@@ -32,7 +32,7 @@ def _response(status: int = 200, data=None, text: str = ""):
 
 
 def _fake_finnhub(monkeypatch, calendar=None, trends=None, quote=None,
-                  profile=None, financials=None):
+                  profile=None, financials=None, earnings=None):
     # Replace finnhub.Client with an object whose methods return canned data.
     client = SimpleNamespace(
         earnings_calendar=lambda **kw: {"earningsCalendar": calendar or []},
@@ -40,12 +40,14 @@ def _fake_finnhub(monkeypatch, calendar=None, trends=None, quote=None,
         quote=lambda ticker: quote or {},
         company_profile2=lambda symbol: profile or {},
         company_basic_financials=lambda ticker, kind: financials or {},
+        company_earnings=lambda ticker, limit=None: earnings or [],
     )
     monkeypatch.setattr(consensus.finnhub, "Client", lambda api_key: client)
 
 
 def _fake_http(monkeypatch, routes: dict):
-    # Replace requests.get: each URL prefix in `routes` maps to a response.
+    # Replace requests.get: each URL prefix in `routes` maps to a response,
+    # or to a list of responses returned one per call (for retry tests).
     # Every call is recorded so tests can check what was (not) requested.
     calls = []
 
@@ -53,7 +55,7 @@ def _fake_http(monkeypatch, routes: dict):
         calls.append(url)
         for prefix, resp in routes.items():
             if url.startswith(prefix):
-                return resp
+                return resp.pop(0) if isinstance(resp, list) else resp
         raise AssertionError(f"unexpected HTTP call to {url}")
 
     monkeypatch.setattr(consensus.requests, "get", fake_get)
@@ -238,6 +240,7 @@ def test_basic_metrics_unknown_ticker_raises(monkeypatch):
 _CONSENSUS = {"next_earnings_date": _day(22), "fiscal_quarter": 3,
               "fiscal_year": 2027, "eps_estimate": 2.47}
 _PAGE_URL = "https://www.earningswhispers.com/stocks/test"
+_NO_WHISPER_NOTE = "No verified EPS whisper number was found for TEST's Q3 FY2027 report."
 
 
 def _whisper_reply(value=2.6, quarter=3, year=2027, url=_PAGE_URL) -> str:
@@ -247,33 +250,46 @@ def _whisper_reply(value=2.6, quarter=3, year=2027, url=_PAGE_URL) -> str:
                                         "page_date": _day(-1)})
 
 
+def _no_signals(monkeypatch, routes: dict | None = None) -> list:
+    # Fake Finnhub and FMP with no fallback data, plus any extra HTTP routes.
+    # Also skip the 2-second retry pause. Returns the recorded HTTP calls.
+    monkeypatch.setattr(consensus.time, "sleep", lambda seconds: None)
+    _fake_finnhub(monkeypatch)
+    return _fake_http(monkeypatch, {consensus._FMP_GRADES_URL: _response(data=[]),
+                                    consensus._FMP_PRICE_TARGET_URL: _response(data=[]),
+                                    **(routes or {})})
+
+
 def test_whisper_verified_when_quarter_matches_and_number_on_page(monkeypatch):
+    # A verified whisper needs no fallback: nothing else is fetched.
     _fake_claude(monkeypatch, [("end_turn", _whisper_reply())])
-    _fake_http(monkeypatch, {_PAGE_URL: _response(text="<b>Earnings Whisper</b> <span>$2.60</span>")})
+    calls = _no_signals(monkeypatch, {_PAGE_URL: _response(text="<b>Earnings Whisper</b> <span>$2.60</span>")})
 
     w = consensus.get_eps_whisper("test", _CONSENSUS)
 
+    assert w["whisper_status"] == "verified"
     assert w["whisper_eps"] == 2.6
-    assert w["reason"] is None
-    assert w["source_url"] == _PAGE_URL
+    assert w["reason"] is None and w["signals"] is None
+    assert calls == [_PAGE_URL]
+    assert w["note"] == f"The EPS whisper number for TEST's Q3 FY2027 report is $2.60 ({_PAGE_URL})."
     # Cost = 1,000 input + 100 output Sonnet tokens, plus two web searches.
     assert w["cost_usd"] == pytest.approx(0.002 + 0.001 + 2 * 0.01)
 
 
 def test_whisper_rejected_when_quarter_does_not_match(monkeypatch):
     _fake_claude(monkeypatch, [("end_turn", _whisper_reply(quarter=2))])
-    calls = _fake_http(monkeypatch, {})  # the page must not even be fetched
+    calls = _no_signals(monkeypatch)
 
     w = consensus.get_eps_whisper("TEST", _CONSENSUS)
 
-    assert w["whisper_eps"] is None
+    assert w["whisper_status"] == "rejected" and w["whisper_eps"] is None
     assert "Q2 FY2027" in w["reason"] and "Q3 FY2027" in w["reason"]
-    assert calls == []
+    assert _PAGE_URL not in calls  # the page is not even fetched
 
 
 def test_whisper_rejected_when_number_not_on_page(monkeypatch):
     _fake_claude(monkeypatch, [("end_turn", _whisper_reply(value=2.6))])
-    _fake_http(monkeypatch, {_PAGE_URL: _response(text="Whisper $12.60 and $2.65")})
+    _no_signals(monkeypatch, {_PAGE_URL: _response(text="Whisper $12.60 and $2.65")})
 
     w = consensus.get_eps_whisper("TEST", _CONSENSUS)
 
@@ -281,50 +297,81 @@ def test_whisper_rejected_when_number_not_on_page(monkeypatch):
     assert "not found on the cited page" in w["reason"]
 
 
-def test_whisper_rejected_when_page_cannot_be_fetched(monkeypatch):
+def test_whisper_page_blocked_is_not_retried(monkeypatch):
+    # A 4xx error won't fix itself, so the page is fetched only once.
     _fake_claude(monkeypatch, [("end_turn", _whisper_reply())])
-    _fake_http(monkeypatch, {_PAGE_URL: _response(403, text="Forbidden")})
+    calls = _no_signals(monkeypatch, {_PAGE_URL: _response(403, text="Forbidden")})
 
     w = consensus.get_eps_whisper("TEST", _CONSENSUS)
 
-    assert w["whisper_eps"] is None
-    assert "HTTP 403" in w["reason"]
+    assert w["whisper_eps"] is None and "HTTP 403" in w["reason"]
+    assert calls.count(_PAGE_URL) == 1
 
 
-@pytest.mark.parametrize("reply", [
-    "I could not find it.",                 # no JSON at all
-    _whisper_reply(value=None),             # Claude found nothing
-    _whisper_reply(url=None),               # a number with no page to check
-    _whisper_reply(value="about 2.6"),      # not a number
+def test_whisper_page_server_error_is_retried_once(monkeypatch):
+    # A momentary 503 followed by a good page still verifies the whisper.
+    _fake_claude(monkeypatch, [("end_turn", _whisper_reply())])
+    calls = _no_signals(monkeypatch, {_PAGE_URL: [_response(503, text="busy"),
+                                                  _response(text="Whisper $2.60")]})
+
+    w = consensus.get_eps_whisper("TEST", _CONSENSUS)
+
+    assert w["whisper_status"] == "verified"
+    assert calls.count(_PAGE_URL) == 2
+
+
+def test_whisper_page_server_error_twice_is_rejected(monkeypatch):
+    _fake_claude(monkeypatch, [("end_turn", _whisper_reply())])
+    calls = _no_signals(monkeypatch, {_PAGE_URL: [_response(503, text="busy"),
+                                                  _response(502, text="bad gateway")]})
+
+    w = consensus.get_eps_whisper("TEST", _CONSENSUS)
+
+    assert w["whisper_status"] == "rejected" and "HTTP 502" in w["reason"]
+    assert calls.count(_PAGE_URL) == 2
+
+
+@pytest.mark.parametrize("reply, status", [
+    ("I could not find it.", "not_found"),                 # no JSON at all
+    (_whisper_reply(value=None), "not_found"),             # Claude found nothing
+    (_whisper_reply(url=None), "not_found"),               # a number with no page to check
+    (_whisper_reply(value="about 2.6"), "rejected"),       # not a number
 ])
-def test_whisper_unusable_answers_return_none(monkeypatch, reply):
+def test_whisper_unusable_answers_still_give_a_note(monkeypatch, reply, status):
+    # A missing whisper is a normal result: a status, a reason and a note.
     _fake_claude(monkeypatch, [("end_turn", reply)])
-    _fake_http(monkeypatch, {})
+    _no_signals(monkeypatch)
 
     w = consensus.get_eps_whisper("TEST", _CONSENSUS)
 
     assert w["whisper_eps"] is None and w["reason"].startswith("whisper:")
+    assert w["whisper_status"] == status
+    assert w["note"] == _NO_WHISPER_NOTE
 
 
 def test_whisper_skips_claude_when_next_report_unknown(monkeypatch):
     requests_made = _fake_claude(monkeypatch, [])
+    _no_signals(monkeypatch)
+
     w = consensus.get_eps_whisper("TEST", {"next_earnings_date": _day(22), "fiscal_quarter": None})
 
     assert w["whisper_eps"] is None and "unknown" in w["reason"]
     assert requests_made == []
+    assert w["note"] == "No verified EPS whisper number was found for TEST's next report."
 
 
 def test_whisper_refusal_returns_none(monkeypatch):
     _fake_claude(monkeypatch, [("refusal", "")])
+    _no_signals(monkeypatch)
     w = consensus.get_eps_whisper("TEST", _CONSENSUS)
-    assert w["whisper_eps"] is None
+    assert w["whisper_eps"] is None and w["whisper_status"] == "not_found"
 
 
 def test_whisper_continues_after_pause_turn(monkeypatch):
     # A paused search turn is sent back so Claude can finish; cost adds up.
     requests_made = _fake_claude(monkeypatch, [("pause_turn", "searching"),
                                                ("end_turn", _whisper_reply())])
-    _fake_http(monkeypatch, {_PAGE_URL: _response(text="Whisper: 2.6")})
+    _no_signals(monkeypatch, {_PAGE_URL: _response(text="Whisper: 2.6")})
 
     w = consensus.get_eps_whisper("TEST", _CONSENSUS)
 
@@ -334,14 +381,101 @@ def test_whisper_continues_after_pause_turn(monkeypatch):
     assert w["cost_usd"] == pytest.approx(2 * (0.003 + 0.02))
 
 
-def test_whisper_prompt_names_earningswhispers(monkeypatch):
+def test_whisper_request_uses_earningswhispers_search_and_fetch(monkeypatch):
     requests_made = _fake_claude(monkeypatch, [("end_turn", _whisper_reply(value=None))])
+    _no_signals(monkeypatch)
     consensus.get_eps_whisper("TEST", _CONSENSUS)
 
     request = requests_made[0]
-    assert "earningswhispers.com" in request["messages"][0]["content"]
+    prompt = request["messages"][0]["content"]
+    assert "earningswhispers.com" in prompt and "sentiment" not in prompt
     assert request["model"] == "claude-sonnet-5-5"
-    assert request["tools"][0]["type"] == "web_search_20260209"
+    assert [t["type"] for t in request["tools"]] == ["web_search_20260209", "web_fetch_20260209"]
+    assert all(t["allowed_domains"] == ["earningswhispers.com"] for t in request["tools"])
+
+
+# ---------------------------------------------------------------------------
+# get_expectation_signals — free fallback facts
+# ---------------------------------------------------------------------------
+
+_EARNINGS = [
+    # Finnhub earnings-surprise rows, deliberately out of order. The oldest
+    # row falls outside the last 4 quarters; the unreported one is skipped.
+    {"period": "2026-03-31", "actual": 1.61, "estimate": 1.67, "surprisePercent": -4.0},
+    {"period": "2026-06-30", "actual": 1.97, "estimate": 1.86, "surprisePercent": 6.0},
+    {"period": "2025-09-30", "actual": 1.20, "estimate": 1.20, "surprisePercent": 0.0},
+    {"period": "2025-12-31", "actual": 1.50, "estimate": 1.40, "surprisePercent": 8.0},
+    {"period": "2025-06-30", "actual": 1.00, "estimate": 0.50, "surprisePercent": 100.0},
+    {"period": "2026-09-30", "actual": None, "estimate": 2.00, "surprisePercent": None},
+]
+_GRADES = [
+    {"date": _day(-5), "action": "upgrade"},
+    {"date": _day(-10), "action": "maintain"},
+    {"date": _day(-20), "action": "downgrade"},
+    {"date": _day(-40), "action": "upgrade"},  # older than 30 days: ignored
+]
+_TARGET = [{"targetConsensus": 330.0, "targetLow": 300.0, "targetHigh": 390.0}]
+
+
+def _fake_signals(monkeypatch, price=300.0, routes: dict | None = None) -> list:
+    # Fake Finnhub and FMP with full fallback data, plus any extra routes.
+    _fake_finnhub(monkeypatch, earnings=_EARNINGS, quote={"c": price})
+    return _fake_http(monkeypatch, {consensus._FMP_GRADES_URL: _response(data=_GRADES),
+                                    consensus._FMP_PRICE_TARGET_URL: _response(data=_TARGET),
+                                    **(routes or {})})
+
+
+def test_expectation_signals_are_computed_with_sources(monkeypatch):
+    _fake_signals(monkeypatch)
+
+    s = consensus.get_expectation_signals("test")
+
+    assert {k: s["beat_history"][k] for k in ("quarters", "beats", "misses", "avg_surprise_pct", "latest_period")} == \
+        {"quarters": 4, "beats": 2, "misses": 1, "avg_surprise_pct": 2.5, "latest_period": "2026-06-30"}
+    assert {k: s["analyst_actions"][k] for k in ("total", "upgrades", "downgrades")} == \
+        {"total": 3, "upgrades": 1, "downgrades": 1}
+    assert (s["price_target"]["consensus"], s["price_target"]["upside_pct"]) == (330.0, 10.0)
+    assert s["beat_history"]["source"]["name"] == "Finnhub earnings surprises"
+    assert s["analyst_actions"]["source"]["name"] == "FMP grades"
+    assert s["price_target"]["source"]["name"] == "FMP price target consensus"
+    assert s["data_gaps"] == [] and s["fetched_at"]
+
+
+def test_expectation_signals_missing_data_listed_as_gaps(monkeypatch):
+    _no_signals(monkeypatch)
+
+    s = consensus.get_expectation_signals("TEST")
+
+    assert s["beat_history"] is None and s["analyst_actions"] is None and s["price_target"] is None
+    assert len(s["data_gaps"]) == 3
+
+
+def test_no_whisper_note_includes_signals(monkeypatch):
+    # The lack of a whisper is stated, then the free facts follow.
+    _fake_claude(monkeypatch, [("end_turn", _whisper_reply(value=None))])
+    _fake_signals(monkeypatch)
+
+    w = consensus.get_eps_whisper("TEST", _CONSENSUS)
+
+    assert w["whisper_status"] == "not_found"
+    assert w["signals"]["beat_history"]["beats"] == 2
+    assert w["note"] == (
+        _NO_WHISPER_NOTE + " Other signals: TEST beat EPS estimates in 2 of the last 4 quarters, "
+        "average surprise +2.5% (Finnhub); analyst rating actions in the last 30 days: 3 "
+        "(upgrades 1, downgrades 1, other 1) (FMP); the consensus price target is $330.00, "
+        "10.0% above the current $300.00 (FMP)."
+    )
+
+
+def test_signals_sentence_skips_unknown_price(monkeypatch):
+    # Without a current price the target is stated with no upside figure.
+    _fake_claude(monkeypatch, [("end_turn", _whisper_reply(value=None))])
+    _fake_signals(monkeypatch, price=0)
+
+    w = consensus.get_eps_whisper("TEST", _CONSENSUS)
+
+    assert w["signals"]["price_target"]["upside_pct"] is None
+    assert w["note"].endswith("the consensus price target is $330.00 (FMP).")
 
 
 # ---------------------------------------------------------------------------

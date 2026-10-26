@@ -1,6 +1,6 @@
 """Market expectations for a ticker: what Wall Street expects before a report.
 
-Four public functions, each returning a plain dict that names where every
+Five public functions, each returning a plain dict that names where every
 number came from and when it was fetched. Anything that cannot be verified
 comes back as None with a reason — never a guess.
 
@@ -12,7 +12,14 @@ comes back as None with a reason — never a guess.
                                           twelve-month EPS, last fiscal year's EPS.
   get_eps_whisper(ticker, consensus)    — the "whisper" EPS for the upcoming
                                           quarter, found by Claude web search and
-                                          checked in code against the cited page.
+                                          fetch and checked in code against the
+                                          cited page; if none is verified, the
+                                          signals below are attached instead.
+                                          Either way, a ready-to-use note.
+  get_expectation_signals(ticker)       — free fallback facts: beat/miss record
+                                          (Finnhub), analyst rating actions in
+                                          the last 30 days and consensus price
+                                          target (FMP).
   get_implied_move(ticker, report_date) — the options-implied earnings move from
                                           EarningsWatcher's free feed.
 """
@@ -41,9 +48,12 @@ from yoda import config
 # FMP's current API lives under /stable/. The old /api/v3/ paths now return
 # 403 "Legacy Endpoint" for accounts created after August 2025.
 _FMP_EARNINGS_URL = "https://financialmodelingprep.com/stable/earnings"
+_FMP_GRADES_URL = "https://financialmodelingprep.com/stable/grades"
+_FMP_PRICE_TARGET_URL = "https://financialmodelingprep.com/stable/price-target-consensus"
 
 # Public URLs used as citations for each Finnhub data source.
 _FINNHUB_CALENDAR_URL = "https://finnhub.io/api/v1/calendar/earnings"
+_FINNHUB_SURPRISES_URL = "https://finnhub.io/api/v1/stock/earnings"
 _FINNHUB_RECS_URL = "https://finnhub.io/api/v1/stock/recommendation"
 _FINNHUB_METRIC_URL = "https://finnhub.io/api/v1/stock/metric"
 _FINNHUB_QUOTE_URL = "https://finnhub.io/api/v1/quote"
@@ -53,10 +63,24 @@ _FINNHUB_PROFILE_URL = "https://finnhub.io/api/v1/stock/profile2"
 # attribution: credit EarningsWatcher and link the page URL they return.
 _EW_URL = "https://earnings-watcher.com/api/implied/{ticker}.json"
 
-# The Claude model and limits used to look up the whisper number.
+# The Claude model used to look up the whisper number.
 WHISPER_MODEL = "claude-sonnet-5-5"
-_WHISPER_MAX_SEARCHES = 5
-_WEB_SEARCH_COST = 0.01  # USD per web search ($10 per 1,000)
+_WEB_SEARCH_COST = 0.01  # USD per web search ($10 per 1,000); fetches are free
+
+# Server-side tools for the whisper call. Search finds the company's
+# earningswhispers.com page; fetch opens the live page so Claude reads the
+# current number (search results hold a saved copy that can lack it).
+_WHISPER_TOOLS = [
+    {"type": "web_search_20260209", "name": "web_search", "max_uses": 2,
+     "allowed_domains": ["earningswhispers.com"]},
+    {"type": "web_fetch_20260209", "name": "web_fetch", "max_uses": 1,
+     "allowed_domains": ["earningswhispers.com"]},
+]
+
+# How far back the fallback signals look: analyst rating actions in the
+# last 30 days, and the beat/miss record over the last 4 reported quarters.
+_GRADES_WINDOW_DAYS = 30
+_BEAT_HISTORY_QUARTERS = 4
 
 # Two sources describe the same report if their dates are this close.
 _SAME_REPORT_DAYS = 7
@@ -337,7 +361,132 @@ def get_basic_metrics(ticker: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Whisper number (Claude web search, verified in code)
+# Fallback signals when no whisper is verified (free structured data)
+# ---------------------------------------------------------------------------
+
+def _beat_history(client: finnhub.Client, ticker: str) -> dict | None:
+    # Count how often the company beat or missed the EPS estimate over its
+    # last few reported quarters, from Finnhub's earnings-surprise history.
+    rows = _finnhub_call(lambda: client.company_earnings(ticker, limit=_BEAT_HISTORY_QUARTERS)) or []
+    rows = [r for r in rows if r.get("actual") is not None and r.get("estimate") is not None]
+    rows = sorted(rows, key=lambda r: r.get("period") or "", reverse=True)[:_BEAT_HISTORY_QUARTERS]
+    if not rows:
+        return None
+
+    # A positive surprise is a beat, negative a miss, zero exactly in line.
+    surprises = [r["actual"] - r["estimate"] for r in rows]
+    pcts = [r["surprisePercent"] for r in rows if r.get("surprisePercent") is not None]
+    return {
+        "quarters": len(rows),
+        "beats": sum(s > 0 for s in surprises),
+        "misses": sum(s < 0 for s in surprises),
+        "avg_surprise_pct": round(sum(pcts) / len(pcts), 1) if pcts else None,
+        "latest_period": rows[0].get("period"),
+        "source": _source("Finnhub earnings surprises", _FINNHUB_SURPRISES_URL),
+    }
+
+
+def _analyst_actions(ticker: str) -> dict | None:
+    # Count analyst rating actions (upgrade / downgrade / other) published in
+    # the last 30 days, from FMP's grades feed.
+    rows = _fmp_get(_FMP_GRADES_URL, {"symbol": ticker}) or []
+    since = (date.today() - timedelta(days=_GRADES_WINDOW_DAYS)).isoformat()
+    recent = [r for r in rows if (r.get("date") or "") >= since]
+    if not recent:
+        return None
+    actions = [(r.get("action") or "").lower() for r in recent]
+    return {
+        "days": _GRADES_WINDOW_DAYS,
+        "total": len(recent),
+        "upgrades": actions.count("upgrade"),
+        "downgrades": actions.count("downgrade"),
+        "source": _source("FMP grades", _FMP_GRADES_URL),
+    }
+
+
+def _price_target(client: finnhub.Client, ticker: str) -> dict | None:
+    # Analysts' consensus 12-month price target from FMP, compared with the
+    # current price from Finnhub.
+    rows = _fmp_get(_FMP_PRICE_TARGET_URL, {"symbol": ticker}) or []
+    target = rows[0] if rows else {}
+    if target.get("targetConsensus") is None:
+        return None
+    price = (_finnhub_call(lambda: client.quote(ticker)) or {}).get("c") or None
+    return {
+        "consensus": target["targetConsensus"],
+        "low": target.get("targetLow"),
+        "high": target.get("targetHigh"),
+        "current_price": price,
+        "upside_pct": round((target["targetConsensus"] / price - 1) * 100, 1) if price else None,
+        "source": _source("FMP price target consensus", _FMP_PRICE_TARGET_URL),
+    }
+
+
+def get_expectation_signals(ticker: str) -> dict:
+    """Free, structured signals of what the market expects, for use when no
+    whisper number is verified.
+
+    Returns a dict with:
+        ticker,
+        beat_history  ({quarters, beats, misses, avg_surprise_pct,
+                        latest_period, source} or None),
+        analyst_actions ({days, total, upgrades, downgrades, source} or None),
+        price_target  ({consensus, low, high, current_price, upside_pct,
+                        source} or None),
+        data_gaps (list of str), fetched_at
+    """
+    ticker = ticker.upper().strip()
+    client = finnhub.Client(api_key=config.FINNHUB_API_KEY)
+    out = {
+        "ticker": ticker,
+        "beat_history": _beat_history(client, ticker),
+        "analyst_actions": _analyst_actions(ticker),
+        "price_target": _price_target(client, ticker),
+        "data_gaps": [],
+        "fetched_at": _now(),
+    }
+
+    # Explain every signal that came back empty.
+    for key in ("beat_history", "analyst_actions", "price_target"):
+        if out[key] is None:
+            out["data_gaps"].append(f"{key}: not available from Finnhub or FMP.")
+    return out
+
+
+def _signals_sentence(ticker: str, signals: dict) -> str:
+    # Turn the fallback signals into one sentence of plain facts, skipping any
+    # signal that is missing. Returns "" when there is nothing to say.
+    parts = []
+
+    # Beat/miss record, e.g. "beat EPS estimates in 3 of the last 4 quarters".
+    b = signals.get("beat_history")
+    if b:
+        text = f"{ticker} beat EPS estimates in {b['beats']} of the last {b['quarters']} quarters"
+        if b["avg_surprise_pct"] is not None:
+            text += f", average surprise {b['avg_surprise_pct']:+.1f}%"
+        parts.append(text + " (Finnhub)")
+
+    # Analyst rating actions in the window.
+    a = signals.get("analyst_actions")
+    if a:
+        other = a["total"] - a["upgrades"] - a["downgrades"]
+        parts.append(f"analyst rating actions in the last {a['days']} days: {a['total']} "
+                     f"(upgrades {a['upgrades']}, downgrades {a['downgrades']}, other {other}) (FMP)")
+
+    # Consensus price target, with upside versus today's price if known.
+    p = signals.get("price_target")
+    if p:
+        text = f"the consensus price target is ${p['consensus']:.2f}"
+        if p["upside_pct"] is not None:
+            direction = "above" if p["upside_pct"] >= 0 else "below"
+            text += f", {abs(p['upside_pct']):.1f}% {direction} the current ${p['current_price']:.2f}"
+        parts.append(text + " (FMP)")
+
+    return ("Other signals: " + "; ".join(parts) + ".") if parts else ""
+
+
+# ---------------------------------------------------------------------------
+# Whisper number (Claude web search + fetch, verified in code)
 # ---------------------------------------------------------------------------
 
 _WHISPER_PROMPT = """Find the EPS "whisper number" for {ticker}'s next earnings report, \
@@ -345,11 +494,12 @@ scheduled for {report_date}.
 
 A whisper number is the unofficial EPS expectation traders hold, distinct from the \
 published analyst consensus (currently {consensus_eps}). earningswhispers.com is a good \
-source to verify whisper estimates against.
+source to verify whisper estimates against: find the company's page there, then fetch \
+it to read the current whisper number.
 
 Rules:
-- Only report a number you saw written on a specific web page. Do not estimate, \
-average, or derive one.
+- Only report a number you saw written on a specific page. Do not estimate, average, \
+or derive one.
 - Say which fiscal quarter and fiscal year (the company's own fiscal calendar, e.g. \
 Q3 of fiscal 2027) the whisper applies to. Some sites label quarters by the calendar \
 month they end in; convert that to the company's fiscal quarter and year.
@@ -362,8 +512,8 @@ Reply with only one JSON object, no other text:
 
 
 def _ask_claude_for_whisper(prompt: str) -> tuple[str, float]:
-    # Run the web-search conversation with Claude and return its final text and
-    # the total cost in USD. Server-side search can pause a long turn
+    # Run the search-and-fetch conversation with Claude and return its final
+    # text and the total cost in USD. Server-side tools can pause a long turn
     # ("pause_turn"); then we send the partial answer back so Claude continues
     # where it stopped (at most 3 rounds).
     messages = [{"role": "user", "content": prompt}]
@@ -373,8 +523,7 @@ def _ask_claude_for_whisper(prompt: str) -> tuple[str, float]:
             model=WHISPER_MODEL,
             max_tokens=16000,
             output_config={"effort": "medium"},
-            tools=[{"type": "web_search_20260209", "name": "web_search",
-                    "max_uses": _WHISPER_MAX_SEARCHES}],
+            tools=_WHISPER_TOOLS,
             messages=messages,
         )
         # Add token cost plus the per-search fee.
@@ -405,96 +554,138 @@ def _parse_json_object(text: str) -> dict | None:
         return None
 
 
-def _number_on_page(url: str, value: float) -> str | None:
-    # Download the cited page and check the whisper number is written on it.
-    # Returns None when found, otherwise the reason it could not be confirmed.
-    try:
-        resp = requests.get(url, headers=_PAGE_HEADERS, timeout=15)
-    except requests.exceptions.RequestException as exc:
-        return f"could not fetch cited page ({type(exc).__name__})."
-    if not resp.ok:
-        return f"cited page returned HTTP {resp.status_code}."
-
-    # Strip HTML tags so numbers split across markup still read as text.
-    page_text = html.unescape(re.sub(r"<[^>]+>", " ", resp.text))
-
-    # Accept the number written with two decimals (2.50) or as-is (2.5),
-    # but not as part of a longer number (12.50 or 2.505).
-    for form in {f"{value:.2f}", f"{value:g}"}:
-        if re.search(rf"(?<![\d.]){re.escape(form)}(?!\d)", page_text):
-            return None
-    return f"{value} not found on the cited page."
-
-
-def get_eps_whisper(ticker: str, consensus: dict) -> dict:
-    """EPS whisper number for the upcoming report, verified in code.
-
-    `consensus` is the dict from get_consensus(): its next_earnings_date and
-    fiscal quarter/year define which report the whisper must apply to.
-    One Claude call with web search proposes a number and a source page; it
-    is kept only if (1) the fiscal quarter/year matches the company's next
-    report and (2) the number appears on the cited page. Otherwise
-    whisper_eps is None and `reason` says why — the caller should add the
-    reason to its data_gaps.
-
-    Returns a dict with:
-        ticker, whisper_eps, fiscal_quarter, fiscal_year, source_url,
-        page_date, retrieved_at, cost_usd, reason (None when verified)
-    """
-    ticker = ticker.upper().strip()
-    out = {"ticker": ticker, "whisper_eps": None, "fiscal_quarter": None,
-           "fiscal_year": None, "source_url": None, "page_date": None,
-           "retrieved_at": _now(), "cost_usd": 0.0, "reason": None}
-
-    # Without a known next report there is nothing to match a whisper against.
+def _search_whisper(ticker: str, consensus: dict) -> tuple[dict | None, float, str | None]:
+    # Ask Claude for the whisper number.
+    # Returns (Claude's answer as a dict, cost in USD, reason if no answer).
     if consensus.get("next_earnings_date") is None or consensus.get("fiscal_quarter") is None:
-        out["reason"] = "whisper: next report or its fiscal quarter unknown, so a whisper cannot be matched."
-        return out
-
-    # Ask Claude to find the whisper number with web search.
+        return None, 0.0, "whisper: next report or its fiscal quarter unknown, so a whisper cannot be matched."
     prompt = _WHISPER_PROMPT.format(
         ticker=ticker,
         report_date=consensus["next_earnings_date"],
         consensus_eps=consensus.get("eps_estimate") or "unknown",
     )
-    text, out["cost_usd"] = _ask_claude_for_whisper(prompt)
+    text, cost = _ask_claude_for_whisper(prompt)
     found = _parse_json_object(text)
-    if not found:
-        out["reason"] = "whisper: Claude returned no readable answer."
-        return out
+    return found, cost, None if found else "whisper: Claude returned no readable answer."
 
-    # Copy what Claude reported; the checks below decide whether to keep it.
-    value = found.get("whisper_eps")
-    for key in ("fiscal_quarter", "fiscal_year", "source_url", "page_date"):
-        out[key] = found.get(key)
+
+def _fetch_page_text(url: str) -> tuple[str | None, str | None]:
+    # Download a cited page and return (plain text, None), or (None, reason)
+    # when it cannot be read. A server error (5xx) or dropped connection is
+    # often momentary, so try once more after 2 seconds before giving up.
+    for attempt in range(2):
+        try:
+            resp = requests.get(url, headers=_PAGE_HEADERS, timeout=15)
+        except requests.exceptions.RequestException as exc:
+            problem = f"could not fetch cited page ({type(exc).__name__})."
+        else:
+            if resp.ok:
+                # Tags become spaces so text split across HTML markup still
+                # reads as one piece.
+                return html.unescape(re.sub(r"<[^>]+>", " ", resp.text)), None
+            problem = f"cited page returned HTTP {resp.status_code}."
+            # A 4xx error (blocked, not found) will not fix itself on retry.
+            if resp.status_code < 500:
+                return None, problem
+        if attempt == 0:
+            time.sleep(2)
+    return None, problem
+
+
+def _number_on_page(page_text: str, value: float) -> bool:
+    # True if the number is written with two decimals (2.50) or as-is (2.5),
+    # but not as part of a longer number (12.50 or 2.505).
+    return any(
+        re.search(rf"(?<![\d.]){re.escape(form)}(?!\d)", page_text)
+        for form in {f"{value:.2f}", f"{value:g}"}
+    )
+
+
+def _check_whisper(found: dict, consensus: dict) -> tuple[float | None, str, str | None]:
+    # Apply the code checks to Claude's whisper answer.
+    # Returns (value, status, reason). Status is "verified", "not_found"
+    # (Claude found nothing) or "rejected" (the answer failed a check).
+    value, url = found.get("whisper_eps"), found.get("source_url")
 
     # Claude must have found a number and a page to cite.
-    if value is None or not out["source_url"]:
-        out["reason"] = "whisper: no whisper number found for the next report."
-        return out
+    if value is None or not url:
+        return None, "not_found", "whisper: no whisper number found for the next report."
     try:
         value = float(value)
     except (TypeError, ValueError):
-        out["reason"] = f"whisper: value {value!r} is not a number."
-        return out
+        return None, "rejected", f"whisper: value {value!r} is not a number."
 
     # Check 1: the fiscal quarter/year must be the company's next report.
+    got = (found.get("fiscal_quarter"), found.get("fiscal_year"))
     expected = (consensus["fiscal_quarter"], consensus.get("fiscal_year"))
-    if (out["fiscal_quarter"], out["fiscal_year"]) != expected:
-        out["reason"] = (
-            f"whisper: Claude's number is for Q{out['fiscal_quarter']} FY{out['fiscal_year']}, "
-            f"but the next report is Q{expected[0]} FY{expected[1]}."
-        )
-        return out
+    if got != expected:
+        return None, "rejected", (f"whisper: Claude's number is for Q{got[0]} FY{got[1]}, "
+                                  f"but the next report is Q{expected[0]} FY{expected[1]}.")
 
     # Check 2: the number must be written on the cited page.
-    page_problem = _number_on_page(out["source_url"], value)
-    if page_problem:
-        out["reason"] = f"whisper: {page_problem} ({out['source_url']})"
-        return out
+    page_text, problem = _fetch_page_text(url)
+    if problem:
+        return None, "rejected", f"whisper: {problem} ({url})"
+    if not _number_on_page(page_text, value):
+        return None, "rejected", f"whisper: {value} not found on the cited page. ({url})"
+    return value, "verified", None
 
-    # Both checks passed: keep the number.
-    out["whisper_eps"] = value
+
+def _whisper_note(ticker: str, consensus: dict, out: dict) -> str:
+    # One or two plain sentences the report can quote as-is. A missing whisper
+    # is stated as a fact, followed by the fallback signals if any.
+    q, y = consensus.get("fiscal_quarter"), consensus.get("fiscal_year")
+    period = f"Q{q} FY{y} report" if q else "next report"
+    if out["whisper_status"] == "verified":
+        return (f"The EPS whisper number for {ticker}'s {period} is "
+                f"${out['whisper_eps']:.2f} ({out['source_url']}).")
+    note = f"No verified EPS whisper number was found for {ticker}'s {period}."
+    signals = _signals_sentence(ticker, out["signals"] or {})
+    return f"{note} {signals}" if signals else note
+
+
+def get_eps_whisper(ticker: str, consensus: dict) -> dict:
+    """EPS whisper number for the upcoming report, with a fallback.
+
+    `consensus` is the dict from get_consensus(): its next_earnings_date and
+    fiscal quarter/year define which report the whisper must apply to.
+    One Claude call (web search + fetch on earningswhispers.com) proposes a
+    number and a source page. It is kept only if the fiscal quarter/year
+    matches the next report and the number appears on the cited page.
+
+    A missing whisper is a normal result, not an error: `whisper_status`
+    says what happened, `signals` holds free structured facts from
+    get_expectation_signals(), and `note` is a ready-to-use sentence for the
+    report either way.
+
+    Returns a dict with:
+        ticker, whisper_status ("verified" | "not_found" | "rejected"),
+        whisper_eps, fiscal_quarter, fiscal_year, source_url, page_date,
+        reason (why there is no whisper, else None),
+        signals (get_expectation_signals() dict, or None when verified),
+        note, retrieved_at, cost_usd
+    """
+    ticker = ticker.upper().strip()
+    out = {"ticker": ticker, "whisper_status": "not_found", "whisper_eps": None,
+           "fiscal_quarter": None, "fiscal_year": None, "source_url": None,
+           "page_date": None, "reason": None, "signals": None, "note": None,
+           "retrieved_at": _now(), "cost_usd": 0.0}
+
+    # Ask Claude; `found` is None when there was no usable answer.
+    found, out["cost_usd"], out["reason"] = _search_whisper(ticker, consensus)
+
+    # Copy Claude's answer and run the checks on it.
+    if found:
+        for key in ("fiscal_quarter", "fiscal_year", "source_url", "page_date"):
+            out[key] = found.get(key)
+        out["whisper_eps"], out["whisper_status"], out["reason"] = _check_whisper(found, consensus)
+
+    # No verified whisper: gather the free fallback signals instead.
+    if out["whisper_status"] != "verified":
+        out["signals"] = get_expectation_signals(ticker)
+
+    # Write the sentence the report can use either way.
+    out["note"] = _whisper_note(ticker, consensus, out)
     return out
 
 
