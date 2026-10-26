@@ -1,13 +1,25 @@
-"""Analyst consensus estimates and basic market metrics for a given ticker.
+"""Market expectations for a ticker: what Wall Street expects before a report.
 
-Two public functions:
-  get_consensus(ticker)     — analyst EPS / revenue / earnings-date from
-                              Finnhub, with an FMP backup when free-tier
-                              coverage is absent.
-  get_basic_metrics(ticker) — current price, market cap, trailing EPS from
-                              Finnhub; always called, not a fallback.
+Four public functions, each returning a plain dict that names where every
+number came from and when it was fetched. Anything that cannot be verified
+comes back as None with a reason — never a guess.
+
+  get_consensus(ticker)                 — next report date, fiscal quarter,
+                                          analyst EPS / revenue estimates
+                                          (Finnhub calendar, FMP backup),
+                                          analyst count.
+  get_basic_metrics(ticker)             — current price, market cap, trailing-
+                                          twelve-month EPS, last fiscal year's EPS.
+  get_eps_whisper(ticker, consensus)    — the "whisper" EPS for the upcoming
+                                          quarter, found by Claude web search and
+                                          checked in code against the cited page.
+  get_implied_move(ticker, report_date) — the options-implied earnings move from
+                                          EarningsWatcher's free feed.
 """
 
+import html
+import json
+import re
 import sys
 import time
 from datetime import datetime, timezone, date, timedelta
@@ -16,20 +28,65 @@ import requests
 import requests.exceptions
 
 import finnhub
+from anthropic import Anthropic
 from finnhub.exceptions import FinnhubAPIException
 
 from yoda import config
 
 
 # ---------------------------------------------------------------------------
-# FMP base URL
+# Source endpoints and settings
 # ---------------------------------------------------------------------------
 
-_FMP_BASE = "https://financialmodelingprep.com/api/v3"
+# FMP's current API lives under /stable/. The old /api/v3/ paths now return
+# 403 "Legacy Endpoint" for accounts created after August 2025.
+_FMP_EARNINGS_URL = "https://financialmodelingprep.com/stable/earnings"
+
+# Public URLs used as citations for each Finnhub data source.
+_FINNHUB_CALENDAR_URL = "https://finnhub.io/api/v1/calendar/earnings"
+_FINNHUB_RECS_URL = "https://finnhub.io/api/v1/stock/recommendation"
+_FINNHUB_METRIC_URL = "https://finnhub.io/api/v1/stock/metric"
+_FINNHUB_QUOTE_URL = "https://finnhub.io/api/v1/quote"
+_FINNHUB_PROFILE_URL = "https://finnhub.io/api/v1/stock/profile2"
+
+# EarningsWatcher's free, no-key implied-move feed. Their terms ask for
+# attribution: credit EarningsWatcher and link the page URL they return.
+_EW_URL = "https://earnings-watcher.com/api/implied/{ticker}.json"
+
+# The Claude model and limits used to look up the whisper number.
+WHISPER_MODEL = "claude-sonnet-5-5"
+_WHISPER_MAX_SEARCHES = 5
+_WEB_SEARCH_COST = 0.01  # USD per web search ($10 per 1,000)
+
+# Two sources describe the same report if their dates are this close.
+_SAME_REPORT_DAYS = 7
+# EarningsWatcher's date may differ from ours by a day or two.
+_IMPLIED_DATE_TOLERANCE_DAYS = 3
+
+# A browser-like header so the cited page is served normally when we check it.
+_PAGE_HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; Yoda research tool)"}
+
+# One shared Claude client, created once when the module loads.
+_claude = Anthropic(api_key=config.ANTHROPIC_API_KEY, max_retries=3)
+
+
+def _now() -> str:
+    # The current time as an ISO-8601 UTC string, used as the retrieval stamp.
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _source(name: str, url: str) -> dict:
+    # A citation for one value: who provided it and where.
+    return {"name": name, "url": url}
+
+
+def _days_apart(a: str, b: str) -> int:
+    # Number of days between two YYYY-MM-DD dates.
+    return abs((date.fromisoformat(a) - date.fromisoformat(b)).days)
 
 
 # ---------------------------------------------------------------------------
-# Internal Finnhub call wrapper
+# Finnhub call wrapper
 # ---------------------------------------------------------------------------
 
 def _finnhub_call(fn):
@@ -63,46 +120,71 @@ def _finnhub_call(fn):
 
 
 # ---------------------------------------------------------------------------
-# Field-level Finnhub extractors
+# FMP call wrapper
 # ---------------------------------------------------------------------------
 
-def _next_earnings_finnhub(client: finnhub.Client, ticker: str) -> str | None:
-    # Query the earnings calendar for the next scheduled date within 180 days.
-    today = date.today()
-    future = today + timedelta(days=180)
+def _fmp_get(url: str, params: dict) -> list | dict | None:
+    # Make one FMP call. A bad key (401), a paid-only endpoint (402) or a
+    # blocked endpoint (403) raises, because those never fix themselves and
+    # would otherwise hide as missing data. A network hiccup returns None.
+    try:
+        resp = requests.get(url, params={**params, "apikey": config.FMP_API_KEY}, timeout=15)
+    except requests.exceptions.RequestException:
+        return None
+
+    # Fail loud on key / plan problems, quoting FMP's own message.
+    if resp.status_code in (401, 402, 403):
+        raise RuntimeError(
+            f"FMP refused {url} (HTTP {resp.status_code}): {resp.text[:200]} "
+            "Check FMP_API_KEY in .env and the FMP plan."
+        )
+    # Other server errors (500s) are treated as temporarily unavailable.
+    if not resp.ok:
+        return None
+    return resp.json()
+
+
+# ---------------------------------------------------------------------------
+# Next-report lookups
+# ---------------------------------------------------------------------------
+
+def _next_report_finnhub(client: finnhub.Client, ticker: str) -> dict | None:
+    # Return Finnhub's calendar row for the next upcoming report: its date,
+    # fiscal quarter/year and the analyst EPS / revenue estimates for that
+    # exact report. Finnhub's list is not sorted, so pick the earliest date
+    # from today onward.
+    today = date.today().isoformat()
     data = _finnhub_call(lambda: client.earnings_calendar(
-        _from=today.isoformat(),
-        to=future.isoformat(),
+        _from=today,
+        to=(date.today() + timedelta(days=180)).isoformat(),
         symbol=ticker,
         international=False,
     ))
-    events = (data or {}).get("earningsCalendar") or []
-    return events[0].get("date") if events else None
+    rows = [
+        r for r in (data or {}).get("earningsCalendar") or []
+        if r.get("date") and r["date"] >= today
+    ]
+    return min(rows, key=lambda r: r["date"]) if rows else None
 
 
-def _eps_estimate_finnhub(client: finnhub.Client, ticker: str) -> float | None:
-    # Pull the most recent quarterly EPS estimate (premium on Finnhub free tier).
-    data = _finnhub_call(lambda: client.company_eps_estimates(symbol=ticker, freq="quarterly"))
-    estimates = (data or {}).get("data") or []
-    val = estimates[0].get("epsAvg") if estimates else None
-    return float(val) if val is not None else None
-
-
-def _revenue_estimate_finnhub(client: finnhub.Client, ticker: str) -> float | None:
-    # Pull the most recent quarterly revenue estimate in USD (premium on free tier).
-    data = _finnhub_call(lambda: client.company_revenue_estimates(symbol=ticker, freq="quarterly"))
-    estimates = (data or {}).get("data") or []
-    val = estimates[0].get("revenueAvg") if estimates else None
-    return float(val) if val is not None else None
+def _next_report_fmp(ticker: str) -> dict | None:
+    # Return FMP's row for the next report that has not happened yet
+    # (no actual EPS), earliest date first.
+    rows = _fmp_get(_FMP_EARNINGS_URL, {"symbol": ticker, "limit": 8}) or []
+    today = date.today().isoformat()
+    upcoming = [
+        r for r in rows
+        if r.get("date") and r["date"] >= today and r.get("epsActual") is None
+    ]
+    return min(upcoming, key=lambda r: r["date"]) if upcoming else None
 
 
 def _analyst_count_finnhub(client: finnhub.Client, ticker: str) -> int | None:
-    # Sum buy/hold/sell counts from the most recent recommendation trend entry.
-    data = _finnhub_call(lambda: client.recommendation_trends(symbol=ticker))
-    trends = data or []
+    # Sum buy/hold/sell counts from the most recent recommendation period.
+    trends = _finnhub_call(lambda: client.recommendation_trends(symbol=ticker)) or []
     if not trends:
         return None
-    latest = trends[0]
+    latest = max(trends, key=lambda t: t.get("period") or "")
     total = sum(
         latest.get(k, 0) or 0
         for k in ("strongBuy", "buy", "hold", "sell", "strongSell")
@@ -111,143 +193,102 @@ def _analyst_count_finnhub(client: finnhub.Client, ticker: str) -> int | None:
 
 
 # ---------------------------------------------------------------------------
-# FMP backup — fills fields Finnhub free tier leaves empty
-# ---------------------------------------------------------------------------
-
-def _fmp_get(path: str) -> list | dict | None:
-    # Make a single FMP API call. Returns parsed JSON or None on any error.
-    # Best-effort: failures degrade gracefully rather than crashing the caller.
-    try:
-        resp = requests.get(
-            f"{_FMP_BASE}{path}",
-            params={"apikey": config.FMP_API_KEY},
-            timeout=10,
-        )
-        resp.raise_for_status()
-        return resp.json()
-    except Exception:
-        return None
-
-
-def _consensus_fmp_backup(ticker: str) -> dict:
-    # Populate consensus fields from FMP when Finnhub free tier leaves them
-    # empty. Uses two endpoints: analyst-estimates for EPS/revenue, and
-    # historical earning_calendar for the next scheduled earnings date.
-    result = {
-        "next_earnings_date": None,
-        "eps_estimate":       None,
-        "revenue_estimate":   None,
-        "analyst_count":      None,
-    }
-
-    # Analyst estimates: EPS and revenue for the next quarter.
-    estimates = _fmp_get(f"/analyst-estimates/{ticker}?period=quarter&limit=1")
-    if estimates and isinstance(estimates, list) and estimates[0]:
-        entry = estimates[0]
-        eps = entry.get("estimatedEpsAvg")
-        rev = entry.get("estimatedRevenueAvg")
-        if eps is not None:
-            result["eps_estimate"] = float(eps)
-        if rev is not None:
-            result["revenue_estimate"] = float(rev)
-
-    # Earnings calendar: find the next upcoming earnings date for this ticker.
-    today_str = date.today().isoformat()
-    calendar = _fmp_get(f"/historical/earning_calendar/{ticker}?limit=10")
-    if calendar and isinstance(calendar, list):
-        # Entries may include past dates; pick the earliest future one.
-        future_dates = [
-            e["date"] for e in calendar
-            if e.get("date") and e["date"] >= today_str
-        ]
-        if future_dates:
-            result["next_earnings_date"] = min(future_dates)
-
-    return result
-
-
-# ---------------------------------------------------------------------------
-# Public API
+# Public API — consensus and basic metrics
 # ---------------------------------------------------------------------------
 
 def get_consensus(ticker: str) -> dict:
-    """Analyst consensus estimates for the given ticker.
+    """Analyst consensus for the company's next earnings report.
 
-    Tries Finnhub first. Falls back to FMP for any field Finnhub leaves
-    empty (free-tier limitation). Source is 'finnhub' when Finnhub covered at
-    least one field, 'fmp_backup' when only FMP helped, or 'finnhub_empty'
-    when both returned nothing. Never fabricates data.
+    Finnhub's earnings calendar is the primary source: one row gives the date,
+    fiscal quarter and the EPS / revenue estimates for that same report. FMP's
+    earnings feed fills any estimate Finnhub leaves empty, but only when FMP is
+    describing the same report (dates within a week). Every filled field has
+    its own entry in `sources`; every empty one has a reason in `data_gaps`.
 
     Returns a dict with:
-        ticker, next_earnings_date, eps_estimate, revenue_estimate,
-        analyst_count, source, fetched_at (ISO-8601 UTC)
+        ticker, next_earnings_date, report_hour, fiscal_quarter, fiscal_year,
+        eps_estimate, revenue_estimate, analyst_count,
+        sources ({field: {name, url}}), data_gaps (list of str), fetched_at
     """
     ticker = ticker.upper().strip()
-    fetched_at = datetime.now(timezone.utc).isoformat()
-
-    # Finnhub pass — each field is fetched independently so a premium-gated
-    # endpoint failing doesn't block the others.
+    fetched_at = _now()
     client = finnhub.Client(api_key=config.FINNHUB_API_KEY)
-    next_earnings_date = _next_earnings_finnhub(client, ticker)
-    eps_estimate       = _eps_estimate_finnhub(client, ticker)
-    revenue_estimate   = _revenue_estimate_finnhub(client, ticker)
-    analyst_count      = _analyst_count_finnhub(client, ticker)
+    fields = ("next_earnings_date", "report_hour", "fiscal_quarter", "fiscal_year",
+              "eps_estimate", "revenue_estimate", "analyst_count")
+    result = dict.fromkeys(fields)
+    sources = {}
+    data_gaps = []
 
-    # Track whether Finnhub provided anything before we merge the backup.
-    finnhub_covered = any(
-        v is not None
-        for v in (next_earnings_date, eps_estimate, revenue_estimate, analyst_count)
-    )
+    # Finnhub calendar: the next report and the estimates attached to it.
+    fh = _next_report_finnhub(client, ticker) or {}
+    fh_src = _source("Finnhub earnings calendar", _FINNHUB_CALENDAR_URL)
+    for field, key in (("next_earnings_date", "date"), ("report_hour", "hour"),
+                       ("fiscal_quarter", "quarter"), ("fiscal_year", "year"),
+                       ("eps_estimate", "epsEstimate"), ("revenue_estimate", "revenueEstimate")):
+        if fh.get(key) not in (None, ""):
+            result[field] = fh[key]
+            sources[field] = fh_src
 
-    # FMP backup — merge any field still None after Finnhub.
-    if not all(
-        v is not None
-        for v in (next_earnings_date, eps_estimate, revenue_estimate, analyst_count)
-    ):
-        backup = _consensus_fmp_backup(ticker)
-        next_earnings_date = next_earnings_date or backup["next_earnings_date"]
-        eps_estimate       = eps_estimate       or backup["eps_estimate"]
-        revenue_estimate   = revenue_estimate   or backup["revenue_estimate"]
-        analyst_count      = analyst_count      or backup["analyst_count"]
+    # FMP backup: only called when the date or an estimate is still missing.
+    if any(result[f] is None for f in ("next_earnings_date", "eps_estimate", "revenue_estimate")):
+        fmp = _next_report_fmp(ticker)
+        fmp_src = _source("FMP earnings", _FMP_EARNINGS_URL)
 
-    # Label the source so downstream code knows where the data came from.
-    final_any = any(
-        v is not None
-        for v in (next_earnings_date, eps_estimate, revenue_estimate, analyst_count)
-    )
-    if finnhub_covered:
-        source = "finnhub"
-    elif final_any:
-        source = "fmp_backup"
-    else:
-        source = "finnhub_empty"
+        # Finnhub had no upcoming report, so FMP's report is the next one.
+        if fmp and result["next_earnings_date"] is None:
+            result["next_earnings_date"] = fmp["date"]
+            sources["next_earnings_date"] = fmp_src
 
-    return {
-        "ticker":             ticker,
-        "next_earnings_date": next_earnings_date,
-        "eps_estimate":       eps_estimate,
-        "revenue_estimate":   revenue_estimate,
-        "analyst_count":      analyst_count,
-        "source":             source,
-        "fetched_at":         fetched_at,
-    }
+        # Same report (dates within a week): fill only the empty estimates.
+        # `is None` keeps a real 0.0 estimate instead of overwriting it.
+        if fmp and _days_apart(fmp["date"], result["next_earnings_date"]) <= _SAME_REPORT_DAYS:
+            for field, key in (("eps_estimate", "epsEstimated"), ("revenue_estimate", "revenueEstimated")):
+                if result[field] is None and fmp.get(key) is not None:
+                    result[field] = fmp[key]
+                    sources[field] = fmp_src
+
+        # Record a date disagreement instead of silently picking one.
+        if fmp and fh and fmp["date"] != fh["date"]:
+            data_gaps.append(
+                f"next_earnings_date: Finnhub says {fh['date']}, FMP says {fmp['date']}; using Finnhub."
+            )
+
+    # Convert estimates to float so callers always get the same type.
+    for field in ("eps_estimate", "revenue_estimate"):
+        if result[field] is not None:
+            result[field] = float(result[field])
+
+    # Analyst count from Finnhub's recommendation trends.
+    result["analyst_count"] = _analyst_count_finnhub(client, ticker)
+    if result["analyst_count"] is not None:
+        sources["analyst_count"] = _source("Finnhub recommendation trends", _FINNHUB_RECS_URL)
+
+    # Explain every field that is still empty.
+    for field in fields:
+        if result[field] is None:
+            data_gaps.append(f"{field}: not available from Finnhub or FMP.")
+
+    return {"ticker": ticker, **result, "sources": sources,
+            "data_gaps": data_gaps, "fetched_at": fetched_at}
 
 
 def get_basic_metrics(ticker: str) -> dict:
-    """Current price, market cap, and trailing EPS from Finnhub.
+    """Current price, market cap, and EPS from Finnhub.
 
-    Always called regardless of analyst consensus coverage. Raises RuntimeError
-    if Finnhub returns no data (bad ticker, auth failure, or network error).
+    Raises RuntimeError if Finnhub returns no data (bad ticker, auth failure,
+    or network error).
 
     Returns a dict with:
-        ticker, current_price, market_cap (USD), recent_eps, source, fetched_at
+        ticker, current_price, market_cap (USD), ttm_eps (trailing twelve
+        months), last_fy_eps (last full fiscal year), last_fy_end,
+        sources ({field: {name, url}}), fetched_at
     """
     ticker = ticker.upper().strip()
-    fetched_at = datetime.now(timezone.utc).isoformat()
+    fetched_at = _now()
     client = finnhub.Client(api_key=config.FINNHUB_API_KEY)
 
-    # quote() returns current price ('c') and previous close ('pc').
-    # An unrecognised ticker returns all zeros, so we check for that below.
+    # quote() returns current price ('c'). An unrecognised ticker returns all
+    # zeros, so a 0 price is treated as missing.
     quote = _finnhub_call(lambda: client.quote(ticker))
     current_price = (quote or {}).get("c") or None
 
@@ -256,52 +297,283 @@ def get_basic_metrics(ticker: str) -> dict:
     market_cap_m = (profile or {}).get("marketCapitalization")
     market_cap = market_cap_m * 1_000_000 if market_cap_m else None
 
-    # company_basic_financials() annual EPS series: most recent entry is [0].
-    bf = _finnhub_call(lambda: client.company_basic_financials(ticker, "all"))
-    eps_series = ((bf or {}).get("series") or {}).get("annual", {}).get("eps", [])
-    recent_eps = eps_series[0]["v"] if eps_series else None
+    # Basic financials: 'epsTTM' is the trailing-twelve-month EPS; the annual
+    # series gives last fiscal year's EPS (the newest period in the list).
+    bf = _finnhub_call(lambda: client.company_basic_financials(ticker, "all")) or {}
+    ttm_eps = (bf.get("metric") or {}).get("epsTTM")
+    annual = ((bf.get("series") or {}).get("annual") or {}).get("eps") or []
+    latest_fy = max(annual, key=lambda e: e.get("period") or "", default={})
+    last_fy_eps = latest_fy.get("v")
+    last_fy_end = latest_fy.get("period")
 
-    # A zero or missing price means Finnhub doesn't recognise the ticker.
+    # A missing price and market cap means Finnhub doesn't recognise the ticker.
     if current_price is None and market_cap is None:
         raise RuntimeError(
             f"Finnhub returned no data for '{ticker}'. "
             "Check the ticker symbol or confirm the stock is listed on a US exchange."
         )
 
+    # Cite each field that was filled.
+    sources = {}
+    for field, value, name, url in (
+        ("current_price", current_price, "Finnhub quote", _FINNHUB_QUOTE_URL),
+        ("market_cap", market_cap, "Finnhub company profile", _FINNHUB_PROFILE_URL),
+        ("ttm_eps", ttm_eps, "Finnhub basic financials", _FINNHUB_METRIC_URL),
+        ("last_fy_eps", last_fy_eps, "Finnhub basic financials", _FINNHUB_METRIC_URL),
+    ):
+        if value is not None:
+            sources[field] = _source(name, url)
+
     return {
         "ticker":        ticker,
         "current_price": current_price,
         "market_cap":    market_cap,
-        "recent_eps":    recent_eps,
-        "source":        "finnhub",
+        "ttm_eps":       ttm_eps,
+        "last_fy_eps":   last_fy_eps,
+        "last_fy_end":   last_fy_end,
+        "sources":       sources,
         "fetched_at":    fetched_at,
     }
 
 
 # ---------------------------------------------------------------------------
+# Whisper number (Claude web search, verified in code)
+# ---------------------------------------------------------------------------
+
+_WHISPER_PROMPT = """Find the EPS "whisper number" for {ticker}'s next earnings report, \
+scheduled for {report_date}.
+
+A whisper number is the unofficial EPS expectation traders hold, distinct from the \
+published analyst consensus (currently {consensus_eps}). earningswhispers.com is a good \
+source to verify whisper estimates against.
+
+Rules:
+- Only report a number you saw written on a specific web page. Do not estimate, \
+average, or derive one.
+- Say which fiscal quarter and fiscal year (the company's own fiscal calendar, e.g. \
+Q3 of fiscal 2027) the whisper applies to. Some sites label quarters by the calendar \
+month they end in; convert that to the company's fiscal quarter and year.
+- If you cannot find a whisper number for this report, set whisper_eps to null.
+
+Reply with only one JSON object, no other text:
+{{"whisper_eps": <number or null>, "fiscal_quarter": <1-4 or null>, \
+"fiscal_year": <four-digit year or null>, "source_url": "<page URL or null>", \
+"page_date": "<YYYY-MM-DD the page was published/updated, or null>"}}"""
+
+
+def _ask_claude_for_whisper(prompt: str) -> tuple[str, float]:
+    # Run the web-search conversation with Claude and return its final text and
+    # the total cost in USD. Server-side search can pause a long turn
+    # ("pause_turn"); then we send the partial answer back so Claude continues
+    # where it stopped (at most 3 rounds).
+    messages = [{"role": "user", "content": prompt}]
+    cost = 0.0
+    for _ in range(3):
+        resp = _claude.messages.create(
+            model=WHISPER_MODEL,
+            max_tokens=16000,
+            output_config={"effort": "medium"},
+            tools=[{"type": "web_search_20260209", "name": "web_search",
+                    "max_uses": _WHISPER_MAX_SEARCHES}],
+            messages=messages,
+        )
+        # Add token cost plus the per-search fee.
+        cost += config.model_cost(WHISPER_MODEL, resp.usage.input_tokens, resp.usage.output_tokens)
+        searches = getattr(getattr(resp.usage, "server_tool_use", None), "web_search_requests", 0) or 0
+        cost += searches * _WEB_SEARCH_COST
+
+        # A refusal means no answer; anything but a pause means Claude is done.
+        if resp.stop_reason == "refusal":
+            return "", cost
+        if resp.stop_reason != "pause_turn":
+            break
+        messages.append({"role": "assistant", "content": resp.content})
+
+    # The answer is the text blocks of the final response, joined together.
+    text = "".join(b.text for b in resp.content if b.type == "text")
+    return text, cost
+
+
+def _parse_json_object(text: str) -> dict | None:
+    # Pull the first {...} JSON object out of Claude's reply.
+    match = re.search(r"\{.*\}", text, re.S)
+    if not match:
+        return None
+    try:
+        return json.loads(match.group(0))
+    except json.JSONDecodeError:
+        return None
+
+
+def _number_on_page(url: str, value: float) -> str | None:
+    # Download the cited page and check the whisper number is written on it.
+    # Returns None when found, otherwise the reason it could not be confirmed.
+    try:
+        resp = requests.get(url, headers=_PAGE_HEADERS, timeout=15)
+    except requests.exceptions.RequestException as exc:
+        return f"could not fetch cited page ({type(exc).__name__})."
+    if not resp.ok:
+        return f"cited page returned HTTP {resp.status_code}."
+
+    # Strip HTML tags so numbers split across markup still read as text.
+    page_text = html.unescape(re.sub(r"<[^>]+>", " ", resp.text))
+
+    # Accept the number written with two decimals (2.50) or as-is (2.5),
+    # but not as part of a longer number (12.50 or 2.505).
+    for form in {f"{value:.2f}", f"{value:g}"}:
+        if re.search(rf"(?<![\d.]){re.escape(form)}(?!\d)", page_text):
+            return None
+    return f"{value} not found on the cited page."
+
+
+def get_eps_whisper(ticker: str, consensus: dict) -> dict:
+    """EPS whisper number for the upcoming report, verified in code.
+
+    `consensus` is the dict from get_consensus(): its next_earnings_date and
+    fiscal quarter/year define which report the whisper must apply to.
+    One Claude call with web search proposes a number and a source page; it
+    is kept only if (1) the fiscal quarter/year matches the company's next
+    report and (2) the number appears on the cited page. Otherwise
+    whisper_eps is None and `reason` says why — the caller should add the
+    reason to its data_gaps.
+
+    Returns a dict with:
+        ticker, whisper_eps, fiscal_quarter, fiscal_year, source_url,
+        page_date, retrieved_at, cost_usd, reason (None when verified)
+    """
+    ticker = ticker.upper().strip()
+    out = {"ticker": ticker, "whisper_eps": None, "fiscal_quarter": None,
+           "fiscal_year": None, "source_url": None, "page_date": None,
+           "retrieved_at": _now(), "cost_usd": 0.0, "reason": None}
+
+    # Without a known next report there is nothing to match a whisper against.
+    if consensus.get("next_earnings_date") is None or consensus.get("fiscal_quarter") is None:
+        out["reason"] = "whisper: next report or its fiscal quarter unknown, so a whisper cannot be matched."
+        return out
+
+    # Ask Claude to find the whisper number with web search.
+    prompt = _WHISPER_PROMPT.format(
+        ticker=ticker,
+        report_date=consensus["next_earnings_date"],
+        consensus_eps=consensus.get("eps_estimate") or "unknown",
+    )
+    text, out["cost_usd"] = _ask_claude_for_whisper(prompt)
+    found = _parse_json_object(text)
+    if not found:
+        out["reason"] = "whisper: Claude returned no readable answer."
+        return out
+
+    # Copy what Claude reported; the checks below decide whether to keep it.
+    value = found.get("whisper_eps")
+    for key in ("fiscal_quarter", "fiscal_year", "source_url", "page_date"):
+        out[key] = found.get(key)
+
+    # Claude must have found a number and a page to cite.
+    if value is None or not out["source_url"]:
+        out["reason"] = "whisper: no whisper number found for the next report."
+        return out
+    try:
+        value = float(value)
+    except (TypeError, ValueError):
+        out["reason"] = f"whisper: value {value!r} is not a number."
+        return out
+
+    # Check 1: the fiscal quarter/year must be the company's next report.
+    expected = (consensus["fiscal_quarter"], consensus.get("fiscal_year"))
+    if (out["fiscal_quarter"], out["fiscal_year"]) != expected:
+        out["reason"] = (
+            f"whisper: Claude's number is for Q{out['fiscal_quarter']} FY{out['fiscal_year']}, "
+            f"but the next report is Q{expected[0]} FY{expected[1]}."
+        )
+        return out
+
+    # Check 2: the number must be written on the cited page.
+    page_problem = _number_on_page(out["source_url"], value)
+    if page_problem:
+        out["reason"] = f"whisper: {page_problem} ({out['source_url']})"
+        return out
+
+    # Both checks passed: keep the number.
+    out["whisper_eps"] = value
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Options-implied earnings move (EarningsWatcher)
+# ---------------------------------------------------------------------------
+
+def get_implied_move(ticker: str, report_date: str | None) -> dict:
+    """Options-implied earnings move (±%) from EarningsWatcher's free feed.
+
+    `report_date` is next_earnings_date from get_consensus(). The live implied
+    move is returned only if EarningsWatcher's confirmed report date is within
+    3 days of it, so the move belongs to the same report. Otherwise
+    implied_move_pct is None and `reason` says why.
+
+    Attribution (EarningsWatcher's terms): credit `source_name` and link
+    `source_url` wherever this number is shown.
+
+    Returns a dict with:
+        ticker, implied_move_pct, report_date, session, as_of, source_name,
+        source_url, retrieved_at, reason (None when available)
+    """
+    ticker = ticker.upper().strip()
+    feed_url = _EW_URL.format(ticker=ticker)
+    out = {"ticker": ticker, "implied_move_pct": None, "report_date": None,
+           "session": None, "as_of": None, "source_name": "EarningsWatcher",
+           "source_url": feed_url, "retrieved_at": _now(), "reason": None}
+
+    # Fetch the ticker's JSON file; 404 means EarningsWatcher doesn't cover it.
+    try:
+        resp = requests.get(feed_url, timeout=15)
+    except requests.exceptions.RequestException as exc:
+        out["reason"] = f"implied move: EarningsWatcher unreachable ({type(exc).__name__})."
+        return out
+    if resp.status_code == 404:
+        out["reason"] = "implied move: ticker not covered by EarningsWatcher."
+        return out
+    if not resp.ok:
+        out["reason"] = f"implied move: EarningsWatcher returned HTTP {resp.status_code}."
+        return out
+    data = resp.json()
+
+    # Record the attribution and report details EarningsWatcher provides.
+    out["source_name"] = data.get("cite_as") or out["source_name"]
+    out["source_url"] = data.get("url") or out["source_url"]
+    out["as_of"] = data.get("as_of")
+    out["report_date"] = data.get("next_date")
+    out["session"] = data.get("session")
+
+    # The live number only exists once a report date is confirmed.
+    if data.get("implied_live_pct") is None or not out["report_date"]:
+        out["reason"] = "implied move: no live implied move yet (EarningsWatcher has no confirmed report date)."
+        return out
+
+    # Make sure the implied move is for the same report as our consensus.
+    if report_date is None:
+        out["reason"] = "implied move: our next report date is unknown, so the match cannot be checked."
+        return out
+    if _days_apart(out["report_date"], report_date) > _IMPLIED_DATE_TOLERANCE_DAYS:
+        out["reason"] = (
+            f"implied move: EarningsWatcher's report date {out['report_date']} "
+            f"does not match our next report {report_date}."
+        )
+        return out
+
+    # All checks passed.
+    out["implied_move_pct"] = float(data["implied_live_pct"])
+    return out
+
+
+# ---------------------------------------------------------------------------
 # Smoke test — run with: python -m yoda.tools.consensus [TICKER]
+# Makes live API calls, including one paid Claude web-search call.
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
     t = sys.argv[1].upper() if len(sys.argv) > 1 else "NFLX"
-
-    print(f"Fetching consensus estimates for {t}...")
     c = get_consensus(t)
-    print(f"\n--- get_consensus ---")
-    print(f"Ticker:             {c['ticker']}")
-    print(f"Next earnings date: {c['next_earnings_date']}")
-    print(f"EPS estimate:       {c['eps_estimate']}")
-    print(f"Revenue estimate:   {c['revenue_estimate']}")
-    print(f"Analyst count:      {c['analyst_count']}")
-    print(f"Source:             {c['source']}")
-    print(f"Fetched at:         {c['fetched_at']}")
-
-    print(f"\nFetching basic metrics for {t}...")
-    m = get_basic_metrics(t)
-    print(f"\n--- get_basic_metrics ---")
-    print(f"Ticker:             {m['ticker']}")
-    print(f"Current price:      {m['current_price']}")
-    print(f"Market cap:         {m['market_cap']}")
-    print(f"Trailing EPS:       {m['recent_eps']}")
-    print(f"Source:             {m['source']}")
-    print(f"Fetched at:         {m['fetched_at']}")
+    print(json.dumps(c, indent=2))
+    print(json.dumps(get_basic_metrics(t), indent=2))
+    print(json.dumps(get_implied_move(t, c["next_earnings_date"]), indent=2))
+    print(json.dumps(get_eps_whisper(t, c), indent=2))
