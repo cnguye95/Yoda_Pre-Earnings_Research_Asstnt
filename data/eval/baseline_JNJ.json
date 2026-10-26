@@ -2,119 +2,342 @@
   "ticker": "JNJ",
   "company_name": "Johnson & Johnson",
   "filing_type": "10-Q",
-  "filing_date": "2026-04-14",
+  "filing_date": "2026-10-21",
   "supplemental_filing_type": null,
   "supplemental_filing_date": null,
-  "report_generated_at": "2026-05-12T11:24:56.349803+00:00",
+  "report_generated_at": "2026-10-26T13:22:33.320465+00:00",
   "key_metrics": [
     {
-      "name": "Worldwide Sales",
-      "value": "$24.1 billion",
-      "unit": "USD",
-      "source_citation": "MD&A, Results of operations, paragraph 1"
+      "name": "Q3 2026 sales to customers",
+      "value": "25,399 (+5.9% reported; +6.0% operational; prior year 23,993)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Earnings (fiscal third quarter); Item 2 MD&A, Analysis of consolidated sales"
     },
     {
-      "name": "Operational Growth",
-      "value": "6.4%",
-      "unit": "Percentage",
-      "source_citation": "MD&A, Results of operations, paragraph 1"
+      "name": "Q3 2026 gross profit / gross margin",
+      "value": "17,302 / 68.1% (prior year 16,690 / 69.6%)",
+      "unit": "USD millions / percent of sales",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Earnings (fiscal third quarter)"
     },
     {
-      "name": "Currency Impact",
-      "value": "3.5%",
-      "unit": "Percentage",
-      "source_citation": "MD&A, Results of operations, paragraph 1"
+      "name": "Q3 2026 R&D expense",
+      "value": "4,652 (18.3% of sales; +26.7% YoY), including about 1,000 of acquired IPR&D for Firefly Bio",
+      "unit": "USD millions",
+      "source_citation": "10-Q Item 2 MD&A, Research and development expense; Part I Item 1, Consolidated Statements of Earnings"
     },
     {
-      "name": "U.S. Sales",
-      "value": "$13.3 billion",
-      "unit": "USD",
-      "source_citation": "MD&A, Results of operations, paragraph 2"
+      "name": "Q3 2026 other (income) expense, net",
+      "value": "5,780 expense vs (478) income prior year; includes 5,500 talc ovarian litigation charge",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Earnings; Item 2 MD&A, Other (income) expense, net"
     },
     {
-      "name": "International Sales",
-      "value": "$10.7 billion",
-      "unit": "USD",
-      "source_citation": "MD&A, Results of operations, paragraph 3"
+      "name": "Q3 2026 earnings before provision for taxes",
+      "value": "34 (prior year 7,493)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Earnings (fiscal third quarter)"
+    },
+    {
+      "name": "Q3 2026 net earnings",
+      "value": "210 (prior year 5,152)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Earnings (fiscal third quarter)"
+    },
+    {
+      "name": "Q3 2026 diluted EPS",
+      "value": "0.09 (prior year 2.12)",
+      "unit": "USD per share",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Earnings; Note 8 Earnings per share"
+    },
+    {
+      "name": "Q3 2026 benefit from taxes on income",
+      "value": "(176) benefit vs 2,341 provision prior year",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Earnings (fiscal third quarter); Note 5 Income taxes"
+    },
+    {
+      "name": "Q3 2026 Innovative Medicine segment income before tax",
+      "value": "5,066 (30.2% of segment sales vs 41.4% prior year)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Note 9 Segment income before tax; Item 2 MD&A, Segment income before tax"
+    },
+    {
+      "name": "Q3 2026 MedTech segment income before tax",
+      "value": "776 (9.0% of segment sales vs 15.3% prior year)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Note 9 Segment income before tax; Item 2 MD&A, Segment income before tax"
+    },
+    {
+      "name": "Nine-month 2026 sales to customers",
+      "value": "74,771 (+7.4% reported; +6.0% operational; prior year 69,629)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Earnings (fiscal nine months); Item 2 MD&A, Analysis of consolidated sales"
+    },
+    {
+      "name": "Nine-month 2026 net earnings / diluted EPS",
+      "value": "10,979 / 4.49 (prior year 21,688 / 8.94)",
+      "unit": "USD millions / USD per share",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Earnings (fiscal nine months)"
+    },
+    {
+      "name": "Nine-month 2026 effective tax rate",
+      "value": "14.0% (prior year 21.5%)",
+      "unit": "percent",
+      "source_citation": "10-Q Note 5 Income taxes; Item 2 MD&A, Provision for taxes on income"
+    },
+    {
+      "name": "Nine-month 2026 net cash from operating activities",
+      "value": "18,850 (prior year 17,221)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Cash Flows"
+    },
+    {
+      "name": "Nine-month 2026 capital expenditures",
+      "value": "3,732 (prior year 2,995)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Cash Flows"
+    },
+    {
+      "name": "Cash, cash equivalents and marketable securities",
+      "value": "17,228 (cash and equivalents 16,910; marketable securities 318)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Note 4 Fair value measurements (cash, cash equivalents and current marketable securities table); Consolidated Balance Sheets"
+    },
+    {
+      "name": "Total debt / net debt",
+      "value": "about 44.6B total debt; 27.4B net debt (prior year net debt 27.2B)",
+      "unit": "USD billions",
+      "source_citation": "10-Q Item 2 MD&A, Liquidity and capital resources"
+    },
+    {
+      "name": "Talc-related reserve (present value)",
+      "value": "about 9.0B; roughly half classified as current liability",
+      "unit": "USD billions",
+      "source_citation": "10-Q Note 11 Legal proceedings, Matters concerning talc"
+    },
+    {
+      "name": "Quarterly dividend declared (Oct 13, 2026)",
+      "value": "1.34 per share, payable Dec 8, 2026",
+      "unit": "USD per share",
+      "source_citation": "10-Q Item 2 MD&A, Liquidity and capital resources, Dividends"
+    },
+    {
+      "name": "Q3 2026 share repurchases",
+      "value": "6,543,070 shares at average price of 261.16",
+      "unit": "shares / USD per share",
+      "source_citation": "10-Q Part II Item 2, Unregistered sales of equity securities and use of proceeds"
+    },
+    {
+      "name": "Impact of STELARA decline on Q3 worldwide operational sales growth",
+      "value": "approximately -4.2 percentage points",
+      "unit": "percent",
+      "source_citation": "10-Q Item 2 MD&A, Analysis of consolidated sales (fiscal third quarter)"
     }
   ],
   "revenue_segments": [
     {
-      "name": "Innovative Medicine",
-      "revenue": "$15.4 billion",
-      "yoy_change": "11.2%",
-      "commentary": "Growth driven by oncology and neuroscience, offset by decline in STELARA sales.",
-      "source_citation": "MD&A, Analysis of sales by business segments, paragraph 1"
+      "name": "Innovative Medicine (total)",
+      "revenue": "16,757",
+      "yoy_change": "+7.7% reported (+7.9% operational)",
+      "commentary": "U.S. +11.1%, international +2.4%. STELARA biosimilar erosion reduced segment operational growth by about 6.9 points. Segment income before tax was 30.2% of sales vs 41.4%, mainly due to the Firefly IPR&D charge (~1.0B), the Sail option premium (0.3B) and higher amortization.",
+      "source_citation": "10-Q Note 9 Sales by segment of business; Item 2 MD&A, Innovative Medicine"
+    },
+    {
+      "name": "MedTech (total)",
+      "revenue": "8,642",
+      "yoy_change": "+2.5% reported (+2.5% operational)",
+      "commentary": "U.S. +4.8%, international +0.1%. Segment margin fell to 9.0% from 15.3% on Orthopaedics separation costs (0.4B), the PreCardia IPR&D impairment (0.3B) and unfavorable fair value changes of securities, partly offset by ~0.2B of tariff recoveries.",
+      "source_citation": "10-Q Note 9 Sales by segment of business and Segment income before tax; Item 2 MD&A, MedTech"
+    },
+    {
+      "name": "Innovative Medicine - Oncology",
+      "revenue": "7,602",
+      "yoy_change": "+16.4% (+16.7% operational)",
+      "commentary": "DARZALEX 4,239 (+15.4%), CARVYKTI 710 (+35.5%), TECVAYLI 312 (+76.6%), TALVEY 171 (+40.9%), RYBREVANT/LAZCLUZE 320 (+62.3%), ERLEADA 1,023 (+9.4%); IMBRUVICA 563 (-18.8%) on competitive pressure.",
+      "source_citation": "10-Q Note 9 Sales by segment of business; Item 2 MD&A, Major Innovative Medicine therapeutic area sales (Q3)"
+    },
+    {
+      "name": "Innovative Medicine - Immunology",
+      "revenue": "4,221",
+      "yoy_change": "+1.3% (+1.4% operational)",
+      "commentary": "TREMFYA 2,396 (+68.3%) offset STELARA 716 (-54.4%); SIMPONI/SIMPONI ARIA 568 (-17.3%) and REMICADE 394 (-17.3%) declined. Other Immunology 147 includes IMAAVY and ICOTYDE launches.",
+      "source_citation": "10-Q Note 9 Sales by segment of business; Item 2 MD&A, Immunology commentary"
+    },
+    {
+      "name": "Innovative Medicine - Neuroscience",
+      "revenue": "2,375",
+      "yoy_change": "+17.3% (+17.6% operational)",
+      "commentary": "SPRAVATO 624 (+36.1%), CAPLYTA 398 (+66.1%, adjunctive MDD launch), INVEGA franchise 998 (+7.3%).",
+      "source_citation": "10-Q Note 9 Sales by segment of business; Item 2 MD&A, Neuroscience commentary"
+    },
+    {
+      "name": "Innovative Medicine - Pulmonary Hypertension",
+      "revenue": "897",
+      "yoy_change": "-19.5% (-19.2% operational)",
+      "commentary": "OPSUMIT/OPSYNVI 372 (-35.7%) after U.S. generic entry late in Q2 2026; UPTRAVI 483 (-0.1%). Potential generic entrants in 2027 in U.S. and Europe.",
+      "source_citation": "10-Q Note 9 Sales by segment of business; Item 2 MD&A, Pulmonary Hypertension commentary"
+    },
+    {
+      "name": "Innovative Medicine - Infectious Diseases",
+      "revenue": "813",
+      "yoy_change": "-1.8% (-1.1% operational)",
+      "commentary": "PREZISTA family 381 (-3.8%) on share and market declines; EDURANT 386 (+0.4%).",
+      "source_citation": "10-Q Note 9 Sales by segment of business; Item 2 MD&A, Infectious Diseases commentary"
+    },
+    {
+      "name": "Innovative Medicine - Cardiovascular / Metabolism / Other",
+      "revenue": "849",
+      "yoy_change": "-5.6% (-5.5% operational)",
+      "commentary": "XARELTO 653 (+2.7%); Other 197 (-25.5%). Potential U.S. XARELTO generic entrants in 2027.",
+      "source_citation": "10-Q Note 9 Sales by segment of business; Item 2 MD&A, Cardiovascular / Metabolism / Other commentary"
+    },
+    {
+      "name": "MedTech - Cardiovascular",
+      "revenue": "2,307",
+      "yoy_change": "+4.3% (+4.1% operational)",
+      "commentary": "Electrophysiology 1,487 (+4.9%) with competitive pressure in PFA catheters; Shockwave 325 (+16.8%); Abiomed 412 (-2.3%) on lower patient volumes.",
+      "source_citation": "10-Q Note 9 Sales by segment of business; Item 2 MD&A, MedTech Cardiovascular commentary"
+    },
+    {
+      "name": "MedTech - Surgery",
+      "revenue": "2,528",
+      "yoy_change": "-0.6% (-1.0% operational)",
+      "commentary": "Declines driven by China volume-based procurement, the surgery transformation program, Middle East disruptions and competitive pressure in Endocutters and Energy.",
+      "source_citation": "10-Q Note 9 Sales by segment of business; Item 2 MD&A, MedTech Surgery commentary"
+    },
+    {
+      "name": "MedTech - Vision",
+      "revenue": "1,461",
+      "yoy_change": "+4.4% (+5.1% operational)",
+      "commentary": "Contact Lenses/Other 1,053 (+3.5%) on ACUVUE OASYS 1-Day; Surgical 408 (+6.8%) on premium IOL demand.",
+      "source_citation": "10-Q Note 9 Sales by segment of business; Item 2 MD&A, MedTech Vision commentary"
+    },
+    {
+      "name": "MedTech - Orthopaedics",
+      "revenue": "2,345",
+      "yoy_change": "+3.2% (+3.4% operational)",
+      "commentary": "Growth in Hips, Knees (ATTUNE, VELYS pull-through) and Trauma. Separation of the business is expected to be completed in mid-2027.",
+      "source_citation": "10-Q Note 9 Sales by segment of business; Item 2 MD&A, MedTech Orthopaedics commentary"
     }
   ],
   "forward_guidance": {
-    "text": "Johnson & Johnson raised its full-year forecast for 2026.",
-    "source_citation": "Recent News, \"J&J tops first-quarter profit estimates even as Stelara sales plunge\", CNBC"
+    "text": "The 10-Q contains no quantitative full-year sales or EPS guidance. Qualitative forward-looking items: (1) the Orthopaedics separation is expected to be completed in mid-2027. (2) STELARA biosimilars are expected to keep hurting sales. SIMPONI biosimilars entered Europe in Q2 2026 with a potential U.S. entrant later in 2026. UPTRAVI faces potential U.S. and Europe generic entrants in 2027, OPSUMIT potential Europe generics in 2027, and XARELTO potential U.S. generics in 2027. (3) Intangible amortization for approved products is estimated at about 5.1B for 2026, 4.4B for 2027 and 3.7B for 2028. (4) The Surgery and Orthopaedics restructuring programs complete in fiscal Q4 2026 at about 0.6B and 1.0B total cost. The Innovative Medicine supply chain program runs through 2029 at 0.7B-0.8B. (5) Cash needs include about 9.0B for talc, 3.2B of current corporate bonds, about 2.6B for the Sail option and about 0.9B for opioid settlements. (6) The company expects to continue regular quarterly dividends.",
+    "source_citation": "10-Q Item 2 MD&A (Analysis of consolidated sales; Pulmonary Hypertension, Immunology and CVM commentary; Liquidity and capital resources); Note 3 Intangible assets; Note 9 Segments; Note 12 Restructuring"
   },
   "key_risks": [
     {
-      "description": "Decline in STELARA sales due to biosimilar competition.",
+      "description": "Talc litigation: about 76,500 U.S. plaintiffs remain. The proposed ovarian cancer resolution (5.5B charge) is conditioned on at least 95% claimant participation. The mesothelioma docket is unaffected and ongoing, there is litigation in Canada, and a securities class action (class certified; expert discovery) continues. The total talc reserve is about 9.0B.",
+      "is_new": true,
+      "source_citation": "10-Q Note 11 Legal proceedings, Matters concerning talc; Item 2 MD&A, Liquidity and capital resources"
+    },
+    {
+      "description": "Biosimilar erosion of STELARA, which reduced Q3 worldwide operational growth by about 4.2 points and is expected to continue. SIMPONI biosimilars launched in Europe, with a possible U.S. entrant later in 2026.",
       "is_new": false,
-      "source_citation": "MD&A, Results of operations, paragraph 1"
+      "source_citation": "10-Q Item 2 MD&A, Analysis of consolidated sales and Immunology commentary; Note 11 (SIMPONI litigation)"
+    },
+    {
+      "description": "Generic entry and patent loss. U.S. OPSUMIT/OPSYNVI generics entered late in Q2 2026 (Q3 sales -35.7%). Generics are potentially expected in 2027 for UPTRAVI (U.S./Europe), OPSUMIT (Europe) and XARELTO (U.S.). ERLEADA is subject to ANDA/Canadian challenges and SPRAVATO to ANDA litigation (Sandoz appealing a ruling favorable to J&J).",
+      "is_new": true,
+      "source_citation": "10-Q Item 2 MD&A, Pulmonary Hypertension and Cardiovascular/Metabolism/Other commentary; Note 11 Intellectual property"
+    },
+    {
+      "description": "BIOCAD launched a biosimilar daratumumab product in Russia at risk in September 2026 after withdrawing its unfair-competition claim against Genmab and J&J.",
+      "is_new": true,
+      "source_citation": "10-Q Note 11 Legal proceedings, DARZALEX"
+    },
+    {
+      "description": "Execution risk on the planned Orthopaedics separation (expected mid-2027). The segment incurred 0.4B of separation costs in Q3 and 0.7B year to date.",
+      "is_new": false,
+      "source_citation": "10-Q Cautionary note regarding forward-looking statements; Note 9 Segment income before tax; Item 2 MD&A, MedTech"
+    },
+    {
+      "description": "MedTech margin and growth pressure: China volume-based procurement, Middle East disruptions, competitive pressure in PFA catheters and Endocutters/Energy, and lower Abiomed volumes. Segment margin was 9.0% in Q3 vs 15.3%.",
+      "is_new": false,
+      "source_citation": "10-Q Item 2 MD&A, MedTech franchise commentary and Economic and market factors"
+    },
+    {
+      "description": "U.S. drug pricing and policy: 340B program policy changes, international reference pricing initiatives, voluntary agreements with the U.S. government, and tariff/trade measures.",
+      "is_new": false,
+      "source_citation": "10-Q Item 2 MD&A, Analysis of Innovative Medicine segment (340B) and Economic and market factors"
+    },
+    {
+      "description": "Other litigation: PREZISTA/INTELENCE False Claims Act qui tam (Third Circuit decision pending, mediation ordered), Anti-Terrorism Act suits (a second action filed in September 2026), BWI antitrust injunction under appeal, STELARA antitrust class action, and CARVYKTI patent suit at the Unified Patent Court (hearing March 2027).",
+      "is_new": false,
+      "source_citation": "10-Q Note 11 Legal proceedings (Government proceedings; General litigation; Intellectual property)"
+    },
+    {
+      "description": "Liquidity and funding commitments: about 9.0B talc, 3.2B current bonds, about 2.6B Sail option and 0.9B opioid obligations, against 17.2B cash and 44.6B debt. Net interest was an expense of 136M in nine months vs income of 62M.",
+      "is_new": false,
+      "source_citation": "10-Q Item 2 MD&A, Interest (income) expense and Liquidity and capital resources"
+    },
+    {
+      "description": "Pipeline and acquisition risk: recorded IPR&D impairment (PreCardia, about 0.4B year to date) and about 1.0B expensed for the Firefly Bio acquisition. Purchased IPR&D still carries 13.3B of indefinite-lived intangibles.",
+      "is_new": true,
+      "source_citation": "10-Q Note 3 Intangible assets; Note 10 Acquisitions; Item 2 MD&A, IPR&D impairments"
     }
   ],
-  "recent_news": [
-    {
-      "headline": "Johnson & Johnson (JNJ) Earnings Date and Reports 2026",
-      "date": "",
-      "url": "https://www.marketbeat.com/stocks/NYSE/JNJ/earnings/",
-      "relevance_note": "Provides information on JNJ's earnings report and conference call."
-    },
-    {
-      "headline": "J&J tops first-quarter profit estimates even as Stelara sales plunge",
-      "date": "",
-      "url": "https://www.cnbc.com/2026/04/14/johnson-and-johnson-jnj-earnings-q1-2026.html",
-      "relevance_note": "Highlights J&J's earnings beat and raised forecast despite Stelara sales decline."
-    },
-    {
-      "headline": "J&J (JNJ) Earnings Date & Report - Investing.com",
-      "date": "",
-      "url": "https://www.investing.com/equities/johnson-johnson-earnings",
-      "relevance_note": "Reports on J&J's earnings surprise and stock price change."
-    },
-    {
-      "headline": "Financials - Quarterly results - investor.jnj.com",
-      "date": "",
-      "url": "https://www.investor.jnj.com/financials/quarterly-results/default.aspx",
-      "relevance_note": "Provides access to J&J's financial results and investor information."
-    },
-    {
-      "headline": "Johnson & Johnson reports Q1 2026 results, raises 2026 outlook",
-      "date": "",
-      "url": "https://www.investor.jnj.com/investor-news/news-details/2026/Johnson--Johnson-reports-Q1-2026-results-raises-2026-outlook/default.aspx",
-      "relevance_note": "Announces J&J's Q1 2026 results and updated outlook."
-    }
-  ],
+  "recent_news": [],
   "bull_case": [
-    "Strong performance in oncology and neuroscience segments, particularly with drugs like DARZALEX and SPRAVATO.",
-    "Positive currency impact boosting international sales."
+    "Underlying growth is broad: Q3 operational growth was 6.0% despite a roughly 4.2-point STELARA headwind, and U.S. sales rose 9.1%.",
+    "Oncology (+16.4%) is led by DARZALEX (+15.4%) and fast-growing newer products (CARVYKTI +35.5%, TECVAYLI +76.6%, RYBREVANT/LAZCLUZE +62.3%).",
+    "TREMFYA (+68.3% to 2,396M) is rapidly replacing STELARA revenue, with new immunology launches (IMAAVY, ICOTYDE) adding to growth.",
+    "Neuroscience grew 17.3%, led by SPRAVATO (+36.1%) and CAPLYTA (+66.1%).",
+    "Nine-month operating cash flow was 18.9B (up from 17.2B), comfortably funding 9.6B of dividends and 6.0B of buybacks. The Q3 loss in earnings was driven mainly by non-recurring items (5.5B talc charge, 1.0B Firefly IPR&D, Sail option premium).",
+    "Litigation overhang may shrink: the proposed talc ovarian resolution would clear the largest docket, and SIMPONI and SPRAVATO patent rulings were favorable.",
+    "MedTech Cardiovascular (+4.3%) and Vision (+4.4%) are growing, with Shockwave up 16.8%."
   ],
   "bear_case": [
-    "Significant decline in STELARA sales due to biosimilar competition.",
-    "Potential over-reliance on a few high-performing drugs to offset declines in other areas."
+    "Q3 profitability collapsed: pre-tax earnings were 34M (0.1% of sales) vs 7.5B, EPS was 0.09, and segment income before tax margin fell to 23.0% from 32.2%.",
+    "Gross margin fell to 68.1% from 69.6% on STELARA mix and higher amortization.",
+    "R&D rose 26.7% to 18.3% of sales; acquired IPR&D, restructuring and separation costs keep recurring.",
+    "Multiple 2026-2027 loss-of-exclusivity events (OPSUMIT, UPTRAVI, XARELTO, SIMPONI, STELARA) threaten the PH, CVM and Immunology franchises. PH sales fell 19.5% in Q3.",
+    "MedTech growth is weak (+2.5%; international +0.1%): Surgery is declining, Abiomed volumes are down, and EP faces PFA competition. Segment margin fell to 9.0%.",
+    "The talc settlement is conditional on 95% participation, the mesothelioma docket is open, and the 9.0B reserve plus the Auris judgment payment drain cash; net debt is 27.4B.",
+    "Net interest turned to an expense, and share-based and low-tax items flattered nine-month EPS comparisons.",
+    "Policy risk from 340B changes, international reference pricing and tariffs adds uncertainty to U.S. pricing."
   ],
   "what_to_watch": [
     {
-      "text": "Monitor the impact of biosimilar competition on STELARA and other key drugs.",
-      "relevant_urls": [
-        "https://www.cnbc.com/2026/04/14/johnson-and-johnson-jnj-earnings-q1-2026.html"
-      ]
+      "text": "Progress toward the 95% claimant participation threshold for the talc ovarian settlement, plus any developments in the mesothelioma docket and the Imerys/Cyprus matters.",
+      "relevant_urls": []
     },
     {
-      "text": "Track the performance of new acquisitions like CAPLYTA and their contribution to sales growth.",
-      "relevant_urls": [
-        "https://www.investor.jnj.com/investor-news/news-details/2026/Johnson--Johnson-reports-Q1-2026-results-raises-2026-outlook/default.aspx"
-      ]
+      "text": "Pace of the TREMFYA ramp relative to STELARA erosion, and early sales of ICOTYDE and IMAAVY in Other Immunology.",
+      "relevant_urls": []
+    },
+    {
+      "text": "SIMPONI biosimilar entry timing in the U.S. (preliminary injunction against Accord/Bio-Thera under appeal; Alvotech case pending) and the IPR final written decision expected by September 2027.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Sales trajectory of OPSUMIT after U.S. generic entry, and preparations for 2027 generic entrants in UPTRAVI and XARELTO.",
+      "relevant_urls": []
+    },
+    {
+      "text": "MedTech Surgery (China VBP, Middle East), Abiomed volumes and EP competition from PFA, along with the Orthopaedics separation timeline (mid-2027) and cost run-rate.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Impact of BIOCAD's at-risk biosimilar daratumumab launch in Russia and the outcome of the Canadian ERLEADA (Sandoz) decision.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Exercise decision and cash timing around the Sail Biomedicines option (about 2.6B), plus further business development after Firefly Bio.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Management's full-year 2026 outlook on the Q3 earnings call (the 10-Q does not provide quantitative guidance).",
+      "relevant_urls": []
     }
   ],
   "data_gaps": [
-    "Specific EPS figures for Q1 2026 are not provided in the filing excerpt.",
-    "Detailed breakdown of sales by geographic region in billions is missing."
+    "No quantitative forward guidance (full-year sales, EPS, margin) appears in the 10-Q; the forward guidance entry reflects only qualitative statements and cost estimates.",
+    "No analyst consensus estimates (revenue, EPS) were provided, so beat/miss expectations cannot be assessed.",
+    "No recent news items or press-release/earnings-call material were supplied; recent_news is empty.",
+    "The Item 1A risk factors from the FY2025 10-K were not provided, so risk novelty (is_new) is judged only from this 10-Q's disclosures.",
+    "The Q3 earnings release or non-GAAP adjusted EPS reconciliation was not provided; only GAAP figures are cited.",
+    "Dated figures for the next earnings date and the Q4 2026 quarter-specific outlook are not in the filing.",
+    "Detailed terms of the Sail Biomedicines option exercise date and the opioid settlement payment schedule are not specified beyond the amounts given."
   ],
   "hypotheses_explored": []
 }

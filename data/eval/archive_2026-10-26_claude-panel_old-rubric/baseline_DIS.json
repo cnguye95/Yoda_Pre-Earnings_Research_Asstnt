@@ -1,0 +1,267 @@
+{
+  "ticker": "DIS",
+  "company_name": "The Walt Disney Company",
+  "filing_type": "10-Q",
+  "filing_date": "2026-08-05",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T13:54:25.068848+00:00",
+  "key_metrics": [
+    {
+      "name": "Total revenues (Q3 FY26)",
+      "value": "25,248",
+      "unit": "USD millions (+7% YoY vs 23,650)",
+      "source_citation": "10-Q Part I Item 1, Condensed Consolidated Statements of Income; Item 2 MD&A Consolidated Results"
+    },
+    {
+      "name": "Net income attributable to Disney (Q3 FY26)",
+      "value": "2,638",
+      "unit": "USD millions (vs 5,262 prior year; prior year included a $3,277M non-cash Hulu tax benefit)",
+      "source_citation": "10-Q Part I Item 1, Statements of Income; Item 2 MD&A Current Quarter Results"
+    },
+    {
+      "name": "Diluted EPS attributable to Disney (Q3 FY26)",
+      "value": "1.51",
+      "unit": "USD per share (vs 2.92 prior year)",
+      "source_citation": "10-Q Part I Item 1, Statements of Income"
+    },
+    {
+      "name": "Items impacting EPS (Q3 FY26)",
+      "value": "(0.55)",
+      "unit": "USD per share (restructuring/impairment (0.41), Acquisition Amortization (0.13)); prior-year quarter was +1.31",
+      "source_citation": "10-Q Item 2 MD&A, Certain Items Impacting Results in the Quarter"
+    },
+    {
+      "name": "Total segment operating income (Q3 FY26)",
+      "value": "5,555",
+      "unit": "USD millions (vs 4,575 prior year)",
+      "source_citation": "10-Q Part I Item 1, Note 2 Segment Information"
+    },
+    {
+      "name": "Restructuring and impairment charges (Q3 FY26)",
+      "value": "900",
+      "unit": "USD millions (812 A+E investment impairment, 88 severance)",
+      "source_citation": "10-Q Item 2 MD&A, Restructuring and impairment charges; Note 15"
+    },
+    {
+      "name": "Effective income tax rate (Q3 FY26)",
+      "value": "22.0",
+      "unit": "percent (vs -85.1% prior year)",
+      "source_citation": "10-Q Item 2 MD&A, Income Taxes"
+    },
+    {
+      "name": "Interest expense, net (Q3 FY26)",
+      "value": "298",
+      "unit": "USD millions (vs 324 prior year)",
+      "source_citation": "10-Q Item 2 MD&A, Interest expense, net"
+    },
+    {
+      "name": "Cash provided by operations (9M FY26)",
+      "value": "12,515",
+      "unit": "USD millions (vs 13,627 prior year)",
+      "source_citation": "10-Q Part I Item 1, Statements of Cash Flows; Item 2 MD&A Financial Condition"
+    },
+    {
+      "name": "Investments in parks, resorts and other property (9M FY26)",
+      "value": "6,780",
+      "unit": "USD millions (vs 6,108 prior year)",
+      "source_citation": "10-Q Item 2 MD&A, Investing Activities"
+    },
+    {
+      "name": "Share repurchases (9M FY26)",
+      "value": "7,245",
+      "unit": "USD millions (68 million shares; Q3: 17 million shares, ~$1.7B)",
+      "source_citation": "10-Q Part I Item 1, Note 10 Equity; Statements of Cash Flows"
+    },
+    {
+      "name": "Remaining repurchase authorization",
+      "value": "271",
+      "unit": "million shares",
+      "source_citation": "10-Q Part II Item 2, Unregistered Sales of Equity Securities and Use of Proceeds"
+    },
+    {
+      "name": "Quarterly dividend declared",
+      "value": "0.75",
+      "unit": "USD per share (~$1.3B, paid July 22, 2026; vs $0.50 a year earlier)",
+      "source_citation": "10-Q Part I Item 1, Note 10 Equity"
+    },
+    {
+      "name": "Cash and cash equivalents (June 27, 2026)",
+      "value": "5,185",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I Item 1, Condensed Consolidated Balance Sheets"
+    },
+    {
+      "name": "Total borrowings (June 27, 2026)",
+      "value": "46,041",
+      "unit": "USD millions (current portion 8,627; unused bank facilities 12,250)",
+      "source_citation": "10-Q Part I Item 1, Note 5 Borrowings; Balance Sheets"
+    },
+    {
+      "name": "Remaining performance obligations",
+      "value": "16",
+      "unit": "USD billions (~2 remainder FY26, 6 FY27, 4 FY28, 4 thereafter)",
+      "source_citation": "10-Q Part I Item 1, Note 3 Revenues"
+    },
+    {
+      "name": "Global guests growth (Q3 FY26)",
+      "value": "4",
+      "unit": "percent (domestic park attendance +3%, domestic per capita spending +4%)",
+      "source_citation": "10-Q Item 2 MD&A, Experiences Key Metrics"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "Entertainment",
+      "revenue": "11,345 USD millions (Q3 FY26); segment operating income 1,680",
+      "yoy_change": "Revenue +6%; operating income +64%",
+      "commentary": "Subscription and affiliate fees were 7,545 (+12%: Fubo +4%, rates +3%, subscribers +3%, FX +1%). Advertising was 1,625 (-1%, rates -4%). Content sales were 1,596 (-6%). Operating income benefited from lower marketing costs and lower film impairments. A+E impairment of $812M is excluded from segment operating income.",
+      "source_citation": "10-Q Item 2 MD&A, Business Segment Results – Entertainment; Note 2"
+    },
+    {
+      "name": "Sports",
+      "revenue": "4,500 USD millions (Q3 FY26); segment operating income 858",
+      "yoy_change": "Revenue +4%; operating income -17%",
+      "commentary": "Subscription and affiliate fees were 3,142 (+8%: rates +5%, NFL Transaction +4%). Advertising was 1,204 (+5%). Other revenue fell 41% on the absence of UFC pay-per-view. Programming costs rose 10% on rate increases, new rights and a shift of NBA rights costs from the first half into Q3.",
+      "source_citation": "10-Q Item 2 MD&A, Business Segment Results – Sports; Note 2"
+    },
+    {
+      "name": "Experiences",
+      "revenue": "9,968 USD millions (Q3 FY26); segment operating income 3,017",
+      "yoy_change": "Revenue +10%; operating income +20%",
+      "commentary": "Theme park admissions were 3,253 (+9%: per capita ticket revenue +5%, attendance +3%). Resorts and vacations were 2,766 (+17%, cruise days +10% from Disney Destiny and Disney Adventure launches). Domestic Parks & Experiences operating income rose 27%; International fell 13%; Consumer Products rose 26%. Tariff refunds helped cost of goods sold.",
+      "source_citation": "10-Q Item 2 MD&A, Business Segment Results – Experiences; Supplemental revenue and operating income"
+    },
+    {
+      "name": "Eliminations",
+      "revenue": "(565) USD millions (Q3 FY26)",
+      "yoy_change": "Eliminations grew 26% (from (448))",
+      "commentary": "Increase reflects the Fubo and NFL Transactions (carriage fees paid by vMVPD services to networks, and Entertainment-to-Sports programming fees).",
+      "source_citation": "10-Q Item 2 MD&A, Business Segment Results, footnote 1 to the segment revenue table"
+    }
+  ],
+  "forward_guidance": {
+    "text": "Management expects fiscal 2026 spend on produced and licensed content, including sports rights, of about $24B (vs $23B in fiscal 2025) and capital expenditures of about $9B (vs $8B), driven by Experiences expansion and new attractions, partly offset by lower cruise fleet spending. The company targets at least $9B of share repurchases in fiscal 2026 ($7.2B done through nine months). The sale of its 50% A+E interest to a Hearst affiliate for ~$1.2B cash is expected to close by the end of fiscal 2026. Much of Consumer Products will move into the Entertainment segment starting with fiscal 2027 reporting. About $2B of contracted performance-obligation revenue is expected in the remainder of fiscal 2026. The 10-Q gives no quantitative revenue, EPS or segment operating income guidance for Q4 or the full year.",
+    "source_citation": "10-Q Item 2 MD&A, Financial Condition (Produced and licensed programming costs, Investing Activities, Financing Activities); Note 17 Subsequent Events; Note 2 Segment Information; Note 3 Revenues"
+  },
+  "key_risks": [
+    {
+      "description": "Carriage and programming contract renewal risk. NFL Network and NFL RedZone were removed from Comcast Xfinity in Q3 FY26 and not reinstated. Disney channels were temporarily dropped from YouTube TV in Q1 FY26. Further renewals for contracts expiring in fiscal 2026 could cause blackouts, and rights costs keep rising.",
+      "is_new": true,
+      "source_citation": "10-Q Part II Item 1A, Risk Factors – renewal of long-term programming or distribution contracts"
+    },
+    {
+      "description": "The FCC ordered early license renewal applications for all Disney-owned television stations in April 2026. The company filed on May 28, 2026 and an FCC response is pending and could adversely impact the company.",
+      "is_new": true,
+      "source_citation": "10-Q Part II Item 1A, Risk Factors – Regulations applicable to our businesses"
+    },
+    {
+      "description": "Securities class action over Disney+ costs and subscriber growth, with trial set for November 16, 2027. Related Union Asset action (stayed) and about ten derivative suits. Loss cannot be reasonably estimated.",
+      "is_new": false,
+      "source_citation": "10-Q Part I Item 1, Note 12 Commitments and Contingencies – Securities Actions and Derivative Actions"
+    },
+    {
+      "description": "Antitrust exposure tied to carriage and bundling practices, the Fubo acquisition and ESPN bundles: Biddle/Fendelander settlement awaiting final approval (motion due Oct 27, 2026, hearing Jan 14, 2027); Unger action pending, with plaintiffs seeking divestiture of Fubo/Hulu interests; DISH counterclaims (stayed pending DISH bankruptcy).",
+      "is_new": false,
+      "source_citation": "10-Q Part I Item 1, Note 12 – Antitrust and Other Actions"
+    },
+    {
+      "description": "Tariffs and trade policy could raise costs or hurt demand. Q3 Experiences cost of goods benefited from tariff refunds, which may not recur.",
+      "is_new": false,
+      "source_citation": "10-Q Part II Item 1A, Risk Factors – Regulations; Item 2 MD&A, Experiences operating expenses"
+    },
+    {
+      "description": "Leverage and refinancing: borrowings of $46.0B, including $8.6B current and $4.4B commercial paper. Share repurchases ($7.2B) and capex ($6.8B) in nine months were funded partly by debt, with a net increase of $3.7B in borrowings.",
+      "is_new": false,
+      "source_citation": "10-Q Part I Item 1, Note 5 Borrowings; Item 2 MD&A, Financing Activities"
+    },
+    {
+      "description": "Investment impairments: $959M of A+E impairments over nine months, with the stake being sold for ~$1.2B. Equity investee income is also pressured by lower A+E advertising.",
+      "is_new": true,
+      "source_citation": "10-Q Note 15 Restructuring and Impairment Charges; Note 17 Subsequent Events"
+    },
+    {
+      "description": "IP and AI risks: expiring copyrights (e.g., Steamboat Willie), unauthorized use of IP including via AI tools, patent claims against streaming services, and uncertain legal frameworks for generative AI.",
+      "is_new": false,
+      "source_citation": "10-Q Part II Item 1A, Risk Factors – intellectual property"
+    },
+    {
+      "description": "Seasonality and event risk: hurricane park closures during peak summer season or sports league work stoppages could have a disproportionate effect on annual results.",
+      "is_new": false,
+      "source_citation": "10-Q Part II Item 1A, Risk Factors – seasonality; Item 2 MD&A Seasonality"
+    }
+  ],
+  "recent_news": [],
+  "bull_case": [
+    "Experiences is accelerating: Q3 revenue +10% and operating income +20% ($3,017M), with domestic Parks & Experiences operating income +27% and hotel occupancy at 91%. Growth is supported by pricing, volume and new cruise ships (Destiny, Adventure).",
+    "Entertainment operating income rose 64% to $1,680M, driven by subscription and affiliate fees +12% (more subscribers, higher effective rates) and lower marketing costs.",
+    "Capital return is strong: dividend raised to $0.75 per quarter from $0.50, $7.2B of buybacks in nine months against a target of at least $9B, and diluted share count down to 1,743M from 1,805M.",
+    "Cost discipline and portfolio pruning: SG&A fell 4% in Q3, corporate expense fell 19%, and the pending ~$1.2B sale of A+E exits an impaired asset.",
+    "Contracted visibility: $16B of remaining performance obligations, and the NFL Network/RedZone and Fubo deals broaden ESPN and live TV reach."
+  ],
+  "bear_case": [
+    "Sports operating income fell 17% in Q3 (14% over nine months) as programming costs rose 10%, with costs shifted into Q3 by the NBA renewal. Further rights-cost inflation and subscriber losses (-3% over nine months) pressure margins.",
+    "Advertising is soft: Entertainment advertising -1% in Q3 (rates -4%), and content sales -6% on TV/VOD and home entertainment declines.",
+    "Reported EPS fell 48% to $1.51 on a tough comparison with a $3.3B tax benefit. Restructuring and impairment charges of $900M and amortization cut EPS by $0.55 in Q3.",
+    "Operating cash flow fell 8% over nine months to $12.5B while capex rose to about $9B for FY26, and buybacks were partly debt-funded. Borrowings are $46.0B, with $8.6B current.",
+    "Legal and regulatory overhang: securities class action trial set for November 2027, antitrust suits over bundling and the Fubo deal, DISH counterclaims, the FCC early license renewal order, and the Comcast NFL Network blackout.",
+    "International Parks & Experiences operating income fell 13% in Q3, and Q3 Experiences costs were helped by tariff refunds that may not repeat."
+  ],
+  "what_to_watch": [
+    {
+      "text": "Fiscal Q4 (quarter ended Oct 3, 2026) results: the 10-Q gives no formal Q4 or full-year EPS or segment guidance, so compare against management commentary on the call.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Experiences momentum: whether per capita spending, cruise days and hotel occupancy hold into the fall quarter, and whether domestic attendance growth (+3% in Q3) continues.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Sports profitability: normalization of NBA rights-cost timing, effects of the Xfinity NFL Network blackout, and rates versus subscriber losses.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Entertainment: advertising rates (-4% in Q3), streaming operating trends, and the fiscal 2027 move of Consumer Products into Entertainment reporting.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Capital return and balance sheet: progress toward the at-least-$9B buyback target ($7.2B done through nine months), the A+E sale closing (~$1.2B expected by fiscal year end), and refinancing of current borrowings.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Legal and regulatory: the Oct 27, 2026 final-approval filing in the Biddle/Fendelander settlement, the Unger arbitration ruling, DISH bankruptcy developments, and any FCC response on early license renewals.",
+      "relevant_urls": []
+    }
+  ],
+  "data_gaps": [
+    "No recent news items were supplied or retrieved, so recent_news is empty; no press coverage, analyst commentary or post-August 5, 2026 events (including any earnings date announcement) are reflected.",
+    "The 10-Q contains no consensus estimates, so expectations for fiscal Q4 revenue and EPS cannot be benchmarked.",
+    "The 10-Q gives no quantitative Q4 or full-year revenue, EPS or segment operating income guidance; only content spend, capex and buyback targets are provided.",
+    "Streaming metrics (subscribers, ARPU, DTC operating income) are not disclosed in this 10-Q, so streaming profitability cannot be assessed separately within Entertainment.",
+    "The 2025 Form 10-K and prior 10-Qs were not provided, so is_new flags on risks are inferred from the 10-Q risk factor update language and specific Q3 events and cannot be verified against prior filings.",
+    "Fiscal Q4 results (quarter ended Oct 3, 2026) were not in the provided filings; as of the report timestamp, Q4 actuals were not available for comparison."
+  ],
+  "hypotheses_explored": [
+    {
+      "id": "H1",
+      "proposing_personality": "Segment analyst",
+      "question": "Is Experiences strength sustainable enough to offset Sports margin pressure?",
+      "summary": "Experiences added $501M of operating income YoY in Q3 versus a $179M decline in Sports. Experiences growth is volume-led (guests +4%) with pricing support, but includes tariff-refund tailwinds and a fleet expansion that raises depreciation (+15% in segment D&A). Sports decline was partly timing-related (NBA cost shift into Q3).",
+      "evidence_quotes": [
+        "Segment operating income increased $501 million, to $3,017 million from $2,516 million, due to higher revenues at Parks & Experiences and, to a lesser extent, Consumer Products, partially offset by higher costs.",
+        "The NBA contract renewal resulted in a shift of costs from the first half of the year to the third quarter."
+      ],
+      "confidence": 65
+    },
+    {
+      "id": "H2",
+      "proposing_personality": "Quality-of-earnings skeptic",
+      "question": "How much of the YoY EPS decline is non-recurring versus operational?",
+      "summary": "Prior-year EPS of $2.92 included a $1.56 benefit from the Hulu tax reclassification. Excluding that and other items, the comparison is far less negative; Q3 FY26 items were a $0.55 headwind versus a net +$1.31 benefit last year. Underlying operating income rose 21% (segment OI $5,555M vs $4,575M).",
+      "evidence_quotes": [
+        "The net income and EPS decreases reflected the comparison to a non-cash tax benefit recognized upon a change in Hulu's U.S. income tax classification in the prior-year quarter and, to a lesser extent, an impairment of our investment in A+E in the current quarter."
+      ],
+      "confidence": 80
+    }
+  ]
+}

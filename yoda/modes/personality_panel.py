@@ -2,14 +2,15 @@
 
 run_personality_panel() is the top-level mode for the Streamlit UI. The design:
 
-  Phase 1 — Ingest:         fetch + chunk + embed + upsert the primary filing.
+  Phase 1 — Ingest:         fetch + chunk the filing; embed only if not stored yet.
   Phase 2 — Investigations: 6 personalities (Optimist, Pessimist, Conservative,
                             Dreamer, Contrarian, Quant) each run a tool-use
-                            loop in parallel using gpt-4o-mini. Each emits
+                            loop in parallel using LOOP_MODEL. Each emits
                             1-2 hypotheses with self-rated confidence.
   Phase 3 — Cross-critique: each personality reads peers' hypotheses and emits
-                            typed messages (SUPPORTS, CHALLENGES, EXTENDS).
-  Phase 4 — Synthesis:      gpt-4o produces the final EarningsReport using the
+                            typed messages (SUPPORTS, CHALLENGES, EXTENDS)
+                            using CRITIQUE_MODEL.
+  Phase 4 — Synthesis:      SYNTH_MODEL produces the final EarningsReport using the
                             filtered hypothesis set + critique messages + the
                             full pool of news data.
 
@@ -26,30 +27,22 @@ import pathlib
 import re
 import time
 import traceback
-from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeout
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 
-from openai import (
-    OpenAI,
-    APIConnectionError,
-    APITimeoutError,
-    InternalServerError,
-    RateLimitError,
-)
+from anthropic import Anthropic
 from pydantic import BaseModel
 
 from yoda import config
 from yoda.ingest.edgar import fetch_latest_filing
 from yoda.ingest.chunker import chunk_filing, Chunk
 from yoda.modes.baseline import _validate_citations
-from yoda.modes.rag_llm import _chunk_heading
 from yoda.modes.tools import (
     ToolContext,
     TOOL_SCHEMAS,
     TOOL_DISPATCH,
     normalize_call,
 )
-from yoda.retrieval.embeddings import embed_texts
 from yoda.retrieval.vector_store import ChromaStore
 from yoda.schema import (
     EarningsReport,
@@ -63,16 +56,23 @@ from yoda.schema import (
 # Constants — models, pricing, mode caps
 # ---------------------------------------------------------------------------
 
-# gpt-4o-mini handles personality loops + critique; gpt-4o handles final synthesis.
-GPT4O_MODEL      = "gpt-4o"
-GPT4O_MINI_MODEL = "gpt-4o-mini"
+# Which Claude model runs each phase. Chosen from a 3-combination spot check
+# (AAPL/JPM/XOM, 2026-10-26): a Sonnet critique scored slightly higher on
+# accuracy/usefulness than all-Haiku for ~$0.13 more per report, while
+# all-Sonnet cost 3.4x as much for no gain.
+SYNTH_MODEL    = "claude-sonnet-5-5"   # Phase 4 final report
+LOOP_MODEL     = "claude-haiku-5-5"    # Phase 2 personality tool loops
+CRITIQUE_MODEL = "claude-sonnet-5-5"   # Phase 3 cross-critique
 
-# Pricing (USD per 1K tokens) as of 2026-05-11.
-GPT4O_INPUT_COST_PER_1K       = 0.0025
-GPT4O_OUTPUT_COST_PER_1K      = 0.01
-GPT4O_MINI_INPUT_COST_PER_1K  = 0.00015
-GPT4O_MINI_OUTPUT_COST_PER_1K = 0.0006
-EMBEDDING_COST_PER_1K         = 0.00002
+# Claude prices live in config.MODEL_COST_PER_1K (shared with the baseline).
+# OpenAI text-embedding-3-small price, USD per 1K tokens.
+EMBEDDING_COST_PER_1K = 0.00002
+
+# Output-token ceilings. Both models think before answering and thinking
+# counts toward max_tokens, so these leave room above the visible output.
+# Synthesis needs the most: the full report JSON (~8K tokens) plus thinking.
+_LOOP_MAX_TOKENS  = 8000
+_SYNTH_MAX_TOKENS = 64000
 
 # Per-personality iteration and wall-clock caps for the panel.
 _CAPS = {"max_iterations": 6, "wall_timeout_seconds": 45, "do_critique": True}
@@ -184,67 +184,70 @@ class _PersonalityCritiqueOutput(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Module-level OpenAI client (one per process, reused across personalities)
+# Module-level Anthropic client (one per process, reused across personalities)
 # ---------------------------------------------------------------------------
 
-_client = OpenAI(api_key=config.OPENAI_API_KEY)
-
-
-# ---------------------------------------------------------------------------
-# Cost helpers
-# ---------------------------------------------------------------------------
-
-def _mini_cost(prompt_tokens: int, completion_tokens: int) -> float:
-    # Compute gpt-4o-mini call cost in USD.
-    return (prompt_tokens  / 1000) * GPT4O_MINI_INPUT_COST_PER_1K \
-         + (completion_tokens / 1000) * GPT4O_MINI_OUTPUT_COST_PER_1K
-
-
-def _gpt4o_cost(prompt_tokens: int, completion_tokens: int) -> float:
-    # Compute gpt-4o call cost in USD.
-    return (prompt_tokens  / 1000) * GPT4O_INPUT_COST_PER_1K \
-         + (completion_tokens / 1000) * GPT4O_OUTPUT_COST_PER_1K
+# max_retries=3: the SDK itself retries rate-limit (429), server (5xx),
+# timeout, and connection errors with exponential backoff — important under
+# 6-way parallelism. Auth and bad-input errors fail immediately.
+_client = Anthropic(api_key=config.ANTHROPIC_API_KEY, max_retries=3)
 
 
 # ---------------------------------------------------------------------------
-# Retry wrapper for OpenAI API calls
+# Structured-output helper
 # ---------------------------------------------------------------------------
 
-# The four exception classes worth retrying. Anything else (auth, bad input,
-# refusal) should fail loud because retrying won't help.
-_RETRY_EXCEPTIONS = (
-    RateLimitError,
-    APIConnectionError,
-    APITimeoutError,
-    InternalServerError,
-)
+def _parse(model: str, max_tokens: int, output_format, **kwargs):
+    """Make one structured-output call and return (parsed, input_tokens, output_tokens).
 
-
-def _with_retry(fn, *args, max_attempts: int = 3, **kwargs):
-    """Run an OpenAI call with exponential backoff on transient errors.
-
-    Retries only the four canonical transient exception classes — rate-limit,
-    connection, timeout, server-side internal errors. Auth failures and bad
-    input bubble up immediately since retrying won't fix them.
-
-    Delays: 2s, 4s (between attempts 1->2 and 2->3). Total worst-case wait
-    on a fully exhausted retry budget: 6s.
+    The reply is validated against the Pydantic model in *output_format*.
+    It streams because the SDK refuses non-streaming calls with a max_tokens
+    as large as synthesis needs; get_final_message() waits for the whole
+    reply. If the model stopped early (refusal or hitting max_tokens) there
+    is no valid object, so raise with the stop reason instead of returning None.
     """
-    delay = 2.0
-    for attempt in range(1, max_attempts + 1):
-        try:
-            return fn(*args, **kwargs)
-        except _RETRY_EXCEPTIONS as exc:
-            if attempt == max_attempts:
-                # Final attempt failed — let the caller see the real exception.
-                raise
-            time.sleep(delay)
-            delay *= 2
+    with _client.messages.stream(
+        model=model, max_tokens=max_tokens, output_format=output_format, **kwargs,
+    ) as stream:
+        resp = stream.get_final_message()
+    if resp.parsed_output is None:
+        raise RuntimeError(f"{model} returned no structured output (stop_reason={resp.stop_reason})")
+    return resp.parsed_output, resp.usage.input_tokens, resp.usage.output_tokens
 
 
 # ---------------------------------------------------------------------------
 # Helpers — render tool results for the model
 # ---------------------------------------------------------------------------
+
+def _chunk_heading(chunk) -> str:
+    # Extract the first line that looks like a heading from the chunk text.
+    # A heading is short (<=80 chars), starts with an uppercase letter or
+    # digit, and does not look like a wrapped sentence tail. This avoids
+    # garbage like "inancial instruments" or "r working capital balances"
+    # that originate from mid-word splits across chunk boundaries (the
+    # chunker uses a 1500-char window with 200-char overlap).
+    for line in chunk.text.splitlines():
+        stripped = line.strip()
+        # Skip empty or too-long lines.
+        if not stripped or len(stripped) > 80:
+            continue
+        # Reject lines that don't start with a capital or digit -- typical
+        # heading-vs-prose tell.
+        if not (stripped[0].isupper() or stripped[0].isdigit()):
+            continue
+        # Reject lines that look like a wrapped sentence tail: >=3 words,
+        # no terminal punctuation, last word lowercase.
+        words = stripped.split()
+        if (
+            len(words) >= 3
+            and stripped[-1] not in ".:!?)]"
+            and words[-1].islower()
+        ):
+            continue
+        return stripped
+    # Fall back to the section label if no clean heading line is found.
+    return chunk.section
+
 
 def _render_chunks(chunks: list[Chunk]) -> str:
     # Format a list of Chunk objects as a string the model can read, with
@@ -283,6 +286,7 @@ def _run_personality(
     ticker: str,
     ctx: ToolContext,
     max_iterations: int,
+    wall_timeout_seconds: float,
     log_prefix: str,
 ) -> PersonalityResult:
     """Run one personality's tool-use loop and return its PersonalityResult.
@@ -291,8 +295,10 @@ def _run_personality(
     state directly, but tools called inside the loop will mutate shared state
     (ChromaStore reads, news_pool appends) — that's intentional.
 
-    Hedges 1, 3, 4, and 6 fire inside this function:
+    Hedges 1, 2, 3, 4, and 6 fire inside this function:
       - max_iterations cap (hedge 1)
+      - wall-clock cap (hedge 2): once wall_timeout_seconds pass, no more
+        tool calls — the personality wraps up with the evidence it has
       - repetition detector (hedge 3)
       - empty-result short-circuit (hedge 4)
       - termination-rewarding system prompt (hedge 6)
@@ -309,10 +315,7 @@ def _run_personality(
         f"Begin by calling whichever tool will surface the most decision-"
         f"relevant evidence first."
     )
-    messages = [
-        {"role": "system", "content": system},
-        {"role": "user",   "content": user},
-    ]
+    messages = [{"role": "user", "content": user}]
 
     # Running counters used in the final PersonalityResult.
     tool_calls_used = 0
@@ -320,64 +323,53 @@ def _run_personality(
     seen_calls: set[str] = set()   # repetition detector store
     started = time.perf_counter()
 
-    # Tool-use loop. Each iteration is one chat.completions call.
+    # Tool-use loop. Each iteration is one messages.create call.
     for iteration in range(1, max_iterations + 2):  # +1 to leave room for "natural finish"
-        # Hedge 1 — hard iteration cap on tool calls. The +1 above lets the
-        # model emit a final FINISH message after using all its tool budget.
-        if tool_calls_used >= max_iterations:
+        # Hedges 1 + 2 — stop tool use once the tool-call budget OR the
+        # wall-clock time is used up. The +1 in the range above lets the
+        # model emit a final FINISH message after that.
+        out_of_time = time.perf_counter() - started >= wall_timeout_seconds
+        must_finish = tool_calls_used >= max_iterations or out_of_time
+        if must_finish:
+            if out_of_time:
+                print(f"{log_prefix} [{personality}] iter {iteration}: time cap reached, finishing")
             messages.append({
                 "role": "user",
-                "content": "You have used your full tool-call budget. Finalize your hypothesis now without further tool calls.",
+                "content": "You have used your full tool-call budget or time. Finalize your hypothesis now without further tool calls.",
             })
 
-        # OpenAI function-calling round-trip. tool_choice="auto" lets the
-        # model decide between calling a tool and producing a text answer.
-        # Wrapped with _with_retry so transient rate-limit / timeout failures
-        # under 6-way parallelism don't kill the personality outright.
-        response = _with_retry(
-            _client.chat.completions.create,
-            model=GPT4O_MINI_MODEL,
+        # Claude tool-use round-trip. tool_choice "auto" lets the model decide
+        # between calling a tool and answering; "none" once it must finish.
+        response = _client.messages.create(
+            model=LOOP_MODEL,
+            max_tokens=_LOOP_MAX_TOKENS,
+            system=system,
             messages=messages,
             tools=TOOL_SCHEMAS,
-            tool_choice="auto" if tool_calls_used < max_iterations else "none",
-            temperature=0.5,   # personality framing wants a bit of variability
+            tool_choice={"type": "none" if must_finish else "auto"},
         )
-        msg = response.choices[0].message
-        total_in  += response.usage.prompt_tokens
-        total_out += response.usage.completion_tokens
+        total_in  += response.usage.input_tokens
+        total_out += response.usage.output_tokens
+        tool_uses = [b for b in response.content if b.type == "tool_use"]
 
         # If the model didn't request a tool, it's emitting a final answer —
         # exit the loop and let the wrap-up step extract hypotheses.
-        if not msg.tool_calls:
+        if not tool_uses:
             print(f"{log_prefix} [{personality}] iter {iteration}: FINISH (no tool call)")
             break
 
-        # Record the assistant's tool-call message in the thread.
-        messages.append({
-            "role": "assistant",
-            "content": msg.content,
-            "tool_calls": [
-                {
-                    "id": tc.id,
-                    "type": "function",
-                    "function": {
-                        "name": tc.function.name,
-                        "arguments": tc.function.arguments,
-                    },
-                } for tc in msg.tool_calls
-            ],
-        })
+        # Record the assistant's full reply (thinking + text + tool_use blocks)
+        # in the thread — Claude needs its own tool_use blocks to match results.
+        messages.append({"role": "assistant", "content": response.content})
 
-        # Execute each tool call and append the result as a tool-role message.
-        # We process tool_calls sequentially — they're independent in practice
+        # Execute each tool call; all results go back together in one user
+        # message. We run them sequentially — they're independent in practice
         # but parallelizing them would require more bookkeeping for no gain.
-        for tc in msg.tool_calls:
+        tool_results = []
+        for tu in tool_uses:
             tool_calls_used += 1
-            tool_name = tc.function.name
-            try:
-                args = json.loads(tc.function.arguments)
-            except json.JSONDecodeError:
-                args = {}
+            tool_name = tu.name
+            args = tu.input if isinstance(tu.input, dict) else {}
 
             # Hedge 3 — repetition detector. If we've already executed this
             # exact tool+query, return a synthetic observation that nudges
@@ -396,6 +388,9 @@ def _run_personality(
                 obs = f"Unknown tool '{tool_name}'. Choose one of: {list(TOOL_DISPATCH.keys())}."
             else:
                 seen_calls.add(call_key)
+                # raw stays None if the tool raises, so the log line below
+                # reports "failed" instead of crashing the personality.
+                raw = None
                 try:
                     raw = TOOL_DISPATCH[tool_name](ctx, **args)
                 except Exception as exc:
@@ -414,16 +409,18 @@ def _run_personality(
                         obs = str(raw)
                 print(f"{log_prefix} [{personality}] iter {iteration}: "
                       f"{tool_name}({args.get('query', args.get('peer_ticker', ''))[:60]!r}) "
-                      f"-> {len(raw) if isinstance(raw, list) else '?'} results")
+                      f"-> {'failed' if raw is None else len(raw) if isinstance(raw, list) else '?'}")
 
-            messages.append({
-                "role": "tool",
-                "tool_call_id": tc.id,
+            tool_results.append({
+                "type": "tool_result",
+                "tool_use_id": tu.id,
                 "content": obs,
             })
 
+        messages.append({"role": "user", "content": tool_results})
+
     # Wrap-up call: ask the personality to produce 1-2 hypothesis drafts.
-    # This is a separate chat.completions call with structured output.
+    # This is a separate structured-output call on the same thread.
     wrap_user = (
         "Based on the evidence you've gathered, produce 1-2 hypotheses for "
         "the analyst. Each hypothesis MUST include direct quotes from your "
@@ -434,23 +431,26 @@ def _run_personality(
     )
     messages.append({"role": "user", "content": wrap_user})
 
+    # The thread contains tool_use blocks, so the API requires `tools` on every
+    # later call; tool_choice "none" keeps the wrap-up from calling another tool.
+    wrap_kwargs = dict(
+        system=system, tools=TOOL_SCHEMAS, tool_choice={"type": "none"},
+    )
+
     # Wrap-up call is isolated in its own try/except so a failure here (e.g.,
-    # LengthFinishReasonError on a long message thread) doesn't lose the
+    # running out of max_tokens on a long message thread) doesn't lose the
     # evidence we already gathered in the loop above. On failure we proceed
     # with an empty drafts list, which marks the personality not-clean but
     # keeps the orchestrator going.
     drafts = []
     try:
-        wrap_resp = _with_retry(
-            _client.beta.chat.completions.parse,
-            model=GPT4O_MINI_MODEL,
-            messages=messages,
-            response_format=_PersonalityFinalOutput,
-            temperature=0.5,
+        parsed, pi, po = _parse(
+            LOOP_MODEL, _LOOP_MAX_TOKENS, _PersonalityFinalOutput,
+            messages=messages, **wrap_kwargs,
         )
-        total_in  += wrap_resp.usage.prompt_tokens
-        total_out += wrap_resp.usage.completion_tokens
-        drafts = wrap_resp.choices[0].message.parsed.hypotheses or []
+        total_in  += pi
+        total_out += po
+        drafts = parsed.hypotheses or []
     except Exception as exc:
         print(f"{log_prefix} [{personality}] wrap-up failed: "
               f"{type(exc).__name__}: {exc!r}")
@@ -468,20 +468,17 @@ def _run_personality(
             ),
         })
         try:
-            retry_resp = _with_retry(
-                _client.beta.chat.completions.parse,
-                model=GPT4O_MINI_MODEL,
-                messages=messages,
-                response_format=_PersonalityFinalOutput,
-                temperature=0.5,
+            parsed, pi, po = _parse(
+                LOOP_MODEL, _LOOP_MAX_TOKENS, _PersonalityFinalOutput,
+                messages=messages, **wrap_kwargs,
             )
-            total_in  += retry_resp.usage.prompt_tokens
-            total_out += retry_resp.usage.completion_tokens
-            drafts = retry_resp.choices[0].message.parsed.hypotheses or []
+            total_in  += pi
+            total_out += po
+            drafts = parsed.hypotheses or []
         except Exception as exc:
-            # Already retried via _with_retry on transient errors; one
-            # structured retry on the business logic is enough. Empty drafts
-            # is acceptable at this point — the personality just abstains.
+            # The SDK already retried transient errors; one structured retry
+            # on the business logic is enough. Empty drafts is acceptable at
+            # this point — the personality just abstains.
             print(f"{log_prefix} [{personality}] wrap-up retry failed: "
                   f"{type(exc).__name__}: {exc!r}")
     # A personality is clean if it produced at least one hypothesis.
@@ -505,7 +502,7 @@ def _run_personality(
     ]
 
     elapsed = time.perf_counter() - started
-    cost = _mini_cost(total_in, total_out)
+    cost = config.model_cost(LOOP_MODEL, total_in, total_out)
 
     print(f"{log_prefix} [{personality}] DONE: {len(hypotheses)} hypotheses, "
           f"{tool_calls_used} tools used, {elapsed:.2f}s, ${cost:.4f}, "
@@ -533,7 +530,7 @@ def _run_critique(
 ) -> tuple[list[CritiqueMessage], int, int]:
     """Have one personality critique its peers' hypotheses.
 
-    Returns (messages, prompt_tokens, completion_tokens).
+    Returns (messages, input_tokens, output_tokens).
     """
     # Build the peer-hypothesis catalog for the personality to react to.
     peers_text = "\n\n".join(
@@ -559,24 +556,19 @@ def _run_critique(
         f"Emit your critique messages now."
     )
 
-    resp = _with_retry(
-        _client.beta.chat.completions.parse,
-        model=GPT4O_MINI_MODEL,
-        messages=[
-            {"role": "system", "content": system},
-            {"role": "user",   "content": user},
-        ],
-        response_format=_PersonalityCritiqueOutput,
-        temperature=0.4,
+    parsed, pi, po = _parse(
+        CRITIQUE_MODEL, _LOOP_MAX_TOKENS, _PersonalityCritiqueOutput,
+        system=system,
+        messages=[{"role": "user", "content": user}],
     )
-    msgs = resp.choices[0].message.parsed.messages or []
+    msgs = parsed.messages or []
     # Defensive: force from_personality to be the actual personality name so
     # the model can't accidentally attribute messages to a peer.
     for m in msgs:
         m.from_personality = personality
 
     print(f"{log_prefix} [{personality}] critique: {len(msgs)} messages emitted")
-    return msgs, resp.usage.prompt_tokens, resp.usage.completion_tokens
+    return msgs, pi, po
 
 
 # ---------------------------------------------------------------------------
@@ -854,9 +846,9 @@ def _synthesize_report(
     news_pool: list[dict],
     financial_chunks: list[Chunk],
 ) -> tuple[EarningsReport, int, int]:
-    """One gpt-4o call producing the final EarningsReport.
+    """One SYNTH_MODEL call producing the final EarningsReport.
 
-    Returns (report, prompt_tokens, completion_tokens).
+    Returns (report, input_tokens, output_tokens).
     """
     # Render hypotheses as a structured catalog the synthesizer can read.
     hyp_text = "\n\n".join(
@@ -899,18 +891,11 @@ def _synthesize_report(
         f"Produce the EarningsReport. Echo final_hypotheses in hypotheses_explored."
     )
 
-    resp = _with_retry(
-        _client.beta.chat.completions.parse,
-        model=GPT4O_MODEL,
-        messages=[
-            {"role": "system", "content": _SYNTHESIS_SYSTEM},
-            {"role": "user",   "content": user_prompt},
-        ],
-        response_format=EarningsReport,
-        temperature=0.2,
+    return _parse(
+        SYNTH_MODEL, _SYNTH_MAX_TOKENS, EarningsReport,
+        system=_SYNTHESIS_SYSTEM,
+        messages=[{"role": "user", "content": user_prompt}],
     )
-    report = resp.choices[0].message.parsed
-    return report, resp.usage.prompt_tokens, resp.usage.completion_tokens
 
 
 # ---------------------------------------------------------------------------
@@ -975,8 +960,8 @@ def run_personality_panel(
 
     wall_start = time.perf_counter()
     embed_tokens = 0
-    mini_in = mini_out = 0
-    gpt4o_in = gpt4o_out = 0
+    critique_in = critique_out = 0
+    synth_in = synth_out = 0
 
     # ------------------------------------------------------------------
     # Phase 1 — Ingest the primary filing and prepare the shared context.
@@ -1007,29 +992,27 @@ def run_personality_panel(
     if supplemental:
         print(f"{log_prefix} Supplemental: {supplemental['filing_type']} {supplemental['filing_date']}")
 
-    # Chunk and embed the filing only when a real filing was found.
+    # Chunk the filing and embed it only if ChromaDB doesn't already hold it.
     # For news-only runs the ChromaStore stays empty; retrieve_filing returns [].
     store = ChromaStore()
     if filing["accession_number"] != f"{ticker}_no_filing":
         chunks = chunk_filing(filing["clean_text"], filing["raw_html"])
-        print(f"{log_prefix} Chunked into {len(chunks)} chunks; embedding...")
-        chunk_texts = [c.text for c in chunks]
         t0 = time.perf_counter()
-        embeddings = embed_texts(chunk_texts)
-        embed_tokens += sum(len(t) for t in chunk_texts) // 4
-        print(f"{log_prefix} Embedded {len(chunks)} chunks in {time.perf_counter()-t0:.2f}s")
-        store.upsert(filing["accession_number"], chunks, embeddings)
+        if store.index_if_missing(filing["accession_number"], chunks):
+            embed_tokens += sum(len(c.text) for c in chunks) // 4
+            print(f"{log_prefix} Embedded {len(chunks)} chunks in {time.perf_counter()-t0:.2f}s")
+        else:
+            print(f"{log_prefix} {len(chunks)} chunks already indexed; skipped embedding")
 
-    # Ingest the supplemental 10-K into the same store if present.
+    # Same for the supplemental 10-K, if present.
     if supplemental:
         sup_chunks = chunk_filing(supplemental["clean_text"], supplemental["raw_html"])
-        print(f"{log_prefix} Supplemental: {len(sup_chunks)} chunks; embedding...")
-        sup_texts = [c.text for c in sup_chunks]
         t0 = time.perf_counter()
-        sup_embeddings = embed_texts(sup_texts)
-        embed_tokens += sum(len(t) for t in sup_texts) // 4
-        print(f"{log_prefix} Supplemental embedded in {time.perf_counter()-t0:.2f}s")
-        store.upsert(supplemental["accession_number"], sup_chunks, sup_embeddings)
+        if store.index_if_missing(supplemental["accession_number"], sup_chunks):
+            embed_tokens += sum(len(c.text) for c in sup_chunks) // 4
+            print(f"{log_prefix} Supplemental: embedded {len(sup_chunks)} chunks in {time.perf_counter()-t0:.2f}s")
+        else:
+            print(f"{log_prefix} Supplemental: {len(sup_chunks)} chunks already indexed; skipped embedding")
 
     ctx = ToolContext(
         primary_ticker=ticker,
@@ -1046,32 +1029,26 @@ def run_personality_panel(
 
     personality_results: list[PersonalityResult] = []
 
-    # ThreadPoolExecutor isolates each personality. future.result(timeout=...)
-    # enforces hedge 2 (wall-clock cap); the try/except below is hedge 5
-    # (graceful degradation).
+    # ThreadPoolExecutor isolates each personality. Hedge 2 (wall-clock cap)
+    # is enforced inside _run_personality, which stops calling tools once its
+    # time is up — so we wait for every result and never discard paid-for work.
+    # (A timeout here would not save time anyway: leaving the `with` block
+    # waits for all threads.) The try/except below is hedge 5 (graceful
+    # degradation).
     with ThreadPoolExecutor(max_workers=6) as pool:
         futures = {
             pool.submit(
                 _run_personality,
                 personality, ticker, ctx,
                 caps["max_iterations"],
+                caps["wall_timeout_seconds"],
                 log_prefix,
             ): personality
             for personality in _PERSONALITY_PROMPTS
         }
         for fut, personality in futures.items():
             try:
-                pr = fut.result(timeout=caps["wall_timeout_seconds"] + 30)
-                # +30s wiggle room above the personality's internal cap so the
-                # wrap-up structured-output call has time to land before the
-                # orchestrator-level future timeout fires.
-            except FutureTimeout:
-                print(f"{log_prefix} [{personality}] HARD TIMEOUT — discarding")
-                pr = PersonalityResult(
-                    personality=personality, hypotheses=[],
-                    tool_calls_used=0, wall_seconds=caps["wall_timeout_seconds"],
-                    cost_usd=0.0, finished_cleanly=False,
-                )
+                pr = fut.result()
             except Exception as exc:
                 # Show the exception type and repr so users see the actual
                 # error, not an empty string when str(exc) is blank.
@@ -1088,10 +1065,9 @@ def run_personality_panel(
                     cost_usd=0.0, finished_cleanly=False,
                 )
             personality_results.append(pr)
-            mini_in  += int(pr.cost_usd / GPT4O_MINI_INPUT_COST_PER_1K * 0)  # cost already counted in pr.cost_usd
 
-    # Tally costs from each personality result. We can't just sum token counts
-    # here since _run_personality reports cost directly; do that in totals.
+    # Each personality reports its own cost in pr.cost_usd, so Phase 2's
+    # total is just their sum.
     phase2_cost = sum(pr.cost_usd for pr in personality_results)
 
     # Assign globally unique hypothesis IDs across all personalities. The
@@ -1142,12 +1118,14 @@ def run_personality_panel(
                 peers = [h for h in all_hypotheses if h.proposing_personality != pr.personality]
                 futures[pool.submit(_run_critique, pr.personality, own, peers, log_prefix)] = pr.personality
 
+            # Wait for every critique (each is one short call) so its tokens
+            # are always counted; a failed call is logged and skipped.
             for fut, personality in futures.items():
                 try:
-                    msgs, pi, po = fut.result(timeout=30)
+                    msgs, pi, po = fut.result()
                     critique_messages.extend(msgs)
-                    mini_in += pi
-                    mini_out += po
+                    critique_in += pi
+                    critique_out += po
                 except Exception as exc:
                     print(f"{log_prefix} [{personality}] critique failed: {exc}")
         print(f"{log_prefix} Phase 3 done: {len(critique_messages)} messages")
@@ -1163,7 +1141,7 @@ def run_personality_panel(
     # ------------------------------------------------------------------
     # Phase 4 — Synthesis
     # ------------------------------------------------------------------
-    print(f"{log_prefix} Phase 4: synthesizing report via {GPT4O_MODEL}...")
+    print(f"{log_prefix} Phase 4: synthesizing report via {SYNTH_MODEL}...")
     # Pull the financial sections directly so the synthesizer can mine them
     # for key_metrics and revenue_segments instead of relying on whatever
     # the personalities happened to surface.
@@ -1180,8 +1158,8 @@ def run_personality_panel(
         news_pool=ctx.news_pool,
         financial_chunks=financial_chunks,
     )
-    gpt4o_in  += syn_in
-    gpt4o_out += syn_out
+    synth_in  += syn_in
+    synth_out += syn_out
     print(f"{log_prefix} Synthesis -> {time.perf_counter()-t0:.2f}s "
           f"({syn_in} in / {syn_out} out tokens)")
 
@@ -1234,16 +1212,18 @@ def run_personality_panel(
     # ------------------------------------------------------------------
     wall_elapsed = time.perf_counter() - wall_start
     embed_cost = (embed_tokens / 1000) * EMBEDDING_COST_PER_1K
-    critique_cost = _mini_cost(mini_in, mini_out)
-    gen_cost = _gpt4o_cost(gpt4o_in, gpt4o_out)
+    critique_cost = config.model_cost(CRITIQUE_MODEL, critique_in, critique_out)
+    gen_cost = config.model_cost(SYNTH_MODEL, synth_in, synth_out)
     total_cost = phase2_cost + critique_cost + gen_cost + embed_cost
 
+    # The "Wall time:" and "Total cost:" line formats are parsed by the eval
+    # runner's regexes — keep them unchanged.
     print(f"{log_prefix} === TOTALS ===")
     print(f"{log_prefix} Wall time:           {wall_elapsed:.2f}s")
     print(f"{log_prefix} Embed cost:          ~${embed_cost:.5f} ({embed_tokens} tokens)")
     print(f"{log_prefix} Phase 2 (loops):     ${phase2_cost:.5f}")
     print(f"{log_prefix} Phase 3 (critique):  ${critique_cost:.5f}")
-    print(f"{log_prefix} Phase 4 (gpt-4o):    ${gen_cost:.5f}")
+    print(f"{log_prefix} Phase 4 (synthesis): ${gen_cost:.5f}")
     print(f"{log_prefix} Total cost:          ${total_cost:.5f}")
 
     if total_cost > REPORT_BUDGET_USD:

@@ -33,7 +33,7 @@ Yoda fetches the most recent 10-Q (and, when available within the same 92-day wi
 
 ### How Yoda Works
 
-Yoda runs a six-personality panel via `yoda/modes/personality_panel.py`. Six personalities (Optimist, Pessimist, Conservative, Dreamer, Contrarian, Quant) each run parallel tool-use loops (6 tool calls, 45s wall-clock), followed by a cross-critique phase where each personality emits SUPPORTS / CHALLENGES / EXTENDS messages on its peers' hypotheses. A deterministic filter retains/contests/drops hypotheses, then gpt-4o synthesizes a final report that surfaces contested items inside the watchlist. Typical latency: ~90s per ticker.
+Yoda runs a six-personality panel via `yoda/modes/personality_panel.py`. Six personalities (Optimist, Pessimist, Conservative, Dreamer, Contrarian, Quant) each run parallel tool-use loops on Claude Haiku 5.5 (up to 6 tool calls; after 45s a personality stops calling tools and writes up what it has), followed by a cross-critique phase where each personality emits SUPPORTS / CHALLENGES / EXTENDS messages on its peers' hypotheses. A deterministic filter retains/contests/drops hypotheses, then Claude Sonnet 5.5 synthesizes a final report that surfaces contested items inside the watchlist. Typical latency: ~3 minutes per ticker — about two-thirds of it is the Sonnet synthesis call, which thinks at high effort before writing the report.
 
 Each personality uses three tools: `retrieve_filing` (semantic search across both the 10-Q and the supplemental 10-K when present), `search_news` (Tavily web search — all URLs accumulate into a shared news pool), and `lookup_peer` (fetch + chunk + search a competitor's filing on demand). The synthesizer then writes a structured `EarningsReport` whose watchlist items each carry 0–3 starting-point URLs drawn from that shared pool, validated against it so synthesis cannot invent links.
 
@@ -41,7 +41,7 @@ Each personality uses three tools: `retrieve_filing` (semantic search across bot
 
 | Choice | Rationale |
 |---|---|
-| `gpt-4o` for synthesis, `gpt-4o-mini` for personality loops + critique | Accuracy where it counts; cost control in the 6× parallel loops |
+| Claude Sonnet 5.5 for synthesis + critique, Claude Haiku 5.5 for personality loops | Accuracy where it counts; cost control in the 6× parallel loops. Chosen by a spot check (AAPL/JPM/XOM): a Sonnet critique scored slightly above all-Haiku for ~$0.13/report more, while all-Sonnet cost 3.4× as much for no gain |
 | Six-personality panel + typed cross-critique | Forces the report to consider divergent lenses (optimism, skepticism, balance-sheet, long-horizon, contrarian, quant) before synthesizing one analyst voice; cross-critique flags contested claims for the watchlist |
 | 10-Q primary + 10-K supplemental ingest | The 10-Q has the freshest quarterly data for pre-earnings; the 10-K supplies annual narrative when both are within the 92-day window |
 | Finnhub consensus with FMP backup | Finnhub free tier is sparse; `yoda/tools/consensus.py` falls back to FMP when Finnhub returns nothing |
@@ -49,7 +49,8 @@ Each personality uses three tools: `retrieve_filing` (semantic search across bot
 | `reportlab` for PDF (not weasyprint) | weasyprint requires GTK3/Pango/Cairo native libs on Windows; reportlab is pure Python |
 | Cite-or-skip rule + URL-pool validation | Any uncitable fact goes to `data_gaps`; every news URL and watchlist URL is validated against the investigation's news pool so synthesis cannot fabricate links |
 | Filing-only `source_citation` enforcement | `key_metrics`, `revenue_segments`, `key_risks`, and `forward_guidance` source citations are restricted to filing section labels — a post-synthesis scrubber replaces any leaked news URLs / outlet names with a bare section fallback, and the chunk-heading extractor rejects mid-word fragments so the judge can verify traceability |
-| `claude-sonnet-4-6` as eval judge | Different model family from the OpenAI-based generation system; prevents same-model bias in scoring |
+| OpenAI `gpt-6.1-sol` as eval judge | Different model family from the Claude-based generation system; prevents self-preference bias in scoring. Sol is OpenAI's counterpart to Sonnet 5.5 |
+| Embed only filings not already stored | ChromaDB is checked first; a filing is embedded only when its stored chunk count differs from its current one (new, half-stored, or re-chunked) |
 
 ### Architecture
 
@@ -75,7 +76,7 @@ Each personality uses three tools: `retrieve_filing` (semantic search across bot
 │  │           Personality Panel (Phase 10)         │     │                │
 │  │  Optimist   Pessimist   Conservative           │     │                │
 │  │  Dreamer    Contrarian  Quant                  │     │                │
-│  │  (gpt-4o-mini · parallel tool-use loops)       │     │                │
+│  │  (Haiku 5.5 loops · Sonnet 5.5 critique)       │     │                │
 │  │                                                │     │                │
 │  │  Tools: retrieve_filing · search_news ·        │     │                │
 │  │         lookup_peer                            │     │                │
@@ -84,13 +85,13 @@ Each personality uses three tools: `retrieve_filing` (semantic search across bot
 │                         ▼                               │                │
 │  ┌────────────────────────────────────────────────┐     │                │
 │  │  Cross-Critique + Synthesis                    │     │                │
-│  │  gpt-4o  →  EarningsReport (Pydantic)          │     │                │
+│  │  Sonnet 5.5 → EarningsReport (Pydantic)        │     │                │
 │  └──────────┬─────────────────────┬───────────────┘     │                │
 │             │                     │                     │                │
 │             ▼                     ▼                     ▼                │
 │  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────────┐    │
 │  │ PDF (reportlab)  │  │ data/reports/    │  │ Judge                │    │
-│  │ data/reports/    │  │ data/filings/    │  │ claude-sonnet-4-6    │    │
+│  │ data/reports/    │  │ data/filings/    │  │ gpt-6.1-sol          │    │
 │  │   {TICKER}.pdf   │  │ data/eval/       │  │ data/eval/judge_*    │    │
 │  └──────────────────┘  └──────────────────┘  └──────────────────────┘    │
 │                                                                          │
@@ -99,8 +100,8 @@ Each personality uses three tools: `retrieve_filing` (semantic search across bot
                                     ▼
         ┌──────────────────────────────────────────────────┐
         │  External APIs                                   │
-        │  OpenAI (gpt-4o, gpt-4o-mini, embeddings)        │
-        │  Anthropic (judge)   SEC EDGAR (filings)         │
+        │  Anthropic (Sonnet 5.5, Haiku 5.5 — generation)  │
+        │  OpenAI (judge, embeddings)   SEC EDGAR          │
         │  Finnhub + FMP (consensus)   Tavily (news)       │
         └──────────────────────────────────────────────────┘
 ```
@@ -114,9 +115,7 @@ app.py (Streamlit — Single ticker + Queue tabs)
     ├── yoda/tools/news.py               # Tavily search
     ├── yoda/modes/personality_panel.py  # Phase 10: 6-personality panel
     ├── yoda/modes/tools.py              # tool registry shared across personalities
-    ├── yoda/modes/rag_llm.py            # Legacy mode (kept as smoke test)
-    ├── yoda/modes/agent.py              # Legacy mode (kept as smoke test)
-    ├── yoda/modes/baseline.py           # Prompt-only baseline (eval lower bound)
+    ├── yoda/modes/baseline.py           # Single-pass baseline (eval lower bound)
     ├── yoda/queue/processor.py          # Batch processor: many tickers → ZIP
     ├── yoda/schema.py                   # EarningsReport + WatchItem Pydantic models
     ├── yoda/report/pdf.py               # EarningsReport → PDF (reportlab)
@@ -129,37 +128,37 @@ app.py (Streamlit — Single ticker + Queue tabs)
 
 ### Evaluation Scope
 
-By default, `run_eval()` evaluates against a **curated 10-ticker universe** chosen for sector variety — one representative per sector/archetype so the eval captures diverse filing structures and business narratives:
+By default, `run_eval()` evaluates against a **curated 20-ticker universe**: two per sector/archetype, with the second chosen to be structurally different from the first, so the eval covers diverse filing structures and business narratives. Twenty (not ten) because the stronger single-pass baseline is expected to narrow the gap to Yoda, and smaller gaps need more tickers to tell apart from judge noise.
 
-| Ticker | Sector |
+| Sector | Tickers |
 |---|---|
-| AAPL | Tech — hardware + services |
-| NVDA | Tech — semiconductors / AI |
-| AMZN | Tech — cloud + e-commerce |
-| JPM | Financials — banking |
-| JNJ | Healthcare — pharma + medtech |
-| XOM | Energy |
-| KO | Consumer Staples |
-| NFLX | Media / Streaming |
-| CAT | Industrials |
-| PANW | Cybersecurity / SaaS |
+| Tech — hardware / platforms | AAPL, MSFT |
+| Tech — semiconductors | NVDA, AMD |
+| Consumer discretionary / retail | AMZN, HD |
+| Financials | JPM (money-center bank), USB (regional bank) |
+| Healthcare | JNJ (pharma + medtech), UNH (managed care) |
+| Energy | XOM (integrated major), SLB (oilfield services) |
+| Consumer staples | KO, PG |
+| Media / streaming | NFLX, DIS |
+| Industrials | CAT, BA |
+| Software | PANW (cybersecurity), CRM (SaaS) |
 
 Each ticker runs against two modes: `baseline` and `yoda`. To evaluate a custom set:
 ```bash
 python -m yoda.eval.runner NFLX AAPL JPM  # Custom tickers
-python -m yoda.eval.runner NFLX            # Single ticker (quick test, ~$0.30, 3-5 min)
+python -m yoda.eval.runner NFLX            # Single ticker (quick test)
 ```
 
-**Cost / Latency**: 10 tickers × 2 modes ≈ $1.50 per full run, 25–30 min. Single ticker is ~$0.15 and 2–4 min for verification.
+**Cost / Latency** (measured on the 2026-10-26 full run): the baseline averages ~$0.31 and ~58s per ticker (more for very long filings — JPM's ~210K-token 10-Q costs ~$0.85), Yoda ~$0.43 and ~2.8 min. A full 20-ticker run is ~$15 of generation plus ~$1–2 of judging, ~75 min. A single ticker is ~$0.75 and ~4 min.
 
 ### Modes Compared
 
-- **`baseline`** — Prompt-only (`yoda/modes/baseline.py`): a single `gpt-4o` call with a manually sliced ~5000-character excerpt from the filing (MD&A preferred, Financial Statements fallback). No RAG, no agent loop. This represents the "just give the LLM a chunk of the filing" approach and sets the lower bound.
-- **`yoda`** — Full personality panel with OpenAI `text-embedding-3-small` for retrieval. Vectors stored in the `filings_openai` Chroma collection.
+- **`baseline`** — Single-pass (`yoda/modes/baseline.py`): "here are the SEC filings; write a pre-earnings research brief." One Claude Sonnet 5.5 call receives the **full text** of the latest 10-Q (plus the supplemental 10-K when one falls in the 92-day window) and returns the report in one response. No retrieval, no news, no agent loop, no second pass. Its only instruction beyond the report format is the citation rule; since it gets no news, any news items or URLs it returns are stripped in code. It reads the same filings Yoda reads, so the comparison measures what Yoda's extra steps add — not how much filing text each side saw.
+- **`yoda`** — Full personality panel (Haiku 5.5 loops, Sonnet 5.5 critique and synthesis) with OpenAI `text-embedding-3-small` for retrieval. Vectors stored in the `filings_openai` Chroma collection.
 
 ### Rubric
 
-Reports were scored by `claude-sonnet-4-6` through `yoda/eval/judge.py` (cross-family to prevent self-grading bias). Judge outputs are cached under `data/eval/judge_cache/` so re-runs are free; a manifest written per run lets `prune_judge_cache(keep_runs=2)` keep only the two most recent runs' cached files. Each report is scored on five dimensions, rated 1–5:
+Reports are scored by OpenAI `gpt-6.1-sol` through `yoda/eval/judge.py` — a different model family from the Claude models that write the reports, so the judge can't favour its own family's output. The judge sees the report JSON plus **only the first 30,000 characters of the filing**, so it cannot verify facts from later in long filings; keep this in mind when reading the accuracy and traceability scores. Judge outputs are cached under `data/eval/judge_cache/` so re-runs are free; a manifest written per run lets `prune_judge_cache(keep_runs=2)` keep only the two most recent runs' cached files. Each report is scored on five dimensions, rated 1–5:
 
 | Dimension | What it measures |
 |---|---|
@@ -171,16 +170,24 @@ Reports were scored by `claude-sonnet-4-6` through `yoda/eval/judge.py` (cross-f
 
 ### Test Set
 
-Ten US-listed stocks, one per sector/archetype (see the table above), all with at least 3 years of public trading history. See [`CURATED_TICKERS` in `yoda/eval/runner.py`](yoda/eval/runner.py) for the source list.
+Twenty US-listed stocks, two per sector/archetype (see the table above), all with at least 3 years of public trading history. See [`CURATED_TICKERS` in `yoda/eval/runner.py`](yoda/eval/runner.py) for the source list.
 
 ### Results
 
-See [`data/eval/summary.md`](data/eval/summary.md) and [`data/eval/comparison.png`](data/eval/comparison.png) for the latest mean scores across baseline and yoda. The chart compares both modes on the five rubric dimensions.
+**Last run: 2026-10-26** — 20 tickers × 2 modes, filings refreshed from SEC the same day. Generation: Claude Sonnet 5.5 (baseline, Yoda synthesis + critique) and Haiku 5.5 (Yoda loops). Judge: `gpt-6.1-sol`.
+
+| Mode | Extraction | Accuracy | Traceability | Relevance | Usefulness | Latency | Cost |
+|---|---|---|---|---|---|---|---|
+| Baseline (single-pass) | 3.25 | 3.05 | 2.00 | 5.00 | 3.25 | 58s | $0.31 |
+| Yoda (panel) | 2.85 | 2.45 | 1.30 | 4.30 | 2.80 | 167s | $0.43 |
+
+**On this rubric, the single-pass baseline beats Yoda.** Paired by ticker, Yoda's average score is 0.57 lower (95% bootstrap range −0.75 to −0.39, entirely below zero), and Yoda won 1 of 20 tickers, tied 2, lost 17. The biggest gaps are source traceability and relevance (−0.7 each) and accuracy (−0.6).
+
+How to read this: the current rubric measures how well a report extracts and cites facts **from the filing**, and the judge sees only the filing's first 30K characters — exactly the single-pass baseline's strength, since it reads the full filings directly while Yoda's synthesis sees ~14 retrieved chunks. It does not measure what Yoda adds (current news, peer comparison, market expectations). Next steps already planned: rebuild the rubric around Yoda's purpose as a pre-earnings brief (market expectations including consensus and whisper numbers, reasoning over dated news, usefulness to sell- and buy-side analysts), and close the filing gaps (full filing in synthesis, filing-matched citations). This run's 40 reports are archived so they can be re-scored under the new rubric.
 
 ![Mean rubric scores by mode — Baseline vs Yoda](data/eval/comparison.png)
 
-
-Full per-ticker results are in [`data/eval/results.csv`](data/eval/results.csv) and [`data/eval/summary.md`](data/eval/summary.md).
+Full per-ticker results and the paired confidence table are in [`data/eval/summary.md`](data/eval/summary.md) and [`data/eval/results.csv`](data/eval/results.csv). The complete run — all 40 report JSONs plus these outputs — is archived in [`data/eval/archive_2026-10-26_claude-panel_old-rubric/`](data/eval/archive_2026-10-26_claude-panel_old-rubric/).
 
 ---
 
@@ -281,7 +288,7 @@ The downloaded PDF contains: cover page (ticker, company name, primary filing da
 
 - Python 3.11+
 - Conda (recommended) or virtualenv
-- API keys for OpenAI, Anthropic, Finnhub, FMP, and Tavily (all have free tiers sufficient for testing)
+- API keys for Anthropic, OpenAI, Finnhub, FMP, and Tavily
 
 ### Installation
 
@@ -325,14 +332,14 @@ The first run for a ticker fetches and indexes the SEC filings — both the 10-Q
 ### Run the Evaluation Harness
 
 ```bash
-# Single ticker (cheap verification, ~$0.30, 3–5 min)
+# Single ticker (cheap verification, ~$0.60, ~4 min)
 python -m yoda.eval.runner NFLX
 
-# Full curated 10-ticker run (~$3, 15–20 min)
+# Full curated 20-ticker run (see Cost / Latency in section 3)
 python -m yoda.eval.runner
 ```
 
-Outputs `data/eval/results.csv`, `data/eval/summary.md`, and `data/eval/comparison.png`. Judge results are cached in `data/eval/judge_cache/` so repeated runs are free; only the two most recent runs' cached files are kept on disk.
+Outputs `data/eval/results.csv`, `data/eval/summary.md` (headed with the run date and models, and including the paired Yoda-vs-baseline confidence table), and `data/eval/comparison.png` (subtitled with the same run line). Judge results are cached in `data/eval/judge_cache/` so repeated runs are free; only the two most recent runs' cached files are kept on disk.
 
 Cache cleanup at the end of every run:
 - `data/eval/{mode}_{TICKER}.json` — one report JSON per `(mode, ticker)` (overwrites older copies)
@@ -340,18 +347,24 @@ Cache cleanup at the end of every run:
 - `data/reports/{TICKER}_{ts}.pdf` — one PDF per ticker (older are deleted)
 - `data/queue_zips/yoda_queue_{ts}.zip` — at most the two most recent ZIP bundles
 
+### Run the Tests
+
+```bash
+python -m pytest -q
+```
+
+The offline suite in `tests/test_offline.py` makes no API calls and costs nothing. It covers the logic that can break silently: citation checks, cost math, the judge cache key, tool schemas, the baseline prompt, the embedding skip, the panel's failure and time-cap handling, and the paired comparison. It needs a `.env` with keys present (importing `yoda.config` checks them). Run it from the repo root with `python -m pytest` so the `yoda` package is importable.
+
 ### Run Individual Mode Smoke Tests
 
 ```bash
 # Multi-agent personality panel — current production mode
 python -m yoda.modes.personality_panel NFLX
 
-# Legacy modes (kept as harnesses; not used by the Streamlit app)
-python -m yoda.modes.baseline
-python -m yoda.modes.rag_llm
-python -m yoda.modes.agent
+# Single-pass baseline (eval lower bound)
+python -m yoda.modes.baseline NFLX
 
-# PDF generation from a saved report JSON
+# PDF generation from a saved report JSON (default mode: yoda)
 python -m yoda.report.pdf NFLX
 ```
 
@@ -361,8 +374,8 @@ python -m yoda.report.pdf NFLX
 
 | Variable | Required | Purpose |
 |---|---|---|
-| `OPENAI_API_KEY` | Yes | LLM generation (`gpt-4o`) and cheap iterative steps (`gpt-4o-mini`) |
-| `ANTHROPIC_API_KEY` | Yes | Model-as-judge in the evaluation harness (`claude-sonnet-4-6`) |
+| `ANTHROPIC_API_KEY` | Yes | All report generation: Claude Sonnet 5.5 (synthesis, critique, baseline) and Claude Haiku 5.5 (personality loops) |
+| `OPENAI_API_KEY` | Yes | Filing embeddings (`text-embedding-3-small`) and the eval judge (`gpt-6.1-sol`) |
 | `FINNHUB_API_KEY` | Yes | Analyst consensus estimates (primary source) |
 | `FMP_API_KEY` | Yes | Financial Modeling Prep — backup source when Finnhub returns no consensus |
 | `TAVILY_API_KEY` | Yes | News and web search |
@@ -378,7 +391,7 @@ yoda/
 ├── requirements.txt
 ├── .env.example
 ├── yoda/
-│   ├── config.py                       # env vars, model names, constants
+│   ├── config.py                       # env vars + Claude price table (MODEL_COST_PER_1K)
 │   ├── ingest/
 │   │   ├── edgar.py                    # ticker -> SEC EDGAR fetch (10-Q primary + 10-K supplemental)
 │   │   └── chunker.py                  # section-aware chunking
@@ -391,9 +404,7 @@ yoda/
 │   ├── modes/
 │   │   ├── personality_panel.py        # Phase 10: 6-personality panel
 │   │   ├── tools.py                    # Tool registry (retrieve_filing, search_news, lookup_peer)
-│   │   ├── baseline.py                 # Prompt-only baseline (eval lower bound)
-│   │   ├── rag_llm.py                  # Legacy Mode 1 (kept as smoke test)
-│   │   └── agent.py                    # Legacy Mode 2 (kept as smoke test)
+│   │   └── baseline.py                 # Single-pass baseline (eval lower bound)
 │   ├── queue/
 │   │   └── processor.py                # Batch queue processor + ZIP bundler
 │   ├── schema.py                       # EarningsReport + WatchItem Pydantic models
@@ -401,7 +412,7 @@ yoda/
 │   │   └── pdf.py                      # EarningsReport -> PDF (reportlab)
 │   └── eval/
 │       ├── rubric.py                   # rubric Pydantic models
-│       ├── judge.py                    # claude-sonnet-4-6 model-as-judge
+│       ├── judge.py                    # gpt-6.1-sol model-as-judge
 │       └── runner.py                   # batch eval over test tickers
 ├── data/
 │   ├── filings/{TICKER}/               # cached primary + supplemental HTML + latest.json (gitignored)
@@ -412,7 +423,7 @@ yoda/
 ├── .claude/commands/research.md        # project-level /research slash command (dev tool)
 ├── .claude/worktrees/                  # working trees from /worktree development (gitignored)
 └── tests/
-    └── test_smoke.py
+    └── test_offline.py                 # offline pytest suite (no API calls)
 ```
 
 ---

@@ -95,6 +95,32 @@ class ChromaStore:
             metadatas=metadatas,
         )
 
+    def count(self, accession_number: str) -> int:
+        """Return how many chunks are stored for *accession_number*."""
+        # include=[] fetches only the IDs, so no documents or vectors are loaded.
+        result = self._collection.get(where={"accession": accession_number}, include=[])
+        return len(result["ids"])
+
+    def index_if_missing(self, accession_number: str, chunks: list[Chunk]) -> bool:
+        """Embed and store *chunks* unless this filing is already fully stored.
+
+        Returns True if it embedded (costing OpenAI tokens), False if it skipped.
+        Comparing counts — not just "does anything exist" — means a filing
+        left half-stored by a crashed run gets re-embedded instead of skipped.
+        """
+        # Skip when every chunk of this filing is already in the store.
+        if self.count(accession_number) == len(chunks):
+            return False
+
+        # Otherwise clear whatever is stored for this filing first. Upsert only
+        # overwrites matching IDs, so if the chunker now makes FEWER chunks,
+        # the old extra ones would linger, keep the counts unequal, and force
+        # a re-embed on every run.
+        self._collection.delete(where={"accession": accession_number})
+        embeddings = embed_texts([c.text for c in chunks])
+        self.upsert(accession_number, chunks, embeddings)
+        return True
+
     def query(
         self,
         accession_number: str,

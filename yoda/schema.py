@@ -1,15 +1,15 @@
 """Pydantic v2 models for the Yoda structured earnings report.
 
-Every downstream phase — baseline, RAG-LLM, agent, PDF, and eval — imports
+Every downstream phase — baseline, personality panel, PDF, and eval — imports
 from here. The schema enforces the project's core 'cite or skip' rule: any
-field that carries a financial fact must also carry a source_citation. The
-baseline and both modes are responsible for populating data_gaps when a fact
-cannot be cited.
+field that carries a financial fact must also carry a source_citation. Both
+the baseline and the panel are responsible for populating data_gaps when a
+fact cannot be cited.
 
-These models are also passed directly to OpenAI structured outputs
-(client.beta.chat.completions.parse), so all types stay within the subset
-that OpenAI's strict JSON schema mode supports (str, int, float, bool,
-list, nested BaseModel, T | None).
+These models are also passed directly to Claude structured outputs
+(client.messages.parse(output_format=...)), so all types stay within the
+simple subset structured outputs support (str, int, float, bool, list,
+nested BaseModel, T | None).
 """
 
 from pydantic import BaseModel
@@ -136,8 +136,8 @@ class EarningsReport(BaseModel):
     data_gaps: list[str]
 
     # Phase 10: multi-agent transparency — final filtered hypotheses the panel
-    # investigated. Defaulted to [] so reports from older modes (baseline,
-    # rag_llm, agent) still validate without modification.
+    # investigated. Defaulted to [] so baseline reports (which have no panel)
+    # still validate without modification.
     hypotheses_explored: list[Hypothesis] = []
 
 

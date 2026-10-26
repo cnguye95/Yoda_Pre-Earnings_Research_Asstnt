@@ -1,0 +1,376 @@
+{
+  "ticker": "PG",
+  "company_name": "The Procter & Gamble Company",
+  "filing_type": "10-Q",
+  "filing_date": "2026-10-22",
+  "supplemental_filing_type": "10-K",
+  "supplemental_filing_date": "2026-08-04",
+  "report_generated_at": "2026-10-26T13:45:36.498067+00:00",
+  "key_metrics": [
+    {
+      "name": "Net sales",
+      "value": "23,276",
+      "unit": "USD millions (+4.0% YoY vs 22,386)",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Earnings; Item 2 MD&A, Results of Operations"
+    },
+    {
+      "name": "Organic sales growth",
+      "value": "4.0",
+      "unit": "% YoY (non-GAAP)",
+      "source_citation": "10-Q Part I Item 2 MD&A, Summary of Results and Measures Not Defined by U.S. GAAP"
+    },
+    {
+      "name": "Unit volume growth",
+      "value": "2.4",
+      "unit": "% YoY (mix +1.1%, price +0.4%, FX ~0%)",
+      "source_citation": "10-Q Part I Item 2 MD&A, Results of Operations - Net Sales"
+    },
+    {
+      "name": "Gross margin",
+      "value": "49.8",
+      "unit": "% of net sales (-160 bps YoY from 51.4%)",
+      "source_citation": "10-Q Part I Item 2 MD&A, Results of Operations - Operating Costs"
+    },
+    {
+      "name": "Operating income",
+      "value": "5,937",
+      "unit": "USD millions (+1% YoY vs 5,856)",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Earnings"
+    },
+    {
+      "name": "Operating margin",
+      "value": "25.5",
+      "unit": "% of net sales (-70 bps YoY)",
+      "source_citation": "10-Q Part I Item 2 MD&A, Results of Operations (Comparisons as a Percentage of Net Sales)"
+    },
+    {
+      "name": "SG&A as % of net sales",
+      "value": "24.3",
+      "unit": "% (-90 bps YoY); SG&A dollars flat at about $5.7B",
+      "source_citation": "10-Q Part I Item 2 MD&A, Results of Operations - Operating Costs"
+    },
+    {
+      "name": "Net earnings",
+      "value": "4,757",
+      "unit": "USD millions (-1% YoY vs 4,781)",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Earnings"
+    },
+    {
+      "name": "Diluted EPS",
+      "value": "1.97",
+      "unit": "USD per share (+1% YoY vs 1.95)",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Earnings; Note 4 Earnings Per Share"
+    },
+    {
+      "name": "Core EPS",
+      "value": "2.00",
+      "unit": "USD per share (+1% YoY vs 1.99; non-GAAP, excludes $0.03 incremental restructuring)",
+      "source_citation": "10-Q Part I Item 2 MD&A, Measures Not Defined by U.S. GAAP - Core EPS reconciliation"
+    },
+    {
+      "name": "Core net earnings attributable to P&G",
+      "value": "4,808",
+      "unit": "USD millions (-1% YoY vs 4,850)",
+      "source_citation": "10-Q Part I Item 2 MD&A, Reconciliation of Non-GAAP Measures"
+    },
+    {
+      "name": "Effective income tax rate",
+      "value": "21.0",
+      "unit": "% (vs 20.8% prior year)",
+      "source_citation": "10-Q Part I Item 2 MD&A, Income Taxes"
+    },
+    {
+      "name": "Diluted weighted average shares",
+      "value": "2,407.2",
+      "unit": "millions (vs 2,436.8 prior year)",
+      "source_citation": "10-Q Part I Item 1, Note 4 Earnings Per Share"
+    },
+    {
+      "name": "Operating cash flow",
+      "value": "5,767",
+      "unit": "USD millions (+359 vs prior year)",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Cash Flows; Item 2 MD&A, Liquidity & Capital Resources"
+    },
+    {
+      "name": "Free cash flow",
+      "value": "4,401",
+      "unit": "USD millions (non-GAAP: OCF 5,767 less capex 1,366)",
+      "source_citation": "10-Q Part I Item 2 MD&A, Measures Not Defined by U.S. GAAP - Free cash flow"
+    },
+    {
+      "name": "Free cash flow productivity",
+      "value": "93",
+      "unit": "% of net earnings (non-GAAP)",
+      "source_citation": "10-Q Part I Item 2 MD&A, Measures Not Defined by U.S. GAAP - Free cash flow productivity"
+    },
+    {
+      "name": "Capital expenditures",
+      "value": "1,366",
+      "unit": "USD millions (vs 1,200 prior year)",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Cash Flows"
+    },
+    {
+      "name": "Cash and cash equivalents",
+      "value": "15,365",
+      "unit": "USD millions at Sept 30, 2026 (vs 9,942 at June 30, 2026)",
+      "source_citation": "10-Q Part I Item 1, Consolidated Balance Sheets"
+    },
+    {
+      "name": "Debt due within one year",
+      "value": "17,028",
+      "unit": "USD millions at Sept 30, 2026 (vs 11,296 at June 30, 2026)",
+      "source_citation": "10-Q Part I Item 1, Consolidated Balance Sheets"
+    },
+    {
+      "name": "Long-term debt",
+      "value": "21,897",
+      "unit": "USD millions at Sept 30, 2026 (vs 22,842 at June 30, 2026)",
+      "source_citation": "10-Q Part I Item 1, Consolidated Balance Sheets"
+    },
+    {
+      "name": "Current liabilities in excess of current assets",
+      "value": "12.5",
+      "unit": "USD billions at Sept 30, 2026",
+      "source_citation": "10-Q Part I Item 2 MD&A, Liquidity & Capital Resources"
+    },
+    {
+      "name": "Treasury stock purchases (cash)",
+      "value": "1,250",
+      "unit": "USD millions (8.59M shares repurchased under program in the quarter)",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Cash Flows; Part II Item 2 Issuer Purchases of Equity Securities"
+    },
+    {
+      "name": "Dividends declared per common share",
+      "value": "1.0885",
+      "unit": "USD per share (vs 1.0568 prior year)",
+      "source_citation": "10-Q Part I Item 1, Consolidated Statements of Shareholders' Equity"
+    },
+    {
+      "name": "Restructuring charges (before tax)",
+      "value": "192",
+      "unit": "USD millions in the quarter (COGS 106, SG&A 82, other non-operating 4)",
+      "source_citation": "10-Q Part I Item 1, Note 7 Supplemental Information - Restructuring Program"
+    },
+    {
+      "name": "FY2026 net sales (context)",
+      "value": "87,032",
+      "unit": "USD millions (+3% YoY; organic +1%)",
+      "source_citation": "10-K Item 7 MD&A, Summary of 2026 Results"
+    },
+    {
+      "name": "FY2026 Core EPS (context)",
+      "value": "6.89",
+      "unit": "USD per share (+1% YoY; diluted EPS 6.62)",
+      "source_citation": "10-K Item 7 MD&A, Summary of 2026 Results; Measures Not Defined by U.S. GAAP"
+    },
+    {
+      "name": "FY2026 adjusted free cash flow productivity (context)",
+      "value": "100",
+      "unit": "% (non-GAAP)",
+      "source_citation": "10-K Item 7 MD&A, Cash Flow, Financial Condition and Liquidity"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "Beauty",
+      "revenue": "4,410",
+      "yoy_change": "+6.4% (organic +5.4%)",
+      "commentary": "Volume +2.2%, mix +2.5%, price +0.7%, FX +1.1%. Net earnings fell 1% to $868M on a 150 bps net margin decline (commodity costs, unfavorable mix, higher marketing). Market share down 0.2 pts overall; Skin Care share down 0.6 pts and Personal Care down 0.4 pts.",
+      "source_citation": "10-Q Part I Item 2 MD&A, Segment Results - Beauty; Net Sales Change Drivers table; Note 2 Segment Information"
+    },
+    {
+      "name": "Grooming",
+      "revenue": "1,889",
+      "yoy_change": "+4.0% (organic +4.5%)",
+      "commentary": "Growth was price-led (+3.5%) with mix +1.5% and volume -0.4%. Net earnings +3% to $477M; gross margin +60 bps on pricing, tariff recoveries and productivity. Segment share +0.2 pts. Latin America distribution losses and IMETA go-to-market discontinuations offset Europe innovation gains.",
+      "source_citation": "10-Q Part I Item 2 MD&A, Segment Results - Grooming; Net Sales Change Drivers table; Note 2"
+    },
+    {
+      "name": "Health Care",
+      "revenue": "3,318",
+      "yoy_change": "+3.1% (organic +2.7%)",
+      "commentary": "Price +2.8% and mix +2.8% offset volume -2.9%. Net earnings +9% to $783M on a 200 bps gross margin gain. Oral Care share down 0.6 pts; Personal Health Care share up 0.5 pts. Thorne, which closed Oct 1, 2026, will join Personal Health Care from Q2 FY27.",
+      "source_citation": "10-Q Part I Item 2 MD&A, Segment Results - Health Care; Net Sales Change Drivers table; Note 8 Subsequent Event"
+    },
+    {
+      "name": "Fabric & Home Care",
+      "revenue": "8,204",
+      "yoy_change": "+4.2% (organic +4.8%)",
+      "commentary": "Volume +4.3% on market growth in North America, Europe and Latin America. Gross margin -290 bps (commodities, product investments, mix). Net earnings +3% to $1.6B; segment share +0.3 pts. Segment now includes Habitat Care (previously in Corporate) and prior periods were recast. MD&A table shows 8,205 versus 8,204 in Note 2 (rounding).",
+      "source_citation": "10-Q Part I Item 2 MD&A, Segment Results - Fabric & Home Care; Note 2 Segment Information; Part II Item 5 Segment Realignment"
+    },
+    {
+      "name": "Baby, Feminine & Family Care",
+      "revenue": "5,322",
+      "yoy_change": "+2.9% (organic +3.0%)",
+      "commentary": "Volume +2.3%, mix +1.8%, price -1.2% (Family Care merchandising investments). Gross margin -220 bps on commodities and merchandising. Net earnings -4% to $1.06B. Baby Care share +0.8 pts; North America Family Care share -0.5 pts.",
+      "source_citation": "10-Q Part I Item 2 MD&A, Segment Results - Baby, Feminine & Family Care; Net Sales Change Drivers table; Note 2"
+    },
+    {
+      "name": "Corporate",
+      "revenue": "132",
+      "yoy_change": "-20% (down $33M from 165)",
+      "commentary": "Corporate net loss was $32M versus net earnings of $61M a year ago (the MD&A cites a $94M decline). Restructuring charges are held in Corporate.",
+      "source_citation": "10-Q Part I Item 2 MD&A, Segment Results - Corporate; Note 2 Segment Information"
+    }
+  ],
+  "forward_guidance": {
+    "text": "The filings give no quantitative FY2027 guidance for sales, organic growth, EPS or free cash flow. Disclosed forward-looking items: (1) direct share repurchases of about $5.0B in FY2027, reaffirmed in the Oct 22, 2026 earnings release (excluding compensation and benefit plan purchases), financed by operating cash flow and debt; (2) the portfolio and productivity plan expects about $2.0B of before-tax restructuring costs over two years, with over half incurred in FY2026 and the remainder in FY2027, including a reduction of up to 7,000 non-manufacturing overhead personnel by end of FY2027; (3) Thorne ($3.9B all-cash, closed Oct 1, 2026) reported from the quarter ending Dec 31, 2026, with results described as not material and purchase accounting to be finalized that quarter; (4) the long-term algorithm of organic sales above market growth, Core EPS growth of mid-to-high single digits and adjusted FCF productivity of 90% or higher.",
+    "source_citation": "10-Q Part II Item 2 (Issuer Purchases footnote 3); 10-Q Note 7 Restructuring Program; 10-Q Note 8 Subsequent Event; 10-K Item 7 MD&A, Strategic Focus (long-term growth algorithm)"
+  },
+  "key_risks": [
+    {
+      "description": "Gross margin compression from input costs and investments: gross margin fell 160 bps in Q1 on 140 bps of higher commodity costs, 140 bps of product and packaging investments and 50 bps of unfavorable mix. Commodity costs were only a 20 bps headwind for FY2026, so this is a sharp acceleration. Productivity (+120 bps) and lower tariff costs/recoveries (+50 bps) only partly offset it, and the tariff recoveries may not recur.",
+      "is_new": true,
+      "source_citation": "10-Q Part I Item 2 MD&A, Results of Operations - Operating Costs; 10-K Item 7 MD&A, Operating Costs"
+    },
+    {
+      "description": "Earnings growth lags sales growth: 4.0% organic growth produced only +1% Core EPS, and Core net earnings attributable to P&G fell 1%. Operating margin fell 70 bps. This is below the stated long-term algorithm of mid-to-high single digit Core EPS growth.",
+      "is_new": true,
+      "source_citation": "10-Q Part I Item 2 MD&A, Results of Operations; Reconciliation of Non-GAAP Measures; 10-K Item 7 MD&A, Strategic Focus"
+    },
+    {
+      "description": "Balance sheet and liquidity: debt due within one year rose to $17.0B from $11.3B (including $5.8B net short-term debt additions) and current liabilities exceeded current assets by $12.5B. Cash of $15.4B pre-funded the $3.9B Thorne payment on Oct 1. Repurchases and the dividend are partly debt-financed. The $4.8B 364-day credit facility expires in October 2026.",
+      "is_new": true,
+      "source_citation": "10-Q Part I Item 1, Consolidated Balance Sheets and Cash Flows; Item 2 MD&A, Liquidity & Capital Resources; Part II Item 2 footnote 3; 10-K Item 7 MD&A, Liquidity"
+    },
+    {
+      "description": "Thorne acquisition and integration risk: $3.9B all-cash deal whose primary assets are an indefinite-lived brand intangible and goodwill. Purchase accounting is incomplete, which carries future impairment risk, and incremental interest expense is likely. The 10-Q says Thorne's results are not material.",
+      "is_new": true,
+      "source_citation": "10-Q Note 8 Subsequent Event; Item 2 MD&A, Recent Developments - Thorne Acquisition"
+    },
+    {
+      "description": "Gillette indefinite-lived intangible impairment risk: carrying value $12.8B with fair value exceeding carrying value by only more than 10% at the last test. A +25 bps discount rate, -25 bps growth or -50 bps royalty change would cut fair value about 5%, 5% and 4%. Grooming volume was -0.4% in Q1.",
+      "is_new": false,
+      "source_citation": "10-Q Part I Item 1, Note 3 Goodwill and Intangible Assets; 10-K Item 7 MD&A, Critical Accounting Policies"
+    },
+    {
+      "description": "Market share losses in several categories: Beauty -0.2 pts (Skin Care -0.6, Personal Care -0.4), Oral Care -0.6 pts, and North America Family Care -0.5 pts. Competitive activity and Greater China pressure are cited.",
+      "is_new": false,
+      "source_citation": "10-Q Part I Item 2 MD&A, Segment Results (Beauty, Health Care, Baby, Feminine & Family Care)"
+    },
+    {
+      "description": "Restructuring execution: about $2.0B program with up to 7,000 overhead roles to be removed by end of FY2027. Go-to-market discontinuations are already depressing volume in IMETA, Latin America and Greater China. Q1 charges were $192M with a $320M reserve outstanding.",
+      "is_new": false,
+      "source_citation": "10-Q Note 7 Restructuring Program; Item 2 MD&A, Segment Results; 10-K Item 7 MD&A, Restructuring Program"
+    },
+    {
+      "description": "Macro, FX, tariff and geopolitical exposure: more than half of sales are outside the U.S., with the Middle East conflict and the Russia-Ukraine war cited (Russia is 1% of sales, earnings and net assets). Tariff policy and currency devaluation could hurt results. Pricing was only +0.4%, so there is limited offset to cost inflation.",
+      "is_new": false,
+      "source_citation": "10-Q Part I Item 2 MD&A, Economic Conditions and Uncertainties; 10-K Item 1A Risk Factors"
+    },
+    {
+      "description": "Customer concentration: Walmart is about 16% of sales and the top ten customers about 43%. Retailer trade terms, private label and channel shifts could pressure margins.",
+      "is_new": false,
+      "source_citation": "10-K Item 1 Business, Key Customers; Item 1A Risk Factors"
+    }
+  ],
+  "recent_news": [],
+  "bull_case": [
+    "Volume-led growth: Q1 organic sales rose 4.0% with unit volume +2.4%, versus 1% organic growth and flat volume in FY2026. Four of five segments grew organic sales at a mid-single-digit rate or better, helped by market growth and distribution gains.",
+    "Strong cash generation: Q1 operating cash flow was $5.8B and free cash flow $4.4B (93% productivity), against a 90%+ long-term target. This funds a $1.0885 quarterly dividend, about $5.0B of FY2027 buybacks and the Thorne deal.",
+    "Cost discipline: SG&A as a percent of sales fell 90 bps with overhead down 70 bps and productivity savings of 120 bps in COGS and 130 bps in SG&A. Restructuring savings are still ramping, with the remaining roughly half of the $2.0B program in FY2027.",
+    "Premiumization and category share gains: positive mix in Beauty, Health Care and Baby; share gains in Fabric Care (+0.4 pts), Baby Care (+0.8 pts) and Personal Health Care (+0.5 pts); Grooming share up 0.2 pts.",
+    "Health Care and portfolio: Health Care net earnings rose 9% on a 200 bps gross margin gain, and the Thorne acquisition adds a premium vitamins/supplements brand to Personal Health Care.",
+    "Balance sheet quality: long-term ratings of Aa3/AA- with stable outlook (as of June 30, 2026), a dividend increased for 70 consecutive years, and share count falling (diluted weighted shares 2,407M versus 2,437M)."
+  ],
+  "bear_case": [
+    "Margin erosion outpacing sales growth: gross margin -160 bps and operating margin -70 bps, with 140 bps of commodity headwind and 140 bps of reinvestment. Core EPS rose only 1% and Core net earnings fell 1%.",
+    "Quality of volume and pricing: pricing contributed just 0.4%, and 1.1% of the growth came from geographic mix. Family Care and Baby pricing was negative, and Health Care volume fell 2.9%.",
+    "Rising leverage and short-term funding: debt due within one year rose $5.7B in the quarter, current liabilities exceed current assets by $12.5B, and the Thorne purchase adds to borrowings against an interest expense already up $26M YoY.",
+    "Beauty, Fabric & Home Care, and Baby/Feminine/Family Care net earnings fell or rose less than sales, and several share positions are slipping (Beauty, Oral Care, NA Family Care).",
+    "Non-recurring support: tariff recoveries (50 bps gross margin benefit) from the IEEPA ruling and one-time items may not repeat. The effective tax rate is rising (21.0% versus 20.8%) and other non-operating income fell $61M.",
+    "Gillette impairment sensitivity, restructuring execution and acquisition risk could produce non-cash charges or disruption, and the stock's 5-year total return (123 versus S&P 500 at 188) shows lagging investor sentiment."
+  ],
+  "what_to_watch": [
+    {
+      "text": "Q2 FY27 gross margin trajectory: whether the 140 bps commodity headwind and 140 bps of product/packaging investment persist, and how much productivity (120 bps in Q1) and tariff recoveries offset them.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Management's full-year FY27 outlook (sales, organic growth, Core EPS, FCF) and any change after Thorne and commodity costs. The filings provided do not contain it.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Thorne: first-quarter contribution (reported from the quarter ending Dec 31, 2026), final purchase price allocation (brand intangible versus goodwill), financing and interest cost.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Debt and liquidity: refinancing of $17.0B of short-term debt, renewal of the $4.8B 364-day facility expiring October 2026, and whether cash is used to repay commercial paper.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Volume durability and share trends in Beauty (Skin Care, Personal Care), Oral Care, Grooming and NA Family Care, plus Fabric Care's market-growth tailwind and Greater China baby/oral dynamics.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Restructuring pace: remaining roughly $0.8B or more of charges, progress toward up to 7,000 overhead role cuts, and Q2 incremental restructuring in Core EPS adjustments.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Gillette: any triggering event ahead of the annual impairment test in the quarter ending December 31, 2026 (fair value cushion only more than 10%).",
+      "relevant_urls": []
+    },
+    {
+      "text": "Cold and cough season (Vicks, Personal Health Care) after a volume decline from lower incidence in Q1; marketing spend versus the 20 bps leverage seen in Q1.",
+      "relevant_urls": []
+    }
+  ],
+  "data_gaps": [
+    "No quantitative FY2027 or Q2 FY27 guidance (sales, organic growth, Core EPS, FCF) appears in the provided 10-Q or 10-K; the Oct 22, 2026 earnings release is referenced but not provided.",
+    "No consensus estimates, expected next earnings date, stock price or valuation data were provided.",
+    "No recent news or external sources were provided, so recent_news is empty.",
+    "Thorne revenue, earnings and expected accretion/dilution are not disclosed (described only as not material); the preliminary purchase price allocation is not yet available.",
+    "Thorne price differs between filings: $3.8B in the 10-K (Aug 4, 2026 agreement) versus $3.9B at close in the 10-Q; the reason is not explained.",
+    "Restructuring cost range differs: the 10-K states about $1.5-$2.0B (including the ongoing plan) while the 10-Q states about $2.0B; the 10-Q does not reconcile the change.",
+    "Remaining dollar value under the share repurchase program is blank in the issuer purchases table (footnote 3 only).",
+    "Status of renewal of the $4.8B 364-day credit facility (expires October 2026) is not stated in the 10-Q.",
+    "Expected FY2027 tax rate, interest expense impact of Thorne financing and the commodity/tariff-recovery outlook are not quantified in the filings.",
+    "Prior-year segment figures were recast for the Habitat Care realignment; only Fabric & Home Care and Corporate full-year recast data are given, so FY comparisons for other segments rely on unchanged figures.",
+    "Minor rounding differences exist between statements (e.g., Fabric & Home Care net sales 8,204 in Note 2 versus 8,205 in MD&A; Baby, Feminine & Family Care pretax earnings 1,391 versus 1,390)."
+  ],
+  "hypotheses_explored": [
+    {
+      "id": "H1",
+      "proposing_personality": "Margin skeptic",
+      "question": "Is the Q1 gross margin decline structural or transitory?",
+      "summary": "Gross margin fell 160 bps, driven mostly by commodity costs (140 bps) and reinvestment (140 bps), which the company can only partly offset with productivity. Tariff recoveries add one-time support. If commodity costs remain elevated, further pressure is likely in Q2 and beyond, so the decline looks at least partly persistent absent pricing.",
+      "evidence_quotes": [
+        "Gross margin decreased 160 basis points to 49.8% of net sales for the quarter.",
+        "140 basis points of higher commodity costs,",
+        "50 basis points of due to lower tariff costs and recognized recoveries and"
+      ],
+      "confidence": 65
+    },
+    {
+      "id": "H2",
+      "proposing_personality": "Growth optimist",
+      "question": "Is the volume-led top-line acceleration sustainable?",
+      "summary": "Unit volume of +2.4% contrasts with flat volume in FY2026, and the growth was broad across Beauty, Fabric & Home Care and Baby. However, it is helped by market growth and distribution gains, while pricing is only +0.4%, and Health Care volume fell. Sustainability depends on innovation and share gains continuing.",
+      "evidence_quotes": [
+        "The increase in net sales was due to a unit volume increase of 2.4%, favorable geographic mix of 1.1% and higher pricing of 0.4%."
+      ],
+      "confidence": 55
+    },
+    {
+      "id": "H3",
+      "proposing_personality": "Balance sheet analyst",
+      "question": "Does Thorne financing materially change leverage and EPS growth?",
+      "summary": "Short-term debt rose sharply and cash was built ahead of the $3.9B all-cash close. The deal is described as immaterial to results, but higher debt, interest expense and acquisition intangibles add modest drag to an EPS growth rate that is already low.",
+      "evidence_quotes": [
+        "Financing activities generated $1.1 billion of net cash fiscal year to date, mainly due to a net debt increase related to the planned acquisition of Thorne."
+      ],
+      "confidence": 60
+    },
+    {
+      "id": "H4",
+      "proposing_personality": "Long-term algorithm tracker",
+      "question": "Is P&G tracking its long-term Core EPS algorithm?",
+      "summary": "Core EPS grew 1% in Q1 and 1% in FY2026 versus a stated goal of mid-to-high single digit growth. Sales growth improved but margin compression offset it, so the company is currently below its algorithm on earnings.",
+      "evidence_quotes": [
+        "Core EPS growth of mid-to-high single digits; and"
+      ],
+      "confidence": 70
+    }
+  ]
+}

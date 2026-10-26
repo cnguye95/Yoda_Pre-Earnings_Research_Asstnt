@@ -2,246 +2,532 @@
   "ticker": "JNJ",
   "company_name": "JNJ",
   "filing_type": "10-Q",
-  "filing_date": "2026-04-22",
-  "supplemental_filing_type": "10-K",
-  "supplemental_filing_date": "2026-02-11",
-  "report_generated_at": "2026-05-12T11:48:25.094883+00:00",
+  "filing_date": "2026-10-21",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T13:24:52.079911+00:00",
   "key_metrics": [
     {
-      "name": "Basic net earnings per share",
-      "value": "2.17",
-      "unit": "USD",
-      "source_citation": "Financial Statements — Note 8 —"
+      "name": "Sales to customers",
+      "value": "74,771 (Fiscal Nine Months 2026 vs 69,629 in Fiscal Nine Months 2025; +7.4%)",
+      "unit": "USD millions",
+      "source_citation": "Other"
     },
     {
-      "name": "Diluted net earnings per share",
-      "value": "2.14",
-      "unit": "USD",
-      "source_citation": "Financial Statements — Note 8 —"
-    },
-    {
-      "name": "Net earnings",
-      "value": "5,235",
-      "unit": "USD Million",
-      "source_citation": "Other — Gross profit"
+      "name": "Worldwide",
+      "value": "25,399 (Fiscal Third Quarter 2026 vs 23,993 in Fiscal Third Quarter 2025; +5.9%)",
+      "unit": "USD millions",
+      "source_citation": "Financial Statements"
     },
     {
       "name": "Gross profit",
-      "value": "15,956",
-      "unit": "USD Million",
-      "source_citation": "Other — Gross profit"
+      "value": "50,517 (Fiscal Nine Months 2026, 67.6% of sales, vs 47,341 or 68.0% in Fiscal Nine Months 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Cost of products sold",
+      "value": "24,254 (Fiscal Nine Months 2026, 32.4% of sales, vs 22,288 or 32.0%)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Selling, marketing and administrative expenses",
+      "value": "18,751 (Fiscal Nine Months 2026, 25.1% of sales, vs 16,923 or 24.3%)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Research and development expense",
+      "value": "11,832 (Fiscal Nine Months 2026, 15.8% of sales, vs 10,413 or 15.0%)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "In-process research and development impairments",
+      "value": "375 (Fiscal Nine Months 2026 vs none in Fiscal Nine Months 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Other (income) expense, net",
+      "value": "6,405 expense (Fiscal Nine Months 2026 vs (7,692) income in Fiscal Nine Months 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Earnings before provision for taxes on income",
+      "value": "12,771 (Fiscal Nine Months 2026, 17.1% of sales, vs 27,615 or 39.7%)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Provision for taxes on income",
+      "value": "1,792 (Fiscal Nine Months 2026 vs 5,927 in Fiscal Nine Months 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net earnings",
+      "value": "10,979 (Fiscal Nine Months 2026 vs 21,688 in Fiscal Nine Months 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net earnings",
+      "value": "210 (Fiscal Third Quarter 2026 vs 5,152 in Fiscal Third Quarter 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other — Fiscal Third Quarter Ended"
+    },
+    {
+      "name": "Basic net earnings per share",
+      "value": "4.56 (Fiscal Nine Months 2026 vs 9.01 in Fiscal Nine Months 2025); 0.09 (Fiscal Third Quarter 2026 vs 2.14 in Fiscal Third Quarter 2025)",
+      "unit": "USD per share",
+      "source_citation": "Financial Statements — Details on reclassifications out of Accumulated Other Comprehensive Income:"
+    },
+    {
+      "name": "Diluted",
+      "value": "4.49 (Fiscal Nine Months 2026 vs 8.94 in Fiscal Nine Months 2025)",
+      "unit": "USD per share",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Comprehensive income",
+      "value": "396 (Fiscal Third Quarter 2026 vs 4,220); 12,144 (Fiscal Nine Months 2026 vs 18,192)",
+      "unit": "USD millions",
+      "source_citation": "Other — Fiscal Third Quarter Ended"
     },
     {
       "name": "Net cash flows from operating activities",
-      "value": "2,514",
-      "unit": "USD Million",
-      "source_citation": "Other — 169,161"
+      "value": "18,850 (Fiscal Nine Months 2026 vs 17,221 in Fiscal Nine Months 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Additions to property, plant and equipment",
+      "value": "(3,732) (Fiscal Nine Months 2026 vs (2,995) in Fiscal Nine Months 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net cash used for investing activities",
+      "value": "(4,859) (Fiscal Nine Months 2026 vs (19,103) in Fiscal Nine Months 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Dividends to shareholders",
+      "value": "(9,585) (Fiscal Nine Months 2026 vs (9,250) in Fiscal Nine Months 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Repurchase of common stock",
+      "value": "(5,958) (Fiscal Nine Months 2026 vs (4,029) in Fiscal Nine Months 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Cash and cash equivalents",
+      "value": "16.9 billion at Q3 2026 (vs 19.7 billion at Q4 2025); marketable securities of $0.3 billion",
+      "unit": "USD billions",
+      "source_citation": "MD&A"
     },
     {
       "name": "Total cash, cash equivalents and current marketable securities",
-      "value": "22,051",
-      "unit": "USD Million",
-      "source_citation": "Financial Statements — 6,675"
+      "value": "17,228 at September 27, 2026",
+      "unit": "USD millions",
+      "source_citation": "Financial Statements"
     },
     {
-      "name": "Total debt",
-      "value": "47,933",
-      "unit": "USD Million",
-      "source_citation": "Quantitative Disclosures — 393"
+      "name": "Loans and notes payable",
+      "value": "8,852 at September 27, 2026 vs 8,495 at December 28, 2025",
+      "unit": "USD millions",
+      "source_citation": "Other"
     },
     {
-      "name": "Total revenue",
-      "value": "24,062",
-      "unit": "USD Million",
-      "source_citation": "Financial Statements — 384"
+      "name": "Long-term debt",
+      "value": "35,799 at September 27, 2026 vs 39,438 at December 28, 2025",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total assets",
+      "value": "197,425 at September 27, 2026 vs 199,210 at December 28, 2025",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total liabilities",
+      "value": "115,896 at September 27, 2026 vs 117,666 at December 28, 2025",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Accrued liabilities",
+      "value": "12,255 at September 27, 2026 vs 8,594 at December 28, 2025",
+      "unit": "USD millions",
+      "source_citation": "Other"
     }
   ],
   "revenue_segments": [
     {
-      "name": "TOTAL MEDTECH",
-      "revenue": "8,636",
-      "yoy_change": "7.7%",
-      "commentary": "Growth driven by new product innovations and strategic pricing actions.",
-      "source_citation": "Financial Statements — 384"
+      "name": "TOTAL MEDTECH (Worldwide)",
+      "revenue": "8,642 (Fiscal Third Quarter 2026); 26,204 (Fiscal Nine Months 2026)",
+      "yoy_change": "+2.5% (Q3 FY2026 vs Q3 FY2025, from 8,430); +4.9% (9M FY2026 vs 9M FY2025, from 24,991)",
+      "commentary": "MedTech U.S. grew 4.8% in Q3 (4,512 vs 4,306), while International was nearly flat at +0.1% (4,130 vs 4,124). The Orthopaedics separation is expected to complete in mid-2027.",
+      "source_citation": "Financial Statements"
     },
     {
-      "name": "WORLDWIDE",
-      "revenue": "24,062",
-      "yoy_change": "9.9%",
-      "commentary": "Overall growth supported by operational growth and positive currency impact.",
-      "source_citation": "Financial Statements — 384"
+      "name": "Innovative Medicine (nine months)",
+      "revenue": "$48.6 billion (Fiscal Nine Months 2026)",
+      "yoy_change": "+8.8% total, +7.4% operational, +1.4% currency (9M FY2026 vs 9M FY2025)",
+      "commentary": "U.S. Innovative Medicine sales increased 9.9% over the nine months. STELARA biosimilar erosion remains a drag on operational sales.",
+      "source_citation": "MD&A — Q3 2026"
+    },
+    {
+      "name": "WORLDWIDE U.S.",
+      "revenue": "14,959 (Fiscal Third Quarter 2026); 42,822 (Fiscal Nine Months 2026)",
+      "yoy_change": "+9.1% (Q3 FY2026 vs Q3 FY2025, from 13,708); +8.3% (9M FY2026 vs 9M FY2025, from 39,557)",
+      "commentary": "U.S. growth is well ahead of international, driven by Innovative Medicine. U.S. rebate and discount estimate changes added approximately 0.4% of U.S. Innovative Medicine revenue in Q3 FY2026, versus 2.4% in Q3 FY2025.",
+      "source_citation": "Financial Statements"
+    },
+    {
+      "name": "WORLDWIDE International",
+      "revenue": "10,440 (Fiscal Third Quarter 2026); 31,949 (Fiscal Nine Months 2026)",
+      "yoy_change": "+1.5% (Q3 FY2026 vs Q3 FY2025, from 10,285); +6.2% (9M FY2026 vs 9M FY2025, from 30,072)",
+      "commentary": "STELARA decline reduced international operational sales by about 2.1% in Q3. Europe fell 0.6% (operational +1.0%, currency -1.6%). Western Hemisphere ex-U.S. grew 12.5% and Asia-Pacific/Africa grew 1.0%.",
+      "source_citation": "MD&A — Q3 2026"
     }
   ],
   "forward_guidance": {
-    "text": "No forward guidance issued in this filing.",
-    "source_citation": "MD&A"
+    "text": "\"In October 2025, the Company announced its intention to separate its Orthopaedics business and expects the separation to be completed in mid-2027.\"",
+    "source_citation": "Financial Statements"
   },
   "key_risks": [
     {
-      "description": "Competitive pressures and regulatory scrutiny could impact revenue growth and profit margins.",
+      "description": "Talc litigation remains open. The Q3 FY2026 charge of about $5.5 billion relates to a proposed ovarian resolution, and the total talc reserve is about $9.0 billion present value, roughly half classified as current. The proposed agreement does not affect the ongoing mesothelioma docket, and the company also faces litigation in Canada. About 76,500 U.S. plaintiffs have direct claims pending, and management states it cannot estimate loss beyond amounts accrued. Further accrual increases could be material to any reporting period.",
       "is_new": false,
-      "source_citation": "MD&A — Risk Factors"
+      "source_citation": "Financial Statements"
     },
     {
-      "description": "Potential changes in tax laws may lead to greater audit scrutiny and additional tax liabilities.",
+      "description": "STELARA biosimilar erosion continues to reduce worldwide operational sales (about 4.2 points in Q3 FY2026 on total company, 6.9 points on Innovative Medicine, and 7.8 points over nine months). Growth depends on newer launches offsetting the decline.",
       "is_new": false,
-      "source_citation": "Notes — Commitments and Contingencies"
+      "source_citation": "MD&A — Q3 2026"
     },
     {
-      "description": "Legal contingencies and tax liabilities may obscure underlying financial risks.",
+      "description": "Further legacy-brand erosion. SIMPONI biosimilars entered Europe in Q2 2026, with a potential U.S. entrant later in 2026. IMBRUVICA is losing share, UPTRAVI faces potential generic entrants in 2027, and REMICADE faces biosimilars. A revised 340B pricing policy adds channel uncertainty.",
+      "is_new": true,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Orthopaedics separation and MedTech margin pressure. The nine-month MedTech pre-tax margin fell to 12.2% from 15.7% on separation costs of about $0.7 billion and IPR&D impairment charges of about $0.4 billion. Execution and timing risk persists through the targeted mid-2027 completion.",
       "is_new": false,
-      "source_citation": "Notes — Commitments and Contingencies"
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "CARVYKTI patent challenge: 2seventy bio filed suit in the Unified Patent Court in Brussels in January 2026 alleging infringement of an EU patent, with an oral hearing scheduled for March 2027.",
+      "is_new": true,
+      "source_citation": "Financial Statements"
+    },
+    {
+      "description": "Earnings quality and rebate-estimate risk. The nine-month effective tax rate was 14.0% versus 21.5%, which may not persist. Favorable adjustments to U.S. rebate and discount estimates for prior-year shipments fell to about 0.4% of U.S. Innovative Medicine revenue in Q3 FY2026 from 2.4%, reducing a prior tailwind.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Liquidity and cash-claim stacking. Roughly half of the talc reserve is current, loans and notes payable were $8,852 million, and net cash collateral paid under credit support agreements was $3.8 billion. These sit alongside dividends of $9,585 million and buybacks of $5,958 million over the nine months.",
+      "is_new": false,
+      "source_citation": "Financial Statements"
+    },
+    {
+      "description": "Restructuring program: a supply chain restructuring program, primarily in Innovative Medicine, with estimated costs of $0.7 billion to $0.8 billion and substantial completion by the end of 2029. Pre-tax expense was $274 million in the nine months of 2026.",
+      "is_new": true,
+      "source_citation": "MD&A — Restructuring"
     }
   ],
   "recent_news": [
     {
-      "headline": "Johnson & Johnson to separate DePuy Synthes ortho business",
-      "date": "",
-      "url": "https://www.massdevice.com/johnson-johnson-separate-orthopedics-business/",
-      "relevance_note": "Discusses the strategic separation of the Orthopaedics business."
+      "headline": "Johnson & Johnson reports Q3 2026 results, raises 2026 guidance",
+      "date": "2026-10-13",
+      "url": "https://www.jnj.com/media-center/press-releases/johnson-johnson-reports-q3-2026-results-raises-2026-guidance",
+      "relevance_note": "Company release: sales up 5.9% to $25.4B, EPS of $0.09 reflecting the talc charge, Firefly Bio acquisition and Sail collaboration, adjusted EPS of $2.59, and guidance raised."
     },
     {
-      "headline": "Why is Johnson & Johnson Selling its Orthopedics Unit",
-      "date": "",
-      "url": "https://www.kavout.com/market-lens/why-is-johnson-johnson-selling-its-orthopedics-unit",
-      "relevance_note": "Explores the rationale behind the separation of the Orthopaedics business."
+      "headline": "Johnson & Johnson reports Q3 2026 results, raises 2026 guidance | Johnson & Johnson",
+      "date": "2026-10-13",
+      "url": "https://www.investor.jnj.com/investor-news/news-details/2026/Johnson--Johnson-reports-Q3-2026-results-raises-2026-guidance/default.aspx",
+      "relevance_note": "Innovative Medicine operational sales grew 7.9%, with a roughly 690 basis point STELARA drag, offset by TREMFYA, oncology and neuroscience growth."
     },
     {
-      "headline": "J&J spins off orthopaedics business against positive Q3 backdrop",
-      "date": "",
-      "url": "https://www.pharmaceutical-technology.com/news/johnson-johnson-q3-financial-results-orthopaedic-spinoff/",
-      "relevance_note": "Provides context on the Orthopaedics business spin-off."
+      "headline": "J&J Q3 2026 Earnings: Talc Offer Charge and Raised Outlook",
+      "date": "2026-10",
+      "url": "https://www.stocktitan.net/articles/johnson-johnson-q3-2026-earnings-talc-settlement",
+      "relevance_note": "Reconciles the after-tax talc charge (about $1.75 per share) to reported and adjusted earnings."
+    },
+    {
+      "headline": "J&J Takes a $5.5 Billion Talc Charge as MedTech Growth Slows From 7.7% to 2.5% | TIKR.com",
+      "date": "2026-10-13",
+      "url": "https://www.tikr.com/blog/jj-takes-a-5-5-billion-talc-charge-as-medtech-growth-slows-from-7-7-to-2-5",
+      "relevance_note": "Shares opened down about 4% despite an adjusted EPS beat ($2.59 vs $2.53 consensus) and a raised outlook; highlights the MedTech slowdown."
+    },
+    {
+      "headline": "Johnson & Johnson raises profit guidance in Q3 2026 earnings",
+      "date": "2026-10-13",
+      "url": "https://qz.com/johnson-johnson-raises-profit-guidance-drug-sales-medtech-101326",
+      "relevance_note": "Innovative Medicine sales of $16.76B (+7.7%); full-year adjusted EPS now $11.05 to $11.15."
+    },
+    {
+      "headline": "Johnson & Johnson Talcum Powder Lawsuit | Updated 2026",
+      "date": "2026-08-26",
+      "url": "https://www.sokolovelaw.com/product-liability/talcum-powder/johnson-and-johnson",
+      "relevance_note": "Describes the proposed $5.5B ovarian settlement (95% participation condition) and continuing mesothelioma verdicts such as a $10M Louisiana verdict."
+    },
+    {
+      "headline": "Talcum Powder Settlements - Verdicts & Payouts (October 2026)",
+      "date": "2026-10",
+      "url": "https://www.drugwatch.com/talcum-powder/settlements",
+      "relevance_note": "Notes the $5.5B proposal still needs to be finalized, plus punitive-damage reductions in a California mesothelioma case."
+    },
+    {
+      "headline": "J&J DePuy Synthes Sale: Orthopedics Divestiture and MedTech Spinoff Guide | MedDeviceGuide",
+      "date": "2026-02",
+      "url": "https://meddeviceguide.com/blog/jnj-depuy-synthes-20b-sale-orthopedics-divestiture-medtech-spinoff-guide",
+      "relevance_note": "Orthopaedics separation announced October 2025; press reports of a potential sale above $20B."
+    },
+    {
+      "headline": "Johnson & Johnson Earnings: Largely In Line as New Products Ready to Offset Stelara Biosimilars | Morningstar",
+      "date": "2026-07",
+      "url": "https://www.morningstar.com/stocks/johnson-johnson-earnings-largely-line-new-products-ready-offset-stelara-biosimilars",
+      "relevance_note": "Fair value estimate of $164; argues multiple myeloma leadership offsets Stelara pressure."
+    },
+    {
+      "headline": "Johnson & Johnson reports Q2 2026 results, raises 2026 outlook",
+      "date": "2026-07",
+      "url": "https://www.jnj.com/media-center/press-releases/johnson-johnson-reports-q2-2026-results-raises-2026-outlook",
+      "relevance_note": "Prior-quarter guidance raise, with operational EPS up $0.18 to $11.58 at the midpoint."
+    },
+    {
+      "headline": "Johnson & Johnson Q1 profit beats estimates",
+      "date": "2026-04-14",
+      "url": "https://www.cnbc.com/2026/04/14/johnson-and-johnson-jnj-earnings-q1-2026.html",
+      "relevance_note": "Stelara sales fell about 60% to $656M in Q1 as patients switched to Tremfya rather than biosimilars."
     }
   ],
   "bull_case": [
-    "JNJ's strategic separation of its Orthopaedics business is expected to enhance focus on higher-growth areas within the MedTech segment, potentially accelerating innovation and strategic agility.",
-    "Product innovations and strong market demand, particularly in Vision and Surgical franchises, are likely to drive continued growth.",
-    "Despite competitive pressures, JNJ's focus on innovation and new product launches positions it well for growth, especially in the Orthopaedics and Neuroscience segments."
+    "Growth franchises are carrying the portfolio through the Stelara cliff. Q3 worldwide sales rose 5.9% to $25.4B (operational +6.0%) despite a roughly 4.2-point Stelara drag, which implies ex-Stelara operational growth of roughly 10% (analyst arithmetic, not a company figure).",
+    "Oncology is compounding. Nine-month Oncology sales rose to $21,981M (+18.7%), led by DARZALEX (+18.8%), CARVYKTI (+47.4%), TECVAYLI (+56.7%), TALVEY (+58.3%) and RYBREVANT/LAZCLUZE (+67.4%), while TREMFYA rose to $6,050M (+69.7%). Q3 Oncology operational growth was 16.7%.",
+    "The Stelara headwind is shrinking. The Q3 Innovative Medicine drag of about 6.9 points compares with 7.8 points over nine months, so the comparison base eases each quarter.",
+    "Operating cash flow was strong at $18,850M over nine months versus $17,221M a year ago, well above net earnings of $10,979M. After $3,732M of capex, free cash flow of about $15.1B nearly covers dividends and buybacks.",
+    "Underlying profitability is intact once one-offs are excluded. Stripping the roughly $5.5B talc charge and $1.0B Firefly IPR&D expense implies a nine-month pre-tax margin near 25.8% (analyst arithmetic). Management raised 2026 guidance at both the Q2 and Q3 reports, and adjusted EPS of $2.59 topped the $2.53 consensus.",
+    "Portfolio optionality: the Orthopaedics separation targeted for mid-2027 (with press reports of a potential $20B+ sale) could simplify MedTech and fund further Innovative Medicine investment.",
+    "Balance sheet is stable. Long-term debt fell to $35,799M from $39,438M, with $16.9B of cash and cash equivalents."
   ],
   "bear_case": [
-    "JNJ's capital allocation strategy, particularly regarding dividends and stock buybacks, appears aggressive relative to its cash flow generation, indicating potential sustainability issues.",
-    "JNJ faces significant risks that could undermine its revenue growth and profit margins, including competitive pressures, regulatory scrutiny, and potential changes in tax laws.",
-    "JNJ's financial disclosures indicate that their accounting practices, especially regarding legal contingencies and tax liabilities, may obscure underlying financial risks."
+    "Reported earnings quality is poor. Q3 net earnings were $210M versus $5,152M, nine-month pre-tax margin was 17.1% versus 39.7%, and the second large talc swing in about a year (a roughly $7.0B reversal in 2025, then a $5.5B charge in 2026) makes talc a recurring item rather than a clean one-time adjustment.",
+    "Talc exposure is not capped. The proposed deal covers ovarian claims only, while the mesothelioma docket and Canadian litigation remain open and about 76,500 U.S. plaintiffs have direct claims. Management cannot estimate loss beyond accruals, and about half of the roughly $9.0B reserve is current, implying a cash outflow within about 12 months.",
+    "MedTech is decelerating. Q3 sales grew only 2.5%, International MedTech was flat (+0.1%), and the nine-month MedTech pre-tax margin fell to 12.2% from 15.7% on separation costs and IPR&D impairments.",
+    "Margin pressure beyond one-offs. Gross margin slipped to 67.6% from 68.0% on STELARA mix, SM&A rose to 25.1% of sales from 24.3%, and R&D rose to 15.8% from 15.0%.",
+    "Legacy erosion is broadening. STELARA fell 54.4% in Q3, IMBRUVICA fell 18.8%, and SIMPONI, REMICADE and OPSUMIT face share loss or biosimilars, with UPTRAVI generics possible in 2027. Growth relies on a small set of launches that must keep compounding.",
+    "A tax rate of 14.0% versus 21.5% flatters nine-month net income, and favorable prior-year rebate adjustments faded to 0.4% of U.S. Innovative Medicine revenue from 2.4%.",
+    "Cash returns are tight against cash generation. Dividends and buybacks of about $15.5B over nine months slightly exceed free cash flow of about $15.1B, before talc payments, a $0.7B to $0.8B supply chain restructuring program, and $3.8B of net collateral posted under credit support agreements."
   ],
   "what_to_watch": [
     {
-      "text": "**Orthopaedics Business Separation:** Johnson & Johnson's strategic separation of its Orthopaedics business is likely to enhance its focus on higher-growth areas within the MedTech segment, positioning the company for accelerated innovation and strategic agility in a competitive landscape.\n\n-> Monitor updates on the separation process and its impact on JNJ's growth strategy.",
+      "text": "**Talc Reserve Adequacy and Mesothelioma Tail:** The Q3 charge of about $5.5B lifted the total talc reserve to roughly $9.0B present value, which covers the proposed ovarian resolution, executed settlements and defense costs. However, the proposed agreement excludes the ongoing mesothelioma docket, the company also faces litigation in Canada, about 76,500 U.S. plaintiffs still have direct claims, and management says it cannot estimate loss beyond accruals. Third-party sources also describe the ovarian deal as conditioned on at least 95% claimant participation, so finality is not yet established, and recent mesothelioma verdicts continue to arrive.\n\n-> Monitor ovarian-deal participation progress, any new accruals for mesothelioma or Canada, and the split of the reserve between current and non-current liabilities.",
       "relevant_urls": [
-        "https://www.massdevice.com/johnson-johnson-separate-orthopedics-business/",
-        "https://www.kavout.com/market-lens/why-is-johnson-johnson-selling-its-orthopedics-unit"
+        "https://www.stocktitan.net/articles/johnson-johnson-q3-2026-earnings-talc-settlement",
+        "https://www.drugwatch.com/talcum-powder/settlements",
+        "https://www.sokolovelaw.com/product-liability/talcum-powder/johnson-and-johnson"
       ]
     },
     {
-      "text": "**Capital Allocation Strategy:** JNJ's capital allocation strategy, particularly regarding dividends and stock buybacks, appears aggressive relative to its cash flow generation, indicating potential sustainability issues.\n\n-> Watch for commentary on capital allocation priorities and any adjustments in dividend or buyback plans.",
+      "text": "**Earnings Quality Versus Cash Earning Power:** One view is that the nine-month result is flattered because the $5.5B talc accrual has not yet been paid, operating cash flow of $18.9B exceeded net earnings of $11.0B on $6.8B of non-cash add-backs, and the effective tax rate fell to 14.0% from 21.5%. However, the accrual actually depresses GAAP earnings (pre-tax margin 17.1% vs 39.7%), so cash earning power currently looks better than reported earnings, and the real exposure is the deferred outflow, about half of a $9.0B reserve being current, and the open mesothelioma docket. The tax rate is the one genuinely flattering item and needs separate testing for persistence.\n\n-> Monitor the gap between GAAP and adjusted EPS, the timing of talc cash payments, and management commentary on the sustainability of the 14.0% tax rate.",
+      "relevant_urls": [
+        "https://www.stocktitan.net/articles/johnson-johnson-q3-2026-earnings-talc-settlement",
+        "https://www.jnj.com/media-center/press-releases/johnson-johnson-reports-q3-2026-results-raises-2026-guidance"
+      ]
+    },
+    {
+      "text": "**STELARA Erosion and Ex-STELARA Growth:** Q3 worldwide sales rose 5.9% with operational growth of 6.0% despite a roughly 4.2-point STELARA drag, and the Innovative Medicine drag narrowed to about 6.9 points in Q3 from 7.8 points over nine months, implying underlying growth of roughly 10% or higher. That said, the estimate rests on analyst arithmetic, and the reported STELARA decline of $854M ($1,570M to $716M, -54.4%) is only about 3.6% of prior-year worldwide sales versus the disclosed 4.2% drag, so the figures need reconciling. Legacy brands such as IMBRUVICA (-18.8%), SIMPONI and REMICADE are also declining, and the filing gives no guidance on how long new launches can keep compounding.\n\n-> Monitor the disclosed STELARA basis-point drag, Immunology ex-STELARA growth (Q3 operational +1.4%), and any quantification of SIMPONI and UPTRAVI erosion.",
+      "relevant_urls": [
+        "https://www.investor.jnj.com/investor-news/news-details/2026/Johnson--Johnson-reports-Q3-2026-results-raises-2026-guidance/default.aspx",
+        "https://www.cnbc.com/2026/04/14/johnson-and-johnson-jnj-earnings-q1-2026.html"
+      ]
+    },
+    {
+      "text": "**Oncology and TREMFYA Durability:** Nine-month Oncology sales rose 18.7% to $21,981M, with DARZALEX at $12,410M (+18.8%), CARVYKTI up 47.4%, TECVAYLI up 56.7%, TALVEY up 58.3%, RYBREVANT/LAZCLUZE up 67.4%, and TREMFYA up 69.7% to $6,050M. On the other hand, DARZALEX remains the largest contributor, TREMFYA's growth comes off a smaller base, and a European patent suit against CARVYKTI has an oral hearing scheduled for March 2027.\n\n-> Monitor DARZALEX share trends, CARVYKTI capacity and patent developments, and the pace of TREMFYA and ICOTYDE launch uptake.",
+      "relevant_urls": [
+        "https://www.morningstar.com/stocks/johnson-johnson-earnings-largely-line-new-products-ready-offset-stelara-biosimilars",
+        "https://qz.com/johnson-johnson-raises-profit-guidance-drug-sales-medtech-101326"
+      ]
+    },
+    {
+      "text": "**MedTech Momentum and the Orthopaedics Separation:** MedTech Q3 sales grew just 2.5% ($8,642M vs $8,430M), International was flat, and the nine-month pre-tax margin fell to 12.2% from 15.7% on about $0.7B of separation costs and $0.4B of IPR&D impairment, partly offset by about $0.2B of tariff recoveries. That said, pockets of strength exist in Shockwave (+16.8%), Electrophysiology (+4.9%) and Vision (+4.4%), and the separation targeted for mid-2027, with press reports of a potential $20B+ sale, could produce a more focused and higher-margin business.\n\n-> Monitor MedTech operational growth by franchise, separation cost run-rate, and any update on whether the Orthopaedics exit is a spin or a sale.",
+      "relevant_urls": [
+        "https://meddeviceguide.com/blog/jnj-depuy-synthes-20b-sale-orthopedics-divestiture-medtech-spinoff-guide",
+        "https://www.tikr.com/blog/jj-takes-a-5-5-billion-talc-charge-as-medtech-growth-slows-from-7-7-to-2-5"
+      ]
+    },
+    {
+      "text": "**Capital Returns Versus Free Cash Flow:** Over nine months, operating cash flow of $18,850M less capex of $3,732M leaves free cash flow of about $15.1B, against dividends of $9,585M and buybacks of $5,958M (about $15.5B in total), a thin shortfall of roughly $0.4B. However, the cash flow statement shows net short-term debt repayment rather than net borrowing, long-term debt fell to $35,799M from $39,438M, and cash and cash equivalents stand at $16.9B, so there is no funding gap today. The pressure point is talc payment timing, $8,852M of loans and notes payable, and $3.8B of net collateral posted under credit support agreements.\n\n-> Monitor operating cash flow, net debt, commercial paper issuance, and management commentary on buyback pacing relative to talc payments.",
       "relevant_urls": []
     },
     {
-      "text": "**Competitive Pressures and Innovation:** Despite competitive pressures, JNJ's focus on innovation and new product launches positions it well for growth, especially in the Orthopaedics and Neuroscience segments.\n\n-> Keep an eye on new product launches and their market reception, particularly in high-growth segments.",
-      "relevant_urls": []
+      "text": "**Margin Structure and Cost Mix:** Gross margin slipped to 67.6% from 68.0% on unfavorable mix tied to STELARA, while SM&A rose to 25.1% of sales from 24.3% and R&D to 15.8% from 15.0%. Excluding the roughly $5.5B talc charge and $1.0B Firefly IPR&D expense, the nine-month pre-tax margin is roughly 25.8% (analyst arithmetic), but that remains well below 39.7% and the adjusted figure is a ceiling rather than a clean run-rate given the settlement cash still to come.\n\n-> Monitor cost of products sold as a percent of sales, SM&A and R&D intensity, and the size of the next IPR&D and restructuring charges (the supply chain program is estimated at $0.7B to $0.8B).",
+      "relevant_urls": [
+        "https://www.tikr.com/blog/jj-takes-a-5-5-billion-talc-charge-as-medtech-growth-slows-from-7-7-to-2-5"
+      ]
     },
     {
-      "text": "**Regulatory and Tax Risks:** JNJ faces significant risks that could undermine its revenue growth and profit margins, including regulatory scrutiny and potential changes in tax laws.\n\n-> Monitor regulatory developments and tax law changes that could impact JNJ's financial performance.",
-      "relevant_urls": []
-    },
-    {
-      "text": "**Financial Transparency:** JNJ's financial disclosures indicate that their accounting practices, especially regarding legal contingencies and tax liabilities, may obscure underlying financial risks.\n\n-> Look for any changes in financial reporting practices or additional disclosures that improve transparency.",
+      "text": "**U.S. Rebate Estimate Tailwinds and Pricing:** Favorable changes in estimates for prior-year U.S. rebate and discount liabilities added about 0.4% of U.S. Innovative Medicine revenue in Q3 FY2026, versus 2.4% in Q3 FY2025, and 2.6% versus 3.1% over nine months. The tailwind has largely faded, so U.S. growth (+9.1% in Q3) is now more dependent on volume and launches. On the other hand, a revised 340B offer requiring covered entities to submit claims data could add channel noise.\n\n-> Monitor U.S. Innovative Medicine growth ex-rebate adjustments and any commentary on 340B policy effects.",
       "relevant_urls": []
     }
   ],
   "data_gaps": [
-    "No forward guidance issued in this filing.",
-    "Lack of detailed segment-specific forward-looking statements."
+    "Operating income/loss is not reported as a line item in the provided filing chunks; only earnings before provision for taxes on income ($12,771M for nine months) is shown.",
+    "Free cash flow is not reported as a line item; only operating cash flow and capital expenditures are available in the chunks.",
+    "Fiscal Q3 2026 diluted EPS and Q3 gross profit are not shown in the provided chunks (the EPS reconciliation is truncated and the Q3 earnings statement is not included).",
+    "Therapeutic-area sales (Oncology, Immunology, STELARA, TREMFYA, DARZALEX, etc.) and Innovative Medicine Q3 segment sales are not included in the provided filing chunks, so these figures could not be placed in revenue_segments.",
+    "The talc reserve details (about $9.0 billion present value, current portion, 76,500 plaintiffs) are not reproduced in the provided filing chunks and are described qualitatively in risks.",
+    "The filing chunks do not include explicit full-year sales or EPS guidance language; only the Orthopaedics separation timing and restructuring completion language are available."
   ],
   "hypotheses_explored": [
     {
-      "id": "h2",
-      "proposing_personality": "Conservative",
-      "question": "Is JNJ's capital allocation strategy sustainable given its current cash flows and obligations?",
-      "summary": "JNJ's capital allocation strategy, particularly regarding dividends and stock buybacks, appears aggressive relative to its cash flow generation, indicating potential sustainability issues.",
-      "evidence_quotes": [
-        "Cash flow used for financing activities of $5.5 billion was primarily due to: $(12.4) billion dividends to shareholders and $(6.0) billion repurchase of common stock.; The Company anticipates that operating cash flows...and access to the commercial paper markets will support its capital allocation strategy."
-      ],
-      "confidence": 3
-    },
-    {
       "id": "h3",
-      "proposing_personality": "Dreamer",
-      "question": "How is Johnson & Johnson's strategic separation of its Orthopaedics business expected to impact its long-term growth and market focus over the next 5-10 years?",
-      "summary": "Johnson & Johnson's separation of its Orthopaedics business is likely to enhance its focus on higher-growth areas within the MedTech segment, positioning the company for accelerated innovation and strategic agility in a competitive landscape.",
+      "proposing_personality": "Contrarian",
+      "question": "Is the Street treating the $5.5B Q3 talc charge as a closed, non-recurring item, when the open mesothelioma docket, Canadian litigation, and a reserve that is still half current keep talc a recurring earnings-quality risk?",
+      "summary": "Consensus appears to strip the talc charge out as one-time, yet this is the second large talc swing in about a year. The deal covers only ovarian claims, mesothelioma and Canada remain open, about 76,500 US plaintiffs remain, and half of the $9.0B reserve is current. GAAP Q3 net earnings fell to $210M from $5.15B. The adjusted EPS definition was not verified and consensus EPS comes from a secondary news source.",
       "evidence_quotes": [
-        "The orthopaedics business, while substantial with $9.2 billion in sales in 2024—representing about 10% of J&J's total revenue and 29% of its MedTech segment—has been identified as a slower-growth area compared to other parts of the portfolio.; J&J's CEO, Joaquin Duato, articulated this shift as a pivot toward faster-growing MedTech segments, indicating a strategic redirection to focus resources and innovation where growth potential is higher."
+        "The proposed agreement does not impact the mesothelioma docket, which remains ongoing. The Company also faces litigation in Canada.",
+        "As of the third quarter of 2026, the total present value of the reserve for talc related matters is approximately $9.0 billion... Approximately half of the reserve is recorded as a current liability.",
+        "As of September 27, 2026, there are approximately 76,500 plaintiffs in the United States with direct claims against the Company and its affiliates in pending lawsuits",
+        "Net earnings $210 (fiscal third quarter 2026) versus 5,152 (fiscal third quarter 2025)"
       ],
       "confidence": 4
     },
     {
       "id": "h4",
-      "proposing_personality": "Dreamer",
-      "question": "How is Johnson & Johnson's strategic separation of its Orthopaedics business expected to impact its long-term growth and market focus over the next 5-10 years?",
-      "summary": "The planned separation of JNJ's Orthopaedics business is anticipated to create a new stand-alone entity that can better compete in the orthopaedics market while allowing JNJ to concentrate on its core innovative medicine and faster-growing MedTech segments.",
+      "proposing_personality": "Contrarian",
+      "question": "Is headline growth understating the quality of the franchise, so that ex-Stelara operational growth is stronger than the Street's narrative of a biosimilar-driven slowdown?",
+      "summary": "Worldwide operational growth was 6.0% despite a 4.2-point Stelara drag, implying roughly 10% ex-Stelara growth (own arithmetic). Growth is concentrated in Tremfya, Darzalex and oncology launches while Imbruvica and Simponi decline, and the filing gives no guidance on durability.",
       "evidence_quotes": [
-        "Johnson & Johnson (J&J) has made the latest slimming down move across its company in recent years, saying it plans to separate its orthopaedics business into a new stand-alone company.; According to J&J’s Chair and CEO, Joaquin Duato, this move is part of a strategy to redirect focus within its medical technology division toward higher-growth areas."
+        "In the fiscal third quarter of 2026, worldwide sales were $25.4 billion, a total increase of 5.9%, which included operational growth of 6.0% and a negative currency impact of 0.1%",
+        "the negative impact of the STELARA sales decline, due to biosimilar competition, on worldwide operational sales was approximately 4.2%.",
+        "TREMFYA 2,396 vs 1,424 (68.3%); STELARA 716 vs 1,570 (54.4%); IMBRUVICA 563 vs 695 (18.8%) decline"
       ],
-      "confidence": 4
+      "confidence": 3
     },
     {
       "id": "h5",
-      "proposing_personality": "Optimist",
-      "question": "What are the potential growth drivers for JNJ in the upcoming earnings call?",
-      "summary": "JNJ is likely to see continued growth driven by product innovations, strong market demand, and strategic pricing actions, particularly in its Vision and Surgical franchises.",
+      "proposing_personality": "Dreamer",
+      "question": "What if JNJ's oncology franchise (DARZALEX, CARVYKTI, TECVAYLI, TALVEY, RYBREVANT/LAZCLUZE) compounds fast enough to replace the STELARA revenue cliff and become the core of a much larger Innovative Medicine business over the next 5-10 years?",
+      "summary": "Nine-month oncology sales rose about 18.7% to $21,981M, with next-generation franchises growing 47% to 67%, while STELARA fell about 54% in Q3. The bull case rests on continued share gains and the ICOTYDE and TREMFYA launches; risks include the CARVYKTI patent suit in Europe and DARZALEX concentration.",
       "evidence_quotes": [
-        "The Vision franchise achieved operational sales growth of 3.6% as compared to the prior year fiscal first quarter, driven by strong performance in the ACUVUE OASYS 1-Day family of products and strategic price actions.; The Surgical operational growth was primarily driven by the strength of recent product innovations, robust demand and strong commercial execution."
+        "Oncology $21,981 vs $18,519, 18.7% total change, 16.8% operational",
+        "STELARA 716 vs 1,570, (54.4)% in the fiscal third quarter of 2026",
+        "Oncology products achieved operational sales growth of 16.7% as compared to the same period a year ago.",
+        "An oral hearing is scheduled for March 2027."
       ],
       "confidence": 4
     },
     {
       "id": "h6",
-      "proposing_personality": "Optimist",
-      "question": "How is JNJ positioned against competitive pressures in its market segments?",
-      "summary": "Despite competitive pressures, JNJ's focus on innovation and new product launches positions it well for growth, especially in the Orthopaedics and Neuroscience segments.",
+      "proposing_personality": "Dreamer",
+      "question": "What if separating or selling DePuy Synthes (Orthopaedics) crystallizes a re-rating of the remaining JNJ pharma-plus-MedTech portfolio, with the proceeds funding a larger oncology and immunology buildout over the next decade?",
+      "summary": "JNJ announced its intent to separate Orthopaedics in October 2025, and press reports in February 2026 said it was exploring a sale for more than $20B. Orthopaedics grew only 3.4% operationally in Q3. The sale value comes from press reporting, not a signed transaction, so confidence is lower.",
       "evidence_quotes": [
-        "The operational growth in Hips was due to new product launches.; Neuroscience products achieved operational growth of 29.3% compared to the same period a year ago, driven by continued increased physician and patient demand."
+        "On October 14, 2025, Johnson & Johnson (NYSE: JNJ) announced its intent to separate its Orthopaedics business — DePuy Synthes — into a standalone company.",
+        "Four months later, in February 2026, Bloomberg reported that J&J was exploring a potential outright sale of the unit for more than $20 billion.",
+        "The Orthopaedics franchise achieved operational sales growth of 3.4% as compared to the prior year fiscal third quarter."
       ],
-      "confidence": 4
+      "confidence": 2
     },
     {
       "id": "h7",
-      "proposing_personality": "Pessimist",
-      "question": "Are JNJ's current revenue growth and profit margins sustainable, or are there underlying issues that could lead to deterioration in their unit economics?",
-      "summary": "JNJ faces significant risks that could undermine its revenue growth and profit margins, including competitive pressures, regulatory scrutiny, and potential changes in tax laws.",
+      "proposing_personality": "Optimist",
+      "question": "Can J&J's Innovative Medicine growth engine (Oncology plus Tremfya) grow fast enough to offset the Stelara biosimilar erosion and keep total operational growth accelerating into the next earnings call?",
+      "summary": "Oncology and Tremfya are compounding at double-digit rates and carry the Innovative Medicine segment. Nine-month operational growth of 7.4% despite a roughly 7.8-point Stelara hit implies the underlying business is growing well above the headline. The main risk is Stelara erosion deepening faster than launches ramp.",
       "evidence_quotes": [
-        "The operational growth in Spine, Sports & Other was driven by new product innovations and growth in shoulders partially offset by competitive pressures and inventory dynamics.; Governments around the world consider various proposals to make changes to tax laws, which may include increasing or decreasing existing statutory tax rates. This may lead to greater audit scrutiny of profits earned in other countries, potentially exposing the company to additional tax liabilities.; Compliance with local regulations and laws that may restrict the Company’s ability to manufacture or sell its products in relevant markets, including requirements to comply with medical device reporting regulations and other requirements such as the European Union’s Medical Devices Regulation."
+        "TREMFYA 6,050 vs 3,566, total change 69.7%, operations change 67.9%",
+        "Innovative Medicine segment sales in the fiscal nine months of 2026 were $48.6 billion, an increase of 8.8%... operational increase of 7.4%",
+        "the negative impact of the STELARA sales decline... was an approximate 7.8%, 10.4% and 4.2% on worldwide, U.S. and international Innovative Medicine segment operational sales, respectively."
       ],
       "confidence": 4
     },
     {
       "id": "h8",
-      "proposing_personality": "Pessimist",
-      "question": "Is JNJ's accounting treatment of revenue and liabilities masking potential financial vulnerabilities?",
-      "summary": "JNJ's financial disclosures indicate that their accounting practices, especially regarding legal contingencies and tax liabilities, may obscure underlying financial risks.",
+      "proposing_personality": "Optimist",
+      "question": "Will MedTech and the broader portfolio show enough operating leverage and guidance momentum that management can keep raising 2026 operational EPS despite a sluggish MedTech top line and the Orthopaedics separation costs?",
+      "summary": "MedTech Q3 sales grew 2.5% and pre-tax margin fell to 12.2% from 15.7% on separation costs, IPR&D impairment and restructuring. Management has nonetheless raised guidance at two consecutive reports, and the separation could unlock a more focused MedTech business. Lower conviction because MedTech evidence is mixed.",
       "evidence_quotes": [
-        "Amounts accrued for legal contingencies often result from a complex series of judgments about future events and uncertainties that rely heavily on estimates and assumptions.; Changes in domestic and international tax laws and regulations, increasing audit scrutiny by tax authorities around the world may cause exposures to additional tax liabilities potentially in excess of existing reserves."
+        "Total MedTech Sales $8,642 vs $8,430, 2.5% total change, 2.5% operations change; Shockwave 16.8% total change; Electrophysiology 4.9%; Vision 4.4%",
+        "The MedTech segment income before tax as a percent of sales in the fiscal nine months of 2026 was 12.2% versus 15.7%",
+        "operational EPS is increasing by $0.18 to $11.58 or 7.3% at the midpoint"
       ],
-      "confidence": 4
+      "confidence": 3
     },
     {
       "id": "h9",
-      "proposing_personality": "Quant",
-      "question": "What are the recent growth rates and margin trajectories for JNJ's segments?",
-      "summary": "JNJ's Innovative Medicine segment continues to show solid growth despite challenges, while MedTech demonstrates stable growth with varying performance across franchises. The overall margin has decreased significantly year-over-year due to a one-time event.",
+      "proposing_personality": "Pessimist",
+      "question": "Is the $9.0B talc reserve enough to cover the remaining talc exposure, or does the mesothelioma docket and unresolved claim count leave an unaccrued tail that could hit future earnings?",
+      "summary": "The $5.5B Q3 charge relates to a proposed ovarian resolution, with a total reserve of about $9.0B and roughly half current. The accrual excludes the mesothelioma docket, about 76,500 US plaintiffs have direct claims, and management cannot estimate loss beyond accruals. Settlement finality is not established in the filing evidence.",
       "evidence_quotes": [
-        "Sales to customers for the fiscal first quarter of 2026 were $24.1 billion, a total increase of 9.9%, which included operational growth of 6.4% and a positive currency impact of 3.5% as compared to 2025 fiscal first quarter sales of $21.9 billion. (MD&A — Q1 2026); Consolidated earnings before provision for taxes on income for the fiscal first quarter of 2026 was $6.0 billion representing 24.9% of sales as compared to $13.6 billion in the fiscal first quarter of 2025, representing 62.3% of sales. (MD&A — 30)"
+        "The proposed agreement does not impact the mesothelioma docket, which remains ongoing.",
+        "the Company is unable to estimate the possible loss or range of loss beyond the amounts accrued.",
+        "The fiscal nine months of 2026 includes a charge of $5.5 billion related to the proposed talc ovarian litigation resolution."
       ],
       "confidence": 4
     },
     {
       "id": "h10",
-      "proposing_personality": "Quant",
-      "question": "How does JNJ's segment performance compare to its historical trends?",
-      "summary": "The Innovative Medicine segment experienced a sales increase of 6.0% in 2025 compared to 2024, while MedTech's total sales growth was 6.1%, indicating consistent performance but with potential margin compression due to rising costs.",
+      "proposing_personality": "Pessimist",
+      "question": "How much of JNJ's reported top-line growth is being masked by biosimilar erosion in Stelara and other legacy brands, and how fast will the next patent cliffs hit?",
+      "summary": "Growth looks healthy only because newer launches offset steep legacy declines. Stelara fell 54.4% in Q3 to $716M, Imbruvica fell 18.8%, Simponi and Remicade face biosimilars, Uptravi faces generics in 2027, and a 340B pricing revision adds channel uncertainty. Growth depends on a small set of launches.",
       "evidence_quotes": [
-        "Innovative Medicine segment sales in 2025 were $60.4 billion, an increase of 6.0% from 2024. (MD&A — 2.8); Total MedTech Sales increased by 6.1% in 2025 compared to 2024. (MD&A — 2025 Sales by segment)"
+        "STELARA 716 1,570 (54.4)",
+        "the negative impact of the STELARA sales decline... was an approximate 6.9%, 9.2% and 3.8% on worldwide, U.S. and international Innovative Medicine segment operational sales, respectively.",
+        "Biosimilars for SIMPONI have entered the European market in the second quarter of 2026, with a potential U.S. entrant later in 2026.",
+        "There are potential generic entrants in 2027 in the U.S. and Europe which will likely result in a reduction in future sales."
       ],
       "confidence": 4
+    },
+    {
+      "id": "h11",
+      "proposing_personality": "Quant",
+      "question": "Is ex-Stelara Innovative Medicine growth accelerating enough to offset the Stelara erosion, and is the Stelara drag shrinking as its base falls?",
+      "summary": "Nine-month Innovative Medicine operational growth of 7.4% includes a roughly 7.8-point Stelara drag, implying ex-Stelara growth near 15%, while the Q3 drag narrowed to about 6.9 points. Tremfya (+68.3%) and Darzalex (+15.4%) carry the segment, and Immunology ex-Stelara is the swing factor.",
+      "evidence_quotes": [
+        "In the fiscal nine months of 2026, the negative impact of the STELARA sales decline... was an approximate 7.8%, 10.4% and 4.2%",
+        "Innovative Medicine segment sales in the fiscal nine months of 2026 were $48.6 billion, an increase of 8.8%",
+        "Oncology 7,602 6,529 16.4 16.7 (0.3) Immunology 4,221 4,168 1.3 1.4 (0.1)"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h12",
+      "proposing_personality": "Quant",
+      "question": "How much of the reported margin compression is one-time (talc charge and IPR&D) versus structural (Stelara mix in cost of products sold), and what does the adjusted margin look like?",
+      "summary": "The GAAP margin collapse is mostly one-time: the nine-month pre-tax margin fell to 17.1% from 39.7%, and excluding the $5.5B talc charge and $1.0B Firefly IPR&D the base is roughly 25.8%. Cost of products sold rose as a percent of sales because of Stelara mix, a real but smaller headwind. Cost-of-goods percentage not yet confirmed, so confidence is moderate.",
+      "evidence_quotes": [
+        "Consolidated earnings before provision for taxes on income for the fiscal nine months of 2026 was $12.8 billion representing 17.1% of sales as compared to $27.6 billion... representing 39.7% of sales.",
+        "includes a charge of approximately $5.5 billion related to the proposed talc ovarian litigation resolution and $1.0 billion of acquired in-process research and development expense related to the acquisition of Firefly Bio, Inc.",
+        "Cost of products sold increased as a percent to sales primarily driven by: Unfavorable product mix primarily driven by the decline of STELARA sales in the Innovative Medicine business"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h2",
+      "proposing_personality": "Conservative",
+      "question": "Is the $5.5B talc ovarian charge a non-cash accrual that flatters near-term earnings, with the real cash drain (about $9.0B remaining) still ahead, so that reported earnings overstate cash-based earning power?",
+      "summary": "Operating cash flow ($18.9B) exceeded net earnings ($11.0B) on non-cash add-backs ($6.8B) and working capital, and the talc cash impact is deferred. The tax rate fell to 14.0% from 21.5%, and $3.8B of net collateral posted adds claims on cash. Contested: peers note the accrual lowers rather than flatters reported earnings, so the real risk is the deferred outflow and the open mesothelioma docket.",
+      "evidence_quotes": [
+        "The fiscal nine months of 2026 includes a charge of $5.5 billion related to the proposed talc ovarian litigation resolution.",
+        "Cash flow from operations of $18.9 billion was the result of: Net earnings 11.0; non-cash expenses and other adjustments... 6.8",
+        "The worldwide effective income tax rate for the fiscal nine months was 14.0% in 2026 and 21.5% in 2025.",
+        "As of September 27, 2026, the cumulative amount of cash collateral paid by the Company under the CSA amounted to $3.8 billion net"
+      ],
+      "confidence": 3
     }
   ]
 }

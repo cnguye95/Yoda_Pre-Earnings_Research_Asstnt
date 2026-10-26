@@ -1,0 +1,551 @@
+{
+  "ticker": "DIS",
+  "company_name": "The Walt Disney Company",
+  "filing_type": "10-Q",
+  "filing_date": "2026-08-05",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T13:56:31.720025+00:00",
+  "key_metrics": [
+    {
+      "name": "Total revenues",
+      "value": "$25,248 (Q3 FY2026, quarter ended June 27, 2026) vs $23,650 (Q3 FY2025); nine months: $76,397 vs $71,961",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Services",
+      "value": "$22,675 (Q3 FY2026) vs $21,214 (Q3 FY2025); nine months: $68,565 vs $64,520",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Products",
+      "value": "$2,573 (Q3 FY2026) vs $2,436 (Q3 FY2025); nine months: $7,832 vs $7,441",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total costs and expenses",
+      "value": "$(20,488) (Q3 FY2026) vs $(20,005) (Q3 FY2025); nine months: $(63,973) vs $(60,732)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Restructuring and impairment charges",
+      "value": "$(900) (Q3 FY2026) vs $(185) (Q3 FY2025); nine months: $(1,139) vs $(437)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net income",
+      "value": "$2,844 (Q3 FY2026) vs $5,943 (Q3 FY2025); nine months: $7,793 vs $11,988",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net income attributable to The Walt Disney Company (Disney)",
+      "value": "$2,638 (Q3 FY2026) vs $5,262 (Q3 FY2025); nine months: $7,287 vs $11,091",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Earnings per share attributable to Disney: Diluted",
+      "value": "$1.51 (Q3 FY2026) vs $2.92 (Q3 FY2025); nine months: $4.12 vs $6.12",
+      "unit": "USD per share",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Earnings per share attributable to Disney: Basic",
+      "value": "$1.52 (Q3 FY2026) vs $2.92 (Q3 FY2025); nine months: $4.13 vs $6.14",
+      "unit": "USD per share",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Cash provided by operations",
+      "value": "$12,515 (nine months ended June 27, 2026) vs $13,627 (nine months ended June 28, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Investments in parks, resorts and other property",
+      "value": "$(6,780) (nine months ended June 27, 2026) vs $(6,108) (nine months ended June 28, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Repurchases of common stock",
+      "value": "$(7,245) (nine months ended June 27, 2026) vs $(2,496) (nine months ended June 28, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Financial Statements — Financing Activities"
+    },
+    {
+      "name": "Dividends",
+      "value": "$(1,337) (nine months ended June 27, 2026) vs $(905) (nine months ended June 28, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Financial Statements — Financing Activities"
+    },
+    {
+      "name": "Change in borrowings",
+      "value": "$3,689 (nine months ended June 27, 2026) vs $(3,410) (nine months ended June 28, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Financial Statements — Financing Activities"
+    },
+    {
+      "name": "Cash and cash equivalents",
+      "value": "$5,185 at June 27, 2026 vs $5,695 at September 27, 2025",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total cash, cash equivalents and restricted cash in the statement of cash flows",
+      "value": "$5,299 at June 27, 2026 vs $5,799 at September 27, 2025",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Current portion of borrowings",
+      "value": "$8,627 at June 27, 2026",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "U.S. dollar denominated borrowings",
+      "value": "$40,319 at June 27, 2026 vs $38,658 at September 27, 2025",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Commercial paper with original maturities greater than three months",
+      "value": "$3,712 at June 27, 2026 vs $99 at September 27, 2025",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total assets",
+      "value": "$204,740 at June 27, 2026 vs $197,514 at September 27, 2025",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total equity",
+      "value": "$116,842 at June 27, 2026 vs $114,612 at September 27, 2025",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Treasury stock, at cost",
+      "value": "$(14,751) at June 27, 2026 (148 million shares) vs $(7,441) at September 27, 2025 (79 million shares)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Weighted average number of common and common equivalent shares outstanding: Diluted",
+      "value": "1,743 (Q3 FY2026) vs 1,805 (Q3 FY2025)",
+      "unit": "millions of shares",
+      "source_citation": "Other"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "Entertainment",
+      "revenue": "$11,345M (Q3 FY2026)",
+      "yoy_change": "+6% (Q3 FY2026 vs Q3 FY2025: $11,345M vs $10,704M); nine months +7% ($34,669M vs $32,258M)",
+      "commentary": "Segment operating income rose 64% in the quarter to $1,680M from $1,022M, driven by subscription and affiliate fees ($7,545M vs $6,765M, up 12%). That growth included 4 points from the Fubo Transaction, 3 points from higher effective rates, 3 points from more subscribers and 1 point from FX. Advertising revenue fell (4% lower rates, partly offset by impressions and Fubo). Nine-month operating income rose only 3% to $4,116M from $3,983M as operating expenses rose 9%. A+E impairment charges of $812M and severance of $60M in the quarter sit outside segment operating income.",
+      "source_citation": "Financial Statements — BUSINESS SEGMENT RESULTS"
+    },
+    {
+      "name": "Sports",
+      "revenue": "$4,500M (Q3 FY2026)",
+      "yoy_change": "+4% (Q3 FY2026 vs Q3 FY2025: $4,500M vs $4,308M); nine months +2% ($14,018M vs $13,692M)",
+      "commentary": "Segment operating income fell 17% to $858M from $1,037M as higher programming and production costs outweighed higher subscription and affiliate fees. The NBA contract renewal shifted costs from the first half into Q3. Nine-month operating income fell 14% to $1,701M from $1,971M. Prior-year UFC pay-per-view revenue did not repeat because the UFC rights expired in December 2025.",
+      "source_citation": "Financial Statements — BUSINESS SEGMENT RESULTS"
+    },
+    {
+      "name": "Experiences",
+      "revenue": "$9,968M (Q3 FY2026)",
+      "yoy_change": "+10% (Q3 FY2026 vs Q3 FY2025: $9,968M vs $9,086M)",
+      "commentary": "Operating income rose 20% to $3,017M from $2,516M, which implies about a 57% incremental margin in the quarter. Operating expenses rose 5% and depreciation and amortization rose 15% to $821M, partly on Disney Cruise Line additions. Domestic Parks & Experiences operating income was $2,088M vs $1,650M (+27%). Nine-month revenue was $29,461M (+8%) and operating income $8,941M vs $8,117M (+10%).",
+      "source_citation": "Financial Statements — Quarter Ended"
+    },
+    {
+      "name": "Experiences — Theme park admissions",
+      "revenue": "$3,253M (Q3 FY2026)",
+      "yoy_change": "+9% (Q3 FY2026 vs Q3 FY2025: $3,253M vs $2,996M)",
+      "commentary": "Growth reflected 5% from higher average per capita ticket revenue and 3% from increased attendance, so it was mostly price-led.",
+      "source_citation": "Financial Statements — Quarter Ended"
+    },
+    {
+      "name": "Experiences — Resorts and vacations",
+      "revenue": "$2,766M (Q3 FY2026)",
+      "yoy_change": "+17% (Q3 FY2026 vs Q3 FY2025: $2,766M vs $2,373M)",
+      "commentary": "Reflects added passenger cruise days from the Disney Treasure (December 2024), Disney Destiny (November 2025) and Disney Adventure (March 2026) launches.",
+      "source_citation": "Financial Statements — Quarter Ended"
+    },
+    {
+      "name": "Experiences — Parks & Experiences merchandise, food and beverage",
+      "revenue": "$2,284M (Q3 FY2026)",
+      "yoy_change": "+7% (Q3 FY2026 vs Q3 FY2025: $2,284M vs $2,143M)",
+      "commentary": "Steady per-guest spending contribution.",
+      "source_citation": "Financial Statements — Quarter Ended"
+    },
+    {
+      "name": "Experiences — Merchandise licensing and retail",
+      "revenue": "$1,056M (Q3 FY2026)",
+      "yoy_change": "+8% (Q3 FY2026 vs Q3 FY2025: $1,056M vs $979M)",
+      "commentary": "Consumer Products contributed to the Experiences operating income increase, partly through higher merchandise licensing royalties.",
+      "source_citation": "Financial Statements — Quarter Ended"
+    },
+    {
+      "name": "Experiences — Parks licensing and other",
+      "revenue": "$609M (Q3 FY2026)",
+      "yoy_change": "+2% (Q3 FY2026 vs Q3 FY2025: $609M vs $595M)",
+      "commentary": "Slowest-growing Experiences revenue line.",
+      "source_citation": "Financial Statements — Quarter Ended"
+    }
+  ],
+  "forward_guidance": {
+    "text": "\"The Company currently expects its fiscal 2026 capital expenditures to be approximately $9 billion compared to fiscal 2025 capital expenditures of $8 billion. The projected increase in capital expenditures is due to higher spending at Experiences, attributable to theme park and resort expansion and new attractions, partially offset by lower spending on cruise ship fleet expansion.\"",
+    "source_citation": "Financial Statements — Financing Activities"
+  },
+  "key_risks": [
+    {
+      "description": "Sports segment profitability is eroding. Operating income fell 17% in the quarter and 14% over nine months as programming and production costs outran revenue growth of 4% and 2%. The NBA renewal shifted costs into Q3 from the first half, so the nine-month decline is the cleaner run-rate. UFC pay-per-view revenue also rolled off after the rights expired in December 2025.",
+      "is_new": false,
+      "source_citation": "Financial Statements — BUSINESS SEGMENT RESULTS"
+    },
+    {
+      "description": "Carriage dispute exposure: in the third quarter of fiscal 2026, NFL Network and NFL RedZone were removed from Comcast Xfinity and service has not been reinstated. This threatens distribution and subscription and affiliate fee revenue tied to the NFL arrangements.",
+      "is_new": true,
+      "source_citation": "Risk Factors"
+    },
+    {
+      "description": "Shareholder returns are running ahead of cash generation. Nine-month repurchases of $7,245M plus dividends of $1,337M (about $8.6B) exceed free cash flow of roughly $5.7B (cash provided by operations of $12,515M less $6,780M of investments in parks, resorts and other property). Borrowings rose $3,689M, and commercial paper with original maturities greater than three months rose to $3,712M from $99M. This leaves the balance sheet to absorb the gap against a target of at least $9B of fiscal 2026 buybacks.",
+      "is_new": false,
+      "source_citation": "Financial Statements — Financing Activities"
+    },
+    {
+      "description": "Operating cash flow declined from $13,627M to $12,515M over nine months, with income tax payments a major drag (income taxes change in operating assets and liabilities of $(1,611)M vs $(136)M). Cash taxes and higher capex of about $9B in fiscal 2026 compress free cash flow.",
+      "is_new": false,
+      "source_citation": "Other"
+    },
+    {
+      "description": "Large impairment and restructuring charges sit outside segment operating income: $1,139M for nine months vs $437M, including $812M for the A+E investment impairment and $60M of severance in the quarter. The A+E write-down signals weakness in linear network assets, and recurring charges make segment profit look cleaner than GAAP results.",
+      "is_new": true,
+      "source_citation": "Other"
+    },
+    {
+      "description": "Experiences growth is leaning on price. Of 9% admissions growth, 5 points came from per-capita ticket revenue and 3 points from attendance. Operating expenses rose 6% over nine months, and depreciation and amortization rose 15% on cruise ship additions. A consumer slowdown or softer international demand would expose the price-led margin gains and the rising capital intensity.",
+      "is_new": false,
+      "source_citation": "Financial Statements — Quarter Ended"
+    },
+    {
+      "description": "Entertainment advertising and content sales are soft, and the fee growth driving segment profit is flattered by the Fubo Transaction (4 of 12 points). Nine-month Entertainment operating income grew only 3% on 7% revenue growth, so durability of the quarter's +64% operating income jump is unproven.",
+      "is_new": false,
+      "source_citation": "Financial Statements — Quarter Ended"
+    },
+    {
+      "description": "Debt and capital intensity are rising. The current portion of borrowings is $8,627M, short-term commercial paper issuance is increasing, and fiscal 2026 capex is expected at about $9B against $8B in fiscal 2025.",
+      "is_new": false,
+      "source_citation": "Other"
+    }
+  ],
+  "recent_news": [
+    {
+      "headline": "Disney (DIS) earnings Q3 2026",
+      "date": "2026-08-05",
+      "url": "https://www.cnbc.com/2026/08/05/disney-dis-earnings-q3-2026.html",
+      "relevance_note": "Reports Experiences revenue up 10% to $9.97B, domestic attendance up 3% and per-capita spending up 4%, Sports revenue up 4% to $4.5B, and streaming revenue up 11% to $5.53B. Also notes that macro uncertainty is weighing on park peers."
+    },
+    {
+      "headline": "Disney Posts Strong Earnings Despite Slowdown in Park Visitors - The New York Times",
+      "date": "2026-05-06",
+      "url": "https://www.nytimes.com/2026/05/06/business/media/disney-earnings.html",
+      "relevance_note": "Prior-quarter coverage of strong earnings alongside slowing park visitors; relevant to the price-versus-volume debate for Experiences."
+    },
+    {
+      "headline": "q3-fy26-earnings.pdf",
+      "date": "2026-08-05",
+      "url": "https://s206.q4cdn.com/979796730/files/doc_financials/2026/q3/q3-fy26-earnings.pdf",
+      "relevance_note": "Company Q3 FY26 earnings release: global Experiences guests up 4%, domestic park attendance up 3%, international headwinds moderating, and NBA rights-cost timing driving Sports programming costs."
+    },
+    {
+      "headline": "Walt Disney Stock: Wall Street Analysts Share Earnings Reactions",
+      "date": "Not provided",
+      "url": "https://www.hollywoodreporter.com/business/business-news/disney-stock-analysts-earnings-reactions-shares-outlook-1236427095",
+      "relevance_note": "Carries management outlook that fiscal 2026 segment operating income growth will be primarily back-half weighted, citing timing of cruise expenses, film slate and marketing, and sports rights payments."
+    },
+    {
+      "headline": "Sports Rights Will Help Cause $1B Bump In Disney Content Spending Next Year",
+      "date": "Not provided",
+      "url": "https://finance.yahoo.com/news/sports-rights-cause-1b-bump-171908458.html",
+      "relevance_note": "Content spend rising $1B to $24B in fiscal 2026 largely on sports rights such as the NBA; relevant to Sports margins and free cash flow."
+    },
+    {
+      "headline": "The Walt Disney Company (Q2 FY26 earnings release)",
+      "date": "Not provided",
+      "url": "https://s206.q4cdn.com/979796730/files/doc_financials/2026/q2/q2-fy26-earnings.pdf",
+      "relevance_note": "Free cash flow reconciliation for the six months ended March 28, 2026 (cash from operations $7,649M, parks investments $4,986M, free cash flow $2,663M); useful baseline for cash coverage of buybacks."
+    },
+    {
+      "headline": "Walt Disney (DIS) Earnings Date and Reports 2026",
+      "date": "2026-08-05",
+      "url": "https://www.marketbeat.com/stocks/NYSE/DIS/earnings",
+      "relevance_note": "Cites Q3 2026 EPS of $2.06 and revenue of $25.25B. The filing reports GAAP diluted EPS of $1.51, so the $2.06 figure appears to be a non-GAAP measure and should be verified against the earnings release."
+    },
+    {
+      "headline": "Disney to build a new theme park in Abu Dhabi - Los Angeles Times",
+      "date": "2025-05-07",
+      "url": "https://www.latimes.com/entertainment-arts/business/story/2025-05-07/disney-q2-earnings",
+      "relevance_note": "Long-dated international expansion option for Experiences; supports the capacity-growth thesis but is not near-term earnings."
+    },
+    {
+      "headline": "Disney Parks Have Supply vs. Demand Imbalance. - Disney Tourist Blog",
+      "date": "Not provided",
+      "url": "https://www.disneytouristblog.com/disney-parks-have-supply-demand-imbalance",
+      "relevance_note": "Discusses the international attendance slowdown and promotional activity, relevant to the price-versus-volume question."
+    }
+  ],
+  "bull_case": [
+    "Experiences is compounding: Q3 FY26 operating income rose 20% to $3,017M on 10% revenue growth, with domestic Parks & Experiences operating income up 27% to $2,088M. Quarterly margin expanded about 260bp and the incremental margin was roughly 57%.",
+    "Growth in the parks is not purely price. Admissions rose 9% (5 points per-capita ticket revenue, 3 points attendance), resorts and vacations rose 17% on new cruise capacity, and domestic attendance grew 3% even with international headwinds.",
+    "Entertainment profit inflected: operating income rose 64% to $1,680M on subscription and affiliate fees up 12% to $7,545M, with 3 points from rate and 3 points from subscribers beyond the Fubo contribution. This points to real pricing and scale effects in streaming.",
+    "Management is returning capital aggressively: $7,245M of buybacks and $1,337M of dividends over nine months, a target of at least $9B of fiscal 2026 buybacks, and diluted shares down to 1,743M from 1,805M year over year.",
+    "Liquidity is ample, with $12,250M of undrawn committed bank capacity and $5,185M of cash, while capex of about $9B is building cruise, domestic and international capacity that should support volume growth into fiscal 2027.",
+    "Fiscal 2026 segment operating income growth is guided to be back-half weighted, which sets up Q4 and fiscal 2027 comparisons as cruise ships (Destiny, Adventure) and the film slate ramp."
+  ],
+  "bear_case": [
+    "GAAP earnings quality is weaker than segment results: diluted EPS fell to $1.51 from $2.92 and nine-month net income fell to $7,793M from $11,988M on a prior-year non-cash Hulu tax benefit and $900M of quarterly restructuring and impairment charges (A+E, severance). Nine-month charges were $1,139M vs $437M.",
+    "Sports is deteriorating: operating income fell 17% in the quarter and 14% over nine months while revenue grew only 4% and 2%. Rights-cost inflation and the NBA cost shift distort the quarter, and the UFC rights expired in December 2025.",
+    "Capital returns exceed free cash flow. Buybacks plus dividends of about $8.6B vs roughly $5.7B of free cash flow was funded in part by a $3,689M rise in borrowings, including a jump in longer-dated commercial paper. Operating cash flow fell 8% on higher cash taxes.",
+    "Entertainment's +64% quarter is not confirmed by nine-month operating income growth of only 3%. Fee growth is flattered by 4 points from Fubo, and advertising and content sales are declining, so the first-half base was weak.",
+    "Experiences leverage is peaking: the nine-month incremental margin was about 40% vs 57% in Q3, first-half operating income growth was only about 6%, and depreciation and amortization is up 15%. Growth is price-led (5 points price vs 3 points attendance) and exposed to a consumer slowdown.",
+    "Carriage risk: NFL Network and NFL RedZone were removed from Comcast Xfinity in Q3 with no reinstatement, a risk to affiliate fee revenue.",
+    "Rising capital intensity (capex of about $9B vs $8B) and about $24B of content spend reduce free cash flow flexibility, leaving buybacks reliant on balance sheet capacity."
+  ],
+  "what_to_watch": [
+    {
+      "text": "**Experiences Momentum and Outlook Revision:** Experiences operating income rose 20% to $3,017M on 10% revenue growth, led by domestic Parks & Experiences (+27% to $2,088M). The quarterly incremental margin was roughly 57%, and admissions grew 9% on both price and volume, which supports the case for an upside revision to the fiscal 2026 outlook. However, nine-month operating income grew only 10% (about 40% incremental margin), implied first-half growth was only about 6%, and depreciation and amortization rose 15% on cruise additions, so Q3 may be the high-water mark rather than a run-rate.\n\n-> Monitor the Q4 Experiences incremental margin, depreciation and amortization growth from the cruise fleet, and whether management raises or merely reaffirms the back-half weighted outlook.",
+      "relevant_urls": [
+        "https://www.cnbc.com/2026/08/05/disney-dis-earnings-q3-2026.html",
+        "https://s206.q4cdn.com/979796730/files/doc_financials/2026/q3/q3-fy26-earnings.pdf",
+        "https://www.hollywoodreporter.com/business/business-news/disney-stock-analysts-earnings-reactions-shares-outlook-1236427095"
+      ]
+    },
+    {
+      "text": "**Parks Pricing vs. Volume and the Capex Ramp:** Of the 9% growth in theme park admissions, 5 points came from per-capita ticket revenue and 3 points from attendance, while nine-month Experiences operating expenses rose 6% (other operating expense up 15%) and parks investments rose to $6,780M from $6,108M. That pattern leaves margins exposed if the consumer softens or pricing elasticity breaks, and the NYT and CNBC both flag mounting macro uncertainty and slower visitor trends. That said, attendance is still growing 3% domestically, cruise capacity is directly feeding resort revenue (+17%), and the capex is building capacity that should support volume growth later.\n\n-> Monitor domestic attendance versus per-capita spending, international attendance trends, and the return profile management ties to fiscal 2026 capex of about $9B.",
+      "relevant_urls": [
+        "https://www.nytimes.com/2026/05/06/business/media/disney-earnings.html",
+        "https://www.cnbc.com/2026/08/05/disney-dis-earnings-q3-2026.html",
+        "https://www.disneytouristblog.com/disney-parks-have-supply-demand-imbalance"
+      ]
+    },
+    {
+      "text": "**Capital Return Funding:** Nine-month buybacks of $7,245M and dividends of $1,337M total about $8.6B, versus roughly $5.7B of free cash flow ($12,515M of operating cash flow less $6,780M of parks investment). Borrowings rose $3,689M, commercial paper over three months rose to $3,712M from $99M, and the company is targeting at least $9B of fiscal 2026 buybacks alongside about $9B of capex and about $24B of content spend. On the other hand, the company holds $5,185M of cash and $12,250M of undrawn bank capacity, so the shortfall is a capital allocation choice rather than a liquidity constraint, and operating cash flow was depressed by higher cash tax payments.\n\n-> Monitor Q4 operating cash flow, the net change in borrowings and commercial paper, and management commentary on how much of the $9B buyback is funded by free cash flow versus balance sheet capacity.",
+      "relevant_urls": [
+        "https://s206.q4cdn.com/979796730/files/doc_financials/2026/q2/q2-fy26-earnings.pdf",
+        "https://finance.yahoo.com/news/sports-rights-cause-1b-bump-171908458.html"
+      ]
+    },
+    {
+      "text": "**Sports Segment Profitability:** Sports operating income fell 17% to $858M in the quarter and 14% to $1,701M over nine months, as higher programming and production costs outweighed subscription and affiliate fee growth on revenue up just 4% and 2%. The NBA renewal shifted costs from the first half into Q3, so the quarter overstates the decline, but the nine-month drop is the cleaner signal and is still negative; prior-year UFC pay-per-view revenue has also rolled off. That said, revenue is growing on fees and advertising, ESPN's direct-to-consumer launch is nearly a year old, and NBA and NHL playoff ratings were strong. NFL Network and RedZone also remain off Comcast Xfinity.\n\n-> Monitor Q4 Sports operating income against rights-cost timing, any resolution of the NFL carriage dispute, and commentary on ESPN direct-to-consumer economics.",
+      "relevant_urls": [
+        "https://www.cnbc.com/2026/08/05/disney-dis-earnings-q3-2026.html",
+        "https://s206.q4cdn.com/979796730/files/doc_financials/2026/q3/q3-fy26-earnings.pdf"
+      ]
+    },
+    {
+      "text": "**Entertainment Profit Durability:** Entertainment operating income jumped 64% to $1,680M, driven by subscription and affiliate fees up 12% to $7,545M (3 points from rate, 3 points from subscribers, 4 points from the Fubo Transaction). However, nine-month operating income grew only 3% to $4,116M on 7% revenue growth with operating expenses up 9%, implying first-half operating income down roughly 18%, while advertising fell on 4% lower rates and content sales declined. Organic fee growth excluding Fubo is closer to 7%, so the quarter may reflect a weak base and timing rather than a durable inflection.\n\n-> Monitor organic subscription and affiliate fee growth after Fubo laps, advertising rate trends, and Q4 Entertainment operating income versus the 64% quarterly jump.",
+      "relevant_urls": [
+        "https://www.cnbc.com/2026/08/05/disney-dis-earnings-q3-2026.html",
+        "https://www.hollywoodreporter.com/business/business-news/disney-stock-analysts-earnings-reactions-shares-outlook-1236427095"
+      ]
+    },
+    {
+      "text": "**Impairments, Restructuring and Earnings Quality:** Restructuring and impairment charges rose to $1,139M for nine months from $437M, including $812M for the A+E investment impairment and $60M for severance in the quarter, and these items are excluded from segment operating income. Net income fell to $2,844M from $5,943M in the quarter, partly on the prior-year non-cash Hulu tax benefit, so the GAAP picture is much weaker than segment profit suggests. That said, the A+E charge is non-cash, and the cash cost is limited to severance, so the cash impact is smaller than the headline.\n\n-> Monitor further impairments of linear network investments, the split between cash severance and non-cash write-downs, and the reconciliation from segment operating income to GAAP results.",
+      "relevant_urls": []
+    },
+    {
+      "text": "**Back-Half Weighting and Cost Timing:** Management has framed fiscal 2026 segment operating income growth as primarily back-half weighted, citing timing of cruise expenses, the film slate and marketing, and sports rights payments. The Disney Destiny (November 2025) and Disney Adventure (March 2026) launches add capacity and depreciation, and the film slate includes Toy Story 5. However, theatrical marketing and the Fubo Transaction already lifted selling, general, administrative and other costs, and capex is rising to about $9B, so cost timing could absorb part of the revenue upside.\n\n-> Monitor Q4 and early fiscal 2027 commentary on cruise launch costs, theatrical marketing, sports rights payments, and any change to the back-half weighting language.",
+      "relevant_urls": [
+        "https://www.hollywoodreporter.com/business/business-news/disney-stock-analysts-earnings-reactions-shares-outlook-1236427095",
+        "https://finance.yahoo.com/news/sports-rights-cause-1b-bump-171908458.html"
+      ]
+    },
+    {
+      "text": "**Streaming Franchise and Linear Decline Offset:** CNBC reports Entertainment streaming revenue up 11% to $5.53B, helped by subscribers, price hikes and advertising, and the bundle strategy is intended to offset traditional TV declines. However, Disney has stopped reporting some metrics, such as linear network revenue and operating income breakdowns and subscriber counts, which limits the ability to verify streaming profitability, and the A+E impairment points to linear erosion.\n\n-> Monitor any disclosure of streaming operating income, subscriber or engagement metrics, and the pace of linear network revenue decline on the call.",
+      "relevant_urls": [
+        "https://www.cnbc.com/2026/08/05/disney-dis-earnings-q3-2026.html"
+      ]
+    }
+  ],
+  "data_gaps": [
+    "Total operating income and gross profit are not presented as line items in the retrieved filing excerpts; the income statement chunk shows total costs and expenses and restructuring and impairment charges but not a subtotal.",
+    "Free cash flow is not reported as a line item in the retrieved filing excerpts; it can only be derived from cash provided by operations and investments in parks, resorts and other property.",
+    "The total borrowings balance at June 27, 2026 and the prior-period current portion of borrowings are truncated in the retrieved chunks, so total debt cannot be stated from the filing excerpts.",
+    "Streaming subscriber counts and streaming (SVOD) operating income are not in the retrieved filing excerpts.",
+    "Entertainment and Sports segment operating income tables and the nine-month Experiences revenue table were only partially present in the retrieved chunks and were drawn from supporting analysis of the same filing."
+  ],
+  "hypotheses_explored": [
+    {
+      "id": "h1",
+      "proposing_personality": "Conservative",
+      "question": "Are Disney's nine-month FY2026 shareholder returns (buybacks plus dividends) covered by free cash flow, or are they being funded with net new borrowing?",
+      "summary": "Nine-month FY2026 free cash flow was about $5.7B (operating cash flow of $12,515M less $6,780M of investments in parks, resorts and other property), while buybacks ($7,245M) and dividends ($1,337M) totaled about $8.6B, roughly $2.8B more than FCF. Borrowings rose $3,689M and commercial paper over three months went from $99M to $3,712M, so buybacks are partly debt-funded. Operating cash flow fell 8% on higher income tax payments.",
+      "evidence_quotes": [
+        "[Financial Statements — Financing Activities] Repurchases of common stock (7,245); Dividends (1,337); Change in borrowings $ 3,689",
+        "[Financial Statements — 48] Cash provided by operations decreased from $13.6 billion in the prior-year period to $12.5 billion for the current period due to higher income tax payments",
+        "[Financial Statements — 50] Total investments in parks, resorts and other property (6,780); Other investing activities, net (476)",
+        "[Financial Statements — Borrowings] Commercial paper with original maturities greater than three months 99 ... 3,712",
+        "[Financial Statements — Liquidity] The Company is targeting at least $9 billion in share repurchases in fiscal 2026."
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h2",
+      "proposing_personality": "Conservative",
+      "question": "Is the FY2026 buyback target of at least $9B covered by free cash flow after the company's own capex and content spending plans, or does it depend on the balance sheet?",
+      "summary": "Management expects FY2026 capex of about $9B and content spend of about $24B against a target of at least $9B of buybacks, versus roughly $5.7B of nine-month FCF. The company has $5.2B of cash and $12.25B of undrawn bank facilities, so using them for buybacks would be a capital allocation choice. Confidence is moderate because full-year FCF and Q4 seasonality were not directly retrieved.",
+      "evidence_quotes": [
+        "[Financial Statements — Liquidity] The Company is targeting at least $9 billion in share repurchases in fiscal 2026.",
+        "[Financial Statements — Financing Activities] The Company currently expects its fiscal 2026 capital expenditures to be approximately $9 billion compared to fiscal 2025 capital expenditures of $8 billion.",
+        "[Financial Statements — Content] The Company currently expects its fiscal 2026 spend on produced and licensed content, including sports rights, to be approximately $24 billion",
+        "[Other — Committed] Total $ 12,250 committed capacity; Unused Capacity 12,250",
+        "[Financial Statements — Cash] Cash and cash equivalents $5,185 at June 27, 2026 vs $5,695 at September 27, 2025"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h4",
+      "proposing_personality": "Contrarian",
+      "question": "Is Sports the under-appreciated weak spot in the Disney story, with segment profit falling while the narrative focuses on parks and streaming?",
+      "summary": "Q3 FY26 Sports operating income fell 17% to $858M from $1,037M and nine-month Sports income fell 14% to $1,701M from $1,971M, on revenue growth of only 4% and 2%. The open question is whether the NFL and Fubo transactions mask underlying ESPN and linear erosion, and whether the A+E impairment signals broader linear write-downs. Evidence quality is moderate because drivers are only partly disclosed.",
+      "evidence_quotes": [
+        "[Financial Statements — Business segment results] Sports $4,500 vs $4,308, 4 %; nine months Sports $14,018 vs $13,692, 2 %.",
+        "[Financial Statements — Income from operating segments] Sports operating income 858 vs 1,037, (17) %; nine months Sports operating income 1,701 vs 1,971, (14) %.",
+        "[Financial Statements — Operating Income from Entertainment] Segment operating income increased $133 million, to $4,116 million from $3,983 million, due to an increase in subscription and affiliate fees, partially offset by higher operating costs.",
+        "[Financial Statements — Items Excluded from Segment Operating Income Related to Entertainment] Charges in the current period were $959 million for an impairment of our investment in A+E and $129 million for severance.",
+        "[Financial Statements — Revenues] Service revenues for the quarter increased 7%, or $1.5 billion, to $22.7 billion, which included an approximate 2 percentage point favorable impact from the Fubo and NFL Transactions."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h5",
+      "proposing_personality": "Dreamer",
+      "question": "Can Experiences compound into a multi-decade growth engine, with domestic margin expansion plus cruise and international capacity additions (including Abu Dhabi) lifting segment operating income well beyond current run-rates?",
+      "summary": "Experiences operating income is growing faster than revenue, with domestic parks margins expanding and capex rising into cruise ships and international parks. The fixed-asset buildout is a long-duration option on pricing power and new-guest capacity. Abu Dhabi is a news-sourced, long-dated option and is weighted lightly, and returns on capex are unverified.",
+      "evidence_quotes": [
+        "[Operating Income from Experiences] Segment operating income increased $501 million, to $3,017 million from $2,516 million, due to higher revenues at Parks & Experiences and, to a lesser extent, Consumer Products, partially offset by higher costs.",
+        "[Financial Statements — Operating Income from Experiences] Supplemental operating income detail: Parks & Experiences Domestic $2,088 vs $1,650, 27% better.",
+        "[Financial Statements — Disney Destiny] Passenger cruise days reflected the launches of the Disney Treasure in December 2024, the Disney Destiny in November 2025 and the Disney Adventure in March 2026.",
+        "[Disney Experiences news] Disney plans a new theme park in Abu Dhabi, UAE, on Yas Island, which is already home to several theme parks including Ferrari World, Warner Bros. World and SeaWorld."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h6",
+      "proposing_personality": "Dreamer",
+      "question": "Does the combined Disney+/Hulu/ESPN streaming bundle become a durable, profitable subscription franchise that offsets linear TV decline over the next several years?",
+      "summary": "If a single-app streaming bundle with sports at its core reaches scale, the linear-to-streaming transition could be a structural margin story. The evidence is thin: news items describe the single-app strategy and ESPN's direct-to-consumer launch, but no current subscriber or streaming operating income figures were retrieved from the filing.",
+      "evidence_quotes": [
+        "[Reuters, 2025-08-06] The entertainment giant is betting that combining its Disney+, Hulu and ESPN services into a single streaming app will fuel growth of its profitable streaming service and help offset declines in its traditional television business.",
+        "[CNBC, 2026-08-05] Revenue in Disney's sports segment, which is made up primarily of ESPN, jumped 4% to $4.5 billion, largely driven by subscription and affiliate fees as well as advertising. ESPN launched its own direct-to-consumer streaming service nearly a year ago."
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h8",
+      "proposing_personality": "Optimist",
+      "question": "Is the Entertainment (streaming and linear) profit inflection durable enough that fee-driven growth can offset ad and content-sales softness and lift the back half of FY26 on the upcoming call?",
+      "summary": "Entertainment operating income rose 64% to $1,680M on subscription and affiliate fees up 12% (3 points rate, 3 points subscribers, 4 points Fubo). Advertising was down 1% and content sales fell 6%, so the upside depends on fee growth continuing to outrun those declines. Management has framed FY26 segment growth as back-half weighted, making the next two quarters the real test.",
+      "evidence_quotes": [
+        "[Financial Statements — Operating Income from Entertainment] Segment operating income increased $658 million, to $1,680 million from $1,022 million, due to an increase in subscription and affiliate fees.",
+        "[Financial Statements — Quarter Ended] Growth in subscription and affiliate fees was due to increases of 4% from the Fubo Transaction, 3% from higher effective rates, 3% from more subscribers and 1% from a favorable foreign exchange impact. Subscription and affiliate fees 7,545 vs 6,765, up 12%.",
+        "[Financial Statements — Quarter Ended] The decrease in advertising revenue was attributable to a decrease of 4% from lower rates, partially offset by increases of 1% from more impressions and 1% from the Fubo Transaction.",
+        "[search_news — Walt Disney Stock: Wall Street Analysts Share Earnings Reactions] Outlook: Fiscal year 26 segment operating income growth will be primarily back-half weighted, largely impacted by timing of cruise expenses, film slate release calendar and marketing, and sports rights payments."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h9",
+      "proposing_personality": "Pessimist",
+      "question": "Is Sports segment profit deteriorating and being masked by Entertainment streaming gains, with the NBA cost-timing shift flattering the first half?",
+      "summary": "Sports segment operating income fell 17% in the quarter and 14% over nine months, even as total segment profit rose. Higher programming costs drove the decline, the NBA renewal pushed some costs into Q3 from the first half, and the UFC rights expiry removed high-margin pay-per-view revenue. The consolidated result leans on Entertainment's subscription and affiliate fee growth, the segment most exposed to NFL distribution blackout risk.",
+      "evidence_quotes": [
+        "[Financial Statements — Operating Income from Sports] Segment operating income decreased $179 million, to $858 million from $1,037 million, as an increase in subscription and affiliate fees was more than offset by higher programming and production costs.",
+        "[Financial Statements — Operating Income from Sports] The NBA contract renewal resulted in a shift of costs from the first half of the year to the third quarter.",
+        "[Financial Statements — Operating Income from Sports] Segment operating income decreased $270 million, to $1,701 million from $1,971 million, as an increase in revenues was more than offset by higher programming and production costs and, to a lesser extent, an increase in sales and marketing costs.",
+        "[Financial Statements — Sports] Revenues - Other: The decrease in other revenue was primarily due to the comparison to Ultimate Fighting Championship (UFC) pay-per-view revenue in the prior-year quarter. Our UFC rights expired in December 2025.",
+        "[Risk Factors — Risk Factors] in the third quarter of fiscal 2026, the NFL Network and NFL RedZone were removed from Comcast Xfinity and service has not been reinstated"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h10",
+      "proposing_personality": "Pessimist",
+      "question": "Are recurring 'non-recurring' restructuring and impairment charges, excluded from segment operating income, growing enough to make reported segment profit look better than economic reality?",
+      "summary": "Restructuring and impairment charges outside segment operating income rose to $1,139M for nine months from $437M, driven mainly by an A+E investment write-down and severance. Impairments and severance have appeared in most recent periods, and segment operating income also excludes acquisition amortization of about $947M for nine months. The A+E write-down signals weakness in a linear-network investment whose advertising revenue is falling.",
+      "evidence_quotes": [
+        "[Financial Statements — Operating Income from Entertainment] Charges in the current quarter were $812 million for an impairment of our investment in A+E and $60 million for severance.",
+        "[Financial Statements — Restructuring and impairment charges] The nine-month period ended June 27, 2026 included charges of $1.0 billion for impairments of our investment in A+E and $0.2 billion for severance.",
+        "[Other — 25] Restructuring and impairment charges (1) (900) (185) (1,139) (437) Acquisition Amortization (2) (947) (1,188)",
+        "[Financial Statements — Operating Income from Entertainment] Charges in the prior-year period were $185 million primarily for an impairment of our investment in Tata Play Limited and $109 million for content impairments.",
+        "[Financial Statements — SULTS COMPARED TO PRIOR-YEAR QUARTER] The net income and EPS decreases reflected the comparison to a non-cash tax benefit recognized upon a change in Hulu's U.S. income tax classification in the prior-year quarter and, to a lesser extent, an impairment of our investment in A+E in the current quarter."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h11",
+      "proposing_personality": "Quant",
+      "question": "Is Experiences operating income growing faster than revenue, so that its incremental margin (about 57% in the quarter but about 40% over nine months) supports margin expansion into the next earnings call?",
+      "summary": "Experiences shows the clearest operating leverage: quarterly operating income rose $501M on $882M of revenue growth (about 57% incremental margin, margin up about 260bp to 30.3%). The nine-month picture is more modest (operating income up $824M on $2,071M of revenue, about 40% incremental, margin up about 70bp). The quarter looks like the high-water mark. A news item citing EPS of $2.06 conflicts with the filing's GAAP figures and should be verified.",
+      "evidence_quotes": [
+        "[Financial Statements — Operating Income from Experiences] Segment operating income increased $501 million, to $3,017 million from $2,516 million, due to higher revenues at Parks & Experiences and, to a lesser extent, Consumer Products, partially offset by higher costs.",
+        "[Financial Statements — Experiences quarter table] Total revenues 9,968 9,086 10 % Operating expenses (5,065) (4,808) (5) % Operating Income $ 3,017 2,516 20 %",
+        "[Financial Statements — Experiences nine-month table] Total revenues 29,461 27,390 8 % Operating expenses (15,010) (14,155) (6) % Operating Income $ 8,941 8,117 10 %",
+        "[Financial Statements — Operating Income from Experiences] Depreciation and amortization increased $110 million, to $821 million from $711 million, primarily due to higher depreciation at our domestic parks and experiences attributable to an increase at Disney Cruise Line."
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h12",
+      "proposing_personality": "Quant",
+      "question": "Can Entertainment's +64% quarterly OI jump be sustained, given that Sports OI fell 17% in the quarter and Entertainment OI grew only 3% over nine months, so the consolidated earnings mix may be more fragile than the headline suggests?",
+      "summary": "Entertainment quarterly operating income rose $658M to $1,680M (+64%), but nine-month operating income rose only $133M (+3%) on 7% revenue growth, with operating expenses up 9%. Sports lost about $270M of year-to-date operating income. Restructuring and impairment charges of $872M in the quarter (including $812M for A+E) are excluded from segment operating income, so GAAP and segment profitability diverge sharply.",
+      "evidence_quotes": [
+        "[Financial Statements — Operating Income from Entertainment] Entertainment operating income $ 1,680 $ 1,022 64 % Sports operating income 858 1,037 (17) %",
+        "[Financial Statements — Operating Income from Entertainment] Segment operating income increased $133 million, to $4,116 million from $3,983 million, due to an increase in subscription and affiliate fees, partially offset by higher operating costs.",
+        "[Financial Statements — Entertainment nine-month table] Total revenues 34,669 32,258 7 % Operating expenses (22,927) (20,965) (9) % Selling, general, administrative and other (7,257) (7,075) (3) %",
+        "[Financial Statements — Items Excluded from Segment Operating Income Related to Entertainment] Restructuring and impairment charges (1) $ (872) $ (185) >(100) % Charges in the current quarter were $812 million for an impairment of our investment in A+E and $60 million for severance."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h3",
+      "proposing_personality": "Contrarian",
+      "question": "Is the Experiences margin expansion that the Street is cheering actually volume-driven, or is it price-driven and vulnerable to a consumer slowdown that would also expose rising cost and capex burdens?",
+      "summary": "Q3 FY26 evidence shows Experiences growth leaning on pricing: attendance grew about 3% while per-capita ticket revenue added about 5%, and cruise capacity expansion is carrying resort revenue. Operating expenses grew 6% over nine months with other operating expense up 15%, and parks capex rose to $6.78B from $6.11B. The bull case assumes pricing elasticity holds and capex converts to returns on schedule; this is a hypothesis to test on the call, not a short thesis.",
+      "evidence_quotes": [
+        "[Financial Statements — Revenues - Theme park admissions] Theme park admissions revenue growth was due to increases of 5% from higher average per capita ticket revenue and 3% from increased attendance.",
+        "[Financial Statements — Operating expenses] Other operating expense (2,922) vs (2,536), (15) %; total operating expenses (15,010) vs (14,155), (6) %.",
+        "[Financial Statements — 2026] Investments in parks, resorts and other property: Total Experiences (5,596) vs (4,933); Total investments in parks, resorts and other property (6,780) vs (6,108).",
+        "[CNBC, 2026/08/05 — Disney Q3 2026] Revenue for Disney's experiences segment ... was up 10% year over year to $9.97 billion. That growth came even as macroeconomic uncertainty continues to mount for consumers and appears to weigh on Disney's parks peers.",
+        "[NYT, 2026/05/06] Disney Posts Strong Earnings Despite Slowdown in Park Visitors"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h7",
+      "proposing_personality": "Optimist",
+      "question": "Will Experiences momentum (domestic parks pricing, attendance, and resorts demand) keep driving segment operating income growth and support an upside revision to the FY26 outlook on the upcoming call?",
+      "summary": "Experiences operating income rose 20% to $3,017M, led by Domestic Parks & Experiences up 27%. Theme park admissions grew 9% (5 points per-capita pricing, 3 points attendance) and resorts and vacations grew 17%. Nine-month Experiences operating income rose to $8,941M from $8,117M. The main caveat is that depreciation and amortization rose 15% on cruise fleet expansion, so the margin benefit is smaller than revenue growth suggests.",
+      "evidence_quotes": [
+        "[Financial Statements — Operating Income from Experiences] Segment operating income increased $501 million, to $3,017 million from $2,516 million, due to higher revenues at Parks & Experiences and, to a lesser extent, Consumer Products, partially offset by higher costs.",
+        "[Financial Statements — Quarter Ended] Parks & Experiences Domestic $2,088 vs $1,650, 27% better; Theme park admissions revenue growth was due to increases of 5% from higher average per capita ticket revenue and 3% from increased attendance; Resorts and vacations revenue 2,766 vs 2,373, up 17%.",
+        "[Financial Statements — Operating Income from Experiences] Nine-month Segment operating income increased $824 million, to $8,941 million from $8,117 million, due to higher revenues at Parks & Experiences and, to a lesser extent, Consumer Products, partially offset by higher costs.",
+        "[Financial Statements — Operating Income from Experiences] Depreciation and amortization increased $110 million, to $821 million from $711 million, primarily due to higher depreciation at our domestic parks and experiences attributable to an increase at Disney Cruise Line."
+      ],
+      "confidence": 4
+    }
+  ]
+}

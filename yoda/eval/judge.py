@@ -1,24 +1,24 @@
 """Model-as-judge scoring for Phase 9 evaluation.
 
-judge_report() calls Anthropic claude-sonnet-4-6 to score an EarningsReport
-against the source filing text using a five-dimension rubric. Results are
-cached on disk so re-running the same report does not re-spend API budget.
+judge_report() calls OpenAI gpt-6.1-sol to score an EarningsReport against
+the source filing text using a five-dimension rubric. Results are cached on
+disk so re-running the same report does not re-spend API budget.
 
-Cache key: first 16 hex chars of SHA256(report.model_dump_json()).
+Cache key: first 16 hex chars of SHA256(judge model + report JSON). Including
+the model means switching judges never reuses another judge's scores.
 Cache location: data/eval/judge_cache/{hash}.json
 
-Cross-family choice: Anthropic judges OpenAI-generated reports to prevent
-same-model bias, which would make the baseline look better than it is.
+Cross-family choice: OpenAI judges Claude-generated reports so the grader
+never favours output from its own model family.
 
 Smoke test: python -m yoda.eval.judge
 """
 
 import datetime
 import hashlib
-import json
 import pathlib
 
-from anthropic import Anthropic
+from openai import OpenAI
 
 from yoda import config
 from yoda.eval.rubric import JudgeScores
@@ -29,8 +29,8 @@ from yoda.schema import EarningsReport
 # Constants
 # ---------------------------------------------------------------------------
 
-# PLAN.md requires the cross-family judge to be this exact model.
-_JUDGE_MODEL = "claude-sonnet-4-6"
+# Cross-family judge: OpenAI's mid-tier model, the counterpart of Sonnet 5.5.
+_JUDGE_MODEL = "gpt-6.1-sol"
 
 # Where to persist cached judge results. Created on first use.
 _CACHE_DIR = pathlib.Path("data/eval/judge_cache")
@@ -39,7 +39,7 @@ _CACHE_DIR = pathlib.Path("data/eval/judge_cache")
 _SYSTEM_PROMPT = (
     "You are an expert financial analyst grading a pre-earnings research "
     "report against the source 10-Q/10-K filing. Score the report on the "
-    "five rubric dimensions using the submit_rubric_scores tool. "
+    "five rubric dimensions. "
     "Base your scores only on the provided report JSON and filing text."
 )
 
@@ -69,10 +69,11 @@ RUBRIC (score each dimension 1-5):
 
 
 # ---------------------------------------------------------------------------
-# Module-level Anthropic client (created once, reused across calls)
+# Module-level OpenAI client (created once, reused across calls)
 # ---------------------------------------------------------------------------
 
-_client = Anthropic(api_key=config.ANTHROPIC_API_KEY)
+# max_retries=3: the SDK retries rate-limit, timeout and server errors itself.
+_client = OpenAI(api_key=config.OPENAI_API_KEY, max_retries=3)
 
 
 # ---------------------------------------------------------------------------
@@ -80,10 +81,11 @@ _client = Anthropic(api_key=config.ANTHROPIC_API_KEY)
 # ---------------------------------------------------------------------------
 
 def judge_report(report: EarningsReport, filing_text: str) -> JudgeScores:
-    """Score a report using Anthropic claude-sonnet-4-6 as the judge.
+    """Score a report using OpenAI gpt-6.1-sol as the judge.
 
-    Caches results to data/eval/judge_cache/{hash}.json keyed by the report's
-    JSON content so re-running the same report doesn't re-spend.
+    Caches results to data/eval/judge_cache/{hash}.json keyed by the judge
+    model + the report's JSON content so re-running the same report doesn't
+    re-spend.
 
     Args:
         report: the EarningsReport to evaluate.
@@ -93,9 +95,9 @@ def judge_report(report: EarningsReport, filing_text: str) -> JudgeScores:
     Returns:
         JudgeScores with five dimension scores and an overall comment.
     """
-    # Compute a stable cache key from the report's serialized JSON.
+    # Compute a stable cache key from the judge model + report JSON.
     report_json = report.model_dump_json()
-    cache_key = hashlib.sha256(report_json.encode()).hexdigest()[:16]
+    cache_key = cache_key_for(report)
     cache_file = _CACHE_DIR / f"{cache_key}.json"
 
     # Return cached result if it exists, avoiding redundant API spend.
@@ -112,54 +114,31 @@ def judge_report(report: EarningsReport, filing_text: str) -> JudgeScores:
         f"--- FILING TEXT (truncated) ---\n{filing_text}"
     )
 
-    # Define the single tool that forces the judge to return structured scores.
-    # input_schema is derived from JudgeScores so the shape is authoritative.
-    tool_def = {
-        "name": "submit_rubric_scores",
-        "description": "Submit rubric scores for the evaluated report.",
-        "input_schema": JudgeScores.model_json_schema(),
-    }
+    # Structured outputs: response_format=JudgeScores makes OpenAI return JSON
+    # that matches the schema exactly, parsed into a JudgeScores instance.
+    response = _client.chat.completions.parse(
+        model=_JUDGE_MODEL,
+        messages=[
+            {"role": "system", "content": _SYSTEM_PROMPT},
+            {"role": "user",   "content": user_message},
+        ],
+        response_format=JudgeScores,
+    )
 
-    # The model occasionally returns DimensionScore fields as JSON strings
-    # rather than nested dicts. Only attempt parse on strings that look like
-    # JSON objects (start with '{') to leave plain strings like overall_comment
-    # untouched.
-    def _try_parse(v):
-        if isinstance(v, str) and v.startswith("{"):
-            try:
-                return json.loads(v)
-            except json.JSONDecodeError:
-                pass
-        return v
+    # OpenAI reports dated snapshot names (e.g. "gpt-6.1-sol-2026-09-29"),
+    # so check the prefix to confirm the intended judge actually answered.
+    assert response.model.startswith(_JUDGE_MODEL), (
+        f"Model mismatch: expected {_JUDGE_MODEL}, got {response.model}"
+    )
 
-    # Retry once on validation failure (e.g. dropped field, truncated output).
-    last_err = None
-    for attempt in range(2):
-        response = _client.messages.create(
-            model=_JUDGE_MODEL,
-            max_tokens=2048,
-            system=_SYSTEM_PROMPT,
-            tools=[tool_def],
-            tool_choice={"type": "tool", "name": "submit_rubric_scores"},
-            messages=[{"role": "user", "content": user_message}],
+    # parsed is None only when the model refused or was cut off.
+    message = response.choices[0].message
+    if message.parsed is None:
+        raise RuntimeError(
+            f"Judge returned no scores (refusal={message.refusal!r}, "
+            f"finish_reason={response.choices[0].finish_reason})"
         )
-        assert response.model == _JUDGE_MODEL, (
-            f"Model mismatch: expected {_JUDGE_MODEL}, got {response.model}"
-        )
-
-        scores_dict = response.content[0].input
-        coerced = {k: _try_parse(v) for k, v in scores_dict.items()}
-        if isinstance(coerced.get("overall_comment"), dict):
-            coerced["overall_comment"] = coerced["overall_comment"].get("overall_comment", "")
-
-        try:
-            scores = JudgeScores.model_validate(coerced)
-            break
-        except Exception as exc:
-            last_err = exc
-            print(f"  [judge] attempt {attempt + 1} validation failed: {exc}; retrying...")
-    else:
-        raise last_err
+    scores = message.parsed
 
     # Persist to cache before returning.
     _CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -175,7 +154,10 @@ def judge_report(report: EarningsReport, filing_text: str) -> JudgeScores:
 
 def cache_key_for(report: EarningsReport) -> str:
     # Return the cache key for a report without calling the judge API.
-    return hashlib.sha256(report.model_dump_json().encode()).hexdigest()[:16]
+    # The judge model is part of the key, so a different judge never gets
+    # a cache hit on another judge's scores.
+    payload = f"{_JUDGE_MODEL}\n{report.model_dump_json()}"
+    return hashlib.sha256(payload.encode()).hexdigest()[:16]
 
 
 def write_run_manifest(cache_keys: set[str]) -> None:
@@ -217,8 +199,8 @@ if __name__ == "__main__":
     import pathlib
     from yoda.ingest.edgar import fetch_latest_filing
 
-    # Load the existing NFLX RAG-LLM report JSON from Phase 4.
-    report_path = pathlib.Path("data/eval/rag_llm_NFLX.json")
+    # Load the NFLX Yoda report JSON saved by the last eval run.
+    report_path = pathlib.Path("data/eval/yoda_NFLX.json")
     report = EarningsReport.model_validate_json(report_path.read_text(encoding="utf-8"))
 
     # Fetch the cached NFLX filing for source text (no network hit if cached).

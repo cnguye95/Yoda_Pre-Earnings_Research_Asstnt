@@ -1,0 +1,272 @@
+{
+  "ticker": "MSFT",
+  "company_name": "Microsoft Corporation",
+  "filing_type": "10-K",
+  "filing_date": "2026-07-29",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T12:48:06.643999+00:00",
+  "key_metrics": [
+    {
+      "name": "Total revenue (FY2026)",
+      "value": "331,839 (up 18% from 281,724)",
+      "unit": "USD millions",
+      "source_citation": "10-K Item 7 MD&A, Summary Results of Operations; Item 8 Income Statements"
+    },
+    {
+      "name": "Gross margin",
+      "value": "225,465 (up 16%; about 67.9% of revenue, derived)",
+      "unit": "USD millions",
+      "source_citation": "10-K Item 7 MD&A, Summary Results of Operations; Item 8 Income Statements"
+    },
+    {
+      "name": "Operating income",
+      "value": "155,237 (up 21% from 128,528)",
+      "unit": "USD millions",
+      "source_citation": "10-K Item 7 MD&A, Summary Results of Operations"
+    },
+    {
+      "name": "Net income (GAAP)",
+      "value": "133,749 (up 31%)",
+      "unit": "USD millions",
+      "source_citation": "10-K Item 7 MD&A, Summary Results of Operations; Item 8 Income Statements"
+    },
+    {
+      "name": "Diluted EPS (GAAP)",
+      "value": "17.95 (vs 13.64)",
+      "unit": "USD per share",
+      "source_citation": "10-K Item 8 Income Statements; Note 2 Earnings Per Share"
+    },
+    {
+      "name": "Adjusted diluted EPS (non-GAAP, excludes OpenAI gains/losses)",
+      "value": "17.28 (up 22% from 14.13). GAAP EPS included a $0.67 benefit from OpenAI net gains, mainly the dilution gain from the OpenAI Recapitalization.",
+      "unit": "USD per share",
+      "source_citation": "10-K Item 7 MD&A, Non-GAAP Financial Measures"
+    },
+    {
+      "name": "Microsoft Cloud revenue",
+      "value": "214.4 billion (up 27%)",
+      "unit": "USD billions",
+      "source_citation": "10-K Item 7 MD&A, Overview highlights; Note 18 Segment Information"
+    },
+    {
+      "name": "Microsoft Cloud gross margin percentage",
+      "value": "66% (decreased on AI infrastructure investment and growing AI product usage)",
+      "unit": "percent",
+      "source_citation": "10-K Item 7 MD&A, Fiscal Year 2026 Compared with Fiscal Year 2025"
+    },
+    {
+      "name": "Azure and other cloud services revenue growth",
+      "value": "41%",
+      "unit": "percent YoY",
+      "source_citation": "10-K Item 7 MD&A, Overview highlights; Intelligent Cloud discussion"
+    },
+    {
+      "name": "Commercial remaining performance obligation",
+      "value": "678 billion (up 84%). Total RPO is 684 billion, weighted average duration about 2.3 years, and about 30% is expected to be recognized in the next 12 months.",
+      "unit": "USD billions",
+      "source_citation": "10-K Item 7 MD&A, Overview highlights; Note 12 Unearned Revenue"
+    },
+    {
+      "name": "Net cash from operations",
+      "value": "182,935 (up from 136,162)",
+      "unit": "USD millions",
+      "source_citation": "10-K Item 8 Cash Flows Statements; Item 7 Liquidity and Capital Resources"
+    },
+    {
+      "name": "Additions to property and equipment (capex, cash)",
+      "value": "115,948 (vs 64,551)",
+      "unit": "USD millions",
+      "source_citation": "10-K Item 8 Cash Flows Statements"
+    },
+    {
+      "name": "Operating cash flow less cash capex (derived)",
+      "value": "66,987 (vs 71,611 in FY2025). This excludes finance-lease asset additions of 24,608.",
+      "unit": "USD millions",
+      "source_citation": "10-K Item 8 Cash Flows Statements; Note 13 Leases (derived calculation)"
+    },
+    {
+      "name": "Cash, cash equivalents and short-term investments",
+      "value": "76.8 billion (vs 94.6 billion)",
+      "unit": "USD billions",
+      "source_citation": "10-K Item 7 MD&A, Cash, Cash Equivalents, and Investments; Item 8 Balance Sheets"
+    },
+    {
+      "name": "Property and equipment, net",
+      "value": "313,076 (vs 204,966)",
+      "unit": "USD millions",
+      "source_citation": "10-K Item 8 Balance Sheets; Note 6 Property and Equipment"
+    },
+    {
+      "name": "Effective tax rate",
+      "value": "19.4% (FY2025: 17.6%)",
+      "unit": "percent",
+      "source_citation": "10-K Item 8 Note 11 Income Taxes; Item 7 MD&A, Income Taxes"
+    },
+    {
+      "name": "Leases not yet commenced (primarily datacenters)",
+      "value": "329.1 billion, commencing between FY2027 and FY2033",
+      "unit": "USD billions",
+      "source_citation": "10-K Item 8 Note 13 Leases"
+    },
+    {
+      "name": "Purchase commitments (primarily datacenters)",
+      "value": "194,060 total; 169,008 due in FY2027",
+      "unit": "USD millions",
+      "source_citation": "10-K Item 7 MD&A, Material Cash Requirements and Other Obligations"
+    },
+    {
+      "name": "Revenue from OpenAI commercial arrangements (related party)",
+      "value": "24.1 billion in FY2026. Accounts receivable from OpenAI were 6.0 billion. Microsoft holds an approximate 25% as-converted equity method interest.",
+      "unit": "USD billions",
+      "source_citation": "10-K Item 8 Note 1 Accounting Policies, Financial Instruments (OpenAI)"
+    },
+    {
+      "name": "Share repurchases and dividends declared (FY2026)",
+      "value": "Repurchased 36 million shares for 16.7 billion. Dividends declared were 27.0 billion ($3.64 per share). 40.6 billion remains under the 60 billion program.",
+      "unit": "USD billions",
+      "source_citation": "10-K Item 7 MD&A, Material Cash Requirements; Item 8 Note 15 Stockholders' Equity"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "Productivity and Business Processes",
+      "revenue": "139,996 USD millions; operating income 83,879",
+      "yoy_change": "+16% revenue; +20% operating income",
+      "commentary": "Microsoft 365 Commercial cloud grew 17%, driven by revenue per user from Microsoft 365 Copilot and E5, with seats up 6%. Microsoft 365 Consumer cloud grew 28%. LinkedIn grew 11% and Dynamics 365 grew 18%. Cost of revenue rose 12% on AI infrastructure to support Copilot, and gross margin percentage increased slightly.",
+      "source_citation": "10-K Item 7 MD&A, Segment Results of Operations; Item 8 Note 18"
+    },
+    {
+      "name": "Intelligent Cloud",
+      "revenue": "137,791 USD millions; operating income 56,972",
+      "yoy_change": "+30% revenue; +28% operating income",
+      "commentary": "Server products and cloud services grew 31%, led by Azure and other cloud services (+41%). Server products revenue grew 1%. Enterprise and partner services grew 6%. Cost of revenue rose 44% on AI infrastructure, and gross margin percentage fell on AI investment and mix shift to Azure, partly offset by efficiency gains.",
+      "source_citation": "10-K Item 7 MD&A, Segment Results of Operations; Item 8 Note 18"
+    },
+    {
+      "name": "More Personal Computing",
+      "revenue": "54,052 USD millions; operating income 14,386",
+      "yoy_change": "-1% revenue; +2% operating income",
+      "commentary": "XBOX revenue fell 7%: content and services -5% and hardware -29%. Operating expenses included XBOX impairment and related expenses. Windows OEM grew 5% but Devices declined, so Windows OEM and Devices fell slightly. Search advertising rose 9% (12% excluding TAC). Gross margin percentage improved on mix shift.",
+      "source_citation": "10-K Item 7 MD&A, Segment Results of Operations; Item 8 Note 18"
+    }
+  ],
+  "forward_guidance": {
+    "text": "The 10-K gives no quantitative revenue, margin, capex or EPS guidance. Qualitative statements in it: (1) cloud and AI infrastructure investments will continue to increase operating costs and may decrease operating margins; (2) additions to property and equipment will continue to support cloud growth and AI training and infrastructure; (3) existing cash, cash flows and capital market access are expected to fund operations and commitments for at least 12 months; (4) about 30% of the 684 billion total RPO is expected to be recognized over the next 12 months; (5) revenue is seasonally higher in the fiscal fourth quarter, so the September quarter is typically below the June quarter. Contractual commitments include 194.1 billion of purchase commitments and 329.1 billion of leases not yet commenced.",
+    "source_citation": "10-K Item 7 MD&A: Economic Conditions, Challenges, and Risks; Seasonality; Liquidity and Capital Resources; Other Planned Uses of Capital; Note 12 Unearned Revenue; Note 13 Leases"
+  },
+  "key_risks": [
+    {
+      "description": "AI and cloud infrastructure investment is made at large scale and ahead of fully developed revenue. Returns depend on uncertain demand, pricing, and the cost of training, inference, components and energy. Overbuilding could cause underutilization and asset impairment, while demand above capacity limits service. Financing access and cost of capital also matter.",
+      "is_new": false,
+      "source_citation": "10-K Item 1A Risk Factors, Strategic and Competitive Risks"
+    },
+    {
+      "description": "Dependence on strategic AI partners, notably OpenAI, which is both a competitor and a significant Azure customer. Partner priorities, contracts, or purchasing could change. Microsoft recorded 24.1 billion of revenue from OpenAI and holds an equity method investment that created large GAAP other income swings (6.5 billion gain in FY2026 vs 4.8 billion loss in FY2025).",
+      "is_new": false,
+      "source_citation": "10-K Item 1A Risk Factors; Item 8 Note 1 (OpenAI); Note 3 Other Income (Expense), Net"
+    },
+    {
+      "description": "Infrastructure constraints: power availability, land, permitting, community opposition, skilled labor, and limited suppliers for GPUs and other components, which can delay datacenter expansion or raise costs.",
+      "is_new": false,
+      "source_citation": "10-K Item 1A Risk Factors, Operational Risks; Item 1 Operations"
+    },
+    {
+      "description": "Margin pressure: gross margin percentage and Microsoft Cloud gross margin (66%) declined on AI infrastructure costs, and depreciation rose to 34.3 billion from 22.0 billion. Finance and operating lease commitments are large.",
+      "is_new": false,
+      "source_citation": "10-K Item 7 MD&A; Item 8 Note 6 Property and Equipment; Note 13 Leases"
+    },
+    {
+      "description": "Cybersecurity risk, including a nation-state attack disclosed in January 2024 and AI-enabled threats against Microsoft, its customers and its supply chain, with potential reputational harm, liability and higher costs.",
+      "is_new": false,
+      "source_citation": "10-K Item 1A Risk Factors, Cybersecurity, Data Privacy, and Platform Abuse Risks; Item 1C"
+    },
+    {
+      "description": "Regulatory, competition-law, AI-regulation and trade exposure (EU AI Act, Digital Markets Act, tariffs, AI export controls, sanctions) that could raise costs or restrict products and markets. The LinkedIn GDPR fine appeal with the Irish DPC is pending.",
+      "is_new": false,
+      "source_citation": "10-K Item 1A Risk Factors, Legal, Regulatory, and Litigation Risks; Item 8 Note 14 Contingencies"
+    },
+    {
+      "description": "Tax risk: the IRS seeks an additional 28.9 billion plus penalties and interest for 2004-2013 transfer pricing. Gross unrecognized tax benefits are 25.8 billion, and Microsoft says its allowances are adequate.",
+      "is_new": false,
+      "source_citation": "10-K Item 7 MD&A, Uncertain Tax Positions; Item 8 Note 11 Income Taxes"
+    },
+    {
+      "description": "Gaming weakness and impairment risk: XBOX revenue fell 7% and hardware fell 29%, with impairment and related expenses recorded. Goodwill of 62.3 billion in More Personal Computing carries impairment risk if performance deteriorates. No goodwill impairment was identified in the May 1, 2026 test.",
+      "is_new": false,
+      "source_citation": "10-K Item 7 MD&A, More Personal Computing; Item 8 Note 8 Goodwill"
+    },
+    {
+      "description": "Earnings quality: GAAP net income and EPS were boosted by OpenAI dilution gains and equity gains, so adjusted EPS growth (22%) is lower than GAAP growth (32%). Other income may be volatile.",
+      "is_new": false,
+      "source_citation": "10-K Item 7 MD&A, Non-GAAP Financial Measures; Other Income (Expense), Net"
+    }
+  ],
+  "recent_news": [],
+  "bull_case": [
+    "Revenue grew 18% and operating income 21%, with Azure up 41% and Microsoft Cloud revenue reaching 214.4 billion (+27%).",
+    "Commercial RPO of 678 billion (+84%) provides multi-year visibility, with about 30% recognized within 12 months.",
+    "AI monetization is visible in Microsoft 365: Commercial cloud grew 17% with revenue per user lifted by Copilot and E5, and seats grew 6%.",
+    "Operating cash flow was 182.9 billion (+34%), supporting capex, dividends (27.0 billion declared) and buybacks while the AAA-rated balance sheet remains strong.",
+    "Operating expenses grew only 7% against 18% revenue growth, delivering operating leverage and a 46.8% operating margin (derived).",
+    "The OpenAI relationship generates 24.1 billion of revenue, gives access to OpenAI IP, and carries a roughly 25% equity stake."
+  ],
+  "bear_case": [
+    "Capex of 115.9 billion (+80%), 194.1 billion of purchase commitments, and 329.1 billion of leases not yet commenced create heavy fixed-cost and utilization risk if AI demand slows.",
+    "Operating cash flow less cash capex fell to about 67.0 billion from 71.6 billion despite higher revenue, and cash and short-term investments declined to 76.8 billion.",
+    "Microsoft Cloud gross margin fell to 66%, and Intelligent Cloud cost of revenue rose 44%. Depreciation expense is rising fast (34.3 billion vs 22.0 billion).",
+    "Reported EPS growth of 32% is flattered by 5.0 billion of after-tax OpenAI gains. Adjusted EPS growth was 22%.",
+    "Concentration and dependency on OpenAI, which is also a competitor, plus a 684 billion RPO whose conversion depends on capacity delivery and customer behavior.",
+    "Consumer and gaming are weak: XBOX revenue fell 7%, hardware fell 29%, and Devices declined.",
+    "Unresolved IRS dispute (28.9 billion plus penalties and interest) and evolving regulation and trade policy."
+  ],
+  "what_to_watch": [
+    {
+      "text": "Azure and other cloud services growth versus the 41% FY2026 rate, and any commentary on capacity constraints limiting growth.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Capex trajectory: cash additions to property and equipment, finance lease additions, and whether the quarterly run rate continues to rise from the 115.9 billion annual FY2026 level.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Microsoft Cloud gross margin percentage versus the 66% FY2026 level, and the effect of rising depreciation and AI usage on gross margin.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Commercial RPO (678 billion, +84%) and its growth, and how much is concentrated in a few large customers, including OpenAI.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Microsoft 365 Copilot seat and usage growth, Microsoft 365 Commercial revenue per user, and seat growth (6% in FY2026).",
+      "relevant_urls": []
+    },
+    {
+      "text": "OpenAI-related items: revenue-sharing, Azure consumption, and any further equity method gains or losses in other income that would distort GAAP EPS against adjusted EPS.",
+      "relevant_urls": []
+    },
+    {
+      "text": "First-quarter FY2027 seasonality: management typically guides on the earnings call; check for operating margin, capex and segment revenue guidance that this 10-K does not contain.",
+      "relevant_urls": []
+    },
+    {
+      "text": "XBOX trends after impairment and related expenses, and the Windows OEM outlook given elevated channel inventory.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Developments in the IRS NOPA dispute, the LinkedIn Irish DPC appeal, and AI export-control or tariff changes.",
+      "relevant_urls": []
+    }
+  ],
+  "data_gaps": [
+    "No quarterly (10-Q) or earnings release data for the September 2026 quarter is provided; only the FY2026 10-K filed 2026-07-29 was supplied, so the actual pre-earnings quarter's comparatives and consensus expectations cannot be cited.",
+    "The 10-K contains no explicit numeric forward guidance; any management outlook for the next quarter or fiscal 2027 is not available from the supplied filings.",
+    "No recent news items were supplied, so recent_news is empty and no URLs are given.",
+    "Analyst consensus estimates, stock price reaction, and current valuation are not in the filing and are not cited.",
+    "Quarterly fiscal Q4 FY2026 revenue and income figures are not broken out in the 10-K, apart from the share repurchase and dividend table.",
+    "Microsoft 365 Commercial seat count, Copilot seat count, Azure absolute revenue, and Microsoft Cloud gross margin dollar amounts are not disclosed in the 10-K; only growth rates and the 66% margin percentage are given.",
+    "The is_new flag on risks could not be assessed because the prior-year 10-K risk factors were not supplied; all risks are marked false by default.",
+    "The breakdown of capex between datacenter shells and servers, and the capacity or supply outlook for GPUs, is not quantified in the filing."
+  ],
+  "hypotheses_explored": []
+}

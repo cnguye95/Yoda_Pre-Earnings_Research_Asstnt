@@ -4,8 +4,10 @@ DimensionScore holds a 1-5 integer score plus a one-sentence justification.
 JudgeScores is the top-level model returned by judge_report(); it maps five
 evaluation dimensions to DimensionScore instances and adds an overall comment.
 
-These models are also used as the Anthropic tool input schema so the judge
-call returns structured data directly without manual JSON parsing.
+JudgeScores is also passed to OpenAI structured outputs
+(client.chat.completions.parse(response_format=JudgeScores)) so the judge
+call returns a validated object directly without manual JSON parsing.
+Strict mode needs every field required, so none of them has a default.
 """
 
 from pydantic import BaseModel
@@ -38,7 +40,7 @@ class JudgeScores(BaseModel):
     # Would a sell-side analyst find this report useful before earnings?
     usefulness: DimensionScore
     # 1-2 sentence overall summary of strengths and weaknesses.
-    overall_comment: str = ""
+    overall_comment: str
 
 
 # ---------------------------------------------------------------------------

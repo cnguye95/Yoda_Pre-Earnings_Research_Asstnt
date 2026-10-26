@@ -42,3 +42,18 @@ FINNHUB_API_KEY = os.environ["FINNHUB_API_KEY"]
 FMP_API_KEY = os.environ["FMP_API_KEY"]
 TAVILY_API_KEY = os.environ["TAVILY_API_KEY"]
 SEC_USER_AGENT = os.environ["SEC_USER_AGENT"]
+
+# Claude prices in USD per 1K tokens as (input, output), as of 2026-10-26.
+# The single source for every cost figure Yoda logs — the baseline and the
+# panel both price their calls from here. Haiku's price applies to prompts
+# up to 100K tokens, which every Haiku call in Yoda stays under.
+MODEL_COST_PER_1K = {
+    "claude-sonnet-5-5": (0.002, 0.01),
+    "claude-haiku-5-5":  (0.0001, 0.0005),
+}
+
+
+def model_cost(model: str, input_tokens: int, output_tokens: int) -> float:
+    # Compute one Claude call's cost in USD from its token counts.
+    in_price, out_price = MODEL_COST_PER_1K[model]
+    return (input_tokens / 1000) * in_price + (output_tokens / 1000) * out_price

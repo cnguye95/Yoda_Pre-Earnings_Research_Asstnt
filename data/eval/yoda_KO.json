@@ -2,310 +2,579 @@
   "ticker": "KO",
   "company_name": "KO",
   "filing_type": "10-Q",
-  "filing_date": "2026-04-30",
-  "supplemental_filing_type": "10-K",
-  "supplemental_filing_date": "2026-02-20",
-  "report_generated_at": "2026-05-12T11:53:00.538308+00:00",
+  "filing_date": "2026-07-29",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T13:43:19.116155+00:00",
   "key_metrics": [
     {
-      "name": "Net Income Attributable to Shareowners of The Coca-Cola Company",
-      "value": "3,924",
-      "unit": "USD Million",
-      "source_citation": "Other — 4,057"
+      "name": "Net Operating Revenues",
+      "value": "$13,380 million (Q2 FY2026 vs $12,535 million Q2 FY2025, +7%)",
+      "unit": "USD millions",
+      "source_citation": "Other"
     },
     {
-      "name": "Basic Net Income Per Share",
-      "value": "0.91",
-      "unit": "USD",
-      "source_citation": "Other — 4,057"
+      "name": "Net Operating Revenues (six months)",
+      "value": "$25,852 million (6M FY2026 vs $23,664 million 6M FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
     },
     {
-      "name": "Diluted Net Income Per Share",
-      "value": "0.91",
-      "unit": "USD",
-      "source_citation": "Other — 4,057"
+      "name": "Gross Profit",
+      "value": "$8,415 million (Q2 FY2026 vs $7,821 million Q2 FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
     },
     {
-      "name": "Consolidated Net Income",
-      "value": "3,966",
-      "unit": "USD Million",
-      "source_citation": "Other — 4,057"
+      "name": "Gross Profit (six months)",
+      "value": "$16,267 million (6M FY2026 vs $14,787 million 6M FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
     },
     {
-      "name": "Net Cash Provided by Operating Activities",
-      "value": "2,021",
-      "unit": "USD Million",
-      "source_citation": "MD&A — 35"
-    },
-    {
-      "name": "Cash and cash equivalents",
-      "value": "10,574",
-      "unit": "USD Million",
-      "source_citation": "Other — 691"
-    },
-    {
-      "name": "Total Cash, Cash Equivalents and Short-Term Investments",
-      "value": "11,083",
-      "unit": "USD Million",
-      "source_citation": "Other — 691"
-    },
-    {
-      "name": "Total Assets",
-      "value": "104,217",
-      "unit": "USD Million",
-      "source_citation": "Other — 691"
-    },
-    {
-      "name": "Total Liabilities",
-      "value": "68,483",
-      "unit": "USD Million",
-      "source_citation": "Other — 691"
-    },
-    {
-      "name": "Total Equity",
-      "value": "35,734",
-      "unit": "USD Million",
-      "source_citation": "Other — 691"
+      "name": "Gross profit margin",
+      "value": "62.9% (Q2 FY2026 vs 62.4% Q2 FY2025); 62.9% (6M FY2026 vs 62.5% 6M FY2025)",
+      "unit": "percent",
+      "source_citation": "MD&A — Gross Profit Margin"
     },
     {
       "name": "Operating Income",
-      "value": "4,630",
-      "unit": "USD Million",
-      "source_citation": "Financial Statements — 43,941"
+      "value": "$4,672 million (Q2 FY2026 vs $4,280 million Q2 FY2025, +9%)",
+      "unit": "USD millions",
+      "source_citation": "Other"
     },
     {
-      "name": "Total net operating revenues",
-      "value": "12,472",
-      "unit": "USD Million",
-      "source_citation": "Financial Statements — 43,941"
+      "name": "Operating Income (six months)",
+      "value": "$9,031 million (6M FY2026 vs $7,939 million 6M FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Income Before Income Taxes",
+      "value": "$5,475 million (Q2 FY2026 vs $4,796 million Q2 FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Income taxes",
+      "value": "$1,037 million (Q2 FY2026 vs $993 million Q2 FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Consolidated Net Income",
+      "value": "$4,438 million (Q2 FY2026 vs $3,803 million Q2 FY2025); $8,404 million (6M FY2026 vs $7,138 million 6M FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Income Attributable to Shareowners of The Coca-Cola Company",
+      "value": "$4,425 million (Q2 FY2026 vs $3,810 million Q2 FY2025); $8,349 million (6M FY2026 vs $7,140 million 6M FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other — Income Attributable to Shareowners of The Coca-Cola Company"
+    },
+    {
+      "name": "Basic Net Income Per Share",
+      "value": "$1.03 (Q2 FY2026 vs $0.89 Q2 FY2025); $1.94 (6M FY2026 vs $1.66 6M FY2025)",
+      "unit": "USD per share",
+      "source_citation": "Other — Income Attributable to Shareowners of The Coca-Cola Company"
+    },
+    {
+      "name": "Diluted Net Income Per Share",
+      "value": "$1.03 (Q2 FY2026 vs $0.88 Q2 FY2025); $1.94 (6M FY2026 vs $1.65 6M FY2025)",
+      "unit": "USD per share",
+      "source_citation": "Other — Income Attributable to Shareowners of The Coca-Cola Company"
+    },
+    {
+      "name": "Average Shares Outstanding — Diluted",
+      "value": "4,313 million (Q2 FY2026 vs 4,315 million Q2 FY2025)",
+      "unit": "millions of shares",
+      "source_citation": "Other — Income Attributable to Shareowners of The Coca-Cola Company"
+    },
+    {
+      "name": "Interest expense",
+      "value": "$369 million (Q2 FY2026 vs $445 million Q2 FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Equity income (loss) — net",
+      "value": "$604 million (Q2 FY2026 vs $561 million Q2 FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net Cash Provided by (Used in) Operating Activities",
+      "value": "$7,543 million (6M FY2026 vs $(1,391) million 6M FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Purchases of property, plant and equipment",
+      "value": "$(684) million (6M FY2026 vs $(751) million 6M FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Dividends",
+      "value": "$(4,562) million (6M FY2026 vs $(2,283) million 6M FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Purchases of stock for treasury",
+      "value": "$(663) million (6M FY2026 vs $(472) million 6M FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Payments of loans, notes payable and long-term debt",
+      "value": "$(1,559) million (6M FY2026 vs $(2,630) million 6M FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Issuances of loans, notes payable and long-term debt",
+      "value": "$9 million (6M FY2026 vs $5,320 million 6M FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Long-term debt",
+      "value": "$37,001 million (July 3, 2026 vs $42,119 million at December 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total Current Liabilities",
+      "value": "$25,200 million (July 3, 2026 vs $21,281 million at December 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total Equity",
+      "value": "$38,315 million (July 3, 2026 vs $34,275 million at December 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total Liabilities and Equity",
+      "value": "$107,922 million (July 3, 2026 vs $104,816 million at December 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total debt securities",
+      "value": "$2,674 million of debt securities at fair value (trading $49 million plus available-for-sale $2,625 million) as of July 3, 2026 vs $1,824 million at December 31, 2025 (trading $50 million plus available-for-sale $1,774 million)",
+      "unit": "USD millions",
+      "source_citation": "Financial Statements"
+    },
+    {
+      "name": "Asia Pacific operating income",
+      "value": "$656 million (Q2 FY2026 vs $647 million Q2 FY2025); $1,192 million (6M FY2026 vs $1,271 million 6M FY2025)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
     }
   ],
   "revenue_segments": [
     {
-      "name": "Concentrate operations",
-      "revenue": "7,385",
-      "yoy_change": "12%",
-      "commentary": "Increase driven by favorable pricing initiatives and mix.",
-      "source_citation": "Other — Concentrate operations"
+      "name": "EMEA (total net operating revenues, incl. intersegment)",
+      "revenue": "$3,240 million (Q2 FY2026); $6,252 million (6M FY2026)",
+      "yoy_change": "+2% Q2 FY2026 vs Q2 FY2025 ($3,176 million), computed from segment totals",
+      "commentary": "Q2 operating income was $1,309 million vs $1,325 million a year ago. Pricing initiatives, including inflationary pricing, were partly offset by unfavorable mix. Six-month operating income was $2,568 million.",
+      "source_citation": "Financial Statements"
     },
     {
-      "name": "Finished product operations",
-      "revenue": "5,087",
-      "yoy_change": "12%",
-      "commentary": "Growth supported by strong demand and pricing strategies.",
-      "source_citation": "Other — Concentrate operations"
+      "name": "Latin America (total net operating revenues)",
+      "revenue": "$1,839 million (Q2 FY2026); $3,517 million (6M FY2026)",
+      "yoy_change": "+16% Q2 FY2026 vs Q2 FY2025 ($1,587 million), computed from segment totals",
+      "commentary": "The fastest-growing segment by revenue. Q2 operating income was $1,177 million vs $957 million. Growth reflects favorable pricing, including inflationary pricing, partly offset by unfavorable mix, plus a favorable weaker-dollar effect against the Mexican peso and Brazilian real.",
+      "source_citation": "Financial Statements"
+    },
+    {
+      "name": "North America (total net operating revenues)",
+      "revenue": "$5,408 million (Q2 FY2026); $10,301 million (6M FY2026)",
+      "yoy_change": "+8% Q2 FY2026 vs Q2 FY2025 ($5,029 million), computed from segment totals",
+      "commentary": "The largest segment. Q2 operating income was $1,695 million vs $1,621 million. Growth was supported by favorable pricing initiatives and 5% six-month growth in Trademark Coca-Cola. Water, sports, coffee and tea unit case volume was flat for the six months.",
+      "source_citation": "Financial Statements"
+    },
+    {
+      "name": "Asia Pacific (total net operating revenues)",
+      "revenue": "$1,581 million (Q2 FY2026); $3,089 million (6M FY2026)",
+      "yoy_change": "+1% Q2 FY2026 vs Q2 FY2025 ($1,572 million); concentrate sales volume +11% and price/mix (9)% in Q2",
+      "commentary": "Revenue growth is nearly flat despite double-digit concentrate volume because of unfavorable mix and affordability initiatives. Q2 operating income rose to $656 million from $647 million. Six-month operating income fell to $1,192 million from $1,271 million.",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Bottling Investments (total net operating revenues)",
+      "revenue": "$1,527 million (Q2 FY2026); $3,167 million (6M FY2026)",
+      "yoy_change": "+8% Q2 FY2026 vs Q2 FY2025 ($1,411 million), computed from segment totals",
+      "commentary": "Favorable mix and pricing initiatives plus a weaker dollar. Q2 operating income was $91 million vs $59 million. Gross margin also benefited from the sale of the finished product operations in Nigeria.",
+      "source_citation": "Financial Statements"
+    },
+    {
+      "name": "Consolidated revenue growth drivers (Q2 FY2026 vs Q2 FY2025)",
+      "revenue": "$13,380 million total net operating revenues",
+      "yoy_change": "Total +7% = volume +4%, price/mix +2%, foreign currency +2%, acquisitions and divestitures (1)%",
+      "commentary": "Growth is balanced across volume, pricing and FX. Foreign currency benefited from a weaker dollar against the Mexican peso, Brazilian real, euro and South African rand, partly offset by a stronger dollar against the Indian rupee, Japanese yen, Argentine peso and Turkish lira.",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Corporate (net operating revenues)",
+      "revenue": "$37 million (Q2 FY2026); $69 million (6M FY2026)",
+      "yoy_change": "(5)% Q2 FY2026 vs Q2 FY2025 ($39 million), computed",
+      "commentary": "Immaterial to consolidated revenue. Q2 operating loss was $(256) million vs $(329) million.",
+      "source_citation": "Financial Statements"
     }
   ],
   "forward_guidance": {
-    "text": "No forward guidance issued in this filing.",
+    "text": "\"for the full year 2026 we currently expect worldwide concentrate sales volume growth to be slightly behind unit case volume growth\"",
     "source_citation": "MD&A"
   },
   "key_risks": [
     {
-      "description": "Foreign currency fluctuations could negatively impact net operating revenues and profitability.",
+      "description": "Asia Pacific price/mix dilution. Q2 price/mix was (9)% and six-month price/mix (8)%, driven by unfavorable mix and affordability initiatives. Six-month segment operating income fell to $1,192 million from $1,271 million, and the six-month margin fell to 40.9% from 45.6% even with 11% concentrate volume growth. Volume is not yet converting into profit.",
       "is_new": false,
-      "source_citation": "MD&A — Risk Factors"
+      "source_citation": "MD&A"
     },
     {
-      "description": "Reliance on pricing strategies may not be sustainable if consumer price sensitivity increases.",
+      "description": "Operating cash flow quality. Management cites a benefit from the trade accounts receivable factoring program (the amount is not quantified), lower income tax payments and lower annual incentive payments as drivers of the increase in operating cash flow. These may not repeat, and the six-month comparison base of $(1,391) million is distorted by a $(9,231) million working-capital swing.",
       "is_new": false,
-      "source_citation": "MD&A — Risk Factors"
+      "source_citation": "MD&A"
     },
     {
-      "description": "Potential impairment charges related to joint ventures could affect financial results.",
+      "description": "Foreign-currency dependence of profit growth. About 5 points of the 9% Q2 operating income increase came from favorable currency, so underlying operating income growth of roughly 4% trails organic revenue growth. A stronger dollar would reverse this tailwind, and a stronger dollar against the rupee, yen, peso and lira already offsets part of it.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Higher commodity costs partly offset gross margin gains. Management also cites increased marketing spending, partly timing-related, which could pressure margins if it does not normalize.",
+      "is_new": false,
+      "source_citation": "MD&A — Gross Profit Margin"
+    },
+    {
+      "description": "Operational and cybersecurity risk at fairlife. The company disclosed a ransomware event at its fairlife U.S. operations that temporarily suspended production. A majority of production has resumed, and the company believes the incident has not had, and is not reasonably likely to have, a material impact.",
+      "is_new": true,
+      "source_citation": "MD&A — Structural Changes, Acquired Brands and Newly Licensed Brands"
+    },
+    {
+      "description": "Trademark impairment signal. The company recorded a decrease in the fair value of a trademark because of revised projections, including a slower projected long-term category growth rate, an intensifying competitive environment and more focused innovation and international rollout plans. This raises the risk of further impairments in slower-growing categories.",
+      "is_new": true,
+      "source_citation": "MD&A — OPERATIONS REVIEW"
+    },
+    {
+      "description": "Unresolved U.S. tax dispute over transfer pricing. A 2020 Tax Court ruling largely upheld IRS adjustments, leaving about $2.7 billion in additional taxes (roughly $6 billion with interest), and the company is appealing. The appeal is still live, so cash taxes or a reserve change could materially affect cash flow.",
       "is_new": false,
       "source_citation": "Notes — Commitments and Contingencies"
     },
     {
-      "description": "Off-balance-sheet liabilities and reliance on derivatives pose financial risks.",
+      "description": "Supplier finance exposure. Obligations confirmed as valid under the supplier finance program were $1,431 million, up from $1,363 million at year-end. This stretches payables through a bank-intermediated program and could add hidden leverage if banks tighten terms.",
       "is_new": false,
-      "source_citation": "Notes — Commitments and Contingencies"
+      "source_citation": "Financial Statements"
+    },
+    {
+      "description": "Lumpy concentrate shipments versus unit case volume. Management expects full-year concentrate sales volume growth to be slightly behind unit case volume growth, so reported revenue growth could lag consumer demand in coming quarters.",
+      "is_new": false,
+      "source_citation": "MD&A"
     }
   ],
   "recent_news": [
     {
-      "headline": "Growth Strategy - Coca Cola Investor Relations",
-      "date": "",
-      "url": "https://investors.coca-colacompany.com/about/growth-strategy",
-      "relevance_note": "Discusses Coca-Cola's growth strategy and market opportunities."
+      "headline": "Coca-Cola Reports Second Quarter 2026 Results and Raises Full Year Guidance",
+      "date": "2026-07-28",
+      "url": "https://investors.coca-colacompany.com/news-events/press-releases/detail/1168/coca-cola-reports-second-quarter-2026-results-and-raises-full-year-guidance",
+      "relevance_note": "Company release: net revenues grew 7% to $13.4 billion and organic revenues grew 6%. Full-year organic revenue growth outlook raised to approximately 5% from 4% to 5%."
     },
     {
-      "headline": "Coca-Cola's Story: Can Organic Growth Stay Resilient in 2026?",
-      "date": "",
-      "url": "https://finance.yahoo.com/news/coca-colas-story-organic-growth-165400105.html",
-      "relevance_note": "Analyzes Coca-Cola's growth resilience and market strategies."
+      "headline": "Coca-Cola Q2 Earnings & Sales Beat Estimates on Volume Growth — TradingView News",
+      "date": "Not provided",
+      "url": "https://www.tradingview.com/news/zacks:32d6e5a7e094b:0-coca-cola-q2-earnings-sales-beat-estimates-on-volume-growth",
+      "relevance_note": "Summarizes the raised 2026 outlook: organic revenue growth of about 5% and comparable earnings growth of 9-10%, including a 3% currency tailwind."
     },
     {
-      "headline": "Coca-Cola: Buy For The Dividend, Hold For The Upside (Downgrade)",
-      "date": "",
-      "url": "https://seekingalpha.com/article/4890598-coca-cola-buy-for-the-dividend-hold-for-the-upside-downgrade",
-      "relevance_note": "Discusses Coca-Cola's capital allocation and dividend strategy."
+      "headline": "Volume Growth and Higher Guidance Lift Coca-Cola Outlook",
+      "date": "Not provided",
+      "url": "https://brief.sharpertrades.com/volume-growth-and-higher-guidance-lift-coca-cola-outlook",
+      "relevance_note": "Notes that Q2's 5% volume gain is a sharp acceleration from the recent 1.5% average quarterly volume growth, which had been outpaced by pricing."
+    },
+    {
+      "headline": "Coca-Cola (KO) Q3 2026 Earnings Preview: Organic Growth Rate and Volume Recovery Are the Core Earnings Test - Alphastreet",
+      "date": "Not provided",
+      "url": "https://news.alphastreet.com/coca-cola-ko-q3-2026-earnings-preview-organic-growth-rate-and-volume-recovery-are-the-core-earnings-test",
+      "relevance_note": "Q3 preview: Q2 comparable EPS of $0.97 beat the $0.93 estimate, and global unit case volume rose 5% after 3% in Q1."
+    },
+    {
+      "headline": "Coca-Cola (KO) Earnings Date & Report - Investing.com",
+      "date": "Not provided",
+      "url": "https://www.investing.com/equities/coca-cola-co-earnings",
+      "relevance_note": "Q2 EPS beat, gross and operating margin expansion, shares up about 6% on the print; next report scheduled for Oct 27, 2026."
+    },
+    {
+      "headline": "Coca-Cola Reports Second Quarter 2026 Results and Raises Full Year Guidance (company media center)",
+      "date": "Not provided",
+      "url": "https://www.coca-colacompany.com/media-center/coca-cola-reports-second-quarter-2026-results",
+      "relevance_note": "Segment-level commentary, including Asia Pacific price/mix decline attributed to unfavorable mix and affordability initiatives."
+    },
+    {
+      "headline": "Coca-Cola (NYSE:KO) Raises Full-Year Guidance as Quality Stock Delivers Solid Earnings",
+      "date": "Not provided",
+      "url": "https://www.chartmill.com/news/KO/Chartmill-51827-Coca-Cola-NYSEKO-Raises-Full-Year-Guidance-as-Quality-Stock-Delivers-Solid-Earnings",
+      "relevance_note": "Highlights the timing of concentrate shipments and a differing view of the revenue result versus consensus."
+    },
+    {
+      "headline": "Is Coca-Cola's Pricing Power Still Driving Revenue Growth in 2026?",
+      "date": "Not provided",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/coca-colas-pricing-power-still-140300103.html",
+      "relevance_note": "Management expects a more balanced 2026 growth algorithm, with volume and price/mix contributing relatively equally."
+    },
+    {
+      "headline": "Coca-Cola, IRS Face Off in Tax Appeal With Huge Stakes for Both",
+      "date": "2026-06-19",
+      "url": "https://news.bloombergtax.com/daily-tax-report/coca-cola-irs-face-off-in-tax-appeal-with-huge-stakes-for-both-28",
+      "relevance_note": "Describes the live appeal of the transfer-pricing dispute, with as much as $20 billion at stake for the company."
+    },
+    {
+      "headline": "Coca-Cola's $6 Billion Tax Fight: How Transfer Pricing Works",
+      "date": "2026-03-19",
+      "url": "https://www.youtube.com/watch?v=8ECWQb0YdEM",
+      "relevance_note": "Explains the 2020 Tax Court ruling, about $2.7 billion in additional taxes (about $6 billion with interest) and the pending appeal."
+    },
+    {
+      "headline": "Coca-Cola & fairlife: Growth through M&A-Driven Portfolio Expansion",
+      "date": "Not provided",
+      "url": "https://www.growth.sevendots.com/p/coca-cola-and-fairlife-growth-through",
+      "relevance_note": "Secondary source claiming fairlife retail sales grew from about $10 million in 2014 to more than $4 billion in 2025."
+    },
+    {
+      "headline": "Coca-Cola (NYSE:KO) Stock Forecast & Analyst Predictions - Simply Wall St",
+      "date": "Not provided",
+      "url": "https://simplywall.st/stocks/us/food-beverage-tobacco/nyse-ko/coca-cola/future",
+      "relevance_note": "Flags cost pressures in Asia Pacific, a higher P/E multiple and ongoing tax litigation as counterweights to the earnings beat."
     }
   ],
   "bull_case": [
-    "Coca-Cola's strong cash position of $13.8 billion supports its ability to sustain dividend payments and share buyback initiatives, indicating robust financial health.",
-    "The company's focus on innovation and digital transformation positions it well for future growth, particularly in emerging markets.",
-    "Coca-Cola's operating margin improvement to 35.0% suggests enhanced operational efficiency and profitability."
+    "Q2 growth was broad-based: net operating revenues rose 7% to $13,380 million, with concentrate volume +4%, price/mix +2% and FX +2%, partly offset by (1)% from divestitures. Volume and pricing both contribute, so growth does not depend on a single lever.",
+    "Operating income rose 9% to $4,672 million. Gross profit margin expanded to 62.9% from 62.4% on pricing, FX and the Nigeria finished-product divestiture. Diluted EPS rose to $1.03 from $0.88.",
+    "Unit case volume accelerated, with Asia Pacific concentrate volume up 11% and India and Southwest Asia up 13% on a six-month basis. Energy drinks are growing across regions, and North America Trademark Coca-Cola grew 5% over six months.",
+    "Six-month operating cash flow was $7,543 million vs $(1,391) million a year ago. After $684 million of capex, this covered $4,562 million of dividends and $663 million of buybacks, with roughly $6.9 billion of implied free cash flow.",
+    "The balance sheet is deleveraging: long-term debt fell to $37,001 million from $42,119 million, and interest expense fell to $369 million from $445 million in Q2. The company also has $6.6 billion of unused backup credit lines.",
+    "Full-year guidance was raised to approximately 5% organic revenue growth (from 4% to 5%), and comparable EPS growth to 9-10% (from 8-9%), signaling management confidence going into the Q3 print.",
+    "Latin America (+16% revenue) and North America (+8%) show pricing power that offsets Asia Pacific mix dilution, and Asia Pacific Q2 operating income still edged up to $656 million."
   ],
   "bear_case": [
-    "Foreign currency fluctuations and reliance on pricing strategies pose risks to Coca-Cola's revenue growth and profitability.",
-    "Impairment charges related to joint ventures could signal broader issues with asset management and profitability.",
-    "The company's reliance on derivative financial instruments could lead to significant losses if counterparties fail."
+    "Asia Pacific price/mix of (9)% offsets nearly all of 11% concentrate volume growth, leaving segment revenue up only 1%. Six-month operating income fell to $1,192 million from $1,271 million and the margin fell to 40.9% from 45.6%. Volume is not clearly converting into profit.",
+    "About 5 points of the 9% Q2 operating income growth came from favorable FX, implying roughly 4% underlying growth, below 6% organic revenue growth. Reported margin expansion to 34.9% from 34.1% may reflect translation more than operating leverage.",
+    "Operating cash flow was boosted by receivables factoring (unquantified), lower tax payments and lower incentive payments. Dividend and buyback coverage of about 1.3x on six-month free cash flow is therefore not a clean run rate. A prior-year dividend base of $2,283 million also looks inconsistent with the current $4,562 million.",
+    "Management expects full-year concentrate sales to be slightly behind unit case volume, so reported revenue could lag consumer demand. Concentrate shipment timing has swung results between quarters.",
+    "The IRS transfer-pricing appeal is unresolved (about $2.7 billion of additional tax, roughly $6 billion with interest, and as much as $20 billion in a worst case per press reports). A reversal would materially hit cash and capital returns.",
+    "A trademark fair value decline tied to slower category growth, flat North America water, sports, coffee and tea volume, and the fairlife ransomware production suspension show weakness in growth adjacencies and operational resilience.",
+    "Supplier finance obligations rose to $1,431 million from $1,363 million, and commodity costs and marketing spending are headwinds to margin expansion. Shares trading near 52-week highs after the print leave less room for a miss."
   ],
   "what_to_watch": [
     {
-      "text": "**Capital Allocation and Share Buybacks:** Coca-Cola's capital allocation strategy emphasizes debt reduction over aggressive share buybacks, which may limit the scale of future repurchase activities despite sufficient cash flow. However, the company's strong cash position supports its ability to sustain dividend payments and share buyback initiatives.\n\n-> Monitor changes in capital allocation priorities and any updates on share buyback programs.",
+      "text": "**Asia Pacific Price/Mix vs. Volume:** Asia Pacific concentrate volume rose 11% in Q2, but price/mix was (9)% on unfavorable mix and affordability initiatives, so segment revenue grew only 1%. Six-month segment operating income fell to $1,192 million from $1,271 million, and the six-month margin dropped to 40.9% from 45.6%, which suggests growth is being bought with lower revenue per case. That said, Q2 operating income edged up to $656 million from $647 million and the Q2 margin was essentially flat at 44.1% vs 44.2%, so the drag looks concentrated in Q1 and part of it reflects geographic mix as India and Southwest Asia (+13% volume) outgrow the rest of the segment.\n\n-> Monitor Asia Pacific price/mix, operating margin versus the roughly 41-44% range, and any management split between like-for-like pricing and geographic or channel mix.",
       "relevant_urls": [
-        "https://seekingalpha.com/article/4890598-coca-cola-buy-for-the-dividend-hold-for-the-upside-downgrade"
+        "https://www.coca-colacompany.com/media-center/coca-cola-reports-second-quarter-2026-results",
+        "https://simplywall.st/stocks/us/food-beverage-tobacco/nyse-ko/coca-cola/future"
       ]
     },
     {
-      "text": "**Foreign Currency Impact:** While Coca-Cola has reported strong revenue growth, foreign currency fluctuations remain a significant risk that could undermine future performance. The company expects favorable impacts from currency fluctuations for the full year 2026.\n\n-> Watch for updates on currency hedging strategies and their impact on financial results.",
-      "relevant_urls": [
-        "https://finance.yahoo.com/news/coca-colas-story-organic-growth-165400105.html"
-      ]
-    },
-    {
-      "text": "**Innovation and Market Expansion:** Coca-Cola is focusing on innovation and market expansion to capture growth in emerging markets. This strategy is supported by their ability to adapt to consumer trends and enhance productivity.\n\n-> Track developments in new product offerings and market expansion initiatives.",
-      "relevant_urls": [
-        "https://investors.coca-colacompany.com/about/growth-strategy"
-      ]
-    },
-    {
-      "text": "**Operating Margin Trends:** Coca-Cola's operating margin has improved, suggesting better operational efficiency and profitability. This improvement reflects enhanced profitability after considering selling, general and administrative expenses.\n\n-> Monitor operating margin trends and management commentary on cost control measures.",
+      "text": "**Quality of Operating Cash Flow and Capital Returns:** Six-month operating cash flow of $7,543 million less $684 million of capex implies about $6.9 billion of free cash flow, covering $4,562 million of dividends and $663 million of buybacks by roughly 1.3x. However, management credits receivables factoring (unquantified), lower tax payments and lower incentive payments for the increase, and the prior-year dividend of $2,283 million looks inconsistent with a roughly $4.5 billion half-year run rate, so the comparison base needs verification. Factoring costs were $27 million vs $36 million, but the volume of receivables sold is not disclosed.\n\n-> Monitor Q3 operating cash flow, any quantification of factoring and working-capital benefits, and management commentary on dividend and buyback priorities.",
       "relevant_urls": []
     },
     {
-      "text": "**Impairment Charges and Asset Management:** Coca-Cola faces potential risks from impairment charges related to joint ventures, which could affect financial results. The company has a history of robust financial performance, which may help absorb these charges.\n\n-> Keep an eye on any announcements regarding impairment charges and their impact on financial statements.",
+      "text": "**Volume and Price/Mix Balance, and Concentrate vs. Unit Case Timing:** The 10-Q shows Q2 consolidated volume +4% (concentrate), unit case volume +5%, price/mix +2% and FX +2%. Management has described a more balanced 2026 growth algorithm, with volume and price/mix contributing relatively equally, and the 10-Q guides full-year concentrate growth slightly behind unit cases. On the other hand, the Q2 press-release summary cites different unit case and price/mix figures, so the 10-Q should be treated as the anchor until the basis difference is reconciled. Q2's volume acceleration also follows a 3% unit case gain in Q1, so durability is unproven.\n\n-> Monitor Q3 unit case volume, concentrate-to-unit-case gap and consolidated price/mix for evidence that organic growth stays in the mid-single digits.",
+      "relevant_urls": [
+        "https://news.alphastreet.com/coca-cola-ko-q3-2026-earnings-preview-organic-growth-rate-and-volume-recovery-are-the-core-earnings-test",
+        "https://finance.yahoo.com/markets/stocks/articles/coca-colas-pricing-power-still-140300103.html",
+        "https://brief.sharpertrades.com/volume-growth-and-higher-guidance-lift-coca-cola-outlook"
+      ]
+    },
+    {
+      "text": "**Operating Leverage and FX Contribution:** Q2 operating income rose 9% to $4,672 million, and the operating margin rose to about 34.9% from 34.1%, helped by lower operating expenses, lower other operating charges and pricing. However, roughly 5 points of that growth came from favorable currency, implying underlying growth of about 4% against 6% organic revenue growth, partly because marketing spending and commodity costs rose. Marketing was partly timing-related, so underlying leverage is probably neutral to modestly positive rather than clearly negative.\n\n-> Monitor Q3 operating income growth ex-FX, the marketing spending cadence and the currency headwind or tailwind embedded in updated full-year comparable EPS guidance.",
+      "relevant_urls": [
+        "https://www.investing.com/equities/coca-cola-co-earnings",
+        "https://www.tradingview.com/news/zacks:32d6e5a7e094b:0-coca-cola-q2-earnings-sales-beat-estimates-on-volume-growth"
+      ]
+    },
+    {
+      "text": "**Raised Full-Year Outlook and the Q3 Print:** The updated outlook calls for approximately 5% organic revenue growth (from 4% to 5%) and comparable EPS growth of 9-10% including a currency tailwind of about 3% and a roughly 1% acquisitions and divestitures headwind. Q2 comparable EPS of $0.97 beat the $0.93 consensus and revenue was $13.38 billion, which sets a high bar after a 6% share price jump. On the other hand, the filing guides concentrate sales slightly behind unit case volume for the full year, and the implied second-half organic growth depends on volume holding up against tougher pricing comparisons.\n\n-> Monitor whether Q3 organic revenue growth of about 5% is delivered with both volume and price/mix positive, and whether full-year guidance is raised again.",
+      "relevant_urls": [
+        "https://investors.coca-colacompany.com/news-events/press-releases/detail/1168/coca-cola-reports-second-quarter-2026-results-and-raises-full-year-guidance",
+        "https://www.tradingview.com/news/zacks:32d6e5a7e094b:0-coca-cola-q2-earnings-sales-beat-estimates-on-volume-growth",
+        "https://www.chartmill.com/news/KO/Chartmill-51827-Coca-Cola-NYSEKO-Raises-Full-Year-Guidance-as-Quality-Stock-Delivers-Solid-Earnings"
+      ]
+    },
+    {
+      "text": "**IRS Transfer-Pricing Appeal:** A 2020 Tax Court ruling largely upheld IRS adjustments, leaving about $2.7 billion in additional taxes (roughly $6 billion with interest), and the company is appealing, with press reports putting as much as $20 billion at stake. Six-month income taxes were $1,682 million vs $1,715 million, and management cites lower income tax payments as a contributor to operating cash flow, so any adverse resolution would reverse that benefit. That said, the reserve and the contingency disclosure were not verified here and the sources are news and video commentary.\n\n-> Monitor contingency disclosures, any change in the unrecognized tax benefit reserve, and management commentary on the appeal timeline and cash tax outlook.",
+      "relevant_urls": [
+        "https://news.bloombergtax.com/daily-tax-report/coca-cola-irs-face-off-in-tax-appeal-with-huge-stakes-for-both-28",
+        "https://www.youtube.com/watch?v=8ECWQb0YdEM"
+      ]
+    },
+    {
+      "text": "**Balance Sheet Flexibility and Debt Paydown:** Long-term debt fell to $37,001 million from $42,119 million, Q2 interest expense fell to $369 million from $445 million, and the company had $6.6 billion of unused backup credit lines with only $9 million of new debt issued in the half. However, total current liabilities rose to $25,200 million from $21,281 million, supplier finance obligations rose to $1,431 million from $1,363 million, and the retrieved text includes no maturity schedule, so near-term refinancing needs are not verified.\n\n-> Monitor current maturities of long-term debt, supplier finance balances and any new issuance announced alongside Q3 results.",
       "relevant_urls": []
+    },
+    {
+      "text": "**Growth Adjacencies: Emerging Markets, Energy and fairlife:** Volume is broadening beyond sparkling drinks, with Asia Pacific up 8% for six months across categories, energy growing across regions, and secondary sources describing fairlife retail sales above $4 billion after the roughly $6.2 billion milestone investment. However, North America water, sports, coffee and tea volume was flat, a trademark was written down on a slower category growth outlook, and a ransomware event temporarily suspended fairlife production, though management says it is not reasonably likely to be material.\n\n-> Monitor fairlife production status and disclosed segment contribution, further impairment indicators, and volume trends in water, sports, coffee and tea and energy.",
+      "relevant_urls": [
+        "https://www.growth.sevendots.com/p/coca-cola-and-fairlife-growth-through"
+      ]
     }
   ],
   "data_gaps": [
-    "No forward guidance issued in this filing regarding specific revenue or earnings targets for upcoming quarters."
+    "Cash and cash equivalents and total debt (loans and notes payable plus long-term debt) balance sheet lines were not present in the provided filing chunks, so total cash and total debt cannot be reported.",
+    "The company does not report free cash flow as a line item in the provided filing chunks; the roughly $6.9 billion figure is derived from operating cash flow less capex.",
+    "The amount of receivables sold under the trade accounts receivable factoring program, and the size of its operating cash flow benefit, is not quantified in the provided text.",
+    "No debt maturity schedule or current maturities of long-term debt were included in the provided chunks.",
+    "The prior-year six-month Dividends figure ($2,283 million) looks inconsistent with the current $4,562 million run rate and could not be reconciled from the chunks.",
+    "The 10-Q MD&A figures for Q2 unit case volume (+5%) and price/mix (+2%) differ from the press-release summary (+3% and +4%); the basis of the difference could not be reconciled from the provided text.",
+    "No fairlife segment-level revenue or profit disclosure was available in the chunks, and the transfer-pricing contingency reserve was not located in the provided filing text."
   ],
   "hypotheses_explored": [
     {
-      "id": "h2",
+      "id": "h1",
       "proposing_personality": "Conservative",
-      "question": "Will Coca-Cola's focus on capital allocation impact its ability to execute share buybacks in the near term?",
-      "summary": "Coca-Cola's capital allocation strategy emphasizes debt reduction over aggressive share buybacks, which may limit the scale of future repurchase activities despite sufficient cash flow.",
+      "question": "Is KO's dividend and buyback capacity covered by organic free cash flow, or is the six-month operating cash flow flattered by working-capital timing and receivables factoring?",
+      "summary": "Six-month FCF is roughly $6.9B (operating cash flow $7,543M less capex $684M), covering the $4,562M dividend and $663M of buybacks about 1.3x. Management cites a factoring benefit that is not quantified, and the prior-year dividend base of $2,283M looks inconsistent. FCF should not be treated as fully repeatable.",
       "evidence_quotes": [
-        "Coca-Cola's capital allocation focuses on debt reduction rather than aggressive share repurchases.",
-        "We currently expect 2026 capital expenditures to be approximately $2.2 billion."
+        "Net Cash Provided by (Used in) Operating Activities 7,543 (1,391) [Other — 107]",
+        "Purchases of property, plant and equipment during the six months ended July 3, 2026 and June 27, 2025 were $684 million and $751 million, respectively. [MD&A — Purchases of Property, Plant and Equipment]",
+        "The increase was primarily driven by strong cash operating results, a benefit of the trade accounts receivable factoring program in the current year, lower income tax payments, a favorable impact due to foreign currency exchange rate fluctuations, lower net interest payments and lower annual incentive payments. [MD&A — MD&A]",
+        "The costs of factoring such receivables were $27 million and $36 million for the six months ended July 3, 2026 and June 27, 2025, respectively. [MD&A — 3M]",
+        "Dividends (4,562) (2,283) [Other — 107]",
+        "Purchases of stock for treasury (663) (472) [Other — 107]",
+        "Net change in operating assets and liabilities (1,267) (9,231) [Other — 107]"
       ],
       "confidence": 3
     },
     {
-      "id": "h3",
-      "proposing_personality": "Contrarian",
-      "question": "Is KO's growth narrative overly optimistic given potential risks and challenges?",
-      "summary": "While KO has reported strong revenue growth, there are underlying risks related to foreign currency fluctuations and reliance on pricing strategies that could undermine future performance.",
+      "id": "h2",
+      "proposing_personality": "Conservative",
+      "question": "Is KO's balance sheet flexible enough to absorb its debt maturities and supplier-finance obligations without relying on new long-term issuance, and does working-capital reliance on supplier finance create hidden leverage?",
+      "summary": "Liquidity looks adequate, with $6.6B of unused backup credit lines and $1,559M of debt repaid in the half with minimal new issuance. Supplier finance obligations rose to $1,431M from $1,363M, and no debt maturity schedule was retrieved, so refinancing needs remain unverified.",
       "evidence_quotes": [
-        "Net operating revenues were $12,472 million, compared to $11,129 million during the three months ended March 28, 2025, an increase of $1,343 million, or 12% (MD&A — Net Operating Revenues).",
-        "...we expect foreign currency exchange rate fluctuations will have a favorable impact on our full year 2026 net operating revenues (MD&A — Gross Profit Margin).",
-        "Management believes gross profit margin provides investors with useful information related to the profitability of our business prior to considering all of the selling, general and administrative expenses and other operating charges incurred (MD&A — Gross Profit Margin)."
+        "we had $6.6 billion in unused backup lines of credit for general corporate purposes as of July 3, 2026. [MD&A — 42]",
+        "the amount of obligations outstanding that the Company has confirmed as valid to the financial institutions under the SCF program was $ 1,431 million and $ 1,363 million, respectively. [Financial Statements — 1,431]",
+        "payments of long-term debt of $32 million [MD&A — Cash Flows from Financing Activities]",
+        "Issuances of loans, notes payable and long-term debt 9 5,320 [Other — 107]"
       ],
-      "confidence": 3
+      "confidence": 2
+    },
+    {
+      "id": "h4",
+      "proposing_personality": "Contrarian",
+      "question": "Are the Q2 2026 volume and price/mix figures consistent across KO's own disclosures, and does the full-year guidance assume concentrate shipments catch up with unit cases?",
+      "summary": "The 10-Q MD&A reports Q2 unit case volume +5%, concentrate +4% and price/mix +2%, while the press-release summary reports unit cases +3% and price/mix +4%. The 10-Q guides full-year concentrate growth to lag unit cases. The differences may reflect different bases and need verification.",
+      "evidence_quotes": [
+        "[MD&A — 34] for the full year 2026 we currently expect worldwide concentrate sales volume growth to be slightly behind unit case volume growth;",
+        "[MD&A — 34] We generally expect the differences between concentrate sales volume and unit case volume growth rates to be minimal on a full year basis;",
+        "[MD&A — Percent Change 2026 versus 2025] Consolidated: Volume 4%, Price/Mix 2%, Foreign Currency Fluctuations 2%, Acquisitions & Divestitures (1)%, Total 7%;",
+        "Coca-Cola Reports Second Quarter 2026 Results and Raises Full Year Guidance: Unit case volume grew 3%, primarily driven by growth in Trademark Coca-Cola and juice, value-added dairy and plant-based beverages. Price/mix grew 4%, primarily driven by pricing actions in the marketplace. Concentrate sales were in-line with unit case volume.",
+        "Is Coca-Cola's Pricing Power Still Driving Revenue Growth in 2026? Management expects a more balanced growth algorithm throughout 2026, with the volume and price/mix contributing relatively equally to the top-line expansion."
+      ],
+      "confidence": 2
     },
     {
       "id": "h5",
       "proposing_personality": "Dreamer",
-      "question": "What are Coca-Cola's long-term growth strategies and how are they positioned to capitalize on emerging market trends over the next 5-10 years?",
-      "summary": "Coca-Cola is strategically focusing on innovation, market expansion, and leveraging brand power to capture growth in emerging markets. Their long-term growth strategy is supported by their ability to adapt to consumer trends and enhance productivity.",
+      "question": "Can KO's non-sparkling and emerging-market volume engines (water, sports, coffee and tea, energy, India and Southwest Asia) compound into a second growth pillar over 5-10 years and re-rate the stock?",
+      "summary": "Volume growth is broadening beyond classic sparkling soft drinks, most visibly in Asia Pacific and India, and energy is growing across regions. The evidence supports breadth but not yet profit scale: North America water, sports, coffee and tea was flat and a trademark was written down on a slower category growth outlook.",
       "evidence_quotes": [
-        "Coca-Cola has 'significant opportunity to develop the beverage industry from the ground up' in emerging markets (Growth Strategy - Coca Cola Investor Relations).",
-        "The company emphasizes 'brand power' as a competitive advantage, influencing consumer choices in a way that smaller companies cannot (The Coca-Cola Company’s Competitive Strategies).",
-        "Coca-Cola's organic growth resilience will depend on 'balancing pricing, volume and mix while navigating currency' challenges (Coca-Cola's Story: Can Organic Growth Stay Resilient in 2026?)."
+        "[MD&A — Six Months Ended July 3, 2026 versus Six Mo] Unit case volume in Asia Pacific increased 8%, which included 8% growth in both sparkling flavors and Trademark Coca-Cola, 9% growth in water, sports, coffee and tea, 8% growth in juice, value-added dairy and plant-based beverages, as well as growth in energy drinks. The operating segment's volume performance included 13% growth in the India and Southwest Asia operating unit;",
+        "[MD&A — Six Months Ended July 3, 2026 versus Six Mo] Unit case volume in North America increased 3%, which included 5% growth in Trademark Coca-Cola, 4% growth in juice, value-added dairy and plant-based beverages, 1% growth in sparkling flavors, as well as growth in energy drinks. Unit case volume in water, sports, coffee and tea was even.",
+        "[MD&A — OPERATIONS REVIEW] The decrease in fair value was primarily driven by the revised projections of future operating results, including a slowing of the projected long-term growth rate for the category, an intensifying competitive environment, and more focused innovation and international rollout plans.",
+        "[search_news — Investing.com earnings summary] Coca-Cola Q2 2026 EPS of $0.97 beat estimates by $0.04; revenue of $13.4B topped forecasts; shares surged 6% to near 52-week highs. Organic revenue grew 6% with 5% volume increase, driven by FIFA World Cup marketing and strongest Coca-Cola brand growth in 17 years."
       ],
-      "confidence": 4
+      "confidence": 3
     },
     {
       "id": "h6",
       "proposing_personality": "Dreamer",
-      "question": "What are Coca-Cola's long-term growth strategies and how are they positioned to capitalize on emerging market trends over the next 5-10 years?",
-      "summary": "Coca-Cola's long-term growth strategies include a focus on innovation in product offerings and adapting to changing consumer preferences, particularly in digital and e-commerce channels, which are crucial for maintaining market share.",
+      "question": "Is fairlife a scalable premium-protein platform that could become a multi-billion-dollar global adjacency, given the roughly $6.2 billion it cost and its reported retail growth?",
+      "summary": "fairlife is the best-documented adjacency bet, but the evidence is thin: the growth figure comes from a single secondary source and a ransomware production suspension shows operational fragility. The company says the impact is not material.",
       "evidence_quotes": [
-        "Coca-Cola is focused on 'continuously strengthening capabilities in marketing, data analytics, and innovation' to maintain consumer interest and brand loyalty (MD&A - Product safety and quality concerns could negatively affect our business).",
-        "The company aims to 'successfully adapt to the rapidly changing retail landscape, including the rapid growth in digital commerce' (MD&A - Product safety and quality concerns could negatively affect our business)."
+        "[MD&A — Other Financing Activities] The cash outflow during the six months ended June 27, 2025 included $104 million of the $6,173 million final milestone payment for fairlife.",
+        "[MD&A — Structural Changes, Acquired Brands and Newly Licensed Brands] As previously disclosed in the Company's Current Report on Form 8-K filed on July 16, 2026, the Company announced a ransomware event at its fairlife operations in the U.S. ... led to a temporary suspension of production operations. A majority of production operations have resumed, and based on the information currently available and the Company's investigation to date, the Company believes that the incident has not had, and is not reasonably likely to have, a material impact on the Company's financial condition or results of operations.",
+        "[search_news — sevendots fairlife analysis, secondary source] fairlife has delivered outsized returns, growing retail sales from about $10 million in 2014 to more than $4 billion in 2025."
       ],
-      "confidence": 5
+      "confidence": 2
     },
     {
       "id": "h7",
       "proposing_personality": "Optimist",
-      "question": "What are the key growth opportunities for Coca-Cola in the upcoming quarters, particularly regarding net operating revenue growth and innovation in product offerings?",
-      "summary": "Coca-Cola is poised for significant growth through digital transformation and innovation in product offerings, including expansion into the ready-to-drink alcohol market.",
+      "question": "Will Coca-Cola's Q3 2026 organic revenue growth stay in the mid-single digits, with price/mix and volume both contributing, rather than depending on volume alone?",
+      "summary": "Q2 2026 growth was broad-based, with consolidated revenue up 7%, volume up and price/mix adding 2%. North America cites favorable pricing initiatives. If pricing holds into Q3, the company has a pricing lever that does not rely on volume recovery alone, though the filing gives no forward guidance on price/mix.",
       "evidence_quotes": [
-        "Coca-Cola is doubling down on digital transformation, bold innovation and a refreshed leadership vision to fuel its next decade of growth. (Beverage Daily)",
-        "In early 2025, Coca-Cola shifted identity by scaling Red Tree Beverages to enter the ready-to-drink alcohol market, complementing its legacy non-alcoholic portfolio. (MatrixBCG.com)"
+        "Price/mix had a 2% favorable impact on our consolidated net operating revenues.",
+        "North America — favorable pricing initiatives;",
+        "During the three months ended July 3, 2026, worldwide concentrate sales volume increased 4% and unit case volume increased 5% compared to the three months ended June 27, 2025",
+        "Unit case volume in North America increased 3%, which included 5% growth in Trademark Coca-Cola",
+        "Coca-Cola delivered second-quarter 2026 results that exceeded consensus expectations, with comparable earnings per share of $0.97 beating the $0.93 estimate by 4.04%, while revenue of $13.38 billion exceeded the $13.2 billion consensus by 1.56% (search_news — Alphastreet Q3 2026 preview)"
       ],
       "confidence": 4
     },
     {
       "id": "h8",
       "proposing_personality": "Optimist",
-      "question": "What are the key growth opportunities for Coca-Cola in the upcoming quarters, particularly regarding net operating revenue growth and innovation in product offerings?",
-      "summary": "Coca-Cola's expansion into new beverage categories and focus on evolving consumer preferences indicate a strong potential for revenue growth.",
+      "question": "Is Asia Pacific's negative price/mix a contained affordability trade-off that is offset by volume, or a structural margin problem that could weigh on the next quarter's operating income?",
+      "summary": "Asia Pacific is the main soft spot, with price/mix a 9% drag in Q2 and six-month operating income down year over year. The optimistic reading is a deliberate trade-down strategy, and Q2 operating income still grew from $647M to $656M. Whether volume keeps outrunning the drag is unproven.",
       "evidence_quotes": [
-        "We participate in one of the most dynamic regions for consumer goods worldwide, with rising incomes, expanding households, per capita opportunities, and evolving consumer behaviors. (Coca-Cola FEMSA Investors)",
-        "The Coca-Cola Company has a significant opportunity to develop the beverage industry from the ground up. (Coca-Cola Investor Relations)"
+        "Asia Pacific — unfavorable mix and affordability initiatives; and",
+        "Asia Pacific's operating income for the three months ended July 3, 2026 and June 27, 2025 was $656 million and $647 million, respectively. The increase in operating income was primarily driven by an increase in concentrate sales volume of 11%, lower commodity costs, lower operating expenses and a favorable foreign currency exchange rate impact of 1%, partially offset by unfavorable price/mix and increased marketing spending.",
+        "Asia Pacific's operating income for the six months ended July 3, 2026 and June 27, 2025 was $1,192 million and $1,271 million, respectively. The decrease in operating income was primarily driven by unfavorable price/mix, higher commodity costs and increased marketing spending partly due to timing, partially offset by an increase in concentrate sales volume of 11%, lower operating expenses, and a favorable foreign currency exchange rate impact of 2%."
       ],
-      "confidence": 4
-    },
-    {
-      "id": "h9",
-      "proposing_personality": "Pessimist",
-      "question": "Could KO be facing deterioration in unit economics due to impairment charges and potential losses from joint ventures?",
-      "summary": "KO is at risk of deteriorating unit economics, as evidenced by the significant impairment charges related to a joint venture, which could signal broader issues with profitability and asset management.",
-      "evidence_quotes": [
-        "\"During the three months ended March 28, 2025, the Company recorded an other-than-temporary impairment charge of $25 million related to a joint venture in Latin America.\" (Financial Statements — 25)",
-        "\"We may be required to recognize impairment charges that could materially affect our financial results.\" (Other — 22)"
-      ],
-      "confidence": 4
+      "confidence": 3
     },
     {
       "id": "h10",
       "proposing_personality": "Pessimist",
-      "question": "Is KO's financial stability threatened by off-balance-sheet liabilities and reliance on derivatives?",
-      "summary": "The company appears vulnerable due to its reliance on derivative financial instruments and the potential for significant losses if counterparties fail, which could impact its overall financial health.",
+      "question": "Is KO carrying an under-disclosed tax contingency from the transfer-pricing dispute with the IRS that could hit cash flow beyond what the earnings narrative implies?",
+      "summary": "A 2020 US Tax Court ruling largely upheld IRS transfer-pricing adjustments, leaving about $2.7 billion in additional taxes, and an appeal is ongoing with large stakes. The filing's contingency footnote and reserve were not verified and sources are news-based, so this remains a lower-confidence flag.",
       "evidence_quotes": [
-        "\"Default by or failure of one or more of our counterparty financial institutions could cause us to incur significant losses.\" (Other — 22)",
-        "\"We assess our noncurrent assets...to determine whether they are impaired and, if they are, we record appropriate impairment charges.\" (Other — 22)"
+        "[News — Bloomberg Tax, June 19, 2026] Coca-Cola, IRS Face Off in Tax Appeal With Huge Stakes for Both",
+        "[News — video summary, posted 2026-03-19] In 2020, a US Tax Court largely upheld the IRS's transfer pricing adjustments against Coca-Cola. That left the company facing about $2.7 billion in additional taxes after the court found the company had under-reported income from transactions between i[ts subsidiaries]"
       ],
-      "confidence": 4
+      "confidence": 2
     },
     {
       "id": "h11",
       "proposing_personality": "Quant",
-      "question": "What is the trend in Coca-Cola's net operating revenues and operating income over the last fiscal year?",
-      "summary": "Coca-Cola has shown a positive trend in net operating revenues and operating income, indicating potential for future earnings growth.",
+      "question": "Is the 9% Q2 2026 operating income increase mostly currency-driven, such that organic operating income grew more slowly than organic revenue (6%) and underlying operating leverage was negative?",
+      "summary": "Reported Q2 operating income rose 9% ($4,672M vs $4,280M), with about 5 points from favorable FX. Ex-FX growth of roughly 4% is below 6% organic revenue growth, so the reported margin gain (34.9% vs 34.1%) may reflect translation and pricing more than cost leverage. The filing does not disclose an ex-FX margin, so this is an estimate.",
       "evidence_quotes": [
-        "Total net operating revenues increased to $12,731 million for the three months ended April 3, 2026, up from $11,379 million for the three months ended March 28, 2025 (Financial Statements — 43,941).",
-        "Operating income rose to $4,630 million for the three months ended April 3, 2026, compared to $4,053 million for the three months ended March 28, 2025 (MD&A — Operating Income and Operating Margin)."
+        "operating income was $4,672 million, compared to $4,280 million during the three months ended June 27, 2025, an increase of $392 million, or 9%. The increase was primarily driven by an increase in concentrate sales volume of 4%, favorable price/mix, lower operating expenses, lower other operating charges and a favorable foreign currency exchange rate impact of 5%, partially offset by higher commodity costs and increased marketing spending partly due to timing. [MD&A — Three Months Ended]",
+        "Consolidated 34.9% (Q2 2026) vs 34.1% (Q2 2025) [MD&A — Three Months Ended]",
+        "Revenues: Net revenues grew 7% to $13.4 billion, and organic revenues (non-GAAP) grew 6%, driven by a 4% increase in concentrate sales and 2% growth in price/mix. [search_news: Coca-Cola Reports Second Quarter 2026 Results and Raises Full Year Guidance]"
       ],
-      "confidence": 4
+      "confidence": 3
     },
     {
       "id": "h12",
       "proposing_personality": "Quant",
-      "question": "How do Coca-Cola's operating margins compare year-over-year?",
-      "summary": "Coca-Cola's operating margin has improved, suggesting better operational efficiency and profitability.",
+      "question": "Is Asia Pacific's 11% concentrate volume growth being diluted by a sharp negative price/mix, and is this a structural drag on consolidated price/mix?",
+      "summary": "Asia Pacific concentrate volume grew 11% but net revenue rose only 1% in Q2 and 3% in H1 because price/mix was -9% in Q2 and -8% in H1. H1 operating margin fell from 45.6% to 40.9%, although Q2 margin was essentially flat. Consolidated +2% price/mix is carried by Latin America and North America.",
       "evidence_quotes": [
-        "The consolidated operating margin increased to 35.0% for the three months ended April 3, 2026, up from 32.9% for the same period in the previous year (MD&A — Operating Income and Operating Margin).",
-        "This improvement in operating margin reflects enhanced profitability after considering selling, general and administrative expenses (MD&A — Gross Profit Margin)."
+        "Asia Pacific 11 (9) (1) — 1 [MD&A — Percent Change 2026 versus 2025] (Q2 Volume / Price-Mix / FX / Total)",
+        "Asia Pacific 11 (8) — — 3 [MD&A — Percent Change 2026 versus 2025] (H1 Volume / Price-Mix / FX / Total)",
+        "Asia Pacific 44.1 44.2 40.9 45.6 [MD&A — Three Months Ended] (operating margin Q2 2026, Q2 2025, H1 2026, H1 2025)",
+        "Unit case volume in Asia Pacific increased 7%, which included 7% growth in Trademark Coca-Cola [MD&A — 33]"
       ],
       "confidence": 4
     },
     {
-      "id": "h1",
-      "proposing_personality": "Conservative",
-      "question": "Is Coca-Cola's current cash position and free cash flow generation sufficient to sustain its dividend payments and share buyback initiatives over the next 12 months?",
-      "summary": "Coca-Cola appears well-positioned to sustain its dividend payments and share buyback initiatives, supported by a strong cash position and recent increases in dividends and share repurchase programs.",
+      "id": "h3",
+      "proposing_personality": "Contrarian",
+      "question": "Is Asia Pacific's unit case growth being bought with lower price/mix, so that the volume recovery the Street is cheering is partly affordability-driven and will not convert into operating income?",
+      "summary": "Asia Pacific, the fastest-growing segment, shows 11% concentrate volume growth but price/mix down 9% in Q2, and its operating income fell year-to-date. The read is that growth comes from lower revenue per case, though Q2 operating income did rise year over year, so the evidence on conversion is mixed.",
       "evidence_quotes": [
-        "The Company’s cash, cash equivalents, short-term investments and marketable securities totaled $13.8 billion as of April 3, 2026.",
-        "Our current capital allocation priorities are as follows: investing wisely to support our business operations, continuing to grow our dividend payment, enhancing our beverage portfolio and capabilities through consumer-centric acquisitions, and using excess cash to repurchase shares over time."
+        "[MD&A — Percent Change 2026 versus 2025] Asia Pacific 11 (volume) / (9) (price/mix) / (1) (FX) / 1 (total) for the three months ended July 3, 2026;",
+        "[MD&A — MD&A] Asia Pacific's operating income for the six months ended July 3, 2026 and June 27, 2025 was $1,192 million and $1,271 million, respectively. The decrease in operating income was primarily driven by unfavorable price/mix, higher commodity costs and increased marketing spending partly due to timing, partially offset by an increase in concentrate sales volume of 11%;",
+        "[MD&A — 39] Asia Pacific — unfavorable mix and affordability;",
+        "[MD&A — MD&A] Asia Pacific's operating income for the three months ended July 3, 2026 and June 27, 2025 was $656 million and $647 million, respectively. The increase in operating income was primarily driven by an increase in concentrate sales volume of 11%, lower commodity costs, lower operating expenses and a favorable foreign currency exchange rate impact of 1%, partially offset by unfavorable price/mix and increased marketing spending."
       ],
-      "confidence": 4
+      "confidence": 3
     }
   ]
 }

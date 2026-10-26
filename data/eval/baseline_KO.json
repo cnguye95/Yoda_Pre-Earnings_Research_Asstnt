@@ -2,91 +2,254 @@
   "ticker": "KO",
   "company_name": "The Coca-Cola Company",
   "filing_type": "10-Q",
-  "filing_date": "2026-04-28",
+  "filing_date": "2026-07-29",
   "supplemental_filing_type": null,
   "supplemental_filing_date": null,
-  "report_generated_at": "2026-05-12T11:51:41.503941+00:00",
+  "report_generated_at": "2026-10-26T13:41:17.900385+00:00",
   "key_metrics": [
     {
-      "name": "Earnings Per Share (EPS)",
-      "value": "0.86",
-      "unit": "USD",
-      "source_citation": "Recent News, public.com, snippet"
+      "name": "Net operating revenues (Q2 2026)",
+      "value": "13,380 vs 12,535 prior year (+7%)",
+      "unit": "USD millions",
+      "source_citation": "10-Q filed 2026-07-29, Part I Item 1, Consolidated Statements of Income; Item 2 MD&A, Net Operating Revenues"
+    },
+    {
+      "name": "Revenue growth drivers (Q2 2026)",
+      "value": "Concentrate volume +4%, price/mix +2%, FX +2%, acquisitions & divestitures -1%",
+      "unit": "% change",
+      "source_citation": "10-Q, Item 2 MD&A, Net Operating Revenues table (three months)"
+    },
+    {
+      "name": "Gross profit margin (Q2 2026)",
+      "value": "62.9% vs 62.4%",
+      "unit": "%",
+      "source_citation": "10-Q, Item 2 MD&A, Gross Profit Margin"
+    },
+    {
+      "name": "Operating income (Q2 2026)",
+      "value": "4,672 vs 4,280 (+9%)",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Item 1 Consolidated Statements of Income; Item 2 MD&A, Operating Income and Operating Margin"
+    },
+    {
+      "name": "Operating margin (Q2 2026)",
+      "value": "34.9% vs 34.1%",
+      "unit": "%",
+      "source_citation": "10-Q, Item 2 MD&A, Operating Income and Operating Margin"
+    },
+    {
+      "name": "Net income attributable to shareowners (Q2 2026)",
+      "value": "4,425 vs 3,810",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Item 1 Consolidated Statements of Income"
+    },
+    {
+      "name": "Diluted EPS (Q2 2026)",
+      "value": "1.03 vs 0.88",
+      "unit": "USD per share",
+      "source_citation": "10-Q, Item 1 Consolidated Statements of Income"
+    },
+    {
+      "name": "Other income (loss) - net (Q2 2026)",
+      "value": "370 vs 212; includes 320 net gain on equity/debt securities and a 66 reduction of the Africa held-for-sale impairment",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Item 2 MD&A, Other Income (Loss) - Net; Note 12"
+    },
+    {
+      "name": "Effective tax rate (Q2 2026)",
+      "value": "18.9% vs 20.7%",
+      "unit": "%",
+      "source_citation": "10-Q, Note 14 Income Taxes"
+    },
+    {
+      "name": "Worldwide unit case volume growth (Q2 2026)",
+      "value": "+5% (concentrate sales volume +4%)",
+      "unit": "% change",
+      "source_citation": "10-Q, Item 2 MD&A, Beverage Volume table"
+    },
+    {
+      "name": "Net cash from operating activities (six months)",
+      "value": "7,543 vs (1,391) prior year",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Item 1 Consolidated Statements of Cash Flows; Item 2 MD&A, Cash Flows from Operating Activities"
+    },
+    {
+      "name": "Cash, cash equivalents, short-term investments and marketable securities",
+      "value": "16.4 billion at July 3, 2026",
+      "unit": "USD billions",
+      "source_citation": "10-Q, Item 2 MD&A, Liquidity, Capital Resources and Financial Position"
+    },
+    {
+      "name": "Long-term debt incl. current portion (carrying value)",
+      "value": "43,495 vs 43,941 at Dec 31, 2025",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Note 15 Fair Value Measurements, Other Fair Value Disclosures"
+    },
+    {
+      "name": "Quarterly dividend declared",
+      "value": "0.53 per share, payable Oct 1, 2026 to holders of record Sept 15, 2026",
+      "unit": "USD per share",
+      "source_citation": "10-Q, Item 2 MD&A, Dividends"
+    },
+    {
+      "name": "Share repurchases (six months)",
+      "value": "7.3 million shares at average 75.53, total 549",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Item 2 MD&A, Purchases of Stock for Treasury"
+    },
+    {
+      "name": "IRS tax reserve (Note 9)",
+      "value": "529 at July 3, 2026 (438 originally recorded in 2020); 6.0 billion deposit paid to IRS",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Note 9 Commitments and Contingencies, Tax Audits"
     }
   ],
-  "revenue_segments": [],
+  "revenue_segments": [
+    {
+      "name": "EMEA",
+      "revenue": "3,240",
+      "yoy_change": "+2% (3,176 prior year)",
+      "commentary": "Operating income 1,309 vs 1,325 as higher marketing and operating expenses offset concentrate volume +1%, price/mix and FX. Revenue growth was reduced by 3 points from the Nigeria divestiture. Unit case volume +4%.",
+      "source_citation": "10-Q, Note 16 Operating Segments; Item 2 MD&A, Net Operating Revenues and Operating Income (three months)"
+    },
+    {
+      "name": "Latin America",
+      "revenue": "1,839",
+      "yoy_change": "+16% (1,587 prior year)",
+      "commentary": "Revenue growth was driven by FX (+11 points) and price/mix (+3). Operating income was 1,177 vs 957, a 64.0% margin. Unit case volume +3%, with Brazil +6% and Mexico flat.",
+      "source_citation": "10-Q, Note 16 Operating Segments; Item 2 MD&A, Net Operating Revenues, Operating Margin and Beverage Volume (three months)"
+    },
+    {
+      "name": "North America",
+      "revenue": "5,408",
+      "yoy_change": "+7% (5,029 prior year)",
+      "commentary": "Concentrate volume +3% and price/mix +4%. Operating income 1,695 vs 1,621, partly offset by higher commodity costs and marketing. Includes fairlife, which had a July 2026 ransomware event.",
+      "source_citation": "10-Q, Note 16 Operating Segments; Item 2 MD&A, Net Operating Revenues and Operating Income (three months)"
+    },
+    {
+      "name": "Asia Pacific",
+      "revenue": "1,581",
+      "yoy_change": "+1% (1,572 prior year)",
+      "commentary": "Concentrate volume +11% was offset by price/mix of -9% (unfavorable mix and affordability initiatives). Operating income 656 vs 647. Unit case volume +8%.",
+      "source_citation": "10-Q, Note 16 Operating Segments; Item 2 MD&A, Net Operating Revenues and Operating Income (three months)"
+    },
+    {
+      "name": "Bottling Investments",
+      "revenue": "1,527",
+      "yoy_change": "+8% (1,411 prior year)",
+      "commentary": "Unit case volume +8% after structural changes, with favorable price/mix. Operating income 91 vs 59, despite India refranchising and an unfavorable FX impact. Africa bottling operations are held for sale.",
+      "source_citation": "10-Q, Note 16 Operating Segments; Item 2 MD&A, Net Operating Revenues and Operating Income (three months); Note 2"
+    },
+    {
+      "name": "Corporate",
+      "revenue": "37",
+      "yoy_change": "-5% (39 prior year)",
+      "commentary": "Operating loss narrowed to 256 from 329 on lower annual incentive expense and lower other operating charges.",
+      "source_citation": "10-Q, Note 16 Operating Segments; Item 2 MD&A, Operating Income (three months)"
+    }
+  ],
   "forward_guidance": {
-    "text": "The company is expected to announce its next earnings report on July 21, 2026, with analysts projecting an EPS of $0.93.",
-    "source_citation": "Recent News, public.com, snippet"
+    "text": "The 10-Q gives no numeric revenue or EPS guidance. Qualitative and partial items: (1) FX is expected to have a favorable impact on full-year 2026 net operating revenues, operating income and operating cash flow, based on spot rates and hedging coverage. (2) The 2026 underlying effective tax rate is expected to be about 19.9% before significant items and excluding any adverse IRS litigation outcome. (3) 2026 capital expenditures are expected to be about 2.2 billion. (4) Full-year concentrate sales volume growth is expected to be slightly behind unit case volume growth. Q4 2026 has six fewer days than Q4 2025. (5) Share repurchases are expected to offset employee stock-based compensation dilution. (6) The sale of part of the Africa bottling interest to CCHBC is expected to close by end of 2026, subject to regulatory approvals.",
+    "source_citation": "10-Q, Item 2 MD&A: Net Operating Revenues; Operating Income; Income Taxes; Liquidity, Capital Resources and Financial Position; Concentrate Sales Volume; Note 2"
   },
   "key_risks": [
     {
-      "description": "The company faces uncertainties and risks related to various economic, political, and regulatory environments, particularly in developing and emerging markets.",
+      "description": "U.S. IRS transfer-pricing dispute (tax years 2007-2009). The 11th Circuit heard the appeal on June 25, 2026, and no decision is disclosed. If the Tax Court position is upheld, the 6.0 billion deposit plus 514 million of accrued interest receivable would not be refunded. Potential incremental tax and interest for 2010-2025 is about 14 billion as of Dec 31, 2025, and continued application of the Tax Court methodology would add about 3.8 points to the 2026 effective tax rate. The Company recorded a 529 million reserve and believes it is more likely than not to prevail.",
       "is_new": false,
-      "source_citation": "Item 2, MD&A, paragraph 1"
+      "source_citation": "10-Q, Note 9 Commitments and Contingencies - Tax Audits; Part II Item 1 Legal Proceedings"
     },
     {
-      "description": "The fair value of the BodyArmor trademark was less than its carrying value, leading to an impairment charge of $960 million. Further impairment may occur if near-term operating results do not meet revised projections or if macroeconomic conditions worsen.",
+      "description": "fairlife ransomware event disclosed in an 8-K on July 16, 2026. It caused a temporary suspension of production, and a majority of production has resumed. The Company currently believes the incident is not reasonably likely to have a material impact, but the investigation is ongoing.",
       "is_new": true,
-      "source_citation": "Item 2, MD&A, paragraph 3"
+      "source_citation": "10-Q, Item 2 MD&A, Operations Review"
+    },
+    {
+      "description": "BodyArmor trademark impairment risk. The remaining carrying value is 2,440 million and fair value approximates carrying value at July 3, 2026. A shortfall versus revised projections or a higher discount rate would likely trigger a further impairment.",
+      "is_new": false,
+      "source_citation": "10-Q, Item 2 MD&A, Critical Accounting Policies and Estimates"
+    },
+    {
+      "description": "Higher commodity costs and increased marketing spend are pressuring segment margins (North America, Asia Pacific, EMEA). Advertising expense rose to 1,565 million from 1,328 million in the quarter.",
+      "is_new": false,
+      "source_citation": "10-Q, Item 2 MD&A, Gross Profit Margin; Selling, General and Administrative Expenses; Operating Income"
+    },
+    {
+      "description": "FX volatility. Q2 operating income benefited 5% from FX, and a reversal of weaker U.S. dollar trends would reduce that tailwind. The stronger dollar versus the yen, rupee, lira and peso is already a headwind in some segments.",
+      "is_new": false,
+      "source_citation": "10-Q, Item 2 MD&A, Foreign Exchange; Operating Income"
+    },
+    {
+      "description": "Africa bottling divestiture execution risk. Closing requires regulatory approvals, with the sale expected by end of 2026. The held-for-sale assets (5,438 million) carry a 1,207 million allowance, and the Q2 net gain came from revised estimates.",
+      "is_new": false,
+      "source_citation": "10-Q, Note 2 Acquisitions and Divestitures"
+    },
+    {
+      "description": "Asia Pacific price/mix of -9% in Q2 (affordability initiatives and mix) is diluting revenue growth despite strong volume.",
+      "is_new": false,
+      "source_citation": "10-Q, Item 2 MD&A, Net Operating Revenues"
+    },
+    {
+      "description": "Baltimore plastic-packaging litigation. The remaining public nuisance claim was dismissed by the Baltimore Circuit Court on July 23, 2026. The 10-Q does not state whether an appeal has been filed.",
+      "is_new": true,
+      "source_citation": "10-Q, Part II Item 1 Legal Proceedings, Environmental Matter"
     }
   ],
-  "recent_news": [
-    {
-      "headline": "Coca-Cola (KO) Earnings: Latest Report, Earnings Call & Financials",
-      "date": "",
-      "url": "https://public.com/stocks/ko/earnings",
-      "relevance_note": "Provides recent earnings per share data and future earnings report date."
-    },
-    {
-      "headline": "What date does Coca-Cola's (KO) report Earnings",
-      "date": "",
-      "url": "https://www.zacks.com/stock/research/KO/earnings-calendar",
-      "relevance_note": "Confirms recent earnings per share and comparison to estimates."
-    },
-    {
-      "headline": "The CocaCola Company (KO) - Earnings History",
-      "date": "",
-      "url": "https://www.alphaquery.com/stock/KO/earnings-history",
-      "relevance_note": "Details on earnings per share and comparison to analyst estimates."
-    },
-    {
-      "headline": "KO Earnings Dates, Upcoming and Historical Coca-Cola Company",
-      "date": "",
-      "url": "https://marketchameleon.com/Overview/KO/Earnings/Earnings-Dates/",
-      "relevance_note": "Provides estimated date for next earnings announcement."
-    },
-    {
-      "headline": "Coca-Cola (KO) Q2 2025 earnings",
-      "date": "",
-      "url": "https://www.cnbc.com/2025/07/22/coca-cola-ko-q2-2025-earnings.html",
-      "relevance_note": "Historical context on earnings performance and forecasts."
-    }
-  ],
+  "recent_news": [],
   "bull_case": [
-    "Coca-Cola beat earnings estimates for Q1 2026, indicating strong financial performance.",
-    "The company has a history of strong demand in key markets like Europe, which can offset weaker performance elsewhere."
+    "Q2 2026 revenue +7%, operating income +9% and operating margin up 80bps to 34.9%, with growth across volume, price/mix and FX.",
+    "Worldwide unit case volume +5% and concentrate sales +4%, with growth in all four geographic segments and strong Asia Pacific (+8% unit cases).",
+    "Management expects FX to remain a tailwind to full-year revenue, operating income and operating cash flow.",
+    "Six-month operating cash flow was 7.5 billion, with 16.4 billion of cash and investments and 6.6 billion of unused backup credit lines. Interest expense fell 17% on lower short-term debt.",
+    "The 8th Circuit's 3M ruling is described as highly supportive of the Company's position in the 11th Circuit IRS appeal, argued June 25, 2026. A favorable outcome could return the 6.0 billion deposit plus interest.",
+    "Corporate costs are falling (operating loss 256 vs 329), and the dividend was raised to 0.53 per quarter from 0.51."
   ],
   "bear_case": [
-    "The impairment charge on the BodyArmor trademark suggests challenges in the sports performance and hydration beverage segment.",
-    "Economic, political, and regulatory risks in developing markets could impact future performance."
+    "Part of the Q2 EPS beat versus last year came from non-operating items: a 320 million net gain on securities and a 66 million Africa impairment reduction, which may not recur.",
+    "About 5 points of the 9% operating income growth came from FX, which could fade if the U.S. dollar strengthens.",
+    "Asia Pacific price/mix was -9%, and EMEA operating income declined despite revenue growth due to higher marketing and operating expenses.",
+    "Commodity costs are higher and marketing spend is up sharply (advertising +18% in Q2), pressuring North America and other segments.",
+    "The IRS dispute carries a potential approximately 14 billion incremental liability (plus a 6.0 billion deposit at risk), and would add about 3.8 points to the effective tax rate if lost.",
+    "The fairlife ransomware outage and BodyArmor's near-impairment fair value add idiosyncratic downside in North America.",
+    "Q4 2026 has six fewer days, and concentrate volume is expected to lag unit case volume for the full year. Six-month volume was also helped by six extra days in Q1."
   ],
   "what_to_watch": [
     {
-      "text": "Monitor the performance of the BodyArmor trademark and any further impairment charges.",
-      "relevant_urls": [
-        "https://public.com/stocks/ko/earnings"
-      ]
+      "text": "Q3 2026 results versus Q2 trends: concentrate sales volume vs unit case volume (Q3 should not be distorted by day-count), price/mix (especially Asia Pacific) and the size of the FX tailwind.",
+      "relevant_urls": []
     },
     {
-      "text": "Watch for the next earnings report expected around July 21, 2026, for updates on financial performance and guidance.",
-      "relevant_urls": [
-        "https://marketchameleon.com/Overview/KO/Earnings/Earnings-Dates/"
-      ]
+      "text": "Any update on the fairlife ransomware recovery, including full production resumption, lost sales or remediation costs in North America.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Eleventh Circuit decision in the IRS transfer-pricing case, argued June 25, 2026, and any change to the 529 million reserve or the effective tax rate guide (about 19.9% ex-significant items).",
+      "relevant_urls": []
+    },
+    {
+      "text": "Commodity cost and marketing spend trends and their effect on gross margin (62.9% in Q2) and segment operating margins.",
+      "relevant_urls": []
+    },
+    {
+      "text": "BodyArmor performance versus revised projections, given fair value approximates the 2,440 million carrying value.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Africa bottling sale to CCHBC: progress on regulatory approvals and closing by year-end 2026, and any further held-for-sale adjustments.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Cash flow comparisons: Q2 2026 included the full Q2 dividend payment, whereas substantially all of the 2025 Q2 dividend was paid in Q3, which will affect Q3 year-over-year financing cash flow. The next dividend of 0.53 is payable Oct 1, 2026.",
+      "relevant_urls": []
     }
   ],
   "data_gaps": [
-    "Specific revenue figures for different segments are not provided in the filing excerpt or news items."
+    "No Q3 2026 results, analyst consensus estimates or company-specific numeric guidance (revenue, organic growth or EPS ranges) appear in the provided filing. Forward-looking items are qualitative or limited to tax rate and capex.",
+    "No recent news items were provided, so the recent_news section is empty. The July 16, 2026 8-K on the fairlife ransomware event is referenced in the 10-Q but was not supplied, so its details and any subsequent developments are not captured.",
+    "No stock price, valuation multiples, or market reaction data were provided.",
+    "The 10-K for FY2025 and the Q1 2026 10-Q were not provided. Full risk-factor text, the Q1 standalone quarter, and the prior-quarter comparison are therefore not covered.",
+    "The status of any 11th Circuit ruling on the IRS dispute after June 25, 2026, and any appeal in the Baltimore matter, are not available from the supplied materials.",
+    "Organic (non-GAAP) revenue growth and comparable operating income or EPS, excluding significant items, are not presented in the 10-Q, so the quality-of-earnings view is based on GAAP figures and disclosed items only.",
+    "Segment-level cost detail for 2026 full-year expectations is not provided."
   ],
   "hypotheses_explored": []
 }

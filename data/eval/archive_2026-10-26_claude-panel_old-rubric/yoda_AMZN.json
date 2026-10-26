@@ -1,0 +1,532 @@
+{
+  "ticker": "AMZN",
+  "company_name": "AMZN",
+  "filing_type": "10-Q",
+  "filing_date": "2026-07-31",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T13:03:35.861271+00:00",
+  "key_metrics": [
+    {
+      "name": "Total net sales",
+      "value": "Q2 2026: $200,606 (vs $167,702 in Q2 2025, +20%); six months 2026: $382,125 (vs $323,369)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net product sales",
+      "value": "Q2 2026: $77,602 (vs $68,246 in Q2 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net service sales",
+      "value": "Q2 2026: $123,004 (vs $99,456 in Q2 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Operating income",
+      "value": "Q2 2026: $27,461 (vs $19,171 in Q2 2025); six months 2026: $51,313 (vs $37,576)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net income",
+      "value": "Q2 2026: $62,647 (vs $18,164 in Q2 2025); six months 2026: $92,902 (vs $35,291)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Basic earnings per share",
+      "value": "Q2 2026: $5.82 (vs $1.71 in Q2 2025)",
+      "unit": "USD per share",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Diluted earnings per share",
+      "value": "Q2 2026: $5.75 (vs $1.68 in Q2 2025)",
+      "unit": "USD per share",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Other income (expense), net",
+      "value": "Q2 2026: $53,415 (vs $1,117 in Q2 2025); six months 2026: $69,062 (vs $3,866)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Provision for income taxes",
+      "value": "Q2 2026: $(18,199) (vs $(2,678) in Q2 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Interest expense",
+      "value": "Q2 2026: $(1,314) (vs $(516) in Q2 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Cost of sales",
+      "value": "Q2 2026: $95,778 (vs $80,809 in Q2 2025, +19%)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Technology and infrastructure",
+      "value": "Q2 2026: $33,158 (vs $27,166 in Q2 2025, +22%)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Total operating expenses",
+      "value": "Q2 2026: $173,145 (vs $148,531 in Q2 2025)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Weighted-average shares used in computation of earnings per share: Diluted",
+      "value": "Q2 2026: 10,903 (vs 10,806 in Q2 2025)",
+      "unit": "millions of shares",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net cash provided by (used in) operating activities",
+      "value": "Q2 2026: $45,387 (vs $32,515 in Q2 2025); six months 2026: $71,419 (vs $49,530)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net cash provided by (used in) operating activities",
+      "value": "Twelve months ended June 30, 2026: $161,403 (vs $121,137 for twelve months ended June 30, 2025)",
+      "unit": "USD millions",
+      "source_citation": "MD&A — Free Cash Flow"
+    },
+    {
+      "name": "Purchases of property and equipment",
+      "value": "Q2 2026: $(54,208) (vs $(32,183) in Q2 2025); six months 2026: $(98,411) (vs $(57,202))",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Purchases of property and equipment, net of proceeds from sales and incentives",
+      "value": "Twelve months ended June 30, 2026: $(169,007) (vs $(102,953) for twelve months ended June 30, 2025)",
+      "unit": "USD millions",
+      "source_citation": "MD&A — Free Cash Flow"
+    },
+    {
+      "name": "Free cash flow",
+      "value": "Twelve months ended June 30, 2026: $(7,604) (vs $18,184 for twelve months ended June 30, 2025)",
+      "unit": "USD millions",
+      "source_citation": "MD&A — Free Cash Flow"
+    },
+    {
+      "name": "Net cash provided by (used in) investing activities",
+      "value": "Twelve months ended June 30, 2026: $(216,775) (vs $(123,569))",
+      "unit": "USD millions",
+      "source_citation": "MD&A — Free Cash Flow"
+    },
+    {
+      "name": "Net cash provided by (used in) financing activities",
+      "value": "Twelve months ended June 30, 2026: $75,160 (vs $(8,652))",
+      "unit": "USD millions",
+      "source_citation": "MD&A — Free Cash Flow"
+    },
+    {
+      "name": "Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other",
+      "value": "Q2 2026: $19,988 (vs $15,227 in Q2 2025); six months 2026: $38,933 (vs $29,489)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Stock-based compensation",
+      "value": "Q2 2026: $6,038 (vs $6,534 in Q2 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Cash and cash equivalents",
+      "value": "June 30, 2026: $78,213 (vs $86,810 at December 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "CASH, CASH EQUIVALENTS, AND RESTRICTED CASH, END OF PERIOD",
+      "value": "June 30, 2026: $80,927 (vs $61,453 at June 30, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total cash, cash equivalents, and marketable securities",
+      "value": "June 30, 2026: $122,988 (vs $123,029 at December 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "North America",
+      "revenue": "Q2 2026: $116,177 (vs $100,068 in Q2 2025)",
+      "yoy_change": "+16% (Q2 2026 vs Q2 2025); six months 2026 +14%",
+      "commentary": "58% of net sales in Q2 2026 (vs 60%). Segment growth was primarily driven by increased unit sales and advertising sales, partly offset by higher shipping, fulfillment, and technology and infrastructure costs.",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "International",
+      "revenue": "Q2 2026: $42,197 (vs $36,761 in Q2 2025)",
+      "yoy_change": "+15% (Q2 2026 vs Q2 2025); +15% excluding FX; six months 2026 +17%",
+      "commentary": "21% of net sales. Operating income was $1,717 in Q2 2026 vs $1,494 in Q2 2025 and $3,141 for six months 2026 vs $2,511.",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "AWS",
+      "revenue": "Q2 2026: $42,232 (vs $30,873 in Q2 2025)",
+      "yoy_change": "+37% (Q2 2026 vs Q2 2025); six months 2026 +33%",
+      "commentary": "21% of net sales (vs 18%). Growth accelerated from 17% in Q2 2025 and was identical excluding FX. Operating income rose to $16,621 from $10,160 in Q2 2025 (~64%), and to $30,782 for six months 2026 from $21,707 (~42%), outpacing sales growth. Technology infrastructure spending to support AWS growth partially offset the gains.",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Consolidated",
+      "revenue": "Q2 2026: $200,606 (vs $167,702 in Q2 2025)",
+      "yoy_change": "+20% (Q2 2026 vs Q2 2025); +20% excluding FX; six months 2026 +18%",
+      "commentary": "FX did not significantly affect Q2 2026 net sales but added $3.0 billion to six-month net sales. Operating income was $27,461 vs $19,171 in Q2 2025.",
+      "source_citation": "MD&A"
+    }
+  ],
+  "forward_guidance": {
+    "text": "\"We expect spending in technology and infrastructure to increase over time as we continue to add infrastructure and employees, including to support our artificial intelligence and machine learning initiatives.\"",
+    "source_citation": "MD&A"
+  },
+  "key_risks": [
+    {
+      "description": "Trailing-twelve-month free cash flow turned negative at $(7,604) million versus +$18,184 million a year earlier. Net property and equipment purchases rose to $169.0 billion, outpacing operating cash flow of $161.4 billion, and financing activities provided $75.2 billion to cover the gap.",
+      "is_new": true,
+      "source_citation": "MD&A — Free Cash Flow"
+    },
+    {
+      "description": "Capex funding is shifting toward external capital. The company issued multiple large note offerings in 2026 (USD, EUR, CHF, CAD) and signed a $17.5 billion undrawn delayed-draw term loan. Interest expense rose to $1,314 million in Q2 2026 from $516 million, while total cash and marketable securities were flat at about $123 billion. Property and equipment acquired but not yet paid rose sharply (about $29.3 billion in the first half of 2026 versus $5.4 billion), a deferred cash outflow not yet in reported free cash flow.",
+      "is_new": true,
+      "source_citation": "Financial Statements"
+    },
+    {
+      "description": "Depreciation lag: AWS net additions to property and equipment were about $48.6 billion in Q2 2026 versus $16.0 billion a year earlier, while AWS depreciation and amortization rose only to about $8.1 billion from $4.8 billion. Assets not yet in service carry little depreciation, so reported AWS margins may not reflect the full cost of the build-out as it comes online.",
+      "is_new": true,
+      "source_citation": "Financial Statements"
+    },
+    {
+      "description": "Technology infrastructure and capex are expected to keep rising in 2026. Cash capex was $53.1 billion in Q2 2026 versus $31.4 billion and $96.3 billion for the six months versus $55.6 billion. Technology and infrastructure expense grew 22% in Q2 and 25% for the six months, and total commitments are reported at about $650 billion versus about $387 billion previously, reducing flexibility if demand softens.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "AWS contracted backlog of about $496 billion (weighted-average remaining life 6.4 years) is concentrated in large AI-lab commitments: an OpenAI expansion of $100 billion over 8 years and an Anthropic expansion of more than $100 billion over 10 years, both including obligations tied to AWS chip performance. Recognition depends on customer usage and Amazon's performance, and the counterparties are partly funded by Amazon's own equity investments.",
+      "is_new": true,
+      "source_citation": "Other"
+    },
+    {
+      "description": "Earnings quality and valuation risk from non-operating items: Q2 2026 net income of $62.6 billion included $53.4 billion of Other income (expense), net against operating income of $27.5 billion. Private-company equity investments (including Anthropic and OpenAI) carried at $122.3 billion versus $16.2 billion at year-end, partly via Level 3 fair value adjustments recognized in other income, so results can swing with private-market valuations. Provision for income taxes rose to $18.2 billion.",
+      "is_new": true,
+      "source_citation": "Other"
+    },
+    {
+      "description": "Further funding obligations to AI-lab partners: subsequent to June 30, 2026, the remaining $21.3 billion Commitment Amount was invested in Series C Preferred Stock of OpenAI, adding to exposure whose maximum loss is generally limited to carrying value and future funding commitments.",
+      "is_new": true,
+      "source_citation": "Other"
+    }
+  ],
+  "recent_news": [
+    {
+      "headline": "Amazon Stock Surges As AWS Growth Outpaces Heavy AI Spending",
+      "date": "2026-07-31",
+      "url": "https://www.forbes.com/sites/petercohan/2026/07/31/amazon-stock-pops-108-on-aws-growth-payoff-from-ai-capex",
+      "relevance_note": "Highlights the negative trailing FCF swing, a Q3 revenue guide below Street expectations, and the 2026 capex raise to $220B."
+    },
+    {
+      "headline": "Amazon Raises 2026 AI Capex to $220B, Says Capacity Won't Meet Demand Through 2027 | MLQ News",
+      "date": "Undated",
+      "url": "https://mlq.ai/news/amazon-raises-2026-ai-capex-to-220b-says-capacity-wont-meet-demand-through-2027",
+      "relevance_note": "CEO comments on capacity shortfalls through 2027 and AWS backlog reaching $496B."
+    },
+    {
+      "headline": "Amazon.com, Inc. (AMZN) Q2 2026 results: same strategy, opposite reaction",
+      "date": "Undated",
+      "url": "https://www.levelheadedinvesting.com/p/amazon-com-inc-amzn-q2-2026-results-same-strategy-opposite-reaction",
+      "relevance_note": "Links the $252B first-half backlog increase to the OpenAI and Anthropic expansions and raises the counterparty-credit question."
+    },
+    {
+      "headline": "Is Amazon Stock Poised to Gain as AI Boosts Cash Flow Prospects? - The Globe and Mail",
+      "date": "Undated",
+      "url": "https://www.theglobeandmail.com/investing/markets/stocks/AMZN/pressreleases/8099910/is-amazon-stock-poised-to-gain-as-ai-boosts-cash-flow-prospects",
+      "relevance_note": "Reports AI and custom-chip businesses each crossing a $25B run rate."
+    },
+    {
+      "headline": "Why Amazon May Be the Smartest Long-Term AI Investment Nobody Is Talking About",
+      "date": "Undated",
+      "url": "https://finance.yahoo.com/technology/ai/articles/why-amazon-may-smartest-long-124940506.html",
+      "relevance_note": "Adds context on AI and custom-chip run rates and the Q1 2026 backlog of $364B."
+    },
+    {
+      "headline": "Bloomberg: AI Bubble Risks Rising as Debt Balloons — Hyperscaler Capex Approaches 100% of Operating Cash Flow, Amazon Projected to Run Negative Free Cash Flow in 2026 | AI Weekly",
+      "date": "Undated",
+      "url": "https://aiweekly.co/alerts/bloomberg-ai-bubble-risks-rising-as-debt-balloons-hyperscaler-capex-approaches",
+      "relevance_note": "Frames the debt-funded AI capex trend and a projected negative 2026 FCF."
+    },
+    {
+      "headline": "Amazon's Selloff Shows AI Capex Has Become the New Margin Test | Investing.com",
+      "date": "Undated",
+      "url": "https://www.investing.com/analysis/amazons-selloff-shows-ai-capex-has-become-the-new-margin-test-200682889",
+      "relevance_note": "Bear-case framing: investors want multiple quarters of evidence that capex yields competitive returns."
+    },
+    {
+      "headline": "Amazon earnings: AMZN Q3 2026 earnings | Plus500",
+      "date": "Undated",
+      "url": "https://us.plus500.com/forecasts/amazon-earnings-amzn-expectations",
+      "relevance_note": "Summarizes Q3 2026 net sales guidance of $197-202B and consensus EPS ahead of the next print."
+    },
+    {
+      "headline": "Amazon's AWS Acceleration Tests Whether AI Spending Can Justify the Valuation | Investing.com",
+      "date": "Undated",
+      "url": "https://www.investing.com/analysis/amazons-aws-acceleration-tests-whether-ai-spending-can-justify-the-valuation-200689862",
+      "relevance_note": "Notes that modest expected EPS growth reflects the Prime Day shift and higher depreciation from capital spending."
+    },
+    {
+      "headline": "Microsoft only US hyperscaler with positive free cash flow as AI capex bites",
+      "date": "Undated",
+      "url": "https://www.investing.com/news/stock-market-news/microsoft-only-us-hyperscaler-with-positive-free-cash-flow-as-ai-capex-bites-93CH-4846663",
+      "relevance_note": "Peer context on negative hyperscaler free cash flow and Amazon's raised $220B capex forecast."
+    },
+    {
+      "headline": "Amazon faces capex risk as analysts weigh up $200B spending plan",
+      "date": "Undated",
+      "url": "https://uk.finance.yahoo.com/news/amazon-faces-capex-risk-analysts-164400880.html",
+      "relevance_note": "Analyst views on capex risk and the need for tangible returns on spending."
+    }
+  ],
+  "bull_case": [
+    "AWS growth accelerated to 37% in Q2 2026 ($42.2B of sales) from 17% a year earlier, and 33% for the first half, on a segment that is now 21% of net sales.",
+    "AWS operating income grew about 64% to $16.6B on 37% sales growth, and about 42% for the six months on 33% sales growth, showing positive operating leverage despite a near-doubling of AWS depreciation.",
+    "Consolidated operating income rose to $27.5B from $19.2B (+43%) on 20% sales growth, with sales and marketing and G&A shrinking as a percent of sales.",
+    "Contracted AWS backlog of about $496B with a 6.4-year weighted-average remaining life, anchored by multi-year OpenAI and Anthropic expansions, gives multi-year demand visibility; management says capacity will not meet demand through 2027.",
+    "Operating cash flow rose to $161.4B on a trailing basis (about +33%), so negative free cash flow is the product of front-loaded, demand-backed capex rather than weak core cash generation.",
+    "Custom silicon (Trainium and Graviton) and AWS AI are reported to be crossing $25B run rates each, with chip performance embedded in long-dated customer contracts, which could give Amazon a durable cost advantage in AI compute.",
+    "Retail is improving: North America sales grew 16% and International 15%, supported by advertising and unit sales."
+  ],
+  "bear_case": [
+    "Trailing free cash flow swung to $(7.6)B from +$18.2B as net property and equipment purchases hit $169.0B; external financing of $75.2B over the twelve months is covering the gap.",
+    "Capex is still rising: Q2 cash capex was $53.1B versus $31.4B, 2026 capex guidance reportedly rose to $220B, and unpaid property and equipment purchases jumped to about $29.3B in the first half, implying more cash outflow ahead.",
+    "The AWS margin print may flatter reality. AWS net additions were $48.6B in Q2 versus only a $3.2B increase in AWS D&A, so much of the spend has yet to hit the P&L; Q3 consensus already reflects higher depreciation and a Prime Day shift.",
+    "Backlog quality is concentrated: two AI labs account for most of the recent growth, recognition depends on usage and chip performance, and those customers are partly funded by Amazon's own equity stakes, creating circularity.",
+    "Reported net income of $62.6B was inflated by $53.4B of non-operating gains tied to private AI investments, which are valued partly with Level 3 inputs and could reverse; tax provision also jumped to $18.2B.",
+    "Debt is rising to fund the build-out: large multi-currency note issuance, a $17.5B term loan, Q2 interest expense of $1.3B versus $0.5B, and commitments of about $650B versus $387B reduce flexibility.",
+    "Q3 revenue guidance was reportedly below Street expectations, and persistent AWS competitive-gap concerns versus Microsoft and Google keep the stock sensitive to any growth slowdown."
+  ],
+  "what_to_watch": [
+    {
+      "text": "**Free Cash Flow and Capex Funding:** Trailing free cash flow fell to $(7.6) billion from +$18.2 billion as net property and equipment purchases rose to $169.0 billion against operating cash flow of $161.4 billion, and financing inflows of $75.2 billion covered the gap. Property and equipment acquired but not yet paid also jumped to about $29.3 billion in the first half, suggesting reported capex understates near-term cash needs. That said, operating cash flow grew roughly 33%, and the capex is aimed at capacity that management says is still short of demand.\n\n-> Monitor trailing free cash flow, the unpaid property and equipment liability, and any change to the 2026 capex outlook (reportedly raised to $220 billion).",
+      "relevant_urls": [
+        "https://www.forbes.com/sites/petercohan/2026/07/31/amazon-stock-pops-108-on-aws-growth-payoff-from-ai-capex",
+        "https://aiweekly.co/alerts/bloomberg-ai-bubble-risks-rising-as-debt-balloons-hyperscaler-capex-approaches",
+        "https://mlq.ai/news/amazon-raises-2026-ai-capex-to-220b-says-capacity-wont-meet-demand-through-2027"
+      ]
+    },
+    {
+      "text": "**AWS Growth Durability:** AWS sales rose 37% in Q2 2026 to $42.2 billion (33% for the first half), and backlog reportedly reached about $496 billion with a 6.4-year weighted-average life. Management has said capacity will fall short of demand through 2027, supporting continued acceleration. However, recognition depends on customer usage and delivery, and the growth comparison gets tougher from here.\n\n-> Monitor whether AWS growth holds at or above roughly 30%, plus the sequential change in backlog and how much converts to revenue.",
+      "relevant_urls": [
+        "https://mlq.ai/news/amazon-raises-2026-ai-capex-to-220b-says-capacity-wont-meet-demand-through-2027",
+        "https://www.levelheadedinvesting.com/p/amazon-com-inc-amzn-q2-2026-results-same-strategy-opposite-reaction"
+      ]
+    },
+    {
+      "text": "**AWS Margin vs. Depreciation Lag:** AWS operating income rose about 64% to $16.6 billion on 37% sales growth, indicating strong incremental margins even as AWS D&A rose about 67% to $8.1 billion. However, Q2 AWS net additions to property and equipment of $48.6 billion (versus $16.0 billion) have barely begun to depreciate, so a rough six-year life implies a step-up in quarterly D&A as assets enter service. Analysts also cite higher depreciation as a drag on expected EPS growth.\n\n-> Monitor AWS operating income and implied margin, AWS D&A growth, and management commentary on the timing of assets placed in service.",
+      "relevant_urls": [
+        "https://www.investing.com/analysis/amazons-aws-acceleration-tests-whether-ai-spending-can-justify-the-valuation-200689862",
+        "https://www.investing.com/analysis/amazons-selloff-shows-ai-capex-has-become-the-new-margin-test-200682889"
+      ]
+    },
+    {
+      "text": "**Backlog Concentration and AI Equity Stakes:** Backlog growth of about $252 billion in the first half is largely tied to the OpenAI ($100 billion over 8 years) and Anthropic (more than $100 billion over 10 years) expansions, both including obligations tied to AWS chip performance. Private-company equity investments carried at $122.3 billion (from $16.2 billion) drove $53.4 billion of Q2 other income, and the remaining $21.3 billion OpenAI commitment was funded after quarter-end. On the other hand, the multi-year terms and chip integration make the commitments sticky, and the long 6.4-year weighted life adds visibility.\n\n-> Monitor non-operating gains or losses in other income, further equity funding of AI partners, and any disclosure on customer concentration within backlog.",
+      "relevant_urls": [
+        "https://www.levelheadedinvesting.com/p/amazon-com-inc-amzn-q2-2026-results-same-strategy-opposite-reaction",
+        "https://www.crn.com/news/cloud/2026/amazon-s-aws-earnings-preview-5-big-ai-sales-anthropic-and-nova-things-to-know"
+      ]
+    },
+    {
+      "text": "**Debt, Interest Cost, and Liquidity:** Total cash, cash equivalents, and marketable securities were flat at about $123.0 billion while Amazon issued large USD, EUR, CHF, and CAD notes and signed a $17.5 billion undrawn delayed-draw term loan. Q2 interest expense rose to $1.3 billion from $0.5 billion, and total commitments are reported at about $650 billion versus $387 billion. That said, the term loan is undrawn and interest income of $1.3 billion offsets part of the cost.\n\n-> Monitor interest expense, any drawdown of the term loan, new debt issuance, and the cash and marketable securities balance.",
+      "relevant_urls": [
+        "https://aiweekly.co/alerts/bloomberg-ai-bubble-risks-rising-as-debt-balloons-hyperscaler-capex-approaches"
+      ]
+    },
+    {
+      "text": "**Q3 Guide and Consolidated Margin:** Q3 2026 net sales guidance is reported at $197-202 billion (about 9-12% growth) with consensus EPS near $2.03, a sharp slowdown from Q2's 20% growth, partly reflecting the Prime Day shift. Operating income rose 43% in Q2 to $27.5 billion, and retail margins benefited from lower sales and marketing and G&A as a share of sales. However, Q2 sales were boosted by timing effects and depreciation is set to climb, so margin upside may be harder to sustain.\n\n-> Monitor reported net sales against the $197-202 billion range, consolidated operating income, and the fourth-quarter guide.",
+      "relevant_urls": [
+        "https://us.plus500.com/forecasts/amazon-earnings-amzn-expectations",
+        "https://www.investing.com/analysis/amazons-aws-acceleration-tests-whether-ai-spending-can-justify-the-valuation-200689862"
+      ]
+    },
+    {
+      "text": "**Custom Silicon as a Second Profit Pool:** Reports indicate that both AWS AI and the Trainium/Graviton chip business crossed $25 billion annual run rates in Q2 2026, growing at triple-digit rates, with Graviton commitments reportedly up nearly 3x sequentially. The filing shows chip performance embedded in the OpenAI and Anthropic obligations, but it does not break out chip revenue, and the run-rate figures come from secondary sources. That said, if chips lower unit compute cost, they could partly offset depreciation pressure.\n\n-> Monitor any disclosure of chip or AI run rates, Trainium commitments, and commentary on cost per unit of compute.",
+      "relevant_urls": [
+        "https://www.theglobeandmail.com/investing/markets/stocks/AMZN/pressreleases/8099910/is-amazon-stock-poised-to-gain-as-ai-boosts-cash-flow-prospects",
+        "https://finance.yahoo.com/technology/ai/articles/why-amazon-may-smartest-long-124940506.html"
+      ]
+    },
+    {
+      "text": "**Earnings Quality and Non-Operating Items:** Q2 net income of $62.6 billion (diluted EPS $5.75) sat far above operating income of $27.5 billion because Other income (expense), net was $53.4 billion, offset by an $18.2 billion tax provision. Such gains reflect mark-ups of private investments and are not repeatable at this scale. However, operating income itself grew 43%, so the core business is improving independent of these gains.\n\n-> Monitor the split between operating income and non-operating gains in the Q3 results, and compare EPS on an operating basis to consensus.",
+      "relevant_urls": []
+    }
+  ],
+  "data_gaps": [
+    "Total debt or long-term debt balances were not included in the provided filing excerpts, so a total debt figure could not be extracted.",
+    "The company does not report gross profit or gross margin in the provided excerpts (management states operating income is a more meaningful measure), so gross margin is not available.",
+    "North America segment operating income and segment D&A tables were not captured in the provided filing excerpts, so segment margins cannot be measured directly.",
+    "A stand-alone Q2 2026 free cash flow figure was not provided in the filing excerpts; only the trailing-twelve-month reconciliation was available.",
+    "The filing excerpts do not disclose how much of the new AWS capex is still in construction or the depreciation schedule, so the timing of the depreciation step-up cannot be sized from the filing.",
+    "Chip (Trainium/Graviton) revenue is not broken out in the filing excerpts; run-rate figures come only from secondary news coverage."
+  ],
+  "hypotheses_explored": [
+    {
+      "id": "h1",
+      "proposing_personality": "Conservative",
+      "question": "Has Amazon's free cash flow turned negative on a trailing basis, with capex growing faster than operating cash flow?",
+      "summary": "On the company's non-GAAP reconciliation, trailing-twelve-month free cash flow fell from about +$18.2B to about -$7.6B even as operating cash flow rose to $161.4B, because net property and equipment purchases rose from $103.0B to $169.0B. Earnings growth is not converting into cash and the gap is being funded externally.",
+      "evidence_quotes": [
+        "[MD&A — Free Cash Flow] Net cash provided by (used in) operating activities $121,137 vs $161,403; Purchases of property and equipment, net of proceeds from sales and incentives (102,953) vs (169,007); Free cash flow $18,184 vs $(7,604) (TTM ended June 30, 2025 vs June 30, 2026)",
+        "[MD&A — Free Cash Flow] Net cash provided by (used in) financing activities $(8,652) vs $75,160 for the same periods"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h2",
+      "proposing_personality": "Conservative",
+      "question": "Is reported capex understating the true infrastructure spend, and is debt issuance now funding the gap rather than cash on hand?",
+      "summary": "Cash-basis capex excludes property acquired but not yet paid, which rose sharply. Total cash and marketable securities were flat at about $123B while the company issued large new notes and secured a $17.5B delayed-draw term loan. Q2 AWS net additions to property and equipment were $48.6B versus $16.0B a year earlier. Earnings quality is weakening given the growing unpaid-capex liability and rising debt; external projections of negative 2026 FCF should be verified.",
+      "evidence_quotes": [
+        "[Financial Statements — Supplemental Cash Flow Information] Increase (decrease) in property and equipment acquired but not yet paid: six months ended June 30 2025 $5,376 vs 2026 $29,267 (TTM figures shown in the filing)",
+        "[Financial Statements — Debt] March 2026 Notes issuance of $37.0 billion; March 2026 Euro-denominated Notes issuance of EUR 14.5 billion; May 2026 Swiss franc-denominated Notes issuance of CHF 2.8 billion; June 2026 Canadian Dollar-denominated Notes issuance of C$14.0 billion",
+        "[Financial Statements — In June 2026, we entered into a $] In June 2026, we entered into a $17.5 billion unsecured delayed draw term loan ... no borrowings outstanding under the Term Loan as of June 30, 2026",
+        "[MD&A — MD&A / Cash] Total cash, cash equivalents, and marketable securities $123,029 (Dec 2025 basis) vs $122,988 (June 30, 2026)",
+        "[MD&A — Note 4 Commitments] Long-term debt principal and interest total $220,309 million; total commitments $650,034 million vs $386,806 million prior",
+        "[search_news — Bloomberg via AI Weekly] Amazon projected to generate negative free cash flow of $17-28 billion in 2026; Amazon raised its 2026 capex forecast to $220 billion"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h3",
+      "proposing_personality": "Contrarian",
+      "question": "Is AWS's Q2 2026 margin expansion durable, or is it flattered by depreciation that has not yet caught up with the capex surge?",
+      "summary": "The AWS profit jump may be a lagging snapshot: Q2 AWS net additions to property and equipment reached $48.6B versus $16.0B a year earlier, while AWS D&A rose only to $8.1B. Because servers depreciate over several years, most of this spend has barely begun to hit the P&L. Trailing free cash flow is already negative. The filing does not disclose how much capex is still under construction, so the lag cannot be precisely sized.",
+      "evidence_quotes": [
+        "Cash capital expenditures were $31.4 billion and $53.1 billion during Q2 2025 and Q2 2026 [MD&A — 27]",
+        "Free cash flow: Twelve Months Ended June 30 — 2025: $18,184; 2026: $(7,604) [MD&A — Free Cash Flow]",
+        "AWS (2) 16,043 48,604 — total net additions to property and equipment, three months ended June 30, 2025 and 2026 [Financial Statements — 24]",
+        "AWS 4,844 8,076 — depreciation and amortization, three months ended June 30, 2025 and 2026 [Financial Statements — includes property and equipment added under finance leases]",
+        "AWS operating income 10,160 16,621 for Q2 2025 and Q2 2026 [MD&A — 90]"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h4",
+      "proposing_personality": "Contrarian",
+      "question": "Is the bear case on Amazon's AI spending overstated because AWS is growing fast enough to absorb the capex without margin damage?",
+      "summary": "AWS sales grew 37% in Q2 2026 and AWS operating income about 64%, so margin expanded even as D&A rose sharply, and management ties infrastructure spend to AWS demand. The weakness is that $650B of total obligations makes the spend non-optional, so revenue must keep compounding. Weakly supported: the evidence shows a strong present but does not prove the future.",
+      "evidence_quotes": [
+        "AWS sales increased 37% in Q2 2026, and 33% for the six months ended June 30, 2026 [MD&A — 29]",
+        "AWS operating income 10,160 16,621 for Q2 2025 and Q2 2026 [MD&A — 90]",
+        "spending on technology infrastructure that was primarily driven by additional investments to support AWS business growth [MD&A — 32]",
+        "Total commitments $650,034 [Financial Statements — 26]"
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h6",
+      "proposing_personality": "Dreamer",
+      "question": "Can Amazon's custom silicon (Trainium and Graviton) become a second durable profit pool, independent of renting AWS capacity, that the market is not pricing in?",
+      "summary": "News reports say both the AWS AI business and the Trainium/Graviton chip business crossed a $25B annual run rate in Q2 2026 with triple-digit growth. If chips are adopted broadly, Amazon could hold a hard-to-replicate AI compute cost advantage. The filing's disclosure that AI contracts carry obligations tied to AWS chip performance supports this directionally, but chip revenue is not broken out and run-rate figures come from secondary sources.",
+      "evidence_quotes": [
+        "In Q2 2026, both AWS' AI business and Amazon's chips business, spanning Trainium and Graviton, crossed a $25 billion annual revenue run rate, each growing at triple-digit percentages. [Globe and Mail news]",
+        "By Q2 2026, both Amazon's AI business and its custom-chip business had each surpassed $25 billion in annualized revenue, more than doubling year over year. [Yahoo Finance news]",
+        "which includes contractual obligations related to the performance of AWS chips. [Other — 496]"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h7",
+      "proposing_personality": "Optimist",
+      "question": "Will AWS growth stay above roughly 30% at the next earnings call, with backlog conversion supporting continued acceleration?",
+      "summary": "AWS sales rose 37% in Q2 2026 and 33% for the first half. Third-party coverage cites backlog near $496B, up $252B in the first half on OpenAI and Anthropic commitments, and management says capacity will not meet demand through 2027. These signals point to durable demand, though backlog and capex figures come from secondary sources.",
+      "evidence_quotes": [
+        "AWS sales increased 37% in Q2 2026, and 33% for the six months ended June 30, 2026 compared to the comparable prior year periods. (retrieve_filing, MD&A — 29)",
+        "AWS operating income increased ... primarily due to increased sales, partially offset by spending on technology infrastructure that was primarily driven by additional investments to support AWS business growth. (retrieve_filing, MD&A — 32)",
+        "The backlog grew $252 billion in the first half of 2026 (search_news, levelheadedinvesting.com Q2 2026 results analysis)",
+        "We will still not have enough capacity to meet all the demand we have in 2026. And I believe this dynamic will also be true in 2027, too. (search_news, MLQ News: Amazon Raises 2026 AI Capex to $220B, quoting CEO Andy Jassy)"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h8",
+      "proposing_personality": "Optimist",
+      "question": "Can Amazon's rising capital spending be converted into operating leverage and pricing power rather than eroding free cash flow?",
+      "summary": "Cash capex rose to $53.1B in Q2 2026 from $31.4B and reached $96.3B for the first half, while operating income grew from $19.2B to $27.5B. The spend is aimed mostly at AWS in a supply-constrained market, which could expand margins over time if capacity is monetized. The downside is negative trailing free cash flow, and the thesis depends on capacity monetization.",
+      "evidence_quotes": [
+        "Cash capital expenditures were $31.4 billion and $53.1 billion during Q2 2025 and Q2 2026, and $55.6 billion and $96.3 billion for the six months ended June 30, 2025 and 2026, which primarily reflect investments in technology infrastructure (the majority of which is to support AWS business growth) (retrieve_filing, MD&A — 27)",
+        "Operating income increased from $19.2 billion in Q2 2025 to $27.5 billion in Q2 2026 (retrieve_filing, MD&A — 90)",
+        "We expect spending in technology and infrastructure to increase over time as we continue to add infrastructure and employees, including to support our artificial intelligence and machine learning initiatives. (retrieve_filing, MD&A — MD&A)",
+        "TTM free cash flow: -$7.6B (search_news, AMZN Stock Analysis 2026 video summary citing AWS backlog of $496B and 2026 capex of ~$220B)"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h9",
+      "proposing_personality": "Pessimist",
+      "question": "Is AWS's capex-driven depreciation ramp, together with a shift in free cash flow, likely to compress consolidated margins and cash returns faster than the reported AWS growth suggests?",
+      "summary": "AWS operating income is rising, but cash capex nearly doubled in Q2 and AWS D&A almost doubled, with trailing free cash flow reportedly swinging to an outflow. The filing says spending is expected to increase further in 2026, so margin and cash pressure is likely to persist.",
+      "evidence_quotes": [
+        "Cash capital expenditures were $31.4 billion and $53.1 billion during Q2 2025 and Q2 2026, and $55.6 billion and $96.3 billion for the six months ended June 30, 2025 and 2026, which primarily reflect investments in technology infrastructure (the majority of which is to support AWS business growth) and in additional capacity to support our fulfillment network, both of which we expect to increase in 2026. [MD&A — 27]",
+        "Total depreciation and amortization expense, by segment... AWS 4,844 (Q2 2025) 8,076 (Q2 2026); six months 9,234 (2025) 15,353 (2026). [Financial Statements — segment D&A table, p.25]",
+        "The increase in AWS operating income in Q2 2026 and for the six months ended June 30, 2026, compared to the comparable prior year periods, is primarily due to increased sales, partially offset by spending on technology infrastructure that was primarily driven by additional investments to support AWS business growth. [MD&A — 32]",
+        "Trailing free cash flow swung from an $18.2 billion inflow in Q2 2025 to a $7.6 billion outflow in Q2 2026. [Forbes news, 2026-07-31, Peter Cohan]",
+        "Analysts describe the $200 billion capex plan as a risk: 'Amazon's Selloff Shows AI Capex Has Become the New Margin Test.' [Investing.com news]"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h10",
+      "proposing_personality": "Pessimist",
+      "question": "Are Amazon's contracted AWS backlog and its AI equity stakes concentrated in a few counterparties, and do they carry valuation or recognition risk that the headline numbers understate?",
+      "summary": "Backlog of about $496B depends heavily on OpenAI and Anthropic, each with multi-year $100B-plus expansions that include obligations tied to AWS chip performance. Private equity stakes rose from $16.2B to $122.3B, valued partly through Level 3 fair value adjustments that flow through other income. Revenue timing is set by customer usage and the OpenAI commitment is still being funded, so both backlog and reported earnings may be weaker than headlines imply.",
+      "evidence_quotes": [
+        "...those commitments not yet recognized were approximately $496 billion as of June 30, 2026. The weighted-average remaining life of our long-term contracts is 6.4 years. The amount and timing of revenue recognition will be driven by customer usage and our performance in accordance with contractual obligations... [Other — 496]",
+        "In Q1 2026, AWS and OpenAI Group PBC announced an expansion of the existing $38.0 billion multi-year commitment and commercial arrangement with OpenAI by $100.0 billion over 8.0 years, which includes contractual obligations related to the performance of AWS chips. [Other — 496]",
+        "In Q2 2026, AWS and Anthropic announced an expansion of the strategic collaboration and existing multi-year commitment by more than $100.0 billion over 10.0 years, which includes contractual obligations related to the performance of AWS chips. [Other — 496]",
+        "As of December 31, 2025 and June 30, 2026, equity investments in private companies not accounted for under the equity-method... had a carrying value of $16.2 billion and $122.3 billion, with adjustments for observable changes in prices or impairments representing Level 3 fair value measurements recognized in 'Other income (expense), net'. [Other — OpenAI]",
+        "Subsequent to June 30, 2026, we invested the remaining $21.3 billion Commitment Amount in shares of Series C Preferred Stock of OpenAI. [Other — Subsequent to June 30, 2026]"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h11",
+      "proposing_personality": "Quant",
+      "question": "Is AWS operating income growing faster than AWS revenue, so that AWS is showing positive incremental margins despite the capex ramp?",
+      "summary": "AWS operating income rose from $10,160M to $16,621M in Q2 (about 64%) against 37% sales growth, and six-month operating income rose about 42% against 33% sales growth, implying positive operating leverage. Absolute AWS margin was inferred from growth rates rather than measured directly.",
+      "evidence_quotes": [
+        "AWS sales increased 37% in Q2 2026, and 33% for the six months ended June 30, 2026 compared to the comparable prior year periods. [MD&A — 29]",
+        "AWS 10,160 16,621 21,707 30,782 [MD&A — 90] (segment operating income table, columns Q2 2025, Q2 2026, 6M 2025, 6M 2026)",
+        "The increase in AWS operating income in Q2 2026 and for the six months ended June 30, 2026, compared to the comparable prior year periods, is primarily due to increased sales, partially offset by spending on technology infrastructure that was primarily driven by additional investments to support AWS business growth. [MD&A — 32]"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h12",
+      "proposing_personality": "Quant",
+      "question": "Will AWS depreciation growth catch up with the capex surge and compress AWS margins in the next quarter?",
+      "summary": "AWS property additions were $48,604M in Q2 2026 versus $16,043M (about 3.0x), and consolidated cash capex rose 69%, while AWS D&A rose about 67% to $8,076M. The $32.6B increase in AWS additions far exceeds the $3.2B increase in AWS D&A, so depreciation has room to grow. This is a forward-looking inference since the filing provides no depreciation schedule.",
+      "evidence_quotes": [
+        "AWS (2) 16,043 48,604 36,507 90,120 [Financial Statements — 24] (total net additions to property and equipment, Q2 2025 and Q2 2026)",
+        "Cash capital expenditures were $31.4 billion and $53.1 billion during Q2 2025 and Q2 2026, and $55.6 billion and $96.3 billion for the six months ended June 30, 2025 and 2026, which primarily reflect investments in technology infrastructure (the majority of which is to support AWS business growth) and in additional capacity to support our fulfillment network, both of which we expect to increase in 2026. [MD&A — 27]",
+        "AWS 4,844 8,076 9,234 15,353 [Financial Statements — 24] (depreciation and amortization by segment, Q2 2025, Q2 2026, 6M 2025, 6M 2026)"
+      ],
+      "confidence": 3
+    }
+  ]
+}

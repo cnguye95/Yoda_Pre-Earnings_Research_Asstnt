@@ -427,7 +427,7 @@ if __name__ == "__main__":
     from yoda.ingest.edgar import fetch_latest_filing
 
     ticker = (sys.argv[1] if len(sys.argv) > 1 else "NFLX").upper()
-    mode   = sys.argv[2] if len(sys.argv) > 2 else "rag_llm"
+    mode   = sys.argv[2] if len(sys.argv) > 2 else "yoda"
 
     # Load the report JSON
     src_path = pathlib.Path(f"data/eval/{mode}_{ticker}.json")

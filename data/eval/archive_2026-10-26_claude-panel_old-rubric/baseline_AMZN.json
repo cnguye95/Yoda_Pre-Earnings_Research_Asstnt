@@ -1,0 +1,280 @@
+{
+  "ticker": "AMZN",
+  "company_name": "Amazon.com, Inc.",
+  "filing_type": "10-Q",
+  "filing_date": "2026-07-31",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T13:01:10.477287+00:00",
+  "key_metrics": [
+    {
+      "name": "Total net sales (Q2 2026)",
+      "value": "200,606 (vs 167,702 in Q2 2025; +20% YoY)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I, Item 1, Consolidated Statements of Operations; Item 2 MD&A, Net Sales"
+    },
+    {
+      "name": "Operating income (Q2 2026)",
+      "value": "27,461 (vs 19,171 in Q2 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I, Item 1, Consolidated Statements of Operations"
+    },
+    {
+      "name": "Operating margin (Q2 2026, calculated)",
+      "value": "13.7% (vs 11.4% in Q2 2025)",
+      "unit": "percent of net sales",
+      "source_citation": "Calculated from 10-Q Part I, Item 1, Consolidated Statements of Operations (operating income divided by total net sales)"
+    },
+    {
+      "name": "Net income (Q2 2026)",
+      "value": "62,647 (vs 18,164 in Q2 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I, Item 1, Consolidated Statements of Operations"
+    },
+    {
+      "name": "Diluted EPS (Q2 2026)",
+      "value": "5.75 (vs 1.68 in Q2 2025)",
+      "unit": "USD per share",
+      "source_citation": "10-Q Part I, Item 1, Consolidated Statements of Operations"
+    },
+    {
+      "name": "Other income (expense), net (Q2 2026)",
+      "value": "53,415 (vs 1,117 in Q2 2025); includes 50,486 of upward adjustments to private equity investments, primarily Anthropic",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I, Item 1, Note 1 - Other Income (Expense), Net; Item 2 MD&A, Other Income (Expense), Net"
+    },
+    {
+      "name": "Provision for income taxes (Q2 2026)",
+      "value": "18,199 (vs 2,678 in Q2 2025); six-month provision includes 15.9 billion of net discrete tax expense, primarily from the Anthropic upward adjustments",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I, Item 1, Consolidated Statements of Operations; Note 7 - Income Taxes"
+    },
+    {
+      "name": "Operating cash flow (trailing twelve months)",
+      "value": "161,403 (vs 121,137 prior-year TTM)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I, Item 1, Consolidated Statements of Cash Flows; Item 2 MD&A, Liquidity and Capital Resources"
+    },
+    {
+      "name": "Free cash flow (trailing twelve months, non-GAAP)",
+      "value": "(7,604) (vs 18,184 prior-year TTM)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I, Item 2 MD&A, Non-GAAP Financial Measures - Free Cash Flow"
+    },
+    {
+      "name": "Purchases of property and equipment (Q2 2026)",
+      "value": "54,208 (vs 32,183 in Q2 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I, Item 1, Consolidated Statements of Cash Flows"
+    },
+    {
+      "name": "Cash, cash equivalents and marketable securities",
+      "value": "122,988 at June 30, 2026 (123,029 at Dec 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I, Item 1, Note 2 - Financial Instruments (fair value table)"
+    },
+    {
+      "name": "Long-term debt (non-current)",
+      "value": "128,894 at June 30, 2026 (65,648 at Dec 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I, Item 1, Consolidated Balance Sheets; Note 5 - Debt"
+    },
+    {
+      "name": "Unrecognized performance obligations on contracts over one year (primarily AWS)",
+      "value": "approximately 496 billion; weighted-average remaining life 6.4 years",
+      "unit": "USD billions",
+      "source_citation": "10-Q Part I, Item 1, Note 1 - Unearned Revenue"
+    },
+    {
+      "name": "Carrying value of private-company equity investments (primarily Anthropic and OpenAI)",
+      "value": "122.3 billion at June 30, 2026 (16.2 billion at Dec 31, 2025)",
+      "unit": "USD billions",
+      "source_citation": "10-Q Part I, Item 1, Note 2 - Non-Marketable Investments"
+    },
+    {
+      "name": "IEEPA tariff refunds received (Q2 2026)",
+      "value": "approximately 640, recorded primarily as a reduction to cost of sales, mainly in North America",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I, Item 1, Note 1 - Use of Estimates"
+    },
+    {
+      "name": "Total purchase and lease commitments",
+      "value": "650,034 total contractual commitments, including 137,214 of leases not yet commenced",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I, Item 1, Note 4 - Commitments and Contingencies (commitments table)"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "AWS",
+      "revenue": "42,232 (Q2 2026)",
+      "yoy_change": "+37% (vs 30,873 in Q2 2025)",
+      "commentary": "Operating income was 16,621 vs 10,160 a year earlier. Growth reflects increased customer usage, partially offset by pricing changes primarily driven by long-term customer contracts. AWS accounted for 48,604 of the 63,891 total net PP&E additions in Q2 2026. AWS segment assets were 350,170 at June 30, 2026 vs 252,588 at Dec 31, 2025.",
+      "source_citation": "10-Q Part I, Item 1, Note 8 - Segment Information; Item 2 MD&A, Net Sales and Operating Income"
+    },
+    {
+      "name": "North America",
+      "revenue": "116,177 (Q2 2026)",
+      "yoy_change": "+16% (vs 100,068 in Q2 2025)",
+      "commentary": "Operating income was 9,123 vs 7,517. Growth was driven by unit sales (including third-party sellers), advertising and subscriptions. Q2 cost of sales benefited from IEEPA tariff refunds of about 640 million, primarily in this segment.",
+      "source_citation": "10-Q Part I, Item 1, Note 8 - Segment Information; Item 2 MD&A, Net Sales and Operating Income; Note 1"
+    },
+    {
+      "name": "International",
+      "revenue": "42,197 (Q2 2026)",
+      "yoy_change": "+15% (vs 36,761 in Q2 2025); also +15% excluding FX",
+      "commentary": "Operating income was 1,717 vs 1,494. Growth was driven by unit sales, advertising and subscriptions. FX did not significantly affect Q2 results.",
+      "source_citation": "10-Q Part I, Item 1, Note 8 - Segment Information; Item 2 MD&A, Net Sales and Operating Income"
+    },
+    {
+      "name": "Advertising services (product group within consolidated sales)",
+      "revenue": "19,809 (Q2 2026)",
+      "yoy_change": "approximately +26% (calculated vs 15,694 in Q2 2025)",
+      "commentary": "This was the fastest-growing non-AWS product group in the quarter. Third-party seller services were 46,780, up about 16% (calculated), and subscription services were 13,730, up about 12% (calculated).",
+      "source_citation": "10-Q Part I, Item 1, Note 8 - Segment Information (net sales by groups of similar products and services); growth percentages calculated"
+    }
+  ],
+  "forward_guidance": {
+    "text": "Q3 2026 guidance (provided July 30, 2026): net sales of $197.0-$202.0 billion, growth of 9%-12% vs Q3 2025. Excluding the impact of Prime Day in both 2025 and 2026, growth would be nearly 400 basis points higher. The guidance includes an unfavorable FX impact of about 80 basis points. Operating income is expected at $22.5-$26.5 billion vs $17.4 billion in Q3 2025. The guidance assumes no impact from energy derivative contract remeasurements and no additional business acquisitions, restructurings or legal settlements.",
+    "source_citation": "10-Q Part I, Item 2 MD&A, Guidance - Third Quarter 2026 Guidance"
+  },
+  "key_risks": [
+    {
+      "description": "Anthropic and OpenAI concentration and valuation risk. Q2 other income was 53.4 billion, mostly Anthropic upward adjustments, and private-company equity carrying value reached 122.3 billion. Total equity, warrant and convertible debt investments were 229.7 billion. The company states market sensitivities are not practicable to quantify. Investment gains are non-cash and could reverse or be impaired. Remaining commitments include a 15.0 billion Anthropic financing facility and a 21.3 billion OpenAI commitment funded after quarter-end.",
+      "is_new": true,
+      "source_citation": "10-Q Part I, Item 1, Note 2 - Non-Marketable Investments; Item 3 Equity Investment Risk"
+    },
+    {
+      "description": "Capital intensity and funding. Trailing-twelve-month free cash flow turned negative (7.6 billion). Long-term debt roughly doubled to 128.9 billion. 25.0 billion of further notes were issued after quarter-end, and a 17.5 billion delayed draw term loan is available through Sep 30, 2026. Interest expense rose to 1.3 billion in Q2 from 516 million. The company expects more financing in 2026 and higher capex. Total commitments are 650 billion, including 137 billion of leases not yet commenced.",
+      "is_new": true,
+      "source_citation": "10-Q Part I, Item 1, Note 5 - Debt; Note 4 - Commitments; Item 2 MD&A, Liquidity and Capital Resources and Free Cash Flow"
+    },
+    {
+      "description": "Supply constraints for semiconductors and memory chips. The company relies on a limited group of suppliers for semiconductor products including AI GPUs, and cites resource and supply volatility including memory chips as a factor that could affect results. Constraints could limit AI product development and operation.",
+      "is_new": false,
+      "source_citation": "10-Q Part II, Item 1A - Our Supplier Relationships Subject Us to a Number of Risks; Item 2 MD&A, Forward-Looking Statements"
+    },
+    {
+      "description": "Patent litigation: Xockets filed an ITC complaint in May 2026 (investigation instituted June 2026) naming Amazon, Annapurna Labs, NVIDIA and Microsoft over GB200-based EC2 and related AWS offerings, seeking injunctive relief. Xockets also has pending district court complaints over AWS Nitro.",
+      "is_new": true,
+      "source_citation": "10-Q Part I, Item 1, Note 4 - Legal Proceedings"
+    },
+    {
+      "description": "Antitrust and consumer protection litigation (FTC, state attorneys general, private class actions in the U.S., Canada and U.K.) seeking billions in damages, treble damages and structural relief. Biometric privacy class actions under the Illinois BIPA are also pending. The company disputes the allegations and gives no loss estimate.",
+      "is_new": false,
+      "source_citation": "10-Q Part I, Item 1, Note 4 - Legal Proceedings; Part II, Item 1A - Claims, Litigation, Government Investigations"
+    },
+    {
+      "description": "Tax risk: income tax contingencies were about 7.1 billion. Open disputes include the Indian tax authority's assertion that tax applies to cloud services fees (adverse resolution could mean significant additional expense), and the Luxembourg intangible-asset denial. Effective tax rate is volatile because of discrete items tied to investment gains.",
+      "is_new": false,
+      "source_citation": "10-Q Part I, Item 1, Note 7 - Income Taxes; Part II, Item 1A - We Face Additional Tax Liabilities and Collection Obligations"
+    },
+    {
+      "description": "Pending Globalstar acquisition (implied value about 10.9 billion including debt, expected to close in 2027). Closing depends on regulatory approvals and Globalstar satellite replacement milestones. It involves integration risk and Apple as Globalstar's largest customer.",
+      "is_new": true,
+      "source_citation": "10-Q Part I, Item 1, Note 4 - Commitments and Contingencies"
+    },
+    {
+      "description": "Tariff and trade policy exposure, including China-based sellers and suppliers. Q2 benefited from about 640 million of non-recurring IEEPA tariff refunds, which the company says is the significant majority of refunds expected.",
+      "is_new": false,
+      "source_citation": "10-Q Part I, Item 1, Note 1 - Use of Estimates; Part II, Item 1A - Our International Operations Expose Us to a Number of Risks"
+    },
+    {
+      "description": "Energy derivative fair-value volatility. About 270 million MWh of long-dated energy contracts are marked to market (Level 3). Q2 included 551 million of net unrealized gains in Technology and infrastructure, mainly AWS. Future remeasurements may be material and are excluded from Q3 guidance.",
+      "is_new": false,
+      "source_citation": "10-Q Part I, Item 1, Note 1 - Derivatives and Hedging, Energy Contracts; Item 2 MD&A, Guidance"
+    }
+  ],
+  "recent_news": [],
+  "bull_case": [
+    "AWS accelerated to +37% YoY to 42.2 billion with segment operating income of 16.6 billion (up from 10.2 billion). Unrecognized contract commitments are about 496 billion with a 6.4-year weighted-average life, and Anthropic (more than 100 billion over 10 years) and OpenAI (100 billion expansion over 8 years) expanded their commitments.",
+    "Consolidated operating income rose 43% to 27.5 billion on 20% sales growth, and the operating margin expanded to about 13.7% from 11.4%. Fulfillment, sales and marketing and G&A all fell as a percent of sales.",
+    "Advertising grew about 26% to 19.8 billion and third-party seller services about 16%, supporting higher-margin mix in the retail segments.",
+    "Q3 operating income guidance of 22.5-26.5 billion compares with 17.4 billion a year earlier (a 29%-52% increase), with sales growth of 9%-12% reported and roughly 13%-16% excluding the Prime Day timing effect, per the guidance wording.",
+    "The company holds about 123 billion of cash and marketable securities, has no commercial paper or revolver borrowings, and holds large strategic stakes (Anthropic preferred 92.5 billion plus convertible notes 97.9 billion at fair value; OpenAI Series C 28.7 billion at June 30) that could be monetized in a liquidity event."
+  ],
+  "bear_case": [
+    "GAAP earnings quality is poor. Q2 net income of 62.6 billion included 50.5 billion of non-cash upward adjustments to private investments. Operating income of 27.5 billion is the better gauge. Those gains could reverse or be impaired, and a large tax charge (15.9 billion of discrete expense in the first half) accompanies them.",
+    "Free cash flow is negative on a trailing-twelve-month basis (7.6 billion). Q2 capex was 54.2 billion, up from 32.2 billion, and the company expects capex to keep increasing. Total commitments are about 650 billion.",
+    "Leverage and interest cost are rising quickly. Long-term debt is 128.9 billion vs 65.6 billion at year-end, a further 25 billion was issued after quarter-end, and Q2 interest expense was 1.3 billion vs 0.5 billion a year earlier.",
+    "AWS depends on a small number of large AI-lab customers (Anthropic and OpenAI), in which Amazon is also an investor and lender, creating circular exposure. Amazon has committed a 20.0 billion facility to Anthropic and 35.0 billion to OpenAI. AWS pricing was also pressured by long-term customer contracts.",
+    "Q3 guidance implies slower reported sales growth (9%-12%) than Q2's 20% and an unfavorable FX effect of about 80 basis points. Q2 operating income was helped by about 640 million of one-time tariff refunds and 551 million of unrealized energy-derivative gains.",
+    "Regulatory, antitrust and patent overhang persists, including FTC and state AG cases and the new Xockets ITC proceeding that seeks injunctive relief on GB200-based AWS offerings."
+  ],
+  "what_to_watch": [
+    {
+      "text": "Q3 2026 results against guidance: net sales of 197-202 billion and operating income of 22.5-26.5 billion. Check whether the Prime Day timing effect and the roughly 80 basis point FX headwind net out as guided.",
+      "relevant_urls": []
+    },
+    {
+      "text": "AWS growth rate and margin. Q2 was +37% with a 39% segment margin (calculated). Watch whether backlog (496 billion at Q2) converts as capacity comes online, and the size of AWS depreciation (8.1 billion in Q2, up from 4.8 billion).",
+      "relevant_urls": []
+    },
+    {
+      "text": "Capex, free cash flow and financing: Q2 purchases of property and equipment were 54.2 billion. Watch the trajectory, any draw on the 17.5 billion term loan (available through Sep 30, 2026), the 5.0 billion 364-day facility maturing October 2026, and additional debt issuance.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Non-operating items: further Anthropic or OpenAI marks in other income, the associated discrete tax expense, the 21.3 billion OpenAI funding completed after quarter-end, any Anthropic IPO or liquidity event, and any draws on the Anthropic facility (15.0 billion available as milestones are reached).",
+      "relevant_urls": []
+    },
+    {
+      "text": "Retail and advertising margin drivers: North America operating margin was about 7.9% and International about 4.1% in Q2 (calculated). Watch for the loss of the one-time tariff-refund benefit and for advertising growth near 26%.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Legal and regulatory: Xockets ITC investigation, FTC and state antitrust cases, and the Globalstar merger approvals (closing expected in 2027).",
+      "relevant_urls": []
+    },
+    {
+      "text": "Interest expense, tax rate, and energy-derivative remeasurements, which Q3 guidance assumes will have no impact.",
+      "relevant_urls": []
+    }
+  ],
+  "data_gaps": [
+    "No news items were provided in the input, so recent_news is empty. No post-filing developments from August through October 2026 could be verified.",
+    "Consensus estimates, stock price and valuation data are not in the provided filing, so no comparison of guidance with Street expectations is possible.",
+    "The July 30, 2026 earnings release (8-K) and earnings call commentary were not provided. Guidance is taken only from the 10-Q's Guidance section, and management commentary on capex outlook, AWS capacity and margins is not available.",
+    "The filing says 2026 capex is expected to increase but gives no specific capex dollar guidance.",
+    "The Q3 2025 net sales base is not stated in the filing. Only Q3 2025 operating income of 17.4 billion appears in the guidance text.",
+    "Q1 2026 stand-alone results were not provided, so sequential comparisons rely on six-month minus Q2 arithmetic that was not performed here.",
+    "The prior 10-Q and 10-K were not provided, so the is_new flags on risks are based only on events dated within Q2 2026 or described as new in this filing. Boilerplate risk factors flagged false could not be compared against prior-period language.",
+    "AWS operating margin, operating margins for North America and International, and operating margin percentages were calculated from reported figures rather than stated in the filing.",
+    "The timing and amount of future Anthropic and OpenAI revenue contributions to AWS, and the cash flow timing of the 496 billion in unrecognized commitments, are not disclosed beyond a 6.4-year weighted-average remaining life.",
+    "The earliest possible Q3 2026 earnings date is not stated in the filing."
+  ],
+  "hypotheses_explored": [
+    {
+      "id": "H1",
+      "proposing_personality": "Growth Bull",
+      "question": "Is the AWS acceleration backed by contracted demand rather than one-time factors?",
+      "summary": "AWS sales growth accelerated to 37% in Q2 from 17% a year earlier, and segment operating income rose from 10.2 billion to 16.6 billion. Unrecognized contract commitments of about 496 billion and new multi-year expansions with OpenAI and Anthropic support visibility. Caveat: usage-driven revenue recognition and pricing concessions in long-term contracts could temper conversion, and customer concentration is high.",
+      "evidence_quotes": [
+        "AWS sales increased 37% in Q2 2026",
+        "those commitments not yet recognized were approximately $496 billion as of June 30, 2026"
+      ],
+      "confidence": 70
+    },
+    {
+      "id": "H2",
+      "proposing_personality": "Forensic Accountant",
+      "question": "How much of Q2 net income reflects durable operating earnings?",
+      "summary": "Operating income was 27.5 billion, while pre-tax income was 80.9 billion because of 50.5 billion in upward adjustments to private investments. Net income of 62.6 billion is therefore not a clean earnings gauge, and the tax line includes large discrete expense tied to the same gains. Q2 operating income also included about 640 million of tariff refunds and 551 million of unrealized energy-derivative gains, so underlying operating income is somewhat lower than reported.",
+      "evidence_quotes": [
+        "The net gain of $53.4 billion in Q2 2026 and $69.1 billion for the six months ended June 30, 2026 is primarily from upward adjustments for observable changes in price relating to our nonvoting preferred stock in Anthropic"
+      ],
+      "confidence": 85
+    },
+    {
+      "id": "H3",
+      "proposing_personality": "Credit Skeptic",
+      "question": "Is the AI buildout straining free cash flow and the balance sheet?",
+      "summary": "Trailing-twelve-month free cash flow fell to negative 7.6 billion as capex rose sharply. Debt financing of about 67 billion was raised in the first half and 25 billion more after quarter-end, with a 17.5 billion term loan also available. Large equity commitments to OpenAI and Anthropic add to cash needs. Offsetting factors are 123 billion of liquidity, 161 billion of trailing operating cash flow, and no covenants on the senior notes.",
+      "evidence_quotes": [
+        "Cash capital expenditures were $31.4 billion and $53.1 billion during Q2 2025 and Q2 2026",
+        "We expect to undertake additional financing activities in 2026."
+      ],
+      "confidence": 65
+    }
+  ]
+}

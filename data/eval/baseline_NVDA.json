@@ -2,71 +2,309 @@
   "ticker": "NVDA",
   "company_name": "NVIDIA Corporation",
   "filing_type": "10-Q",
-  "filing_date": "2026-05-10",
+  "filing_date": "2026-08-26",
   "supplemental_filing_type": null,
   "supplemental_filing_date": null,
-  "report_generated_at": "2026-05-12T11:17:28.587761+00:00",
-  "key_metrics": [],
-  "revenue_segments": [],
+  "report_generated_at": "2026-10-26T12:51:58.458686+00:00",
+  "key_metrics": [
+    {
+      "name": "Revenue (Q2 FY2027, quarter ended Jul 26, 2026)",
+      "value": "96,221",
+      "unit": "USD millions (+106% YoY, +18% QoQ)",
+      "source_citation": "10-Q Part I Item 1, Condensed Consolidated Statements of Income; Item 2 MD&A, Second Quarter Summary"
+    },
+    {
+      "name": "Gross margin",
+      "value": "75.0% (vs 72.4% a year ago, 74.9% prior quarter)",
+      "unit": "percent of revenue",
+      "source_citation": "10-Q Item 2 MD&A, Second Quarter of Fiscal Year 2027 Summary"
+    },
+    {
+      "name": "Total operating expenses",
+      "value": "8,408",
+      "unit": "USD millions (+55% YoY, +10% QoQ)",
+      "source_citation": "10-Q Item 2 MD&A, Second Quarter Summary; Operating Expenses"
+    },
+    {
+      "name": "Operating income",
+      "value": "63,734",
+      "unit": "USD millions (+124% YoY, +19% QoQ)",
+      "source_citation": "10-Q Item 1, Condensed Consolidated Statements of Income; Item 2 MD&A Summary table"
+    },
+    {
+      "name": "Other income, net",
+      "value": "7,773 (of which gains from equity securities, net: 7,771)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Note 7, Other Income, Net; Item 2 MD&A, Other Income, Net"
+    },
+    {
+      "name": "Net income",
+      "value": "59,688",
+      "unit": "USD millions (+126% YoY, +2% QoQ)",
+      "source_citation": "10-Q Item 1, Condensed Consolidated Statements of Income; Item 2 MD&A Summary table"
+    },
+    {
+      "name": "Diluted EPS",
+      "value": "2.46",
+      "unit": "USD per share (vs 1.08 a year ago, 2.39 prior quarter)",
+      "source_citation": "10-Q Item 1, Statements of Income; Note 3, Net Income Per Share; Item 2 MD&A Summary table"
+    },
+    {
+      "name": "Effective tax rate",
+      "value": "16.5% (vs 15.3% a year ago)",
+      "unit": "percent of pre-tax income",
+      "source_citation": "10-Q Note 11, Income Taxes"
+    },
+    {
+      "name": "Net cash provided by operating activities (first half FY2027)",
+      "value": "74,421",
+      "unit": "USD millions (vs 42,779 in first half FY2026)",
+      "source_citation": "10-Q Item 1, Condensed Consolidated Statements of Cash Flows"
+    },
+    {
+      "name": "Cash, cash equivalents and marketable debt securities",
+      "value": "56,586",
+      "unit": "USD millions",
+      "source_citation": "10-Q Item 2 MD&A, Liquidity and Capital Resources"
+    },
+    {
+      "name": "Marketable equity securities",
+      "value": "42,783",
+      "unit": "USD millions (36.9B subject to short-term lock-ups)",
+      "source_citation": "10-Q Note 5, Cash Equivalents and Marketable Securities; Condensed Consolidated Balance Sheets"
+    },
+    {
+      "name": "Non-marketable securities",
+      "value": "51,157",
+      "unit": "USD millions (vs 22,251 at Jan 25, 2026)",
+      "source_citation": "10-Q Condensed Consolidated Balance Sheets; Note 6"
+    },
+    {
+      "name": "Accounts receivable, net",
+      "value": "63,059",
+      "unit": "USD millions (vs 38,466 at Jan 25, 2026)",
+      "source_citation": "10-Q Condensed Consolidated Balance Sheets"
+    },
+    {
+      "name": "Inventories",
+      "value": "31,575",
+      "unit": "USD millions (vs 21,403 at Jan 25, 2026)",
+      "source_citation": "10-Q Condensed Consolidated Balance Sheets; Note 7"
+    },
+    {
+      "name": "Supply and capacity commitments",
+      "value": "279",
+      "unit": "USD billions (up from 119 billion in prior quarter)",
+      "source_citation": "10-Q Note 10, Commitments; Item 2 MD&A, Recent Developments"
+    },
+    {
+      "name": "Total commitments (supply, cloud, leases, equity investments, capex)",
+      "value": "366",
+      "unit": "USD billions",
+      "source_citation": "10-Q Note 10, Future commitments table"
+    },
+    {
+      "name": "Maximum gross guarantee exposure incl. SB Energy guarantees",
+      "value": "108.5 (3.5 AI cloud guarantees + 105.0 SB Energy cap)",
+      "unit": "USD billions",
+      "source_citation": "10-Q Note 10, Guarantees"
+    },
+    {
+      "name": "Total debt (net carrying amount)",
+      "value": "33,366",
+      "unit": "USD millions (25.0B of notes issued June 2026; $25.0B commercial paper program undrawn)",
+      "source_citation": "10-Q Note 9, Debt"
+    },
+    {
+      "name": "Share repurchases in Q2 FY2027",
+      "value": "19.7 (94 million shares)",
+      "unit": "USD billions",
+      "source_citation": "10-Q Note 12, Shareholders' Equity; Part II Item 2"
+    },
+    {
+      "name": "Remaining repurchase authorization",
+      "value": "99.3",
+      "unit": "USD billions",
+      "source_citation": "10-Q Note 12, Shareholders' Equity"
+    },
+    {
+      "name": "Quarterly dividend per share",
+      "value": "0.25 (raised from 0.01 on May 18, 2026)",
+      "unit": "USD per share",
+      "source_citation": "10-Q Note 12, Shareholders' Equity"
+    },
+    {
+      "name": "Largest direct customer share of revenue (Q2 FY2027)",
+      "value": "16%",
+      "unit": "percent of total revenue",
+      "source_citation": "10-Q Note 13, Segment Information; Item 2 MD&A, Concentration of Revenue"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "Compute & Networking (reportable segment)",
+      "revenue": "88,299 USD millions",
+      "yoy_change": "+114%",
+      "commentary": "Growth driven by the ramp of Blackwell Ultra infrastructure. Segment operating income was 62,696 million, up 121% YoY.",
+      "source_citation": "10-Q Note 13, Segment Information; Item 2 MD&A, Revenue and Reportable Segments"
+    },
+    {
+      "name": "Graphics (reportable segment)",
+      "revenue": "7,922 USD millions",
+      "yoy_change": "+46%",
+      "commentary": "Growth driven by sales of the Blackwell architecture. Segment operating income was 3,899 million, up 74% YoY.",
+      "source_citation": "10-Q Note 13, Segment Information; Item 2 MD&A, Revenue and Reportable Segments"
+    },
+    {
+      "name": "Data Center (market platform)",
+      "revenue": "89,023 USD millions",
+      "yoy_change": "+117% (+18% QoQ)",
+      "commentary": "Driven by the Blackwell Ultra ramp. Hopper shipments to China were under 1% of Data Center revenue.",
+      "source_citation": "10-Q Item 2 MD&A, Revenue by Market Platform; Note 13"
+    },
+    {
+      "name": "Hyperscale (market platform, within Data Center)",
+      "revenue": "48,710 USD millions",
+      "yoy_change": "+102% (+13% QoQ)",
+      "commentary": "Revenue more than doubled YoY on Blackwell Ultra. A company was reclassified from ACIE to Hyperscale in Q2 and prior periods were recast.",
+      "source_citation": "10-Q Item 2 MD&A, Revenue by Market Platform; Note 13"
+    },
+    {
+      "name": "AI Clouds, Industrial & Enterprise (market platform, within Data Center)",
+      "revenue": "40,313 USD millions",
+      "yoy_change": "+138% (+25% QoQ)",
+      "commentary": "Driven by end-demand from AI natives, enterprises and sovereign customers, and by hyperscalers using AI clouds.",
+      "source_citation": "10-Q Item 2 MD&A, Revenue by Market Platform; Note 13"
+    },
+    {
+      "name": "Edge Computing (market platform)",
+      "revenue": "7,198 USD millions",
+      "yoy_change": "+27% (+13% QoQ)",
+      "commentary": "Strong Blackwell workstation sales, partly offset by slower consumer PC sales tempered by elevated memory and systems prices.",
+      "source_citation": "10-Q Item 2 MD&A, Revenue by Market Platform; Note 13"
+    },
+    {
+      "name": "Geography: United States (by customer headquarters)",
+      "revenue": "60,074 USD millions",
+      "yoy_change": "+83% (calculated from 32,897 in Q2 FY2026)",
+      "commentary": "Taiwan 26,985 million and China (incl. Hong Kong) 7,880 million. Non-US-headquartered customers were 38% of Q2 revenue. The YoY percentage is derived from the filing's reported figures.",
+      "source_citation": "10-Q Note 13, Geographic Revenue based upon Customer Headquarters Location"
+    }
+  ],
   "forward_guidance": {
-    "text": "NVIDIA expects continued growth in its data center and gaming segments, driven by strong demand for AI and graphics processing units.",
-    "source_citation": "MD&A, paragraph 3"
+    "text": "The 10-Q gives no quantitative revenue, margin or EPS guidance for Q3 FY2027 or beyond, so none is stated here. Qualitative forward-looking disclosures: (1) Vera Rubin began production shipments in Q3 FY2027, and NVIDIA will ship both Blackwell and Rubin systems while experiencing certain supply constraints; (2) supply and capacity commitments rose to $279B to meet demand over the next several years; (3) Q4 FY2027 will be a 14-week quarter (FY2027 is a 53-week year); (4) extended payment terms for investment-grade customers will continue to affect the timing of operating cash flows; (5) revenue growth may depend on customers' availability of land, power, shell and capital; (6) H200 China sales are restricted and were under 1% of Data Center revenue; (7) first SB Energy guarantee phase is expected in FY2029, and AI cloud revenue-share may contribute to revenue in the future.",
+    "source_citation": "10-Q Item 2 MD&A, Recent Developments, Future Objectives and Challenges; Note 1 (Fiscal Year); Note 10; Liquidity and Capital Resources"
   },
   "key_risks": [
     {
-      "description": "NVIDIA faces uncertainties in the application of complex tax laws, which could impact its financial results.",
+      "description": "Commitments, guarantees and other commercial arrangements. Supply and capacity commitments are $279B and total commitments $366B. AI cloud agreements ($36B) require NVIDIA to purchase capacity if the clouds cannot resell it. SB Energy guarantees are capped at $105B, tied to OpenAI leases. Counterparty failure or demand shortfalls could leave NVIDIA with stranded obligations. Financing MOUs for more than $500B of third-party capital may not become definitive agreements.",
+      "is_new": true,
+      "source_citation": "10-Q Part II Item 1A (new risk factor: 'Commitments, guarantees, and other commercial arrangements...'); Note 10; Item 2 MD&A, Recent Developments"
+    },
+    {
+      "description": "Indebtedness. Senior notes outstanding rose to $33.5B principal after a $25.0B issuance in June 2026, plus a $25.0B commercial paper program. Refinancing and covenant risk is flagged in a new risk factor.",
+      "is_new": true,
+      "source_citation": "10-Q Part II Item 1A ('Our indebtedness may adversely affect our financial condition...'); Note 9"
+    },
+    {
+      "description": "Export controls and China. NVIDIA is effectively foreclosed from China's data center market. H200 licenses exist but PRC restrictions limit sales. A $0.4B H200 inventory and purchase obligation charge was taken in H1 FY2027, and licensed H200s face a 25% tariff that NVIDIA cannot pass through. China's antitrust regulators published a preliminary finding on the Mellanox approval terms. Further US controls (GAIN AI Act, RASA, replacement for the AI Diffusion rule) are possible. This risk factor was updated in the filing.",
       "is_new": false,
-      "source_citation": "Income Taxes, paragraph 1"
+      "source_citation": "10-Q Part II Item 1A ('We are subject to complex laws, rules, regulations, and political and other actions...'); Item 2 MD&A, Recent Developments"
+    },
+    {
+      "description": "Regulatory and antitrust scrutiny. The risk factor now cites the French Competition Authority questioning whether gaming and data center GPUs are separate categories. NVIDIA also receives information requests from competition regulators in the EU, US, UK, China and South Korea.",
+      "is_new": false,
+      "source_citation": "10-Q Part II Item 1A (regulatory risk factor, updated)"
+    },
+    {
+      "description": "Customer and indirect-customer concentration. One direct customer was 16% of Q2 revenue and five direct customers made up 22%, 14%, 13%, 11% and 10% of accounts receivable. One AI research and deployment company contributed a meaningful amount of revenue indirectly.",
+      "is_new": false,
+      "source_citation": "10-Q Note 7 (accounts receivable concentration); Note 13; Item 2 MD&A, Concentration of Revenue"
+    },
+    {
+      "description": "Supply constraints and execution. The filing cites certain supply constraints and the complexity of producing data center systems, which could cause production delays, quality issues, higher inventory provisions, yield declines, higher material costs and higher warranty costs. Memory is the primary component of the supply commitments. Customers may also delay new architectures for lack of data center capacity or capital.",
+      "is_new": false,
+      "source_citation": "10-Q Item 2 MD&A, Recent Developments; Note 10, Supply and capacity"
+    },
+    {
+      "description": "Earnings quality and investment portfolio volatility. Other income of $7.8B in Q2 and $24.1B in H1 consisted mostly of equity-security gains. Marketable and non-marketable equity holdings total about $94B on the balance sheet, and the filing cites $99B of equity investments and $25B of further commitments. Valuations are exposed to market volatility and, for private holdings, complex valuation judgments. $36.9B of marketable equity is subject to short-term lock-up restrictions.",
+      "is_new": false,
+      "source_citation": "10-Q Note 5; Note 6; Note 7 (Other Income, Net); Item 3 Market Risk; Item 2 MD&A, Recent Developments"
+    },
+    {
+      "description": "Working capital and extended payment terms. Accounts receivable rose by $24.6B in H1 because of extended terms (90 days to one year) on large multi-quarter agreements with investment-grade customers, which affects the timing of operating cash flow.",
+      "is_new": false,
+      "source_citation": "10-Q Note 7; Condensed Consolidated Statements of Cash Flows; Item 2 MD&A, Liquidity and Capital Resources"
+    },
+    {
+      "description": "Legal proceedings. On March 25, 2026 the district court certified a class in the securities class action concerning 2017-2018 statements (In Re NVIDIA Corporation Securities Litigation). No liability is accrued and the loss cannot be estimated. Related derivative suits remain stayed.",
+      "is_new": false,
+      "source_citation": "10-Q Note 10, Litigation"
     }
   ],
-  "recent_news": [
-    {
-      "headline": "NVIDIA Corporation Common Stock (NVDA) Earnings Report Date",
-      "date": "",
-      "url": "https://www.nasdaq.com/market-activity/stocks/nvda/earnings",
-      "relevance_note": "Provides information on the upcoming earnings report date for NVIDIA."
-    },
-    {
-      "headline": "NVIDIA Corporation (NVDA) Stock Price, News, Quote & History",
-      "date": "",
-      "url": "https://finance.yahoo.com/quote/NVDA/",
-      "relevance_note": "General stock price and news information for NVIDIA."
-    },
-    {
-      "headline": "Nvidia Earnings Date & Event Calendar - Wall Street Horizon",
-      "date": "",
-      "url": "https://www.wallstreethorizon.com/nvidia-earnings-calendar",
-      "relevance_note": "Confirms the date of NVIDIA's next earnings report."
-    },
-    {
-      "headline": "Financial Reports - NVIDIA Investor Relations",
-      "date": "",
-      "url": "https://investor.nvidia.com/financial-info/financial-reports/default.aspx",
-      "relevance_note": "Provides access to NVIDIA's financial reports and SEC filings."
-    },
-    {
-      "headline": "NVIDIA Corporation (NVDA) Earnings Dates & Report | Seeking Alpha",
-      "date": "",
-      "url": "https://seekingalpha.com/symbol/NVDA/earnings",
-      "relevance_note": "Offers analysis and historical data on NVIDIA's earnings."
-    }
-  ],
+  "recent_news": [],
   "bull_case": [
-    "Strong demand for AI and graphics processing units could drive growth in NVIDIA's data center and gaming segments."
+    "Revenue of $96.2B (+106% YoY, +18% QoQ) with a 75.0% gross margin and $63.7B of operating income (66.2% operating margin), showing continued operating leverage as operating expenses grew 55% against revenue up 106%.",
+    "Data Center revenue of $89.0B (+117% YoY); Hyperscale more than doubled and AI Clouds, Industrial & Enterprise grew 138%, showing broad demand across hyperscalers, AI natives, enterprises and sovereign customers.",
+    "Product cycle continuity: Vera Rubin began production shipments in Q3 FY2027 while Blackwell and Blackwell Ultra still drive revenue, and Blackwell is the vast majority of revenue.",
+    "Supply and capacity commitments rising from $119B to $279B in one quarter signals management's confidence in multi-year demand visibility.",
+    "Strong cash generation: H1 operating cash flow was $74.4B. Capital return is accelerating, with $19.7B of Q2 buybacks, a dividend raised from $0.01 to $0.25 per share and $99.3B of remaining authorization.",
+    "Customer advances grew to $2.8B (from $160M at fiscal year-end) and total deferred revenue to $6.4B, a sign of customer pre-commitment.",
+    "Ecosystem investments and the new financing platforms (MOUs for more than $500B of third-party capital) could ease customers' power, shell and capital constraints."
   ],
   "bear_case": [
-    "Complex tax laws and potential changes in tax regulations could negatively impact NVIDIA's financial results."
+    "Quality of earnings: Q2 net income of $59.7B includes $7.8B of mostly unrealized equity-security gains (H1: $23.7B), which can reverse with market prices. Operating income of $63.7B is the cleaner measure.",
+    "Balance sheet risk is building. Debt rose to $33.4B, commitments total $366B, and guarantees could reach $108.5B, including the up-to-$105B SB Energy guarantees tied to OpenAI leases. The new AI cloud model obliges NVIDIA to buy back unsold capacity.",
+    "Circularity concerns: NVIDIA invests in, guarantees and extends long payment terms to customers and partners who buy its products. $99B of equity investments and $25B of further commitments raise questions about demand quality and counterparty credit.",
+    "Receivables jumped to $63.1B (from $38.5B at Jan 25, 2026) and inventories to $31.6B, absorbing cash; raw materials rose from $3.8B to $11.3B.",
+    "Customer concentration: one direct customer was 16% of Q2 revenue, and one AI research and deployment company contributed a meaningful amount indirectly. The OpenAI-related exposure concentrates risk.",
+    "China data center revenue is effectively zero; H200 sales are under 1% of Data Center revenue, and a 25% tariff cannot be passed through. Export-control and regulatory scrutiny (China SAMR, EU, France) continues.",
+    "Supply constraints persist and are tied to memory, where prices are elevated. Gross margin was flat sequentially despite the mix benefit, and memory costs pressure consumer PC demand.",
+    "Sequential growth of 18% needs to be maintained against a very high base; net income grew only 2% QoQ, and the effective tax rate rose to 16.5%."
   ],
   "what_to_watch": [
     {
-      "text": "Monitor NVIDIA's performance in the data center and gaming segments, particularly in relation to AI and graphics processing units.",
-      "relevant_urls": [
-        "https://investor.nvidia.com/financial-info/quarterly-results/default.aspx"
-      ]
+      "text": "Q3 FY2027 revenue versus the company's own outlook (not included in the supplied filing) and the sequential growth trajectory after +18% in Q2; Q4 will be a 14-week quarter.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Gross margin as Vera Rubin ramps alongside Blackwell Ultra, and the effect of memory/component costs and inventory provisions (net 0.8% gross margin headwind in Q2).",
+      "relevant_urls": []
+    },
+    {
+      "text": "Size and trend of supply commitments ($279B), further data center lease commitments, and any change in how AI cloud capacity commitments ($36B) are used or resold.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Progress on SB Energy/OpenAI guarantees ($105B cap), the $500B+ third-party financing platform MOUs becoming definitive agreements, and any new guarantees.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Accounts receivable, customer advances and operating cash flow, as extended payment terms affect cash conversion.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Other income and equity-security gains or losses, lock-up expirations on the $36.9B of marketable equity, and valuation marks on non-marketable holdings ($51.2B).",
+      "relevant_urls": []
+    },
+    {
+      "text": "China and export-control developments: H200 licensing, the PRC response, the GAIN AI Act and RASA, replacement of the AI Diffusion rule, and the SAMR Mellanox review.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Capital return pace (buybacks, the $0.25 quarterly dividend) and any further debt issuance or commercial paper usage.",
+      "relevant_urls": []
     }
   ],
   "data_gaps": [
-    "Specific financial figures such as revenue, gross profit, and net income are not provided in the filing excerpt."
+    "No quantitative forward guidance (Q3 FY2027 revenue, gross margin, operating expenses, tax rate) is included in the 10-Q. The earnings press release or 8-K with the outlook was not provided.",
+    "No analyst consensus estimates, stock price, valuation multiples or market capitalization were supplied, so expectations versus results cannot be assessed.",
+    "No recent news items or URLs were supplied, so recent_news is empty; any post-filing developments (August 26 through October 26, 2026) are not covered.",
+    "The date of the upcoming Q3 FY2027 earnings release (quarter ends Oct 25, 2026) is not stated in the filing.",
+    "The names of the direct customers behind the 16%/15%/13% revenue concentration and of the 'AI research and deployment company' are not disclosed, and the indirect-customer revenue amount is not quantified.",
+    "Sequential (Q1 FY2027) segment-level operating income and the Q1 balance sheet are not in the 10-Q beyond summary figures, so QoQ analysis is limited to the MD&A summary tables.",
+    "Quantification of the expected revenue contribution from AI cloud revenue share, Vera Rubin units and the Groq license is not disclosed.",
+    "The Annual Report on Form 10-K for FY2026 and the Q1 FY2027 10-Q were not supplied; risk 'is_new' flags rely on the 10-Q's statement of which risk factors changed."
   ],
   "hypotheses_explored": []
 }

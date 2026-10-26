@@ -19,10 +19,11 @@ lxml==5.3.0
 chromadb==1.5.9
 
 # LLM clients
-openai==1.54.0
-# httpx 0.28 dropped the `proxies` arg that openai 1.54.0 uses internally.
-httpx<0.28
-anthropic==0.39.0
+# anthropic: Claude generation (personality panel + baseline).
+# Pinned to the last 1.x release; 2.x changes the API surface.
+anthropic==1.17.0
+# openai: eval judge (gpt-6.1-sol) + embeddings (text-embedding-3-small).
+openai==3.37.0
 
 # Schema validation
 pydantic==2.9.2
@@ -47,3 +48,6 @@ torch==2.5.1
 urllib3==2.0.7
 # Env loading
 python-dotenv==1.0.1
+
+# Offline test suite (tests/)
+pytest==9.1.1

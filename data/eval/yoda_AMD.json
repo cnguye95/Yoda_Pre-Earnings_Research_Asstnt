@@ -1,0 +1,508 @@
+{
+  "ticker": "AMD",
+  "company_name": "AMD",
+  "filing_type": "10-Q",
+  "filing_date": "2026-08-05",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T12:59:09.259797+00:00",
+  "key_metrics": [
+    {
+      "name": "Net revenue",
+      "value": "$11,536 (Q2 FY2026 vs $7,685 in Q2 FY2025); six months $21,789 vs $15,123",
+      "unit": "USD millions",
+      "source_citation": "MD&A — International Sales"
+    },
+    {
+      "name": "Gross profit",
+      "value": "$6,203 (Q2 FY2026 vs $3,059 in Q2 FY2025); six months $11,619 vs $6,795",
+      "unit": "USD millions",
+      "source_citation": "MD&A — International Sales"
+    },
+    {
+      "name": "Gross margin",
+      "value": "54% (Q2 FY2026 vs 40% in Q2 FY2025); six months 53% vs 45%",
+      "unit": "percent",
+      "source_citation": "MD&A — International Sales"
+    },
+    {
+      "name": "Operating income (loss)",
+      "value": "$1,990 (Q2 FY2026 vs $(134) in Q2 FY2025); six months $3,466 vs $672",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net income",
+      "value": "$2,297 (Q2 FY2026 vs $872 in Q2 FY2025); six months $3,680 vs $1,581",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Basic earnings per share",
+      "value": "$1.40 (Q2 FY2026 vs $0.54 in Q2 FY2025); six months $2.26 vs $0.98",
+      "unit": "USD per share",
+      "source_citation": "Other — Three Months Ended"
+    },
+    {
+      "name": "Diluted earnings per share",
+      "value": "$1.38 (Q2 FY2026 vs $0.54 in Q2 FY2025); six months $2.22 vs $0.97",
+      "unit": "USD per share",
+      "source_citation": "Other — Three Months Ended"
+    },
+    {
+      "name": "Diluted earnings from continuing operations",
+      "value": "$1.39 (Q2 FY2026 vs $0.47 in Q2 FY2025)",
+      "unit": "USD per share",
+      "source_citation": "Other — Three Months Ended"
+    },
+    {
+      "name": "Research and development",
+      "value": "$2,528 (Q2 FY2026 vs $1,894 in Q2 FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total operating expenses",
+      "value": "$4,213 (Q2 FY2026 vs $3,193 in Q2 FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net cash provided by operating activities",
+      "value": "$5,321 (six months ended June 27, 2026 vs $2,950 in six months ended June 28, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Purchases of property and equipment",
+      "value": "$(1,197) (six months ended June 27, 2026 vs $(494) in prior-year six months)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Cash and cash equivalents",
+      "value": "$5,086 (June 27, 2026 vs $5,539 at December 27, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Short-term investments",
+      "value": "$8,025 (June 27, 2026 vs $5,013 at December 27, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Current portion of long-term debt, net",
+      "value": "$875 (June 27, 2026 vs $874 at December 27, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Long-term debt, net",
+      "value": "$2,351 (June 27, 2026 vs $2,348 at December 27, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Accounts receivable, net",
+      "value": "$7,281 (June 27, 2026 vs $6,315 at December 27, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Inventories",
+      "value": "$8,468 (June 27, 2026 vs $7,920 at December 27, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total assets",
+      "value": "$84,464 (June 27, 2026 vs $76,926 at December 27, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total stockholders' equity",
+      "value": "$67,224 (June 27, 2026 vs $62,999 at December 27, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Gains from long-term investments, net",
+      "value": "$(549) cash-flow adjustment (six months ended June 27, 2026 vs $(36) in prior-year six months)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "Data Center",
+      "revenue": "$6,718 million (Q2 FY2026)",
+      "yoy_change": "+107% (Q2 FY2026 vs $3,240 million in Q2 FY2025)",
+      "commentary": "Growth was primarily driven by strong demand for AMD EPYC processors and AMD Instinct MI350 Series GPUs. Segment operating income was $2,103 million vs an operating loss of $(155) million in the prior-year quarter, which included the MI308 export-control charge. Six-month revenue was $12,493 million vs $6,914 million.",
+      "source_citation": "Other — Three Months Ended"
+    },
+    {
+      "name": "Client",
+      "revenue": "$3,062 million (Q2 FY2026)",
+      "yoy_change": "+23% (Q2 FY2026 vs $2,499 million in Q2 FY2025)",
+      "commentary": "Driven by a 34% increase in unit shipments, partially offset by a 6% decrease in average selling price of client processors.",
+      "source_citation": "Other — Three Months Ended"
+    },
+    {
+      "name": "Gaming",
+      "revenue": "$779 million (Q2 FY2026)",
+      "yoy_change": "-31% (Q2 FY2026 vs $1,122 million in Q2 FY2025)",
+      "commentary": "Decline primarily due to lower semi-custom revenue.",
+      "source_citation": "Other — Three Months Ended"
+    },
+    {
+      "name": "Total Client and Gaming",
+      "revenue": "$3,841 million (Q2 FY2026)",
+      "yoy_change": "+6% (Q2 FY2026 vs $3,621 million in Q2 FY2025)",
+      "commentary": "Operating income was $582 million vs $767 million in the prior-year quarter, so profit fell despite higher revenue.",
+      "source_citation": "Other — Three Months Ended"
+    },
+    {
+      "name": "Embedded",
+      "revenue": "$977 million (Q2 FY2026)",
+      "yoy_change": "+19% (Q2 FY2026 vs $824 million in Q2 FY2025)",
+      "commentary": "Operating income was $386 million vs $275 million in the prior-year quarter, driven by higher revenue, partially offset by higher cost of sales and operating expenses.",
+      "source_citation": "MD&A"
+    }
+  ],
+  "forward_guidance": {
+    "text": "No forward guidance issued in this filing.",
+    "source_citation": "MD&A"
+  },
+  "key_risks": [
+    {
+      "description": "Industry-wide memory shortage and rising memory prices could raise AMD's production costs and compress gross margin, and may push up data center buildout costs, which could delay or reduce customer demand.",
+      "is_new": true,
+      "source_citation": "Risk Factors"
+    },
+    {
+      "description": "Customers may lack or be unable to secure capital to fund AI infrastructure and may request alternative financing or deferred-payment arrangements from vendors and suppliers. AMD also has data center lease guarantees with maximum potential future payments of $4.1 billion.",
+      "is_new": true,
+      "source_citation": "Risk Factors"
+    },
+    {
+      "description": "Unconditional commitments of approximately $30.3 billion, of which $17.4 billion falls in the remainder of fiscal 2026. Also $4.5 billion of leases not yet commenced and long-term data center leases with $9.5 billion of aggregate future payments commencing in 2027 and 2028. These are fixed claims on cash if AI demand slows.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Customer concentration: a small number of customers is expected to account for a substantial part of revenue, and the loss of a significant customer may have a material adverse effect.",
+      "is_new": false,
+      "source_citation": "Risk Factors"
+    },
+    {
+      "description": "Helios rack-scale platform, expected to start shipping in the second half of fiscal 2026, heightens the challenge of managing supply, demand and inventory and could adversely affect revenue and inventory management.",
+      "is_new": false,
+      "source_citation": "Risk Factors"
+    },
+    {
+      "description": "Demand for AI products depends on how customers use generative AI, whose near-term and long-term trajectory is unknown. Some customers may lack access to data center capacity or energy for buildouts.",
+      "is_new": false,
+      "source_citation": "Risk Factors"
+    },
+    {
+      "description": "Warrants for up to 160 million shares each at $0.01 per share, issued to OpenAI and Meta, vest on GPU purchase milestones and stock-price conditions. They are classified as liabilities until conditions for equity classification are met, so dilution and fair-value swings are possible. No warrant shares had vested as of June 27, 2026.",
+      "is_new": false,
+      "source_citation": "Other"
+    },
+    {
+      "description": "Earnings quality: Other income (expense), net rose to $763 million for six months, mainly from unrealized gains on newly public equity stakes. $1.1 billion of marketable equity securities are subject to time-based sale restrictions expiring through October 2028, so these gains are non-operating and may be volatile.",
+      "is_new": true,
+      "source_citation": "MD&A — Other Income (Expense), Net"
+    },
+    {
+      "description": "Export controls: prior-year results included inventory and related charges tied to U.S. government export controls on MI308 Data Center GPU products, showing geopolitical sensitivity of China-related sales.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    }
+  ],
+  "recent_news": [
+    {
+      "headline": "AMD's AI engine shifts into higher gear as data center revenue more than doubles and Helios ramps - but market is confused - SiliconANGLE",
+      "date": "2026-08-04",
+      "url": "https://siliconangle.com/2026/08/04/amds-ai-engine-shifts-higher-gear-data-center-revenue-doubles-helios-ramps-market-confused",
+      "relevance_note": "Covers Data Center revenue of $6.7B and the Q3 revenue outlook of about $13B plus or minus $300M."
+    },
+    {
+      "headline": "AMD's AI-powered revenue forecast fails to wow investors",
+      "date": "2026-08-04",
+      "url": "https://www.reuters.com/business/amd-forecasts-upbeat-revenue-ai-data-center-demand-beats-quarterly-estimates-2026-08-04",
+      "relevance_note": "Data center revenue of $6.72B beat expectations of $6.48B and grew 16.3% sequentially."
+    },
+    {
+      "headline": "AMD Earnings Beat Estimates and Stock Falls 8%: Was the Bar Too High?",
+      "date": "Undated (after August 4, 2026 print)",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/amd-earnings-beat-estimates-stock-205710559.html",
+      "relevance_note": "Post-print stock reaction; Q3 guide implies 41% growth and non-GAAP gross margin near 56%."
+    },
+    {
+      "headline": "AMD Beat on Revenue, Profit, and Guidance — So Why Did the Stock Drop 7%?",
+      "date": "Undated (after August 4, 2026 print)",
+      "url": "https://www.tradingkey.com/analysis/stocks/us-stocks/262074451-amd-q2-2026-earnings-double-beat-stock-falls-tradingkey",
+      "relevance_note": "Attributes the selloff to a gross margin miss (54% vs 56% consensus) tied to Helios ramp costs."
+    },
+    {
+      "headline": "AMD Reports Second Quarter 2026 Financial Results :: Advanced Micro Devices, Inc. (AMD)",
+      "date": "2026-08-04",
+      "url": "https://ir.amd.com/news-events/press-releases/detail/1295/amd-reports-second-quarter-2026-financial-results",
+      "relevance_note": "Company release with Q3 outlook: revenue of about $13B, up about 41% YoY, non-GAAP gross margin about 56%."
+    },
+    {
+      "headline": "Advanced Micro Devices Sees AI Boom Fueling MI450, Helios and Server CPU Growth",
+      "date": "2026-09-08",
+      "url": "https://www.marketbeat.com/instant-alerts/event-advanced-micro-devices-sees-ai-boom-fueling-mi450-helios-and-server-cpu-growth-2026-09-08",
+      "relevance_note": "CFO commentary: MI450 production shipments begin at end of Q3, with a very significant step up in Q4."
+    },
+    {
+      "headline": "AMD Beats Revenue, Misses Earnings, Strong Q3",
+      "date": "Undated",
+      "url": "https://leverageshares.com/us/insights/amd-beats-on-revenue-misses-on-earnings-but-delivers-strong-q3-guidance",
+      "relevance_note": "Cites a 43% adjusted gross margin and a roughly $800M China export charge; this conflicts with the 10-Q's 54% GAAP margin and needs reconciliation."
+    },
+    {
+      "headline": "AMD's Big OpenAI Deal: Seller Financing Part II & More",
+      "date": "Undated",
+      "url": "https://enertuition.substack.com/p/amds-big-openai-deal-seller-financing",
+      "relevance_note": "Commentary on vendor-financing concerns and the performance-based warrant structure."
+    },
+    {
+      "headline": "Does AMD Have an OpenAI Problem? | The Motley Fool",
+      "date": "2026-03-02",
+      "url": "https://www.fool.com/investing/2026/03/02/does-amd-have-an-openai-problem",
+      "relevance_note": "Highlights customer dependency risk on OpenAI's financial stability."
+    },
+    {
+      "headline": "Advanced Micro Devices, Inc. (AMD) Analyst Ratings, Estimates & Forecasts - Yahoo Finance",
+      "date": "Undated",
+      "url": "https://finance.yahoo.com/quote/AMD/analysis",
+      "relevance_note": "Consensus EPS of $1.93 for the Sep 2026 quarter and $2.65 for the Dec 2026 quarter, implying a steep sequential step-up."
+    }
+  ],
+  "bull_case": [
+    "Data Center net revenue more than doubled to $6.7 billion (+107% YoY), driven by strong demand for EPYC processors and Instinct MI350 Series GPUs, and the segment swung to $2.1 billion of operating income from a $155 million loss.",
+    "Total net revenue rose 50% to $11.5 billion, with operating income of $2.0 billion vs a $134 million loss and gross margin of 54% vs 40%. Operating leverage is visible as revenue growth outpaced opex growth.",
+    "Multi-year agreements with OpenAI and Meta, each intending to deploy up to 6 gigawatts of AMD GPUs with the first gigawatt on MI450, give the second-half Helios and MI450 ramp a very large potential base that is not yet in reported revenue.",
+    "The balance sheet is strong: $13.1 billion of cash, cash equivalents and short-term investments, total debt principal of $3.25 billion, an undrawn revolver and a higher $5.5 billion commercial paper ceiling.",
+    "Operating cash flow of $5.3 billion in six months more than doubled from $2.4 billion in continuing operations a year ago, funding capex of $1.2 billion without new borrowing.",
+    "Embedded revenue grew 19% to $977 million with operating income of $386 million vs $275 million, and Client revenue grew 23% on 34% unit growth, showing breadth outside Data Center.",
+    "Milestone-vesting warrants align OpenAI and Meta with AMD's volume and share price, and no tranches have vested, so dilution occurs only if AMD wins the GPU volume."
+  ],
+  "bear_case": [
+    "The 14-point gross margin gain is largely a comparison effect: the filing credits the absence of the prior-year MI308 export-control charge first and favorable mix second, with no quantified split. Margin missed the roughly 56% consensus and the stock fell about 8% after the print.",
+    "The filing warns of an industry-wide memory shortage and rising memory prices that could raise production costs and pressure gross margin in coming quarters, when the comparison tailwind no longer applies.",
+    "Earnings quality is flattered by non-operating items: Other income (expense), net rose $626 million to $763 million for six months on unrealized gains from newly listed equity stakes, and these shares carry sale restrictions through October 2028.",
+    "Fixed obligations are large: $30.3 billion of unconditional commitments ($17.4 billion in the rest of 2026), $4.1 billion of data center lease guarantees, $4.5 billion of leases not yet commenced and $9.5 billion of future data center lease payments. These are exposed if the AI buildout slows.",
+    "Customers may lack capital for AI infrastructure and seek deferred-payment arrangements, and AMD's 6 GW programs reflect customer intent rather than committed purchase orders. A small number of customers account for a substantial part of revenue.",
+    "R&D grew 33% and marketing, general and administrative grew about 41% against 50% revenue growth, so operating leverage may be less clean than headline margins suggest.",
+    "Client revenue growth is volume-led with a 6% ASP decline, Gaming fell 31%, and Client and Gaming operating income fell to $582 million from $767 million despite higher revenue. Accounts receivable rose $966 million in six months, a working-capital build that flatters nothing about cash conversion."
+  ],
+  "what_to_watch": [
+    {
+      "text": "**Gross Margin Durability:** The 10-Q reports a 54% gross margin vs 40% a year ago, but attributes the increase first to the absence of the prior-year MI308 export-control inventory charge and second to favorable mix. The result missed the roughly 56% consensus for non-GAAP margin and the stock fell about 8%, and the filing warns that memory shortages and rising memory prices could pressure margin. On the other hand, Data Center revenue more than doubled and mix is a genuine tailwind, so 54% may prove a credible floor rather than a one-off.\n\n-> Monitor management's charge-adjusted gross margin bridge, the GAAP vs non-GAAP reconciliation (the roughly 56% non-GAAP guide), and commentary on memory cost inflation.",
+      "relevant_urls": [
+        "https://finance.yahoo.com/markets/stocks/articles/amd-earnings-beat-estimates-stock-205710559.html",
+        "https://www.tradingkey.com/analysis/stocks/us-stocks/262074451-amd-q2-2026-earnings-double-beat-stock-falls-tradingkey",
+        "https://leverageshares.com/us/insights/amd-beats-on-revenue-misses-on-earnings-but-delivers-strong-q3-guidance"
+      ]
+    },
+    {
+      "text": "**Data Center Momentum and Operating Leverage:** Data Center revenue rose 107% to $6.7 billion on EPYC and MI350 demand, the segment earned $2.1 billion of operating income, and the roughly $13 billion Q3 revenue outlook implies a further sequential step-up. That said, part of the margin expansion is a base effect, R&D grew 33% and marketing, general and administrative about 41% against 50% revenue growth, and $30.3 billion of unconditional commitments plus customer-concentration risk could squeeze returns if the ramp slows. The filing shows these as disclosed risks rather than current weakness, so the demand case is intact but the margin case is less settled.\n\n-> Monitor Data Center sequential growth vs the roughly $13 billion Q3 guide, segment operating margin, and whether R&D growth stays below revenue growth.",
+      "relevant_urls": [
+        "https://siliconangle.com/2026/08/04/amds-ai-engine-shifts-higher-gear-data-center-revenue-doubles-helios-ramps-market-confused",
+        "https://www.reuters.com/business/amd-forecasts-upbeat-revenue-ai-data-center-demand-beats-quarterly-estimates-2026-08-04"
+      ]
+    },
+    {
+      "text": "**MI450 / Helios Ramp:** Q2 Data Center growth came from EPYC and MI350, so the MI450 and Helios rack-scale generation, with OpenAI and Meta each intending to deploy up to 6 gigawatts and the first gigawatt on MI450, is upside not yet in reported revenue. Management has indicated production shipments begin at the end of Q3 with a very significant step-up in Q4. However, the 6 GW figures are customer intent rather than purchase orders, and the filing flags supply, demand and inventory management challenges with the Helios rollout in the second half.\n\n-> Monitor MI450 revenue recognition timing, Helios shipment commentary, inventory build and any change to the Q4 step-up language.",
+      "relevant_urls": [
+        "https://www.marketbeat.com/instant-alerts/event-advanced-micro-devices-sees-ai-boom-fueling-mi450-helios-and-server-cpu-growth-2026-09-08",
+        "https://www.investing.com/analysis/amds-ai-deals-provide-visibility-on-future-revenue-through-2027-200678987"
+      ]
+    },
+    {
+      "text": "**Earnings Quality and Cash Conversion:** Six-month net income of $3.68 billion more than doubled, but Other income (expense), net rose $626 million to $763 million on unrealized gains from newly listed equity stakes, including $549 million of gains from long-term investments in the cash flow statement. Operating cash flow of $5.3 billion (vs $2.4 billion in continuing operations) is the stronger signal. However, it was supported by working-capital swings, with accounts receivable up $966 million and inventories up $548 million, so conversion should be judged against operating income rather than net income.\n\n-> Monitor operating income, operating cash flow less capex, receivable and inventory trends, and any further mark-to-market gains on restricted equity holdings.",
+      "relevant_urls": []
+    },
+    {
+      "text": "**Commitments, Leases and Liquidity:** AMD holds $13.1 billion of cash and short-term investments, an undrawn revolver, $3.25 billion of debt principal ($875 million current) and a commercial paper ceiling raised to $5.5 billion, which comfortably covers near-term needs. However, it reports $30.3 billion of unconditional commitments ($17.4 billion in the rest of 2026), $4.1 billion of data center lease guarantees, $4.5 billion of leases not yet commenced and capex of $1.2 billion in six months vs $494 million a year ago. These fixed claims could become a burden if AI deployments slip.\n\n-> Monitor the commitments schedule, commercial paper usage, capex pace, and any new guarantees or capacity purchase agreements.",
+      "relevant_urls": []
+    },
+    {
+      "text": "**Customer Warrants and Financing Structures:** Warrants for up to 160 million shares each at $0.01 were issued to OpenAI and Meta, vesting with GPU purchase milestones and stock-price hurdles, and no tranches have vested. This aligns customers with AMD's volume, and dilution arises only if AMD wins the deployments. On the other hand, the warrants are classified as liabilities, so fair-value swings could hit earnings as the stock rises, the revenue-accounting treatment remains an open question, and the filing notes customers may seek deferred-payment arrangements.\n\n-> Monitor warrant fair-value charges, any contra-revenue treatment disclosed, vesting progress, and commentary on customer financing arrangements.",
+      "relevant_urls": [
+        "https://enertuition.substack.com/p/amds-big-openai-deal-seller-financing",
+        "https://www.fool.com/investing/2026/03/02/does-amd-have-an-openai-problem"
+      ]
+    },
+    {
+      "text": "**Client and Gaming Profitability:** Client revenue rose 23% to $3.1 billion on 34% unit growth, but average selling price fell 6%, and Gaming declined 31% to $779 million on lower semi-custom revenue. Client and Gaming operating income fell to $582 million from $767 million despite revenue up 6%. The recovering PC market supports volume, but pricing and gaming weakness are drags on segment returns.\n\n-> Monitor Client ASP trends, semi-custom outlook, and Client and Gaming operating margin.",
+      "relevant_urls": [
+        "https://siliconangle.com/2026/08/04/amds-ai-engine-shifts-higher-gear-data-center-revenue-doubles-helios-ramps-market-confused"
+      ]
+    }
+  ],
+  "data_gaps": [
+    "The filing does not quantify the split of the 14-point year-over-year gross margin increase between the absence of the prior-year MI308 export-control charge and favorable product mix.",
+    "A secondary source cites a 43% adjusted gross margin, which conflicts with the 54% GAAP figure in the filing; the reconciliation is not provided in the filing chunks.",
+    "Free cash flow is not reported as a line item in the filing chunks; only operating cash flow and purchases of property and equipment are shown.",
+    "The filing chunks contain no outlook or guidance language, so topics such as Q3 revenue, gross margin and operating expense expectations were not addressed in the filing text provided.",
+    "The accounting treatment of the OpenAI and Meta warrants on reported revenue (contra-revenue or not) is not clarified in the chunks reviewed."
+  ],
+  "hypotheses_explored": [
+    {
+      "id": "h1",
+      "proposing_personality": "Conservative",
+      "question": "Is AMD's H1 2026 net income of $3.68B a reliable guide to earnings quality, or is it inflated by non-operating investment gains that the operating cash flow does not confirm?",
+      "summary": "Net income more than doubled year over year, but a large share came from non-operating, non-cash gains on newly listed equity stakes. Operating cash flow of $5.3B is the stronger signal, though helped by a working-capital build, and the gains should be stripped out before extrapolating earnings.",
+      "evidence_quotes": [
+        "Other income (expense), net for the six months ended June 27, 2026 was $763 million, an increase of $626 million, or 457%, compared to $137 million for the prior year period.",
+        "Gains from long-term investments, net (549) (36)",
+        "Net cash provided by operating activities of continuing operations 5,321 2,401",
+        "Accounts receivable, net (966) 1,078"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h2",
+      "proposing_personality": "Conservative",
+      "question": "Does AMD's balance sheet and capital allocation (cash, debt maturities, capex, buybacks, commercial paper capacity) comfortably fund the 2026 maturities and data center build-out without relying on new external capital?",
+      "summary": "Liquidity looks solid: $13.1B of cash and short-term investments, an undrawn revolver, and total debt of $3.25B with $875M current. Capex nearly doubled to $1.2B, and buybacks are small compared with tax-withholding outflows. The company also has $9.5B of future data center lease commitments and raised its commercial paper ceiling to $5.5B, so the funding cushion is real but its use needs watching.",
+      "evidence_quotes": [
+        "As of June 27, 2026, our cash, cash equivalents and short-term investments were $13.1 billion compared to $10.6 billion as of December 27, 2025.",
+        "Total debt (principal amount) 3,250 3,250",
+        "As of June 27, 2026 and December 27, 2025, the Company had no outstanding balance under its Revolving Facility.",
+        "In May 2026, the Company increased to $5.5 billion, from $3.0 billion, the maximum aggregate amount outstanding at any time of unsecured commercial paper notes",
+        "long-term data center leases with aggregate future payments of $9.5 billion over lease terms of up to 16 years that are expected to commence in 2027 and 2028"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h3",
+      "proposing_personality": "Contrarian",
+      "question": "Is AMD's 54% Q2 2026 gross margin a clean base for Q3 guidance, or is it flattered by the absence of a prior-year export-control charge?",
+      "summary": "The filing attributes the year-over-year jump mainly to the absence of the MI308 export-control inventory charge recorded in the prior-year quarter, plus mix. Q2 margin still missed the roughly 56% consensus and the stock fell about 8%. The headline expansion is largely a comparison effect, and a 54% GAAP vs 43% adjusted source conflict needs reconciling.",
+      "evidence_quotes": [
+        "The increase in both periods was driven by the absence of inventory and related charges associated with the U.S. government export control on AMD Instinct MI308 Data Center GPU products that was recorded in the prior year period and a favorable product mix, including higher Data Center segment revenue.",
+        "Investors prioritized a gross margin miss (54% versus the 56% consensus)",
+        "AMD's adjusted gross margin stood at 43% for Q2."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h4",
+      "proposing_personality": "Contrarian",
+      "question": "Could the memory shortage and customer financing strain slow the AI data center ramp that the Street is extrapolating?",
+      "summary": "Data Center revenue rose 107% to $6.7B and Q3 guidance implies about 41% growth. The filing flags that customers may struggle to fund AI infrastructure and that memory price inflation could raise buildout costs. These are disclosed risks, not yet realized in results.",
+      "evidence_quotes": [
+        "the industry-wide memory shortage and related rising prices in memory may drive the price for data center buildouts higher.",
+        "Customers may also lack, or be unable to, secure capital to fund their required AI infrastructure and may request alternative financing or deferred-payment arrangements from vendors and suppliers.",
+        "Data Center net revenue of $6.7 billion for the three months ended June 27, 2026 increased by 107%"
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h5",
+      "proposing_personality": "Dreamer",
+      "question": "Can AMD's MI450 / Helios rack-scale ramp, backed by up to 6 GW commitments each from OpenAI and Meta, turn Data Center AI into a multi-year franchise large enough to re-rate AMD as a second AI platform rather than a cyclical share-taker?",
+      "summary": "The long-horizon upside is whether the MI450 generation becomes a standing gigawatt-scale platform. Q2 growth came mainly from EPYC and MI350, not MI450, so the H2 2026 MI450 ramp is the real test. The 6 GW figures are customer intent, not committed purchase orders.",
+      "evidence_quotes": [
+        "each customer intends to deploy up to 6 gigawatts of AMD data center GPUs, with the first gigawatt of each deployment powered by our AMD Instinct MI450 series products.",
+        "The increase in both periods was primarily driven by strong demand for our AMD EPYC processors and AMD Instinct MI350 Series GPUs.",
+        "the near-term and long-term trajectory of such generative AI solutions is unknown."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h6",
+      "proposing_personality": "Dreamer",
+      "question": "Do the warrants issued to OpenAI and Meta turn AMD's customer milestones into a self-reinforcing flywheel, where AMD's upside is tied to GPU purchase volumes and its own share price, and does that alignment make the long-dated AI thesis more credible or more fragile?",
+      "summary": "Each customer could acquire up to 160 million AMD shares at $0.01, vesting only as GPU purchases and stock-price hurdles are met. No tranches have vested yet, so this is an option on execution, not revenue today. The dilution and liability classification are open questions.",
+      "evidence_quotes": [
+        "we issued each customer a warrant to purchase up to 160 million shares of our common stock at an exercise price of $0.01 per share",
+        "The warrants will be classified as liabilities until certain conditions for equity classification are met.",
+        "As of June 27, 2026, no warrant shares had vested or become exercisable"
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h8",
+      "proposing_personality": "Optimist",
+      "question": "Will the MI450 and Helios rack ramp in the second half of 2026 give AMD a second, larger leg of AI revenue growth that the market is not yet pricing?",
+      "summary": "The upside case depends on MI450 and Helios revenue starting in Q3 2026 and stepping up sharply in Q4. Multi-gigawatt agreements give the ramp a large potential base, but the main evidence is news coverage of management commentary and the filing flags Helios timing risk.",
+      "evidence_quotes": [
+        "each customer intends to deploy up to 6 gigawatts of AMD data center GPUs, with the first gigawatt of each deployment powered by our AMD Instinct MI450 series products.",
+        "the introduction of system-level architectures, such as our Helios rack-scale platforms... which is expected to start shipping in the second half of fiscal year 2026, heighten the challenges of managing our supply and demand",
+        "Hu said AMD expects production shipments of MI450 products to begin at the end of the third quarter, with revenue beginning in the quarter."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h9",
+      "proposing_personality": "Pessimist",
+      "question": "Is AMD's jump to a 54% gross margin mostly a base-period effect from lapping the MI308 export-control charge, so that underlying unit economics are improving less than the headline suggests and are exposed to memory cost inflation?",
+      "summary": "The 40% to 54% expansion is largely explained by the absence of a prior-year MI308 inventory charge plus mix. The filing warns an industry-wide memory shortage could compress gross margin. No quantified split of the one-time lapping effect is available.",
+      "evidence_quotes": [
+        "Gross margin was 54% and 40% for the three months ended June 27, 2026 and June 28, 2025, respectively.",
+        "there is currently an industry-wide memory shortage as the demand for such components has outpaced supply."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h10",
+      "proposing_personality": "Pessimist",
+      "question": "Is AMD carrying off-balance-sheet and customer-linked exposure (lease guarantees, cloud capacity commitments, and milestone-vesting warrants to large customers) that the headline AI revenue growth does not reflect, and that could hit results if AI buildouts slow?",
+      "summary": "AMD reports $30.3 billion of unconditional commitments, of which $17.4 billion falls in the rest of fiscal 2026, plus $4.1 billion of data center lease guarantees and $4.5 billion of leases not yet commenced. Warrants to OpenAI and Meta and possible deferred-payment requests add customer-linked exposure. The revenue accounting of the warrants remains open.",
+      "evidence_quotes": [
+        "As of June 27, 2026, we had unconditional commitments of approximately $30.3 billion, of which $17.4 billion are for the remainder of fiscal year 2026.",
+        "we have data center lease guarantees with maximum potential amount of future payments of $4.1 billion",
+        "leases that have not yet commenced for $4.5 billion",
+        "we expect that a small number of customers will continue to account for a substantial part of our revenue"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h11",
+      "proposing_personality": "Quant",
+      "question": "Is AMD's Q2 2026 gross margin step-up (54% vs 40%) a durable mix-driven expansion, or is it mostly a base effect from the prior-year MI308 export-control charge, and does R&D growth outpacing revenue erode the operating leverage that the next quarter's estimates assume?",
+      "summary": "The margin expansion is flattered by a non-recurring comparison. R&D grew 33% against 50% revenue growth, so operating leverage is real but less clean than headline numbers imply, and sell-side estimates for the Dec-2026 quarter rely on sustaining the 54% gross margin.",
+      "evidence_quotes": [
+        "R&D expenses of $2.5 billion for the three months ended June 27, 2026 increased by $0.6 billion, or 33%, compared to $1.9 billion for the prior year period.",
+        "Net revenue for the three months ended June 27, 2026 was $11.5 billion, a 50% increase compared to the prior year period.",
+        "| Avg. Estimate | 1.93 | 2.65 | 7.59 | 15.72 |"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h12",
+      "proposing_personality": "Quant",
+      "question": "Is the Client segment's growth quality deteriorating, with unit-driven revenue gains being bought with falling pricing, while Gaming contracts further?",
+      "summary": "Client revenue grew 23% on 34% unit growth with ASP down 6%, so growth is volume-led and price-dilutive. Gaming fell 31%, and Client and Gaming operating income fell to $582M from $767M despite revenue up 6%.",
+      "evidence_quotes": [
+        "primarily driven by a 34% increase in unit shipments of client processors, partially offset by a 6% decrease in average selling price of client processors.",
+        "Gaming net revenue of $779 million for the three months ended June 27, 2026 decreased by 31% compared to net revenue of $1.1 billion for the prior year period, primarily due to lower semi-custom revenue.",
+        "Client and Gaming operating income was $582 million for the three months ended June 27, 2026, compared to operating income of $767 million for the prior year period."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h7",
+      "proposing_personality": "Optimist",
+      "question": "Is AMD's Data Center momentum, driven by EPYC and MI350, strong enough to keep revenue growing and gross margin expanding into Q3 2026?",
+      "summary": "Data Center revenue more than doubled and gross margin rose sharply on mix. Management's Q3 guide of about $13B implies another sequential step up. Main risks are customer concentration and AI buildout timing, though peers challenge the margin claim as largely a base effect and note R&D growth and commitments could limit leverage.",
+      "evidence_quotes": [
+        "Data Center net revenue of $6.7 billion for the three months ended June 27, 2026 increased by 107%, compared to net revenue of $3.2 billion for the prior year period.",
+        "The increase in both periods was primarily driven by strong demand for our AMD EPYC processors and AMD Instinct MI350 Series GPUs.",
+        "Gross margin was 54% and 40% for the three months ended June 27, 2026 and June 28, 2025, respectively.",
+        "AMD expects third-quarter revenue of approximately $13 billion, plus or minus $300 million, ahead of Wall Street expectations",
+        "The loss of a significant customer may have a material adverse effect on us."
+      ],
+      "confidence": 4
+    }
+  ]
+}

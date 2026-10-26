@@ -1,0 +1,370 @@
+{
+  "ticker": "CRM",
+  "company_name": "Salesforce, Inc.",
+  "filing_type": "10-Q",
+  "filing_date": "2026-08-27",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T14:12:26.063759+00:00",
+  "key_metrics": [
+    {
+      "name": "Total revenue (Q2 FY27)",
+      "value": "11,345",
+      "unit": "USD millions (+11% YoY vs 10,236)",
+      "source_citation": "10-Q Part I, Item 1, Condensed Consolidated Statements of Operations; Item 2 MD&A, Revenues"
+    },
+    {
+      "name": "Subscription and support revenue (Q2 FY27)",
+      "value": "10,820",
+      "unit": "USD millions (+12% YoY vs 9,690)",
+      "source_citation": "10-Q Part I, Item 1, Condensed Consolidated Statements of Operations; Item 2 MD&A, Revenues"
+    },
+    {
+      "name": "Informatica revenue contribution (Q2 FY27)",
+      "value": "456",
+      "unit": "USD millions (about 41% of the 1,109 YoY revenue increase; derived)",
+      "source_citation": "10-Q Part I, Item 2 MD&A, Revenues (acquisition contribution disclosure)"
+    },
+    {
+      "name": "Revenue growth excluding Informatica (Q2, derived)",
+      "value": "approx. 6.4",
+      "unit": "percent YoY ((11,345-456)/10,236; analyst calculation)",
+      "source_citation": "Derived from 10-Q Part I, Item 1, Statements of Operations and Item 2 MD&A, Revenues"
+    },
+    {
+      "name": "Income from operations (Q2 FY27)",
+      "value": "2,331",
+      "unit": "USD millions (about 21% of revenue; flat vs 2,332 a year ago)",
+      "source_citation": "10-Q Part I, Item 1, Statements of Operations; Item 2 MD&A, Results of Operations table"
+    },
+    {
+      "name": "Restructuring charges (Q2 FY27)",
+      "value": "94",
+      "unit": "USD millions (vs 4 a year ago)",
+      "source_citation": "10-Q Part I, Item 1, Statements of Operations; Item 2 MD&A, Operating Expenses"
+    },
+    {
+      "name": "Amortization of acquired intangibles (Q2 FY27)",
+      "value": "522",
+      "unit": "USD millions (vs 380 a year ago)",
+      "source_citation": "10-Q Part I, Item 1, Note 7 Intangible Assets Acquired Through Business Combinations and Goodwill"
+    },
+    {
+      "name": "Interest expense (Q2 FY27)",
+      "value": "473",
+      "unit": "USD millions (vs 67 a year ago)",
+      "source_citation": "10-Q Part I, Item 1, Statements of Operations; Item 2 MD&A, Other Income and Expense"
+    },
+    {
+      "name": "Gains on strategic investments, net (Q2 FY27)",
+      "value": "2,613",
+      "unit": "USD millions (vs 6 a year ago); includes about 2.7B of unrealized gains on Anthropic",
+      "source_citation": "10-Q Part I, Item 1, Note 3 Investments; Item 2 MD&A, Other Income and Expense"
+    },
+    {
+      "name": "Net income (Q2 FY27)",
+      "value": "3,526",
+      "unit": "USD millions (vs 1,887 a year ago)",
+      "source_citation": "10-Q Part I, Item 1, Condensed Consolidated Statements of Operations"
+    },
+    {
+      "name": "Diluted EPS (Q2 FY27)",
+      "value": "4.29",
+      "unit": "USD per share (vs 1.96 a year ago)",
+      "source_citation": "10-Q Part I, Item 1, Condensed Consolidated Statements of Operations"
+    },
+    {
+      "name": "Diluted EPS (six months FY27)",
+      "value": "6.67",
+      "unit": "USD per share (vs 3.55); strategic investment gains added 2.87 and the ASR added 0.57",
+      "source_citation": "10-Q Part I, Item 2 MD&A, Highlights from First Six Months of Fiscal 2027"
+    },
+    {
+      "name": "Diluted weighted-average shares (Q2 FY27)",
+      "value": "821",
+      "unit": "millions (vs 962 a year ago)",
+      "source_citation": "10-Q Part I, Item 1, Statements of Operations; Note 11 Net Income Per Share"
+    },
+    {
+      "name": "Current remaining performance obligation (cRPO)",
+      "value": "33.5",
+      "unit": "USD billions (+14% YoY); foreign currency impact minimal",
+      "source_citation": "10-Q Part I, Item 1, Note 2 Revenues; Item 2 MD&A, Highlights"
+    },
+    {
+      "name": "Total remaining performance obligation (RPO)",
+      "value": "66.3",
+      "unit": "USD billions (+11% YoY; down from 72.4 at January 31, 2026)",
+      "source_citation": "10-Q Part I, Item 1, Note 2 Revenues; Item 2 MD&A, Highlights"
+    },
+    {
+      "name": "Attrition rate",
+      "value": "approx. 8",
+      "unit": "percent (trailing twelve months, excluding Slack self-service, Informatica and current-year acquisitions)",
+      "source_citation": "10-Q Part I, Item 2 MD&A, Sources of Revenues"
+    },
+    {
+      "name": "Operating cash flow (Q2 FY27)",
+      "value": "1,269",
+      "unit": "USD millions (vs 740 a year ago)",
+      "source_citation": "10-Q Part I, Item 1, Condensed Consolidated Statements of Cash Flows"
+    },
+    {
+      "name": "Operating cash flow (six months FY27)",
+      "value": "7,970",
+      "unit": "USD millions (+10% YoY vs 7,216)",
+      "source_citation": "10-Q Part I, Item 1, Statements of Cash Flows; Item 2 MD&A, Highlights"
+    },
+    {
+      "name": "Capital expenditures (Q2 FY27)",
+      "value": "171",
+      "unit": "USD millions (Q2 operating cash flow less capex is about 1,098; derived)",
+      "source_citation": "10-Q Part I, Item 1, Condensed Consolidated Statements of Cash Flows"
+    },
+    {
+      "name": "Cash, cash equivalents and marketable securities",
+      "value": "11.4",
+      "unit": "USD billions at July 31, 2026 (vs 9.6 at January 31, 2026)",
+      "source_citation": "10-Q Part I, Item 2 MD&A, Results of Operations balance sheet table"
+    },
+    {
+      "name": "Principal outstanding on debt",
+      "value": "39.5",
+      "unit": "USD billions at July 31, 2026 (vs 14.5 at January 31, 2026); no borrowings under the 5.0B revolver",
+      "source_citation": "10-Q Part I, Item 1, Note 8 Debt"
+    },
+    {
+      "name": "Total stockholders' equity",
+      "value": "38,378",
+      "unit": "USD millions at July 31, 2026 (vs 59,142 at January 31, 2026)",
+      "source_citation": "10-Q Part I, Item 1, Condensed Consolidated Balance Sheets"
+    },
+    {
+      "name": "Strategic investments carrying value",
+      "value": "11,324",
+      "unit": "USD millions (vs 7,591); Anthropic is about 45% of the portfolio, or about 5.1B",
+      "source_citation": "10-Q Part I, Item 1, Balance Sheets and Note 1 Concentrations; Item 3 Strategic Investments"
+    },
+    {
+      "name": "Remaining share repurchase authorization",
+      "value": "22.9",
+      "unit": "USD billions at July 31, 2026; no repurchases in Q2 outside the ASR",
+      "source_citation": "10-Q Part I, Item 1, Note 9 Stockholders' Equity; Part II, Item 2 Issuer Purchases of Equity Securities"
+    },
+    {
+      "name": "Quarterly dividend per share",
+      "value": "0.440",
+      "unit": "USD per share (vs 0.416 a year ago)",
+      "source_citation": "10-Q Part I, Item 1, Note 9 Stockholders' Equity, Dividends"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "Agentforce Apps (subscription and support)",
+      "revenue": "7,193 USD millions (Q2 FY27)",
+      "yoy_change": "+8%",
+      "commentary": "67% of subscription and support revenue, down from 69% a year ago. It includes Agentforce Sales, Service, Marketing, Commerce, Apps Flex Credits and Slack. Company says growth was volume-driven and pricing was not a significant driver. The company reports one operating segment, so these are revenue disaggregations.",
+      "source_citation": "10-Q Part I, Item 1, Note 2 Revenues (Disaggregation of Revenue); Item 2 MD&A, Subscription and Support Revenues by Service Offering"
+    },
+    {
+      "name": "Data 360, Headless Platform, and Other (subscription and support)",
+      "revenue": "3,618 USD millions (Q2 FY27)",
+      "yoy_change": "+20%",
+      "commentary": "33% of subscription and support revenue, up from 31%. The category includes Informatica, which contributed about 456M of total company revenue in the quarter. If all of that sits in this category, growth excluding Informatica would be about 5% (analyst estimate, not disclosed by category).",
+      "source_citation": "10-Q Part I, Item 2 MD&A, Subscription and Support Revenues by Service Offering and Impact of Acquisitions; Note 2 Revenues"
+    },
+    {
+      "name": "Professional services and other",
+      "revenue": "525 USD millions (Q2 FY27)",
+      "yoy_change": "-4%",
+      "commentary": "Decline attributed to less demand for larger, multi-year transformation engagements, which the company says may continue in the near term. Cost of professional services (628M) exceeds its revenue.",
+      "source_citation": "10-Q Part I, Item 2 MD&A, Revenues; Cost of Revenues"
+    },
+    {
+      "name": "Geography: Americas",
+      "revenue": "7,404 USD millions (Q2 FY27)",
+      "yoy_change": "+10%",
+      "commentary": "65% of total revenue. About 93% of Americas revenue is attributed to the United States. Geography is based on the contracting entity.",
+      "source_citation": "10-Q Part I, Item 1, Note 2 Revenues; Item 2 MD&A, Revenues by Geography"
+    },
+    {
+      "name": "Geography: Europe",
+      "revenue": "2,764 USD millions (Q2 FY27)",
+      "yoy_change": "+14%",
+      "commentary": "25% of total revenue; fastest-growing region in the quarter. Informatica likely contributes to regional growth, though the filing does not break this out.",
+      "source_citation": "10-Q Part I, Item 2 MD&A, Revenues by Geography"
+    },
+    {
+      "name": "Geography: Asia Pacific",
+      "revenue": "1,168 USD millions (Q2 FY27)",
+      "yoy_change": "+9%",
+      "commentary": "10% of total revenue. Total revenue was minimally affected by foreign currency in Q2, and about +1% for the six months.",
+      "source_citation": "10-Q Part I, Item 2 MD&A, Revenues by Geography"
+    }
+  ],
+  "forward_guidance": {
+    "text": "The 10-Q contains no quantitative revenue, margin, EPS or cRPO guidance for Q3 or fiscal 2027. Only qualitative forward statements are available: (1) the March 2026 debt offering is expected to raise interest expense versus prior year throughout fiscal 2027; (2) final settlement of the $25B ASR is expected in Q3 FY27, with about 42M shares in the unsettled forward component excluded from diluted EPS as anti-dilutive; (3) the Contentful (about $1.5B cash) and Fin/Intercom (about $3.6B cash) acquisitions are expected to close in Q3 FY27, subject to regulatory approvals; (4) no significant additional restructuring charges are expected near term, with $170M-$190M of future restructuring cash payments; (5) professional services weakness may continue near term; (6) R&D is expected to hold roughly steady as a percentage of revenue, while S&M and G&A may decline as a percentage of revenue over time.",
+    "source_citation": "10-Q Part I, Item 2 MD&A (Overview, Operating Expenses, Other Income and Expense, Share Repurchase Program, Other Future Obligations); Item 1, Notes 6, 9 and 11"
+  },
+  "key_risks": [
+    {
+      "description": "Leverage step-up: principal debt rose to $39.5B from $14.5B after the $25B March 2026 notes (used to fund the ASR) and the $6B term loan. Interest expense was $473M in Q2 versus $67M, and is expected to stay elevated through FY27. Equity fell to $38.4B from $59.1B. Pending cash deals of about $5.1B (Contentful, Fin) add further cash demands.",
+      "is_new": true,
+      "source_citation": "10-Q Part I, Item 1, Note 8 Debt and Balance Sheets; Item 2 MD&A, Other Income and Expense; Part II, Item 1A, Financial Risks (debt service)"
+    },
+    {
+      "description": "Strategic investment concentration and valuation volatility: Anthropic is about 45% of the $11.3B portfolio (22% at January 31, 2026). Q2 net gains of $2.6B (mostly Anthropic unrealized gains) drove net income and EPS. A 10% decline in enterprise value of the five largest private holdings would reduce carrying value by about $641M. Impairments were $285M in Q2.",
+      "is_new": true,
+      "source_citation": "10-Q Part I, Item 1, Note 1 Concentrations and Note 3 Investments; Item 3 Strategic Investments; Part II, Item 1A"
+    },
+    {
+      "description": "Weak organic growth: excluding Informatica, Q2 total revenue grew about 6% (derived). Agentforce Apps grew 8%, professional services declined 4%, and total RPO fell to $66.3B from $72.4B at January 31, 2026. Monetization of Agentforce and Data 360 (consumption-based) is described as relatively new and uncertain, with limited pricing experience.",
+      "is_new": false,
+      "source_citation": "10-Q Part I, Item 2 MD&A, Revenues and Remaining Performance Obligation; Item 1, Note 2; Part II, Item 1A (Strategic and Industry Risks)"
+    },
+    {
+      "description": "Integration and closing risk on acquisitions: Qualified closed April 2026; Contentful and Fin/Intercom (about $5.1B combined cash) are pending regulatory approvals and expected to close in Q3 FY27. Informatica integration remains ongoing and acquisitions drive higher intangible amortization (about $839M for the remaining six months of FY27).",
+      "is_new": false,
+      "source_citation": "10-Q Part I, Item 1, Notes 6 and 7; Part II, Item 1A (acquisition risk factor)"
+    },
+    {
+      "description": "Intensifying competition from AI-native companies and AI-driven disruption, including risk that AI offerings reduce demand for existing applications or transform workforce needs.",
+      "is_new": false,
+      "source_citation": "10-Q Part II, Item 1A, Strategic and Industry Risks (competition)"
+    },
+    {
+      "description": "AI-enabled cybersecurity threats: frontier AI models may let threat actors find zero-day vulnerabilities and automate attacks, compressing remediation time and potentially requiring emergency patching and higher costs. The filing also flags dependence on third-party AI models that could be suspended or restricted.",
+      "is_new": true,
+      "source_citation": "10-Q Part II, Item 1A, Operational and Execution Risks (security breaches; defects and disruptions; third-party services)"
+    },
+    {
+      "description": "Backpage-related litigation keeps expanding: many new plaintiff groups were filed in 2026 across Northern District of Illinois, Northern District of California and Texas MDL. Most actions are stayed under 18 U.S.C. 1595(b) pending criminal proceedings. The Slack securities state court action is active again. Management does not expect a material adverse impact but cannot estimate losses.",
+      "is_new": true,
+      "source_citation": "10-Q Part I, Item 1, Note 12 Legal Proceedings and Claims; Part II, Item 1"
+    },
+    {
+      "description": "Rising cost of revenues: subscription and support cost of revenue rose to 18% of revenue from 16%, driven by hosting, generative AI technologies and acquired intangibles amortization. Gross margin was 77% versus 78%.",
+      "is_new": false,
+      "source_citation": "10-Q Part I, Item 2 MD&A, Cost of Revenues"
+    },
+    {
+      "description": "ASR settlement risk: volatility in the stock price may require the company to deliver additional shares or make a cash payment at final settlement in Q3 FY27.",
+      "is_new": false,
+      "source_citation": "10-Q Part II, Item 1A, Financial Risks (debt service obligations); Part I, Item 1, Note 9"
+    },
+    {
+      "description": "Regulatory and data-sovereignty exposure: EU AI Act, DSA, DORA and U.S. state AI laws; scrutiny of safe-harbor protections; data residency requirements that may limit resiliency options; the Dutch Privacy Collective GDPR matter remains pending before the Dutch Supreme Court.",
+      "is_new": false,
+      "source_citation": "10-Q Part II, Item 1A, Legal and Regulatory Risks"
+    },
+    {
+      "description": "Effective tax rate pressure and tax law uncertainty: ETR was 23% for the six months (22% prior year), with possible CAMT exposure under the OBBBA and Pillar Two developments.",
+      "is_new": false,
+      "source_citation": "10-Q Part I, Item 1, Note 10 Income Taxes; Part II, Item 1A, Financial Risks (effective tax rate)"
+    }
+  ],
+  "recent_news": [],
+  "bull_case": [
+    "Revenue growth of 11% in Q2 with cRPO up 14% to $33.5B, a stable attrition rate of about 8%, and total revenue growth of 12% for the six months.",
+    "Data 360, Headless Platform and Other grew 20% in Q2 (22% for six months) and now makes up 33% of subscription and support revenue; filing cites strong momentum in Agentforce Apps and Data 360.",
+    "Cash generation remains strong: six-month operating cash flow of $8.0B (+10%) and Q2 operating cash flow of $1.27B versus $0.74B a year ago, while still paying $0.44 quarterly dividends.",
+    "The $25B ASR cut diluted shares to 821M from 962M (-15%), adding $0.57 to six-month diluted EPS, with final ASR settlement in Q3 still to come and $22.9B of repurchase authorization remaining.",
+    "Restructuring is largely done (no significant additional charges expected), and management expects S&M and G&A to decline as a percentage of revenue with AI-driven productivity and self-serve/partner channels.",
+    "Strategic portfolio marks (Anthropic about $5.1B carrying value, with $2.7B of Q2 unrealized gains) show embedded asset value not reflected in operating income, and the portfolio provides exposure to AI model leaders.",
+    "Europe grew 14% and all regions grew; foreign currency was neutral in Q2 and hedging programs were added in FY27."
+  ],
+  "bear_case": [
+    "Operating income was flat YoY at $2.33B (21% margin vs 23%) despite 11% revenue growth, as intangible amortization (+$142M), restructuring (+$90M) and cost of revenues (hosting, AI) absorbed the gains.",
+    "Organic growth is much slower than headline: about 6% excluding Informatica's $456M contribution, and Agentforce Apps (67% of subscription revenue) grew only 8% with pricing not a growth driver.",
+    "Q2 EPS of $4.29 is inflated by $2.6B of strategic investment gains; excluding tax-effected gains, the quarter's EPS was roughly $1.86 versus about $1.95 a year ago (analyst estimate), with Anthropic concentration making future marks lumpy and potentially negative.",
+    "Balance sheet leverage jumped: $39.5B of debt, interest expense of $473M a quarter, equity down 35% since January, and about $5.1B of additional cash acquisitions pending, limiting flexibility versus an operating income base of about $9B annualized.",
+    "Total RPO fell to $66.3B from $72.4B at January 31 (seasonal, but noncurrent RPO dropped to $32.8B from $37.3B), and professional services revenue is declining with management warning of continued weakness.",
+    "Heavy AI-related cost pressure and competition from AI-native entrants could compress gross margin further (77% vs 78%) and threaten seat-based application demand.",
+    "Expanding Backpage litigation (hundreds of plaintiffs) and Slack securities action create headline and potential liability risk, with no estimate of loss disclosed."
+  ],
+  "what_to_watch": [
+    {
+      "text": "Q3 FY27 results and guidance: the 10-Q gives no numeric outlook, so check the earnings release for revenue, cRPO, operating margin and EPS guidance, especially cRPO growth (14% in Q2) and ex-Informatica organic growth.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Organic growth in Data 360, Headless Platform and Other as Informatica laps its November 2025 acquisition date (Q3 has partial overlap), plus Agentforce Apps growth against the 8% in Q2.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Closing of Contentful (about $1.5B) and Fin/Intercom (about $3.6B) in Q3, including regulatory approvals, plus any new financing, share issuance, or purchase accounting disclosures.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Final ASR settlement in Q3: additional share delivery (about 20% of the expected total remains) or cash payment, and whether open-market repurchases resume (none in Q2) against $22.9B remaining authorization.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Operating margin trajectory: R&D and cost of revenue (hosting/AI), amortization (about $839M in remaining six months of FY27), restructuring cash payments of $170M-$190M, and progress on S&M and G&A leverage.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Interest expense run rate (Q2 $473M), cash interest paid and any debt actions, including the $5B revolver, as well as credit rating commentary.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Strategic investment marks, particularly Anthropic (about 45% of portfolio) and any further impairments (Q2 $285M), which swing GAAP EPS.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Backpage and Slack litigation developments: pending motion for reconsideration of the stay in G.G. consolidated cases, new plaintiff filings, and any loss accruals.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Professional services trend (Q2 -4%) and whether it signals weaker large transformation deal demand for Agentforce deployments.",
+      "relevant_urls": []
+    }
+  ],
+  "data_gaps": [
+    "No formal quantitative forward guidance (revenue, cRPO, operating margin, EPS, tax rate) is in the 10-Q; the earnings press release/8-K was not provided.",
+    "No recent news items were provided in the source materials, so recent_news is empty rather than risk fabricated headlines or URLs.",
+    "The date of the next earnings report (Q3 FY27) is not stated in the filing; confirm against the company's investor relations calendar.",
+    "No analyst consensus estimates or market data (stock price, valuation multiples) were provided, so no comparison to expectations is possible.",
+    "The filing does not break out Agentforce-specific metrics (ARR, deal counts, paid deals), Data 360 ARR, or Informatica revenue by service offering; the ex-Informatica Data 360 growth estimate assumes all Informatica revenue sits in that category.",
+    "Non-GAAP operating margin, non-GAAP EPS and free cash flow are not reported in the 10-Q; the Q2 free cash flow figure (operating cash flow less capex) and ex-gain EPS are analyst calculations.",
+    "The is_new risk flags reflect period-over-period changes evidenced within this 10-Q (for example, debt, Anthropic concentration, litigation count, AI-cyber language); a redline against the fiscal 2026 10-K was not available.",
+    "The prior-year fiscal 2026 10-K and Q1 FY27 10-Q were not provided, so Q1 versus Q2 sequential detail, Q1 cRPO and full-year cost trends cannot be cited.",
+    "The size of the ASR final share delivery is not quantified in the filing; only the initial delivery of about 103M shares (about 80% of the expected total) is stated.",
+    "Attrition rate excludes Slack self-service, Informatica and current-year acquisitions, so total company attrition is not disclosed."
+  ],
+  "hypotheses_explored": [
+    {
+      "id": "H1",
+      "proposing_personality": "Skeptical forensic analyst",
+      "question": "How much of the Q2 revenue growth is organic versus acquired from Informatica?",
+      "summary": "Informatica contributed about $456M of the $1,109M YoY total revenue increase, so organic growth was about 6.4% against 11% reported. Agentforce Apps, the core CRM franchise, grew 8% and the filing says pricing was not a significant driver. Reported cRPO growth of 14% likely also includes Informatica and should be tested against organic figures when it laps the acquisition.",
+      "evidence_quotes": [
+        "The acquisition of Informatica in November 2025 contributed approximately $456 million and $900 million of total revenues for the three and six months ended July 31, 2026, respectively.",
+        "Pricing was not a significant driver of the increase in revenues for either period."
+      ],
+      "confidence": 80
+    },
+    {
+      "id": "H2",
+      "proposing_personality": "Earnings quality analyst",
+      "question": "Did strategic investment gains and the ASR flatter Q2 EPS?",
+      "summary": "Diluted EPS more than doubled to $4.29, but the company itself attributes $2.87 of six-month EPS to strategic investment gains and $0.57 to the ASR. Operating income was flat at about $2.33B and interest expense rose by $406M YoY. Underlying earnings power is therefore well below headline EPS, and the Anthropic mark could reverse or stall.",
+      "evidence_quotes": [
+        "Gains (losses) on strategic investments impacted our diluted net income per share by $2.87 and ($0.05) for the six months ended July 31, 2026 and 2025, respectively, based on a U.S. tax rate of 23.5%.",
+        "Our $25 billion accelerated share repurchase program, which commenced in March 2026, resulted in the repurchase of approximately 103 million shares which benefited our diluted net income per share by $0.57 for the six months ended July 31, 2026."
+      ],
+      "confidence": 85
+    },
+    {
+      "id": "H3",
+      "proposing_personality": "Balance sheet / capital allocation analyst",
+      "question": "Is the debt-funded buyback and acquisition program straining financial flexibility?",
+      "summary": "Salesforce borrowed $25B to fund the ASR and has $6B of term loans, lifting principal debt to $39.5B and quarterly interest expense to $473M. Cash and securities are $11.4B, operating cash flow is seasonally strong (Q1) but Q2 was only $1.27B, and about $5.1B of cash acquisitions are pending. No covenant issues are reported and the $5B revolver is undrawn, so liquidity looks adequate, but the cushion against a revenue shortfall is thinner.",
+      "evidence_quotes": [
+        "We expect this debt offering to cause interest expense to increase as compared to prior year throughout fiscal 2027.",
+        "The Company was in compliance with all debt covenants as of July 31, 2026."
+      ],
+      "confidence": 70
+    }
+  ]
+}

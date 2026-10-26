@@ -1,0 +1,647 @@
+{
+  "ticker": "BA",
+  "company_name": "BA",
+  "filing_type": "10-Q",
+  "filing_date": "2026-07-28",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T14:05:56.043321+00:00",
+  "key_metrics": [
+    {
+      "name": "Revenues (six months ended June 30, 2026 vs 2025)",
+      "value": "46,777 vs 42,245",
+      "unit": "USD millions",
+      "source_citation": "MD&A — 49"
+    },
+    {
+      "name": "Revenues (three months ended June 30, 2026 vs 2025)",
+      "value": "24,560 vs 22,749",
+      "unit": "USD millions",
+      "source_citation": "MD&A — 49"
+    },
+    {
+      "name": "Earnings/(loss) from operations, as reported (six months ended June 30, 2026 vs 2025)",
+      "value": "604 vs 285",
+      "unit": "USD millions",
+      "source_citation": "MD&A — 49"
+    },
+    {
+      "name": "Earnings/(loss) from operations, as reported (three months ended June 30, 2026 vs 2025)",
+      "value": "156 vs (176)",
+      "unit": "USD millions",
+      "source_citation": "MD&A — 49"
+    },
+    {
+      "name": "Operating margins (six months ended June 30, 2026 vs 2025)",
+      "value": "1.3% vs 0.7%",
+      "unit": "percent",
+      "source_citation": "MD&A — 49"
+    },
+    {
+      "name": "Operating margins (three months ended June 30, 2026 vs 2025)",
+      "value": "0.6% vs (0.8)%",
+      "unit": "percent",
+      "source_citation": "MD&A — 49"
+    },
+    {
+      "name": "Core operating earnings/(loss) (non-GAAP) (six months ended June 30, 2026 vs 2025)",
+      "value": "294 vs (234)",
+      "unit": "USD millions",
+      "source_citation": "MD&A — 49"
+    },
+    {
+      "name": "Core operating earnings/(loss) (non-GAAP) (three months ended June 30, 2026 vs 2025)",
+      "value": "1 vs (433)",
+      "unit": "USD millions",
+      "source_citation": "MD&A — 49"
+    },
+    {
+      "name": "Core operating margins (non-GAAP) (three months ended June 30, 2026 vs 2025)",
+      "value": "0.0% vs (1.9)%",
+      "unit": "percent",
+      "source_citation": "MD&A — 49"
+    },
+    {
+      "name": "Net loss (six months ended June 30, 2026 vs 2025)",
+      "value": "(435) vs (643)",
+      "unit": "USD millions",
+      "source_citation": "Other — Condensed Consolidated Statements of Cash Flows"
+    },
+    {
+      "name": "Net loss available to common shareholders (six months ended June 30, 2026 vs 2025)",
+      "value": "(620) vs (820)",
+      "unit": "USD millions",
+      "source_citation": "Other — 172"
+    },
+    {
+      "name": "Net loss available to common shareholders (three months ended June 30, 2026 vs 2025)",
+      "value": "(530) vs (697)",
+      "unit": "USD millions",
+      "source_citation": "Other — 172"
+    },
+    {
+      "name": "Net loss per share: Basic (six months ended June 30, 2026 vs 2025)",
+      "value": "(0.79) vs (1.09)",
+      "unit": "USD per share",
+      "source_citation": "Other — 172"
+    },
+    {
+      "name": "Net loss per share: Diluted (six months ended June 30, 2026 vs 2025)",
+      "value": "(0.79) vs (1.09)",
+      "unit": "USD per share",
+      "source_citation": "Other — 172"
+    },
+    {
+      "name": "Net loss per share: Diluted (three months ended June 30, 2026 vs 2025)",
+      "value": "(0.67) vs (0.92)",
+      "unit": "USD per share",
+      "source_citation": "Other — 172"
+    },
+    {
+      "name": "Core loss per share (non-GAAP) (six months ended June 30, 2026 vs 2025)",
+      "value": "(0.97) vs (1.73)",
+      "unit": "USD per share",
+      "source_citation": "MD&A — Non-operating pension expense/(income)"
+    },
+    {
+      "name": "Core loss per share (non-GAAP) (three months ended June 30, 2026 vs 2025)",
+      "value": "(0.76) vs (1.24)",
+      "unit": "USD per share",
+      "source_citation": "MD&A — Non-operating pension expense/(income)"
+    },
+    {
+      "name": "Net cash provided/(used) by operating activities (six months ended June 30, 2026 vs 2025)",
+      "value": "1,185 vs (1,389)",
+      "unit": "USD millions",
+      "source_citation": "Other — Condensed Consolidated Statements of Cash Flows"
+    },
+    {
+      "name": "Advances and progress billings (cash flow change, six months ended June 30, 2026 vs 2025)",
+      "value": "4,660 vs (616)",
+      "unit": "USD millions",
+      "source_citation": "Other — Condensed Consolidated Statements of Cash Flows"
+    },
+    {
+      "name": "Inventories (cash flow change, six months ended June 30, 2026 vs 2025)",
+      "value": "(3,859) vs (374)",
+      "unit": "USD millions",
+      "source_citation": "Other — Condensed Consolidated Statements of Cash Flows"
+    },
+    {
+      "name": "Accounts payable (cash flow change, six months ended June 30, 2026 vs 2025)",
+      "value": "1,381 vs (46)",
+      "unit": "USD millions",
+      "source_citation": "Other — Condensed Consolidated Statements of Cash Flows"
+    },
+    {
+      "name": "Depreciation and amortization (six months ended June 30, 2026 vs 2025)",
+      "value": "1,169 vs 926",
+      "unit": "USD millions",
+      "source_citation": "Other — Condensed Consolidated Statements of Cash Flows"
+    },
+    {
+      "name": "Net cash provided/(used) by investing activities (six months ended June 30, 2026 vs 2025)",
+      "value": "3,629 vs (3,946)",
+      "unit": "USD millions",
+      "source_citation": "Other — 3"
+    },
+    {
+      "name": "Debt repayments (six months ended June 30, 2026 vs 2025)",
+      "value": "(8,376) vs (677)",
+      "unit": "USD millions",
+      "source_citation": "Other — 3"
+    },
+    {
+      "name": "Net cash used by financing activities (six months ended June 30, 2026 vs 2025)",
+      "value": "(8,513) vs (725)",
+      "unit": "USD millions",
+      "source_citation": "Other — 3"
+    },
+    {
+      "name": "Cash and cash equivalents at end of period (June 30, 2026 vs June 30, 2025)",
+      "value": "7,239 vs 7,087",
+      "unit": "USD millions",
+      "source_citation": "Other — 3"
+    },
+    {
+      "name": "Cash & cash equivalents, including restricted, at end of period",
+      "value": "7,966",
+      "unit": "USD millions",
+      "source_citation": "Other — 3"
+    },
+    {
+      "name": "Proceeds from investments (six months ended June 30, 2026 vs 2025)",
+      "value": "25,090 vs 18,847",
+      "unit": "USD millions",
+      "source_citation": "Other — 3"
+    },
+    {
+      "name": "Capital expenditures (six months ended June 30, 2026 vs 2025)",
+      "value": "2.0 vs 1.1",
+      "unit": "USD billions",
+      "source_citation": "MD&A — Financing Activities"
+    },
+    {
+      "name": "Total debt balance (June 30, 2026 vs December 31, 2025)",
+      "value": "45.9 vs 54.1",
+      "unit": "USD billions",
+      "source_citation": "MD&A — Financing Activities"
+    },
+    {
+      "name": "Debt classified as short-term (June 30, 2026)",
+      "value": "4.6",
+      "unit": "USD billions",
+      "source_citation": "MD&A — Financing Activities"
+    },
+    {
+      "name": "Short-term investments (June 30, 2026)",
+      "value": "12.8",
+      "unit": "USD billions",
+      "source_citation": "MD&A — Financing Activities"
+    },
+    {
+      "name": "Unused borrowing capacity on revolving credit line agreements (June 30, 2026)",
+      "value": "10.0",
+      "unit": "USD billions",
+      "source_citation": "MD&A — Financing Activities"
+    },
+    {
+      "name": "Time deposits (June 30, 2026 vs December 31, 2025)",
+      "value": "11,530 vs 17,230",
+      "unit": "USD millions",
+      "source_citation": "Other — 6"
+    },
+    {
+      "name": "Environmental remediation liability (June 30, 2026)",
+      "value": "971",
+      "unit": "USD millions",
+      "source_citation": "MD&A — Contingent Obligations"
+    },
+    {
+      "name": "Basic weighted average shares outstanding (six months ended June 30, 2026 vs 2025)",
+      "value": "789.4 vs 755.2",
+      "unit": "millions of shares",
+      "source_citation": "Other — 172"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "Commercial Airplanes (BCA) — total segment revenues",
+      "revenue": "$20,954M (six months ended June 30, 2026)",
+      "yoy_change": "+10.2% (six months 2026 vs 2025: $20,954M vs $19,021M)",
+      "commentary": "Q2 2026 revenue was $11,751M vs $10,874M in Q2 2025. Segment operating loss narrowed to ($885M) from ($1,094M) for the six months and to ($322M) from ($557M) in Q2. R&D expense rose to $1,200M from $1,092M for the six months.",
+      "source_citation": "Financial Statements — The following table reconciles segment Revenues to Segment operating earnings:"
+    },
+    {
+      "name": "Defense, Space & Security (BDS) — total segment revenues",
+      "revenue": "$15,082M (six months ended June 30, 2026)",
+      "yoy_change": "+16.8% (six months 2026 vs 2025: $15,082M vs $12,915M)",
+      "commentary": "Q2 2026 revenue was $7,483M vs $6,617M. Segment operating earnings fell to $218M from $265M for the six months and swung to a ($15M) loss in Q2 from $110M of earnings a year earlier.",
+      "source_citation": "Financial Statements — The following table reconciles segment Revenues to Segment operating earnings:"
+    },
+    {
+      "name": "Global Services (BGS) — total segment revenues",
+      "revenue": "$10,714M (six months ended June 30, 2026)",
+      "yoy_change": "+3.6% (six months 2026 vs 2025: $10,714M vs $10,344M)",
+      "commentary": "Q2 2026 revenue was $5,344M vs $5,281M, up about 1.2%. Segment operating earnings were $1,939M vs $1,992M for the six months, with Q2 2026 at $968M.",
+      "source_citation": "Financial Statements — The following table reconciles segment Revenues to Segment operating earnings:"
+    },
+    {
+      "name": "BCA revenue from contracts with customers — Europe",
+      "revenue": "$5,107M (six months ended June 30, 2026)",
+      "yoy_change": "+240.9% (six months 2026 vs 2025: $5,107M vs $1,498M)",
+      "commentary": "Q2 2026 Europe revenue was $2,568M vs $990M. Total non-U.S. revenues were $13,858M vs $9,825M for the six months.",
+      "source_citation": "Financial Statements — 27"
+    },
+    {
+      "name": "BCA revenue from contracts with customers — United States",
+      "revenue": "$6,890M (six months ended June 30, 2026)",
+      "yoy_change": "-24.7% (six months 2026 vs 2025: $6,890M vs $9,144M)",
+      "commentary": "Q2 2026 U.S. revenue was $3,483M vs $5,361M. Geographic mix has shifted sharply toward non-U.S. customers.",
+      "source_citation": "Financial Statements — 27"
+    },
+    {
+      "name": "BCA revenue from contracts with customers — Middle East",
+      "revenue": "$2,906M (six months ended June 30, 2026)",
+      "yoy_change": "+65.1% (six months 2026 vs 2025: $2,906M vs $1,760M)",
+      "commentary": "Q2 2026 Middle East revenue was $2,140M vs $1,277M. Asia was down to $4,464M from $5,379M for the six months.",
+      "source_citation": "Financial Statements — 27"
+    },
+    {
+      "name": "BDS revenue from U.S. customers",
+      "revenue": "$12,095M (six months ended June 30, 2026)",
+      "yoy_change": "+19.0% (six months 2026 vs 2025: $12,095M vs $10,160M)",
+      "commentary": "Non-U.S. customers contributed $2,987M vs $2,755M. About 93% of BDS revenue was from the U.S. government vs 92%, and 60% was on fixed-price contracts vs 58%.",
+      "source_citation": "Financial Statements — Six months ended June 30"
+    },
+    {
+      "name": "BGS commercial revenue from contracts with customers",
+      "revenue": "$6,033M (six months ended June 30, 2026)",
+      "yoy_change": "+1.1% (six months 2026 vs 2025: $6,033M vs $5,967M)",
+      "commentary": "Q2 2026 commercial revenue was $3,001M vs $2,996M, essentially flat.",
+      "source_citation": "Financial Statements — Six months ended June 30"
+    },
+    {
+      "name": "BGS government revenue from contracts with customers",
+      "revenue": "$4,471M (six months ended June 30, 2026)",
+      "yoy_change": "+7.3% (six months 2026 vs 2025: $4,471M vs $4,168M)",
+      "commentary": "Q2 2026 government revenue was $2,243M vs $2,172M. Government is the faster-growing leg of BGS.",
+      "source_citation": "Financial Statements — Six months ended June 30"
+    }
+  ],
+  "forward_guidance": {
+    "text": "\"We continue to expect capital expenditures in 2026 to be higher than in 2025.\"",
+    "source_citation": "MD&A — Financing Activities"
+  },
+  "key_risks": [
+    {
+      "description": "Cash flow quality: first-half operating cash flow of $1,185M was achieved against a $435M net loss. It was driven by a $4,660M inflow from advances and progress billings and a $1,381M increase in accounts payable, partly offset by a $3,859M inventory build. These working-capital items can reverse as aircraft deliver or if certification timing slips.",
+      "is_new": true,
+      "source_citation": "Other — Condensed Consolidated Statements of Cash Flows"
+    },
+    {
+      "description": "Liquidity drawdown and capital intensity: total debt fell to $45.9B from $54.1B, funded largely by investment proceeds ($5.6B net) rather than operating cash flow. Cash plus short-term investments were $20.0B ($7.2B plus $12.8B), with $4.6B of debt classified as short-term. Capital expenditures were $2.0B vs $1.1B and are expected to rise further in 2026.",
+      "is_new": false,
+      "source_citation": "MD&A — Financing Activities"
+    },
+    {
+      "description": "Fixed-price development program reach-forward losses: the company has booked repeated charges on KC-46A, VC-25B (a $280M increase in Q2 2026 after a $60M increase in 2025), T-7A and other programs. The filing states there is a risk that additional losses may be recorded in future periods.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Contingent support for United Launch Alliance: in May 2026 Boeing and Lockheed each agreed to guarantee $500M of certain ULA credit facilities maturing July 30, 2027. Management says it expects to provide additional support and could incur losses if ULA cannot resume Vulcan launches consistent with its assumptions. Credit guarantees show $522M of maximum potential payments against $34M recorded.",
+      "is_new": true,
+      "source_citation": "MD&A — Contingent Obligations"
+    },
+    {
+      "description": "Certification and regulatory timing: certification of the 737-7 and 737-10 (about 40 aircraft in inventory) and of the 777X is controlled by regulators. Delays defer deliveries, tie up inventory and could delay release of customer advances. The 737 rate increase beyond 42 per month also depends on FAA concurrence.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Backlog conversion and cancellations: backlog was $715,261M with about 21% expected to convert by 2027 and about 62% by 2030. Order cancellations were $2,777M in the first half, primarily on the 737. Conversion is gradual and depends on production rate and certification execution.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Legal and environmental contingencies: various legal proceedings, claims and investigations are pending, and an environmental remediation liability of $971M was recorded at June 30, 2026.",
+      "is_new": false,
+      "source_citation": "MD&A — Contingent Obligations"
+    },
+    {
+      "description": "Segment margin pressure in defense: BDS segment operating earnings declined to $218M from $265M for the six months and swung to a Q2 loss of ($15M), with cost of sales as a share of revenue rising partly on lower margins at BGS and BDS. Fixed-price exposure at BDS rose to 60% of revenue from 58%.",
+      "is_new": true,
+      "source_citation": "Financial Statements — The following table reconciles segment Revenues to Segment operating earnings:"
+    }
+  ],
+  "recent_news": [
+    {
+      "headline": "Boeing Q2 revenue tops estimates as jet deliveries climb, cash turns positive",
+      "date": "Undated (Q2 2026 results, July 28, 2026)",
+      "url": "https://finance.yahoo.com/markets/stocks/article/boeing-q2-revenue-tops-estimates-as-jet-deliveries-climb-cash-turns-positive-120622920.html",
+      "relevance_note": "Covers the 737 transition to 47 per month, the new North Line, certification flight testing complete on the 737-7 and 737-10, and a $1B-$3B 2026 free cash flow outlook."
+    },
+    {
+      "headline": "Boeing Reports Second Quarter Results (press release)",
+      "date": "Undated (July 28, 2026)",
+      "url": "https://investors.boeing.com/investors/news/press-release-details/2026/Boeing-Reports-Second-Quarter-Results",
+      "relevance_note": "Company release showing 171 Q2 commercial deliveries, BCA revenue of $11,751M and first-half deliveries of 314."
+    },
+    {
+      "headline": "[PDF] Boeing Reports Second Quarter Results",
+      "date": "Undated (July 28, 2026)",
+      "url": "https://s2.q4cdn.com/661678649/files/doc_financials/2026/q2/Press-Release.pdf",
+      "relevance_note": "Reports GAAP loss per share of ($0.67), core loss per share of ($0.76), operating cash flow of $1.4B, free cash flow of $0.6B and a record $715B backlog."
+    },
+    {
+      "headline": "Boeing Is Still Losing Money. The Turnaround Just Became Real.",
+      "date": "Undated",
+      "url": "https://longyield.substack.com/p/boeing-is-still-losing-money-the",
+      "relevance_note": "Cites Q2 free cash flow of $631M vs a $200M outflow a year earlier, and a plan to deliver 500 737s in 2026."
+    },
+    {
+      "headline": "Boeing (BA) Faces A Debt Wall As Big Repayments Draw Closer",
+      "date": "Undated",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/boeing-ba-faces-debt-wall-101601423.html",
+      "relevance_note": "Highlights upcoming bond and loan maturities and questions around refinancing and capital allocation."
+    },
+    {
+      "headline": "ba-20260824 (SEC filing)",
+      "date": "2026-08-24",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026059427/ba-20260824.htm",
+      "relevance_note": "Post-period filing describing amendments to the five-year credit agreements, including a 365-day extension and a new minimum liquidity covenant."
+    },
+    {
+      "headline": "FAA Set to Clear Boeing's 737 MAX 10. Why Analysts Are Cutting Targets Anyway",
+      "date": "Undated",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/faa-set-clear-boeing-737-210224579.html",
+      "relevance_note": "Cites consensus free cash flow of $2.18B in 2026, $5.55B in 2027 and $9.75B in 2028, and notes first MAX 10 customer deliveries only in 2027."
+    },
+    {
+      "headline": "Boeing Stock Fell 7% in a Day on the MAX 10 Delay. Here's What It Means for 2027 Cash Flow | TIKR.com",
+      "date": "Undated",
+      "url": "https://www.tikr.com/blog/boeing-stock-fell-7-in-a-day-on-the-max-10-delay-heres-what-it-means-for-2027-cash-flow",
+      "relevance_note": "Discusses working-capital release potential once rates stabilize and the 2027 timing risk for MAX 7/10 deliveries."
+    },
+    {
+      "headline": "Examining Why Boeing's 777X Certification Timeline Is Likely Slipping - Leeham News",
+      "date": "2026-09-17",
+      "url": "https://leehamnews.com/2026/09/17/examining-why-boeings-777x-certification-timeline-is-likely-slipping",
+      "relevance_note": "Reports that 777X certification is expected to slip into next year, lagging the 737-7 and 737-10."
+    },
+    {
+      "headline": "Boeing 'off and rolling' as FAA backs 737 production boost",
+      "date": "Undated",
+      "url": "https://www.aerotime.aero/articles/boeing-increases-737-max-production-rate-faa-approval",
+      "relevance_note": "CEO ambition of 52 737s per month and eventually 63 per month following FAA backing of the rate increase."
+    },
+    {
+      "headline": "Boeing (BA) Q3 Earnings on the Horizon: Analysts' Insights on Key Performance Measures",
+      "date": "Undated",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/boeing-ba-q3-earnings-horizon-121504809.html",
+      "relevance_note": "Analyst estimates for Q3 total deliveries (161), 737 deliveries (125) and Global Services revenue ($5.36B)."
+    },
+    {
+      "headline": "Boeing (BA) Earnings Preview: Production Recovery and Cash Burn Trajectory Set the Turnaround Benchmark - Alphastreet",
+      "date": "Undated",
+      "url": "https://news.alphastreet.com/boeing-ba-earnings-preview-production-recovery-and-cash-burn-trajectory-set-the-turnaround-benchmark",
+      "relevance_note": "Frames production recovery and cash burn as the key benchmarks, with 171 Q2 deliveries and the North Line at Everett in low-rate production."
+    },
+    {
+      "headline": "BA Stock: MAX 10 Certification Clears Path for 2027 Cash Flow Boost",
+      "date": "Undated",
+      "url": "https://www.marketbeat.com/articles/cleared-for-takeoff-boeings-737-max-10-approval-sets-up-a-major-cash-flow-recovery",
+      "relevance_note": "Notes about $13B of deferred 737 production costs and the 52-per-month production target in 2027 as a mechanism to recover them."
+    }
+  ],
+  "bull_case": [
+    "Revenue grew about 10.7% to $46,777M in the first half and about 8% to $24,560M in Q2. Core operating earnings improved to $294M from a ($234M) loss, and Q2 core operating margin moved from (1.9)% to 0.0%.",
+    "The Commercial Airplanes segment loss narrowed to ($322M) from ($557M) in Q2 on higher deliveries and a lower 767 reach-forward loss. Management says the 737 program began moving from 42 to 47 per month with FAA concurrence, and a new 737 line began low-rate production in July 2026.",
+    "Backlog stood at a record $715,261M, with BCA backlog up from $567,290M to $596,724M in six months. About 62% is expected to convert to revenue through 2030, which gives multi-year visibility. Orders in excess of deliveries, not cancellations, drove the increase.",
+    "Operating cash flow swung to +$1,185M from ($1,389M), and Q2 free cash flow was reported as positive. The $3,859M inventory build is raw material for rate increases and certified 737-7/-10 deliveries, so it should convert to cash as deliveries scale.",
+    "Balance sheet repair is visible: total debt fell to $45.9B from $54.1B, with $10.0B of unused revolver capacity. Fixed-cost absorption at higher rates gives operating leverage from a thin 1.3% operating margin base.",
+    "Global Services remains a profitable base, with $1,939M of first-half segment operating earnings. Defense revenue grew about 17%."
+  ],
+  "bear_case": [
+    "The company still lost $435M in the first half and net loss per share was ($0.79). Operating margin was only 1.3% and Q2 core margin only reached breakeven. Part of the improvement came from the absence of a $445M DOJ charge booked in Q2 2025.",
+    "Cash flow quality is weak: advances of $4,660M and payables of $1,381M carried operating cash flow, while inventories absorbed $3,859M. After $2.0B of capex, first-half free cash flow is roughly negative $0.8B. Advances are likely to unwind as aircraft deliver.",
+    "Debt reduction was funded by running down investments, not free cash flow. Debt repayments of $8,376M compared with $35M of new borrowings, and cash plus short-term investments fell to about $20.0B from about $29.4B at year-end 2025. The investment drawdown cannot be repeated, and capex is expected to rise.",
+    "Fixed-price programs keep generating reach-forward charges (a $280M VC-25B increase in Q2 2026, after KC-46A and T-7A charges), and the filing warns of additional losses. BDS segment earnings slipped into a Q2 loss of ($15M).",
+    "ULA guarantees of $500M each from Boeing and Lockheed, with management expecting to provide additional support, add contingent exposure to liquidity. Credit guarantees carry $522M of maximum potential payments.",
+    "Roughly 40 737-7/-10 aircraft sit in inventory pending certification, and the 777X is slipping. Geographic revenue mix has shifted sharply, with U.S. BCA revenue down about 25% while Europe and the Middle East surged, which may be lumpy. Consensus free cash flow of $9.75B in 2028 relies on MAX 10 deliveries that begin only in 2027."
+  ],
+  "what_to_watch": [
+    {
+      "text": "**Cash Flow Quality and Sustainability:** First-half operating cash flow of $1,185M (vs an outflow of $1,389M) came with a $435M net loss. The swing relied on $4,660M of advances and progress billings and $1,381M of payables, and Q2 free cash flow was reported as positive at $631M. Customer advances also reflect order demand and delivery slots, and the $3,859M inventory build is raw material for the 42-to-47 ramp that should convert into cash as deliveries scale. However, operating cash flow less $2.0B of capex is still about negative $0.8B for the half, and advances can reverse as deliveries scale. Roughly 40 uncertified 737-7/-10 aircraft in inventory would tie up cash if certification slips.\n\n-> Monitor the Q3 split of operating cash flow between advances, payables and inventory, plus capex and any change to the $1B-$3B 2026 free cash flow framework.",
+      "relevant_urls": [
+        "https://finance.yahoo.com/markets/stocks/article/boeing-q2-revenue-tops-estimates-as-jet-deliveries-climb-cash-turns-positive-120622920.html",
+        "https://longyield.substack.com/p/boeing-is-still-losing-money-the",
+        "https://www.tikr.com/blog/boeing-stock-fell-7-in-a-day-on-the-max-10-delay-heres-what-it-means-for-2027-cash-flow"
+      ]
+    },
+    {
+      "text": "**737 Rate Ramp and Operating Leverage:** The 737 program began transitioning from 42 to 47 per month with FAA concurrence, a new line started low-rate production in July, and BCA revenue rose $1,933M in the first half on higher 737 and 787 deliveries. Higher rates should improve fixed-cost absorption, and the CEO has talked of 52 per month. However, the first-half operating margin was only 1.3%, the cash improvement came from working capital rather than margin expansion, and the filing says capex will keep rising. Reports also suggest the line is not yet stable at 47, with wings cited as a constraint.\n\n-> Monitor Q3 737 deliveries (analysts expect about 125), the stability of the 47-per-month rate, and BCA segment operating margin.",
+      "relevant_urls": [
+        "https://www.aerotime.aero/articles/boeing-increases-737-max-production-rate-faa-approval",
+        "https://finance.yahoo.com/markets/stocks/articles/boeing-ba-q3-earnings-horizon-121504809.html",
+        "https://news.alphastreet.com/boeing-ba-earnings-preview-production-recovery-and-cash-burn-trajectory-set-the-turnaround-benchmark"
+      ]
+    },
+    {
+      "text": "**Liquidity, Debt Paydown and ULA Support:** Total debt fell to $45.9B from $54.1B, with $4.6B classified as short-term and $10.0B of unused revolver capacity. However, repayments of $8,376M were funded mainly by drawing down investments, so cash plus short-term investments fell to roughly $20.0B from about $29.4B. Boeing and Lockheed each guaranteed $500M of ULA credit facilities and expect to provide further support. Credit guarantees show $522M of maximum potential payments. A post-period amendment to the five-year credit agreements added a liquidity covenant.\n\n-> Monitor cash and short-term investment balances, near-term maturities, any new ULA support, and the terms of the amended credit facilities.",
+      "relevant_urls": [
+        "https://finance.yahoo.com/markets/stocks/articles/boeing-ba-faces-debt-wall-101601423.html",
+        "https://www.sec.gov/Archives/edgar/data/12927/000162828026059427/ba-20260824.htm",
+        "https://investors.boeing.com/investors/news/press-release-details/2026/Boeing-Reports-First-Quarter-Results/default.aspx"
+      ]
+    },
+    {
+      "text": "**Reach-Forward Losses on Fixed-Price Programs:** Boeing increased the VC-25B reach-forward loss by $280M in Q2 2026 after a $60M increase in 2025, and has booked large charges on KC-46A and T-7A. The filing says additional losses may be recorded in future periods and does not quantify the remaining exposure. BDS fixed-price revenue rose to 60% from 58%, and BDS segment earnings slid to a Q2 loss of ($15M). That said, the lower 767 reach-forward loss helped narrow the BCA loss in Q2.\n\n-> Monitor any new or increased reach-forward charges at BDS and BCA, and management commentary on remaining exposure on VC-25B, KC-46A, T-7A and MQ-25.",
+      "relevant_urls": []
+    },
+    {
+      "text": "**Certification Milestones and Backlog Conversion:** Backlog reached $715,261M with about 62% expected to convert by 2030, and 737 undelivered units were roughly flat (4,397 vs 4,404) despite $2,777M of first-half cancellations. However, part of that book depends on 737-7/-10 and 777X certification, which regulators control. The 777X is reported to be slipping into next year, and a MAX 10 delay drove a one-day 7% share drop earlier.\n\n-> Monitor updates on 737-7/-10 certification timing, first delivery dates, 777X certification progress, and any change in cancellations or backlog conversion percentages.",
+      "relevant_urls": [
+        "https://leehamnews.com/2026/09/17/examining-why-boeings-777x-certification-timeline-is-likely-slipping",
+        "https://www.tikr.com/blog/boeing-stock-fell-7-in-a-day-on-the-max-10-delay-heres-what-it-means-for-2027-cash-flow",
+        "https://www.marketbeat.com/articles/cleared-for-takeoff-boeings-737-max-10-approval-sets-up-a-major-cash-flow-recovery"
+      ]
+    },
+    {
+      "text": "**Durability of the Margin Inflection:** Q2 core operating margin improved to 0.0% from (1.9)% and the BCA loss narrowed to ($322M). However, unallocated items improved by $427M largely because a $445M DOJ charge from Q2 2025 did not recur, and a lower 767 reach-forward loss also helped. The six-month operating margin of 1.3% is still thin, so this reads as a small step from negative to breakeven. Higher rates could add operating leverage from this low base.\n\n-> Monitor Q3 core operating margin excluding non-recurring items, BCA loss from operations, and R&D spending (up to $1,200M for the half).",
+      "relevant_urls": [
+        "https://s2.q4cdn.com/661678649/files/doc_financials/2026/q2/Press-Release.pdf",
+        "https://investors.boeing.com/investors/news/press-release-details/2026/Boeing-Reports-Second-Quarter-Results"
+      ]
+    },
+    {
+      "text": "**Defense and Services Segment Contribution:** Defense revenue grew to $15,082M (+16.8%) and Global Services revenue to $10,714M (+3.6%), yet cost of sales as a share of revenue rose partly on lower margins at both segments. BDS earnings fell to $218M for the half with a Q2 loss of ($15M), while BGS earned $1,939M but was down from $1,992M. Analysts expect Q3 Global Services revenue of about $5.36B, roughly flat year over year, so a durable second engine is not yet evident.\n\n-> Monitor BDS and BGS segment margins, BGS commercial revenue growth (only +1.1% for the half) and government mix.",
+      "relevant_urls": [
+        "https://finance.yahoo.com/markets/stocks/articles/boeing-ba-q3-earnings-horizon-121504809.html"
+      ]
+    },
+    {
+      "text": "**Street Free Cash Flow Path:** Consensus free cash flow rises from about $2.18B in 2026 to $5.55B in 2027 and $9.75B in 2028, roughly 4.5x the 2026 figure. Management has talked of a $1B-$3B range for 2026 and a longer-term target near $10B. However, the step-up depends on MAX 7/10 deliveries starting in 2027, working-capital release and a 52-per-month rate, none of which the filing guarantees.\n\n-> Monitor any change to the 2026 free cash flow range, commentary on 2027 delivery timing, and the size and timing of inventory and advance reversals.",
+      "relevant_urls": [
+        "https://finance.yahoo.com/markets/stocks/articles/faa-set-clear-boeing-737-210224579.html",
+        "https://www.marketbeat.com/articles/cleared-for-takeoff-boeings-737-max-10-approval-sets-up-a-major-cash-flow-recovery"
+      ]
+    }
+  ],
+  "data_gaps": [
+    "Gross profit or gross margin is not presented in the provided filing chunks, so it is not reported in key_metrics (cost of sales is only described qualitatively).",
+    "Free cash flow (non-GAAP) is not reported in the provided filing chunks; only operating cash flow ($1,185M) and capital expenditures ($2.0B) are available.",
+    "Total assets and equity balance-sheet totals were not included in the provided chunks, so cash, short-term investments and debt rely on the MD&A Financing Activities discussion.",
+    "Q2 2025 BGS segment operating earnings were truncated in the provided segment table, so the Q2 year-over-year BGS earnings comparison is incomplete.",
+    "The quantity and cost impact of remaining reach-forward loss exposure on fixed-price programs (VC-25B, KC-46A, T-7A, MQ-25) is not quantified in the filing text provided."
+  ],
+  "hypotheses_explored": [
+    {
+      "id": "h1",
+      "proposing_personality": "Conservative",
+      "question": "Is Boeing's positive first-half 2026 operating cash flow earnings-driven, or is it being funded by customer advances while the company still loses money?",
+      "summary": "The swing to positive operating cash flow is a working-capital story, not an earnings-quality story. Net loss was still negative and the improvement came mainly from customer advances. Inventory build is consuming cash that the advances are masking.",
+      "evidence_quotes": [
+        "Net cash provided/(used) by operating activities 1,185 (1,389)",
+        "Net loss ($435)",
+        "favorable changes in Advances and progress billings ($5.3 billion) and Accounts payable ($1.4 billion), partially offset by unfavorable changes in Inventories ($3.5 billion)",
+        "Non-cash items 2,376 2,101"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h2",
+      "proposing_personality": "Conservative",
+      "question": "Has Boeing's deleveraging been funded by drawing down its cash and investment balances, and is the remaining liquidity sufficient for the coming debt maturities?",
+      "summary": "Debt fell sharply in H1 2026, but almost entirely from cash repayment rather than free cash flow. Repayments of about $8.4B against roughly $35M of new borrowings drew cash and short-term investments down by roughly $9B, and ULA guarantees add contingent exposure.",
+      "evidence_quotes": [
+        "Debt repayments (8,376) (677)",
+        "New borrowings 35 98",
+        "Cash and cash equivalents 7,239 10,921; Short-term and other investments 12,783 18,479",
+        "we and Lockheed each agreed to guarantee $500 of certain ULA credit facilities maturing on July 30, 2027"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h4",
+      "proposing_personality": "Contrarian",
+      "question": "Does the Street's 2028 free cash flow path depend on MAX 10 deliveries that the company itself has not yet secured, making consensus more fragile than it looks?",
+      "summary": "Consensus free cash flow rises from about $2.2B in 2026 to $5.6B in 2027 and $9.75B in 2028, which is roughly 4.5x 2026. Most of the step-up depends on 737-7 and 737-10 deliveries starting in 2027 and on working-capital release, and certification timing is set by regulators.",
+      "evidence_quotes": [
+        "We continue to expect certification of the 737-7 and 737-10 in 2026... the ultimate timing will be determined by the regulators.",
+        "Consensus has Boeing at $2.18 billion in 2026, $5.55 billion in 2027 and $9.75 billion in 2028.",
+        "The 2028 figure needs MAX 10s leaving the factory, and the first ones don't reach customers until 2027."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h5",
+      "proposing_personality": "Dreamer",
+      "question": "If the 737 rate ramp past 47 per month and the 777X certification both land, does Boeing's existing backlog convert into a multi-year volume and margin expansion that the market is not pricing in?",
+      "summary": "The filing supports a long-duration volume story. Backlog was $715,261M with about 62% expected to convert through 2030, and management is planning output above 47 per month. The bull case depends on execution, with the 777X slipping and $2,777M of cancellations in the first half.",
+      "evidence_quotes": [
+        "Our backlog at June 30, 2026 was $715,261. We expect approximately 21% to be converted to revenue through 2027 and approximately 62% through 2030, with the remainder thereafter.",
+        "We are also planning for additional production rate increases beyond 47 per month and began low-rate production on a new 737 production line in July 2026.",
+        "Aircraft order cancellations during the six months ended June 30, 2026, totaled $2,777 million and primarily relate to 737 aircraft."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h6",
+      "proposing_personality": "Dreamer",
+      "question": "Is the defense and services franchise a durable, under-appreciated second engine, or is the margin drag from BGS and BDS too large for it to matter in a 5-10 year view?",
+      "summary": "Weakly supported. The filing says cost of sales rose as a share of revenue partly because of lower margins at BGS and BDS, and consolidated operating margin was only 1.3%. Segment-level services optionality remains an open question.",
+      "evidence_quotes": [
+        "Revenues $46,777 (six months 2026) versus $42,245 (2025); GAAP Earnings/(loss) from operations $604 (2026) versus $285 (2025); Operating margins 1.3%.",
+        "Cost of sales as a percentage of Revenues increased during the six and three months ended June 30, 2026, compared with the same periods in 2025 due to lower margins at BGS and BDS."
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h8",
+      "proposing_personality": "Optimist",
+      "question": "Does BA's record backlog of roughly $715 billion give multi-year revenue visibility that outweighs the 737 and 777X order-cancellation and certification risks?",
+      "summary": "Backlog reached $715,261 million and BCA backlog grew from $567,290 million to $596,724 million in six months, with about 62% expected to convert through 2030. Cancellations of $2,777 million are small against that base, though certification and conversion timing remain swing factors.",
+      "evidence_quotes": [
+        "Our backlog at June 30, 2026 was $ 715,261. We expect approximately 21% to be converted to revenue through 2027 and approximately 62% through 2030, with the remainder thereafter.",
+        "BCA total backlog increased from $567,290 million as of December 31, 2025, to $596,724 million at June 30, 2026, reflecting new orders in excess of deliveries.",
+        "As of June 30, 2026, we had approximately 40 737-7 and 737-10 aircraft in inventory."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h9",
+      "proposing_personality": "Pessimist",
+      "question": "Are Boeing's fixed-price development programs still generating recurring reach-forward losses, so that the reported earnings recovery is overstated and more charges are likely before the next earnings call?",
+      "summary": "Boeing has taken repeated reach-forward losses on fixed-price programs (KC-46, VC-25B, T-7A, MQ-25), and the filing says more losses may follow. The $280M VC-25B charge in Q2 2026 followed a $60M increase in 2025, and remaining exposure is not quantified.",
+      "evidence_quotes": [
+        "During the three months ended June 30, 2026, we increased the reach-forward loss by $280 due to higher estimated costs required to complete structural and wiring installation and to satisfy air worthiness certification requirements.",
+        "Risk remains that we may record additional losses in future periods.",
+        "A number of our ongoing fixed-price development programs have reach-forward losses."
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h10",
+      "proposing_personality": "Pessimist",
+      "question": "Is Boeing's positive first-half 2026 operating cash flow driven by customer advances rather than durable earnings, and does off-balance-sheet support for ULA and guarantees make the liquidity picture weaker than headline cash suggests?",
+      "summary": "Operating cash flow turned to +$1.185B only because advances and progress billings rose $4.66B, offsetting a $3.86B inventory build. After $2.0B of capex, free cash flow is roughly -$0.8B. Cash and short-term investments fell and ULA guarantees add contingent exposure.",
+      "evidence_quotes": [
+        "Advances and progress billings 4,660 ... Inventories (3,859)",
+        "We continue to expect capital expenditures in 2026 to be higher than in 2025.",
+        "we and Lockheed each agreed to guarantee $500 of certain ULA credit facilities maturing on July 30, 2027",
+        "Credit guarantees 522 15 $ 34 $ 14"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h11",
+      "proposing_personality": "Quant",
+      "question": "Is Boeing's Q2 2026 margin inflection durable at the operating line, or is it being flattered by non-recurring items and working capital?",
+      "summary": "Revenue rose about 8% in Q2 2026 and core operating margin moved from -1.9% to 0.0%. The BCA loss narrowed to $322M from $557M, but part of the improvement is non-recurring (absence of a prior-year $445M DOJ charge, lower 767 reach-forward loss). A real but small step to roughly breakeven.",
+      "evidence_quotes": [
+        "Core operating earnings/(loss) $1 (2026) vs ($433) (2025) for the three months ended June 30",
+        "The decrease reflects the absence of an earnings charge of $445 million recorded in the second quarter of 2025 related to an agreement with the Department of Justice.",
+        "BCA loss from operations was $322 million for the three months ended June 30, 2026, compared with $557 million in the same period in 2025"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h12",
+      "proposing_personality": "Quant",
+      "question": "Is the swing to positive operating cash flow a sign of earnings-driven cash generation, or is it mainly customer advances and payables timing that could reverse?",
+      "summary": "Operating cash flow swung to +$1,185M from -$1,389M, almost all from working capital: advances +$4,660M and payables +$1,381M, offset by a $3,859M inventory build. Debt paydown was funded largely by investment proceeds and capex rose to $2.0B, so the inflection is largely timing-driven.",
+      "evidence_quotes": [
+        "Advances and progress billings 4,660 vs (616); Inventories (3,859) vs (374); Net cash provided/(used) by operating activities 1,185 vs (1,389)",
+        "As of June 30, 2026, the total debt balance was $45.9 billion, down from $54.1 billion at December 31, 2025.",
+        "We continue to expect capital expenditures in 2026 to be higher than in 2025."
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h3",
+      "proposing_personality": "Contrarian",
+      "question": "Is Boeing's positive Q2 2026 free cash flow a structural turn, or a working-capital timing benefit that reverses as inventory and 737-7/-10 certification lag?",
+      "summary": "Operating cash flow of $1,185M for H1 2026 was driven mainly by a $4,660M inflow from advances and progress billings while inventories absorbed $3,859M. Investing inflows came largely from net investment proceeds and debt was cut by $8.4B, so much of the improvement may unwind. Roughly 40 737-7/-10 aircraft sit in inventory awaiting certification.",
+      "evidence_quotes": [
+        "Advances and progress billings 4,660 (616); Inventories (3,859) (374)",
+        "The increase in cash provided was primarily due to net proceeds from investments of $5.6 billion in 2026 compared with net contributions to investments of $2.7 billion in 2025.",
+        "As of June 30, 2026, we had approximately 40 737-7 and 737-10 aircraft in inventory."
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h7",
+      "proposing_personality": "Optimist",
+      "question": "Will BA's 737 rate ramp from 42 to 47 per month, with FAA concurrence, convert into operating leverage and a sustained free cash flow inflection in 2026-2027?",
+      "summary": "The 737 program is moving to 47 per month with FAA concurrence and deliveries are rising. Customer advances turned cash flow positive in Q2 2026, and higher deliveries should improve fixed-cost absorption. Risks are execution on new lines and certification timing, and the Q2 cash figure is small and partly working-capital driven.",
+      "evidence_quotes": [
+        "During the first half of 2026, the 737 program began to transition from a production rate of 42 to 47 per month with the concurrence of the Federal Aviation Administration (FAA).",
+        "BCA revenues increased by $1,933 million for the six months ended June 30, 2026, compared with the same period in 2025 primarily due to higher deliveries on 737 and 787 programs partially offset by lower deliveries on 777 program.",
+        "Operating cash flow of $1.4 billion and free cash flow (non-GAAP) of $0.6 billion."
+      ],
+      "confidence": 4
+    }
+  ]
+}

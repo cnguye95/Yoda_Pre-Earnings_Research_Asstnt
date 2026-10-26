@@ -1,0 +1,534 @@
+{
+  "ticker": "MSFT",
+  "company_name": "Microsoft Corporation",
+  "filing_type": "10-K",
+  "filing_date": "2026-07-29",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T12:50:04.773868+00:00",
+  "key_metrics": [
+    {
+      "name": "Total revenue",
+      "value": "331,839 (FY2026 vs 281,724 in FY2025, +18%)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors — Fair Value"
+    },
+    {
+      "name": "Gross margin",
+      "value": "225,465 (FY2026 vs 193,893 in FY2025, +16%; about 68.0% of revenue vs about 68.8%)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors — Fair Value"
+    },
+    {
+      "name": "Total cost of revenue",
+      "value": "106,374 (FY2026 vs 87,831 in FY2025, +21%)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors — Fair Value"
+    },
+    {
+      "name": "Operating income",
+      "value": "155,237 (FY2026 vs 128,528 in FY2025, +21%; about 46.8% margin vs about 45.6%)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors — Fair Value"
+    },
+    {
+      "name": "Other income (expense), net",
+      "value": "10,697 (FY2026 vs (4,901) in FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors — Fair Value"
+    },
+    {
+      "name": "Provision for income taxes",
+      "value": "32,185 (FY2026 vs 21,795 in FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors — Fair Value"
+    },
+    {
+      "name": "Net income",
+      "value": "133,749 (FY2026 vs 101,832 in FY2025, about +31%)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors — Fair Value"
+    },
+    {
+      "name": "Earnings Per Share: Basic",
+      "value": "18.00 (FY2026 vs 13.70 in FY2025)",
+      "unit": "USD per share",
+      "source_citation": "Financial Statements — NOTE 2 — EARNINGS PER SHARE"
+    },
+    {
+      "name": "Earnings Per Share: Diluted",
+      "value": "17.95 (FY2026 vs 13.64 in FY2025, about +32%)",
+      "unit": "USD per share",
+      "source_citation": "Financial Statements — NOTE 2 — EARNINGS PER SHARE"
+    },
+    {
+      "name": "Net cash from operations",
+      "value": "182,935 (FY2026 vs 136,162 in FY2025, +$46.8 billion)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors — Cash Flows"
+    },
+    {
+      "name": "Common stock repurchased",
+      "value": "(22,271) (FY2026 vs (18,420) in FY2025), financing cash flows",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Common stock cash dividends paid",
+      "value": "(26,445) (FY2026 vs (24,082) in FY2025), financing cash flows",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Cash dividends declared per common share",
+      "value": "3.64 (FY2026 vs 3.32 in FY2025)",
+      "unit": "USD per share",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Cash and cash equivalents",
+      "value": "20,935 (June 30, 2026 vs 30,242 at June 30, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Short-term investments",
+      "value": "55,908 (June 30, 2026 vs 64,323 at June 30, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Total cash, cash equivalents, and short-term investments",
+      "value": "76,843 (June 30, 2026 vs 94,565 at June 30, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Property and equipment, net of accumulated depreciation",
+      "value": "313,076 (June 30, 2026 vs 204,966 at June 30, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Equity and other investments",
+      "value": "36,348 (June 30, 2026 vs 15,405 at June 30, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Current portion of long-term debt",
+      "value": "9,227 (June 30, 2026 vs 2,999 at June 30, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Long-term debt",
+      "value": "31,067 (June 30, 2026 vs 40,152 at June 30, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Total liabilities",
+      "value": "315,989 (June 30, 2026 vs 275,524 at June 30, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Total stockholders’ equity",
+      "value": "442,387 (June 30, 2026 vs 343,479 at June 30, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Short-term unearned revenue",
+      "value": "72,965 (June 30, 2026 vs 64,555 at June 30, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "United States revenue (geographic)",
+      "value": "170,794 (FY2026 vs 144,546 in FY2025, about +18%)",
+      "unit": "USD millions",
+      "source_citation": "Financial Statements"
+    },
+    {
+      "name": "Other countries revenue (geographic)",
+      "value": "161,045 (FY2026 vs 137,178 in FY2025, about +17%)",
+      "unit": "USD millions",
+      "source_citation": "Financial Statements"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "Productivity and Business Processes",
+      "revenue": "139,996 (USD millions, FY2026)",
+      "yoy_change": "+16% (FY2026 vs FY2025, from 120,810)",
+      "commentary": "Segment revenue rose $19.2 billion. Operating income was $83,879 million, up 20%. Microsoft 365 Commercial products and cloud services revenue rose $14.2 billion, or 16%. Operating expenses rose 9% on AI compute, AI talent, commercial sales and higher Copilot advertising. Foreign currency added 2% to revenue.",
+      "source_citation": "Risk Factors — SEGMENT RESULTS OF OPERATIONS"
+    },
+    {
+      "name": "Intelligent Cloud",
+      "revenue": "137,791 (USD millions, FY2026)",
+      "yoy_change": "+30% (FY2026 vs FY2025, from 106,265)",
+      "commentary": "Revenue rose $31.5 billion. Server products and cloud services revenue rose 31%, and Azure and other cloud services revenue grew 41% with growth across all workloads. Cost of revenue rose 44% to $57,876 million on AI infrastructure investment, so operating income grew only 28% to $56,972 million. Gross margin percentage fell on AI infrastructure and a mix shift to Azure, offset in part by Azure efficiency gains.",
+      "source_citation": "Risk Factors — Intelligent Cloud"
+    },
+    {
+      "name": "More Personal Computing",
+      "revenue": "54,052 (USD millions, FY2026)",
+      "yoy_change": "(1)% (FY2026 vs FY2025, from 54,649)",
+      "commentary": "Revenue was roughly flat to slightly down. Cost of revenue fell 7%, so operating income rose 2% to $14,386 million.",
+      "source_citation": "Risk Factors — SEGMENT RESULTS OF OPERATIONS"
+    },
+    {
+      "name": "United States (geographic revenue)",
+      "revenue": "170,794 (USD millions, FY2026)",
+      "yoy_change": "About +18% (FY2026 vs FY2025, from 144,546)",
+      "commentary": "The United States was about 51% of total revenue. It includes billings to OEMs and certain multinational organizations. No customer or country other than the United States exceeded 10% of revenue.",
+      "source_citation": "Financial Statements"
+    },
+    {
+      "name": "Other countries (geographic revenue)",
+      "revenue": "161,045 (USD millions, FY2026)",
+      "yoy_change": "About +17% (FY2026 vs FY2025, from 137,178)",
+      "commentary": "International revenue grew slightly slower than U.S. revenue and was about 49% of total revenue.",
+      "source_citation": "Financial Statements"
+    }
+  ],
+  "forward_guidance": {
+    "text": "No forward guidance issued in this filing.",
+    "source_citation": "MD&A"
+  },
+  "key_risks": [
+    {
+      "description": "AI capacity may be misjudged. The filing warns that demand for cloud-based and AI products is evolving and difficult to forecast, and that overestimating demand or misaligning capacity may cause underutilization and impairment of balance sheet assets. The same investments are made at significant scale and on an accelerated timeline, in advance of fully developed revenue streams. FY2026 property and equipment, net, rose to $313.1 billion from $205.0 billion.",
+      "is_new": false,
+      "source_citation": "Risk Factors"
+    },
+    {
+      "description": "Margin dilution from AI infrastructure. Microsoft Cloud gross margin percentage fell to 66% on continued AI infrastructure investment, and Intelligent Cloud cost of revenue rose 44% against 30% segment revenue growth. Total gross margin percentage compressed by roughly 80 to 90 basis points. Depreciation on newly built or leased capacity will flow into future cost of revenue regardless of demand.",
+      "is_new": false,
+      "source_citation": "Risk Factors — Intelligent Cloud"
+    },
+    {
+      "description": "Large lease and purchase commitments that are not yet commenced. Additional leases, primarily for datacenters, of $329.1 billion had not commenced at June 30, 2026, with some subject to contractual conditions, and will commence between fiscal 2027 and fiscal 2033 with terms of 1 to 20 years. Finance lease liabilities rose to $66.6 billion from $46.2 billion, and purchase commitments total roughly $194 billion, with about $169 billion due in fiscal 2027. These obligations are not in reported debt.",
+      "is_new": false,
+      "source_citation": "Risk Factors"
+    },
+    {
+      "description": "Counterparty concentration and related-party exposure to OpenAI. Microsoft holds an equity-method investment of approximately 25% on an as-converted basis, and OpenAI is a related party under ASC 850. Remaining performance obligation was $684 billion ($678 billion commercial), with only about 30% expected to be recognized within 12 months. Reported OpenAI gains boosted FY2026 EPS, and the filing does not break out OpenAI's share of the backlog.",
+      "is_new": false,
+      "source_citation": "Risk Factors"
+    },
+    {
+      "description": "Cash conversion after AI reinvestment. Operating cash flow rose $46.8 billion to $182.9 billion, but additions to property and equipment rose to roughly $115.9 billion. Dividends and buybacks (about $48.7 billion paid) consume a growing share of free cash flow, while cash and short-term investments fell to $76.8 billion from $94.6 billion.",
+      "is_new": false,
+      "source_citation": "Risk Factors — Cash Flows"
+    },
+    {
+      "description": "Earnings quality and valuation of investments. Other income (expense), net, swung to $10.7 billion of income from an expense of $4.9 billion, driven by net recognized gains on investments and derivatives. Equity and other investments rose to $36.3 billion from $15.4 billion, including $24.6 billion of Level-less 'Other' equity investments valued at cost with adjustments, which are harder to value and can swing earnings.",
+      "is_new": false,
+      "source_citation": "Risk Factors — Fair Value"
+    },
+    {
+      "description": "Partners that are also competitors and significant customers of Azure could shift workloads. The filing flags that in some cases these parties are significant customers of Azure and other cloud services, which creates dependency and competitive risk in a capacity-constrained market.",
+      "is_new": false,
+      "source_citation": "Risk Factors"
+    }
+  ],
+  "recent_news": [
+    {
+      "headline": "Microsoft earnings to spotlight Azure growth, AI spending",
+      "date": "Undated",
+      "url": "https://finance.yahoo.com/technology/ai/articles/microsoft-earnings-spotlight-azure-growth-190200926.html",
+      "relevance_note": "Bank of America expects higher capex, including finance leases, to pressure near-term free cash flow, and says Azure growth at or above 39% to 40% is needed to support the stock."
+    },
+    {
+      "headline": "Microsoft Spent $115.9 Billion on AI. What Did Shareholders Get? - 24/7 Wall St.",
+      "date": "Undated",
+      "url": "https://247wallst.com/investing/2026/08/21/microsoft-spent-115-9-billion-on-ai-what-did-shareholders-get",
+      "relevance_note": "Reports capex of $115.948 billion (+79.62%) and free cash flow of $66.987 billion (-6.46%) against $26.4 billion of dividends and $22.3 billion of buybacks."
+    },
+    {
+      "headline": "Microsoft holds the line on AI spending plans",
+      "date": "Undated",
+      "url": "https://www.cfodive.com/news/microsoft-holds-line-ai-spending-plans/826648",
+      "relevance_note": "An analyst expects some leases to shift from finance to operating, lowering reported calendar 2026 capex to $175 billion from $190 billion. This is third-party commentary, not a company statement."
+    },
+    {
+      "headline": "Microsoft Says OpenAI Is 45% of the Azure Cloud Computing Backlog - Business Insider",
+      "date": "Undated",
+      "url": "https://www.businessinsider.com/microsoft-openai-azure-cloud-computing-backlog-2026-1",
+      "relevance_note": "The December-quarter backlog was $625 billion, up 110%, with OpenAI about 45% of commitments. This is an earlier-quarter data point, not the fiscal year-end figure."
+    },
+    {
+      "headline": "Microsoft stock hits one-year low amid AI spending concerns",
+      "date": "Undated",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/microsoft-stock-hits-one-low-143821813.html",
+      "relevance_note": "Shows investor concern about AI spending and its pricing into the shares."
+    },
+    {
+      "headline": "Microsoft earnings preview: AI spending, cloud margins, and why the stock keeps falling – GeekWire",
+      "date": "Undated",
+      "url": "https://www.geekwire.com/2026/microsoft-earnings-preview-record-ai-spending-and-a-stock-near-a-one-year-low",
+      "relevance_note": "Covers the Azure 39% to 40% constant-currency outlook and notes that expectations above published guidance set the real bar."
+    },
+    {
+      "headline": "Microsoft earnings preview: After a $357B wipeout, tech giant gets another chance – GeekWire",
+      "date": "Undated",
+      "url": "https://www.geekwire.com/2026/microsoft-earnings-preview-after-a-357-billion-wipeout-tech-giant-gets-another-chance",
+      "relevance_note": "Cites 15 million paid Copilot seats, roughly 3.3% of a commercial base of about 450 million."
+    },
+    {
+      "headline": "Microsoft Stock Heads into Earnings with Azure Growth, Copilot Momentum in Focus",
+      "date": "Undated",
+      "url": "https://www.webull.com/news/15753313062560768",
+      "relevance_note": "BNP Paribas sees monetization upside from OpenAI economics and consumption-based Copilot pricing."
+    },
+    {
+      "headline": "Microsoft Just Proved that AI Spending Can Pay Off. Here's How the Company Separates Itself From Other AI Stocks. | The Motley Fool",
+      "date": "Undated",
+      "url": "https://www.fool.com/investing/2026/08/03/microsoft-just-proved-that-ai-spending-can-pay-off",
+      "relevance_note": "Notes management said capex will exceed $50 billion in the next quarter and discusses the $175 billion calendar-year capex figure."
+    },
+    {
+      "headline": "Microsoft's $175 Billion Capex Bet Raises the Stakes for Azure Growth | Investing.com",
+      "date": "Undated",
+      "url": "https://www.investing.com/analysis/microsofts-175-billion-capex-bet-raises-the-stakes-for-azure-growth-200688792",
+      "relevance_note": "Discusses the capex outlook, the useful-life change, and Azure growth expectations for the September quarter."
+    }
+  ],
+  "bull_case": [
+    "Azure and other cloud services revenue grew 41% in FY2026 with growth across all workloads, and Intelligent Cloud revenue rose 30% to $137.8 billion. The filing says demand exceeding available capacity limits the ability to serve customers, which points to demand rather than weakness.",
+    "Operating income grew 21% to $155.2 billion and operating margin expanded roughly 120 basis points to about 46.8%, even as gross margin percentage slipped. Opex growth of 7% against revenue growth of 18% is absorbing the AI cost drag.",
+    "Operating cash flow rose 34% to $182.9 billion, funding capex, a $3.64 per share dividend, and buybacks while total long-term debt (current and long-term portions) fell to about $40.3 billion from $43.2 billion.",
+    "Remaining performance obligation reached $684 billion ($678 billion commercial) with a weighted average duration of about 2.3 years, and about 30% (roughly $205 billion) is expected to be recognized within 12 months. This gives multi-year revenue visibility.",
+    "Adjusted diluted EPS excluding OpenAI items still grew about 22% to $17.28, so the core business is strong beyond mark-to-market gains.",
+    "Copilot (about 15 million paid seats, roughly 3.3% of the commercial base) and consumption-based pricing offer long-tail monetization optionality, and Azure efficiency gains could stabilize cloud gross margin near 66%.",
+    "Productivity and Business Processes grew 16% with operating income up 20%, giving a high-margin base of recurring Microsoft 365 revenue."
+  ],
+  "bear_case": [
+    "Free cash flow fell about 6% to roughly $67.0 billion as capital additions rose about 80% to $115.9 billion. Roughly 110% of the incremental operating cash flow was reinvested, and dividends plus buybacks now absorb about 73% of free cash flow, up from about 59%.",
+    "Microsoft Cloud gross margin fell to 66%, Intelligent Cloud cost of revenue rose 44% against 30% revenue growth, and total gross margin percentage fell to about 68.0% from about 68.8%. Finance-lease property at cost rose about 53% to $82.7 billion, and finance lease cost rose about 65%, so depreciation could outrun revenue.",
+    "Datacenter leases not yet commenced total $329.1 billion, about five times recorded finance lease liabilities of $66.6 billion. Purchase commitments of about $194 billion, with about $169 billion due in fiscal 2027, mean the cash call is largely ahead.",
+    "Backlog quality is a concern: only about 30% of the $684 billion RPO converts within 12 months, and OpenAI (a roughly 25% equity-method related party, reported at about 45% of the backlog in an earlier quarter) concentrates counterparty risk.",
+    "GAAP EPS growth of 32% is flattered by OpenAI-related gains (about $0.67 per share) and by $10.7 billion of other income. Adjusted EPS growth was 22%.",
+    "Cash and short-term investments fell to $76.8 billion from $94.6 billion, while equity and other investments rose to $36.3 billion, a larger share of hard-to-value assets.",
+    "The filing itself warns of possible underutilization and asset impairment if AI demand is overestimated, and the stock has traded near a one-year low on AI spending concerns."
+  ],
+  "what_to_watch": [
+    {
+      "text": "**Azure Growth Versus Cloud Gross Margin:** Azure and other cloud services revenue grew 41% in FY2026, Intelligent Cloud revenue grew 30%, and the filing notes demand exceeding available capacity, which supports growth continuing as new capacity lands. Bank of America expects Azure at or above the 39% to 40% guided range to be needed to support the stock. However, Microsoft Cloud gross margin fell to 66%, Intelligent Cloud cost of revenue rose 44% against 30% revenue growth, and segment operating income grew only 28%, so capacity constraint alone does not prove that incremental Azure revenue earns an adequate return.\n\n-> Monitor Azure growth in constant currency against guidance, and whether Microsoft Cloud gross margin stabilizes near or above 66% rather than merely citing efficiency gains.",
+      "relevant_urls": [
+        "https://www.tradingkey.com/analysis/stocks/us-stocks/262058481-msft-earnings-preview-azure-ai-capital-expenditure-center-stage-stock-price-surge-pressure-tradingkey",
+        "https://finance.yahoo.com/technology/ai/articles/microsoft-earnings-spotlight-azure-growth-190200926.html",
+        "https://www.geekwire.com/2026/microsoft-earnings-preview-record-ai-spending-and-a-stock-near-a-one-year-low"
+      ]
+    },
+    {
+      "text": "**Free Cash Flow and Capital Returns:** Operating cash flow rose 34% to $182.9 billion, but additions to property and equipment rose about 80% to roughly $115.9 billion, so free cash flow fell about 6% to roughly $67.0 billion. Dividends ($26.4 billion paid) and buybacks ($22.3 billion) now absorb about 73% of free cash flow versus about 59% a year earlier, and cash plus short-term investments fell to $76.8 billion from $94.6 billion. That said, operating cash flow growth is funding a front-loaded build-out, so a one-year dip may prove a trough if capacity converts into contracted backlog.\n\n-> Monitor operating cash flow growth versus capex (management indicated more than $50 billion next quarter), the free cash flow payout ratio, and any change in buyback pace.",
+      "relevant_urls": [
+        "https://247wallst.com/investing/2026/08/21/microsoft-spent-115-9-billion-on-ai-what-did-shareholders-get",
+        "https://www.fool.com/investing/2026/08/03/microsoft-just-proved-that-ai-spending-can-pay-off"
+      ]
+    },
+    {
+      "text": "**Datacenter Leases and Off-Balance-Sheet Commitments:** The filing discloses $329.1 billion of leases, mostly for datacenters, that had not yet commenced, starting between fiscal 2027 and fiscal 2033, plus about $194 billion of purchase commitments with roughly $169 billion due in fiscal 2027. Finance lease liabilities already rose to $66.6 billion from $46.2 billion, and finance lease cost jumped about 65%. On the other hand, some arrangements are subject to contractual conditions, and one analyst expects part of the leases to be classified as operating, which would lower reported capex without changing the economic commitment.\n\n-> Monitor finance versus operating lease classification, the amount of leases commencing in the next quarters, and capex reported with and without finance leases.",
+      "relevant_urls": [
+        "https://www.cfodive.com/news/microsoft-holds-line-ai-spending-plans/826648",
+        "https://www.investing.com/analysis/microsofts-175-billion-capex-bet-raises-the-stakes-for-azure-growth-200688792"
+      ]
+    },
+    {
+      "text": "**Backlog Quality and OpenAI Concentration:** Remaining performance obligation reached $684 billion ($678 billion commercial, weighted average duration about 2.3 years), with about 30% expected to be recognized within 12 months, giving strong visibility. However, Microsoft owns roughly 25% of OpenAI on an as-converted basis, OpenAI is a related party, and news reports said OpenAI was about 45% of the commercial backlog in the December quarter. The filing does not break out that share at year-end, so the quality of the non-OpenAI portion is the key variable.\n\n-> Monitor any updated disclosure of OpenAI's share of RPO, growth in non-OpenAI commitments, and related-party revenue and receivable balances.",
+      "relevant_urls": [
+        "https://www.businessinsider.com/microsoft-openai-azure-cloud-computing-backlog-2026-1",
+        "https://finance.yahoo.com/news/microsoft-says-openai-driving-45-014014164.html"
+      ]
+    },
+    {
+      "text": "**Earnings Quality and OpenAI Mark-to-Market Effects:** GAAP diluted EPS rose 32% to $17.95, but adjusted diluted EPS excluding OpenAI items rose about 22% to $17.28, and OpenAI-related gains added about $0.67 per share. Other income, net, swung to $10.7 billion from an expense of $4.9 billion. Even so, 22% growth ex-OpenAI is still strong, and operating income grew 21%, so the core business is not weak.\n\n-> Monitor the gap between GAAP and adjusted EPS, other income (expense), net, and operating income growth as the cleaner read of momentum.",
+      "relevant_urls": []
+    },
+    {
+      "text": "**Depreciation Wave and Gross Margin Trajectory:** Total gross margin percentage fell to about 68.0% from about 68.8%, cost of revenue grew 21% against revenue growth of 18%, and finance-lease property at cost rose from $53.9 billion to $82.7 billion. Operating margin still expanded about 120 basis points because operating expenses grew only 7%, which shows opex discipline is offsetting the drag. However, depreciation on the new asset base will keep landing in cost of revenue, so margin stability depends on utilization holding.\n\n-> Monitor total and cloud gross margin percentage, the rate of operating expense growth, and any commentary on useful lives and depreciation growth.",
+      "relevant_urls": [
+        "https://www.investing.com/analysis/microsofts-175-billion-capex-bet-raises-the-stakes-for-azure-growth-200688792"
+      ]
+    },
+    {
+      "text": "**Copilot Monetization:** Microsoft disclosed about 15 million paid Microsoft 365 Copilot seats, roughly 3.3% of a commercial base of about 450 million, which has been cited as a shortfall. Conversely, low penetration is also optionality, and analysts see upside from consumption-based Copilot pricing and OpenAI economics. The filing notes higher Copilot advertising expenses in Productivity and Business Processes, where operating income grew 20%.\n\n-> Monitor updated paid-seat counts, Productivity and Business Processes growth versus 16%, and any disclosure of Copilot revenue contribution.",
+      "relevant_urls": [
+        "https://www.geekwire.com/2026/microsoft-earnings-preview-after-a-357-billion-wipeout-tech-giant-gets-another-chance",
+        "https://www.webull.com/news/15753313062560768"
+      ]
+    }
+  ],
+  "data_gaps": [
+    "The provided filing chunks contain no outlook or guidance language, so topics such as revenue, Azure growth, operating margin, and capex guidance are not addressed in the supplied sections.",
+    "Capital expenditures (additions to property and equipment) and free cash flow are not available as line items in the provided filing chunks, so these figures are omitted from key_metrics. The roughly $115.9 billion capex and roughly $67.0 billion free cash flow figures are used only in prose and come from the analyst calculation and news.",
+    "Microsoft Cloud revenue, the Microsoft Cloud gross margin percentage detail, and remaining performance obligation figures appear in the analysis but were not within the provided filing chunks as tabular data, so they are not in key_metrics.",
+    "The share of remaining performance obligation attributable to OpenAI is not quantified in the provided filing chunks. The roughly 45% figure comes from news about the December quarter and cannot be verified for fiscal year-end.",
+    "A total debt line item was not shown in the provided filing chunks. Only current portion of long-term debt and long-term debt are reported here.",
+    "News sources conflict on near-term Azure guidance (37% to 38% versus 39% to 40% constant currency), which reflects different quarters and cannot be reconciled from the provided pool."
+  ],
+  "hypotheses_explored": [
+    {
+      "id": "h1",
+      "proposing_personality": "Conservative",
+      "question": "Is Microsoft's free cash flow shrinking because AI capex is growing faster than operating cash flow, so the dividend plus buyback is now absorbing a larger share of FCF?",
+      "summary": "Operating cash flow rose about 34% to $182.9B, but capex rose about 80% to $115.9B, so free cash flow fell about 6% to roughly $67.0B. Dividends and buybacks totaled about $48.7B, roughly 73% of FCF versus about 59% a year earlier, and cash plus short-term investments fell from $94.6B to $76.8B.",
+      "evidence_quotes": [
+        "Cash from operations increased $46.8 billion to $182.9 billion for fiscal year 2026",
+        "Additions to property and equipment (115,948) (64,551) (44,477)",
+        "Free cash flow, however, fell 6.46% to $66.987 billion.",
+        "Cash, cash equivalents, and short-term investments totaled $76.8 billion and $94.6 billion as of June 30, 2026 and 2025, respectively."
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h2",
+      "proposing_personality": "Conservative",
+      "question": "Are the off-balance-sheet datacenter commitments and non-cash items inflating reported cash flow and hiding a larger future cash call?",
+      "summary": "Lease commitments not yet commenced total $329.1B and purchase commitments are $194.1B, with $169.0B due in fiscal 2027. Finance lease liabilities rose to $66.6B from $46.2B, none of which is in debt of $40.3B. Reported CFO also benefits from a $14.2B deferred tax add-back and a deduction for $11.0B of investment gains.",
+      "evidence_quotes": [
+        "As of June 30, 2026, we had additional leases, primarily for datacenters, that had not yet commenced of $ 329.1 billion",
+        "Purchase commitments (d) 169,008 25,052 194,060",
+        "Total finance lease liabilities $ 66,594",
+        "Deferred income taxes 14,189 (7,056) (4,738)",
+        "Net recognized losses (gains) on investments and derivatives (11,047) 5,329 1,634"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h3",
+      "proposing_personality": "Contrarian",
+      "question": "Is the Street underwriting Azure's acceleration as proof that AI capex is paying off, when the filings show AI infrastructure is already diluting Microsoft Cloud margins and inflating the asset base faster than revenue?",
+      "summary": "Microsoft Cloud gross margin fell to 66%, Intelligent Cloud cost of revenue rose 44%, and finance-lease property at cost rose from about $53.9B to $82.7B. Depreciation on these assets will land in future cost of revenue whether or not Azure demand holds, so this is a risk flag rather than a forecast.",
+      "evidence_quotes": [
+        "Microsoft Cloud gross margin percentage decreased to 66% driven by continued investments in AI infrastructure and growing AI product usage",
+        "Cost of revenue increased $17.7 billion or 44% driven by investments in AI infr",
+        "Property and equipment, at cost $ 82,712 (2026) vs $ 53,876 (2025), Finance Leases",
+        "Right-of-use assets obtained in exchange for lease obligations: Finance leases 24,608 (2026) vs 20,511 (2025)",
+        "Microsoft stock hits one-year low amid AI spending concerns"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h4",
+      "proposing_personality": "Contrarian",
+      "question": "Is the headline EPS growth overstating operating momentum because OpenAI mark-to-market gains and a huge contracted backlog are carrying the story, while the backlog itself depends heavily on one counterparty?",
+      "summary": "GAAP diluted EPS rose 32% to $17.95 but adjusted EPS excluding OpenAI rose 22% to $17.28, with OpenAI gains adding about $0.67 per share. RPO reached $684B, about 30% recognized within 12 months, and news reports about 45% of the commercial backlog tied to OpenAI as of an earlier quarter, which is unverified in the 10-K excerpts.",
+      "evidence_quotes": [
+        "Net gains from investments in OpenAI, which resulted in an increase in net income and diluted EPS of $5.0 billion and $0.67, respectively.",
+        "Adjusted diluted earnings per share (non-GAAP) 17.28 (2026) vs 14.13 (2025)",
+        "Revenue allocated to remaining performance obligations ... was $684 billion as of June 30, 2026.",
+        "We expect to recognize approximately 30% of both our total company remaining performance obligation revenue and commercial remaining performance obligation revenue over the next 12 months",
+        "Microsoft disclosed 45% of its $625B commercial backlog was tied to OpenAI."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h5",
+      "proposing_personality": "Dreamer",
+      "question": "Does Microsoft's AI infrastructure build-out create a multi-decade compounding cloud franchise that the market is undervaluing, or does it risk stranded assets if AI demand slows?",
+      "summary": "Azure demand is currently outrunning capacity, which supports a long-duration AI infrastructure thesis, but the filing warns capex could be stranded if utilization falls short. The payoff horizon is uncertain.",
+      "evidence_quotes": [
+        "Azure and other cloud services revenue grew 41% driven by demand for services across the platform with continued growth across all workloads.",
+        "Demand for cloud-based and AI products and services is evolving and difficult to forecast.",
+        "These investments are being made at significant scale and on an accelerated timeline, require substantial and increasing capital expenditures and continued access to capital, and are in advance of fully developed revenue streams."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h6",
+      "proposing_personality": "Dreamer",
+      "question": "Is Copilot's low paid-seat penetration a long-tail monetization option that could turn a small share of the Microsoft 365 base into a large recurring AI revenue stream?",
+      "summary": "Roughly 3.3% penetration of the commercial base is the optionality, though the evidence is a press citation rather than filing data and confidence is lower.",
+      "evidence_quotes": [
+        "Microsoft disclosed in January that its Copilot product had reached 15 million paid seats, roughly 3.3% of the Microsoft 365 commercial base of about 450 million",
+        "Microsoft is moving beyond infrastructure-led AI revenue toward additional monetization through its OpenAI economics and consumption-based Copilot pricing.",
+        "We have an investment accounted for under the equity method that represents an approximate 25% interest on an as-converted basis."
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h8",
+      "proposing_personality": "Optimist",
+      "question": "Will the commercial backlog (RPO) keep converting into recognized revenue, so that multi-year AI contracts provide durable visibility even though OpenAI accounts for a large share of it?",
+      "summary": "Commercial RPO up 84% to $678B is the strongest forward-looking metric, well ahead of recognized revenue. Concentration in OpenAI and partners that are also competitors is a real caveat, and Q2 and year-end figures should not be blended.",
+      "evidence_quotes": [
+        "Commercial remaining performance obligation increased 84% to $678 billion.",
+        "Microsoft Cloud revenue increased 27% to $214.4 billion.",
+        "OpenAI accounts for roughly 45% of those commitments, Microsoft revealed.",
+        "In some cases, these parties are significant customers of Azure and other cloud services."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h9",
+      "proposing_personality": "Pessimist",
+      "question": "Are Microsoft's not-yet-commenced datacenter leases an off-balance-sheet obligation that is growing faster than the disclosed finance lease liabilities, and is the company under-disclosing how much future capex is being pushed into leases?",
+      "summary": "$329.1B of leases had not commenced, about five times the $66.6B of finance lease liabilities, with commencement between fiscal 2027 and 2033. Finance lease liabilities and ROU additions rose sharply, and the conditions and timing of outflows are not quantified. The reclassification point rests on third-party commentary.",
+      "evidence_quotes": [
+        "As of June 30, 2026, we had additional leases, primarily for datacenters, that had not yet commenced of $329.1 billion, with some arrangements subject to certain contractual conditions being met.",
+        "Total finance lease liabilities $ 66,594 (June 30, 2026) vs $ 46,172 (June 30, 2025).",
+        "Right-of-use assets obtained in exchange for lease obligations: Finance leases 24,608 (2026) vs 20,511 (2025).",
+        "In the future, some leases will shift from finance to operating as a result of this, which should drive capex for calendar 2026 to $175 billion, from $190 billion previously"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h10",
+      "proposing_personality": "Pessimist",
+      "question": "Is a large share of Microsoft's $684B remaining performance obligation tied to OpenAI, a related party with a roughly 25% equity stake, so that backlog quality and revenue durability are more concentrated than the headline figure suggests?",
+      "summary": "Total RPO is $684B with about 30% recognized in 12 months, and OpenAI is a related party with an approximate 25% as-converted interest. The filing excerpts do not quantify OpenAI's share of RPO, so concentration cannot be confirmed.",
+      "evidence_quotes": [
+        "Revenue allocated to remaining performance obligations ... was $ 684 billion as of June 30, 2026.",
+        "We have an investment accounted for under the equity method that represents an approximate 25% interest on an as-converted basis.",
+        "In accordance with ASC 850, we are disclosing revenue and accounts receivable balances from transactions with OpenAI."
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h11",
+      "proposing_personality": "Quant",
+      "question": "Can Microsoft keep Azure growing above 40% while cloud gross margin compression stays contained, or is the 41% Azure growth being bought with margin dilution that will show up in FY2027 gross margin?",
+      "summary": "Total gross margin percentage fell from about 68.8% to about 68.0% and Microsoft Cloud gross margin fell to 66%, while operating margin expanded from about 45.6% to about 46.8%. The number to watch is whether cloud gross margin stabilizes near 66% while Azure keeps growing 40%+.",
+      "evidence_quotes": [
+        "Microsoft Cloud gross margin percentage decreased to 66% driven by continued investments in AI infrastructure and growing AI product usage, offset in part by efficiency gains in Azure and Microsoft 365 Commercial cloud.",
+        "Azure and other cloud services revenue grew 41%",
+        "Cost of revenue increased $17.7 billion or 44% driven by investments in AI infr",
+        "Revenue 331,839 vs 281,724 (18%); Gross margin 225,465 vs 193,893 (16%); Operating income 155,237 vs 128,528 (21%)"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h12",
+      "proposing_personality": "Quant",
+      "question": "Is the capex-driven build-out being funded by real demand? Does the $684B backlog and 34% operating cash flow growth justify the lease and infrastructure ramp, or is depreciation going to outrun revenue?",
+      "summary": "Operating cash flow rose 34% and RPO reached $684B with about 30% due within 12 months, supporting near-term visibility. Finance lease cost rose 65% against 20% growth in additions, and $82.7B of finance-lease property is the depreciation variable. Consensus and guidance figures from secondary sources are low quality and conflict with filing data.",
+      "evidence_quotes": [
+        "Net cash from operations 182,935 (2026) vs 136,162 (2025) vs 118,548 (2024)",
+        "Total finance lease cost $7,950 vs $4,825",
+        "Property and equipment, at cost (finance leases) $82,712 vs $53,876",
+        "Microsoft guided Azure growth to 37-38% for Q3, down from 39% this quarter and 40% last quarter."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h7",
+      "proposing_personality": "Optimist",
+      "question": "Will Azure's growth stay above roughly 35-40% over the next several quarters, with demand still exceeding supply, so that the capacity build-out converts into upside to cloud revenue and margins?",
+      "summary": "Azure is the main upside driver, with 41% growth across all workloads and a capacity constraint that signals demand. However, capex is rising sharply, cloud gross margin has fallen to 66%, Intelligent Cloud cost of revenue grew 44% against 30% revenue growth, and capacity constraint alone does not prove an adequate return on the capex.",
+      "evidence_quotes": [
+        "Azure and other cloud services revenue grew 41% driven by demand for services across the platform with continued growth across all workloads.",
+        "Operating income increased $12.4 billion or 28%.",
+        "Conversely, demand exceeding available capacity limits our ability to meet customer needs in a timely manner.",
+        "Microsoft management expects Azure to grow by 39% to 40% in constant currency",
+        "Bank of America estimates Q4 capital expenditures, including finance leases, will total about $42 billion"
+      ],
+      "confidence": 4
+    }
+  ]
+}

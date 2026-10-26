@@ -1,0 +1,652 @@
+{
+  "ticker": "SLB",
+  "company_name": "SLB",
+  "filing_type": "10-Q",
+  "filing_date": "2026-07-29",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T13:38:43.337370+00:00",
+  "key_metrics": [
+    {
+      "name": "Revenue (Six Months 2026 vs Six Months 2025)",
+      "value": "17,693 vs 17,035 (+4%; -6% excluding ChampionX)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Revenue (Second Quarter 2026 vs Second Quarter 2025)",
+      "value": "8,972 vs 8,546",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Income Before Taxes, segment total (Second Quarter 2026 vs Second Quarter 2025)",
+      "value": "1,019 vs 1,285 (about 11.4% vs about 15.0% of revenue)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Income Before Taxes, segment total (Six Months 2026 vs Six Months 2025)",
+      "value": "1,975 vs 2,348",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Net income (Second Quarter 2026 vs Second Quarter 2025)",
+      "value": "815 vs 1,048",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Net income (Six Months Ended June 30, 2026 vs 2025)",
+      "value": "1,576 vs 1,877",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors — Financial Statements"
+    },
+    {
+      "name": "Net income per share of SLB (Second Quarter 2026 vs Second Quarter 2025)",
+      "value": "0.52 vs 0.74",
+      "unit": "USD per share",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Net income per share of SLB (Six Months 2026 vs Six Months 2025)",
+      "value": "1.02 vs 1.32",
+      "unit": "USD per share",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Average shares outstanding: Basic / Assuming dilution (Second Quarter 2026)",
+      "value": "1,490 / 1,506 (vs 1,352 / 1,366 in Second Quarter 2025)",
+      "unit": "shares, millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "NET CASH PROVIDED BY OPERATING ACTIVITIES",
+      "value": "1,846 vs 1,802 (Six Months Ended June 30, 2026 vs 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors — Financial Statements"
+    },
+    {
+      "name": "Capital expenditures",
+      "value": "(802) vs (769) (Six Months Ended June 30, 2026 vs 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors — Financial Statements"
+    },
+    {
+      "name": "Free cash flow",
+      "value": "693 vs 725 (Six Months 2026 vs Six Months 2025)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Increase in working capital",
+      "value": "(1,344) for Six Months Ended June 30, 2026",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Cash",
+      "value": "2,743 at Jun. 30, 2026 vs 3,036 at Dec. 31, 2025",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Short-term investments",
+      "value": "1,328 at Jun. 30, 2026 vs 1,176 at Dec. 31, 2025",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Long-term Debt",
+      "value": "11,140 at Jun. 30, 2026 vs 9,742 at Dec. 31, 2025",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Short-term borrowings and current portion of long-term debt",
+      "value": "1,658 at Jun. 30, 2026 vs 1,894 at Dec. 31, 2025",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Net debt",
+      "value": "(8,727) at Jun. 30, 2026 vs (7,424) at Dec. 31, 2025",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Proceeds from issuance of long-term debt",
+      "value": "1,985 vs 1,081 (Six Months Ended June 30, 2026 vs 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Repayment of long-term debt",
+      "value": "(729) vs - (Six Months Ended June 30, 2026 vs 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Stock repurchase program",
+      "value": "(1,099) vs (2,300) (Six Months Ended June 30, 2026 vs 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Dividends paid",
+      "value": "(866) vs (773) (Six Months Ended June 30, 2026 vs 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Dividends declared ($0.59 per share)",
+      "value": "(880) for January 1, 2026 – June 30, 2026",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "NET CASH USED IN INVESTING ACTIVITIES",
+      "value": "(1,522) vs (186) (Six Months Ended June 30, 2026 vs 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "NET CASH USED IN FINANCING ACTIVITIES",
+      "value": "(606) vs (1,989) (Six Months Ended June 30, 2026 vs 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Cash, end of period",
+      "value": "2,743 vs 3,236 (June 30, 2026 vs June 30, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Receivables less allowance for doubtful accounts",
+      "value": "9,132 at Jun. 30, 2026 vs 8,689 at Dec. 31, 2025",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Inventories",
+      "value": "5,436 at Jun. 30, 2026 vs 5,032 at Dec. 31, 2025",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "SLB stockholders' equity",
+      "value": "26,074 at Jun. 30, 2026 vs 26,109 at Dec. 31, 2025",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Depreciation and amortization",
+      "value": "1,397 vs 1,273 (Six Months Ended June 30, 2026 vs 2025)",
+      "unit": "USD millions",
+      "source_citation": "Risk Factors — Financial Statements"
+    },
+    {
+      "name": "Charges and credits",
+      "value": "(110) vs (228) (Six Months 2026 vs Six Months 2025)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Interest expense",
+      "value": "(244) vs (283) (Six Months 2026 vs Six Months 2025)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "Digital (Second Quarter 2026 vs Second Quarter 2025)",
+      "revenue": "$697 million",
+      "yoy_change": "+18% (vs $591 million); +9% sequentially",
+      "commentary": "Sequential growth was led by a 25%, or $25 million, increase in Digital Exploration revenue. Pretax margin of 28% expanded 683 bps sequentially on exploration data license sales and transfer fees, which are lumpy.",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Reservoir Performance (Second Quarter 2026 vs Second Quarter 2025)",
+      "revenue": "$1,556 million",
+      "yoy_change": "-8% (vs $1,691 million)",
+      "commentary": "Pretax income of $232 million (about 15% margin), down 121 bps sequentially on lower profitability in evaluation and intervention. Revenue was hit by Middle East disruption and production shut-ins.",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Well Construction (Second Quarter 2026 vs Second Quarter 2025)",
+      "revenue": "$2,742 million",
+      "yoy_change": "-7% (vs $2,963 million)",
+      "commentary": "Pretax income of $417 million (about 15% margin) was essentially flat sequentially. Six-month margin contracted 401 bps year on year on the Middle East conflict and pricing headwinds in select markets.",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Production Systems (Second Quarter 2026 vs Second Quarter 2025)",
+      "revenue": "$3,771 million",
+      "yoy_change": "+29% (vs $2,932 million); +7% sequentially",
+      "commentary": "The year-on-year increase includes ChampionX, acquired in Q3 2025. Pretax income of $586 million (16% margin), up 138 bps sequentially on SLB OneSubsea and artificial lift. The Middle East declined.",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "All Other (Second Quarter 2026 vs Second Quarter 2025)",
+      "revenue": "$505 million",
+      "yoy_change": "-13% (vs $583 million); +$63 million sequentially",
+      "commentary": "Sequential growth was driven by 33%, or $46 million, higher Data Center Solutions revenue. Pretax income of $142 million, up $29 million sequentially on Data Center Solutions and APS.",
+      "source_citation": "Risk Factors"
+    },
+    {
+      "name": "Digital (Six Months 2026 vs Six Months 2025)",
+      "revenue": "$1,337 million",
+      "yoy_change": "+14% (+$160 million)",
+      "commentary": "Driven by a $120 million increase in Digital Operations and $55 million higher exploration data license and transfer fee sales. Pretax margin of 25%, up 93 bps year on year.",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Production Systems (Six Months 2026 vs Six Months 2025)",
+      "revenue": "$7,279 million",
+      "yoy_change": "+26% (vs $5,773 million)",
+      "commentary": "ChampionX production chemicals and artificial lift contributed $1.7 billion of revenue and $307 million of pretax income. Excluding the acquisition, revenue fell 3% on Middle East disruption. Pretax margin of 15% contracted 178 bps year on year.",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "All Other (Six Months 2026 vs Six Months 2025)",
+      "revenue": "$948 million",
+      "yoy_change": "-17% (vs $1,145 million)",
+      "commentary": "Reflects the absence of $215 million of APS revenue after the Palliser divestiture in Q2 2025, plus lower SLB Capturi revenue. Pretax income of $255 million fell $62 million.",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Middle East & Asia geography (Second Quarter 2026 vs Second Quarter 2025)",
+      "revenue": "$2,572 million",
+      "yoy_change": "-14% (vs $2,986 million); six months $5,257 million vs $5,983 million, -12%",
+      "commentary": "Middle East revenue fell 13% sequentially to $1.66 billion on conflict disruptions. International revenue still grew 3% sequentially on Latin America, Europe & Africa and Asia.",
+      "source_citation": "Risk Factors"
+    }
+  ],
+  "forward_guidance": {
+    "text": "\"Capital investments for the full year 2026 are expected to be approximately $2.5 billion.\"",
+    "source_citation": "MD&A"
+  },
+  "key_risks": [
+    {
+      "description": "Middle East conflict disruption: production shut-ins and security constraints continue to limit operations in several markets. Middle East revenue fell 13% sequentially to $1.66 billion, and Reservoir Performance and Well Construction margins were hit. Recovery is partial and uneven, and could extend into the second half.",
+      "is_new": true,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Payout funding and leverage: H1 2026 free cash flow of $693 million covered only about 35% of $1,965 million of dividends and buybacks. Long-term debt rose to $11,140 million from $9,742 million, net debt rose to $8,727 million from $7,424 million, and cash fell to $2,743 million.",
+      "is_new": true,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Weak cash conversion: working capital absorbed $1,344 million in H1 (receivables up $307 million, inventories up $362 million, payables down $406 million, taxes payable down $239 million). Failure of the expected seasonal reversal would keep free cash flow subdued.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Organic revenue erosion and margin compression: excluding ChampionX, H1 revenue declined 6%. Consolidated segment pretax margin fell to about 11.4% in Q2 2026 from about 15.0% in Q2 2025, with Well Construction down 401 bps and Reservoir Performance down 208 bps year on year over six months.",
+      "is_new": true,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Pricing headwinds in select markets compound the Middle East impact on Well Construction profitability.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Portfolio and integration risk: APS divestiture (Palliser) removed $215 million of H1 revenue and reduced All Other profitability. The ChampionX acquisition now drives reported Production Systems growth and carries integration and margin-accretion expectations.",
+      "is_new": false,
+      "source_citation": "MD&A — All Other"
+    },
+    {
+      "description": "Capital intensity: capital investments are expected to be about $2.5 billion for 2026, competing with shareholder returns and Digital/Data Center growth spending for free cash flow.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Currency and hedging volatility: cash flow hedges on cross-currency interest rate swaps and foreign currency forwards swung to a $(63) million loss in Q2 2026 from a $316 million gain in Q2 2025.",
+      "is_new": false,
+      "source_citation": "Risk Factors — Consolidated Statement of Income Classification"
+    },
+    {
+      "description": "Litigation: SLB is party to various legal proceedings. Management believes the probability of a material loss on any pending proceeding is remote, but litigation is inherently uncertain.",
+      "is_new": false,
+      "source_citation": "Risk Factors — Consolidated Statement of Income Classification"
+    },
+    {
+      "description": "Lumpy exploration data licensing: Digital's sequential margin expansion and revenue growth rely on exploration data license and transfer fee sales, which are non-recurring in nature and flatter near-term profitability.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    }
+  ],
+  "recent_news": [
+    {
+      "headline": "SLB Announces Second-Quarter 2026 Results",
+      "date": "Q2 2026 results release (July 2026)",
+      "url": "https://investorcenter.slb.com/news-releases/news-release-details/slb-announces-second-quarter-2026-results",
+      "relevance_note": "Primary results release: Q2 cash flow from operations $1.36 billion, free cash flow $716 million, dividend $0.295 per share, Well Construction margin flat sequentially, Reservoir Performance margin down 121 bps."
+    },
+    {
+      "headline": "SLB N.V. Q2 2026 Earnings Call Summary",
+      "date": "Q2 2026 call (July 2026)",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/slb-n-v-q2-2026-205850124.html",
+      "relevance_note": "Summarizes the 13% sequential Middle East decline, the expected materially higher H2 free cash flow on working capital and collections, and a Q3 base case of gradual Middle East recovery."
+    },
+    {
+      "headline": "SLB (NYSE:SLB) Earnings Beat Sends Quality Stock Higher as Growth at a Reasonable Price Story Strengthens",
+      "date": "Q2 2026 results date",
+      "url": "https://www.chartmill.com/news/SLB/Chartmill-51617-SLB-NYSESLB-Earnings-Beat-Sends-Quality-Stock-Higher-as-Growth-at-a-Reasonable-Price-Story-Strengthens",
+      "relevance_note": "Q2 adjusted EPS of $0.55 on revenue of $8.972 billion beat estimates; the filing's GAAP net income per share is $0.52."
+    },
+    {
+      "headline": "SLB Offshore Growth Offsets Middle East Disruptions",
+      "date": "Date not provided",
+      "url": "https://discoveryalert.com/slb-offshore-growth-middle-east-disruptions-digital-2026",
+      "relevance_note": "Describes force majeure in Qatar and Iraq field-access constraints behind the 13% Middle East sequential decline, offset by offshore and digital growth."
+    },
+    {
+      "headline": "SLB Provides Update on Middle East Operations and First Quarter Outlook",
+      "date": "2026-03-11",
+      "url": "https://www.slb.com/newsroom/press-release/2026/pr-2026-0311-middle-east-operations",
+      "relevance_note": "Company update at the onset of the Middle East disruption that has driven margin pressure in Reservoir Performance and Well Construction."
+    },
+    {
+      "headline": "SLB Took a Middle East Hit in Q1. Why Analysts Still See a Path to $65 | TIKR.com",
+      "date": "Date not provided",
+      "url": "https://www.tikr.com/blog/slb-took-a-middle-east-hit-in-q1-why-analysts-still-see-a-path-to-65",
+      "relevance_note": "Frames the key risk as a conflict extending deep into H2 2026 and names adjusted EBITDA margin as the metric to watch."
+    },
+    {
+      "headline": "SLB, Liberty Energy to Form Strategic Alliance for Data Center Infrastructure and Power | SLB",
+      "date": "2026-07-14",
+      "url": "https://www.slb.com/newsroom/press-release/2026/pr-2026-0714-slb-liberty-energy",
+      "relevance_note": "Planned alliance on modular infrastructure and integrated power for data centers; supports the Data Center Solutions growth option."
+    },
+    {
+      "headline": "SLB Industrializes AI for the Energy Industry with NVIDIA | SLB",
+      "date": "2026-03-25",
+      "url": "https://investorcenter.slb.com/news-releases/news-release-details/slb-industrializes-ai-energy-industry-nvidia",
+      "relevance_note": "Expanded NVIDIA collaboration on AI infrastructure and models; relevant to the Digital and Data Center strategy."
+    },
+    {
+      "headline": "SLB CEO Highlights Digital, AI and Growth Strategy at THRIVE Energy Conference | SLB",
+      "date": "2026-02-25",
+      "url": "https://www.slb.com/newsroom/features/2026/2026-0225-thrive-feature",
+      "relevance_note": "Management framing of digital and AI as central to growth and value creation."
+    },
+    {
+      "headline": "SLB Announces Third-Quarter 2026 Results | SLB",
+      "date": "2026-10-23",
+      "url": "https://investorcenter.slb.com/news-releases/news-release-details/slb-announces-third-quarter-2026-results",
+      "relevance_note": "Post-filing release: Q3 cash flow from operations $1.51 billion and free cash flow $828 million; Production Systems margin up 60 bps sequentially; Well Construction margin up 122 bps on Middle East recovery."
+    },
+    {
+      "headline": "SLB Limited (SLB) Q3 FY2026 earnings call transcript",
+      "date": "2026-10-23",
+      "url": "https://finance.yahoo.com/quote/SLB/earnings/SLB-Q3-2026-earnings_call-715202.html",
+      "relevance_note": "Post-filing commentary expecting a meaningful Q4 free cash flow step-up from lower inventory and higher collections."
+    },
+    {
+      "headline": "[SLB Q3 2026 Earnings Call] SLB Posts $9.45B Revenue, Guides Q4 to ~$10B as Middle East Recovery and Deepwater Cycle Accelerate — BigGo Finance",
+      "date": "2026-10-23",
+      "url": "https://finance.biggo.com/news/US_SLB_2026-10-23",
+      "relevance_note": "Post-filing: Q3 revenue $9.45 billion, Middle East revenue up 13% sequentially to $1.9 billion, margin expansion in all four divisions."
+    },
+    {
+      "headline": "SLB shrugs off impact of Middle East conflict | Upstream",
+      "date": "2026-10-23",
+      "url": "https://www.upstreamonline.com/finance/slb-shrugs-off-impact-of-middle-east-conflict/2-1-2063214",
+      "relevance_note": "Post-filing coverage of Q3 results and improved outlook."
+    },
+    {
+      "headline": "SLB (NYSE:SLB) Posts Earnings Results, Beats Expectations By $0.02 EPS",
+      "date": "2026-10-23",
+      "url": "https://www.marketbeat.com/instant-alerts/earnings-slb-nyse-slb-posts-earnings-results-beats-expectations-by-002-eps-2026-10-23",
+      "relevance_note": "Post-filing: Q3 EPS of $0.64 vs $0.62 consensus on revenue of $9.45 billion."
+    }
+  ],
+  "bull_case": [
+    "Growth outside the Middle East is broad: revenue grew sequentially across all Divisions excluding the Middle East on offshore activity, a U.S. unconventionals rebound and strong production and recovery demand. International revenue rose 3% sequentially despite a 13% Middle East decline.",
+    "Adding back charges and credits ($69 million in Q2, $41 million in Q1), adjusted pretax income rose from about $997 million to about $1,088 million on $251 million of extra revenue, a roughly 36% incremental margin (an analyst-derived figure) versus 25% reported. This suggests Middle East normalization would be upside to an already-growing base.",
+    "Production Systems pretax margin expanded 138 bps sequentially to 16% on SLB OneSubsea and artificial lift. ChampionX adds production chemicals and artificial lift scale: $1.7 billion of H1 revenue and $307 million of pretax income.",
+    "Digital revenue grew 14% in H1 to $1,337 million at a 25% pretax margin. Data Center Solutions grew 33% sequentially, and the NVIDIA and Liberty Energy alliances give a credible path to a less cyclical earnings stream.",
+    "Liquidity is ample: $4.1 billion of cash and short-term investments plus $5.0 billion of undrawn committed facilities. Net debt of $8.7 billion is still below the $9.95 billion at June 30, 2025, and management points to a seasonal, collections-driven H2 free cash flow step-up.",
+    "Shareholder returns continue: the dividend was raised 3.5% to $0.295 per share, and about $3.03 billion of repurchase authorization remained at June 2026 month-end."
+  ],
+  "bear_case": [
+    "H1 free cash flow of $693 million covered only about 35% of $1,965 million of dividends and buybacks. The roughly $1.27 billion gap was funded by net new borrowing (issuance of $1,985 million less repayments of $729 million), with net debt up about $1.3 billion in six months.",
+    "Underlying revenue is shrinking: excluding ChampionX, H1 revenue fell 6%, or $1.05 billion. Reported growth rests on the acquisition, and Reservoir Performance and Well Construction revenue fell 8% and 7% year on year in Q2.",
+    "Consolidated segment pretax margin dropped to about 11.4% in Q2 2026 from about 15.0% a year earlier. Well Construction (down 401 bps year on year over six months) and Reservoir Performance (down 208 bps) are still impaired, and the margin recovery is concentrated in smaller segments.",
+    "Digital's 683 bps sequential margin jump rests on lumpy exploration data license sales, which overstate the durability of any margin or mix improvement. The Digital and Data Center base (All Other is about 6% of Q2 revenue) is too small to offset a Middle East swing.",
+    "Middle East normalization is still an assumption: shut-ins and security challenges continue to constrain operations in several markets, and the region fell 13% sequentially to $1.66 billion.",
+    "Capital investments of about $2.5 billion for 2026 and a $1,344 million working capital build limit free cash flow available for returns. If collections do not reverse as expected, buybacks (which were $1,099 million in H1) may need to slow or debt will keep rising."
+  ],
+  "what_to_watch": [
+    {
+      "text": "**Capital Return Funding:** H1 2026 free cash flow was $693 million against $866 million of dividends and $1,099 million of buybacks, leaving a gap of about $1.27 billion that was covered by net new debt (issuance of $1,985 million less repayments of $729 million). Net debt rose from $7,424 million to $8,727 million. That said, net debt remains below the $9,951 million of a year ago and free cash flow is only slightly below the $725 million of H1 2025, so management's seasonal working-capital reversal (a $1,344 million drag in H1) could close much of the gap.\n\n-> Monitor free cash flow versus dividends plus buybacks, the pace of repurchases against remaining authorization, and the net debt change in the next print.",
+      "relevant_urls": [
+        "https://finance.yahoo.com/markets/stocks/articles/slb-n-v-q2-2026-205850124.html",
+        "https://investorcenter.slb.com/news-releases/news-release-details/slb-announces-second-quarter-2026-results",
+        "https://investorcenter.slb.com/news-releases/news-release-details/slb-announces-third-quarter-2026-results"
+      ]
+    },
+    {
+      "text": "**Middle East Recovery Pace:** Middle East revenue fell 13% sequentially to $1.66 billion in Q2, Middle East & Asia revenue was $2,572 million versus $2,986 million a year ago, and margin declines in Reservoir Performance and Well Construction are explicitly tied to the conflict. Activity has begun to recover in certain countries, and management's base case assumes a gradual recovery. However, production shut-ins and security challenges still constrain other markets, and the 10-Q does not quantify a recovery timeline, so normalization remains an assumption rather than evidence.\n\n-> Monitor Middle East sequential revenue, commentary on shut-ins and field access in Qatar and Iraq, and any quantified recovery timing.",
+      "relevant_urls": [
+        "https://discoveryalert.com/slb-offshore-growth-middle-east-disruptions-digital-2026",
+        "https://www.tikr.com/blog/slb-took-a-middle-east-hit-in-q1-why-analysts-still-see-a-path-to-65",
+        "https://finance.yahoo.com/markets/stocks/articles/slb-n-v-q2-2026-205850124.html"
+      ]
+    },
+    {
+      "text": "**Incremental Margin Quality and Core Earnings Power:** Q2 revenue rose $251 million sequentially to $8,972 million and pretax income rose $63 million to $1,019 million. Adding back charges and credits ($69 million in Q2, $41 million in Q1) implies a roughly 36% incremental margin versus 25% reported, and ex-Middle East revenue appears to have grown about 7% sequentially, which would make a Middle East recovery additive to a growing base. On the other hand, the 36% figure rests on a single quarter and on add-backs that recurred in both periods, the ex-Middle East growth rate is a derived number, and Digital's margin jump came from lumpy data license sales. Consolidated pretax margin is also still about 11.4% against about 15.0% a year ago, so describing the engine as compounding overstates what the filing shows.\n\n-> Monitor adjusted incremental margin on sequential revenue growth, the size of charges and credits, and segment margins excluding exploration data license effects.",
+      "relevant_urls": [
+        "https://finance.biggo.com/news/US_SLB_2026-10-23",
+        "https://investorcenter.slb.com/news-releases/news-release-details/slb-announces-second-quarter-2026-results"
+      ]
+    },
+    {
+      "text": "**Breadth of Margin Recovery:** Production Systems pretax margin expanded 138 bps sequentially to 16% and Digital expanded 683 bps to 28%, while Reservoir Performance contracted 121 bps sequentially to 15% and Well Construction was flat at about 15%. Year on year over six months, Well Construction contracted 401 bps and Reservoir Performance 208 bps, and the larger divisions have not yet turned. However, flat Well Construction margins despite a Middle East revenue decline suggest deterioration has paused, so any Gulf normalization would flow mostly into these two segments.\n\n-> Monitor Well Construction and Reservoir Performance pretax margins sequentially, and the portion of Digital margin attributable to exploration data licenses.",
+      "relevant_urls": [
+        "https://investorcenter.slb.com/news-releases/news-release-details/slb-announces-second-quarter-2026-results",
+        "https://investorcenter.slb.com/news-releases/news-release-details/slb-announces-third-quarter-2026-results"
+      ]
+    },
+    {
+      "text": "**Organic Revenue Trend and ChampionX Contribution:** H1 2026 revenue of $17.7 billion rose 4% year on year, but excluding ChampionX it fell 6%, or $1.05 billion, and Production Systems excluding the acquisition fell 3%. The decline is largely attributed to the Middle East conflict and the absence of $215 million of APS revenue after the Palliser divestiture. That said, Production Systems margin gains on SLB OneSubsea and artificial lift show underlying strength in production and recovery demand.\n\n-> Monitor revenue excluding ChampionX, Production Systems growth excluding the acquisition, and OneSubsea contribution.",
+      "relevant_urls": [
+        "https://investorcenter.slb.com/news-releases/news-release-details/slb-announces-second-quarter-2026-results"
+      ]
+    },
+    {
+      "text": "**Digital and Data Center Solutions as a Second Engine:** Digital revenue grew 14% in H1 to $1.3 billion at a 25% pretax margin, and Data Center Solutions revenue grew 33% sequentially in Q2, with new NVIDIA and Liberty Energy alliances pointing to a data-center power and infrastructure option that is not in the base thesis. However, All Other is only about 6% of Q2 revenue, Digital is about $1.3 billion of $17.7 billion of H1 revenue, and the exploration data license component is lumpy, so the mix shift is unproven at scale.\n\n-> Monitor Data Center Solutions revenue and profitability, recurring Digital Operations growth versus exploration data licenses, and capital allocated to data-center capacity.",
+      "relevant_urls": [
+        "https://www.slb.com/newsroom/press-release/2026/pr-2026-0714-slb-liberty-energy",
+        "https://investorcenter.slb.com/news-releases/news-release-details/slb-industrializes-ai-energy-industry-nvidia",
+        "https://www.slb.com/newsroom/features/2026/2026-0225-thrive-feature"
+      ]
+    },
+    {
+      "text": "**Buyback Pace and Insider Activity:** SLB repurchased about 11.97 million shares in Q2 at an average price of $54.13, leaving roughly $3.03 billion of authorization, while buybacks were running even as Middle East disruption weighed on margins. The CEO also adopted a Rule 10b5-1 plan to sell up to 435,000 shares. That said, the 10b5-1 sale is a pre-arranged and routine event with little signal value, and the more material issue is the cash coverage of repurchases, which fell to $1,099 million in H1 from $2,300 million in H1 2025.\n\n-> Monitor repurchase volume and average price, remaining authorization, and any management comment on slowing buybacks to preserve cash.",
+      "relevant_urls": []
+    },
+    {
+      "text": "**Capital Spending and Cash Conversion:** Capital investments are guided to about $2.5 billion for 2026 versus $802 million of capital expenditures in H1, and operating cash flow of $1,846 million was only marginally above $1,802 million a year ago as working capital absorbed $1,344 million. Management expects materially higher free cash flow in the second half on seasonal working-capital improvement and higher customer collections. However, receivables of $9,132 million and inventories of $5,436 million both rose versus year-end, so the reversal has not yet shown in reported balances.\n\n-> Monitor receivables and inventory balances, operating cash flow, and reaffirmation of the $2.5 billion capital investment target.",
+      "relevant_urls": [
+        "https://finance.yahoo.com/markets/stocks/articles/slb-n-v-q2-2026-205850124.html",
+        "https://finance.yahoo.com/quote/SLB/earnings/SLB-Q3-2026-earnings_call-715202.html"
+      ]
+    }
+  ],
+  "data_gaps": [
+    "Operating income/loss and gross profit (gross margin) line items from the consolidated statement of income were not present in the provided filing chunks; segment income before taxes is used instead.",
+    "The Digital segment Q2 2026 revenue and pretax income table row, and the Reservoir Performance and Well Construction six-month tables, were truncated in the extracted chunks; Digital Q2 revenue relies on MD&A narrative.",
+    "The per-share line in the consolidated statement of income is truncated in the extracted chunks, so basic versus diluted EPS could not be separately confirmed from the labels.",
+    "Management's outlook or guidance language for revenue, margins and free cash flow was not present in the provided filing chunks; only the 2026 capital investment expectation was available."
+  ],
+  "hypotheses_explored": [
+    {
+      "id": "h1",
+      "proposing_personality": "Conservative",
+      "question": "Are SLB's H1 2026 shareholder payouts (dividends plus buybacks) covered by free cash flow, or are they being funded with new debt?",
+      "summary": "No. H1 2026 free cash flow was $693M against $1,965M of dividends ($866M) and buybacks ($1,099M). The roughly $1.27B gap was covered by net new borrowing (issuance $1,985M less repayments $729M). Long-term debt rose from $9,742M to $11,140M, net debt from $7,424M to $8,727M, and cash fell from $3,036M to $2,743M. Working capital absorbed $1,344M, so the payout is being financed by the balance sheet.",
+      "evidence_quotes": [
+        "Free cash flow 693 (H1 2026) vs 725 (H1 2025); Stock repurchase program (1,099); Dividends paid (866); Increase in working capital (1,344)",
+        "Stock repurchase program (1,099) (2,300); Dividends paid (866) (773); Proceeds from issuance of long-term debt 1,985 1,081; Repayment of long-term debt (729)",
+        "Net debt (8,727) at Jun. 30, 2026 vs (7,424) at Dec. 31, 2025",
+        "Total long-term debt $11,140 at Jun. 30, 2026 vs $9,742 at Dec. 31, 2025",
+        "As of June 30, 2026, SLB had $4.1 billion of cash and short-term investments on hand and committed debt facility agreements with commercial banks aggregating $5.0 billion, all of which was available."
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h2",
+      "proposing_personality": "Conservative",
+      "question": "Will free cash flow step up enough in H2 2026 to close the H1 payout gap, and is that step-up visible in reported results or only in guidance?",
+      "summary": "Management guides to a seasonal second-half cash step-up, and the filing itself gives no H2 cash figures. Even taking $716M (Q2) and $828M (Q3) free cash flow at face value, H2 generation would still need to be sustained to cover roughly $1.0B-plus of semiannual dividends and buybacks. Capex guided up to about $2.5B limits free cash available for returns, so the H2 step-up is treated as a hope rather than evidence until buybacks slow or are funded from cash flow.",
+      "evidence_quotes": [
+        "Capital investments for the full year 2026 are expected to be approximately $2.5 billion.",
+        "In January 2026, SLB announced a 3.5% increase to its quarterly cash dividend from $0.285 per share ... to $0.295 per share",
+        "Free cash flow is expected to be materially higher in the second half of 2026 due to seasonal working capital improvements and higher customer collections.",
+        "Cash flow from operations for the third quarter of 2026 was $1.51 billion and free cash flow was $828 million.",
+        "Cash flow from operations for the second quarter of 2026 was $1.36 billion and free cash flow was $716 million."
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h3",
+      "proposing_personality": "Contrarian",
+      "question": "Is SLB's capital return program (dividends plus buybacks) being funded by free cash flow, or by rising net debt, and does the Street's bullish framing ignore that gap?",
+      "summary": "H1 2026 free cash flow was only $693M against $866M of dividends and $1,099M of buybacks, about $1.97B returned. Net debt widened from $7,424M at year-end 2025 to $8,727M at June 30, 2026, about $1.3B in six months. Working capital absorbed $1,344M, so the cash conversion problem is operational, not just timing. If Middle East disruption persists, the return program looks financed with borrowed money.",
+      "evidence_quotes": [
+        "Free cash flow 693 (six months 2026) versus 725 (six months 2025); Stock repurchase program (1,099); Dividends paid (866)",
+        "Net debt (8,727) as of Jun. 30, 2026 versus (9,951) as of Jun. 30, 2025 and (7,424) as of Dec. 31, 2025",
+        "Increase in working capital (1,344) for the six months ended Jun. 30, 2026",
+        "Capital investments for the full year 2026 are expected to be approximately $2.5 billion; dividend increased 3.5% to $0.295 per share"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h4",
+      "proposing_personality": "Contrarian",
+      "question": "Does the Street's second-half recovery thesis assume a Middle East normalization that the filing does not yet support, given that the region is still the main drag on margins?",
+      "summary": "The 10-Q describes recovery as partial and uneven. Middle East revenue fell 13% sequentially to $1.66B in Q2, and Middle East & Asia revenue was down year on year. Margin declines in Reservoir Performance and Well Construction are explicitly tied to the conflict. Growth outside the Middle East is real but is used to offset a region that has not normalized, and the disruption could persist into the second half.",
+      "evidence_quotes": [
+        "International revenue increased 3% sequentially despite the severe disruptions in the Middle East. ... the decline in the Middle East where revenue fell 13% sequentially to $1.66 billion.",
+        "While activity in the Middle East began to recover in certain countries as conditions improved, operations in other markets remained constrained by production shut-ins and ongoing security challenges.",
+        "Well Construction pretax operating margin of 15% contracted 401 bps year on year primarily due to lower profitability as a result of the Middle East conflict compounded by pricing headwinds in select markets.",
+        "Middle East & Asia $2,572M in Q2 2026 vs $2,986M in Q2 2025; six months $5,257M vs $5,983M",
+        "The primary risk is a conflict that extends deep into the second half of 2026. That would strain the full-year consensus revenue estimate of approximately $36.5 billion, delay the margin recovery, and push the high-case timeline further out."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h5",
+      "proposing_personality": "Dreamer",
+      "question": "Can Data Center Solutions and the broader Digital franchise grow into a second, higher-margin earnings engine that re-rates SLB beyond oil-and-gas cycle exposure over the next 5-10 years?",
+      "summary": "SLB's digital and AI-infrastructure push is small today but compounding. Digital revenue grew 14% year on year in H1 2026 at a 25% pretax margin, and Data Center Solutions grew 33% sequentially in Q2. Partnerships with NVIDIA and Liberty Energy point to a possible data-center power and infrastructure business not in consensus. The base is still small (All Other is about 6% of Q2 revenue), so the upside is an option, not yet a thesis.",
+      "evidence_quotes": [
+        "Digital revenue of $1.3 billion increased 14%, or $160 million, year on year, driven by a $120 million increase in Digital Operations and $55 million of higher sales of exploration data licenses and transfer fees.",
+        "Digital pretax operating margin of 25% increased 93 bps year on year driven by the higher Digital Exploration sales and improved profitability in Digital Operations.",
+        "All Other revenue of $505 million increased $63 million sequentially primarily due to 33%, or $46 million, higher revenue in Data Center Solutions.",
+        "All Other pretax operating income of $142 million increased $29 million sequentially due to improved profitability in Data Center Solutions and Asset Performance Solutions (APS).",
+        "North America revenue increased 4% sequentially driven by higher sales of production chemicals, artificial lift, and valves in U.S. land, as well as increased revenue from Data Center Solutions.",
+        "Planned alliance combines modular infrastructure and integrated power solutions designed to accelerate global data center deployment",
+        "SLB today announced an expansion of its technology collaboration with NVIDIA to design and deploy critical AI infrastructure and models for the energy industry."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h6",
+      "proposing_personality": "Dreamer",
+      "question": "Is the Digital mix shift large enough, on the current trajectory, to lift SLB's through-cycle margins and reduce its dependence on Middle East and upstream capex cycles?",
+      "summary": "Digital earns roughly 25% pretax margins versus about 11% for the consolidated company in Q2 2026, so even modest share gains could lift group margins over time. The counterweight is scale: Digital was about $1.3 billion of $17.7 billion first-half revenue, and the Middle East disruption showed how exposed the core segments remain. Confidence is low-to-moderate because the mix shift is early and unproven.",
+      "evidence_quotes": [
+        "Digital pretax operating margin of 25% increased 93 bps year on year driven by the higher Digital Exploration sales and improved profitability in Digital Operations.",
+        "Second-quarter 2026 revenue of $9.0 billion increased 3% compared to the first quarter of 2026 as broad-based growth across international markets more than offset the impact of continued disruptions in the Middle East.",
+        "International revenue increased 3% sequentially despite the severe disruptions in the Middle East. Strong performances in Latin America, Europe & Africa and Asia more than offset the decline in the Middle East where revenue fell 13% sequentially to $1.66 billion.",
+        "Capital investments for the full year 2026 are expected to be approximately $2.5 billion."
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h7",
+      "proposing_personality": "Optimist",
+      "question": "Does SLB's growth excluding the Middle East, led by offshore, Digital, and Production Systems, support further sequential margin expansion next quarter?",
+      "summary": "Ex-Middle East momentum is broad: revenue grew sequentially across all Divisions excluding the Middle East, driven by offshore activity, a U.S. unconventionals rebound, and production and recovery demand. Digital and Production Systems margins both expanded sequentially, and Digital revenue rose 9% sequentially. Offshore and production-systems mix are the operating-leverage engine, so the next quarter can show margin upside if Middle East disruption does not deepen, though evidence covers only two segments.",
+      "evidence_quotes": [
+        "Excluding the Middle East, revenue grew sequentially across all Divisions, supported by higher offshore activity, a rebound in U.S. unconventionals, and strong demand for production and recovery solutions.",
+        "Production Systems pretax operating margin was 16%, expanding 138 basis points sequentially, driven by improved profitability in SLB OneSubsea and artificial lift.",
+        "Digital revenue of $697 million increased 9% sequentially, driven by a 25%, or $25 million, increase in Digital Exploration revenue"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h8",
+      "proposing_personality": "Optimist",
+      "question": "Is the Middle East disruption a latent upside catalyst once activity normalizes, or is it a persistent drag that caps near-term upside?",
+      "summary": "This is an option, not yet a proven catalyst. Middle East revenue fell 13% sequentially to $1.66 billion, and Reservoir Performance and Well Construction margins were hit. Management notes some early recovery in certain countries, but operations elsewhere remain constrained. No recovery timing or quantified guidance was retrieved, so the upside case rests on the qualitative recovery signal and press coverage of a positive 2026 outlook from Q4 2025.",
+      "evidence_quotes": [
+        "International revenue increased 3% sequentially despite the severe disruptions in the Middle East. Strong performances in Latin America, Europe & Africa and Asia more than offset the decline in the Middle East where revenue fell 13% sequentially to $1.66 billion.",
+        "While activity in the Middle East began to recover in certain countries as conditions improved, operations in other markets remained constrained by production shut-ins and ongoing security challenges.",
+        "Positive outlook for 2026"
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h9",
+      "proposing_personality": "Pessimist",
+      "question": "Is the Middle East disruption masking underlying margin and revenue erosion at SLB, so that the reported recovery in Q2 2026 is overstated and margins may not rebound as management implies?",
+      "summary": "Excluding the ChampionX acquisition, H1 2026 revenue fell 6%. Most of the segment margin compression is tied to the Middle East conflict, and operations in several Middle East markets remain constrained. Reported growth depends on acquisitions and on non-Middle East offshore strength. If the Gulf stays impaired, the next quarters could show further margin contraction in Reservoir Performance and Well Construction.",
+      "evidence_quotes": [
+        "Six-month 2026 revenue of $17.7 billion increased 4%, or $658 million, year on year. Excluding the impact of the ChampionX acquisition in the third quarter last year, revenue declined year on year by 6%, or $1.05 billion.",
+        "Reservoir Performance pretax operating margin of 16% contracted 208 bps year on year primarily due to the operational disruption in the Middle East.",
+        "Well Construction pretax operating margin of 15% contracted 401 bps year on year primarily due to lower profitability as a result of the Middle East conflict compounded by pricing headwinds in select markets.",
+        "While activity in the Middle East began to recover in certain countries as conditions improved, operations in other markets remained constrained by production shut-ins and ongoing security challenges.",
+        "a 13% sequential revenue decline in the Middle East caused by regional conflict.",
+        "posting earnings per share (EPS) of $0.55... For comparison, Schlumberger reported EPS of $0.74 in the same quarter last year."
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h10",
+      "proposing_personality": "Pessimist",
+      "question": "Is SLB's capital return and insider activity signaling confidence that the market is not pricing in, or is it running buybacks and insider sales into an earnings window where downside risk is elevated?",
+      "summary": "SLB repurchased about 11.97 million shares in Q2 2026 at an average of $54.13, leaving roughly $3.03 billion of authorization. Buybacks continued while Middle East disruption was still hitting segment margins. The CEO adopted a Rule 10b5-1 plan to sell up to 435,000 shares over a 426-day window. Each item is individually routine, but together they are a weak signal worth monitoring; free cash flow coverage of buybacks and dividends was not verified in this hypothesis.",
+      "evidence_quotes": [
+        "11,966.6 ... $54.13 with Maximum value of shares that may yet be purchased under the plans or programs of $3,028,458 (thousands) at June 2026 month-end",
+        "Olivier Le Peuch, CEO and a member of the SLB Board of Directors, adopted a Rule 10b5-1 trading arrangement that is intended to satisfy the affirmative defense of Rule 10b5-1(c) for the sale of up to 435,000 shares of SLB's common stock"
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h12",
+      "proposing_personality": "Quant",
+      "question": "Is margin recovery broad-based across divisions, or concentrated in Production Systems and Digital while Well Construction and Reservoir Performance remain impaired year over year?",
+      "summary": "Segment dispersion is the quantitative risk. Sequentially, Production Systems pretax margin rose 138 bps to 16% and Digital rose 683 bps to 28%, while Reservoir Performance fell 121 bps to 15%. Well Construction was flat sequentially at about 15.2%. Year over year for six months, Well Construction contracted 401 bps to 15% and Reservoir Performance 208 bps to 16%. Consolidated pretax margin fell from about 15.0% in Q2 2025 to about 11.4% in Q2 2026. Breadth of recovery is unproven until Well Construction margins turn up.",
+      "evidence_quotes": [
+        "Production Systems pretax operating margin was 16%, expanding 138 basis points sequentially, driven by improved profitability in SLB OneSubsea and artificial lift.",
+        "Reservoir Performance pretax operating margin of 15% contracted 121 bps sequentially primarily due to lower profitability in evaluation and intervention activities.",
+        "Digital pretax operating margin of 28%, expanded 683 basis points sequentially, primarily due to higher sales of exploration data licenses and transfer fees.",
+        "Well Construction pretax operating margin of 15% contracted 401 bps year on year primarily due to lower profitability as a result of the Middle East conflict compounded by pricing headwinds in select markets.",
+        "Production Systems pretax operating margin was 16%, expanding 60 bps sequentially. Margin expansion was driven by improved profitability in SLB OneSubsea, artificial lift, completions and production chemicals, supported by the recovery in Middle East operations."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h11",
+      "proposing_personality": "Quant",
+      "question": "Is SLB's core earnings power compounding ex-Middle East, such that a Middle East recovery would add to already-rising incremental margins rather than merely repair them?",
+      "summary": "Consolidated revenue rose $251M sequentially (8,721 to 8,972, +2.9%) and pretax income rose $63M (956 to 1,019). Adding back charges and credits (Q2 $69M, Q1 $41M) gives adjusted pretax of about $1,088M vs $997M, a roughly 36% incremental margin versus the reported 25%. Middle East revenue fell 13% sequentially to $1.66B, implying ex-Middle East revenue grew roughly 7% sequentially (derived). Contested: the incremental margin rests on one quarter and add-backs, the ex-Middle East growth is a derived figure, and consolidated pretax margin remains about 11.4% versus about 15.0% a year ago.",
+      "evidence_quotes": [
+        "Second-quarter 2026 revenue of $9.0 billion increased 3% compared to the first quarter of 2026 as broad-based growth across international markets led by offshore activity in Latin America, Europe & Africa, and Asia more than offset the impact of continued disruptions in the Middle East.",
+        "Middle East where revenue fell 13% sequentially to $1.66 billion.",
+        "Second Quarter 2026 Revenue 8,972 Income Before Taxes 1,019 ; First Quarter 2026 Revenue 8,721 Income Before Taxes 956 ; Charges and credits (69) in Q2 and (41) in Q1.",
+        "SLB reported third-quarter 2026 revenue of $9.45 billion, up 5% sequentially, with pre-tax segment operating margins expanding 104 basis points and adjusted EBITDA margin reaching 21.9%. All four divisions and every geography grew, led by a 13% sequential rebound in Middle East revenue to $1.9 billion."
+      ],
+      "confidence": 4
+    }
+  ]
+}

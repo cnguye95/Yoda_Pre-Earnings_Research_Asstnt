@@ -1,0 +1,655 @@
+{
+  "ticker": "NVDA",
+  "company_name": "NVDA",
+  "filing_type": "10-Q",
+  "filing_date": "2026-08-26",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T12:54:24.374988+00:00",
+  "key_metrics": [
+    {
+      "name": "Revenue (total, three months ended Jul 26, 2026 vs Jul 27, 2025)",
+      "value": "96,221 vs 46,743 (+106% Q2 FY2027 vs Q2 FY2026)",
+      "unit": "USD millions",
+      "source_citation": "MD&A — Jul 26, 2026"
+    },
+    {
+      "name": "Revenue (total, six months ended Jul 26, 2026 vs Jul 27, 2025)",
+      "value": "177,837 vs 90,805 (+96% H1 FY2027 vs H1 FY2026)",
+      "unit": "USD millions",
+      "source_citation": "MD&A — Jul 26, 2026"
+    },
+    {
+      "name": "Net income (three months ended Jul 26, 2026 vs Jul 27, 2025)",
+      "value": "59,688 vs 26,422 (62.0% of revenue vs 56.6%)",
+      "unit": "USD millions",
+      "source_citation": "Other — Condensed Consolidated Statements of Shareholders"
+    },
+    {
+      "name": "Net income (six months ended Jul 26, 2026 vs Jul 27, 2025)",
+      "value": "118,010 vs 45,197 (66.4% of revenue in H1 FY2027)",
+      "unit": "USD millions",
+      "source_citation": "Other — Net income"
+    },
+    {
+      "name": "Gross profit",
+      "value": "75.0% of revenue in Q2 FY2027 vs 72.4% in Q2 FY2026; 75.0% in H1 FY2027 vs 66.6% in H1 FY2026",
+      "unit": "% of revenue",
+      "source_citation": "MD&A — Geographic Data"
+    },
+    {
+      "name": "Cost of revenue",
+      "value": "25.0% of revenue in Q2 FY2027 vs 27.6% in Q2 FY2026",
+      "unit": "% of revenue",
+      "source_citation": "MD&A — Geographic Data"
+    },
+    {
+      "name": "Research and development",
+      "value": "7,054 vs 4,291 (+64% Q2 FY2027 vs Q2 FY2026); 7.4% of revenue vs 9.2%",
+      "unit": "USD millions",
+      "source_citation": "MD&A — Operating Expenses"
+    },
+    {
+      "name": "Sales, general and administrative",
+      "value": "1,354 vs 1,122 (+21% Q2 FY2027 vs Q2 FY2026)",
+      "unit": "USD millions",
+      "source_citation": "MD&A — Operating Expenses"
+    },
+    {
+      "name": "Total operating expenses",
+      "value": "8,408 vs 5,413 (+55% Q2 FY2027 vs Q2 FY2026); 8.8% of revenue vs 11.6%",
+      "unit": "USD millions",
+      "source_citation": "MD&A — Operating Expenses"
+    },
+    {
+      "name": "Operating income",
+      "value": "66.2% of revenue in Q2 FY2027 vs 60.8% in Q2 FY2026; 66.0% in H1 FY2027 vs 55.1% in H1 FY2026",
+      "unit": "% of revenue",
+      "source_citation": "MD&A — Geographic Data"
+    },
+    {
+      "name": "Other income, net",
+      "value": "8.1% of revenue in Q2 FY2027 vs 6.0%; 13.6% in H1 FY2027 vs 3.4%",
+      "unit": "% of revenue",
+      "source_citation": "MD&A — Geographic Data"
+    },
+    {
+      "name": "Income tax expense",
+      "value": "12.3% of revenue in Q2 FY2027 vs 10.2% in Q2 FY2026",
+      "unit": "% of revenue",
+      "source_citation": "MD&A — Geographic Data"
+    },
+    {
+      "name": "Net cash provided by operating activities",
+      "value": "74,421 vs 42,779 (six months ended Jul 26, 2026 vs Jul 27, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Purchases related to property and equipment and intangible assets",
+      "value": "(4,434) vs (3,122) (six months ended Jul 26, 2026 vs Jul 27, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Gains from equity securities, net",
+      "value": "(23,707) vs (2,073) (six months ended Jul 26, 2026 vs Jul 27, 2025; non-cash adjustment deducted from net income)",
+      "unit": "USD millions",
+      "source_citation": "Other — Net income"
+    },
+    {
+      "name": "Stock-based compensation expense",
+      "value": "3,954 vs 3,099 (six months); Q2 total 2,027 vs 1,624",
+      "unit": "USD millions",
+      "source_citation": "Other — Net income"
+    },
+    {
+      "name": "Depreciation and amortization",
+      "value": "2,124 vs 1,280 (six months ended Jul 26, 2026 vs Jul 27, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other — Net income"
+    },
+    {
+      "name": "Marketable equity securities",
+      "value": "42,783 vs 12,886 (Jul 26, 2026 vs Jan 25, 2026)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Accounts receivable, net",
+      "value": "63,059 vs 38,466 (Jul 26, 2026 vs Jan 25, 2026)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Inventories",
+      "value": "31,575 vs 21,403 (Jul 26, 2026 vs Jan 25, 2026)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total current assets",
+      "value": "197,412 vs 125,605 (Jul 26, 2026 vs Jan 25, 2026)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Non-marketable securities",
+      "value": "51,157 vs 22,251 (Jul 26, 2026 vs Jan 25, 2026)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total assets",
+      "value": "320,272 vs 206,803 (Jul 26, 2026 vs Jan 25, 2026)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Short-term debt",
+      "value": "1,000 vs 999 (Jul 26, 2026 vs Jan 25, 2026)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Long-term debt",
+      "value": "32,366 vs 7,469 (Jul 26, 2026 vs Jan 25, 2026)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total liabilities",
+      "value": "91,288 vs 49,510 (Jul 26, 2026 vs Jan 25, 2026)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total shareholders' equity",
+      "value": "228,984 vs 157,293 (Jul 26, 2026 vs Jan 25, 2026)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Proceeds related to issuance of debt, net of costs",
+      "value": "24,896 vs nil (six months ended Jul 26, 2026 vs Jul 27, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Payments related to repurchases of common stock",
+      "value": "(39,044) vs (23,815) (six months ended Jul 26, 2026 vs Jul 27, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Dividends paid",
+      "value": "(6,290) vs (488) (six months ended Jul 26, 2026 vs Jul 27, 2025); $0.25 per common share declared and paid in Q2 FY2027 vs $0.02",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Purchases of equity securities",
+      "value": "(42,404) vs (1,245) (six months ended Jul 26, 2026 vs Jul 27, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net cash used in investing activities",
+      "value": "(35,124) vs (12,343) (six months ended Jul 26, 2026 vs Jul 27, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net cash used in financing activities",
+      "value": "(27,459) vs (27,386) (six months ended Jul 26, 2026 vs Jul 27, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Groq, Inc.",
+      "value": "(2,944) vs nil (financing activities, six months ended Jul 26, 2026 vs Jul 27, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Aggregate unearned stock-based compensation expense",
+      "value": "19.4 billion as of Jul 26, 2026, recognized over a weighted average of 2.6 years for RSUs, PSUs and market-based PSUs",
+      "unit": "USD billions",
+      "source_citation": "Other — Three Months Ended"
+    },
+    {
+      "name": "Revenue from sales to customers headquartered outside of the United States",
+      "value": "38% of total revenue in Q2 FY2027 vs 30% in Q2 FY2026; 30% in H1 FY2027 vs 35% in H1 FY2026",
+      "unit": "% of total revenue",
+      "source_citation": "MD&A — Gross Profit and Gross Margin"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "Compute & Networking (revenue)",
+      "revenue": "$88,299 million in Q2 FY2027 vs $41,331 million in Q2 FY2026; $162,850 million in H1 FY2027 vs $80,920 million",
+      "yoy_change": "+114% Q2 FY2027 vs Q2 FY2026; +101% H1 FY2027 vs H1 FY2026",
+      "commentary": "Growth driven by the ramp of Blackwell Ultra infrastructure. Two direct customers in the prior-year comparison period represented 23% and 16% of total revenue, primarily attributable to this segment, so concentration remains a feature.",
+      "source_citation": "MD&A — Jul 26, 2026"
+    },
+    {
+      "name": "Graphics (revenue)",
+      "revenue": "$7,922 million in Q2 FY2027 vs $5,412 million in Q2 FY2026; $14,987 million in H1 FY2027 vs $9,885 million",
+      "yoy_change": "+46% Q2 FY2027 vs Q2 FY2026; +52% H1 FY2027 vs H1 FY2026",
+      "commentary": "Increase driven by sales of the Blackwell architecture.",
+      "source_citation": "MD&A — Jul 26, 2026"
+    },
+    {
+      "name": "Total segment revenue",
+      "revenue": "$96,221 million in Q2 FY2027 vs $46,743 million in Q2 FY2026; $177,837 million in H1 FY2027 vs $90,805 million",
+      "yoy_change": "+106% Q2 FY2027 vs Q2 FY2026; +96% H1 FY2027 vs H1 FY2026",
+      "commentary": "Compute & Networking is about 92% of Q2 FY2027 revenue (88,299 of 96,221).",
+      "source_citation": "MD&A — Jul 26, 2026"
+    },
+    {
+      "name": "Compute & Networking (operating income)",
+      "revenue": "$62,696 million in Q2 FY2027 vs $28,363 million in Q2 FY2026; $116,031 million in H1 FY2027 vs $50,417 million",
+      "yoy_change": "+121% Q2 FY2027 vs Q2 FY2026; +130% H1 FY2027 vs H1 FY2026",
+      "commentary": "Segment operating margin is about 71% of segment revenue in Q2 FY2027 vs about 69% a year ago, showing operating leverage on the Blackwell Ultra ramp.",
+      "source_citation": "MD&A — Jul 26, 2026"
+    },
+    {
+      "name": "Graphics (operating income)",
+      "revenue": "$3,899 million in Q2 FY2027 vs $2,242 million in Q2 FY2026; $6,840 million in H1 FY2027 vs $3,882 million",
+      "yoy_change": "+74% Q2 FY2027 vs Q2 FY2026; +76% H1 FY2027 vs H1 FY2026",
+      "commentary": "Segment operating margin is about 49% in Q2 FY2027 vs about 41% a year ago.",
+      "source_citation": "MD&A — Jul 26, 2026"
+    },
+    {
+      "name": "Total reportable segment operating income",
+      "revenue": "$66,595 million in Q2 FY2027 vs $30,605 million in Q2 FY2026; $122,871 million in H1 FY2027 vs $54,299 million",
+      "yoy_change": "+118% Q2 FY2027 vs Q2 FY2026; +126% H1 FY2027 vs H1 FY2026",
+      "commentary": "Segment operating income grew faster than segment revenue (+106%), consistent with the gross margin and opex-leverage gains.",
+      "source_citation": "MD&A — Jul 26, 2026"
+    }
+  ],
+  "forward_guidance": {
+    "text": "No forward guidance issued in this filing.",
+    "source_citation": "MD&A"
+  },
+  "key_risks": [
+    {
+      "description": "Supply and capacity commitments rose from $119 billion last quarter to $279 billion as of July 26, 2026 (about $366 billion across all purchase obligation categories), mostly memory and manufacturing capacity, against Q2 FY2027 revenue of $96.2 billion. Some agreements may be cancelable, rescheduled or adjustable only before firm orders are placed, so a demand air pocket could produce inventory write-downs and purchase-obligation charges rather than just lower revenue.",
+      "is_new": true,
+      "source_citation": "Notes — Commitments and Contingencies"
+    },
+    {
+      "description": "AI cloud agreements: about $36 billion of commitments, typically six years in duration, under which NVIDIA sells infrastructure to AI clouds and commits to buy cloud service back. The AI clouds can unilaterally stop providing that service and resell it at more advantageous rates, and the filing states these strategic commitments and guarantees may impact financial results and depend on the performance of customers and partners. This creates circular-demand and unused-capacity exposure.",
+      "is_new": true,
+      "source_citation": "Notes — Commitments and Contingencies"
+    },
+    {
+      "description": "Receivables and extended payment terms: accounts receivable, net rose to $63,059 million from $38,466 million in six months (about +64%) as the company offers terms of 90 days up to one year to certain investment-grade customers for large data center builds. Five direct customers account for 22%, 14%, 13%, 11% and 10% of the balance (about 70%), so a single delayed payment would materially hit working capital.",
+      "is_new": true,
+      "source_citation": "Financial Statements"
+    },
+    {
+      "description": "Customer concentration: revenue is concentrated in a limited number of direct and indirect customers (two direct customers were 23% and 16% of revenue in the prior-year Q2), primarily within Compute & Networking, and one AI research and deployment company contributed a meaningful amount of revenue via cloud services purchased from NVIDIA's customers.",
+      "is_new": false,
+      "source_citation": "MD&A — Indirect Customers"
+    },
+    {
+      "description": "Inventory provisions and excess purchase obligations totaled $985 million in Q2 FY2027 and $2.1 billion in H1 FY2027, a 0.8-point and 1.0-point drag on gross margin. Inventories rose to $31,575 million from $21,403 million, so the scale of production and the Blackwell-to-next-generation transition raise provision and yield risk.",
+      "is_new": false,
+      "source_citation": "MD&A — Gross Profit and Gross Margin"
+    },
+    {
+      "description": "Earnings quality and investment-portfolio exposure: H1 FY2027 net income of $118,010 million includes $23,707 million of net gains from equity securities, versus $2,073 million a year earlier. Non-marketable securities more than doubled to $51,157 million and $36.9 billion of publicly-held equity is subject to short-term lock-up restrictions, so mark-to-market volatility can swing reported earnings.",
+      "is_new": true,
+      "source_citation": "Other"
+    },
+    {
+      "description": "Opex growth: research and development rose 64% YoY in Q2 FY2027, driven by a 127% increase in compute infrastructure and a 30% increase in compensation and benefits. If revenue growth slows, the current operating leverage (opex 8.8% of revenue vs 11.6%) could reverse.",
+      "is_new": false,
+      "source_citation": "MD&A — Operating Expenses"
+    },
+    {
+      "description": "Balance sheet leverage has increased: long-term debt rose to $32,366 million from $7,469 million after a $25.0 billion multi-tranche senior unsecured notes issuance in June 2026, alongside $39.0 billion of H1 buybacks, $42.4 billion of equity-security purchases and a $2.9 billion Groq, Inc. financing outflow.",
+      "is_new": true,
+      "source_citation": "Financial Statements"
+    },
+    {
+      "description": "Demand durability and China: future demand depends on customers' and partners' ability to generate revenue and sustain investment in computing infrastructure. Hopper shipments to China were under 1% of Data Center revenue in Q2 FY2027, so the business relies on non-China hyperscale, AI cloud, enterprise and sovereign demand.",
+      "is_new": false,
+      "source_citation": "Risk Factors"
+    }
+  ],
+  "recent_news": [
+    {
+      "headline": "NVIDIA Q2 Earnings Beat on Blackwell Ultra & Data Center Strength",
+      "date": "Not provided",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/nvidia-q2-earnings-beat-blackwell-144500017.html",
+      "relevance_note": "Reports Q3 FY2027 revenue guidance of $108 billion (±2%), assuming no Data Center compute revenue from China and Vera Rubin at about 20% of Data Center revenue."
+    },
+    {
+      "headline": "Nvidia Stock Forecast: Rubin Ramp and $108 Billion Q3 Outlook Keep AI Growth Accelerating",
+      "date": "2026-10-06",
+      "url": "https://www.tradingkey.com/analysis/stocks/us-stocks/262201321-nvidia-nvda-stock-forecast-october-6-2026",
+      "relevance_note": "Cites the Q3 guide of about $108B, GAAP and non-GAAP gross margin guided to about 74% (±50bp), and Q2 GAAP diluted EPS of $2.46 / non-GAAP $2.22."
+    },
+    {
+      "headline": "Nvidia Forecast: Vera Rubin Ramp and a $108 Billion Guide Set the Stage for 2027 | TIKR.com",
+      "date": "Not provided",
+      "url": "https://www.tikr.com/blog/nvidia-forecast-vera-rubin-ramp-and-a-108-billion-guide-set-the-stage-for-2027",
+      "relevance_note": "Notes Vera Rubin began production shipments in August and is expected to be about 20% of Data Center revenue; frames Rubin execution as the next major test."
+    },
+    {
+      "headline": "Nvidia's Blockbuster Quarter Has One Ugly Loose End. $27 Billion of Free Cash Flow Vanished",
+      "date": "Not provided",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/nvidia-blockbuster-quarter-one-ugly-134104617.html",
+      "relevance_note": "Highlights DSO rising from 45 to 60 days on extended payment terms for large purchases by investment-grade customers; relevant to the working-capital risk."
+    },
+    {
+      "headline": "Why Nvidia's 'circular financing' does not concern me",
+      "date": "Not provided",
+      "url": "https://growordieinvesting.substack.com/p/why-nvidias-circular-financing-does",
+      "relevance_note": "Discusses DSO at 60, the 10-Q's 90-day to one-year terms and the $36 billion of AI cloud commitments that are owed regardless of demand."
+    },
+    {
+      "headline": "Nvidia, CoreWeave, and Nebius: Inside the Circular Financing of the GPU Boom",
+      "date": "Not provided",
+      "url": "https://io-fund.com/ai-stocks/nvidia-coreweave-nebius-circular-financing-gpu-boom",
+      "relevance_note": "Examines circular financing between NVIDIA and AI cloud providers; notes LTM free cash flow of $119 billion."
+    },
+    {
+      "headline": "Nvidia is warning that a lack of working capital could slow down the AI boom (Seeking Alpha)",
+      "date": "Not provided",
+      "url": "https://www.facebook.com/Seekingalpha/videos/nvidia-warns-of-an-ai-bottleneck-the-working-capital-squeeze/1471746644821089",
+      "relevance_note": "Frames working-capital constraints at cloud infrastructure providers as a potential limiter of AI buildout pace."
+    },
+    {
+      "headline": "NVIDIA Earnings Preview: Can Blackwell Justify a $5 Trillion Valuation?",
+      "date": "Not provided",
+      "url": "https://www.tastylive.com/news-insights/nvidia-earnings-preview-can-blackwell-justify-a-5-trillion-valuation-",
+      "relevance_note": "Options imply roughly a 5% post-earnings move vs 2.8% average; guidance is built on essentially zero China data center compute revenue, so H200 resumption would be upside."
+    },
+    {
+      "headline": "NVIDIA (NVDA) Q3 2027 Earnings Date, Time & Estimates",
+      "date": "Not provided",
+      "url": "https://www.marketbeat.com/earnings/reports/2026-11-18-nvidia-co-stock",
+      "relevance_note": "Consensus for Q3 FY2027 of $2.49 EPS on $108.82 billion revenue; NVIDIA beat consensus EPS in 7 of its last 8 quarters."
+    },
+    {
+      "headline": "NVIDIA Earnings Q2 FY27: Revenue, Data Center, AI Capex",
+      "date": "Not provided",
+      "url": "https://www.rexshares.com/nvidia-earnings",
+      "relevance_note": "Cites a different Q3 FY27 consensus of $103.8 billion, showing the Street benchmark is inconsistent across sources."
+    },
+    {
+      "headline": "Nvidia Earnings Date: Q3 FY2027 Time and Estimates | CMEG",
+      "date": "Not provided",
+      "url": "https://www.cmelitegroup.com/knowledge-hub/nvidia-earnings-date",
+      "relevance_note": "Cites about $26.0 billion returned to shareholders in the quarter, about $99.0 billion remaining repurchase authorization, a $105.8-110.2 billion guide range and 74% guided gross margin."
+    },
+    {
+      "headline": "Among AI crowd, some investors position for slower hyperscaler spending growth | Reuters",
+      "date": "2026-07-17",
+      "url": "https://www.reuters.com/business/retail-consumer/among-ai-crowd-some-investors-position-slower-hyperscaler-spending-growth-2026-07-17",
+      "relevance_note": "UBS estimates hyperscaler capex up 76% this year to $673B but only 25% next year and 6% in 2028, a risk to the demand-durability thesis."
+    },
+    {
+      "headline": "Nvidia Looks Like a Genius Buy With $1 Trillion in Data Center Capital Expenditures Coming in 2027",
+      "date": "Not provided",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/nvidia-looks-genius-buy-1-163300293.html",
+      "relevance_note": "Cites NVIDIA's view that big-four hyperscaler capex could rise from $650B in 2026 to $1 trillion in 2027, supporting the demand-visibility argument."
+    }
+  ],
+  "bull_case": [
+    "Data Center-led growth is accelerating: Q2 FY2027 total revenue rose 106% YoY to $96.2 billion, with Compute & Networking up 114% to $88.3 billion on the Blackwell Ultra ramp, and the Q3 guide of about $108 billion implies further sequential growth while assuming no China Data Center compute revenue.",
+    "Operating leverage is widening: operating expenses grew 55% against revenue growth of 106%, lifting operating margin to 66.2% from 60.8% and implying an incremental operating margin of roughly 70% on about $49.5 billion of incremental revenue.",
+    "Gross margin expanded to 75.0% from 72.4% on Blackwell Ultra mix and held flat sequentially despite $985 million of inventory and purchase-obligation provisions (a 0.8-point drag), indicating pricing power through the ramp.",
+    "Cash generation is substantial: H1 operating cash flow was $74.4 billion (up about 74% YoY) against $4.4 billion of capex, funding $39.0 billion of buybacks and $6.3 billion of dividends (quarterly dividend raised to $0.25 per share) while the company still adds balance-sheet capacity.",
+    "Supply and capacity commitments of $279 billion (maturing roughly $92 billion in the remainder of 2027, $87 billion in 2028, $88 billion in 2029) lock up memory and fabrication capacity at a scale smaller competitors cannot match and point to multi-year demand visibility into the Vera Rubin cycle.",
+    "The AI cloud structure (about $36 billion of six-year commitments) gives a path to revenue-share participation, and demand is broadening across hyperscalers, AI natives, enterprises and sovereigns, with China upside not required for the guide.",
+    "Balance sheet strength is retained: total shareholders' equity rose to $229.0 billion and the company holds large Treasury and money-market holdings plus marketable equity securities of $42.8 billion."
+  ],
+  "bear_case": [
+    "Reported earnings overstate the operating business: H1 net income of $118.0 billion includes $23.7 billion of net equity-security gains (vs $2.1 billion a year earlier), and H1 operating cash flow of $74.4 billion (about $70 billion after capex) is well below net income.",
+    "Working-capital strain is building: accounts receivable rose about 64% to $63.1 billion in six months, inventories rose about 48% to $31.6 billion, DSO reportedly moved from 45 to 60 days, and payment terms of 90 days to one year are offered to select customers, with five customers holding about 70% of receivables.",
+    "Off-balance-sheet obligations are growing faster than revenue: supply commitments rose 134% in one quarter to $279 billion (about $366 billion in total) against a roughly 12% sequential revenue step implied by the guide, and the cancellation flexibility applies only before firm orders are placed.",
+    "About $36 billion of AI cloud commitments are structured so the AI clouds can unilaterally stop providing the service and resell at better rates, creating circular-demand risk if third-party demand does not absorb capacity.",
+    "The implied Q3 gross margin of about 74% is roughly 100bp below the 75.0% reported in Q2, and the guide's roughly 12% sequential revenue growth is slower than the 18% sequential Data Center growth, so the headline acceleration narrative faces margin and growth-rate headwinds.",
+    "Revenue and receivable concentration remain high, with a small number of direct and indirect customers, and the AI customer base depends on continued funding of data center buildouts, while some forecasts see hyperscaler capex growth slowing sharply in 2027-2028.",
+    "Balance sheet leverage and capital deployment are shifting: long-term debt rose to $32.4 billion from $7.5 billion after a $25 billion notes issuance, alongside $42.4 billion of equity-security purchases, increasing mark-to-market and concentration risk in the investment portfolio.",
+    "R&D compute infrastructure spend rose 127% and total opex rose 55%, so operating leverage could reverse if revenue momentum softens."
+  ],
+  "what_to_watch": [
+    {
+      "text": "**Earnings Quality and Equity Gains:** H1 FY2027 net income of $118.0 billion includes $23.7 billion of net gains from equity securities (vs $2.1 billion a year earlier), while operating cash flow was $74.4 billion and capex $4.4 billion, leaving roughly $70 billion of free cash flow. Operating margin of 66.2% shows the core business is highly profitable and operating cash flow is up about 74% YoY. However, the company bought $42.4 billion of equity securities in H1 and non-marketable securities rose to $51.2 billion, so mark-to-market swings can distort the headline EPS that the Street capitalizes.\n\n-> Focus on operating income and incremental operating margin excluding investment gains, plus management commentary on the lock-up-restricted portfolio and the pace of further equity purchases.",
+      "relevant_urls": [
+        "https://finance.yahoo.com/markets/stocks/articles/nvidia-blockbuster-quarter-one-ugly-134104617.html",
+        "https://io-fund.com/ai-stocks/nvidia-coreweave-nebius-circular-financing-gpu-boom"
+      ]
+    },
+    {
+      "text": "**Receivables, DSO and Customer Payment Terms:** Accounts receivable, net rose to $63.1 billion from $38.5 billion since January, while inventories rose to $31.6 billion from $21.4 billion, and the company discloses terms of 90 days up to one year for select investment-grade customers on large data center builds. Five direct customers account for about 70% of receivables, and DSO reportedly moved from 45 to 60 days. That said, the customers are described as investment-grade and operating cash flow still grew to $74.4 billion, so the strain may so far be timing rather than credit deterioration.\n\n-> Monitor accounts receivable and DSO, any lengthening of payment terms, receivable concentration percentages, and operating cash flow adjusted for the working-capital swing.",
+      "relevant_urls": [
+        "https://finance.yahoo.com/markets/stocks/articles/nvidia-blockbuster-quarter-one-ugly-134104617.html",
+        "https://growordieinvesting.substack.com/p/why-nvidias-circular-financing-does",
+        "https://www.facebook.com/Seekingalpha/videos/nvidia-warns-of-an-ai-bottleneck-the-working-capital-squeeze/1471746644821089"
+      ]
+    },
+    {
+      "text": "**Supply Commitments and Inventory Provisions:** Supply and capacity commitments jumped from $119 billion to $279 billion in one quarter (about $366 billion of total obligations, with roughly $92 billion due in the remainder of 2027, $87 billion in 2028 and $88 billion in 2029), which can be read as locking in multi-year supply for the Rubin transition. On the other hand, the filing says agreements are cancelable or adjustable only before firm orders are placed, and Q2 inventory and excess purchase-obligation provisions were already $985 million (a 0.8-point gross margin drag; $2.1 billion and 1.0 point for H1), so a demand miss would hit margins hard relative to that baseline.\n\n-> Track the commitment total and its maturity mix, the quarterly provision for inventory and excess purchase obligations, and management commentary on which commitments are cancelable.",
+      "relevant_urls": [
+        "https://growordieinvesting.substack.com/p/why-nvidias-circular-financing-does"
+      ]
+    },
+    {
+      "text": "**AI Cloud Commitments and Circular Demand:** About $36 billion of typically six-year AI cloud commitments sit alongside the supply build; NVIDIA sells infrastructure to AI clouds, commits to buy cloud service back, and may participate in revenue share if third-party customers absorb the capacity, which could create recurring infrastructure-style revenue. However, the AI clouds can unilaterally stop providing the service and sell it at more advantageous rates, and the filing says these commitments depend on customer and partner performance, so unused capacity would be NVIDIA's cost if third-party demand disappoints.\n\n-> Watch for the size and run-off rate of AI cloud commitments, any disclosed revenue-share contribution, and disclosure on utilization by third-party customers versus internal R&D.",
+      "relevant_urls": [
+        "https://io-fund.com/ai-stocks/nvidia-coreweave-nebius-circular-financing-gpu-boom",
+        "https://growordieinvesting.substack.com/p/why-nvidias-circular-financing-does"
+      ]
+    },
+    {
+      "text": "**Q3 Guide, Vera Rubin Ramp and Gross Margin:** Management's reported Q3 FY2027 guide of about $108 billion (±2%), excluding China Data Center compute revenue and with Vera Rubin at about 20% of Data Center revenue, implies a continued Blackwell-to-Rubin handoff without an air pocket. That said, the guided GAAP gross margin of about 74% (±50bp) is roughly 100bp below the 75.0% reported in Q2, and about 12% sequential revenue growth is slower than the 18% sequential Data Center growth, while published Street consensus ranges from $103.8 billion to $108.8 billion, so the beat-versus-consensus bar is unclear.\n\n-> Monitor the revenue result versus the $105.8-110.2 billion guided range, realized gross margin versus 74%, and the Rubin share of Data Center revenue.",
+      "relevant_urls": [
+        "https://finance.yahoo.com/markets/stocks/articles/nvidia-q2-earnings-beat-blackwell-144500017.html",
+        "https://www.marketbeat.com/earnings/reports/2026-11-18-nvidia-co-stock",
+        "https://www.rexshares.com/nvidia-earnings"
+      ]
+    },
+    {
+      "text": "**Operating Leverage and Compute Infrastructure Spend:** Q2 operating expenses rose 55% against revenue growth of 106%, taking operating margin to 66.2% from 60.8% and implying roughly 70% incremental operating margin, with Compute & Networking segment operating income up 121%. However, R&D rose 64% on a 127% increase in compute infrastructure and 30% higher compensation, and opex is growing in dollar terms (8,408 million vs 5,413 million), so leverage depends on revenue holding at the guided level.\n\n-> Track opex as a percentage of revenue, R&D compute infrastructure growth and incremental operating margin at the Q3 revenue level.",
+      "relevant_urls": [
+        "https://www.tikr.com/blog/nvidia-forecast-vera-rubin-ramp-and-a-108-billion-guide-set-the-stage-for-2027"
+      ]
+    },
+    {
+      "text": "**Demand Durability, Hyperscaler Capex and China:** NVIDIA's guidance reportedly assumes essentially zero China Data Center compute revenue, so any H200 resumption would be upside, and the company has pointed to hyperscaler capex potentially rising from about $650 billion in 2026 to $1 trillion in 2027. On the other hand, some investors are positioning for slower hyperscaler spending, with UBS projecting capex growth to slow from 76% this year to 25% next year and 6% in 2028, and revenue remains concentrated among a few customers.\n\n-> Monitor commentary on 2027 customer capex plans, Data Center growth by customer group (hyperscale versus AI cloud, enterprise and sovereign), and any change in China assumptions.",
+      "relevant_urls": [
+        "https://www.reuters.com/business/retail-consumer/among-ai-crowd-some-investors-position-slower-hyperscaler-spending-growth-2026-07-17",
+        "https://finance.yahoo.com/markets/stocks/articles/nvidia-looks-genius-buy-1-163300293.html",
+        "https://www.tastylive.com/news-insights/nvidia-earnings-preview-can-blackwell-justify-a-5-trillion-valuation-"
+      ]
+    },
+    {
+      "text": "**Capital Return, Debt and Investment Deployment:** In H1 FY2027 the company repurchased $39.0 billion of stock and paid $6.3 billion of dividends (quarterly dividend of $0.25 per share), funded by $74.4 billion of operating cash flow, with roughly $99 billion of repurchase authorization reportedly remaining. However, long-term debt rose to $32.4 billion from $7.5 billion after a $25.0 billion notes issuance in June 2026, and $42.4 billion went into equity-security purchases and $2.9 billion into a Groq, Inc. financing outflow, so the balance sheet is increasingly funding strategic investments externally.\n\n-> Monitor net debt, remaining buyback authorization, the pace of equity-security and strategic investments, and management commentary on capital allocation priorities.",
+      "relevant_urls": [
+        "https://www.cmelitegroup.com/knowledge-hub/nvidia-earnings-date"
+      ]
+    }
+  ],
+  "data_gaps": [
+    "Basic and diluted net income per share: the net income per share note was truncated in the retrieved filing chunks, so EPS could not be sourced from the filing.",
+    "Cash and cash equivalents balance sheet line and total marketable securities: the top of the balance sheet was truncated; only cash equivalents of $21,350 million within the investments table and marketable equity securities of $42,783 million are visible.",
+    "Free cash flow is not a reported line item in the retrieved chunks; it can only be derived (operating cash flow of $74,421 million less $4,434 million of purchases related to property and equipment and intangible assets).",
+    "Data Center revenue ($89.0 billion in the market platform table), the sequential comparison for the Q2 income statement and the dollar value of consolidated operating income were not in the retrieved chunks; only percentages of revenue are used.",
+    "Forward guidance: the retrieved filing chunks contain no outlook language, so the Q3 revenue and gross margin outlook cited in news could not be verified against the filing text.",
+    "Full inventory composition and the commitments table were truncated in the retrieved chunks, so inventory component totals and commitment amounts rely on hypothesis excerpts rather than the extracted filing text."
+  ],
+  "hypotheses_explored": [
+    {
+      "id": "h1",
+      "proposing_personality": "Conservative",
+      "question": "Is NVDA's reported net income of $118.0B backed by operating cash flow, or is it inflated by non-cash investment gains?",
+      "summary": "The headline H1 FY27 net income of $118.0B is mostly not cash. The cash flow statement subtracts $23.7B of equity-security gains, which explain much of the doubling in net income. Operating cash flow of $74.4B is the cleaner anchor, and after $4.4B of capex free cash flow is about $70B. Earnings quality is acceptable on a cash basis, but the EPS headline overstates the operating business.",
+      "evidence_quotes": [
+        "Net income $118,010 (six months ended Jul 26, 2026) vs $45,197 (six months ended Jul 27, 2025)",
+        "Gains from equity securities, net (23,707) vs (2,073)",
+        "Net cash provided by operating activities 74,421 vs 42,779",
+        "Purchases related to property and equipment and intangible assets (4,434)"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h2",
+      "proposing_personality": "Conservative",
+      "question": "Is the receivables build tied to extended customer payment terms a sign of rising credit and working-capital risk that the cash flow statement is not yet showing?",
+      "summary": "Accounts receivable rose to $63.1B at Jul 26, 2026 from $38.5B at Jan 25, 2026, about 64% in six months, attributed to extended payment terms of 90 days to one year for large investment-grade customers. Five direct customers hold about 70% of the balance. Inventory rose to $31.6B from $21.4B and supply commitments rose to $279B from $119B in one quarter. If collections slip, the cash flow statement would show it first.",
+      "evidence_quotes": [
+        "an increase in accounts receivable due to extended payment terms on large multi-quarter agreements with certain investment-grade customers",
+        "In certain cases, for investment-grade customer purchases, we have and may in the future provide longer payment terms ranging from 90 days up to one year to assist customers with large data center builds",
+        "Five direct customers accounted for 22%, 14%, 13%, 11%, and 10% of our accounts receivable balance as of July 26, 2026",
+        "increasing supply commitments from $119 billion last quarter to $279 billion as of July 26, 2026",
+        "NVIDIA's DSO increased from 45 days to 60 days, which the company attributed to 'extended payment terms for large purchases by certain investment grade customers to be shipped over multiple quarters'"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h3",
+      "proposing_personality": "Contrarian",
+      "question": "Is the $279B supply commitment build a bet on demand that has not yet shown up in cash, and does the Street's model assume that demand is locked in?",
+      "summary": "The Street models the data center run-rate as durable and treats the 75% gross margin as a given. Supply commitments more than doubled in one quarter from $119B to $279B against quarterly revenue of $96B. Several commitments can be cancelled or rescheduled, AI cloud arrangements let cloud partners walk away, concentration is rising and buyers are getting longer payment terms. If demand slows, the exposure is inventory write-downs and purchase obligations, not just lower revenue.",
+      "evidence_quotes": [
+        "increasing supply commitments from $119 billion last quarter to $279 billion as of July 26, 2026",
+        "in certain instances, these agreements may be cancelable, rescheduled, or adjustable for our business needs prior to placing firm orders",
+        "Shipments of Data Center Hopper products to China during the second quarter of fiscal year 2027 were less than 1% of Data Center revenue. Data Center revenue was $89.0 billion, up 117% from a year ago and up 18% sequentially",
+        "Under these agreements, AI clouds procure our data center infrastructure products and we commit to cloud service agreements, which the AI clouds can unilaterally stop providing to us and sell to third-party customers at more advantageous rates.",
+        "Provisions for inventory and excess inventory purchase obligations totaled $985 million and $2.1 billion for the second quarter and first half of fiscal year 2027.",
+        "Our revenue is concentrated among a limited number of direct and indirect customers and this trend may continue."
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h4",
+      "proposing_personality": "Contrarian",
+      "question": "Is reported earnings quality overstated, and does operating cash flow confirm the net income figure?",
+      "summary": "Six-month net income was $118.0B but operating cash flow was $74.4B, and the cash flow statement subtracts $23.7B of non-operating equity gains. Receivables are growing because of extended terms on multi-quarter deals, with five customers at 70% of the balance. The company bought $42.4B of equity securities in H1 and returned about $45B through buybacks and dividends. Mark-to-market gains flatter the P&L, and the Street may be capitalizing gain-inflated net income as recurring profit. This is a question for the call, not a finding that numbers are wrong.",
+      "evidence_quotes": [
+        "Net income $118,010 and Gains from equity securities, net (23,707)",
+        "Net cash provided by operating activities 74,421 (six months ended Jul 26, 2026, versus 42,779 a year earlier)",
+        "an increase in accounts receivable due to extended payment terms on large multi-quarter agreements with certain investment-grade customers",
+        "Five direct customers accounted for 22%, 14%, 13%, 11%, and 10% of our accounts receivable balance as of July 26, 2026. and payment terms ranging from 90 days up to one year",
+        "Purchases of equity securities (42,404) and Payments related to repurchases of common stock (39,044)"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h5",
+      "proposing_personality": "Dreamer",
+      "question": "What if NVIDIA's AI-cloud model turns the company from a chip vendor into a long-duration AI infrastructure platform with recurring cloud economics, so that its share of inference compute compounds for a decade?",
+      "summary": "NVIDIA is building a flywheel in which AI clouds deploy its systems, sovereign and enterprise demand broadens, and NVIDIA participates in downstream revenue. If the six-year AI cloud structure holds and third-party demand absorbs capacity, the company captures recurring infrastructure-style revenue on top of hardware margins. The constraint is that the structure places $36B of commitments on the balance sheet and gives AI clouds the right to exit, so the upside depends on counterparties remaining solvent and in demand.",
+      "evidence_quotes": [
+        "Our commitments, which are typically six years in duration, totaled $36 billion as of July 26, 2026, and decrease as capacity is used by third-party customers or by us for our research and development efforts. If certain criteria are met, we will participate in revenue share generated by the AI clouds from third-party customers, which may contribute to revenue in the future.",
+        "Under these agreements, AI clouds procure our data center infrastructure products and we commit to cloud service agreements, which the AI clouds can unilaterally stop providing to us and sell to third-party customers at more advantageous rates.",
+        "Data Center revenue was $89.0 billion, up 117% from a year ago and up 18% sequentially, driven by the ramp of our Blackwell Ultra infrastructure. ACIE revenue increased 138% from a year ago and 25% sequentially driven by end-demand from AI natives, enterprises, and sovereign customers, as well as hyperscalers utilizing AI clouds.",
+        "Future demand may be affected by the ability of customers and partners, including those developing open models, to generate revenue and sustain investment in computing infrastructure."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h6",
+      "proposing_personality": "Dreamer",
+      "question": "What if the next guide confirms that the Rubin transition extends the current acceleration into fiscal 2028, pushing NVIDIA's revenue base well beyond the current Blackwell cycle?",
+      "summary": "If Q3 FY2027 guidance is delivered and Rubin ramps on schedule, the Blackwell-driven growth curve is the start of a multi-generation platform cycle. The filing supports Blackwell momentum and ACIE/sovereign breadth, but the specific Q3 guide figure comes from a news aggregator and the Rubin timing is not confirmed in the filing excerpts retrieved. Confidence is low until the guide is verified against the company's own release.",
+      "evidence_quotes": [
+        "Data Center revenue was $89.0 billion, up 117% from a year ago and up 18% sequentially, driven by the ramp of our Blackwell Ultra infrastructure.",
+        "Gross margin was approximately flat sequentially as our Blackwell architecture remains the vast majority of our revenue.",
+        "Nvidia expects about $108B in revenue for fiscal Q3 2027 (plus or minus 2%). Management expects non-GAAP gross margins to be approximately 74% and GAAP gross margins to be about the same (plus or minus 50 basis points)."
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h7",
+      "proposing_personality": "Optimist",
+      "question": "Will NVIDIA's Data Center growth and Blackwell/Vera Rubin ramp carry revenue to the ~$108B guide at the next earnings call, with upside not dependent on China?",
+      "summary": "Data Center momentum is accelerating. Q2 FY27 Data Center revenue was $89.0B, up 117% YoY and 18% QoQ, with Hyperscale and AI Clouds/Industrial/Enterprise both growing sharply. Management guided Q3 FY27 revenue to about $108B (±2%) while assuming zero Data Center compute revenue from China, so the guide rests on non-China demand. Vera Rubin is expected to reach about 20% of Data Center revenue in the quarter, a built-in product-cycle catalyst.",
+      "evidence_quotes": [
+        "Data Center revenue was $89.0 billion, up 117% from a year ago and up 18% sequentially, driven by the ramp of our Blackwell Ultra infrastructure.",
+        "Shipments of Data Center Hopper products to China during the second quarter of fiscal year 2027 were less than 1% of Data Center revenue.",
+        "Compute & Networking revenue – The year-over-year increase in the second quarter and first half of fiscal year 2027 was driven by the ramp of our Blackwell Ultra infrastructure.",
+        "For the third quarter of fiscal 2027, NVIDIA expects revenues of $108 billion, plus or minus 2%. The guidance assumes no Data Center compute revenues from China. Management expects Vera Rubin to represent about 20% of Data Center revenues in the quarter."
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h8",
+      "proposing_personality": "Optimist",
+      "question": "Does NVIDIA's pricing power and mix shift show up as margin expansion and operating leverage, and is the record supply build a moat or a cancellable commitment risk?",
+      "summary": "Gross margin expanded to 75.0% in Q2 FY27 from 72.4% a year earlier on Blackwell Ultra mix, and Compute & Networking operating income rose 121% YoY even as opex grew 55%. Supply and capacity commitments rose from $119B to $279B, signaling confidence in demand and a supplier-scale moat. The caveat is that the commitments are not all firm, and the filing flags inventory provision and yield risk at this production scale.",
+      "evidence_quotes": [
+        "Gross margin increased to 75.0% for the second quarter of fiscal year 2027 compared to 72.4% for the se",
+        "Gross margin increased from a year ago on improved mix from Blackwell Ultra. Gross margin was approximately flat sequentially as our Blackwell architecture remains the vast majority of our revenue.",
+        "Compute & Networking segment operating income: $62,696 million in Q2 FY27 vs. $28,363 million in Q2 FY26, up 121%.",
+        "We have partnered with our extensive network to secure the necessary supply and critical components needed to meet demand for the next several years, increasing supply commitments from $119 billion last quarter to $279 billion as of July 26, 2026.",
+        "We enter into agreements with our suppliers that allow them to procure inventory based upon our defined criteria, and in certain instances, these agreements may be cancelable, rescheduled, or adjustable for our business needs prior to placing firm orders."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h9",
+      "proposing_personality": "Pessimist",
+      "question": "Are NVDA's off-balance-sheet supply and cloud commitments growing faster than verified end-demand, and could they force write-downs or cash strain if AI cloud customers pull back?",
+      "summary": "Supply commitments jumped from $119B to $279B as of July 26, 2026, mostly memory and manufacturing capacity. Separately, $36B of AI cloud agreements are commitments that the AI clouds can stop providing, and the obligations are described as dependent on customer performance. Management frames these as strategic, but they are firm-looking liabilities largely outside the balance sheet. If AI cloud demand softens, NVDA carries the excess-capacity and inventory risk.",
+      "evidence_quotes": [
+        "increasing supply commitments from $119 billion last quarter to $279 billion as of July 26, 2026",
+        "Supply and capacity ... Total $ 279 with Total $ 366 across all commitment categories, in billions",
+        "AI cloud agreements ... Under these agreements, AI clouds procure our data center infrastructure products and we commit to cloud service agreements, which the AI clouds can unilaterally stop providing to us and sell to third-party customers at more advantageous rates.",
+        "Our commitments, which are typically six years in duration, totaled $36 billion as of July 26, 2026, and decrease as capacity is used by third-party customers or by us for our research and development efforts. ... If market conditions change, it may negatively impact our financial results.",
+        "These strategic commitments and guarantees may impact our financial results and are dependent on the performance of our customers and partners."
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h10",
+      "proposing_personality": "Pessimist",
+      "question": "Is NVDA's working capital building faster than revenue, with inventory growth, longer customer payment terms, and receivable concentration creating a cash-conversion risk the headline margins do not show?",
+      "summary": "Raw materials rose from $3,807M to $11,341M and work in process from $8,822M to $13,377M between fiscal year-end and July 26, 2026, while finished goods fell to $6,857M. Management offers payment terms of 90 days up to one year to some investment-grade customers, and five direct customers hold 22%, 14%, 13%, 11% and 10% of receivables. Debt rose from $7.5B to $31.4B in fair value after a $25B note issue in June 2026. The total inventory line and prior-period finished goods figure could not be verified from the truncated extract.",
+      "evidence_quotes": [
+        "Payment from customers is generally due shortly after delivery of our products. In certain cases, for investment-grade customer purchases, we have and may in the future provide longer payment terms ranging from 90 days up to one year to assist customers with large data center builds",
+        "Raw materials $ 11,341 $ 3,807 Work in process 13,377 8,822 Finished goods 6,857 8,",
+        "Five direct customers accounted for 22 %, 14 %, 13 %, 11 %, and 10 % of our accounts receivable balance as of July 26, 2026.",
+        "For the second quarter of fiscal year 2027, one direct customer represented 16% of total revenue",
+        "In June 2026, we issued an aggregate of $ 25.0 billion of senior unsecured notes across seven tranches for general corporate purposes. and the estimated fair value of debt was $ 31.4 billion and $ 7.5 billion, respectively.",
+        "Gross margin increased to 75.0% for the second quarter of fiscal year 2027 compared to 72.4%"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h11",
+      "proposing_personality": "Quant",
+      "question": "Is NVDA's operating leverage still widening, with opex growing far slower than revenue, such that incremental operating margins stay well above the 75% gross margin on the Q3 FY27 call?",
+      "summary": "Q2 FY27 revenue rose 106% YoY to $96.2B while total opex rose 55% YoY and 10% QoQ against 18% QoQ revenue growth. Consolidated operating margin expanded from 60.8% to 66.2%, implying an incremental operating margin of roughly 70% on about $49.5B of incremental revenue. Gross margin expanded 2.6 points YoY to 75.0% and was flat QoQ, so the gain is mix-driven. The risk is that opex growth is accelerating in dollar terms and R&D compute infrastructure is up 127%.",
+      "evidence_quotes": [
+        "Operating expenses were up 55% from a year ago and up 10% sequentially.",
+        "Gross margin increased to 75.0% for the second quarter of fiscal year 2027 compared to 72.4%",
+        "The increases in research and development expenses for the second quarter and first half of fiscal year 2027 were primarily driven by a 127% and 120% increase in compute infrastructure, respectively",
+        "Revenue by Market Platform: Data Center $89,023 million, up 18% QoQ and 117% YoY; Total revenue $96,221 million, up 18% QoQ and 106% YoY",
+        "Operating margin 66.2% vs 60.8% a year ago; operating expenses 8.8% of revenue vs 11.6%"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h12",
+      "proposing_personality": "Quant",
+      "question": "Do the supply commitments that more than doubled in one quarter imply a revenue ramp beyond the guided Q3 level, and is the gross margin at risk from inventory and purchase-obligation provisions as Blackwell transitions?",
+      "summary": "Supply and capacity commitments jumped from $119B to $279B in one quarter, up about 134% QoQ, with total purchase obligations of $366B, far faster than the roughly 12% sequential revenue step implied by the $108B Q3 guide. Either the commitments are multi-year ($92B remainder of 2027, $87B in 2028, $88B in 2029), implying revenue visibility, or they embed inventory risk. Q2 provisions were $985M (0.8-point margin drag) and H1 provisions $2.1B (1.0 point). Street consensus for Q3 is inconsistent across sources.",
+      "evidence_quotes": [
+        "increasing supply commitments from $119 billion last quarter to $279 billion as of July 26, 2026",
+        "Remainder of 2027: Supply and capacity $92B; 2028 $87B; 2029 $88B; total commitments $366B",
+        "Provisions for inventory and excess inventory purchase obligations totaled $985 million and $2.1 billion for the second quarter and first half of fiscal year 2027",
+        "The net effect on our gross margin was an unfavorable impact of 0.8% and 1.0% in the second quarter and first half of fiscal year 2027",
+        "NVIDIA's guidance for Q3 FY2027, revenue of $108 billion, plus or minus 2%, made explicit what was already evident in the Q1 consensus debate",
+        "NVIDIA is expected to post earnings of $2.49 per share on revenue of $108.82 billion"
+      ],
+      "confidence": 3
+    }
+  ]
+}

@@ -1,0 +1,296 @@
+{
+  "ticker": "BA",
+  "company_name": "The Boeing Company",
+  "filing_type": "10-Q",
+  "filing_date": "2026-07-28",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T14:03:48.500417+00:00",
+  "key_metrics": [
+    {
+      "name": "Total revenues (Q2 2026)",
+      "value": "24,560 (vs 22,749 in Q2 2025; +8.0% YoY, calculated)",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Item 1, Condensed Consolidated Statements of Operations; MD&A Consolidated Results of Operations"
+    },
+    {
+      "name": "Earnings/(loss) from operations (Q2 2026)",
+      "value": "156 (vs (176) in Q2 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Item 1, Condensed Consolidated Statements of Operations"
+    },
+    {
+      "name": "Operating margin (Q2 2026)",
+      "value": "0.6% (vs (0.8)% in Q2 2025)",
+      "unit": "percent",
+      "source_citation": "10-Q, MD&A Consolidated Results of Operations table"
+    },
+    {
+      "name": "Net loss attributable to Boeing shareholders (Q2 2026)",
+      "value": "(444) (vs (611) in Q2 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Item 1, Condensed Consolidated Statements of Operations"
+    },
+    {
+      "name": "Diluted loss per share (Q2 2026)",
+      "value": "(0.67) (vs (0.92) in Q2 2025)",
+      "unit": "USD per share",
+      "source_citation": "10-Q, Item 1, Condensed Consolidated Statements of Operations; Note 3 Earnings Per Share"
+    },
+    {
+      "name": "Core loss per share, non-GAAP (Q2 2026)",
+      "value": "(0.76) (vs (1.24) in Q2 2025)",
+      "unit": "USD per share",
+      "source_citation": "10-Q, MD&A Non-GAAP Measures reconciliation"
+    },
+    {
+      "name": "Core operating earnings, non-GAAP (Q2 2026)",
+      "value": "1 (vs (433) in Q2 2025); core operating margin 0.0%",
+      "unit": "USD millions",
+      "source_citation": "10-Q, MD&A Non-GAAP Measures reconciliation"
+    },
+    {
+      "name": "Net cumulative catch-up impact on earnings from operations (Q2 2026)",
+      "value": "(350) (vs (187) in Q2 2025); (0.52) per diluted share",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Note 1 Basis of Presentation, Long-term Contracts"
+    },
+    {
+      "name": "Net cash provided by operating activities (six months 2026)",
+      "value": "1,185 (vs (1,389) used in six months 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Item 1, Condensed Consolidated Statements of Cash Flows; MD&A Liquidity and Capital Resources"
+    },
+    {
+      "name": "Capital expenditures (six months 2026)",
+      "value": "2,008 (vs 1,101 in six months 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Item 1, Condensed Consolidated Statements of Cash Flows; Note 19 Capital Expenditures"
+    },
+    {
+      "name": "Operating cash flow less capex (six months 2026, derived, not a company-reported measure)",
+      "value": "(823)",
+      "unit": "USD millions",
+      "source_citation": "Derived from 10-Q Condensed Consolidated Statements of Cash Flows (1,185 less 2,008)"
+    },
+    {
+      "name": "Cash and cash equivalents",
+      "value": "7,239 (vs 10,921 at Dec 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Item 1, Condensed Consolidated Statements of Financial Position"
+    },
+    {
+      "name": "Short-term and other investments",
+      "value": "12,783 (vs 18,479 at Dec 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Item 1, Condensed Consolidated Statements of Financial Position"
+    },
+    {
+      "name": "Total debt",
+      "value": "45.9 billion (vs 54.1 billion at Dec 31, 2025); 4.6 billion classified short-term",
+      "unit": "USD billions",
+      "source_citation": "10-Q, MD&A Liquidity and Capital Resources, Financing Activities"
+    },
+    {
+      "name": "Unused revolving credit capacity",
+      "value": "10.0",
+      "unit": "USD billions",
+      "source_citation": "10-Q, MD&A Liquidity and Capital Resources, Capital Resources"
+    },
+    {
+      "name": "Total backlog",
+      "value": "715,261 (vs 682,207 at Dec 31, 2025; +4.8%, calculated); contractual 674,506",
+      "unit": "USD millions",
+      "source_citation": "10-Q, MD&A Backlog table; Note 19 Backlog"
+    },
+    {
+      "name": "Commercial deliveries (Q2 2026)",
+      "value": "171 total (737: 129; 767: 10; 777: 7; 787: 25) vs 150 in Q2 2025",
+      "unit": "aircraft",
+      "source_citation": "10-Q, MD&A Commercial Airplanes, deliveries table"
+    },
+    {
+      "name": "Product warranty liability",
+      "value": "3,273 at June 30, 2026 (vs 2,797 at Jan 1, 2026), including 521 of estimate changes in six months",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Note 10 Product Warranties"
+    },
+    {
+      "name": "Inventories",
+      "value": "88,388 (vs 84,679 at Dec 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Item 1, Statements of Financial Position; Note 6 Inventories"
+    },
+    {
+      "name": "Total shareholders' equity",
+      "value": "6,100 (vs 5,454 at Dec 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q, Item 1, Condensed Consolidated Statements of Financial Position"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "Commercial Airplanes (BCA)",
+      "revenue": "11,751 (Q2 2026); operating loss (322)",
+      "yoy_change": "+8.1% revenue vs 10,874 (calculated); operating margin (2.7)% vs (5.1)%",
+      "commentary": "Revenue growth was driven by higher 737 deliveries, partly offset by lower 777 deliveries. The loss narrowed on higher revenue and a lower 767 reach-forward loss, partly offset by higher R&D. BCA backlog was 596,724 million. 737 production is transitioning from 42 to 47 per month.",
+      "source_citation": "10-Q, MD&A Commercial Airplanes; Item 1 Summary of Business Segment Data"
+    },
+    {
+      "name": "Defense, Space & Security (BDS)",
+      "revenue": "7,483 (Q2 2026); operating loss (15)",
+      "yoy_change": "+13.1% revenue vs 6,617 (calculated); operating margin (0.2)% vs 1.7%",
+      "commentary": "Revenue rose on proprietary and weapons programs, higher KC-46 volume and the acquired Spirit defense business. Earnings swung to a loss on a 280 million VC-25B reach-forward loss and higher G&A. Backlog was 85,322 million.",
+      "source_citation": "10-Q, MD&A Defense, Space & Security; Note 10 VC-25B Presidential Aircraft"
+    },
+    {
+      "name": "Global Services (BGS)",
+      "revenue": "5,344 (Q2 2026); operating earnings 968",
+      "yoy_change": "+1.2% revenue vs 5,281 (calculated); operating margin 18.1% vs 19.9%",
+      "commentary": "Higher commercial and government services revenue was largely offset by the absence of 327 million from the Digital Aviation Solutions divestiture. Margin compression also reflects ERP-transition disruption in one distribution business. Backlog was 32,840 million.",
+      "source_citation": "10-Q, MD&A Global Services"
+    },
+    {
+      "name": "Unallocated items, eliminations and other",
+      "revenue": "(18) revenue; (630) operating loss (Q2 2026)",
+      "yoy_change": "Operating loss improved from (1,035); the prior-year quarter included a 445 million DOJ-related charge",
+      "commentary": "The improvement reflects the absence of the 445 million Q2 2025 charge tied to the Department of Justice agreement, partly offset by higher deferred compensation expense.",
+      "source_citation": "10-Q, MD&A Unallocated Items, Eliminations and Other; Note 19"
+    }
+  ],
+  "forward_guidance": {
+    "text": "The 10-Q gives no quantitative financial guidance such as revenue, EPS or free cash flow targets. Qualitative operating expectations: (1) the 737 program is transitioning from 42 to 47 per month with FAA concurrence, with further rate increases planned and a new 737 line in low-rate production since July 2026 that must be production-certified; (2) 737-7 and 737-10 certification expected in 2026, with timing set by regulators; (3) 777-9 first delivery expected in 2027, 777-8 Freighter about two years later, and 777-8 passenger not before 2030; (4) 787 stabilized at 8 per month; (5) 2026 capital expenditures expected to be higher than 2025; (6) VC-25B contract terms expected to be finalized in Q3 2026; (7) Starliner uncrewed mission no earlier than Q4 2026; (8) MQ-25 LRIP contract expected later in 2026; (9) 767 commercial production expected to finish by 2027.",
+    "source_citation": "10-Q, MD&A Commercial Airplanes Program Highlights; MD&A Investing Activities; Note 10 (VC-25B, MQ-25, Commercial Crew)"
+  },
+  "key_risks": [
+    {
+      "description": "Fixed-price development programs (VC-25B, KC-46A, MQ-25, T-7A, Commercial Crew) carry further reach-forward loss risk. VC-25B took a new 280 million loss in Q2 2026, and contract terms and schedule are to be reset in Q3 2026.",
+      "is_new": true,
+      "source_citation": "10-Q, Note 10 Liabilities, Commitments and Contingencies (VC-25B; Fixed-Price Contracts); MD&A BDS"
+    },
+    {
+      "description": "The ULA Vulcan launch pause after a Q1 2026 anomaly is hurting ULA's finances. Boeing and Lockheed each guaranteed 500 million of ULA credit facilities maturing July 30, 2027, and expect to provide additional support and could incur losses.",
+      "is_new": true,
+      "source_citation": "10-Q, Note 9 Investments; Note 11 Credit Guarantees"
+    },
+    {
+      "description": "Starliner schedule slip: the uncrewed mission is now no earlier than Q4 2026, follow-on mission timing and requirements are under discussion with NASA, and there are about 558 million of capitalized precontract costs.",
+      "is_new": true,
+      "source_citation": "10-Q, Note 10 Commercial Crew"
+    },
+    {
+      "description": "Certification and delivery risk: 737-7/737-10 certification (including the engine anti-ice solution), 777-9 certification flight testing, and the 777X engine durability issue could delay deliveries, cause reach-forward losses or cancellations. About 40 737-7/-10 aircraft are in inventory.",
+      "is_new": false,
+      "source_citation": "10-Q, MD&A Commercial Airplanes Program Highlights; Backlog"
+    },
+    {
+      "description": "Production-rate ramp and supply chain risk: inflation, supplier financial difficulties and shortages (the 787 line was briefly slowed in April 2026), and the 737 rate increase to 47 and beyond requires FAA concurrence and certification of the new line.",
+      "is_new": false,
+      "source_citation": "10-Q, MD&A Additional Considerations: Supply Chain; 787 Program"
+    },
+    {
+      "description": "Leverage and liquidity: total debt is 45.9 billion, equity is only 6.1 billion, and credit ratings sit at the lowest investment-grade tier (BBB-/Baa3). Cash and short-term investments fell by about 9.4 billion in six months (calculated from the balance sheet) as 8.4 billion of debt was repaid. Operating cash flow less capex was negative for the half.",
+      "is_new": false,
+      "source_citation": "10-Q, Statements of Financial Position and Cash Flows; MD&A Liquidity and Capital Resources"
+    },
+    {
+      "description": "Labor: two SPEEA contracts expire October 6, 2026, and negotiations are ongoing, creating the possibility of a work stoppage.",
+      "is_new": false,
+      "source_citation": "10-Q, MD&A Additional Considerations: Human Capital"
+    },
+    {
+      "description": "U.S. government funding and budget uncertainty: agencies are funded only through September 30, 2026, the FY27 NASA request is 6 billion lower, and DoW priorities could change.",
+      "is_new": false,
+      "source_citation": "10-Q, MD&A Additional Considerations: U.S. Government Funding; Defense, Space & Security Overview"
+    },
+    {
+      "description": "Legal exposure: MAX-accident civil suits, securities class actions (class certification partially granted March 16, 2026 and being appealed), and door plug accident litigation. No range of loss can be estimated. Family-member representatives have until late August 2026 to decide on further appeal of the non-prosecution agreement ruling.",
+      "is_new": false,
+      "source_citation": "10-Q, Note 18 Legal Proceedings"
+    },
+    {
+      "description": "Spirit integration: purchase price allocation is still preliminary, with goodwill of 10,278 million assigned to BCA; integration or synergy shortfalls could affect results.",
+      "is_new": false,
+      "source_citation": "10-Q, Note 2 Spirit Acquisition; Forward-Looking Statements"
+    },
+    {
+      "description": "Higher non-operating pension expense (147 million in H1 2026 vs income of 85 million) and rising warranty liabilities (3,273 million) weigh on earnings.",
+      "is_new": false,
+      "source_citation": "10-Q, Note 13 Postretirement Plans; Note 10 Product Warranties"
+    },
+    {
+      "description": "Trade and tariffs: tariffs were not material in H1 2026 and the IEEPA ruling is noted, but US-China relations remain a watch item and the environment could change.",
+      "is_new": false,
+      "source_citation": "10-Q, MD&A Additional Considerations: Global Trade"
+    }
+  ],
+  "recent_news": [],
+  "bull_case": [
+    "Quarterly operating earnings turned positive (156 million vs a 176 million loss) and core operating earnings reached breakeven, with net loss narrowing to 444 million from 611 million.",
+    "Commercial deliveries rose to 171 from 150, with 737 deliveries at 129 vs 104. The 737 is moving to 47 per month, with a new production line in low-rate production and 787 stabilized at 8 per month.",
+    "BCA loss narrowed to 322 million from 557 million, and BCA backlog grew to 596.7 billion. Total backlog was 715.3 billion (+4.8% since year-end).",
+    "Operating cash flow turned positive in H1 at 1.2 billion vs 1.4 billion used a year earlier, helped by 4.7 billion of higher advances and progress billings.",
+    "Debt was cut to 45.9 billion from 54.1 billion, lowering interest expense, and Fitch moved its outlook to positive in June 2026.",
+    "Milestones in 2026: MQ-25 first flight and Milestone C, T-7A Milestone C and a first 14-aircraft LRIP lot, and an expected MQ-25 LRIP contract.",
+    "BDS revenue grew 13% and BGS holds an 18% margin, with BGS backlog up to 32.8 billion."
+  ],
+  "bear_case": [
+    "The company is still loss-making: Q2 net loss was 444 million and the diluted loss per share was (0.67). GAAP operating margin was only 0.6%, and the segment losses at BCA and BDS were not offset by BGS profits.",
+    "Q2 net unfavorable catch-up adjustments of 350 million (0.52 per share) and the new 280 million VC-25B charge show ongoing fixed-price development program risk. BDS swung to an operating loss, and further charges are flagged for several programs.",
+    "Operating cash flow less capex was about negative 823 million for H1 (derived). The operating cash inflow came largely from a 4.7 billion rise in advances, while inventories grew by 3.9 billion to 88.4 billion. Cash and short-term investments fell to 20.0 billion from 29.4 billion.",
+    "Balance sheet is stretched: equity is 6.1 billion against 159.8 billion of liabilities, ratings are BBB-/Baa3, and a 3.0 billion 364-day facility expires in August 2026.",
+    "The 737-7/-10 and 777-9 certifications and the 777X engine issue remain unresolved, and the 777-9 first delivery is not until 2027. 777 deliveries fell to 7 from 13 in Q2.",
+    "Warranty liability rose to 3.27 billion from 2.80 billion in six months, non-operating pension expense swung to a cost of 147 million, and BGS margins are compressing (18.1% vs 19.9%) on divestiture and ERP disruption.",
+    "New contingent exposures arose: ULA guarantee (500 million with possible additional support), Starliner delay, and a possible SPEEA work stoppage after October 6, 2026.",
+    "Mandatory convertible preferred (115 million depositary shares) converts October 2027 into 5.828 to 6.994 common shares per preferred share (roughly 33 to 40 million shares), adding dilution."
+  ],
+  "what_to_watch": [
+    {
+      "text": "Whether Q3 2026 deliveries and 737 production at 47 per month hold, and how the 737 rate and certification of the new line are progressing.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Q3 operating cash flow and capex versus the 2026 expectation of higher capex, and any management free-cash-flow commentary on the earnings call.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Additional reach-forward losses or catch-up adjustments at BDS (VC-25B contract reset in Q3, KC-46A, MQ-25, T-7A, Starliner) and BDS operating margin recovery after the Q2 operating loss.",
+      "relevant_urls": []
+    },
+    {
+      "text": "FAA progress on 737-7/-10 certification, including the engine anti-ice solution, and 777-9 flight test phases and the engine durability fix.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Outcome of the SPEEA negotiations ahead of the October 6, 2026 contract expirations.",
+      "relevant_urls": []
+    },
+    {
+      "text": "ULA Vulcan return to flight and any further Boeing financial support beyond the 500 million guarantee.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Liquidity actions: the 364-day credit facility expiring in August 2026 (renewal or term-out), further debt reductions, and credit rating or outlook changes.",
+      "relevant_urls": []
+    },
+    {
+      "text": "BGS margin trend as ERP disruption eases, and BCA backlog trends including cancellations (2.8 billion in H1) and ASC 606 adjustments.",
+      "relevant_urls": []
+    },
+    {
+      "text": "US government funding: FY27 appropriations and any shutdown risk after September 30, 2026, plus the NASA budget cut and Starliner mission timing.",
+      "relevant_urls": []
+    }
+  ],
+  "data_gaps": [
+    "No quantitative management guidance (revenue, EPS, free cash flow, delivery targets) appears in the 10-Q, so no numeric forward guidance could be cited.",
+    "No earnings press release, 8-K or earnings call transcript was provided, so management commentary beyond the 10-Q MD&A is missing.",
+    "No analyst consensus estimates (EPS, revenue, deliveries, free cash flow) were provided for the upcoming quarter.",
+    "No Q3 2026 data was provided. The 10-Q covers the quarter ended June 30, 2026 and is nearly three months older than the report timestamp, so developments since July 28, 2026 are not captured, including any 737-7/-10 certification, the 364-day facility renewal, the SPEEA outcome, or VC-25B finalization.",
+    "No recent news items were provided and no URLs could be cited, so recent_news is empty.",
+    "The company does not report a free cash flow figure in the 10-Q. The operating cash flow less capex figure is derived and covers only six months; Q2 standalone operating cash flow is not disclosed.",
+    "Segment-level quarterly delivery or production-rate targets for the second half and 2027 were not quantified beyond the 737 and 787 rates.",
+    "No stock price or valuation data was provided, so valuation context is not covered."
+  ],
+  "hypotheses_explored": []
+}

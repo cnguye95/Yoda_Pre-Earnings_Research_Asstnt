@@ -1,0 +1,244 @@
+{
+  "ticker": "NFLX",
+  "company_name": "Netflix, Inc.",
+  "filing_type": "10-Q",
+  "filing_date": "2026-10-21",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T13:50:25.188747+00:00",
+  "key_metrics": [
+    {
+      "name": "Q3'26 Revenues",
+      "value": "12.874 (+12% YoY; +11% constant currency; FX net of hedging contributed $101M)",
+      "unit": "USD billions",
+      "source_citation": "10-Q Part I, Item 1 Consolidated Statements of Operations; Item 2 MD&A Results of Operations / Revenues"
+    },
+    {
+      "name": "Q3'26 Operating Income",
+      "value": "4.459 (+37% YoY vs 3.248)",
+      "unit": "USD billions",
+      "source_citation": "10-Q Part I, Item 1 Consolidated Statements of Operations; Item 2 MD&A Results of Operations"
+    },
+    {
+      "name": "Q3'26 Operating Margin",
+      "value": "34.6% vs 28.2% in Q3'25 (the prior-year quarter included a $619M Brazil non-income tax expense in cost of revenues)",
+      "unit": "percent",
+      "source_citation": "10-Q Note 12 Segment and Geographic Information; Item 2 MD&A Cost of Revenues"
+    },
+    {
+      "name": "Q3'26 Net Income",
+      "value": "3.664 (+44% YoY vs 2.547)",
+      "unit": "USD billions",
+      "source_citation": "10-Q Part I, Item 1 Consolidated Statements of Operations; Item 2 MD&A Results of Operations"
+    },
+    {
+      "name": "Q3'26 Diluted EPS",
+      "value": "0.87 vs 0.59 in Q3'25 (post 10-for-1 split)",
+      "unit": "USD per share",
+      "source_citation": "10-Q Part I, Item 1 Consolidated Statements of Operations; Note 3 Earnings per Share"
+    },
+    {
+      "name": "Q3'26 Effective Tax Rate",
+      "value": "15% vs 18% in Q3'25 (driven by a larger U.S. federal R&D tax credit benefit)",
+      "unit": "percent",
+      "source_citation": "10-Q Note 11 Income Taxes; Item 2 MD&A Provision for Income Taxes"
+    },
+    {
+      "name": "Q3'26 Net Cash Provided by Operating Activities",
+      "value": "3.162 (+12% YoY)",
+      "unit": "USD billions",
+      "source_citation": "10-Q Consolidated Statements of Cash Flows; Item 2 MD&A Cash Flows"
+    },
+    {
+      "name": "Q3'26 Free Cash Flow (derived: operating cash flow less purchases of property and equipment of $278.8M)",
+      "value": "2.884",
+      "unit": "USD billions",
+      "source_citation": "10-Q Consolidated Statements of Cash Flows (derived calculation)"
+    },
+    {
+      "name": "Q3'26 Share Repurchases",
+      "value": "4.8 (63.9M shares; average price roughly $72-77 per share); $22.3B authorization remaining",
+      "unit": "USD billions",
+      "source_citation": "10-Q Part II, Item 2 Unregistered Sales of Equity Securities; Note 10 Stockholders' Equity"
+    },
+    {
+      "name": "Cash, Cash Equivalents, Restricted Cash and Short-term Investments",
+      "value": "8.226 at 9/30/26 vs 9.068 at 12/31/25",
+      "unit": "USD billions",
+      "source_citation": "10-Q Item 2 MD&A Liquidity and Capital Resources; Note 4"
+    },
+    {
+      "name": "Total Debt (short- and long-term, carrying value)",
+      "value": "15.132 at 9/30/26 vs 14.463 at 12/31/25; $2.475B classified as short-term; $3.194B principal and interest due in next 12 months",
+      "unit": "USD billions",
+      "source_citation": "10-Q Note 7 Debt; Item 2 MD&A Liquidity and Capital Resources"
+    },
+    {
+      "name": "Total Content Obligations",
+      "value": "25.2 vs 24.0 at 12/31/25, of which 11.8 is due in under one year",
+      "unit": "USD billions",
+      "source_citation": "10-Q Note 9 Commitments and Contingencies - Content"
+    },
+    {
+      "name": "Q3'26 Content Amortization",
+      "value": "4.235 (+6% YoY vs 4.003)",
+      "unit": "USD billions",
+      "source_citation": "10-Q Note 5 Balance Sheet Components - Content Assets; Note 12"
+    },
+    {
+      "name": "Q3'26 Additions to Content Assets",
+      "value": "5.160 vs 4.654 in Q3'25 (+11%)",
+      "unit": "USD billions",
+      "source_citation": "10-Q Consolidated Statements of Cash Flows"
+    },
+    {
+      "name": "9M'26 Net Income (includes $2.8B WBD termination fee in Q1'26 within Interest and other income)",
+      "value": "12.348 vs 8.563 in 9M'25",
+      "unit": "USD billions",
+      "source_citation": "10-Q Consolidated Statements of Operations; Note 6 Acquisitions"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "United States and Canada (UCAN)",
+      "revenue": "$5,628.2M",
+      "yoy_change": "+11% reported; +11% constant currency",
+      "commentary": "Largest region at about 44% of Q3 revenue. Nine-month revenue was $16.3B, up 12%.",
+      "source_citation": "10-Q Note 2 Revenue Recognition; Item 2 MD&A Revenues and Non-GAAP Constant Currency Information"
+    },
+    {
+      "name": "Europe, Middle East, and Africa (EMEA)",
+      "revenue": "$4,106.6M",
+      "yoy_change": "+11% reported; +9% constant currency",
+      "commentary": "FX was a tailwind. Prior-year Q3 included $113.6M of hedging losses in EMEA revenue. Nine-month revenue was $12.1B, up 14% (10% constant currency).",
+      "source_citation": "10-Q Note 2 Revenue Recognition; Item 2 MD&A Non-GAAP Constant Currency Information"
+    },
+    {
+      "name": "Latin America (LATAM)",
+      "revenue": "$1,602.6M",
+      "yoy_change": "+17% reported; +12% constant currency",
+      "commentary": "Fastest-growing region on a reported basis. Roughly 5 points of the growth came from FX. Nine-month revenue was $4.7B, up 19% (15% constant currency).",
+      "source_citation": "10-Q Note 2 Revenue Recognition; Item 2 MD&A Non-GAAP Constant Currency Information"
+    },
+    {
+      "name": "Asia-Pacific (APAC)",
+      "revenue": "$1,536.8M",
+      "yoy_change": "+12% reported; +15% constant currency",
+      "commentary": "Constant-currency growth exceeded reported growth because FX was a headwind. Nine-month revenue was $4.6B, up 16% (17% constant currency).",
+      "source_citation": "10-Q Note 2 Revenue Recognition; Item 2 MD&A Non-GAAP Constant Currency Information"
+    },
+    {
+      "name": "Revenue driver mix (company-wide, not a reportable segment)",
+      "revenue": "Subscription revenue +$1,057M YoY; advertising revenue +$256M YoY",
+      "yoy_change": "Total revenue +12%",
+      "commentary": "Netflix operates as one operating segment. Subscription growth reflects higher memberships and pricing. Advertising contributed about 19% of the incremental revenue. Absolute subscription and advertising revenue levels are not disclosed in the 10-Q.",
+      "source_citation": "10-Q Item 2 MD&A Revenues; Note 12 Segment and Geographic Information"
+    }
+  ],
+  "forward_guidance": {
+    "text": "The 10-Q contains no quantitative revenue, operating margin, or EPS guidance. Qualitative statements: the core strategy is to grow globally within the parameters of the operating margin target; management expects to continue to significantly invest in global content, particularly original content; cash flows, available funds and financing access are expected to be sufficient for the next twelve months and beyond; unknown future content obligations are expected to be significant, at roughly $1B-$4B over the next three years, mostly after the next twelve months.",
+    "source_citation": "10-Q Part I, Item 2 MD&A - Overview; Liquidity and Capital Resources (Uses of Cash, Material Cash Requirements)"
+  },
+  "key_risks": [
+    {
+      "description": "Foreign currency exposure: non-USD currencies were 57% of revenue and 30% of operating expenses in 9M'26. A weaker foreign currency versus the USD would hurt reported revenue and operating income. The 10-Q's sensitivity analysis estimates that a 10% USD weakening would lower AOCI on revenue cash flow hedges by about $2.4B. Reported revenue growth benefited from FX ($101M in Q3, $508M in 9M).",
+      "is_new": false,
+      "source_citation": "10-Q Part I, Item 3 Quantitative and Qualitative Disclosures About Market Risk - Foreign Currency Risk; Item 2 MD&A Revenues"
+    },
+    {
+      "description": "Content spend and commitments: $25.2B of content obligations ($19.6B off balance sheet), plus unknown future title obligations of roughly $1B-$4B over three years. Content asset additions rose 11% in Q3 and 24% in 9M, and in-production content grew to $10.9B. Heavy upfront cash investment affects liquidity.",
+      "is_new": false,
+      "source_citation": "10-Q Note 9 Commitments and Contingencies - Content; Item 2 MD&A Liquidity and Capital Resources (Uses of Cash, Material Cash Requirements); Note 5"
+    },
+    {
+      "description": "Brazil non-income tax assessments: Q3'25 cost of revenues included a $619M expense, and 9M'26 working capital included $729M of non-routine payments for prior-period assessments. The company is routinely audited on non-income taxes, so further assessments are possible and the year-over-year comparison is distorted.",
+      "is_new": false,
+      "source_citation": "10-Q Item 2 MD&A Cost of Revenues; Cash Flows; Note 9 Non-Income Taxes"
+    },
+    {
+      "description": "Debt maturities and refinancing: $2.475B is classified as short-term debt, including $1.0B of 4.375% notes due November 2026, and $3.19B of principal and interest is due within 12 months. Total debt is $15.1B against $8.2B of cash and investments. Management states it may periodically raise debt, and financing availability depends on market conditions.",
+      "is_new": false,
+      "source_citation": "10-Q Note 7 Debt; Item 2 MD&A Liquidity and Capital Resources - Financing Arrangements"
+    },
+    {
+      "description": "Interest rate exposure is new with $2.4B of interest rate swaps. In 2026 Netflix began converting fixed-rate notes to SOFR-floating. A 1% rise in SOFR would raise annual interest expense by about $24M, and the swaps carry a $145M fair value liability.",
+      "is_new": true,
+      "source_citation": "10-Q Note 8 Derivative Financial Instruments and Hedging Activities; Part I, Item 3 Interest Rate Risk"
+    },
+    {
+      "description": "Expense growth: technology and development expense rose 21% YoY in Q3 (personnel +$136M), outpacing revenue growth of 12%. Stock-based compensation rose to $134M from $81M. Cost discipline matters for sustaining a margin of roughly 34%.",
+      "is_new": false,
+      "source_citation": "10-Q Item 2 MD&A Technology and Development; Note 10 Stock-Based Compensation"
+    },
+    {
+      "description": "Capital return and liquidity drain: Q3 repurchases of $4.8B exceeded operating cash flow of $3.2B. Cash and investments fell 9% YTD while debt rose. Buybacks are discretionary and depend on share price.",
+      "is_new": false,
+      "source_citation": "10-Q Consolidated Statements of Cash Flows; Part II, Item 2; Item 2 MD&A Liquidity and Capital Resources"
+    },
+    {
+      "description": "The 10-Q states there are no material changes to the Risk Factors in the FY2025 10-K. Pricing changes and tests may affect membership growth and plan mix, and the ad-supported plan is a growth driver.",
+      "is_new": false,
+      "source_citation": "10-Q Part II, Item 1A Risk Factors; Item 2 MD&A Revenues"
+    }
+  ],
+  "recent_news": [],
+  "bull_case": [
+    "Q3'26 operating margin expanded to 34.6% from 28.2%, helped by the absence of last year's $619M Brazil charge. Revenue growth outpaced S&M and G&A growth.",
+    "Revenue grew 12% (11% constant currency) with all four regions growing double digits. Subscription revenue grew on both membership and pricing, and advertising revenue added $256M YoY (about $864M YTD).",
+    "Operating cash flow was $3.16B in Q3 (+12%) and $10.2B for 9M (+27%, including the $2.8B WBD termination fee). Free cash flow was about $2.9B in Q3.",
+    "Aggressive buybacks (63.9M shares for $4.8B in Q3, $22.3B authorization remaining) reduced the diluted share count to 4.195B from 4.340B a year earlier, supporting EPS growth of 47% ($0.87 vs $0.59).",
+    "The balance sheet is flexible, with no borrowings under the $3B revolver or the $3B commercial paper program, and covenant compliance. The WBD deal termination returned a $2.8B fee with immaterial financing costs.",
+    "Effective tax rate fell to 15% in Q3, aided by R&D credits."
+  ],
+  "bear_case": [
+    "Part of the Q3 margin and net income comparison is flattered by the $619M Brazil non-income tax charge in Q3'25. Adjusting for it, the prior-year margin would have been about 33.6%, so underlying expansion was about 1 point.",
+    "Technology and development expense grew 21% and sales and marketing 6%. Content amortization rose $233M and content additions rose 11%, so content cost growth could pressure margin if revenue growth slows.",
+    "Reported revenue was helped by FX ($101M in Q3). Constant-currency growth was 9% in EMEA and 12% in LATAM, versus 12% and 17% reported.",
+    "Net cash fell and debt rose YTD. Q3 buybacks ($4.8B) exceeded free cash flow of about $2.9B, and the company issued $1B of new 5.25% notes in July 2026. Total debt of $15.1B exceeds cash of $8.2B.",
+    "The 9M'26 net income growth of 44% includes the one-time $2.8B termination fee. Underlying 9M growth is much lower.",
+    "The 10-Q provides no forward guidance and no membership figures, which limits visibility into momentum. Unknown future content obligations are described as significant ($1B-$4B over three years).",
+    "Stock option and RSU overhang: 120M options outstanding at a $41.24 weighted-average exercise price, with 60.7M dilutive shares in Q3."
+  ],
+  "what_to_watch": [
+    {
+      "text": "Q4'26 and FY2027 guidance for revenue, operating margin and EPS. The 10-Q has none, so the earnings release and letter are needed. Check whether the roughly 34% margin is sustained or whether content spend and T&D growth compress it.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Advertising revenue momentum: Q3 growth was $256M, versus $864M YTD. Look for the ad tier's share of sign-ups and the pace of S&M headcount growth.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Constant-currency versus reported growth by region (EMEA 9% vs 11%, LATAM 12% vs 17%, APAC 15% vs 12%). Watch FX assumptions and hedging in the Q4 outlook.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Content cash investment versus amortization: additions of $5.16B against amortization of $4.24B in Q3, and $25.2B of total obligations. Watch for changes in the slate and in free cash flow conversion.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Capital allocation: the pace of repurchases (about $4.8B in Q3), and the plan to refinance the $1B November 2026 notes and the 2027 maturities. $22.3B of authorization remains.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Brazil and other non-income tax matters. Check for any new assessments after the $729M of payments YTD, and the Q4 effective tax rate after the 15% in Q3.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Technology and development expense growth of 21% and stock-based compensation (up 65% YoY in Q3), and whether the pace of investment moderates.",
+      "relevant_urls": []
+    }
+  ],
+  "data_gaps": [
+    "No forward guidance (Q4'26 or FY revenue, operating income/margin, EPS, free cash flow) is in the 10-Q. The earnings release and shareholder letter were not provided.",
+    "Paid membership counts, ARM/ARPU and engagement metrics are not disclosed in the 10-Q.",
+    "Absolute subscription revenue and advertising revenue levels and ad-tier metrics are not disclosed, only YoY dollar changes ($1,057M and $256M for Q3).",
+    "No analyst consensus estimates, price targets or stock price/valuation data were provided, so the results cannot be compared with expectations.",
+    "No recent news items were provided, so the recent_news section is empty. The filing is dated 2026-10-21 and the report timestamp is 2026-10-26, so the Q3 earnings release may already have occurred.",
+    "Full risk factor text is not reproduced in the 10-Q, which incorporates the FY2025 10-K by reference and reports no material changes. New-risk flags therefore rest on 10-Q disclosures only.",
+    "Details of the March 2026 acquisition (about $587M cash) are not disclosed beyond the purchase price.",
+    "No Q4 or FY2026 content spend target, no breakdown of why the WBD transaction was terminated beyond Note 6, and no cash content spend guidance are in the filing.",
+    "Free cash flow is not a reported figure in the 10-Q; the figure here is derived from reported operating cash flow less capex."
+  ],
+  "hypotheses_explored": []
+}

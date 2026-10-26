@@ -1,0 +1,557 @@
+{
+  "ticker": "CRM",
+  "company_name": "Salesforce, Inc.",
+  "filing_type": "10-Q",
+  "filing_date": "2026-08-27",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T14:14:55.288842+00:00",
+  "key_metrics": [
+    {
+      "name": "Total Revenue",
+      "value": "$11,345 (Q2 FY2027, three months ended July 31, 2026) vs $10,236 (Q2 FY2026); +11%",
+      "unit": "USD millions",
+      "source_citation": "MD&A — Revenues"
+    },
+    {
+      "name": "Total Revenue (six months)",
+      "value": "$22,478 (six months ended July 31, 2026) vs $20,065 (prior-year six months); +12%",
+      "unit": "USD millions",
+      "source_citation": "MD&A — Revenues"
+    },
+    {
+      "name": "Total Subscription and Support Revenue",
+      "value": "$10,820 (Q2 FY2027) vs $9,690 (Q2 FY2026); six months $21,413 vs $18,987",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Gross profit",
+      "value": "$8,696 (Q2 FY2027; 77% of revenue) vs $7,994 (Q2 FY2026; 78%); six months $17,259 vs $15,558",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Total cost of revenues",
+      "value": "$2,649 (Q2 FY2027) vs $2,242 (Q2 FY2026)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Research and development",
+      "value": "$1,687 (Q2 FY2027) vs $1,481 (Q2 FY2026)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Sales and marketing",
+      "value": "$3,859 (Q2 FY2027) vs $3,443 (Q2 FY2026)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Restructuring",
+      "value": "$94 (Q2 FY2027) vs $4 (Q2 FY2026); six months $174 vs $40",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Total operating expenses",
+      "value": "$6,365 (Q2 FY2027; 56% of revenue) vs $5,662 (Q2 FY2026; 55%)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Income from operations",
+      "value": "$2,331 (Q2 FY2027; 21% margin) vs $2,332 (Q2 FY2026; 23%); six months $4,678 vs $4,274",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Interest expense",
+      "value": "$(473) (Q2 FY2027) vs $(67) (Q2 FY2026); six months $(790) vs $(135)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Gains (losses) on strategic investments, net",
+      "value": "$2,613 (Q2 FY2027) vs $6 (Q2 FY2026); six months $3,171 vs $(57)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Provision for income taxes",
+      "value": "$(1,026) (Q2 FY2027) vs $(519) (Q2 FY2026)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Net income",
+      "value": "$3,526 (Q2 FY2027) vs $1,887 (Q2 FY2026); six months $5,633 vs $3,428",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Basic net income per share",
+      "value": "$4.30 (Q2 FY2027) vs $1.97 (Q2 FY2026); six months $6.67 vs $3.58",
+      "unit": "USD per share",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Diluted net income per share",
+      "value": "$4.29 (Q2 FY2027) vs $1.96 (Q2 FY2026); six months $6.67 vs $3.55",
+      "unit": "USD per share",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Shares used in computing diluted net income per share",
+      "value": "821 (Q2 FY2027) vs 962 (Q2 FY2026)",
+      "unit": "millions of shares",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net cash provided by operating activities",
+      "value": "$1,269 (Q2 FY2027) vs $740 (Q2 FY2026); six months $7,970 vs $7,216",
+      "unit": "USD millions",
+      "source_citation": "MD&A — Cash"
+    },
+    {
+      "name": "Net cash provided by (used in) investing activities",
+      "value": "$(1,197) (Q2 FY2027) vs $1,165 (Q2 FY2026); six months $(3,380) vs $(402)",
+      "unit": "USD millions",
+      "source_citation": "MD&A — Cash"
+    },
+    {
+      "name": "Net cash used in financing activities",
+      "value": "$(622) (Q2 FY2027) vs $(2,503) (Q2 FY2026); six months $(3,543) vs $(5,423)",
+      "unit": "USD millions",
+      "source_citation": "MD&A — Cash"
+    },
+    {
+      "name": "Capital expenditures",
+      "value": "$(171) (Q2 FY2027) vs $(135) (Q2 FY2026); six months $(316) vs $(314)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Proceeds from issuance of debt, net of issuance costs",
+      "value": "$24,842 (six months ended July 31, 2026) vs $0 (prior-year six months)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Repurchases of common stock",
+      "value": "$(84) (Q2 FY2027) vs $(2,225) (Q2 FY2026); six months $(27,332) vs $(4,858)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Payments of dividends and dividend equivalents",
+      "value": "$(364) (Q2 FY2027) vs $(399) (Q2 FY2026); six months $(729) vs $(801)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Stock-based compensation expense",
+      "value": "$906 (Q2 FY2027) vs $793 (Q2 FY2026); six months $1,763 vs $1,607",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Cash and cash equivalents, beginning of period",
+      "value": "$8,935 (Q2 FY2027 beginning of period) vs $10,928 (Q2 FY2026 beginning of period)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "Agentforce Apps (subscription and support)",
+      "revenue": "$7,193 (Q2 FY2027)",
+      "yoy_change": "+8% (Q2 FY2027 vs Q2 FY2026 $6,682); six months $14,102 vs $13,027",
+      "commentary": "The core application franchise (Sales, Service, Marketing, Commerce, Slack) grew slower than total revenue and its share of subscription revenue slipped from 69% to 67%.",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Data 360, Headless Platform, and Other (subscription and support)",
+      "revenue": "$3,618 (Q2 FY2027)",
+      "yoy_change": "+20% (Q2 FY2027 vs Q2 FY2026 $3,008); six months $7,299 vs $5,960 (+22%)",
+      "commentary": "The fastest-growing bucket. It includes Informatica, which closed in November 2025, so reported growth includes acquired revenue; the filing excerpts do not size the organic portion.",
+      "source_citation": "MD&A — Revenues"
+    },
+    {
+      "name": "Total Subscription and Support Revenue",
+      "revenue": "$10,820 (Q2 FY2027)",
+      "yoy_change": "+12% (Q2 FY2027 vs Q2 FY2026 $9,690)",
+      "commentary": "Includes $9M of hedging gains. Data 360 and related products supplied about $610M of the roughly $1,130M year-over-year increase.",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Professional services and other (derived: total revenue less subscription and support revenue)",
+      "revenue": "$525 (Q2 FY2027)",
+      "yoy_change": "-4% (Q2 FY2027 vs Q2 FY2026 $546)",
+      "commentary": "Decline reflects less demand for larger, multi-year transformation engagements, which the filing says may continue in the near term.",
+      "source_citation": "MD&A — Revenues"
+    },
+    {
+      "name": "Americas",
+      "revenue": "$7,404 (Q2 FY2027; 65% of revenue)",
+      "yoy_change": "+10% (Q2 FY2027 vs Q2 FY2026 $6,736); six months +11%",
+      "commentary": "Largest region; about 93% of Americas revenue is attributed to the United States.",
+      "source_citation": "MD&A — Revenues"
+    },
+    {
+      "name": "Europe",
+      "revenue": "$2,764 (Q2 FY2027; 25% of revenue)",
+      "yoy_change": "+14% (Q2 FY2027 vs Q2 FY2026 $2,429); six months +16%",
+      "commentary": "Fastest-growing region, with share up from 24% to 25%.",
+      "source_citation": "MD&A — Revenues"
+    },
+    {
+      "name": "Asia Pacific",
+      "revenue": "$1,168 (Q2 FY2027; 10% of revenue)",
+      "yoy_change": "+9% (Q2 FY2027 vs Q2 FY2026 $1,071); six months +10%",
+      "commentary": "Slowest-growing region, with share stable at 10%.",
+      "source_citation": "MD&A — Revenues"
+    }
+  ],
+  "forward_guidance": {
+    "text": "No forward guidance issued in this filing.",
+    "source_citation": "MD&A"
+  },
+  "key_risks": [
+    {
+      "description": "Leverage rose sharply after the $25.0B March 2026 senior notes issue, whose net proceeds funded an accelerated share repurchase, plus a $6.0B floating-rate term loan. Principal debt outstanding is $39.5B (vs $14.5B at January 31, 2026) against $11.4B of cash, cash equivalents and marketable securities. Interest expense was $473M in the quarter vs $67M a year earlier, and $29.25B of principal falls due after fiscal 2030.",
+      "is_new": true,
+      "source_citation": "Risk Factors"
+    },
+    {
+      "description": "Under the accelerated share repurchase agreements, volatility in the stock price may obligate the company to deliver shares or make a cash payment to the counterparty on final settlement.",
+      "is_new": true,
+      "source_citation": "Risk Factors"
+    },
+    {
+      "description": "Significant other contractual commitments, including leases that have not yet commenced and commitments with infrastructure service providers, are not reflected on the condensed consolidated balance sheets.",
+      "is_new": false,
+      "source_citation": "Risk Factors"
+    },
+    {
+      "description": "The transition toward more complex pricing structures, including AI-driven consumption models, may make it harder to optimize pricing, predict attrition rates and accurately forecast revenue. Attrition may increase or fluctuate as customers reduce user counts.",
+      "is_new": false,
+      "source_citation": "Risk Factors"
+    },
+    {
+      "description": "Earnings quality: six-month net income of $5.6B includes $3.2B of non-cash gains on strategic investments, and Q2 income from operations was flat at $2,331M vs $2,332M. Six-month operating cash flow of $7.97B benefited from an $8.0B receivables inflow while unearned revenue fell $5.6B, so net income and cash flow overstate underlying run-rate momentum.",
+      "is_new": false,
+      "source_citation": "MD&A — Cash"
+    },
+    {
+      "description": "Professional services and other revenue fell 4% on weaker demand for larger multi-year transformation engagements, which the filing says may continue in the near term. The cost of professional services may also exceed related revenue in future periods.",
+      "is_new": false,
+      "source_citation": "MD&A — Revenues"
+    },
+    {
+      "description": "Acquisition integration and financing: growth is aided by Informatica (closed November 2025). The filing says expense contributions from recent acquisitions are generally not separately identifiable, which limits visibility into organic growth and margins. Credit agreements entered into for Informatica add financing risk.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Tax exposure: prior-year returns are under examination in the United States, Germany, Israel, India and Australia. The provision for income taxes was $1,026M in the quarter vs $519M a year earlier, and an unfavorable resolution could require an adjustment to the provision.",
+      "is_new": false,
+      "source_citation": "Financial Statements — 11."
+    }
+  ],
+  "recent_news": [
+    {
+      "headline": "Salesforce (CRM) Q2 earnings report 2027",
+      "date": "2026-08-26",
+      "url": "https://www.cnbc.com/2026/08/26/salesforce-crm-q2-earnings-report-2027.html",
+      "relevance_note": "Q3 guide of $11.42-$11.50B revenue vs $11.41B consensus; FY27 revenue guide raised to $46.1-$46.4B."
+    },
+    {
+      "headline": "Salesforce Delivers Record Second Quarter Fiscal 2027 Results",
+      "date": "2026-08-26",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/salesforce-delivers-record-second-quarter-200100684.html",
+      "relevance_note": "Company release: FY27 guide includes slightly above 3 pts of Informatica contribution; the raise comprises $100M organic, $200M from pending acquisitions and a $100M FX headwind."
+    },
+    {
+      "headline": "Document (Salesforce Q2 FY27 Exhibit 99.1)",
+      "date": "2026-08-26",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000187/crm-q2fy27xexhibit991.htm",
+      "relevance_note": "Primary-source earnings release with the guidance bridge and Informatica contribution."
+    },
+    {
+      "headline": "Salesforce Raised Guidance Again. Now It Has to Deliver the Revenue Acceleration",
+      "date": "2026-08-27",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/salesforce-raised-guidance-again-now-102032039.html",
+      "relevance_note": "Shows that acquisitions account for a meaningful part of the guidance raise."
+    },
+    {
+      "headline": "Salesforce posts Q2 FY2027 earnings beat, raises full-year revenue guidance",
+      "date": "2026-08-26",
+      "url": "https://qz.com/salesforce-earnings-revenue-forecast-ai-agentforce-082626",
+      "relevance_note": "Post-earnings stock reaction (about +11% after hours) and the guidance raise."
+    },
+    {
+      "headline": "Agentforce ARR Hits $1.5B: Can It Boost Salesforce's Revenue Growth?",
+      "date": "2026-08-27",
+      "url": "https://finance.yahoo.com/technology/ai/articles/agentforce-arr-hits-1-5b-142700697.html",
+      "relevance_note": "Agentforce ARR cited at $1.5B, which conflicts with the $1.2B figure reported for Q1; the piece says the impact on growth will take time."
+    },
+    {
+      "headline": "Salesforce (CRM) Q1 earnings report 2027",
+      "date": "2026-05-27",
+      "url": "https://www.cnbc.com/2026/05/27/salesforce-crm-q1-earnings-report-2027.html",
+      "relevance_note": "Agentforce annualized revenue of $1.2B, up 205%; RPO of $67.9B at the end of Q1."
+    },
+    {
+      "headline": "Salesforce Stock Q2 Earnings Preview: Expectations & Key Metrics",
+      "date": "2026-08",
+      "url": "https://www.indmoney.com/blog/us-stocks/salesforce-stock-q2-earnings-preview-crm",
+      "relevance_note": "Frames Agentforce's $1.2B ARR as only about 2.6% of revenue and lists organic subscription and cRPO growth as the key tests."
+    },
+    {
+      "headline": "Salesforce surges 3% on $25 billion debt offering to fund massive share buyback",
+      "date": "2026-03",
+      "url": "https://ca.finance.yahoo.com/news/salesforce-surges-3-25-billion-161810810.html",
+      "relevance_note": "Context for the $25B notes issue and the $50B repurchase program announced in February 2026."
+    },
+    {
+      "headline": "Salesforce Headlines Another Big Day for Corporate Borrowing",
+      "date": "2026-03-11",
+      "url": "https://www.wsj.com/livecoverage/cpi-inflation-data-stock-market-03-11-2026/card/salesforce-headlines-another-big-day-for-corporate-borrowing-KgVwboEGXqE9C0Wf7FrZ",
+      "relevance_note": "Confirms the $25B bond sale to fund buybacks."
+    },
+    {
+      "headline": "Why is Salesforce pivoting to usage-based pricing? | Solvimon Blog",
+      "date": "",
+      "url": "https://www.solvimon.com/blog/why-is-salesforce-pivoting-to-usage-based-pricing",
+      "relevance_note": "Discusses the shift from seat-based to usage-based pricing for AI products."
+    },
+    {
+      "headline": "Salesforce.com, Inc. - Salesforce Delivers Record First Quarter Fiscal 2027 Results",
+      "date": "2026-05-27",
+      "url": "https://investor.salesforce.com/news/news-details/2026/Salesforce-Delivers-Record-First-Quarter-Fiscal-2027-Results/default.aspx",
+      "relevance_note": "Management expects organic revenue acceleration in the second half of FY27."
+    }
+  ],
+  "bull_case": [
+    "Revenue grew 11% to $11,345M in Q2 FY2027 (12% for six months), with Europe up 14%. Management raised the FY27 revenue guide to $46.1-$46.4B and guided Q3 to $11.42-$11.50B, ahead of the $11.41B consensus.",
+    "Data 360, Headless Platform, and Other grew 20% in the quarter and 22% for six months, and now makes up 33% of subscription and support revenue. This points to a growing data and context layer under Agentforce.",
+    "Backlog supports forward visibility: total RPO is up 11% year over year to $66.3B and current RPO is up 14% to $33.5B, ahead of revenue growth. The decline in RPO and unearned revenue since January is largely a seasonal billings effect.",
+    "Cash generation is strong: operating cash flow was $7,970M for six months against capex of only $316M, comfortably covering dividends of $729M.",
+    "Agentforce ARR has grown from $800M in February to $1.2B in May, up 205% year over year, and the Informatica deal adds data-layer capability. The consumption transition could raise long-run revenue per customer.",
+    "Six-month income from operations rose to $4.7B from $4.3B, the buyback has cut diluted shares to 821M from 962M, and quarterly GAAP EPS reached $4.29."
+  ],
+  "bear_case": [
+    "Headline growth is flattered by Informatica (closed November 2025). The FY27 guide includes slightly above 3 pts of Informatica contribution, implying organic growth of about 8-9%, in line with the 8% growth in Agentforce Apps. Only $100M of the guidance raise is organic.",
+    "Reported net income of $3,526M is inflated by $2,613M of non-cash strategic-investment gains. Income from operations was flat at $2,331M with margin down to 21% from 23%, and six-month operating income growth of about 9% trails revenue growth of 12%.",
+    "Balance sheet leverage rose sharply: principal debt of $39.5B vs $14.5B in six months, a $6.0B floating-rate term loan, and quarterly interest expense of $473M vs $67M. Buybacks and dividends now depend on operating cash flow and refinancing access.",
+    "Operating cash flow was supported by an $8.0B receivables inflow, a timing effect, while unearned revenue fell $5.6B in six months vs $4.2B a year earlier. The extra decline suggests more than seasonality may be at work.",
+    "Agentforce is small, about 2-3% of revenue, and press-reported ARR figures conflict ($1.2B vs $1.5B). The filing says pricing was not a significant driver of revenue growth, and professional services fell 4% on weaker demand for large transformation projects.",
+    "Restructuring costs rose to $94M from $4M, and consumption-based pricing could make attrition and revenue harder to forecast. Off-balance-sheet infrastructure and lease commitments add to obligations."
+  ],
+  "what_to_watch": [
+    {
+      "text": "**Organic Growth vs. Informatica:** Total revenue grew 11%, but Agentforce Apps grew only 8% ($7,193M vs $6,682M) while Data 360, Headless Platform, and Other grew 20% ($3,618M vs $3,008M) and includes Informatica. The FY27 guide includes slightly above 3 pts of Informatica contribution, implying organic growth of roughly 8-9%, and Data 360 supplied about $610M of the roughly $1,130M increase in subscription revenue. That said, organic growth of 8-9% is steady for a company this size, and management has said it expects organic acceleration in the second half.\n\n-> Press management for an Informatica-excluded growth rate and for the organic growth of Data 360 as Informatica laps in November 2026.",
+      "relevant_urls": [
+        "https://finance.yahoo.com/markets/stocks/articles/salesforce-delivers-record-second-quarter-200100684.html",
+        "https://finance.yahoo.com/markets/stocks/articles/salesforce-raised-guidance-again-now-102032039.html",
+        "https://investor.salesforce.com/news/news-details/2026/Salesforce-Delivers-Record-First-Quarter-Fiscal-2027-Results/default.aspx"
+      ]
+    },
+    {
+      "text": "**Agentforce Monetization and Backlog Quality:** Agentforce annualized revenue of $1.2B (up 205%) is only about 2-3% of a roughly $46B revenue base, press-reported ARR figures conflict ($1.2B vs $1.5B), and the filing says pricing was not a significant driver of growth. Total RPO of $66.3B is also below $72.4B at January 31 and below the $67.9B reported at the end of Q1. However, the January comparison reflects Salesforce's seasonal billing peak, and the like-for-like picture is better: total RPO is up 11% and current RPO up 14% year over year, ahead of revenue growth, while 205% ARR growth on a small base is an early-stage signal. Early consumption-model revenue should also look small at this stage.\n\n-> Watch for an updated Agentforce ARR figure, a reconciliation of the RPO figures, and whether current RPO growth stays above revenue growth.",
+      "relevant_urls": [
+        "https://www.cnbc.com/2026/05/27/salesforce-crm-q1-earnings-report-2027.html",
+        "https://finance.yahoo.com/technology/ai/articles/agentforce-arr-hits-1-5b-142700697.html",
+        "https://www.indmoney.com/blog/us-stocks/salesforce-stock-q2-earnings-preview-crm"
+      ]
+    },
+    {
+      "text": "**Leverage and Capital Return:** The $25.0B March 2026 notes funded an accelerated share repurchase, lifting principal debt to $39.5B from $14.5B against $11.4B of cash, cash equivalents and marketable securities. Six-month repurchases totaled $27.3B, $22.9B of authorization remains, and quarterly interest expense jumped to $473M from $67M. However, six-month operating cash flow of $7.97B and capex of just $316M leave ample room to cover dividends of $729M, and repurchases slowed to $84M in Q2 as the program shifted from the accelerated repurchase to ordinary buybacks.\n\n-> Monitor interest expense, net debt, final settlement of the accelerated repurchase (shares or cash) and the pace of open-market buybacks against free cash flow.",
+      "relevant_urls": [
+        "https://ca.finance.yahoo.com/news/salesforce-surges-3-25-billion-161810810.html",
+        "https://www.wsj.com/livecoverage/cpi-inflation-data-stock-market-03-11-2026/card/salesforce-headlines-another-big-day-for-corporate-borrowing-KgVwboEGXqE9C0Wf7FrZ"
+      ]
+    },
+    {
+      "text": "**Earnings Quality and Cash Flow Durability:** Net income of $3,526M includes $2,613M of non-cash strategic-investment gains, and income from operations was flat at $2,331M with operating margin down to 21% from 23%. Six-month operating cash flow of $7,970M relied on an $8,035M receivables inflow while unearned revenue fell $5,576M vs $4,188M a year earlier. On the other hand, some of the unearned revenue decline is seasonal, capex is small, and free cash flow of roughly $7.65B for six months is real cash, and first-half operating income did rise to $4.7B from $4.3B.\n\n-> Track non-GAAP operating margin, year-over-year unearned revenue and billings, and whether receivables collections normalize in the second half.",
+      "relevant_urls": []
+    },
+    {
+      "text": "**Guidance Raise and Q3 Setup:** FY27 revenue guidance moved to $46.1-$46.4B from $45.9-$46.2B, and Q3 revenue is guided to $11.42-$11.50B against a $11.41B consensus. Of the raise, $100M is organic and $200M comes from the pending Contentful and Fin acquisitions, partly offset by a $100M FX headwind, so the quality of the raise is mixed. At roughly 0.4% at the midpoint, the Q3 guide is only slightly above consensus; that said, the raise came despite a stronger dollar, and RPO growth points to better visibility.\n\n-> Monitor the Q3 revenue and cRPO results against the $11.42-$11.50B guide and the organic share of any further FY27 raise.",
+      "relevant_urls": [
+        "https://www.cnbc.com/2026/08/26/salesforce-crm-q2-earnings-report-2027.html",
+        "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000187/crm-q2fy27xexhibit991.htm",
+        "https://qz.com/salesforce-earnings-revenue-forecast-ai-agentforce-082626"
+      ]
+    },
+    {
+      "text": "**Consumption Pricing and Professional Services Demand:** The filing warns that AI-driven consumption pricing may make it harder to optimize pricing, predict attrition and forecast revenue, and it provides no consumption revenue disclosure. Professional services and other revenue fell 4% to $525M on weaker demand for large multi-year transformation engagements, which may continue. On the other hand, a consumption model could raise long-run revenue per customer, and services softness may simply reflect a shift toward subscription-led deployments.\n\n-> Watch for attrition commentary, any disclosure of consumption or Flex Credit revenue, and the professional services trend.",
+      "relevant_urls": [
+        "https://www.solvimon.com/blog/why-is-salesforce-pivoting-to-usage-based-pricing"
+      ]
+    },
+    {
+      "text": "**Restructuring and Acquisition Amortization:** Restructuring charges rose to $94M from $4M in the quarter ($174M vs $40M for six months), and total operating expenses reached 56% of revenue vs 55%. Acquisition-related amortization in cost of revenues rose to $234M from $150M with Informatica. However, sales and marketing held at 34% of revenue and general and administrative fell to 6% from 7%, so cost discipline is partly offsetting these charges.\n\n-> Monitor restructuring charges, the margin impact of acquisition amortization, and whether management quantifies Informatica's expense contribution.",
+      "relevant_urls": []
+    }
+  ],
+  "data_gaps": [
+    "The retrieved filing excerpts do not show cash and cash equivalents at the end of the period, total debt or the balance sheet, so those metrics are omitted from key_metrics.",
+    "Free cash flow is not reported as a line item in the retrieved filing excerpts; only operating cash flow and capital expenditures are shown.",
+    "The filing excerpts do not quantify Informatica's revenue contribution or organic growth rate; the filing only says it may quantify acquired contributions for one year after the acquisition.",
+    "The retrieved filing excerpts contain no outlook language, so guidance topics such as full-year revenue, operating margin and cash flow are not covered.",
+    "Prior-year (July 31, 2025) unearned revenue and remaining performance obligation balances were not retrieved, so year-over-year comparisons of those balances cannot be confirmed from the filing excerpts."
+  ],
+  "hypotheses_explored": [
+    {
+      "id": "h1",
+      "proposing_personality": "Conservative",
+      "question": "Has CRM's debt-funded $25.0B accelerated share repurchase turned a net-cash balance sheet into a leveraged one, and do the 2028-2031 maturities and floating-rate term loan leave the buyback and dividend dependent on operating cash flow?",
+      "summary": "Principal debt rose to $39.5B against $11.4B of cash, cash equivalents and marketable securities, and the $25.0B of March 2026 notes funded the accelerated repurchase. Remaining buyback authorization is $22.9B and the $6.0B floating-rate term loan adds rate exposure. Net debt is roughly $28B, so capital returns rely on operating cash generation and refinancing access.",
+      "evidence_quotes": [
+        "we used the net proceeds from the March 2026 Notes to fund an accelerated share repurchase program of our common stock.",
+        "The contractual future principal payments for all borrowings as of July 31, 2026 were as follows (in millions): ... Fiscal 2029 6,000 ... Fiscal 2030 4,250 ... Thereafter 29,250 Total principal outstanding $ 39,500",
+        "As of July 31, 2026, we had cash, cash equivalents and marketable securities totaling $11.4 billion.",
+        "As of July 31, 2026, the Company was authorized to purchase a remaining $ 22.9 billion of its common stock under the Share Repurchase Program."
+      ],
+      "confidence": 5
+    },
+    {
+      "id": "h2",
+      "proposing_personality": "Conservative",
+      "question": "Is the reported earnings and six-month operating cash flow strength of CRM low quality, with net income inflated by strategic-investment gains and operating cash flow propped up by receivables collections while unearned revenue declines?",
+      "summary": "Six-month net income of $5.6B includes $3.2B of strategic-investment gains, leaving underlying earnings of roughly $2.5B. Operating cash flow of $7.97B was supported by an $8.0B receivables inflow while unearned revenue fell $5.6B. Capex is small, so free cash flow is real, but its trend depends on collections timing.",
+      "evidence_quotes": [
+        "The net cash provided by operating activities during the six months ended July 31, 2026 was primarily comprised of net income of $5.6 billion, adjusted for non-cash items, including $3.2 billion of gains on strategic investments, $2.0 billion of depreciation and amortization, and $1.8 billion of stock-based compensation expense.",
+        "Accounts receivable, net 8,035 6,349",
+        "Unearned revenue (1,577) (1,244) (5,576) (4,188)",
+        "Capital expenditures (171) (135) (316) (314)"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h3",
+      "proposing_personality": "Contrarian",
+      "question": "Is Salesforce's headline 11-12% revenue growth masking a slower organic core, with Agentforce Apps growing only 8%?",
+      "summary": "Agentforce Apps grew 8% while Data 360, which includes Informatica (closed November 2025), grew 20%. The filing does not quantify Informatica's contribution, so the organic rate is unknown and could be well below the headline. Professional services fell 4% on weaker demand for large transformation projects.",
+      "evidence_quotes": [
+        "Agentforce Apps 7,193 vs 6,682, growth rate 8%; Data 360, Headless Platform, and Other 3,618 vs 3,008, growth rate 20%; Total 10,820 vs 9,690, growth rate 12%",
+        "The decrease in professional services and other revenues for the three and six months ended July 31, 2026 was primarily due to less demand for larger, multi-year transformation engagements, which may continue in the near term.",
+        "Salesforce raised its fiscal 2027 revenue guidance from $45.90-$46.20 billion to $46.10-$46.40 billion, implying 11%-12% year-over-year growth."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h5",
+      "proposing_personality": "Dreamer",
+      "question": "If Data 360 and the agent layer become a consumption-priced foundation for enterprise AI agents, could Salesforce's growth engine shift from seat-based Agentforce Apps to the data layer over the next five to ten years?",
+      "summary": "The filing shows a mix shift inside the subscription base, with Data 360 growing about 20% vs about 8% for Agentforce Apps. The evidence is strong on the growth gap but thin on how much of Data 360 is consumption-priced, and the Agentforce ARR figure comes from press coverage rather than the filing.",
+      "evidence_quotes": [
+        "Data 360, Headless Platform, and Other: 3,618 (33%) vs 3,008 (31%), Growth Rate 20%; Six Months: 7,299 vs 5,960, Growth Rate 22%",
+        "Agentforce enables organizations to deploy autonomous agents that reason, make decisions, and execute tasks.",
+        "Agentforce can become a meaningful growth driver, but it will take time to change Salesforce's growth rate materially."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h6",
+      "proposing_personality": "Dreamer",
+      "question": "Can Salesforce's shift to AI-driven consumption pricing lift long-run revenue per customer without breaking forecastability, attrition, or the path to a $60B+ FY30 target?",
+      "summary": "Consumption pricing could make Salesforce a toll on enterprise AI activity, but the company itself flags it as a risk to pricing, attrition prediction and forecasting. The FY30 target comes from news, not the filing, and the filing gives no consumption revenue disclosure to size the upside.",
+      "evidence_quotes": [
+        "Our transition toward more complex pricing structures, including AI-driven consumption models, may make it more difficult to optimize our pricing, predict attrition rates, and accurately forecast revenue.",
+        "We continue to invest for growth, including investing in generative and agentic AI across all products, which we believe will change how our customers help their customers."
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h7",
+      "proposing_personality": "Optimist",
+      "question": "Can Data 360 and the broader data layer sustain roughly 20%+ growth and carry Salesforce's top-line re-acceleration, with operating leverage showing up in profit?",
+      "summary": "Data 360, Headless Platform, and Other grew 20% in the quarter and 22% over six months vs 8% for Agentforce Apps, and total subscription and support revenue grew 13% for the half. Six-month income from operations rose from $4.3B to $4.7B, though that is below revenue growth and the data-layer growth is partly acquired.",
+      "evidence_quotes": [
+        "Data 360, Headless Platform, and Other: Three Months Ended July 31, 2026 $3,618 (33%) vs 2025 $3,008 (31%), Growth Rate 20%; Six Months Ended July 31, 2026 $7,299 (34%) vs 2025 $5,960 (31%), Growth Rate 22%",
+        "For the six months ended July 31, 2026, income from operations was $4.7 billion as compared to $4.3 billion for the six months ended July 31, 2025.",
+        "Six Months Ended July 31, Total revenues $22,478 vs $20,065, growth rate 12%"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h8",
+      "proposing_personality": "Optimist",
+      "question": "Is the drop in remaining performance obligation and unearned revenue since January a seasonal billing pattern rather than a demand slowdown, and is Agentforce ARR still compounding?",
+      "summary": "RPO fell from $72.4B to $66.3B and unearned revenue from $24.3B to $18.8B between January 31 and July 31, 2026. The filing cites seasonality as a driver and January is the usual billings peak, but year-over-year balances were not retrieved, so the benign reading is not confirmed.",
+      "evidence_quotes": [
+        "The unearned revenue balance is influenced by several factors, including seasonality, the compounding effects of renewals, invoice duration, invoice timing, dollar size and new business linearity within the quarter.",
+        "Unearned revenue $18.8 billion as of July 31, 2026 vs $24.3 billion as of January 31, 2026; Remaining performance obligation $66.3 billion vs $72.4 billion as of January 31, 2026",
+        "As of July 31, 2026 total $66.3B (current $33.5B, noncurrent $32.8B); As of January 31, 2026 total $72.4B (current $35.1B, noncurrent $37.3B)"
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h9",
+      "proposing_personality": "Pessimist",
+      "question": "Is Salesforce's headline 11-12% revenue growth flattered by the Informatica acquisition, so that underlying organic growth is materially lower than reported?",
+      "summary": "FY27 guidance of 11-12% growth includes a slightly-above-3-point Informatica contribution, implying organic growth of roughly 8-9%. Of the $300M constant-currency raise, only $100M is organic. Professional services revenue is shrinking and acquisition expense contributions are not separately quantified.",
+      "evidence_quotes": [
+        "Raises full year FY27 revenue guidance, now expects full year FY27 revenue of $46.1 billion to $46.4 billion, up 11% - 12% Y/Y and 11% in CC, including slightly above 3pts Informatica contribution.",
+        "The $200M raise, $300 million CC, reflects $100 million of organic growth, $200 million from the pending Contentful and Fin acquisitions, and $100M FX headwind",
+        "Expense contributions from our recent acquisitions for each of the respective period comparisons generally were not separately identifiable due to the integration of these businesses into our existing operations or were insignificant to our results of operations during the periods presented."
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h10",
+      "proposing_personality": "Pessimist",
+      "question": "Is Salesforce's balance sheet and commitment picture under-disclosed, with leverage and buyback-related obligations rising faster than the narrative around cash generation suggests?",
+      "summary": "Principal due on debt rose from $14.5B to $39.5B in six months after the $25B notes issue and $6B term loan. The accelerated repurchase can force a share delivery or cash payment depending on the stock price, and infrastructure commitments and uncommenced leases sit off balance sheet. Part of the unearned revenue and RPO drop is likely seasonal.",
+      "evidence_quotes": [
+        "under the ASR Agreements, volatility in our stock price may obligate us to deliver shares of our common stock or make a cash payment to the counterparty upon final settlement.",
+        "We also have significant other contractual commitments, including leases that have not yet commenced and commitments with infrastructure service providers, which are not reflected on our condensed consolidated balance sheets.",
+        "Principal due on our outstanding debt obligations 39.5 vs 14.5; Unearned revenue 18.8 vs 24.3; Remaining performance obligation 66.3 vs 72.4 (in billions, July 31, 2026 vs January 31, 2026)"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h11",
+      "proposing_personality": "Quant",
+      "question": "Is the 11% headline revenue growth being carried by the Data 360 / Headless / Other bucket, which includes the November 2025 Informatica acquisition, while the core Agentforce Apps franchise grows at only 8%?",
+      "summary": "Q2 FY27 revenue rose 11% to $11,345M, with Agentforce Apps up 8% and Data 360, Headless Platform, and Other up 20%. Part of the 20% is likely acquired, and the filing does not disclose the dollar contribution, so organic growth cannot be computed from the evidence.",
+      "evidence_quotes": [
+        "Agentforce Apps $ 7,193 67% $ 6,682 69% 8%; Data 360, Headless Platform, and Other 3,618 33 3,008 31 20",
+        "Total revenues $ 11,345 $ 10,236 $ 1,109 11%",
+        "we may quantitatively disclose the impact of our acquired products and services for the one-year period subsequent to the acquisition date to the growth in certain of our revenues where such discussions would be meaningful."
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h12",
+      "proposing_personality": "Quant",
+      "question": "Is the guidance raise a real acceleration or just a rounding-sized nudge that mostly passes through the beat, with forward visibility improving only in backlog?",
+      "summary": "The FY27 revenue guide moved up $0.2B at both ends, about 0.4% at the midpoint, and the Q3 guide is about 0.4% above consensus. Backlog is the stronger signal, with total RPO up 11% to $66.3B and current RPO up 14% to $33.5B. The unearned revenue decline is seasonal, and professional services fell 4%.",
+      "evidence_quotes": [
+        "The company now expects fiscal 2027 revenue of $46.1 billion to $46.4 billion, up from prior guidance of $45.9 billion to $46.2 billion issued in May. For the fiscal third quarter, Salesforce said it expects revenue of $11.42 billion to $11.50 billion.",
+        "Total remaining performance obligation... as of July 31, 2026 was approximately $66.3 billion, an increase of 11 percent year-over-year. Current remaining performance obligation... was approximately $33.5 billion, an increase of 14 percent year-over-year.",
+        "Professional services and other $525 vs $546, (4)%"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h4",
+      "proposing_personality": "Contrarian",
+      "question": "Is Agentforce monetization too small to carry the AI re-rating thesis, and is the Data 360 growth story partly bought rather than organic?",
+      "summary": "Annualized Agentforce revenue of about $1.2B is roughly 2-3% of a roughly $46B revenue base, and reported ARR figures conflict across sources ($1.2B vs $1.5B). The filing says pricing was not a significant driver of growth, and the high-growth Data 360 group includes Informatica. RPO of $66.3B vs $72.4B at January 31 is partly seasonal, and year-over-year RPO growth of 11% weakens the backlog concern.",
+      "evidence_quotes": [
+        "Annualized revenue from Agentforce reached $1.2 billion, up 205% year over year.",
+        "Agentforce ARR Hits $1.5B: Can It Boost Salesforce's Revenue Growth?",
+        "Remaining performance obligation 66.3 (July 31, 2026) vs 72.4 (January 31, 2026) in billions",
+        "Pricing was not a significant driver of the increase in revenues for either period.",
+        "Data 360, Headless Platform, and Other groups our data context layer and unified platform... comprised of Data 360, Data 360 and Platform Flex Credits, Headless Platform, Informatica, Agentforce MuleSoft, Agentforce Tableau and Other."
+      ],
+      "confidence": 3
+    }
+  ]
+}

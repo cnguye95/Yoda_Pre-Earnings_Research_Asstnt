@@ -1,0 +1,524 @@
+{
+  "ticker": "USB",
+  "company_name": "USB",
+  "filing_type": "10-Q",
+  "filing_date": "2026-08-06",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T13:20:19.795872+00:00",
+  "key_metrics": [
+    {
+      "name": "Net income",
+      "value": "$2,183 million (Q2 2026 vs $1,821 million in Q2 2025); $4,133 million for six months 2026 vs $3,537 million",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Net income attributable to U.S. Bancorp",
+      "value": "$2,177 million (Q2 2026 vs $1,815 million in Q2 2025); $4,122 million for six months 2026 vs $3,524 million",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Net income applicable to U.S. Bancorp common shareholders",
+      "value": "$2,098 million (Q2 2026 vs $1,733 million in Q2 2025); $3,939 million for six months 2026 vs $3,336 million",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Average diluted common shares outstanding",
+      "value": "1,555 million (Q2 2026 and six months 2026) vs 1,559 million (Q2 2025) and 1,560 million (six months 2025)",
+      "unit": "millions of shares",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Total noninterest income",
+      "value": "$3,325 million (Q2 2026 vs $2,924 million in Q2 2025); $6,322 million for six months 2026 vs $5,760 million",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Total noninterest expense",
+      "value": "$4,428 million (Q2 2026 vs $4,181 million in Q2 2025); $8,693 million for six months 2026 vs $8,413 million",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Income before income taxes",
+      "value": "$2,720 million (Q2 2026 vs $2,293 million in Q2 2025); $5,139 million for six months 2026 vs $4,452 million",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Applicable income taxes",
+      "value": "$537 million (Q2 2026 vs $472 million in Q2 2025); $1,006 million for six months 2026 vs $915 million",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Provision for credit losses",
+      "value": "$1,114 million (six months 2026 vs $1,038 million in six months 2025)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Comprehensive income (loss)",
+      "value": "$2,295 million (Q2 2026 vs $2,254 million in Q2 2025); $4,009 million for six months 2026 vs $4,692 million",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Net cash provided by operating activities",
+      "value": "$6,160 million (six months 2026 vs $1,605 million in six months 2025)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Net cash used in investing activities",
+      "value": "$(11,728) million (six months 2026 vs $(3,918) million in six months 2025)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Net cash provided by financing activities",
+      "value": "$25,368 million (six months 2026 vs $2,869 million in six months 2025)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Cash and due from banks at end of period",
+      "value": "$66,491 million at June 30, 2026 vs $57,807 million at June 30, 2025",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Loans, net of allowance for losses",
+      "value": "$402,655 million carrying amount at June 30, 2026 vs $383,730 million at December 31, 2025",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Investment securities held-to-maturity",
+      "value": "$74,085 million carrying amount at June 30, 2026 vs $76,170 million at December 31, 2025 (fair value $64,622 million)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Short-term borrowings",
+      "value": "$34,830 million at June 30, 2026 vs $14,649 million at December 31, 2025",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Long-term debt",
+      "value": "$56,767 million carrying amount at June 30, 2026 vs $59,350 million at December 31, 2025",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Time deposits",
+      "value": "$46,494 million carrying amount at June 30, 2026 vs $47,314 million at December 31, 2025",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Net increase (decrease) in deposits",
+      "value": "$10,013 million (six months 2026 vs $(199) million in six months 2025)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Net increase in loans outstanding",
+      "value": "$(19,309) million (six months 2026 vs $(7,168) million in six months 2025)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Repurchase of common stock",
+      "value": "$(477) million (six months 2026 vs $(266) million in six months 2025)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "Trust and investment management fees",
+      "revenue": "$785 million (Q2 2026); $1,530 million (six months 2026)",
+      "yoy_change": "Q2 2026 vs Q2 2025: +11.7% ($703 million); six months 2026 vs six months 2025: $1,530 million vs $1,383 million",
+      "commentary": "Growth is attributed to business growth and favorable market conditions, which points to organic fee momentum rather than acquired revenue.",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Capital markets revenue",
+      "revenue": "$512 million (Q2 2026); $889 million (six months 2026)",
+      "yoy_change": "Q2 2026 vs Q2 2025: $512 million vs $315 million; six months 2026 vs six months 2025: $889 million vs $607 million",
+      "commentary": "The increase reflects the BTIG acquisition in Q2 2026 plus higher client derivative activity, corporate bond underwriting fees and favorable markets. The organic and acquired portions are not separated in the filing.",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Lending and deposit-related fees",
+      "revenue": "$308 million (Q2 2026); $602 million (six months 2026)",
+      "yoy_change": "Q2 2026 vs Q2 2025: $308 million vs $277 million; six months 2026 vs six months 2025: $602 million vs $543 million",
+      "commentary": "Steady growth across both periods.",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Mortgage banking revenue",
+      "revenue": "$169 million (Q2 2026); $330 million (six months 2026)",
+      "yoy_change": "Q2 2026 vs Q2 2025: $169 million vs $162 million; six months 2026 vs six months 2025: $330 million vs $335 million",
+      "commentary": "Roughly flat; this is not a growth driver.",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Investment products fees",
+      "revenue": "$102 million (Q2 2026); $199 million (six months 2026)",
+      "yoy_change": "Q2 2026 vs Q2 2025: $102 million vs $90 million; six months 2026 vs six months 2025: $199 million vs $177 million",
+      "commentary": "Modest growth.",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Securities gains (losses), net",
+      "revenue": "$(49) million (Q2 2026); $(84) million (six months 2026)",
+      "yoy_change": "Q2 2026 vs Q2 2025: $(49) million vs $(57) million; six months 2026 vs six months 2025: $(84) million vs $(57) million",
+      "commentary": "First-half losses reflect repositioning of a portion of the investment securities portfolio, which weighed on the noninterest income line.",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Total noninterest income",
+      "revenue": "$3,325 million (Q2 2026); $6,322 million (six months 2026)",
+      "yoy_change": "Q2 2026 vs Q2 2025: +13.7% ($2,924 million); six months 2026 vs six months 2025: +9.8% ($5,760 million)",
+      "commentary": "Management cites higher fee revenue in all categories plus the BTIG contribution.",
+      "source_citation": "MD&A"
+    }
+  ],
+  "forward_guidance": {
+    "text": "No forward guidance issued in this filing.",
+    "source_citation": "MD&A"
+  },
+  "key_risks": [
+    {
+      "description": "Embedded securities losses: held-to-maturity securities carry amortized cost of $74.1B against fair value of $64.6B (a $9.5B unrealized loss). Available-for-sale securities carry net unrealized losses of about $4.4B ($3.3B after tax), with roughly $4.5B of gross losses in positions held 12 months or longer. These losses constrain balance-sheet repositioning and tangible equity if rates stay higher, even though management has no plans to sell and the losses do not hit regulatory capital directly. The filing gives no tangible book value sensitivity to a further rate move.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Capital accretion is not visible in the regulatory ratio. CET1 was 10.8% at both June 30, 2026 and December 31, 2025, with risk-weighted assets up about 3.3% to $496.5B. First-half common dividends and buybacks absorbed about $2.1B, and the BTIG acquisition added goodwill. Further RWA growth or a higher payout could pressure the ratio.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Credit costs are rising with loan growth. First-half provision for credit losses was $1,114 million vs $1,038 million. Card provisions were $831 million in the first half and card charge-offs run near $446 million a quarter. The allowance assumes a baseline unemployment path with a peak weighted-average rate of 5.9%, which may prove optimistic for a consumer-heavy card book.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Policy risk to card economics: an announced executive order proposing a temporary 10% cap on credit card interest rates could pressure the highest-yielding part of the consumer lending book. Management's quantification of the exposure is not apparent in the filing.",
+      "is_new": true,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Margin durability and revenue mix. Q2 net interest margin improved to 2.79% (2.78% for six months) on fixed-asset repricing, mix and lower funding costs, but first-half net interest income fell on lower earning assets and lower cash balances. Noninterest income was also hurt in the first half by securities repositioning losses.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Acquisition integration and expense growth. Q2 noninterest expense rose 5.9% to $4,428 million, with marketing and business development up 34%, technology and communications up 12.5% and compensation up 3.3%. BTIG's full cost load and integration spending may not yet be fully reflected, and acquired capital markets revenue flatters the efficiency ratio of 57.1%.",
+      "is_new": true,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Funding mix shift: short-term borrowings rose to $34.8B from $14.6B at year-end, and financing activities provided $25.4B of cash in the first half. This may raise funding-cost and liquidity sensitivity if wholesale markets tighten.",
+      "is_new": true,
+      "source_citation": "MD&A"
+    }
+  ],
+  "recent_news": [
+    {
+      "headline": "U.S. Bancorp reports third quarter 2026 results",
+      "date": "2026-10-15",
+      "url": "https://www.usbank.com/about-us-bank/news-and-stories/article-library/us-bancorp-reports-third-quarter-2026-results.html",
+      "relevance_note": "Company release for the quarter after this 10-Q. It cites net interest margin of 2.84% and CET1 of 10.8%, which bear on the NIM durability and capital questions raised by the Q2 filing."
+    },
+    {
+      "headline": "U.S. Bancorp Q3 earnings rise 10% to $2.2B | USB 8-K Filing",
+      "date": "2026-10",
+      "url": "https://www.stocktitan.net/sec-filings/USB/8-k-us-bancorp-de-reports-material-event-3d1199dce6e2.html",
+      "relevance_note": "8-K text attributes the Q3 margin of 2.84% (vs 2.79% in Q2 2026) to fixed-asset repricing, asset mix and a small business credit card portfolio purchase. This supports margin durability but post-dates this filing."
+    },
+    {
+      "headline": "How Investors Are Reacting To U.S. Bancorp (USB) Earnings Beat",
+      "date": "2026-10",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/investors-reacting-u-bancorp-usb-211432723.html",
+      "relevance_note": "Reports a raised full-year 2026 net revenue growth outlook of 8% to 9% tied to BTIG capital markets revenue, and a plan to resume share repurchases. This is post-period context and is not verified against the 10-Q."
+    },
+    {
+      "headline": "U.S. Bancorp's (NYSE:USB) Q3 2026 Earnings Results: Revenue In Line With Expectations",
+      "date": "2026-10",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/u-bancorp-nyse-usb-q3-110835225.html",
+      "relevance_note": "Cites Q3 net interest income of $4.47B, net interest margin of 2.8% and an efficiency ratio of 55.9%. Useful for judging whether Q2 operating leverage persisted."
+    },
+    {
+      "headline": "U.S. Bancorp (USB) Earnings: Latest Report, Earnings Call & Financials",
+      "date": "2026-07-16",
+      "url": "https://public.com/stocks/usb/earnings",
+      "relevance_note": "Summarizes Q2 2026 EPS of $1.35 vs $1.27 expected and $1.11 a year earlier, a beat consistent with the 10-Q's net income increase."
+    },
+    {
+      "headline": "Earnings Whispers | U.S. Bancorp (USB) Q3 2026 Earnings Call Transcript",
+      "date": "2026-10",
+      "url": "https://earningswhispers.com/transcript/USB/Q32026",
+      "relevance_note": "Management cites net charge-offs down two basis points to 51 bp and a stable CET1 ratio of 10.8%, relevant to the credit and capital debates."
+    },
+    {
+      "headline": "Compared to Estimates, U.S. Bancorp (USB) Q3 Earnings: A Look at Key Metrics",
+      "date": "2026-10",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/compared-estimates-u-bancorp-usb-123006222.html",
+      "relevance_note": "Provides Q3 net charge-off ratio of 0.5%, average earning assets of $630.78B and book value per share of $38.27 for tracking credit and balance-sheet trends."
+    },
+    {
+      "headline": "Anchorage Digital taps US Bank for custody services",
+      "date": "2026-09-03",
+      "url": "https://www.fintechfutures.com/blockchain-crypto-digital-assets/anchorage-digital-bank-selects-us-bank-to-custody-reserves-backing-its-payment-stablecoins",
+      "relevance_note": "Custody mandate for stablecoin reserves; evidence of fee-franchise expansion into digital assets, not yet quantified in the filing."
+    },
+    {
+      "headline": "U.S. Bancorp (USB) takes next step towards launching its stablecoin with cross-border payment on Stellar (XLM)",
+      "date": "2026-09-09",
+      "url": "https://www.coindesk.com/business/2026/09/08/u-s-bank-takes-next-step-towards-launching-its-stablecoin-with-cross-border-payment-test",
+      "relevance_note": "Shows progress on a USB stablecoin cross-border payment test, relevant to the long-run payments and fee-income optionality."
+    },
+    {
+      "headline": "Rate Caps Statement | American Bankers Association",
+      "date": "2026",
+      "url": "https://www.aba.com/about-us/press-room/press-releases/rate-caps-statement",
+      "relevance_note": "Industry response to the announced plan for an executive order imposing a temporary 10% credit card interest rate cap, a risk to card economics."
+    },
+    {
+      "headline": "The Potential Adverse Consequences of a Credit Card Interest Rate Cap - Bank Policy Institute",
+      "date": "2026",
+      "url": "https://bpi.com/the-potential-adverse-consequences-of-a-credit-card-interest-rate-cap-2",
+      "relevance_note": "Analysis of how a 10% APR cap could reduce card credit availability, helping size the policy risk."
+    },
+    {
+      "headline": "US Bancorp Earnings: Good Commercial Loan Growth, but Net Interest Margin Flat in First Quarter | Morningstar",
+      "date": "2026",
+      "url": "https://www.morningstar.com/stocks/us-bancorp-earnings-good-commercial-loan-growth-net-interest-margin-flat-first-quarter",
+      "relevance_note": "Notes a history of positive operating leverage and an efficiency ratio target in the mid-to-high 50s, framing the Q2 efficiency ratio of 57.1%."
+    }
+  ],
+  "bull_case": [
+    "Net income of $2,183 million in Q2 2026 rose from $1,821 million a year earlier, and net income applicable to common shareholders rose to $2,098 million from $1,733 million. Earnings comfortably cover the roughly $2.1B returned to shareholders in the first half.",
+    "Net interest margin widened to 2.79% in Q2 from 2.66%, driven by loan growth (average total loans up $27.0B, or 7.1%), better earning asset mix, lower funding costs and fixed-asset repricing. These are structural drivers that keep rolling forward as lower-yielding assets mature.",
+    "Positive operating leverage: noninterest income rose 13.7% in Q2 against expense growth of 5.9%, and the efficiency ratio improved to 57.1% from 59.2%. Fee growth is broad-based, with trust and investment management fees up 11.7%, lending and deposit-related fees up 11% and investment products fees up 13%.",
+    "The BTIG acquisition adds a capital markets platform (capital markets revenue $512 million vs $315 million), which diversifies earnings away from spread income. The Q2 results also show higher client derivative activity and underwriting fees.",
+    "Capital is stable: CET1 was 10.8% at both period ends, while CET1 dollars grew about $1.9B. The unrealized securities losses do not flow through regulatory capital, and management has no plans to sell the securities.",
+    "Digital-asset custody and stablecoin initiatives offer longer-term fee optionality as payments and custody revenue scale."
+  ],
+  "bear_case": [
+    "First-half net interest income fell 8.4% on lower earning assets, and Q2 net interest income benefited partly from fixed-asset repricing and mix. One quarter of a 2.79% net interest margin does not establish a durable trend, and lower cash balances remain a drag.",
+    "Fee growth is partly bought. Capital markets revenue includes the BTIG contribution, so the organic growth rate cannot be separated from the filing. The efficiency ratio is flattered by acquired revenue, while marketing (up 34%) and technology (up 12.5%) expenses are climbing and BTIG's full cost load may not yet be visible.",
+    "The embedded securities loss is large: about $9.5B on held-to-maturity and about $4.4B on available-for-sale, with accumulated other comprehensive loss of $7.1B. This limits repositioning flexibility and tangible book value, and repositioning losses already hit first-half fee income.",
+    "Retained earnings are not building the regulatory ratio. CET1 was flat at 10.8% as risk-weighted assets grew about 3.3%, leaving little room to raise the payout without eroding capital.",
+    "Provisions are rising with loan growth, and card credit costs remain elevated. The reserve assumes a peak unemployment rate of 5.9%, and a proposed 10% card APR cap is an unquantified policy risk to the highest-yielding consumer assets.",
+    "Funding mix has shifted toward short-term borrowings, which rose to $34.8B from $14.6B at year-end, adding funding-cost and liquidity sensitivity."
+  ],
+  "what_to_watch": [
+    {
+      "text": "**Net Interest Margin Durability:** Q2 net interest margin reached 2.79% (2.66% a year earlier), helped by loan growth, mix and fixed-asset repricing, and average loans were up 7.1%. However, first-half net interest income still fell 8.4% on lower earning assets, and lower cash balances were a drag. That said, the year-over-year Q2 widening of 13 bp exceeded the 9 bp six-month widening, which suggests exit-rate momentum, and the consolidated margin is the cleaner anchor than the percentage changes in dollar net interest income.\n\n-> Monitor whether the net interest margin holds at or above 2.79%, the drivers of any further fixed-asset repricing benefit, and trends in average earning assets and funding costs.",
+      "relevant_urls": [
+        "https://www.stocktitan.net/sec-filings/USB/8-k-us-bancorp-de-reports-material-event-3d1199dce6e2.html",
+        "https://earningswhispers.com/transcript/USB/Q32026"
+      ]
+    },
+    {
+      "text": "**Organic vs. Acquired Fee Growth:** Q2 noninterest income rose $401 million (13.7%) to $3.3B, with trust and investment management fees up 11.7% and capital markets revenue at $512 million vs $315 million. However, the capital markets lift is partly from the BTIG acquisition, and first-half fee income was dragged by securities repositioning losses, so repeatable earnings upside depends on organic strength in trust, card and treasury management. On the other hand, the filing also cites higher client derivative activity, bond underwriting and favorable markets, which are repeatable drivers beyond M&A.\n\n-> Monitor a split of fee growth between BTIG and organic lines, capital markets revenue run-rate and trust fee growth ex-acquisition.",
+      "relevant_urls": [
+        "https://finance.yahoo.com/markets/stocks/articles/investors-reacting-u-bancorp-usb-211432723.html",
+        "https://finance.yahoo.com/markets/stocks/articles/u-bancorp-nyse-usb-q3-110835225.html"
+      ]
+    },
+    {
+      "text": "**Operating Leverage After BTIG:** The efficiency ratio improved to 57.1% from 59.2% in Q2, with fee income up $401 million against a $247 million (5.9%) rise in noninterest expense. However, the improvement leans on acquired revenue while marketing is up 34.2%, technology and communications up 12.5% and compensation up 3.3%. Some expense growth figures quoted in segment detail are on far smaller bases than the consolidated figures, so operating leverage should be judged on consolidated numbers and net of provision, which rose $37 million to $538 million on loan growth.\n\n-> Monitor the consolidated efficiency ratio, expense growth ex-BTIG, integration costs and the provision-adjusted pre-tax margin.",
+      "relevant_urls": [
+        "https://www.morningstar.com/stocks/us-bancorp-earnings-good-commercial-loan-growth-net-interest-margin-flat-first-quarter",
+        "https://finance.yahoo.com/markets/stocks/articles/compared-estimates-u-bancorp-usb-123006222.html"
+      ]
+    },
+    {
+      "text": "**Securities Portfolio and Tangible Equity:** Held-to-maturity securities carry a $9.5B unrealized loss (amortized cost $74.1B vs fair value $64.6B), available-for-sale securities carry about $4.4B of net unrealized losses, and about $4.5B of available-for-sale losses sit in positions held 12 months or longer. Management has no plans to sell and the losses do not reduce CET1 directly. That said, repositioning losses already hit first-half fee income (securities losses of $84 million), and the filing gives no tangible book value sensitivity to further rate moves.\n\n-> Monitor accumulated other comprehensive loss, any further securities repositioning, and management commentary on tangible book value sensitivity.",
+      "relevant_urls": [
+        "https://earningswhispers.com/transcript/USB/Q32026"
+      ]
+    },
+    {
+      "text": "**Credit Costs and Card Policy Risk:** The first-half provision was $1,114 million vs $1,038 million, driven by loan growth, while Q2 net charge-offs eased to $536 million from $554 million and the allowance reflects improved credit quality. However, card provisions remain elevated at $831 million for the half, the reserve assumes a peak weighted-average unemployment rate of 5.9%, and a proposed temporary 10% card APR cap is not quantified in the filing.\n\n-> Monitor net charge-off ratios, card reserve coverage, macro scenario assumptions and any management sizing of APR cap exposure.",
+      "relevant_urls": [
+        "https://www.aba.com/about-us/press-room/press-releases/rate-caps-statement",
+        "https://bpi.com/the-potential-adverse-consequences-of-a-credit-card-interest-rate-cap-2",
+        "https://finance.yahoo.com/markets/stocks/articles/compared-estimates-u-bancorp-usb-123006222.html"
+      ]
+    },
+    {
+      "text": "**Capital Generation and Shareholder Returns:** First-half common dividends of about $1.6B and treasury purchases of $0.5B totaled roughly $2.1B, about 53% of net income applicable to common, so earnings cover the payout. However, CET1 held at 10.8% as risk-weighted assets rose from $480.4B to $496.5B and BTIG added goodwill, so retained earnings of about $1.8B are being absorbed by growth. On the other hand, CET1 dollars grew about $1.9B, so the flat ratio is mostly arithmetic rather than a generation failure.\n\n-> Monitor the CET1 ratio, risk-weighted asset growth split between BTIG and organic loans, and buyback pace.",
+      "relevant_urls": [
+        "https://finance.yahoo.com/markets/stocks/articles/investors-reacting-u-bancorp-usb-211432723.html"
+      ]
+    },
+    {
+      "text": "**Digital-Asset and Payments Fee Optionality:** Fee revenue grew 13.2% in Q2, and recent news shows custody of stablecoin reserves for a digital bank and a cross-border stablecoin payment test. However, the magnitude is unproven: the stablecoin items come from news rather than the filing, and part of the fee growth was acquired through BTIG.\n\n-> Monitor any disclosure of digital-asset revenue, custody balances and payments-segment fee trends.",
+      "relevant_urls": [
+        "https://www.fintechfutures.com/blockchain-crypto-digital-assets/anchorage-digital-bank-selects-us-bank-to-custody-reserves-backing-its-payment-stablecoins",
+        "https://www.coindesk.com/business/2026/09/08/u-s-bank-takes-next-step-towards-launching-its-stablecoin-with-cross-border-payment-test"
+      ]
+    },
+    {
+      "text": "**Funding Mix and Balance-Sheet Growth:** Net loans rose to $402.7B from $383.7B at year-end, and short-term borrowings rose to $34.8B from $14.6B while deposits grew by $10.0B in the first half. However, the heavier reliance on short-term borrowings could raise funding costs and weigh on margin if deposit growth lags loan growth. On the other hand, long-term debt fell to $56.8B from $59.4B.\n\n-> Monitor deposit growth vs loan growth, the short-term borrowing balance and the funding-cost contribution to margin.",
+      "relevant_urls": []
+    }
+  ],
+  "data_gaps": [
+    "Q2 2026 basic and diluted earnings per share line items are truncated in the provided filing text, so EPS is not reported as a Q2 metric.",
+    "Free cash flow, a gross margin or gross profit figure and a single total debt figure are not reported as line items in the provided filing text.",
+    "Management quantification of tangible book value sensitivity to further rate moves on the unrealized securities losses is not provided.",
+    "The BTIG acquisition's standalone revenue and expense contribution is not separated from organic capital markets results.",
+    "The filing did not address outlook topics such as net interest income, fee revenue, expense or credit loss guidance, or capital return plans.",
+    "Management quantification of exposure to a potential 10% credit card APR cap is not visible in the filing text."
+  ],
+  "hypotheses_explored": [
+    {
+      "id": "h1",
+      "proposing_personality": "Conservative",
+      "question": "Are USB's dividends and buybacks covered by earnings, and is the flat CET1 ratio evidence that retained capital is not being built fast enough to fund growth?",
+      "summary": "Earnings cover the payout (about 53% of H1 net income applicable to common), but CET1 stayed at 10.8% as risk-weighted assets grew about 3.3% and BTIG goodwill absorbed retained earnings.",
+      "evidence_quotes": [
+        "common equity tier 1 capital ratio was 10.8 percent at both June 30, 2026 and December 31, 2025.",
+        "Risk-weighted assets 496,488 480,382 Common equity tier 1 capital 53,575 51,665",
+        "The Company returned $1.0 billion and $2.1 billion of earnings to shareholders in the second quarter of 2026 and the first six months of 2026, respectively, through dividends and share repurchases."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h2",
+      "proposing_personality": "Conservative",
+      "question": "How large are USB's embedded securities losses relative to its equity, and do they limit flexibility even though they do not hit regulatory capital directly?",
+      "summary": "HTM unrealized loss of about $9.5B and AFS net unrealized loss of $4.4B constrain repositioning and tangible equity, though management has no plan to sell.",
+      "evidence_quotes": [
+        "Held-to-Maturity Total held-to-maturity $ 74,085 $ 42 $ (9,505) $ 64,622",
+        "At both June 30, 2026 and December 31, 2025, the Company's net unrealized losses on available-for-sale investment securities were $4.4 billion ($3.3 billion net-of-tax).",
+        "At June 30, 2026, the Company had no plans to sell investment securities with unrealized losses"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h4",
+      "proposing_personality": "Contrarian",
+      "question": "Are rising provisions and expense growth quietly absorbing the NIM gains, so that USB's operating leverage is weaker than the margin story implies?",
+      "summary": "Provisions are rising on loan growth and expenses are growing on technology and marketing, but consolidated charge-offs are falling and efficiency improved, so the thesis is mixed.",
+      "evidence_quotes": [
+        "Provision for credit losses 538 (Q2 2026) vs 501 (Q2 2025); Net loan charge-offs 536 (Q2 2026) vs 554 (Q2 2025)",
+        "Total noninterest expense $4,428 million, up 5.9 percent in the second quarter; $8,693 million, up 3.3 percent in the first six months of 2026."
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h5",
+      "proposing_personality": "Dreamer",
+      "question": "Can U.S. Bancorp's fee franchise (trust, payments, capital markets, and digital-asset rails) compound into a much larger share of revenue over 5-10 years, so that the bank stops being valued mainly as a spread lender?",
+      "summary": "Fee base is growing faster than spread income with visible stablecoin and custody activity, but the direction is supported more than the magnitude and part of the growth is acquired.",
+      "evidence_quotes": [
+        "Noninterest income increased $401 million (13.7 percent) driven by higher fee revenue across all categories and the contribution from the BTIG acquisition;",
+        "Trust and investment management fees 785 703 11.7% (three months ended June 30, 2026 vs. 2025); Total fee revenue 3,374 2,981 13.2%"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h6",
+      "proposing_personality": "Dreamer",
+      "question": "Is USB in a durable operating-leverage phase, where fee revenue outgrows the cost base enough to keep lifting returns even after the BTIG cost is absorbed?",
+      "summary": "The efficiency ratio is improving and spending targets product and technology, but the Q2 revenue jump includes a one-time acquisition contribution and expenses also rose.",
+      "evidence_quotes": [
+        "Efficiency ratio 57.1% (three months ended June 30, 2026) vs. 59.2% prior year; 57.6% vs. 60.0% for six months",
+        "Total noninterest expense 4,428 4,181 5.9%; Marketing and business development 216 161 34.2%"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h7",
+      "proposing_personality": "Optimist",
+      "question": "Is U.S. Bancorp's net interest margin recovery durable enough to keep lifting NII into the next earnings print?",
+      "summary": "Q2 margin improved on loan growth, mix, fixed-asset repricing and lower funding costs, but first-half NII declined and lower cash balances are a drag.",
+      "evidence_quotes": [
+        "The net interest margin, on a taxable-equivalent basis, was 2.79 percent in the second quarter of 2026 and 2.78 percent in the first six months of 2026, compared with 2.66 percent and 2.69 percent, respectively, for the same periods of 2025.",
+        "Average total loans in the second quarter and the first six months of 2026 were $27.0 billion (7.1 percent) and $20.8 billion (5.5 percent) higher, respectively, than the same periods of 2025."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h9",
+      "proposing_personality": "Pessimist",
+      "question": "Are USB's roughly $4.65 billion of securities unrealized losses, mostly in positions held over 12 months, a hidden capital and earnings drag that management is not fully quantifying?",
+      "summary": "AFS losses of about $4.65B, mostly in positions held 12+ months, remain locked in AOCI, and no tangible book sensitivity to rates is disclosed.",
+      "evidence_quotes": [
+        "Total investment securities $ 56,216 $ (4,652)",
+        "These unrealized losses primarily relate to changes in interest rates and market spreads subsequent to purchase of these available-for-sale investment securities."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h10",
+      "proposing_personality": "Pessimist",
+      "question": "Is USB's credit card book being reserved against a benign macro path while provisions stay elevated and a proposed 10% APR cap could hit the card franchise?",
+      "summary": "Card provisions are $831M for the first half, the reserve assumes a peak unemployment rate of 5.9%, and the exposure to a proposed APR cap is not quantified in the filing.",
+      "evidence_quotes": [
+        "Credit card: Add Provision for credit losses 831 (six months 2026); Loans charged-off 885; Net loan charge-offs 732",
+        "The projected unemployment rates considered in the estimate ranged from 3.6 percent to 9.5 percent, with a peak weighted-average unemployment rate of 5.9 percent.",
+        "The Administration announced plans today to issue an executive order imposing a temporary 10% cap on credit card interest rates."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h11",
+      "proposing_personality": "Quant",
+      "question": "Is USB's Q2 2026 net interest income inflection (NIM expansion to 2.79%) durable enough to offset the first-half NII decline, or is it a one-quarter mix/repricing effect?",
+      "summary": "Q2 NII rose 25.6% and NIM widened 13 bp to 2.79%, but first-half NII fell 8.4%, so the run-rate needs to be tested into the next quarter.",
+      "evidence_quotes": [
+        "Net interest income, on a taxable-equivalent basis, increased $55 million (25.6 percent) in the second quarter, compared with the second quarter of 2025",
+        "Net interest income, on a taxable-equivalent basis, decreased $26 million (8.4 percent) in the first six months of 2026"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h3",
+      "proposing_personality": "Contrarian",
+      "question": "Is USB's Q2 2026 net interest income surge a durable margin recovery, or a repricing and mix effect that masks a weaker first half?",
+      "summary": "NIM recovery to 2.79% is real, but first-half NII fell 8.4% on lower earning assets and fee income was hit by repositioning losses, so the base beneath the headline is thinner.",
+      "evidence_quotes": [
+        "Noninterest income decreased $23 million (20.5 percent) in the first six months of 2026, compared with the first six months of 2025, primarily due to losses from repositioning a portion of the investment securities portfolio.",
+        "Net interest margin was 2.84 percent in the third quarter of 2026, compared with 2.75 percent in the third quarter of 2025 and 2.79 percent in the second quarter of 2026."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h8",
+      "proposing_personality": "Optimist",
+      "question": "Can U.S. Bancorp convert its operating leverage and fee momentum into positive earnings surprises, or is the fee growth mostly acquired (BTIG) and therefore not repeatable?",
+      "summary": "Q2 shows positive operating leverage with noninterest income up 13.7% vs expenses up 5.9% and a better efficiency ratio, though the capital markets lift is partly from BTIG and H1 fees were hit by repositioning losses.",
+      "evidence_quotes": [
+        "Capital markets revenue increased due to the contribution from BTIG following the acquisition in the second quarter of 2026, along with higher client-related derivative activity, corporate bond underwriting fees and favorable market conditions.",
+        "Total noninterest expense $ 4,428 $ 4,181 5.9 % Efficiency ratio (a) 57.1 % 59.2 %"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h12",
+      "proposing_personality": "Quant",
+      "question": "Is USB's Q2 2026 operating leverage (revenue growth above expense growth) driven by organic core performance or by the BTIG acquisition, and does it hold once credit costs are included?",
+      "summary": "Revenue growth outpaced expenses, but the fee gain is attributed to BTIG and the expense and provision changes cited are small, so the leverage signal is thin and not separable into organic versus acquired.",
+      "evidence_quotes": [
+        "The provision for credit losses was $538 million in the second quarter and $1.1 billion in the first six months of 2026, representing increases of $37 million (7.4 percent) and $76 million (7.3 percent), respectively, from the same periods of 2025, primarily due to loan growth.",
+        "Total loan net charge-offs were $536 million for the second quarter and $1.1 billion for the first six months of 2026, compared with $554 million and $1.1 billion, respectively, for the same periods of 2025."
+      ],
+      "confidence": 3
+    }
+  ]
+}

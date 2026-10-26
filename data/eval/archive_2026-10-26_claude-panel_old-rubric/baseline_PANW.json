@@ -1,0 +1,349 @@
+{
+  "ticker": "PANW",
+  "company_name": "Palo Alto Networks, Inc.",
+  "filing_type": "10-K",
+  "filing_date": "2026-09-10",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T14:08:10.103484+00:00",
+  "key_metrics": [
+    {
+      "name": "Total revenue (FY2026)",
+      "value": "11,480",
+      "unit": "USD millions (+24% YoY vs 9,221)",
+      "source_citation": "10-K Item 7 MD&A, Key Financial Metrics; Item 8 Consolidated Statements of Operations"
+    },
+    {
+      "name": "Gross margin",
+      "value": "70.4% (vs 73.4% FY2025, 74.3% FY2024)",
+      "unit": "percent",
+      "source_citation": "10-K Item 7 MD&A, Key Financial Metrics and Gross Margin"
+    },
+    {
+      "name": "Operating income / margin",
+      "value": "695 / 6.1% (vs 1,243 / 13.5% FY2025)",
+      "unit": "USD millions / percent",
+      "source_citation": "10-K Item 7 MD&A, Key Financial Metrics"
+    },
+    {
+      "name": "Net income",
+      "value": "307 (vs 1,134 FY2025)",
+      "unit": "USD millions",
+      "source_citation": "10-K Item 8, Consolidated Statements of Operations"
+    },
+    {
+      "name": "Diluted EPS (GAAP)",
+      "value": "0.40 (vs 1.60 FY2025)",
+      "unit": "USD per share",
+      "source_citation": "10-K Item 8, Consolidated Statements of Operations; Note 17 Net Income Per Share"
+    },
+    {
+      "name": "Other income (expense), net",
+      "value": "(159) vs +353 FY2025; includes 620 loss on fair value of 2030 Notes and 58 gain on Capped Calls",
+      "unit": "USD millions",
+      "source_citation": "10-K Item 7 MD&A, Other Income (Expense), Net; Note 18"
+    },
+    {
+      "name": "Effective tax rate",
+      "value": "42.7% (vs 28.9% FY2025)",
+      "unit": "percent",
+      "source_citation": "10-K Item 7 MD&A, Provision for Income Taxes; Note 16 Income Taxes"
+    },
+    {
+      "name": "Net cash provided by operating activities",
+      "value": "4,553 (vs 3,716 FY2025)",
+      "unit": "USD millions",
+      "source_citation": "10-K Item 7 MD&A, Key Financial Metrics and Cash Flows"
+    },
+    {
+      "name": "Free cash flow (non-GAAP)",
+      "value": "4,113 (vs 3,469 FY2025); about 35.8% of revenue (calculated)",
+      "unit": "USD millions",
+      "source_citation": "10-K Item 7 MD&A, Free Cash Flow reconciliation"
+    },
+    {
+      "name": "Next-Generation Security ARR",
+      "value": "9.1 billion (vs 5.6 billion at July 31, 2025)",
+      "unit": "USD billions",
+      "source_citation": "10-K Item 7 MD&A, Key Financial Metrics"
+    },
+    {
+      "name": "Remaining performance obligations",
+      "value": "21.2 billion (vs 15.8 billion); about 9.3 billion expected to be recognized within 12 months",
+      "unit": "USD billions",
+      "source_citation": "10-K Item 7 MD&A, Key Financial Metrics; Note 2 Revenue"
+    },
+    {
+      "name": "Pro forma revenue (as if CyberArk and Chronosphere owned from start of FY2025)",
+      "value": "12,312 (FY2026) vs 10,486 (FY2025); pro forma net loss (114) and (37)",
+      "unit": "USD millions (unaudited)",
+      "source_citation": "10-K Note 8 Acquisitions, Additional Acquisition-Related Information"
+    },
+    {
+      "name": "Cash, cash equivalents and investments",
+      "value": "7,906 (vs 8,459)",
+      "unit": "USD millions",
+      "source_citation": "10-K Item 7 MD&A, Liquidity and Capital Resources"
+    },
+    {
+      "name": "Share-based compensation",
+      "value": "1,815 (vs 1,300 FY2025); about 3.3 billion unrecognized over about 2.5 years",
+      "unit": "USD millions",
+      "source_citation": "10-K Item 7 MD&A, Results of Operations; Note 15 Equity Award Plans"
+    },
+    {
+      "name": "Current deferred revenue",
+      "value": "7,747 (vs 6,302); long-term deferred revenue 7,009",
+      "unit": "USD millions",
+      "source_citation": "10-K Item 8, Consolidated Balance Sheets"
+    },
+    {
+      "name": "Goodwill and intangible assets, net",
+      "value": "22,010 goodwill; 7,017 intangibles, net",
+      "unit": "USD millions",
+      "source_citation": "10-K Item 8, Consolidated Balance Sheets; Note 9 Goodwill and Intangible Assets"
+    },
+    {
+      "name": "2030 Convertible Senior Notes outstanding principal",
+      "value": "About 1.1 billion principal; fair value 1.8 billion",
+      "unit": "USD billions",
+      "source_citation": "10-K Note 11 Debt; Item 7 MD&A, Debt"
+    },
+    {
+      "name": "Non-cancelable purchase commitments",
+      "value": "8,242 (cloud 7,686; manufacturing 370; other 186)",
+      "unit": "USD millions",
+      "source_citation": "10-K Note 13 Commitments and Contingencies, Purchase Commitments"
+    },
+    {
+      "name": "Share repurchase authorization remaining",
+      "value": "1.0 billion; expires December 31, 2026; no repurchases in the quarter ended July 31, 2026",
+      "unit": "USD billions",
+      "source_citation": "10-K Item 5, Purchases of Equity Securities by the Issuer; Note 14"
+    },
+    {
+      "name": "Employees",
+      "value": "21,921 (vs 16,068), including about 4,223 from CyberArk",
+      "unit": "headcount",
+      "source_citation": "10-K Item 1 Human Capital; Item 1A Risk Factors (Risks Related to Our Growth)"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "Product",
+      "revenue": "2,280",
+      "yoy_change": "+27%",
+      "commentary": "Driven by software licenses including CyberArk, and demand for the new generation of hardware. Product gross margin fell to 75.1% from 77.1% on hardware supply chain costs and higher intangible amortization.",
+      "source_citation": "10-K Item 7 MD&A, Product Revenue and Gross Margin; Note 2 Revenue"
+    },
+    {
+      "name": "Subscription",
+      "revenue": "6,239",
+      "yoy_change": "+25%",
+      "commentary": "Growth includes CyberArk (identity) and Chronosphere (observability) contributions plus underlying demand.",
+      "source_citation": "10-K Item 7 MD&A, Subscription and Support Revenue; Note 2 Revenue"
+    },
+    {
+      "name": "Support",
+      "revenue": "2,961",
+      "yoy_change": "+21%",
+      "commentary": "Subscription and support combined was 9,200, or 80.1% of revenue, with gross margin of 69.2% versus 72.5% a year earlier, on intangible amortization and cloud costs.",
+      "source_citation": "10-K Item 7 MD&A, Subscription and Support Revenue and Gross Margin; Note 2 Revenue"
+    },
+    {
+      "name": "Americas",
+      "revenue": "7,679",
+      "yoy_change": "+24%",
+      "commentary": "Largest absolute contributor. The US was 7,108.",
+      "source_citation": "10-K Item 7 MD&A, Revenue by Geographic Theater; Note 2 Revenue"
+    },
+    {
+      "name": "EMEA",
+      "revenue": "2,428",
+      "yoy_change": "+27%",
+      "commentary": "Fastest-growing theater.",
+      "source_citation": "10-K Item 7 MD&A, Revenue by Geographic Theater"
+    },
+    {
+      "name": "APAC",
+      "revenue": "1,373",
+      "yoy_change": "+25%",
+      "commentary": "Growth attributed to investment in the global sales force.",
+      "source_citation": "10-K Item 7 MD&A, Revenue by Geographic Theater"
+    },
+    {
+      "name": "Acquired businesses (Chronosphere and CyberArk), post-close contribution",
+      "revenue": "930",
+      "yoy_change": "n/a (new in FY2026)",
+      "commentary": "Combined operating loss of 797 since acquisition. The company reports one operating and reportable segment, so these are not separate segments. CyberArk was 6% of consolidated revenue.",
+      "source_citation": "10-K Note 8 Acquisitions; Note 19 Segment Information; Item 9A"
+    }
+  ],
+  "forward_guidance": {
+    "text": "The 10-K contains no quantitative revenue, margin, EPS or ARR guidance for fiscal 2027 or the upcoming quarter (Q1 FY2027, ending October 31, 2026). Qualitative statements and forward indicators: about 9.3 billion of the 21.2 billion RPO is expected to be recognized within 12 months; operating expenses are expected to increase in absolute dollars; about 3.3 billion of unrecognized share-based compensation will be recognized over about 2.5 years; the CyberArk workforce optimization plan (60 million estimated cost) should be substantially complete by end of FY2027; seasonality is expected to be strongest in fiscal Q2 and Q4; Embrace (completed Aug 27, 2026) and Console (completed Sept 1, 2026) will be accounted for as business combinations in Q1 FY2027.",
+    "source_citation": "10-K Note 2 Revenue (RPO); Item 7 MD&A, Operating Expenses; Note 8 Acquisitions; Note 20 Subsequent Events; Item 1 Seasonality"
+  },
+  "key_risks": [
+    {
+      "description": "CyberArk integration and expanded scope: integration complexity, new identity security competition, and possible failure to realize synergies. CyberArk added about 4,223 employees and 14.8 billion of goodwill.",
+      "is_new": true,
+      "source_citation": "10-K Item 1A, Risk Factors: 'As a result of the CyberArk acquisition...'; Note 8"
+    },
+    {
+      "description": "Gross margin compression: 70.4% versus 73.4% on acquired-intangible amortization, cloud hosting costs, and Q4 FY2026 memory and component cost inflation and shortages that may continue to affect margin.",
+      "is_new": true,
+      "source_citation": "10-K Item 1A, Risks Related to Operations (manufacturing partners and limited sources of supply); Item 7 MD&A, Gross Margin"
+    },
+    {
+      "description": "Consumption- or usage-based offerings (observability, AI-related) expose revenue to customer optimization, particularly among large enterprise and AI-native cohorts.",
+      "is_new": true,
+      "source_citation": "10-K Item 1A, Risks Related to Our Products and Technology"
+    },
+    {
+      "description": "Competition from cloud hyperscalers, frontier AI model providers, and vendors bundling broader platforms; vendor consolidation trends; 'identity security' market lacks a standard definition.",
+      "is_new": true,
+      "source_citation": "10-K Item 1A, Risk Factors (competition, vendor consolidation, identity security definition)"
+    },
+    {
+      "description": "AI disruption perception risk: perceived commoditization of cybersecurity by AI, and AI-native platform transition risk, could hurt demand or the stock regardless of actual results.",
+      "is_new": true,
+      "source_citation": "10-K Item 1A, 'Issues in the development, deployment, or use of AI...'"
+    },
+    {
+      "description": "Product vulnerability: in May 2026 an authentication bypass vulnerability in certain PAN-OS versions led to a security advisory and remediation efforts.",
+      "is_new": true,
+      "source_citation": "10-K Item 1A, 'Defects, errors, or vulnerabilities in our products...'"
+    },
+    {
+      "description": "2030 Convertible Notes and Capped Calls: about 1.1 billion principal must be settled in cash on conversion, and fair value swings with the stock price drive volatile GAAP other income/expense (620 loss in FY2026) and the tax rate.",
+      "is_new": true,
+      "source_citation": "10-K Item 1A (2030 Notes risk factors); Note 11 Debt; Item 7 MD&A, Other Income (Expense), Net"
+    },
+    {
+      "description": "Channel and customer concentration: two distributors were 30% of revenue and one distributor was 19% of gross accounts receivable.",
+      "is_new": false,
+      "source_citation": "10-K Item 1A, 'We rely on our channel partners...'; Note 1 Concentrations of Risks"
+    },
+    {
+      "description": "Large fixed commitments: 8.2 billion of non-cancelable purchase commitments (mostly cloud hosting) and 793 million of operating lease obligations, which could pressure profitability if growth slows.",
+      "is_new": false,
+      "source_citation": "10-K Note 13 Commitments and Contingencies; Note 12 Leases; Item 1A (growth risk)"
+    },
+    {
+      "description": "Patent litigation: Centripetal judgment of 114 million plus interest is on appeal, with 151 million accrued; Finjan matter is pending appeal.",
+      "is_new": false,
+      "source_citation": "10-K Note 13 Commitments and Contingencies, Litigation"
+    },
+    {
+      "description": "Tax exposure: effective tax rate of 42.7%, unrecognized tax benefits of 719 million, Pillar Two and other tax law changes.",
+      "is_new": false,
+      "source_citation": "10-K Note 16 Income Taxes; Item 1A (tax liabilities risk factor)"
+    },
+    {
+      "description": "Israel operations, expanded through CyberArk, are exposed to regional hostilities and employee reserve-duty call-ups.",
+      "is_new": true,
+      "source_citation": "10-K Item 1A, 'We face risks associated with having operations and employees located in Israel'"
+    },
+    {
+      "description": "Acquisition accounting risk: 22.0 billion goodwill and 7.0 billion intangibles, including 3.5 billion of platform renewals flagged as a critical audit matter, create impairment exposure if forecasts fail.",
+      "is_new": true,
+      "source_citation": "10-K Item 8, Report of Independent Registered Public Accounting Firm (Critical Audit Matters); Note 9"
+    }
+  ],
+  "recent_news": [],
+  "bull_case": [
+    "Revenue grew 24% to 11.5B, and NGS ARR rose to 9.1B from 5.6B (10-K Item 7).",
+    "RPO of 21.2B (up from 15.8B), with about 9.3B recognizable in 12 months, gives visibility (Note 2).",
+    "Operating cash flow of 4.55B and FCF of 4.11B (about 36% of revenue) show strong cash generation despite thin GAAP operating margin (Item 7).",
+    "The platform has been broadened through CyberArk (identity), Chronosphere (observability), Koi, Portkey, Embrace and Console, positioning the company in AI security (Prisma AIRS) and agent identity (Item 1).",
+    "Growth is broad across theaters, with EMEA up 27% and APAC up 25% (Item 7).",
+    "7.9B of cash and investments and an undrawn 400M revolver support liquidity; ICFR was effective with an unqualified audit opinion (Item 7; Item 9A)."
+  ],
+  "bear_case": [
+    "GAAP profitability compressed: operating margin 6.1% versus 13.5%, net income down 73% and diluted EPS 0.40 versus 1.60, with a 42.7% tax rate (Item 7; Note 16).",
+    "Gross margin fell about 300 bps to 70.4% on intangible amortization, cloud costs and memory/component inflation that may persist (Item 7; Item 1A).",
+    "The acquired businesses contributed 930M of revenue but an 797M operating loss; integration, retention and synergy risk is high, and 22B of goodwill is exposed to impairment (Note 8; Note 9).",
+    "The 2030 Notes (about 1.1B principal, 1.8B fair value) and Capped Calls will keep GAAP other income volatile and may require cash settlement (Note 11).",
+    "Usage-based revenue can see optimization pullbacks, and hyperscalers and frontier AI vendors are entering security and observability (Item 1A).",
+    "Concentration: two distributors were 30% of revenue, and 8.2B of purchase commitments are fixed regardless of demand (Item 1A; Note 13).",
+    "A PAN-OS authentication bypass vulnerability disclosed in May 2026 raises product-quality and reputational concerns (Item 1A)."
+  ],
+  "what_to_watch": [
+    {
+      "text": "Q1 FY2027 (quarter ending Oct 31, 2026) is the first full quarter with CyberArk and Chronosphere; the 10-K notes seasonality with strongest sequential growth in fiscal Q2 and Q4, so check sequential revenue and NGS ARR trajectory versus the 9.1B year-end level.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Gross margin trajectory: whether it stabilizes near 70% or falls further on memory/component costs, cloud hosting costs and intangible amortization (about 1.08B of amortization scheduled for FY2027).",
+      "relevant_urls": []
+    },
+    {
+      "text": "Operating expenses and the pace of the CyberArk workforce optimization plan (60M total cost, 14M severance liability at year-end), plus Embrace (325M) and Console (500M) integration costs.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Management commentary on consumption-based revenue optimization in observability and AI-related offerings.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Fair value moves in the 2030 Notes and Capped Calls (driven by the stock price) and their effect on GAAP other income and the tax rate; whether the 280.75 sale-price conversion condition is met in the calendar quarter ending September 30, 2026.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Capital allocation: the 1.0B remaining repurchase authorization expires Dec 31, 2026, and none was repurchased in the quarter ended July 31, 2026.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Centripetal appeal (114M judgment plus interest), the Finjan appeal, and the IBM QRadar transition services arrangement ending in the quarter ending Oct 31, 2026.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Customer response to the May 2026 PAN-OS vulnerability and demand for the new Prisma AIRS (including AIRS Gateway), Cortex XSIAM and Idira platforms.",
+      "relevant_urls": []
+    }
+  ],
+  "data_gaps": [
+    "No quarterly (10-Q) or earnings-release data was provided, so Q1 FY2027 comparables, quarterly NGS ARR and sequential trends cannot be cited.",
+    "No formal company guidance (revenue, EPS, margin, ARR, FCF) was provided; the 10-K contains none, so forward_guidance contains only qualitative indicators.",
+    "No analyst consensus estimates were provided.",
+    "No news articles or URLs were provided, so recent_news is empty.",
+    "The prior-year 10-K was not provided, so the is_new flags on risks are inferred from the FY2026 text and events (CyberArk, memory shortage, PAN-OS vulnerability) rather than a direct comparison.",
+    "Non-GAAP operating margin and non-GAAP EPS are not in the 10-K (only free cash flow is reconciled), though the company uses non-GAAP net income per diluted share as a PSU performance condition.",
+    "Revenue contribution from Chronosphere and CyberArk is disclosed only in combination (930M); CyberArk alone is only given as 6% of consolidated revenue.",
+    "No billings or calculated billings figure is disclosed in the 10-K.",
+    "The MD&A geographic table shows total revenue growth of 25% while other sections show 24% (2,259 / 9,221 is about 24.5%); the 24% figure is used throughout."
+  ],
+  "hypotheses_explored": [
+    {
+      "id": "H1",
+      "proposing_personality": "Margin skeptic",
+      "question": "Will gross margin pressure persist into the Q1 FY2027 print?",
+      "summary": "Gross margin fell about 300 bps in FY2026 on acquisition amortization, cloud costs and Q4 memory/component inflation. The 10-K says these cost pressures could continue, and the full-quarter inclusion of acquired intangibles (about 1.08B FY2027 amortization versus 640M in FY2026) points to more pressure near term.",
+      "evidence_quotes": [
+        "we experienced supply chain disruption and inflationary pressures during our fourth quarter of fiscal 2026, resulting in increased costs for memory and other components, which have negatively affected our gross margin and could continue to affect our gross margin.",
+        "Subscription and support gross margin decreased for fiscal 2026 compared to fiscal 2025 primarily due to higher amortization of intangible assets as a result of our acquisitions in our current fiscal year and an increase in costs related to our cloud-based offerings."
+      ],
+      "confidence": 70
+    },
+    {
+      "id": "H2",
+      "proposing_personality": "Growth analyst",
+      "question": "How much of the NGS ARR increase to 9.1B is organic versus acquired?",
+      "summary": "NGS ARR rose from 5.6B to 9.1B, but the company says the metric's scope expands when it acquires products, and CyberArk and Chronosphere were added mid-year. The 10-K gives no organic split, so headline ARR growth likely overstates organic momentum, which matters for evaluating the next print.",
+      "evidence_quotes": [
+        "The scope of products, subscriptions, and support offerings that contribute to NGS ARR will generally increase over time as we introduce or acquire new next-generation products, subscriptions, and support offerings."
+      ],
+      "confidence": 65
+    },
+    {
+      "id": "H3",
+      "proposing_personality": "Balance sheet / capital structure analyst",
+      "question": "Is the 2030 Notes cash-settlement exposure a near-term liquidity concern?",
+      "summary": "The notes are about 1.1B principal against 7.9B of cash and investments, and the sale-price conversion condition was not met in the quarter ended June 30, 2026. Liquidity looks ample; the main impact is GAAP volatility from fair value changes rather than a funding risk.",
+      "evidence_quotes": [
+        "The sale price condition for the 2030 Notes was not met during the calendar quarter ended June 30, 2026, and as a result, our 2030 Notes are not convertible pursuant to that condition during the calendar quarter ending September 30, 2026."
+      ],
+      "confidence": 75
+    }
+  ]
+}

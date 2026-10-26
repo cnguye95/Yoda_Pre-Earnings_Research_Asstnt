@@ -2,112 +2,316 @@
   "ticker": "JPM",
   "company_name": "JPMorgan Chase & Co.",
   "filing_type": "10-Q",
-  "filing_date": "2026-04-14",
+  "filing_date": "2026-08-06",
   "supplemental_filing_type": null,
   "supplemental_filing_date": null,
-  "report_generated_at": "2026-05-12T11:21:52.484974+00:00",
+  "report_generated_at": "2026-10-26T13:13:09.938573+00:00",
   "key_metrics": [
     {
-      "name": "EPS",
-      "value": "5.94",
-      "unit": "USD",
-      "source_citation": "Investing.com, snippet"
+      "name": "Net income (2Q26)",
+      "value": "21,155 (up 41% YoY from 14,987)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Item 2 MD&A, Executive Overview – Financial performance of JPMorganChase"
     },
     {
-      "name": "Revenue",
-      "value": "50.5",
-      "unit": "Billion USD",
-      "source_citation": "Investing.com, snippet"
+      "name": "Diluted EPS (2Q26)",
+      "value": "7.70 (vs 5.24 in 2Q25, up 47%)",
+      "unit": "USD per share",
+      "source_citation": "10-Q Part I Item 1, Consolidated statements of income; MD&A Executive Overview"
     },
     {
-      "name": "Net Income",
-      "value": "16.5",
-      "unit": "Billion USD",
-      "source_citation": "Investing.com, snippet"
+      "name": "Total net revenue (reported, 2Q26)",
+      "value": "57,347 (up 28% YoY); includes a $4.6B net gain on Visa shares and $1.0B of gains on certain equity investments",
+      "unit": "USD millions",
+      "source_citation": "10-Q MD&A, Consolidated Financial Highlights footnote (e) and Executive Overview"
     },
     {
-      "name": "ROTCE",
-      "value": "23",
-      "unit": "%",
-      "source_citation": "Investing.com, snippet"
+      "name": "Net interest income (2Q26)",
+      "value": "25,511 (up 10% YoY); NII excluding Markets 23,677 (up 4%)",
+      "unit": "USD millions",
+      "source_citation": "10-Q MD&A, Explanation and Reconciliation of Non-GAAP Financial Measures"
+    },
+    {
+      "name": "Noninterest revenue (2Q26)",
+      "value": "31,836 (up 47% YoY); excluding Markets 22,267 (up 59%)",
+      "unit": "USD millions",
+      "source_citation": "10-Q MD&A, Executive Overview and Non-GAAP reconciliation"
+    },
+    {
+      "name": "Total noninterest expense (2Q26)",
+      "value": "27,316 (up 15% YoY); overhead ratio 48%",
+      "unit": "USD millions",
+      "source_citation": "10-Q MD&A, Consolidated Results of Operations – Noninterest expense; Consolidated Financial Highlights"
+    },
+    {
+      "name": "Provision for credit losses (2Q26)",
+      "value": "2,515 (down 12% YoY); net charge-offs 2,366; net allowance addition 149",
+      "unit": "USD millions",
+      "source_citation": "10-Q MD&A, Consolidated Results of Operations – Provision for credit losses"
+    },
+    {
+      "name": "Return on common equity / ROTCE (2Q26)",
+      "value": "24% / 29% (vs 18% / 21% in 2Q25)",
+      "unit": "percent (annualized)",
+      "source_citation": "10-Q MD&A, Consolidated Financial Highlights"
+    },
+    {
+      "name": "Markets revenue (2Q26)",
+      "value": "12,078 (up 35% YoY); Equity Markets 6,025 (up 86%); Fixed Income Markets 6,053 (up 6%)",
+      "unit": "USD millions",
+      "source_citation": "10-Q MD&A, CIB segment results – Markets revenue"
+    },
+    {
+      "name": "Investment banking fees (CIB, 2Q26)",
+      "value": "3,277 (up 30% YoY)",
+      "unit": "USD millions",
+      "source_citation": "10-Q MD&A, CIB segment results – Investment banking fees table"
+    },
+    {
+      "name": "CET1 capital ratio – Standardized",
+      "value": "14.2% (vs 14.6% at 12/31/25 and 15.1% at 2Q25); requirement 11.5%",
+      "unit": "percent",
+      "source_citation": "10-Q MD&A, Capital Risk Management – Selected capital and RWA data; Consolidated Financial Highlights"
+    },
+    {
+      "name": "Supplementary leverage ratio / Tier 1 leverage",
+      "value": "5.5% / 6.6% (SLR requirement 4.3%)",
+      "unit": "percent",
+      "source_citation": "10-Q MD&A, Capital Risk Management – leverage-based capital metrics"
+    },
+    {
+      "name": "Tangible book value per share",
+      "value": "113.35 (up 10% YoY); book value per share 133.01",
+      "unit": "USD per share",
+      "source_citation": "10-Q MD&A, Consolidated Financial Highlights and Non-GAAP reconciliation"
+    },
+    {
+      "name": "Net charge-off rate (Firm, 2Q26)",
+      "value": "0.66% (vs 0.73% in 2Q25); Card Services 3.34%",
+      "unit": "percent",
+      "source_citation": "10-Q MD&A, Credit Portfolio table; CCB Selected metrics"
+    },
+    {
+      "name": "Allowance for loan losses to retained loans",
+      "value": "1.79% (vs 1.85% in 2Q25); total allowance for credit losses 31,531",
+      "unit": "percent / USD millions",
+      "source_citation": "10-Q MD&A, Consolidated Financial Highlights – Credit quality metrics"
+    },
+    {
+      "name": "Nonperforming assets",
+      "value": "9,849 (down 6% YoY)",
+      "unit": "USD millions",
+      "source_citation": "10-Q MD&A, Consolidated Financial Highlights and Executive Overview"
+    },
+    {
+      "name": "Total loans / total deposits (period-end)",
+      "value": "1,542,462 / 2,713,700; loans-to-deposits ratio 57%",
+      "unit": "USD millions",
+      "source_citation": "10-Q MD&A, Consolidated Financial Highlights – Selected balance sheet data"
+    },
+    {
+      "name": "Firm liquidity coverage ratio (average, 2Q26)",
+      "value": "110% (vs 112% in 1Q26 and 113% in 2Q25)",
+      "unit": "percent",
+      "source_citation": "10-Q MD&A, Liquidity Risk Management – LCR and HQLA table"
+    },
+    {
+      "name": "Effective tax rate (2Q26)",
+      "value": "23.1% (vs 18.0% in 2Q25, which included a $774M tax benefit)",
+      "unit": "percent",
+      "source_citation": "10-Q MD&A, Consolidated Results of Operations – Income tax expense"
+    },
+    {
+      "name": "Capital return: common repurchases and dividend (2Q26)",
+      "value": "Repurchased 21.7M shares for 6,703; dividend 1.50 per share, intended to rise to 1.65 for 3Q26; new $50B buyback authorized effective July 1, 2026",
+      "unit": "USD millions / USD per share",
+      "source_citation": "10-Q MD&A, Capital Risk Management – Capital actions; Part II Item 2"
     }
   ],
   "revenue_segments": [
     {
-      "name": "Fixed Income Trading",
-      "revenue": "Not specified",
-      "yoy_change": "21%",
-      "commentary": "Rising activity in commodities, credit, currencies, and emerging markets.",
-      "source_citation": "CNBC, snippet"
+      "name": "Consumer & Community Banking (CCB)",
+      "revenue": "20,272 (managed basis, 2Q26)",
+      "yoy_change": "+8%",
+      "commentary": "Net income 5,311 (+3%) and ROE 34%. Card Services & Auto revenue rose 12% on higher revolving balances and auto operating lease income. Noninterest expense rose 13% on marketing, technology and lease depreciation. Card NCO rate was 3.34%.",
+      "source_citation": "10-Q MD&A, Consumer & Community Banking segment results; Segment & Corporate Results – Managed basis"
+    },
+    {
+      "name": "Commercial & Investment Bank (CIB)",
+      "revenue": "24,853 (managed basis, 2Q26)",
+      "yoy_change": "+27%",
+      "commentary": "Net income 9,678 (+46%), ROE 22%. Markets revenue 12,078 (+35%), with Equity Markets +86%. Investment banking revenue was 3,902 (+45%) and Payments 5,296 (+12%). Expense rose 18%. Capital allocated to CIB rose by $8.5B in the quarter.",
+      "source_citation": "10-Q MD&A, Commercial & Investment Bank segment results"
+    },
+    {
+      "name": "Asset & Wealth Management (AWM)",
+      "revenue": "6,851 (managed basis, 2Q26)",
+      "yoy_change": "+19%",
+      "commentary": "Net income 1,957 (+33%), ROE 48%. AUM of $5.1T (+18%) and client assets of $7.7T (+19%). Average loans rose 18%, driven by securities-based lending. Expense rose 13% on revenue-related compensation and distribution fees.",
+      "source_citation": "10-Q MD&A, Asset & Wealth Management segment results and Client assets"
+    },
+    {
+      "name": "Corporate",
+      "revenue": "6,046 (managed basis, 2Q26)",
+      "yoy_change": "+293%",
+      "commentary": "Includes the $4.6B net Visa share gain and $763M of equity investment gains. NII fell 45% to 822 on lower rates, and investment securities losses were 395. Treasury and CIO net income was 529 vs 1,121 a year ago. Net income was 4,209 vs 1,695.",
+      "source_citation": "10-Q MD&A, Corporate results; Note 25 – Business segments & Corporate"
     }
   ],
   "forward_guidance": {
-    "text": "JPMorgan Chase lowered its guidance for full-year 2026 net interest income from $104.5 billion to about $103 billion.",
-    "source_citation": "CNBC, snippet"
+    "text": "Management guidance given July 14, 2026 for full-year 2026: net interest income of approximately $105.5 billion, NII excluding Markets of approximately $96.5 billion (both market dependent), adjusted expense of approximately $107.5 billion (market dependent), and Card Services net charge-off rate of approximately 3.2%. The filing says there is no assurance actual results will match the outlook.",
+    "source_citation": "10-Q MD&A, Executive Overview – Outlook"
   },
   "key_risks": [
     {
-      "description": "Increasingly complex economic risks flagged by CEO Jamie Dimon.",
+      "description": "Capital regulation: the March 2026 U.S. Basel III Re-Proposal would raise the Firm's required CET1 capital by about 6% (based on 12/31/25 positions). Together with the GSIB Surcharge Re-Proposal, the increase would be about 4% versus requirements that take effect January 1, 2028. Standardized CET1 is 14.2% against an 11.5% requirement.",
       "is_new": true,
-      "source_citation": "CNBC, snippet"
+      "source_citation": "10-Q MD&A, Capital Risk Management – Key Regulatory Developments"
+    },
+    {
+      "description": "Wholesale credit migration: criticized exposure rose to $50.3B from $48.5B at year-end, driven by Commercial & Industrial (Consumer & Retail, Transportation, Industrials, Oil & Gas). Consumer & Retail criticized exposure rose $1.3B to $9.3B. Real Estate criticized exposure rose to $12.2B.",
+      "is_new": false,
+      "source_citation": "10-Q MD&A, Wholesale Credit Portfolio – industry exposures; Real Estate and Consumer & Retail detail"
+    },
+    {
+      "description": "Allowance and macro sensitivity: the allowance weights adverse scenarios for geopolitical and macro uncertainty (weighted-average unemployment peaking at 5.6% in 2Q27). Modeled losses under the relative adverse scenario would be about $1.0B higher for residential real estate, $4.8B for credit card and $5.0B for wholesale versus the central case.",
+      "is_new": false,
+      "source_citation": "10-Q MD&A, Allowance for Credit Losses and Critical Accounting Estimates – Allowance for credit losses"
+    },
+    {
+      "description": "Apple Card transaction: a forward purchase commitment with expected closing about 24 months after December 30, 2025. It carries a $2.2B allowance for lending-related commitments, about $106B of related commitments and additional RWA modeling steps. Credit card exposure and future charge-offs will grow when it closes.",
+      "is_new": false,
+      "source_citation": "10-Q MD&A, Consolidated Financial Highlights footnote (f); Note 12 footnotes (e),(f); Note 22 footnote (h)"
+    },
+    {
+      "description": "Earnings quality and Visa exposure: 2Q26 results include a $4.6B net Visa share gain and $1.0B of equity investment gains. About $1.6B of Visa C shares are locked up until August 9, 2026, and the shares drove higher Corporate VaR. Visa B-3 shares remain subject to litigation-dependent conversion uncertainty.",
+      "is_new": true,
+      "source_citation": "10-Q Note 2 – Equity securities without readily determinable fair values; MD&A Market Risk Management – VaR"
+    },
+    {
+      "description": "Markets and market-risk dependence: Markets revenue was $12.1B with Equity Markets up 86%, and the outlook for NII and expense is described as market dependent. Average total VaR rose to $49M from $37M in 1Q26, with 4 backtesting exceptions in the quarter and 15 over 12 months.",
+      "is_new": false,
+      "source_citation": "10-Q MD&A, Market Risk Management – Value-at-risk and VaR backtesting; Outlook"
+    },
+    {
+      "description": "Litigation and legal: reasonably possible losses in excess of reserves range from $0 to about $1.3B. Matters include cash sweep class actions (class certification motion filed June 2026), a civil suit by President Trump and affiliates over fair access to banking, interchange opt-out trials (a September 2026 trial is scheduled), EURIBOR and LIBOR appeals, and Russian court judgments including a $439M claim.",
+      "is_new": true,
+      "source_citation": "10-Q Note 24 – Litigation"
+    },
+    {
+      "description": "Expense growth: noninterest expense was up 15% YoY (compensation +11%, professional services +28%, marketing +31%), outpacing the 2Q26 FTE-adjusted revenue ex-one-offs trend and increasing operating leverage risk if Markets or IB activity normalizes.",
+      "is_new": false,
+      "source_citation": "10-Q MD&A, Consolidated Results of Operations – Noninterest expense"
+    },
+    {
+      "description": "Interest-rate and NII risk: lower rates cut Corporate NII by 45%, and earnings-at-risk shows -100 bps parallel shift would reduce NII-related earnings by about $2.4B (-200 bps: $5.1B). Cash flow hedge losses are expected to flow through income over the next 12 months (about $1.7B after-tax in AOCI).",
+      "is_new": false,
+      "source_citation": "10-Q MD&A, Market Risk Management – Earnings-at-risk; Note 4 – Cash flow hedge gains and losses"
+    },
+    {
+      "description": "Funding and securities-portfolio risk: average LCR slipped to 110% (from 113% a year ago); estimated uninsured deposits were $1,743.9B; gross unrealized losses on HTM securities were $18.2B and AOCI was a $7.7B loss; securities repositioning produced $395M of investment securities losses in the quarter.",
+      "is_new": false,
+      "source_citation": "10-Q MD&A, Liquidity Risk Management; Note 9 – Investment securities; Consolidated balance sheets"
     }
   ],
-  "recent_news": [
-    {
-      "headline": "JPMorgan Chase (JPM) earnings 1Q 2026 - CNBC",
-      "date": "",
-      "url": "https://www.cnbc.com/2026/04/14/jpmorgan-chase-jpm-earnings-1q-2026.html",
-      "relevance_note": "Discusses JPMorgan's earnings performance and economic risks."
-    },
-    {
-      "headline": "JPMorgan (JPM) Earnings Date & Report",
-      "date": "",
-      "url": "https://www.investing.com/equities/jp-morgan-chase-earnings",
-      "relevance_note": "Provides detailed financial metrics for Q1 2026."
-    },
-    {
-      "headline": "Investor Relations - JPMorganChase",
-      "date": "",
-      "url": "https://www.jpmorganchase.com/ir",
-      "relevance_note": "Links to official earnings documents."
-    },
-    {
-      "headline": "Earnings To Watch: JPMorgan Chase (JPM) Reports Q1 Results Tomorrow",
-      "date": "",
-      "url": "https://finance.yahoo.com/markets/stocks/articles/earnings-watch-jpmorgan-chase-jpm-102001693.html",
-      "relevance_note": "Mentions upcoming earnings report."
-    },
-    {
-      "headline": "JP Morgan Chase & Co. Common Stock (JPM) Earnings Report Date | Nasdaq",
-      "date": "",
-      "url": "https://www.nasdaq.com/market-activity/stocks/jpm/earnings",
-      "relevance_note": "Mentions earnings report date."
-    }
-  ],
+  "recent_news": [],
   "bull_case": [
-    "JPMorgan Chase beat Wall Street expectations for revenue and earnings per share, indicating strong financial performance.",
-    "Fixed income trading revenue increased by 21%, driven by rising activity in commodities, credit, currencies, and emerging markets."
+    "Quarterly net income of $21.2B (+41%) with ROE of 24% and ROTCE of 29%; even excluding the roughly $5.6B of Visa and equity investment gains, revenue growth was strong in CIB (+27%) and AWM (+19%).",
+    "Markets revenue of $12.1B (+35%), investment banking fees +30% and #1 YTD global IB fee ranking, with AUM of $5.1T (+18%) and strong net inflows, showing broad fee-based momentum.",
+    "Credit is stable to improving: net charge-off rate fell to 0.66% from 0.73%, nonperforming assets fell 6%, and card 30+ and 90+ delinquencies improved to 1.91% and 1.00% from 2.16% and 1.10% at year-end.",
+    "Capital strength and return: CET1 of 14.2% is about 270 bps above the 11.5% requirement, TLAC surplus is $100B, a new $50B buyback is effective July 1, and the quarterly dividend is intended to increase to $1.65 (from $1.50).",
+    "Full-year guidance (NII about $105.5B, NII ex-Markets about $96.5B) combined with the asset-sensitive tilt and growth in loans (+10% average) and deposits (+7% average) supports earnings power.",
+    "Business momentum: card sales volume +10%, active mobile customers +6%, average Banking & Payments loans +13%, and Payments revenue +12%."
   ],
   "bear_case": [
-    "JPMorgan Chase lowered its guidance for full-year 2026 net interest income, which could indicate potential challenges in maintaining previous income levels.",
-    "CEO Jamie Dimon highlighted increasingly complex economic risks, which could impact future performance."
+    "Reported 2Q26 results are inflated by about $5.6B of non-recurring items ($4.6B Visa gain, $1.0B equity gains) that are unlikely to repeat; Equity Markets +86% is also a tough comparison.",
+    "Expenses grew 15% YoY and full-year adjusted expense guidance of about $107.5B leaves little room if revenue weakens; compensation, technology, marketing and occupancy are all rising.",
+    "Standardized CET1 has fallen from 15.1% a year ago to 14.2%, and the Basel III Re-Proposal and GSIB changes could raise required CET1 capital by about 4% or more; the Advanced total capital ratio is now the binding constraint.",
+    "Wholesale criticized exposure is rising (Consumer & Retail, Real Estate, Oil & Gas, Industrials), and the allowance rests on heavy adverse-scenario weighting; a deterioration would require reserve builds.",
+    "Net interest income excluding Markets grew only 4%, Corporate NII fell 45% and the asset-sensitive profile loses $2.4B per -100 bps; much of NII growth came from low-spread Markets balance sheet expansion.",
+    "Balance sheet and risk growth: total assets rose 13% in six months to $5.0T, repo funding is up 59%, VaR increased, LCR slipped to 110%, and there is a $1.3B possible-loss range plus unresolved litigation including political and regulatory matters."
   ],
   "what_to_watch": [
     {
-      "text": "Monitor changes in net interest income guidance and its impact on overall earnings.",
-      "relevant_urls": [
-        "https://www.cnbc.com/2026/04/14/jpmorgan-chase-jpm-earnings-1q-2026.html"
-      ]
+      "text": "Whether 3Q26 results show a normalized quarter without the Visa and equity-investment gains: compare net revenue (2Q26 reported 57.3B; about 51.7B excluding the $4.6B and $1.0B items) and ROTCE against 29% and 26% YTD.",
+      "relevant_urls": []
     },
     {
-      "text": "Watch for developments in fixed income trading activities and their contribution to revenue.",
-      "relevant_urls": [
-        "https://www.cnbc.com/2026/04/14/jpmorgan-chase-jpm-earnings-1q-2026.html"
-      ]
+      "text": "Progress against full-year guidance: NII about $105.5B and NII ex-Markets about $96.5B (H1 reported NII was 50.9B and ex-Markets 47.0B, implying roughly 54-55B and 49.5B for H2 if guidance is on a comparable basis; guidance basis not specified in the filing).",
+      "relevant_urls": []
+    },
+    {
+      "text": "Adjusted expense trajectory: guidance of about $107.5B vs H1 noninterest expense of 54.2B less 0.3B legal expense (about 53.8B), implying H2 of about 53.7B (derived); watch for any raise driven by revenue-related compensation.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Markets and IB durability: Equity Markets (6.0B), Fixed Income Markets (6.1B), IB fees (3.3B) and the IB pipeline commentary; management notes Markets NII and revenue are market dependent.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Credit trends: Card NCO rate versus the approximately 3.2% full-year guide (2Q26 3.34%, 1H 3.40%), wholesale criticized exposure ($50.3B), Consumer & Retail and Real Estate migration, and the reserve build or release path (allowance ratio 1.79%).",
+      "relevant_urls": []
+    },
+    {
+      "text": "Capital: CET1 versus 14.2%, pace of buybacks under the new $50B authorization versus RWA growth, dividend increase to $1.65, and any finalization of the U.S. Basel III Re-Proposal and GSIB surcharge changes.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Visa C share lock-up expiry (August 9, 2026), subsequent fair value changes in Corporate and VaR impact, and the Treasury and CIO securities repositioning losses.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Apple Card transaction milestones, reserve implications and the interchange trials (September 2026), cash sweep class certification and other litigation developments in Note 24.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Leadership transition: Doug Petno and Troy Rohrbaugh named Co-Presidents (June 25, 2026), with Rohrbaugh now CEO of CCB following Marianne Lake's retirement; watch CCB execution and commentary on succession.",
+      "relevant_urls": []
     }
   ],
   "data_gaps": [
-    "Specific revenue figures for fixed income trading were not provided in the news or filing excerpt."
+    "No recent news items were provided in the input, so recent_news is empty; no developments after the 10-Q filing date of 2026-08-06 are reflected.",
+    "The report timestamp (2026-10-26) is likely after or around JPM's 3Q26 earnings release; no 3Q26 results, 8-K earnings release, or consensus estimates were provided, so this brief reflects Q2 2026 data only.",
+    "The July 14, 2026 earnings release and call transcript were not provided; guidance is cited as restated in the 10-Q Outlook section, and the filing does not state whether NII guidance is on a reported or managed basis.",
+    "Risk factors in Part II Item 1A are incorporated by reference to the 2025 Form 10-K, which was not provided; the is_new flags are judged from 10-Q text and were not checked against prior-period risk factors.",
+    "No share price, valuation multiples, analyst ratings, or consensus EPS were provided, so no valuation comparison is made.",
+    "Implied second-half guidance figures are derived by the report author from H1 figures and the guidance, not stated in the filing.",
+    "Adjusted expense (excluding Firmwide legal expense) for 2Q26 is not stated in the 10-Q provided; the legal expense of $339M for H1 comes from Note 5.",
+    "Peer comparisons and prior-quarter (1Q26) detail beyond the five-quarter highlights table were not provided."
   ],
-  "hypotheses_explored": []
+  "hypotheses_explored": [
+    {
+      "id": "H1",
+      "proposing_personality": "Skeptic (earnings quality)",
+      "question": "How much of the 2Q26 earnings beat is non-recurring, and what is the underlying run-rate?",
+      "summary": "Roughly $5.6B of pre-tax gains (Visa $4.6B net, equity investments $1.0B) flatter 2Q26 revenue. Excluding them, net revenue is about $51.7B, still up about 15% YoY versus $44.9B, driven by Markets (+35%) and fees. The underlying trend remains strong but ROE/ROTCE and EPS overstate the sustainable level, and the 23.1% tax rate rose partly because the prior-year had a $774M tax benefit.",
+      "evidence_quotes": [
+        "Included a $4.6 billion net gain related to Visa shares in Corporate and $1.0 billion of gains on certain equity investments in Corporate and CIB.",
+        "Equity Markets revenue was $6.0 billion, up 86%, driven by strong performance across products and regions."
+      ],
+      "confidence": 80
+    },
+    {
+      "id": "H2",
+      "proposing_personality": "Credit analyst",
+      "question": "Is credit quality deteriorating beneath the benign headline net charge-off rate?",
+      "summary": "Headline credit is benign (Firm NCO rate 0.66%, nonperforming assets down 6%, card delinquencies down), but criticized wholesale exposure is rising, concentrated in Consumer & Retail, Real Estate and Oil & Gas, and the allowance leans on adverse scenarios. Net reserve additions are modest ($149M in 2Q26), so any downgrade migration converting to losses is the key risk to watch rather than current losses.",
+      "evidence_quotes": [
+        "Total criticized exposure, excluding loans held-for-sale and loans at fair value, was $50.3 billion and $48.5 billion as of June 30, 2026 and December 31, 2025",
+        "The Firm's qualitative adjustments and its weighted-average macroeconomic outlook continued to include additional weight placed on the adverse scenarios"
+      ],
+      "confidence": 65
+    },
+    {
+      "id": "H3",
+      "proposing_personality": "Capital and regulatory analyst",
+      "question": "Does the Basel III and GSIB re-proposal threaten the capital return trajectory?",
+      "summary": "Required CET1 would rise about 6% under the Basel III Re-Proposal alone and about 4% when combined with the GSIB Surcharge Re-Proposal versus current rules effective 2028. With CET1 of 14.2% against an 11.5% requirement, a $50B buyback, and a dividend increase to $1.65, current capital return looks sustainable, but the 90 bps decline in CET1 from a year ago and strong RWA growth (+$151B Standardized in six months) leave less buffer for acceleration.",
+      "evidence_quotes": [
+        "The Firm expects that the changes in requirements reflected in the U.S. Basel III Re-Proposal and the GSIB Surcharge Re-Proposal, taken together, would result in an increase in the Firm’s required CET1 capital of approximately 4%",
+        "On June 24, 2026, the Firm announced that its Board of Directors had authorized a new $50 billion common share repurchase program, effective July 1, 2026."
+      ],
+      "confidence": 70
+    }
+  ]
 }

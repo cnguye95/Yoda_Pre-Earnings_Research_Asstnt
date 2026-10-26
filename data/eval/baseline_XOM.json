@@ -1,87 +1,261 @@
 {
   "ticker": "XOM",
-  "company_name": "Exxon Mobil Corporation",
+  "company_name": "Exxon Mobil Corporation (successor registrant: ExxonMobil Holdings Corporation)",
   "filing_type": "10-Q",
-  "filing_date": "2026-05-01",
+  "filing_date": "2026-08-03",
   "supplemental_filing_type": null,
   "supplemental_filing_date": null,
-  "report_generated_at": "2026-05-12T11:49:13.655002+00:00",
+  "report_generated_at": "2026-10-26T13:32:09.994467+00:00",
   "key_metrics": [
     {
-      "name": "Earnings Per Share (EPS)",
-      "value": "1.16",
+      "name": "Net income attributable to ExxonMobil (Q2 2026)",
+      "value": "14,525 (vs 7,082 in Q2 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I Item 1, Condensed Consolidated Statement of Income"
+    },
+    {
+      "name": "Earnings per share, basic and diluted (Q2 2026)",
+      "value": "3.48 (vs 1.64 in Q2 2025)",
+      "unit": "USD per share",
+      "source_citation": "10-Q Part I Item 1, Condensed Consolidated Statement of Income; Note 2 Earnings Per Share"
+    },
+    {
+      "name": "Total revenues and other income (Q2 2026)",
+      "value": "116,017 (vs 81,506 in Q2 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I Item 1, Condensed Consolidated Statement of Income"
+    },
+    {
+      "name": "Income before income taxes (Q2 2026)",
+      "value": "19,424 (vs 10,705 in Q2 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I Item 1, Condensed Consolidated Statement of Income"
+    },
+    {
+      "name": "Net income attributable to ExxonMobil (six months 2026)",
+      "value": "18,708 (vs 14,795 in 1H 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I Item 1, Condensed Consolidated Statement of Income"
+    },
+    {
+      "name": "Net cash provided by operating activities (Q2 2026)",
+      "value": "23,555 (vs 11,550 in Q2 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I Item 2 MD&A, Liquidity and Capital Resources (cash flow from operations and asset sales table)"
+    },
+    {
+      "name": "Net cash provided by operating activities (six months 2026)",
+      "value": "32,260 (vs 24,503 in 1H 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I Item 1, Condensed Consolidated Statement of Cash Flows"
+    },
+    {
+      "name": "Cash capital expenditures, non-GAAP (Q2 2026)",
+      "value": "6,787 (vs 6,603 in Q2 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I Item 2 MD&A, Cash Capital Expenditures (Non-GAAP)"
+    },
+    {
+      "name": "Oil-equivalent production (Q2 2026)",
+      "value": "4,514 (vs 4,630 in Q2 2025, down 116)",
+      "unit": "thousand oil-equivalent barrels per day",
+      "source_citation": "10-Q Part I Item 2 MD&A, Upstream Operational Results and Additional Information"
+    },
+    {
+      "name": "Refinery throughput, worldwide (Q2 2026)",
+      "value": "3,562 (vs 3,936 in Q2 2025)",
+      "unit": "thousand barrels per day",
+      "source_citation": "10-Q Part I Item 2 MD&A, Energy Products Operational Results"
+    },
+    {
+      "name": "Dividends paid per common share (Q2 2026)",
+      "value": "1.03 (vs 0.99 in Q2 2025)",
+      "unit": "USD per share",
+      "source_citation": "10-Q Part I Item 1, Note 2 Earnings Per Share"
+    },
+    {
+      "name": "Share repurchases (six months 2026)",
+      "value": "10.0 billion, 66.7 million shares; Q2 2026 average price paid 149.30 per share",
       "unit": "USD",
-      "source_citation": "Recent News, marketbeat.com"
+      "source_citation": "10-Q Part I Item 2 MD&A, Liquidity and Capital Resources; Part II Item 2 Issuer Purchases of Equity Securities"
+    },
+    {
+      "name": "Total debt",
+      "value": "42.4 billion at June 30, 2026 (43.5 billion at year-end 2025)",
+      "unit": "USD",
+      "source_citation": "10-Q Part I Item 2 MD&A, Liquidity and Capital Resources"
+    },
+    {
+      "name": "Net debt to capital ratio",
+      "value": "10.7% (down 0.3 percentage points from year-end 2025)",
+      "unit": "percent",
+      "source_citation": "10-Q Part I Item 2 MD&A, Liquidity and Capital Resources"
+    },
+    {
+      "name": "Cash and cash equivalents",
+      "value": "10,588 at June 30, 2026 (10,681 at December 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "10-Q Part I Item 1, Condensed Consolidated Balance Sheet"
+    },
+    {
+      "name": "Effective income tax rate (Q2 2026)",
+      "value": "24% (vs 34% in Q2 2025)",
+      "unit": "percent",
+      "source_citation": "10-Q Part I Item 2 MD&A, Taxes"
+    },
+    {
+      "name": "Cumulative structural cost savings vs 2019",
+      "value": "16.3 billion, including 1.2 billion added in 1H 2026",
+      "unit": "USD",
+      "source_citation": "10-Q Part I Item 2 MD&A, Structural Cost Savings (Non-GAAP)"
     }
   ],
-  "revenue_segments": [],
+  "revenue_segments": [
+    {
+      "name": "Upstream",
+      "revenue": "12,680 (third-party sales and other operating revenue, U.S. 8,201 + non-U.S. 4,479); segment earnings 7,927",
+      "yoy_change": "Revenue +37.5% (vs 9,225); earnings +46.7% (vs 5,402)",
+      "commentary": "Higher crude realizations (+4,650 earnings impact) and Guyana/Permian advantaged volume growth (+1,140) were partly offset by Middle East volume disruption (-1,060), higher depreciation (-690), and a 1,199 identified-item loss from financial reserves. Oil-equivalent production was 4,514 kboe/d, down 116 from Q2 2025.",
+      "source_citation": "10-Q Part I Item 1 Note 3 Segment table (three months ended June 30, 2026 and 2025); Item 2 MD&A, Upstream"
+    },
+    {
+      "name": "Energy Products",
+      "revenue": "89,608 (third-party sales and other operating revenue, U.S. 38,517 + non-U.S. 51,091); segment earnings 5,465",
+      "yoy_change": "Revenue +49.4% (vs 59,989); earnings +300% (vs 1,366)",
+      "commentary": "Stronger refining margins added 3,180 and favorable derivative mark-to-market timing effects added 2,560. Identified items were a 1,180 loss, mainly impairments. Scheduled maintenance and Middle East disruption weighed on volumes; refinery throughput fell to 3,562 kbd from 3,936.",
+      "source_citation": "10-Q Part I Item 1 Note 3 Segment table; Item 2 MD&A, Energy Products"
+    },
+    {
+      "name": "Chemical Products",
+      "revenue": "6,887 (third-party sales and other operating revenue, U.S. 2,552 + non-U.S. 4,335); segment earnings 1,131",
+      "yoy_change": "Revenue +21.5% (vs 5,670); earnings +286% (vs 293)",
+      "commentary": "Margins added 980 on a larger North America ethane feed advantage and performance chemical margins. Asia Pacific weakness cut advantaged volume earnings by 130. Overview says chemical margins improved but remain below the bottom of the 10-year range. Chemical sales volumes were 4,471 kt vs 5,264 kt.",
+      "source_citation": "10-Q Part I Item 1 Note 3 Segment table; Item 2 MD&A, Overview and Chemical Products"
+    },
+    {
+      "name": "Specialty Products",
+      "revenue": "5,328 (third-party sales and other operating revenue, U.S. 1,596 + non-U.S. 3,732); segment earnings 956",
+      "yoy_change": "Revenue +16.5% (vs 4,572); earnings +22.6% (vs 780)",
+      "commentary": "Higher basestock margins added 270, partly offset by Middle East supply disruptions (-110). Sales volumes were 1,784 kt vs 2,004 kt.",
+      "source_citation": "10-Q Part I Item 1 Note 3 Segment table; Item 2 MD&A, Specialty Products"
+    },
+    {
+      "name": "Corporate and Financing",
+      "revenue": "n/a (expense of 954)",
+      "yoy_change": "Expense up 195 vs 759 in Q2 2025",
+      "commentary": "Higher expense reflects lower interest income and unfavorable tax impacts.",
+      "source_citation": "10-Q Part I Item 2 MD&A, Corporate and Financing"
+    }
+  ],
   "forward_guidance": {
-    "text": "ExxonMobil's future plans include ambitions to reach Scope 1 and Scope 2 net zero from operated assets by 2050, and to reach Scope 1 and 2 net zero in integrated Upstream Permian Basin unconventional operated assets by 2035.",
-    "source_citation": "MD&A, Forward-Looking Statements"
+    "text": "The Corporation plans to invest 27 to 29 billion dollars in 2026, with actual spending dependent on project progress. Citing its 2025 Corporate Plan Update of December 9, 2025, it expects 2026 share repurchases of 20 billion dollars assuming reasonable market conditions. As of June 30, 2026, 10.2 billion dollars remained under the program per the filing's table. The Louisiana coastal litigation settlement (effective July 31, 2026) is expected to have an immaterial Q3 earnings impact. The filing gives no quantitative production, margin or earnings guidance for Q3 2026.",
+    "source_citation": "10-Q Part I Item 2 MD&A, Liquidity and Capital Resources; Part II Item 2 footnote (4); Part I Item 1 Note 7 Litigation"
   },
   "key_risks": [
     {
-      "description": "Global or regional changes or imbalances in the supply and demand for oil, natural gas, petrochemicals, and feedstocks.",
-      "is_new": false,
-      "source_citation": "MD&A, Forward-Looking Statements"
+      "description": "Middle East supply disruptions cut Upstream earnings by 1,060 in Q2 and Energy Products earnings by 310. They also lowered Asia production and prevented physical shipments tied to hedges (an identified item in Energy Products year to date).",
+      "is_new": true,
+      "source_citation": "10-Q Part I Item 2 MD&A, Overview; Upstream, Energy Products and Specialty Products earnings driver analyses"
     },
     {
-      "description": "Developments or changes in local, national, or international laws, regulations, taxes, trade sanctions, trade tariffs, or policies affecting ExxonMobil's business.",
+      "description": "Reliance on unusually elevated refining margins, which the filing attributes to unprecedented global refining capacity reductions. Margins and prices could normalize, and chemical margins remain below the bottom of the 10-year range.",
       "is_new": false,
-      "source_citation": "MD&A, Forward-Looking Statements"
+      "source_citation": "10-Q Part I Item 2 MD&A, Overview"
+    },
+    {
+      "description": "Derivative, trading and mark-to-market volatility: trading-related realized and unrealized losses of 2.3 billion for the six months ended June 30, 2026 (vs 534 million gain a year earlier), unfavorable Upstream timing effects of 870 year to date, and large swings in Energy Products timing effects. Timing effects are expected to unwind in later periods.",
+      "is_new": false,
+      "source_citation": "10-Q Part I Item 1 Note 6 Financial Instruments and Derivatives; Item 2 MD&A, earnings driver analyses"
+    },
+    {
+      "description": "Identified items, mainly impairments (Energy Products, 1,180 loss in Q2) and financial reserves (Upstream, 1,199 loss in Q2). Depreciation and depletion (including impairments) rose to 8,689 from 6,101.",
+      "is_new": true,
+      "source_citation": "10-Q Part I Item 2 MD&A, Upstream and Energy Products earnings driver analyses; Item 1 Statement of Income"
+    },
+    {
+      "description": "Climate-change lawsuits by state and local governments, which the company considers meritless but whose outcomes are unpredictable. A Louisiana coastal parish settlement was reached effective July 31, 2026; the company says it is not material and its estimated earnings impact was included in Q2 reserve updates.",
+      "is_new": true,
+      "source_citation": "10-Q Part I Item 1 Note 7 Litigation and Other Contingencies"
+    },
+    {
+      "description": "Corporate redomiciliation to ExxonMobil Holdings Corporation (Texas) effective July 1, 2026. Shareholder rights now fall under Texas law and the new organizational documents, which creates governance and legal-framework change risk even though the company says business operations and financial reporting basis are unchanged.",
+      "is_new": true,
+      "source_citation": "10-Q Explanatory Note and Part I Item 1 Note 1 Basis of Financial Statement Preparation"
+    },
+    {
+      "description": "Working capital and liquidity exposure to higher prices: receivables rose to 60,558 from 44,562, payables and accrued liabilities rose to 74,491 from 60,911, and collateral held under master netting arrangements rose to 1.4 billion from 0.5 billion. Operational working capital was a 3.9 billion use of cash in 1H.",
+      "is_new": false,
+      "source_citation": "10-Q Part I Item 1, Condensed Consolidated Balance Sheet, Statement of Cash Flows; Note 6"
+    },
+    {
+      "description": "Regulatory, geopolitical and policy factors listed in the forward-looking statements, including European taxes on the oil and gas sector, trade tariffs and sanctions, and shipping and transportation route disruptions. Upstream volumes were also hit by divestments and Kazakhstan downtime.",
+      "is_new": false,
+      "source_citation": "10-Q Part I Item 2 MD&A, Forward-Looking Statements and Upstream Year-to-Date Earnings Driver Analysis"
     }
   ],
-  "recent_news": [
-    {
-      "headline": "ExxonMobil (XOM) Earnings Date and Reports 2026",
-      "date": "",
-      "url": "https://www.marketbeat.com/stocks/NYSE/XOM/earnings/",
-      "relevance_note": "Reports Q1 2026 earnings with EPS of $1.16, exceeding estimates."
-    },
-    {
-      "headline": "Exxon Mobil (XOM) Earnings: Latest Report, Earnings Call ...",
-      "date": "",
-      "url": "https://public.com/stocks/xom/earnings",
-      "relevance_note": "Confirms Q1 2026 EPS of $1.16 and upcoming earnings report date."
-    },
-    {
-      "headline": "Exxon Mobil Corporation Common Stock (XOM) Earnings Report Date",
-      "date": "",
-      "url": "https://www.nasdaq.com/market-activity/stocks/xom/earnings",
-      "relevance_note": "General earnings report information."
-    },
-    {
-      "headline": "What date does Exxon Mobil's (XOM) report Earnings",
-      "date": "",
-      "url": "https://www.zacks.com/stock/research/XOM/earnings-calendar",
-      "relevance_note": "Historical earnings data."
-    },
-    {
-      "headline": "XOM - Company Earnings Calendar - Yahoo Finance",
-      "date": "",
-      "url": "https://finance.yahoo.com/calendar/earnings?symbol=XOM",
-      "relevance_note": "Earnings calendar information."
-    }
-  ],
+  "recent_news": [],
   "bull_case": [
-    "ExxonMobil exceeded earnings expectations for Q1 2026, indicating strong financial performance.",
-    "The company's forward-looking plans for carbon reduction and net-zero ambitions could position it favorably in a transitioning energy market."
+    "Q2 2026 earnings of 14.5 billion dollars (EPS 3.48) roughly doubled from 7.1 billion (EPS 1.64), driven by higher prices and margins, advantaged investments and structural cost savings.",
+    "Operating cash flow was 32.3 billion dollars in 1H 2026 (up 7.8 billion) and 23.6 billion in Q2 alone. This comfortably covered 13.0 billion of cash capex, 8.6 billion of dividends and 10.0 billion of buybacks.",
+    "Advantaged volumes keep growing: Guyana and Permian added 1,140 million to Q2 Upstream earnings. Permian and Guyana growth mostly offset Middle East disruption in production.",
+    "Structural cost savings reached 16.3 billion dollars vs 2019 (1.2 billion added in 1H 2026), and Q2 savings contributed across all four segments.",
+    "Strong balance sheet: net debt to capital of 10.7%, total debt of 42.4 billion, and 7.7 billion of undrawn committed credit lines.",
+    "Chemical Products earnings rose to 1,131 million from 293 million on a North America ethane feed advantage and performance chemical margins.",
+    "Shareholder returns are consistent: the dividend per share rose to 1.03 from 0.99, and the company expects 20 billion dollars of 2026 buybacks, with 10.2 billion still authorized under the program as of June 30."
   ],
   "bear_case": [
-    "ExxonMobil faces significant risks from potential changes in global supply and demand dynamics for oil and gas.",
-    "Regulatory changes and international policies could adversely affect ExxonMobil's operations and profitability."
+    "The Q2 earnings surge relied partly on non-repeatable items: Energy Products got 2,560 million from favorable derivative mark-to-market timing effects and margins rely on unprecedented refining capacity reductions that may normalize.",
+    "Middle East disruption is a material drag on volumes and earnings (Upstream -1,060, Energy Products -310, Specialty -110 in Q2). Production fell 116 kboe/d year on year, and Asia gas output fell to 1,274 mmcfd from 3,206.",
+    "Identified items totaled roughly 2.5 billion dollars of losses across the four segments in Q2 (Upstream 1,199, Energy Products 1,180, Chemical 83, Specialty 13): financial reserves and impairments.",
+    "Cost pressure: depreciation and depletion rose 42% to 8,689 million in Q2, and Upstream expenses (mainly depreciation) cut earnings by 690. Interest expense rose to 227 from 145 and Corporate and Financing expense rose to 954 from 759.",
+    "Refinery throughput fell 9.5% (3,562 vs 3,936 kbd), chemical sales volumes fell 15% and chemicals margins remain below the 10-year range, with weak Asia Pacific demand.",
+    "Working capital and collateral needs are rising with prices (receivables +16.0 billion in 6 months), and trading and derivatives produced 2.3 billion of losses for 1H.",
+    "Year-to-date Energy Products earnings (4,203) were hurt by 1,886 of identified items and by 770 of unfavorable timing effects, showing high earnings volatility; the effective tax rate also swung from 34% to 24% on mix, which may not persist."
   ],
   "what_to_watch": [
     {
-      "text": "Monitor ExxonMobil's progress towards its net-zero emissions goals and any related technological advancements.",
-      "relevant_urls": [
-        "https://www.marketbeat.com/stocks/NYSE/XOM/earnings/",
-        "https://public.com/stocks/xom/earnings"
-      ]
+      "text": "Q3 2026 reversal or unwinding of Q2 derivative timing effects (+2,560 million in Energy Products) and any further identified items or impairments.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Status of Middle East supply disruptions and any recovery in Upstream, Energy Products and Specialty volumes. Includes Asia gas production and physical shipments tied to hedges.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Refining margin sustainability amid industry refining capacity reductions, and whether chemical margins recover toward the 10-year range.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Production trajectory: Permian and Guyana growth vs 4,514 kboe/d in Q2, plus Kazakhstan and divestment effects.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Pace of buybacks against the 20 billion dollar 2026 expectation (10.0 billion done in 1H) and cash capex against the 27 to 29 billion range (13.0 billion in 1H).",
+      "relevant_urls": []
+    },
+    {
+      "text": "Further structural cost savings progress (16.3 billion cumulative vs 2019) and depreciation trends.",
+      "relevant_urls": []
+    },
+    {
+      "text": "Any Q3 follow-through on the Louisiana coastal settlement (expected immaterial) and developments in climate litigation.",
+      "relevant_urls": []
+    },
+    {
+      "text": "First post-redomiciliation reporting by ExxonMobil Holdings Corporation: shares, governance and any disclosure presentation changes.",
+      "relevant_urls": []
     }
   ],
   "data_gaps": [
-    "Specific revenue figures for different segments are not provided in the filing excerpt or news items."
+    "No recent news items were provided in the source materials, so recent_news is empty and no news URLs are cited.",
+    "No consensus analyst estimates, Q3 2026 earnings date or company guidance for Q3 (production, margins, identified items) was provided in the filing.",
+    "The Q2 2026 earnings press release and earnings presentation were not provided; only the 10-Q was used.",
+    "The 2025 Form 10-K Item 1A Risk Factors were not provided, so the is_new flags on risks reflect only whether the item is newly dated or disclosed in this 10-Q and are not benchmarked against prior risk factors.",
+    "The 10-Q does not give a consolidated total of identified items for Q2 2026 (the segment amounts are 1,199, 1,180, 83 and 13 million, with Corporate and Financing identified items not separately disclosed), nor consolidated earnings excluding identified items.",
+    "Segment revenue figures are third-party sales and other operating revenue derived by summing U.S. and non-U.S. columns in Note 3; they exclude equity income, intersegment revenue and other income.",
+    "The filing does not quantify Middle East exposure beyond earnings-driver amounts, and gives no detail on the nature of the 1,199 million Upstream financial reserves or the assets impaired in Energy Products.",
+    "No stock price, valuation multiples or dividend yield data were provided (apart from Q2 average repurchase prices in Part II Item 2).",
+    "Q2 revenue for segment-level quarterly operating results in the prior quarter (Q1 2026) was not provided; Q1 can only be inferred by subtracting Q2 from six-month totals and is not shown here."
   ],
   "hypotheses_explored": []
 }

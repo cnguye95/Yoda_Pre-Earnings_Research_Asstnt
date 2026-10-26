@@ -1,7 +1,7 @@
 """Tool registry for the multi-agent personality panel.
 
-Three tools, each a plain Python function, registered with an OpenAI
-function-calling schema so personality agents can choose to call them inside
+Three tools, each a plain Python function, registered with a Claude tool
+schema so personality agents can choose to call them inside
 their tool-use loop. The agents see the same tool surface regardless of which
 personality they embody — what differs is the system prompt that shapes how
 they use the tools.
@@ -22,7 +22,6 @@ import time
 
 from yoda.ingest.edgar import fetch_latest_filing
 from yoda.ingest.chunker import chunk_filing, Chunk
-from yoda.retrieval.embeddings import embed_texts
 from yoda.retrieval.vector_store import ChromaStore
 from yoda.tools.news import search_news as _tavily_search
 
@@ -120,9 +119,8 @@ def lookup_peer(ctx: ToolContext, peer_ticker: str, query: str, k: int = 3) -> l
             # for the same peer across runs avoid the SEC round-trip too.
             peer_filing = fetch_latest_filing(peer_ticker)
             peer_chunks = chunk_filing(peer_filing["clean_text"], peer_filing["raw_html"])
-            peer_texts = [c.text for c in peer_chunks]
-            peer_embeds = embed_texts(peer_texts)
-            ctx.store.upsert(peer_filing["accession_number"], peer_chunks, peer_embeds)
+            # Embeds only if an earlier run hasn't already stored this filing.
+            ctx.store.index_if_missing(peer_filing["accession_number"], peer_chunks)
             ctx._ingested_peers[peer_ticker] = peer_filing["accession_number"]
 
         peer_accession = ctx._ingested_peers[peer_ticker]
@@ -132,105 +130,96 @@ def lookup_peer(ctx: ToolContext, peer_ticker: str, query: str, k: int = 3) -> l
 
 
 # ---------------------------------------------------------------------------
-# OpenAI tool schemas — passed to chat.completions.create(tools=[...])
+# Claude tool schemas — passed to client.messages.create(tools=[...])
 # ---------------------------------------------------------------------------
 
-# Each entry follows OpenAI's function-calling schema. The "name" must match
-# a key in TOOL_DISPATCH below so the loop can route the model's tool_call
-# back to the right Python function.
+# Each entry follows Anthropic's tool format: name, description, input_schema.
+# The "name" must match a key in TOOL_DISPATCH below so the loop can route
+# the model's tool_use block back to the right Python function.
 TOOL_SCHEMAS = [
     {
-        "type": "function",
-        "function": {
-            "name": "retrieve_filing",
-            "description": (
-                "Semantic search over the primary company's most recent 10-Q "
-                "or 10-K. Returns chunks of filing text relevant to your query. "
-                "Use this for facts directly stated in the filing."
-            ),
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "query": {
-                        "type": "string",
-                        "description": "Search query in natural language.",
-                    },
-                    "k": {
-                        "type": "integer",
-                        "description": "How many chunks to return (default 5, max 10).",
-                        "minimum": 1,
-                        "maximum": 10,
-                    },
+        "name": "retrieve_filing",
+        "description": (
+            "Semantic search over the primary company's most recent 10-Q "
+            "or 10-K. Returns chunks of filing text relevant to your query. "
+            "Use this for facts directly stated in the filing."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "Search query in natural language.",
                 },
-                "required": ["query"],
-                "additionalProperties": False,
+                "k": {
+                    "type": "integer",
+                    "description": "How many chunks to return (default 5, max 10).",
+                    "minimum": 1,
+                    "maximum": 10,
+                },
             },
+            "required": ["query"],
+            "additionalProperties": False,
         },
     },
     {
-        "type": "function",
-        "function": {
-            "name": "search_news",
-            "description": (
-                "Search the web for recent news about the company or its industry. "
-                "Use this for sentiment, competitor moves, regulatory developments, "
-                "or events that happened after the filing date."
-            ),
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "query": {
-                        "type": "string",
-                        "description": "Search query in natural language.",
-                    },
-                    "max_results": {
-                        "type": "integer",
-                        "description": "How many articles to return (default 3, max 5).",
-                        "minimum": 1,
-                        "maximum": 5,
-                    },
+        "name": "search_news",
+        "description": (
+            "Search the web for recent news about the company or its industry. "
+            "Use this for sentiment, competitor moves, regulatory developments, "
+            "or events that happened after the filing date."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "Search query in natural language.",
                 },
-                "required": ["query"],
-                "additionalProperties": False,
+                "max_results": {
+                    "type": "integer",
+                    "description": "How many articles to return (default 3, max 5).",
+                    "minimum": 1,
+                    "maximum": 5,
+                },
             },
+            "required": ["query"],
+            "additionalProperties": False,
         },
     },
     {
-        "type": "function",
-        "function": {
-            "name": "lookup_peer",
-            "description": (
-                "Fetch a competitor's most recent SEC filing and search it for "
-                "evidence on a topic. Use this to compare the primary company "
-                "against a named peer (e.g., DIS for NFLX, BX for COIN)."
-            ),
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "peer_ticker": {
-                        "type": "string",
-                        "description": "The peer company's ticker symbol (e.g., 'DIS').",
-                    },
-                    "query": {
-                        "type": "string",
-                        "description": "What to search for in the peer's filing.",
-                    },
-                    "k": {
-                        "type": "integer",
-                        "description": "How many chunks to return (default 3, max 5).",
-                        "minimum": 1,
-                        "maximum": 5,
-                    },
+        "name": "lookup_peer",
+        "description": (
+            "Fetch a competitor's most recent SEC filing and search it for "
+            "evidence on a topic. Use this to compare the primary company "
+            "against a named peer (e.g., DIS for NFLX, BX for COIN)."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "peer_ticker": {
+                    "type": "string",
+                    "description": "The peer company's ticker symbol (e.g., 'DIS').",
                 },
-                "required": ["peer_ticker", "query"],
-                "additionalProperties": False,
+                "query": {
+                    "type": "string",
+                    "description": "What to search for in the peer's filing.",
+                },
+                "k": {
+                    "type": "integer",
+                    "description": "How many chunks to return (default 3, max 5).",
+                    "minimum": 1,
+                    "maximum": 5,
+                },
             },
+            "required": ["peer_ticker", "query"],
+            "additionalProperties": False,
         },
     },
 ]
 
 
-# Maps the tool name (as returned in the model's tool_call) to the Python
+# Maps the tool name (as returned in the model's tool_use block) to the Python
 # function that implements it. The dispatcher in personality_panel.py looks
 # up the function here and passes (ctx, **args) into it.
 TOOL_DISPATCH = {
@@ -272,10 +261,9 @@ if __name__ == "__main__":
     print(f"[tools-smoke] Ingesting {ticker} so tools have something to query...")
     filing = fetch_latest_filing(ticker)
     chunks = chunk_filing(filing["clean_text"], filing["raw_html"])
-    embeds = embed_texts([c.text for c in chunks])
 
     store = ChromaStore()
-    store.upsert(filing["accession_number"], chunks, embeds)
+    store.index_if_missing(filing["accession_number"], chunks)
 
     ctx = ToolContext(
         primary_ticker=ticker,

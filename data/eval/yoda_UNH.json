@@ -1,0 +1,630 @@
+{
+  "ticker": "UNH",
+  "company_name": "UnitedHealth Group",
+  "filing_type": "10-Q",
+  "filing_date": "2026-08-10",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T13:28:59.133294+00:00",
+  "key_metrics": [
+    {
+      "name": "Total revenues",
+      "value": "112,032 (Q2 2026 vs Q2 2025: 111,616; +0.4%)",
+      "unit": "USD millions",
+      "source_citation": "MD&A — RESULTS SUMMARY"
+    },
+    {
+      "name": "Total revenues",
+      "value": "223,753 (six months 2026 vs six months 2025: 221,191; +1%)",
+      "unit": "USD millions",
+      "source_citation": "MD&A — RESULTS SUMMARY"
+    },
+    {
+      "name": "Premiums",
+      "value": "86,956 (Q2 2026 vs Q2 2025: 87,905; -1%); six months 174,517 vs 174,439",
+      "unit": "USD millions",
+      "source_citation": "MD&A — RESULTS SUMMARY"
+    },
+    {
+      "name": "Earnings from operations",
+      "value": "7,991 (Q2 2026 vs Q2 2025: 5,150; +55%)",
+      "unit": "USD millions",
+      "source_citation": "MD&A — RESULTS SUMMARY"
+    },
+    {
+      "name": "Earnings from operations",
+      "value": "16,981 (six months 2026 vs six months 2025: 14,269; +19%)",
+      "unit": "USD millions",
+      "source_citation": "MD&A — RESULTS SUMMARY"
+    },
+    {
+      "name": "Medical costs",
+      "value": "75,358 (Q2 2026 vs Q2 2025: 78,585; -4%); six months 148,847 vs 151,996 (-2%)",
+      "unit": "USD millions",
+      "source_citation": "MD&A — RESULTS SUMMARY"
+    },
+    {
+      "name": "Operating costs",
+      "value": "14,268 (Q2 2026 vs Q2 2025: 13,778; +4%); six months 29,658 vs 27,372 (+8%)",
+      "unit": "USD millions",
+      "source_citation": "MD&A — RESULTS SUMMARY"
+    },
+    {
+      "name": "Total operating costs",
+      "value": "104,041 (Q2 2026 vs Q2 2025: 106,466; -2%); six months 206,772 vs 206,922",
+      "unit": "USD millions",
+      "source_citation": "MD&A — RESULTS SUMMARY"
+    },
+    {
+      "name": "Interest expense",
+      "value": "(962) (Q2 2026 vs Q2 2025: (1,027)); six months (1,917) vs (2,025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Earnings before income taxes",
+      "value": "6,968 (Q2 2026 vs Q2 2025: 4,082); six months 14,931 vs 12,188",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Provision for income taxes",
+      "value": "(1,298) (Q2 2026 vs Q2 2025: (510)); six months (2,780) vs (2,142)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net earnings",
+      "value": "5,670 (Q2 2026 vs Q2 2025: 3,572); six months 12,151 vs 10,046",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Net earnings attributable to UnitedHealth Group common shareholders",
+      "value": "5,484 (Q2 2026 vs Q2 2025: 3,406); six months 11,764 vs 9,698",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Diluted",
+      "value": "6.04 (Q2 2026 vs Q2 2025: 3.74); six months 2026: 12.94 (prior-year six-month figure not shown in provided chunks)",
+      "unit": "USD per share (earnings per share attributable to UnitedHealth Group common shareholders)",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Basic",
+      "value": "6.06 (Q2 2026 vs Q2 2025: 3.76); six months 12.98 vs 10.66",
+      "unit": "USD per share (earnings per share attributable to UnitedHealth Group common shareholders)",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Diluted weighted-average number of common shares outstanding",
+      "value": "906 (Q2 2026 vs Q2 2025: 910); six months 908 vs 914",
+      "unit": "millions of shares",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Cash flows from operating activities",
+      "value": "19,964 (six months 2026 vs six months 2025: 12,644)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Purchases of property, equipment and capitalized software",
+      "value": "(1,562) (six months 2026 vs six months 2025: (1,784))",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Cash and cash equivalents",
+      "value": "28,585 at June 30, 2026 (vs 24,365 at December 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Cash flows used for investing activities",
+      "value": "(4,245) (six months 2026 vs six months 2025: (1,516))",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Cash flows used for financing activities",
+      "value": "(11,615) (six months 2026 vs six months 2025: (7,848))",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Common share repurchases",
+      "value": "(1,646) (six months 2026 vs six months 2025: (5,545))",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Cash dividends paid",
+      "value": "(4,092) (six months 2026 vs six months 2025: (3,912))",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Repayments of long-term debt",
+      "value": "(2,500) (six months 2026 vs six months 2025: none)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Repayments of care provider loans - cyberattack",
+      "value": "197 (six months 2026 vs six months 2025: 1,293)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Total debt securities - available-for-sale",
+      "value": "50,285 fair value at June 30, 2026 (vs 48,182 at December 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "UnitedHealthcare (Total revenues, Q2 2026)",
+      "revenue": "86,017",
+      "yoy_change": "Prior-year segment revenue not shown in provided chunks; prior periods recast for Optum Financial realignment",
+      "commentary": "Earnings from operations of 3,942 and total operating costs of 82,075 in Q2 2026. Premiums of 82,613 account for most of the segment's unaffiliated revenue.",
+      "source_citation": "Financial Statements — Optum"
+    },
+    {
+      "name": "Optum Health (Total revenues, Q2 2026)",
+      "revenue": "23,472",
+      "yoy_change": "Prior-year segment revenue not shown in provided chunks",
+      "commentary": "Earnings from operations of 1,190 on total operating costs of 22,282. Includes 14,353 of revenue from affiliated customers. Optum Financial/Optum Bank now sit in Optum Insight following the January 1, 2026 realignment.",
+      "source_citation": "Financial Statements — Optum"
+    },
+    {
+      "name": "Optum Insight (Total revenues, Q2 2026)",
+      "revenue": "5,402",
+      "yoy_change": "Prior-year segment revenue not shown in provided chunks",
+      "commentary": "Highest operating margin of the segments: earnings from operations of 1,369 on revenue of 5,402. Includes 284 of investment and other income, reflecting the realigned Optum Financial business.",
+      "source_citation": "Financial Statements — Optum"
+    },
+    {
+      "name": "Optum Rx (Total revenues, Q2 2026)",
+      "revenue": "38,292",
+      "yoy_change": "Prior-year segment revenue not shown in provided chunks",
+      "commentary": "Earnings from operations of 1,490 on total operating costs of 36,802. Products revenue to unaffiliated customers was 13,728, and affiliated revenue of 23,242 is the larger part.",
+      "source_citation": "Financial Statements — Optum"
+    },
+    {
+      "name": "Total Optum (Total revenues, Q2 2026)",
+      "revenue": "65,663 (after Optum eliminations of (1,503))",
+      "yoy_change": "Prior-year figure not shown in provided chunks",
+      "commentary": "Earnings from operations of 4,049 for Optum overall in the quarter.",
+      "source_citation": "Financial Statements — Optum"
+    },
+    {
+      "name": "UnitedHealthcare (Total revenues, six months 2026)",
+      "revenue": "172,282",
+      "yoy_change": "Prior-year segment revenue not shown in provided chunks",
+      "commentary": "Premiums of 165,599, services of 5,529 and investment and other income of 1,154. Total operating costs of 162,646.",
+      "source_citation": "Financial Statements"
+    },
+    {
+      "name": "Optum Health (Total revenues, six months 2026)",
+      "revenue": "47,581",
+      "yoy_change": "Prior-year segment revenue not shown in provided chunks",
+      "commentary": "Total operating costs of 45,250 over six months, including a net portfolio divestiture loss of 341 per the operating cost discussion.",
+      "source_citation": "Financial Statements"
+    },
+    {
+      "name": "Optum Insight (Total revenues, six months 2026)",
+      "revenue": "10,527",
+      "yoy_change": "Prior-year segment revenue not shown in provided chunks",
+      "commentary": "Six-month earnings from operations decreased on investments in people, technology and new products and restructuring, partly offset by net portfolio gains of 524.",
+      "source_citation": "Financial Statements"
+    },
+    {
+      "name": "Optum Rx (Total revenues, six months 2026)",
+      "revenue": "74,028",
+      "yoy_change": "Prior-year segment revenue not shown in provided chunks",
+      "commentary": "Products revenue to unaffiliated customers of 26,876 and affiliated revenue of 44,640.",
+      "source_citation": "Financial Statements"
+    },
+    {
+      "name": "Consolidated Premiums (Q2 2026 vs Q2 2025)",
+      "revenue": "86,956",
+      "yoy_change": "-1% (vs 87,905)",
+      "commentary": "Six-month premiums were essentially flat at 174,517 vs 174,439, reflecting repricing and benefit design actions offset by lower membership.",
+      "source_citation": "MD&A — RESULTS SUMMARY"
+    },
+    {
+      "name": "Consolidated Products (Q2 2026 vs Q2 2025)",
+      "revenue": "13,835",
+      "yoy_change": "+2% (vs 13,564)",
+      "commentary": "Six-month products revenue was 27,085 vs 26,600 (+2%).",
+      "source_citation": "MD&A — RESULTS SUMMARY"
+    },
+    {
+      "name": "Consolidated Services (Q2 2026 vs Q2 2025)",
+      "revenue": "10,018",
+      "yoy_change": "+11% (vs 9,039)",
+      "commentary": "Fastest-growing revenue line. Six-month services revenue was 19,797 vs 18,011 (+10%).",
+      "source_citation": "MD&A — RESULTS SUMMARY"
+    },
+    {
+      "name": "Investment and other income (Q2 2026 vs Q2 2025)",
+      "revenue": "1,223",
+      "yoy_change": "+10% (vs 1,108)",
+      "commentary": "Six-month figure was 2,354 vs 2,141 (+10%).",
+      "source_citation": "MD&A — RESULTS SUMMARY"
+    }
+  ],
+  "forward_guidance": {
+    "text": "No forward guidance issued in this filing.",
+    "source_citation": "MD&A"
+  },
+  "key_risks": [
+    {
+      "description": "Medicare Advantage funding remains below medical cost trend. Rate notices for numerous years have left industry base rates well below forward medical cost trend, and the 2027 Final Notice, while moving toward trend, still remains below it. Medicare Advantage membership is down 9% year over year (7,565K vs 8,350K). The filing gives no quantified earnings sensitivity to the rate gap.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Risk adjustment and audit exposure. CMS and OIG have selected certain local plans for RADV audits that may result in retrospective payment adjustments, and the company states it can provide no assurance on scope or outcome. CMS has separately proposed excluding chart reviews from Medicare Advantage risk scoring starting in 2027, which could reduce revenue directly. Neither exposure is quantified.",
+      "is_new": true,
+      "source_citation": "Notes"
+    },
+    {
+      "description": "Margin recovery relies in part on favorable prior-period reserve development, which is non-recurring in nature. Prior-year development was a $1,250 million benefit in the first six months of 2026 vs $320 million in 2025. Medical costs payable fell $420 million over the period. A smaller release, or reserves proving inadequate, would show up as medical care ratio deterioration.",
+      "is_new": true,
+      "source_citation": "Notes"
+    },
+    {
+      "description": "Medical cost trend remains above historical levels. Commercial trend is elevated, partly due to higher provider reimbursement from the No Surprises Act independent resolution process, more aggressive provider billing and increased service and coding intensity, and management states these trends may continue in future periods.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Medicaid funding and payment rate environment is described as insufficient to meet health needs, creating risk of continued downward pressure on Medicaid margin percentages. Medicaid membership fell 9% (6,780K vs 7,490K), partly from reduced eligibility and the exit from one state.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Operating cost ratio is rising (13.3% vs 12.4% for six months; 12.7% vs 12.3% for the quarter) on investment in people, process and technology, restructuring and other actions, and business mix. Restructuring and other actions increased operating costs by $415 million over six months, and the reported ratio benefits from net portfolio divestiture gains.",
+      "is_new": false,
+      "source_citation": "MD&A — Operating Cost Ratio"
+    },
+    {
+      "description": "Optum Health's value-based care footprint is shrinking as the company exits loss-making contracts and continues dispositions (about 93 million people served vs 95 million). Fully accountable value-based care is exposed to Medicare funding reductions and elevated cost trend, and pricing responses may cost further membership.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Membership contraction caps top-line growth. UnitedHealthcare served 1.6 million fewer people due to benefit design, pricing actions, reduced Medicaid eligibility and a state exit, so earnings must be driven by margin rather than revenue growth.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Cash flow quality and liquidity. Operating cash flow benefited from working-capital releases (other assets, receivables) and a receivables financing facility, while a $4.4 billion medical payable build reversed. Financing outflows of $11.6 billion include $2.5 billion of long-term debt repayment and $4.1 billion of dividends.",
+      "is_new": true,
+      "source_citation": "Other"
+    },
+    {
+      "description": "Effective tax rate increased year over year because the 2025 rate was lowered by tax benefits having more impact on reduced pre-tax income, and by the updated full-year rate expectation. A normalized rate adds pressure to EPS growth.",
+      "is_new": false,
+      "source_citation": "MD&A — Operating Cost Ratio"
+    }
+  ],
+  "recent_news": [
+    {
+      "headline": "UnitedHealth Group Reports Second Quarter 2026 Results",
+      "date": "2026-07-16",
+      "url": "https://www.unitedhealthgroup.com/newsroom/2026/2026-07-16-uhg-reports-second-quarter-2026-results.html",
+      "relevance_note": "Company release: raised 2026 adjusted EPS outlook to $19.50-$20.00 on year-to-date performance."
+    },
+    {
+      "headline": "UnitedHealth Group Reports Second Quarter 2026 Results (PDF)",
+      "date": "2026-07-16",
+      "url": "https://www.unitedhealthgroup.com/content/dam/UHG/PDF/investors/2026/unh-reports-second-quarter-2026-results.pdf",
+      "relevance_note": "Cites a Q2 MCR of 86.7% and $860 million of net medical reserve development in the quarter, and Q2 operating cash flow of $11.1 billion."
+    },
+    {
+      "headline": "UnitedHealth Group (UNH) earnings Q2 2026",
+      "date": "2026-07-16",
+      "url": "https://www.cnbc.com/2026/07/16/unitedhealth-group-unh-earnings-q2-2026.html",
+      "relevance_note": "Q2 results beat estimates; full-year adjusted EPS outlook raised from more than $18.25; revenue guidance maintained above $439 billion."
+    },
+    {
+      "headline": "UnitedHealth Stock After Q2 Earnings: A Beat, a Raised Guide, and a Delayed Recovery",
+      "date": "Not dated in news pool",
+      "url": "https://www.tikr.com/blog/unitedhealth-stock-after-q2-earnings-a-beat-a-raised-guide-and-a-delayed-recovery",
+      "relevance_note": "Q2 adjusted EPS of $6.38 vs $4.92 estimate; medical cost trend came in below the initial 10% estimate."
+    },
+    {
+      "headline": "UnitedHealth Q2 2026 Earnings Insight | HealthWorks AI",
+      "date": "Not dated in news pool",
+      "url": "https://healthworksai.com/insights/unitedhealth-group-q2-2026-earnings-analysis",
+      "relevance_note": "Highlights that the 86.7% MCR includes $860 million of net favorable prior-period development, which bears on underlying margin quality."
+    },
+    {
+      "headline": "UnitedHealth Group's Q2 Recovery Came With a Clear Tradeoff: Margin Before Membership Growth",
+      "date": "Not dated in news pool",
+      "url": "https://vhealth.ai/blog/unitedhealth-group-q2-2026-margin-recovery",
+      "relevance_note": "Medicare Advantage membership declined 965,000 from year-end 2025 through June 30, 2026; Optum Q2 revenue of $65.7 billion and earnings of $4.0 billion."
+    },
+    {
+      "headline": "CMS proposes excluding chart reviews from MA risk scoring in 2027 payment rule",
+      "date": "Not dated in news pool",
+      "url": "https://www.healthcaredive.com/news/cms-proposed-2027-advance-notice-chart-reviews-medicare-advantage/810549",
+      "relevance_note": "Proposed risk-adjustment change to which UnitedHealth's Medicare Advantage book is described as most exposed per member."
+    },
+    {
+      "headline": "CMS releases the 2027 Medicare Advantage and Part D Advance Notice: Proposes major risk adjustment changes",
+      "date": "Not dated in news pool",
+      "url": "https://www.risehealth.org/insights-articles/cms-releases-the-2027-medicare-advantage-and-part-d-advance-notice-proposes-major-risk-adjustment-changes",
+      "relevance_note": "Advance Notice detail on the 2027 payment rate and risk score change for MA plans."
+    },
+    {
+      "headline": "Earnings Remarks (Q1 2026)",
+      "date": "Not dated in news pool",
+      "url": "https://www.unitedhealthgroup.com/content/dam/UHG/PDF/investors/2026/unh-q1-2026-remarks.pdf",
+      "relevance_note": "Management reiterates plans to invest nearly $1.5 billion in AI-related initiatives in 2026 and to use Optum Insight to help other health system participants."
+    },
+    {
+      "headline": "UnitedHealth Earnings: Earlier Bills Cost Less Than Expected",
+      "date": "Not dated in news pool",
+      "url": "https://www.stocktitan.net/articles/unitedhealth-q3-2026-earnings-medical-costs-reserves",
+      "relevance_note": "Later-period commentary on reserve release as a share of MCR improvement ($610 million, about 0.7 point); useful context for reserve dependence."
+    },
+    {
+      "headline": "UnitedHealth Group Reports First Quarter 2026 Results",
+      "date": "Not dated in news pool",
+      "url": "https://www.unitedhealthgroup.com/content/dam/UHG/PDF/investors/2026/unh-reports-first-quarter-2026-results.pdf",
+      "relevance_note": "Q1 context: Optum Health operating earnings of $1.1 billion and Q1 outlook of greater than $17.35 per share, which was subsequently raised."
+    },
+    {
+      "headline": "UnitedHealth Group reports 2025 results and issues 2026 outlook",
+      "date": "Not dated in news pool",
+      "url": "https://www.unitedhealthgroup.com/content/dam/UHG/PDF/investors/2025/unh-reports-2025-results-and-issues-2026-outlook.pdf",
+      "relevance_note": "Optum Health full-year 2025 earnings from operations of $(278) million vs $7.8 billion in 2024, the baseline for the Optum Health reset."
+    }
+  ],
+  "bull_case": [
+    "Earnings power has recovered sharply: Q2 2026 earnings from operations rose 55% to $7,991 million from $5,150 million, diluted EPS rose to $6.04 from $3.74, and six-month net earnings attributable to common shareholders reached $11,764 million vs $9,698 million.",
+    "Margin is being driven by operations as well as reserves: current-year medical costs fell about $2.0 billion (150,333 vs 152,316) on essentially flat six-month premiums ($174.5 billion vs $174.4 billion), implying roughly 1.2 points of underlying MCR improvement after stripping out prior-period development.",
+    "Pricing discipline is visible: premiums were flat despite about 3% fewer UnitedHealthcare medical members, so premium per member rose. Management attributes the MCR improvement to affordability and medical cost management initiatives and pricing trends, which are levers that do not depend on reserve releases.",
+    "Management raised the full-year 2026 adjusted EPS outlook to $19.50-$20.00 (from more than $18.25) on year-to-date performance and an improved outlook for the remainder of the year.",
+    "Operating cash flow of $19,964 million in the first six months (vs $12,644 million) funded $4,092 million of dividends, $1,646 million of buybacks and $2,500 million of long-term debt repayment while cash and cash equivalents rose to $28,585 million.",
+    "The 2027 Medicare Advantage Final Notice moved toward expected industry medical cost trend, a constructive step for rate adequacy even though it remains below.",
+    "Optum is diversifying the earnings base: Optum Insight generated $1,369 million of Q2 earnings from operations on $5,402 million of revenue, services revenue grew 11%, and management is investing nearly $1.5 billion in AI initiatives in 2026.",
+    "Portfolio pruning (exits from loss-making contracts, net portfolio divestitures of $524 million of gains at Optum Insight) is reshaping the business toward a smaller, potentially higher-return footprint."
+  ],
+  "bear_case": [
+    "Reserve development carries a visible share of the improvement: prior-year favorable development was $1,250 million in the first six months vs $320 million a year ago (about 0.7 point of premiums vs 0.2). Management lists it first among drivers of the MCR decline and says medical cost trend remains above historical levels.",
+    "A further $236 million change in premium deficiency and loss contract reserves, plus a $187 million restructuring benefit to medical costs, are non-run-rate items that flatter reported medical costs.",
+    "Revenue is stalled: Q2 premiums fell 1% and total revenue was up only 0.4%, while UnitedHealthcare served 1.6 million fewer people and Medicare Advantage and Medicaid membership are each down 9%. Further repricing rounds against below-trend Medicare Advantage rates risk shedding more members.",
+    "The operating cost ratio is deteriorating (13.3% vs 12.4% for six months) and reported figures benefit from net portfolio divestiture gains inside operating costs, so the underlying deleverage is probably slightly worse than reported.",
+    "Cash flow quality is weaker than the headline: about $4.8 billion of operating cash flow above net earnings came from working capital, including a $3,020 million other-asset release, a $1,481 million receivables decline and receivables sales under a financing facility, while medical costs payable declined $420 million.",
+    "Regulatory and legal overhangs are unquantified: RADV audits, the proposed exclusion of chart reviews from 2027 Medicare Advantage risk scoring and Medicaid margin pressure could reduce revenue or trigger one-time payment adjustments.",
+    "Optum Health remains in a reset with limited evidence of proven value-based economics; full-year 2025 earnings from operations were $(278) million vs $7.8 billion in 2024, and six-month Optum Insight earnings fell on investment spending."
+  ],
+  "what_to_watch": [
+    {
+      "text": "**Durability of the Raised Full-Year Outlook:** Q2 earnings from operations rose 55% to $7,991 million, the medical care ratio fell about 2.7 points to 86.7%, and full-year adjusted EPS guidance was lifted to $19.50-$20.00 on year-to-date performance and an improved outlook for the rest of the year. The filing points to pricing, affordability and medical cost management initiatives as structural levers that do not rely on reserve releases. However, the filing does not size how much of the improvement each lever contributes, and the guide may embed reserve development ($1,250 million in six months) and a $187 million restructuring benefit to medical costs, so confidence in the second-half run rate should be tempered.\n\n-> Monitor management's split of the MCR improvement between current-year performance, reserve development and restructuring benefits, and whether the second-half outlook assumes any further prior-period releases.",
+      "relevant_urls": [
+        "https://www.unitedhealthgroup.com/newsroom/2026/2026-07-16-uhg-reports-second-quarter-2026-results.html",
+        "https://www.cnbc.com/2026/07/16/unitedhealth-group-unh-earnings-q2-2026.html",
+        "https://www.tikr.com/blog/unitedhealth-stock-after-q2-earnings-a-beat-a-raised-guide-and-a-delayed-recovery"
+      ]
+    },
+    {
+      "text": "**Prior-Period Reserve Development and Underlying MCR:** Prior-year favorable development reached $1,250 million in the first six months (vs $320 million), and Q2 alone carried $860 million of net favorable development. Management lists it ahead of cost management and pricing as a driver of the MCR decline, and trend still sits above historical levels, which suggests the underlying gain is smaller than the headline. That said, current-year medical costs fell about $2.0 billion on flat premiums, and excluding prior-period development the current-year MCR improved by roughly 1.2 points (about 86.1% vs 87.3%), so the direction of underlying performance is still favorable even if smaller. Medical costs payable also fell $420 million, and a smaller release next period would show up as MCR deterioration.\n\n-> Watch the size of favorable development as a share of premiums, current-year MCR ex-development, and medical costs payable and days claims payable for confirmation that reserve strength is intact.",
+      "relevant_urls": [
+        "https://healthworksai.com/insights/unitedhealth-group-q2-2026-earnings-analysis",
+        "https://www.unitedhealthgroup.com/content/dam/UHG/PDF/investors/2026/unh-reports-second-quarter-2026-results.pdf",
+        "https://www.stocktitan.net/articles/unitedhealth-q3-2026-earnings-medical-costs-reserves"
+      ]
+    },
+    {
+      "text": "**Cash Flow Quality and Capital Deployment:** Operating cash flow of $19,964 million compares with net earnings of $12,151 million, helped by a $3,020 million other-asset release, a $1,481 million receivables decline and $3.2 billion of receivables sold under a financing facility. The prior-year comparison ($12,644 million) was depressed by a $4,371 million medical payable build that reversed this year. On the other hand, some working capital release may reflect a shrinking, repriced book and the unwinding of restructuring, so normalization cuts both ways. Capital returns are balanced: $4,092 million of dividends, $1,646 million of buybacks (vs $5,545 million) and $2,500 million of long-term debt repaid.\n\n-> Monitor operating cash flow relative to net earnings, receivables financing balances, medical costs payable, and management commentary on buyback pacing versus debt reduction.",
+      "relevant_urls": [
+        "https://www.unitedhealthgroup.com/content/dam/UHG/PDF/investors/2026/unh-reports-second-quarter-2026-results.pdf"
+      ]
+    },
+    {
+      "text": "**Membership Shrinkage, Pricing and Medicare Advantage Rates:** UnitedHealthcare medical membership fell 3% (48.5 million vs 50.1 million), with Medicare Advantage down 9% to 7,565K and Medicaid down 9% to 6,780K, while premiums held flat, indicating higher premium per member from repricing and mix. The 2027 Final Notice moved toward forward medical cost trend, but the filing says base rates remain well below trend, so each further repricing round may cost membership and cap growth. Conversely, a smaller, better-priced book could compound off a healthier margin floor if enrollment stabilizes without MCR giving back the gains.\n\n-> Track Medicare Advantage and Medicaid membership trends, premium per member, 2027 bid and benefit commentary, and whether management expects membership to stabilize.",
+      "relevant_urls": [
+        "https://vhealth.ai/blog/unitedhealth-group-q2-2026-margin-recovery",
+        "https://www.risehealth.org/insights-articles/cms-releases-the-2027-medicare-advantage-and-part-d-advance-notice-proposes-major-risk-adjustment-changes"
+      ]
+    },
+    {
+      "text": "**Risk Adjustment, RADV Audits and Chart Review Exclusion:** CMS has proposed excluding chart reviews from Medicare Advantage risk scoring starting in 2027, and CMS and OIG have selected certain local plans for RADV audits that may lead to retrospective payment adjustments. The filing says it can provide no assurance on the outcome and offers no quantified range, so a risk-score cut would hit revenue directly and any recoupment would be a hard-to-model one-time item. That said, the final 2027 notice moved toward medical cost trend, partly offsetting the pressure.\n\n-> Listen for any quantification of risk-score sensitivity, RADV audit status and reserves, and how 2027 bids incorporate the chart-review change.",
+      "relevant_urls": [
+        "https://www.healthcaredive.com/news/cms-proposed-2027-advance-notice-chart-reviews-medicare-advantage/810549",
+        "https://www.risehealth.org/insights-articles/cms-releases-the-2027-medicare-advantage-and-part-d-advance-notice-proposes-major-risk-adjustment-changes"
+      ]
+    },
+    {
+      "text": "**Operating Cost Ratio and Reinvestment:** The operating cost ratio rose to 13.3% from 12.4% for six months (12.7% vs 12.3% in Q2) on investment in people, process and technology, restructuring and business mix, with $415 million of restructuring-related costs and a $400 million foundation contribution in operating costs. Net portfolio divestiture gains ($524 million at Optum Insight and $8 million at Optum Rx, against a $341 million loss at Optum Health) are booked inside operating costs and flatter the reported ratio. However, the reinvestment, including nearly $1.5 billion of AI spending, may support efficiency gains later.\n\n-> Monitor the operating cost ratio ex-restructuring and divestiture items, and management's targets for efficiency savings from technology investment.",
+      "relevant_urls": [
+        "https://www.unitedhealthgroup.com/content/dam/UHG/PDF/investors/2026/unh-q1-2026-remarks.pdf"
+      ]
+    },
+    {
+      "text": "**Optum Health Reset and Optum Insight Mix Shift:** Optum Health served about 93 million people (vs 95 million), is exiting loss-making contracts, and produced Q2 earnings from operations of $1,190 million on $23,472 million of revenue, after full-year 2025 earnings of $(278) million vs $7.8 billion in 2024. Optum Insight earned $1,369 million in Q2 on $5,402 million of revenue, but six-month earnings fell on investment in people, technology and new products. The thesis of a smaller, more profitable care delivery business and a technology-led Insight is plausible, though the 2026 recovery owes much to reserve development and the payoff from AI investment is not yet visible in reported results.\n\n-> Watch Optum Health operating margin and members served, Optum Insight earnings from operations, and disclosure on returns from AI-related initiatives.",
+      "relevant_urls": [
+        "https://www.unitedhealthgroup.com/content/dam/UHG/PDF/investors/2025/unh-reports-2025-results-and-issues-2026-outlook.pdf",
+        "https://www.alpha-sense.com/earnings/unh",
+        "https://www.unitedhealthgroup.com/content/dam/UHG/PDF/investors/2026/unh-q1-2026-remarks.pdf"
+      ]
+    }
+  ],
+  "data_gaps": [
+    "Total debt (short-term and long-term) balance sheet line items were not included in the provided filing chunks.",
+    "Free cash flow is not reported as a line item in the provided chunks; only operating cash flow and capital expenditure were available.",
+    "Gross profit or gross margin is not reported in the provided chunks; the medical care ratio figures were not present in the provided filing chunks.",
+    "The filing excerpts provided did not include any outlook or guidance discussion (full-year revenue, earnings, cash flow or medical cost trend expectations).",
+    "Prior-year segment revenue and earnings comparatives (recast for the Optum Financial realignment) were not present in the provided chunks, so segment year-over-year changes could not be computed.",
+    "The prior-year six-month diluted EPS was cut off in the provided chunk and could not be extracted.",
+    "The filing provides no quantified earnings sensitivity or range for Medicare Advantage rate shortfalls, RADV audit exposure, or the proposed risk-adjustment changes.",
+    "Quarterly split of prior-period reserve development within the six-month $1,250 million figure is not given in the provided filing chunks."
+  ],
+  "hypotheses_explored": [
+    {
+      "id": "h1",
+      "proposing_personality": "Conservative",
+      "question": "Is UNH's 1H 2026 operating cash flow surge (vs 1H 2025) durable cash earnings, or mostly working-capital timing that flatters cash conversion?",
+      "summary": "Operating cash flow rose to $19.96B from $12.64B vs net earnings of $12.15B, so about $4.8B came from working-capital items, mainly a $3.02B other-asset release and a $1.48B receivables decline, partly helped by a receivables financing facility. The prior-year comparison was depressed by a $4.37B medical payable build that reversed this year. Underlying cash conversion looks weaker than the headline and the H1 cash figure should be normalized before capitalizing it.",
+      "evidence_quotes": [
+        "Net earnings $12,151 (2026) vs $10,046 (2025); Cash flows from operating activities 19,964 (2026) vs 12,644 (2025)",
+        "Accounts receivable 1,481 (2026) vs (1,681) (2025); Other assets 3,020 (2026) vs (2,143) (2025); Medical costs payable (420) (2026) vs 4,371 (2025)",
+        "During the six months ended June 30, 2026, the Company sold $3.2 billion of receivables under the receivables financing facility, of which $1.7 billion has been collected from counterparties, with $130 million not yet remitted to financial institutions."
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h2",
+      "proposing_personality": "Conservative",
+      "question": "Is the 2026 margin recovery (Q2 MCR down 2.7 points) driven by sustainable medical cost management, or by favorable prior-period reserve releases and one-time items that may not recur?",
+      "summary": "Q2 medical care ratio fell to 86.7% from 89.4%, partly on favorable prior-period reserve development ($1.25B in 1H 2026 vs $0.32B in 1H 2025). Trend remains above historical levels. Restructuring added a net $187M benefit to medical costs while $415M of restructuring-related costs and a $400M foundation contribution hit operating costs. Earnings quality is mixed, and medical costs payable declined, so the EPS step-up is partly non-recurring until reserve development proves repeatable.",
+      "evidence_quotes": [
+        "The MCR decreased due to favorable prior period reserve development, affordability and medical cost management initiatives, and pricing trends, partially offset by medical costs trend which remains above historical levels",
+        "Reported medical costs: Prior years (1,250) (2026) vs (320) (2025)",
+        "For the six months ended June 30, 2026, these items increased operating costs by $415 million, partially offset by a $75 million increase to investment and other income and $187 million decrease in medical costs"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h3",
+      "proposing_personality": "Contrarian",
+      "question": "Is UNH's H1 2026 medical care ratio improvement mostly a reserve-release story rather than an underlying cost-trend improvement, and will that flatter the next quarter's MCR?",
+      "summary": "MCR fell 1.8 points (87.1% to 85.3%) on affordability and cost management, but prior-year favorable development was $1,250M vs $320M (about 0.7% of premium vs 0.2%). Excluding prior-period development and the premium deficiency charge, current-year MCR is near 86.1% vs 87.3%, about 1.2 points of underlying improvement, with roughly 0.5 point of the headline gain coming from the higher year-over-year release. Management says trend remains above historical levels, so releases cannot repeat indefinitely.",
+      "evidence_quotes": [
+        "The MCR decreased due to favorable prior period reserve development, affordability and medical cost management initiatives, and pricing trends, partially offset by medical costs trend which remains above historical levels and continues to be affected by higher provider reimbursement under the No Surprises Act and increased service and coding intensity in commercial.",
+        "Reported medical costs: Current year 150,333 (2026) vs 152,316 (2025); Prior years (1,250) (2026) vs (320) (2025); Changes in premium deficiency and loss contract reserves (236) vs —",
+        "Medical care ratio (a) 86.7% vs 89.4% (Q2); 85.3% vs 87.1% (six months); Premiums 174,517 vs 174,439 for six months ended June 30",
+        "Commercial medical cost trend is elevated, in part due to the independent resolution process under the No Surprises Act and more aggressive billing practice among providers. These trends may continue in future periods."
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h4",
+      "proposing_personality": "Contrarian",
+      "question": "Is the margin recovery coming from repricing and shrinking the membership base (fewer, more profitable people) rather than from durable cost-trend control, and does that model hold if Medicare Advantage funding stays below trend?",
+      "summary": "Revenue was flat (+1% for H1), premiums were flat and medical costs fell 2% while people served dropped. UnitedHealthcare medical membership fell 3% (48.5M vs 50.1M) with Medicare Advantage and Medicaid each down 9%. Management says Medicare Advantage base rates sit well below forward trend and the 2027 notice remains below. The margin gain is partly a function of shrinking into profitability, which helps near-term MCR but caps growth and depends on untested pricing actions.",
+      "evidence_quotes": [
+        "UnitedHealthcare served 1.6 million fewer people due to benefit design and pricing actions and reduced Medicaid eligibility and the exit from one state",
+        "Total UnitedHealthcare - Medical 48,525 (2026) vs 50,115 (2025), (3)%; Medicare Advantage 7,565 vs 8,350, (9)%; Medicaid 6,780 vs 7,490, (9)%",
+        "Medical costs decreased primarily due to fewer people served across UnitedHealthcare and Optum Health and favorable prior period reserve development, partially offset by elevated medical cost trend which remains above historical levels",
+        "Medicare Advantage rate notices for numerous years have resulted in industry base rates well below the industry forward medical cost trend. While the Final Notice for 2027 moved towards the expected industry forward medical cost trend, it remains below."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h5",
+      "proposing_personality": "Dreamer",
+      "question": "If Optum Insight's AI and data businesses scale as management intends, could UNH's long-run earnings mix shift toward higher-margin technology and services, making today's Optum Health trough a temporary cost of that transition?",
+      "summary": "Optum Insight is the most credible long-duration option: about $1.5B of AI investment in 2026, growing business-services earnings, and the 2026 realignment moving Optum Financial/Optum Bank into Insight. The segment could be valued as a healthcare technology and data platform rather than a managed-care cost center, but six-month Insight earnings fell on people and technology investment, so the payoff is not yet visible.",
+      "evidence_quotes": [
+        "We remain on track to invest nearly $1.5 billion in AI-related initiatives in 2026.",
+        "Optum Insight is developing and bringing to market healthcare-specific AI solutions that enhance productivity and performance outcomes while improving patient and clinician experience.",
+        "Earnings from operations for the three months ended June 30, 2026, increased due to growth in business services.",
+        "On January 1, 2026, the Company realigned certain businesses to respond to changes in the markets it serves and the opportunities that are emerging as the health system evolves. Optum Financial, including Optum Bank, which was historically included in Optum Health is now included in Optum Insight."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h6",
+      "proposing_personality": "Dreamer",
+      "question": "Is Optum Health's shrinking value-based footprint a deliberate reset that could leave a smaller but more profitable care-delivery business able to compound over the next decade, rather than a sign of structural failure?",
+      "summary": "Optum Health is contracting on purpose: fewer people served, continued dispositions and exits of loss-making contracts. Full-year 2025 operating earnings fell to near zero from $7.8B in 2024 and 2025 came in about $6.6B below expectations. Repricing and exits could clear the way for a margin-accretive model, but the evidence is thin because the 2026 recovery is driven largely by reserve development rather than proven value-based economics.",
+      "evidence_quotes": [
+        "Optum Health served approximately 93 million people and 95 million people as of June 30, 2026 and June 30, 2025, respectively.",
+        "Full year 2025 earnings from operations were $(278) million compared to $7.8 billion in 2024.",
+        "Optum Health earnings in 2025 are approximately $6.6 billion below our expectations.",
+        "Earnings from operations increased due to cost management, increased favorable reserve development and the net decrease in loss contract reserves, partially offset by continued elevated medical cost trends"
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h8",
+      "proposing_personality": "Optimist",
+      "question": "Can UNH keep margin expansion going once membership contraction and Medicare Advantage rate pressure play out, or will the 2026 top-line drag cap the upside?",
+      "summary": "The 10-Q shows shrinking membership and flat revenue, so the margin story has to carry earnings. Management is deliberately shedding unprofitable members and the 2027 Medicare Advantage final notice moved toward industry trend. Risks are real: MA base rates still trail forward trend, Medicaid margins are under pressure and value-based care enrollment is shrinking, so support for a durable pricing and mix story is only partial.",
+      "evidence_quotes": [
+        "Total revenues $112,032M vs $111,616M for the three months ended June 30, 2026 (0.4% increase); premiums $86,956M vs $87,905M",
+        "While the Final Notice for 2027 moved towards the expected industry forward medical cost trend, it remains below.",
+        "The funding and payment rate environment remains insufficient to meet the health needs of patients and creates the risk of continued downward pressure on Medicaid margin percentages.",
+        "UnitedHealthcare served 1.6 million fewer people due to benefit design and pricing actions and reduced Medicaid eligibility and the exit from one state",
+        "Commercial medical cost trend is elevated, in part due to the independent resolution process under the No Surprises Act and more aggressive billing practice among providers. These trends may continue in future periods."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h10",
+      "proposing_personality": "Pessimist",
+      "question": "Is UnitedHealth under-disclosing the revenue and earnings exposure from Medicare Advantage rate pressure, proposed 2027 risk-adjustment changes, and RADV audits?",
+      "summary": "Medicare Advantage base rates have stayed well below forward cost trend for years and the 2027 final notice still falls short. MA membership fell 9% (785K) and further contraction is expected in 2026. CMS has proposed excluding chart reviews from MA risk scoring starting in 2027, and RADV audits may lead to retrospective payment adjustments. The filing gives no quantified range and says it can provide no assurance on outcomes, so a risk-score cut would hit revenue directly and RADV recoupments would be a hard-to-model one-time hit.",
+      "evidence_quotes": [
+        "Medicare Advantage rate notices for numerous years have resulted in industry base rates well below the industry forward medical cost trend. While the Final Notice for 2027 moved towards the expected industry forward medical cost trend, it remains below.",
+        "Medicare Advantage 7,565 vs 8,350 (785) (9)",
+        "CMS and OIG have selected certain of the Company's local plans for risk adjustment data validation (RADV) audits to validate the coding practices of and supporting documentation maintained by health care providers and such audits may result in retrospective adjustments to payments made to the Company's health plans.",
+        "The Company can provide no assurance as to the scope and outcome of these matters and no assurance as to whether its business, financial condition or results of operations will be materially adversely affected.",
+        "CMS proposes excluding chart reviews from MA risk scoring in 2027 payment rule"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h11",
+      "proposing_personality": "Quant",
+      "question": "How much of the Q2 2026 medical care ratio improvement (89.4% to 86.7%) is recurring versus driven by favorable prior-period reserve development?",
+      "summary": "The 270bp MCR improvement is real but partly non-recurring. YTD prior-year reserve development was a $1,250M favorable item vs $320M a year earlier, an estimated 0.8 to 0.9 points of medical costs on the $148.8B YTD base (filing does not give quarterly premium revenue). Elevated trend remains, so the underlying MCR gain is likely smaller than the headline and the release should be treated as a quality-of-earnings adjustment before extrapolating into the second half.",
+      "evidence_quotes": [
+        "Medical care ratio (a) 86.7 % 89.4 % (2.7)%",
+        "Medical costs decreased primarily due to fewer people served across UnitedHealthcare and Optum Health and favorable prior period reserve development, partially offset by elevated medical cost trend which remains above historical levels",
+        "Prior years (1,250) (320)"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h12",
+      "proposing_personality": "Quant",
+      "question": "Is the operating cost ratio deleverage (12.4% to 13.3% YTD) masked by portfolio divestiture gains recorded in operating costs, so that the underlying cost ratio is worse than reported?",
+      "summary": "The reported operating cost ratio rose 0.9pt YTD and 0.4pt in Q2 while revenue was flat. Net portfolio gains booked inside operating costs (gains of $524M at Optum Insight and $8M at Optum Rx against a $341M loss at Optum Health, net $191M) flatter the ratio. The effect is roughly 0.1pt of revenue at most, so underlying deleverage is probably slightly worse than reported, and cost reinvestment and restructuring are rising faster than revenue.",
+      "evidence_quotes": [
+        "Operating cost ratio 12.7 12.3 0.4 13.3 12.4 0.9",
+        "The operating cost ratio increased primarily due to investments in people, process and technology to drive improved consumer and care provider experiences and greater operating efficiencies, and business mix",
+        "For the six months ended June 30, 2026, the operating cost ratio also increased due the impacts of restructuring and other actions, partially offset by net portfolio divestitures in 2026.",
+        "Year-to-date impacts consisted of gains of $524 million and $8 million at Optum Insight and Optum Rx, respectively, partially offset by a net loss of $341 million at Optum Health."
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h7",
+      "proposing_personality": "Optimist",
+      "question": "Is UNH's margin recovery in 2026 durable enough to support the raised full-year outlook, or is it driven mainly by one-time reserve releases?",
+      "summary": "Q2 2026 shows real operating leverage: the medical care ratio fell 2.7 points to 86.7%, earnings from operations rose 55%, and management raised full-year 2026 adjusted EPS guidance to $19.50-$20.00. Part of the improvement is favorable prior-period reserve development ($1,250M in six months vs $320M), so durability is the key open question. The filing also points to structural levers (pricing, affordability and medical cost management) that do not depend on reserve releases.",
+      "evidence_quotes": [
+        "Medical care ratio (a) 86.7% vs 89.4% for the three months ended June 30 (2.7) point decrease; Earnings from operations $7,991M vs $5,150M, up 55%",
+        "The MCR decreased due to favorable prior period reserve development, affordability and medical cost management initiatives, and pricing trends, partially offset by medical costs trend which remains above historical levels",
+        "Reported medical costs: Prior years (1,250) for the six months ended June 30, 2026 vs (320) for 2025",
+        "UnitedHealth Group reported second quarter 2026 results and raised guidance for full year 2026",
+        "The company now expects full year 2026 adjusted net earnings between $19.50 to $20.00 per share resulting from performance year-to-date and an improved outlook for the remainder of the year",
+        "posted second-quarter earnings that blew past estimates and raised its full-year profit outlook, as the company better manages high medical costs and uses AI to help streamline operations"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h9",
+      "proposing_personality": "Pessimist",
+      "question": "Is the H1 2026 medical cost ratio improvement flattered by prior-period reserve releases that management is not quantifying clearly enough, so that underlying MCR is worse than reported?",
+      "summary": "Prior-year reserve development was a $1,250M benefit in H1 2026, nearly four times the $320M in H1 2025. Management lists favorable prior-period reserve development first among drivers of the MCR decline while stating trend remains above historical levels. Current-year medical costs fell only about $2.0B on a much smaller membership base. Reserve releases are non-recurring and can reverse, so the reported margin recovery may overstate the sustainable run rate.",
+      "evidence_quotes": [
+        "The MCR decreased due to favorable prior period reserve development, affordability and medical cost management initiatives, and pricing trends, partially offset by medical costs trend which remains above historical levels and continues to be affected by higher provider reimbursement under the No Surprises Act and increased service and coding intensity in commercial.",
+        "Reported medical costs: Current year 150,333 (2026) vs 152,316 (2025); Prior years (1,250) (2026) vs (320) (2025); Changes in premium deficiency and loss contract reserves (236) —",
+        "For the six months ended June 30, 2026, these items increased operating costs by $415 million, partially offset by a $75 million increase to investment and other income and $187 million decrease in medical costs",
+        "Medical costs decreased primarily due to fewer people served across UnitedHealthcare and Optum Health and favorable prior period reserve development, partially offset by elevated medical cost trend which remains above historical levels"
+      ],
+      "confidence": 4
+    }
+  ]
+}

@@ -1,0 +1,565 @@
+{
+  "ticker": "PANW",
+  "company_name": "Palo Alto Networks, Inc.",
+  "filing_type": "10-K",
+  "filing_date": "2026-09-10",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T14:10:25.437528+00:00",
+  "key_metrics": [
+    {
+      "name": "Total revenue",
+      "value": "$11,480 million (FY2026 vs $9,221 million FY2025 and $8,027 million FY2024; +24.5% YoY)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "name": "Product",
+      "value": "$2,280 million (FY2026 vs $1,802 million FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "name": "Subscription and support",
+      "value": "$9,200 million (FY2026 vs $7,419 million FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "name": "Total gross profit",
+      "value": "$8,077 million (FY2026 vs $6,770 million FY2025 and $5,968 million FY2024)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Total gross profit gross margin",
+      "value": "70.4% (FY2026 vs 73.4% FY2025 and 74.3% FY2024)",
+      "unit": "percent of revenue",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Operating income",
+      "value": "$695 million (FY2026)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "name": "General and administrative",
+      "value": "$899 million (FY2026 vs $443 million FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "name": "Total operating expenses",
+      "value": "$7,382 million (FY2026 vs $5,527 million FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "name": "Total other income (expense), net",
+      "value": "$(159) million (FY2026 vs $353 million FY2025), including a $(620) million change in fair value of convertible senior notes and a $58 million change in fair value of Capped Calls",
+      "unit": "USD millions",
+      "source_citation": "Financial Statements"
+    },
+    {
+      "name": "Net income",
+      "value": "$307 million (FY2026 vs $1,134 million FY2025 and $2,578 million FY2024)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "name": "Net income per share, basic",
+      "value": "$0.41 (FY2026 vs $1.71 FY2025 and $4.04 FY2024)",
+      "unit": "USD per share",
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "name": "Net income per share, diluted",
+      "value": "$0.40 (FY2026 vs $1.60 FY2025 and $3.64 FY2024)",
+      "unit": "USD per share",
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "name": "Weighted-average shares used to compute net income per share, diluted",
+      "value": "764 million (FY2026 vs 709 million FY2025)",
+      "unit": "millions of shares",
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "name": "Net cash provided by operating activities",
+      "value": "$4,553 million (FY2026 vs $3,716 million FY2025 and $3,258 million FY2024)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Free cash flow (non-GAAP)",
+      "value": "$4,113 million (FY2026 vs $3,469 million FY2025 and $3,101 million FY2024)",
+      "unit": "USD millions",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Purchases of property, equipment, and other assets",
+      "value": "$440 million (FY2026 vs $247 million FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "name": "Share-based compensation for equity-based awards",
+      "value": "$1,774 million (FY2026 vs $1,295 million FY2025 and $1,076 million FY2024)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "name": "Deferred revenue",
+      "value": "$7,747 million current (July 31, 2026 vs $6,302 million July 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures — Short-term investments"
+    },
+    {
+      "name": "Long-term deferred revenue",
+      "value": "$7,009 million (July 31, 2026 vs $6,450 million July 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures — Short-term investments"
+    },
+    {
+      "name": "Total cash equivalents",
+      "value": "$1,637 million (July 31, 2026 vs $1,375 million July 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "name": "Short-term investments",
+      "value": "$557 million (July 31, 2026 vs $635 million July 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures — Short-term investments"
+    },
+    {
+      "name": "Long-term investments",
+      "value": "$4,835 million (July 31, 2026 vs $5,555 million July 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures — Short-term investments"
+    },
+    {
+      "name": "Long-term convertible senior notes",
+      "value": "$1,774 million (July 31, 2026 vs none at July 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures — Short-term investments"
+    },
+    {
+      "name": "Goodwill",
+      "value": "$22,010 million (July 31, 2026 vs $4,567 million July 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures — Short-term investments"
+    },
+    {
+      "name": "Intangible assets, net",
+      "value": "$7,017 million (July 31, 2026 vs $763 million July 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures — Short-term investments"
+    },
+    {
+      "name": "Total assets",
+      "value": "$48,460 million (July 31, 2026 vs $23,576 million July 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures — Short-term investments"
+    },
+    {
+      "name": "Total liabilities",
+      "value": "$20,968 million (July 31, 2026 vs $15,752 million July 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures — Short-term investments"
+    },
+    {
+      "name": "Total stockholders' equity",
+      "value": "$27,492 million (July 31, 2026 vs $7,824 million July 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "name": "Business acquisitions, net of cash and restricted cash acquired",
+      "value": "$(4,663) million (FY2026 vs $(1,054) million FY2025 and $(611) million FY2024)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "name": "Repurchases of common stock",
+      "value": "$(1,000) million (FY2026; none in FY2025; $(567) million in FY2024)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "name": "Net cash used in investing activities",
+      "value": "$(3,104) million (FY2026 vs $(2,205) million FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "name": "Net cash used in financing activities",
+      "value": "$(1,202) million (FY2026 vs $(779) million FY2025)",
+      "unit": "USD millions",
+      "source_citation": "Quantitative Disclosures"
+    }
+  ],
+  "revenue_segments": [
+    {
+      "name": "Product",
+      "revenue": "$2,280 million (FY2026)",
+      "yoy_change": "+26.5% (FY2026 vs FY2025: $2,280M vs $1,802M)",
+      "commentary": "Product was 19.9% of total revenue. Product gross margin was 75.1% vs 77.1% in FY2025. The filing attributes the decline to hardware supply chain challenges and higher intangible amortization, partly offset by software license revenue from the CyberArk acquisition and lower inventory excess and obsolete charges.",
+      "source_citation": "MD&A"
+    },
+    {
+      "name": "Subscription and support",
+      "revenue": "$9,200 million (FY2026)",
+      "yoy_change": "+24.0% (FY2026 vs FY2025: $9,200M vs $7,419M)",
+      "commentary": "Subscription and support was 80.1% of total revenue. Gross margin was 69.2% vs 72.5% in FY2025. Cost of subscription and support revenue rose 39% to $2,835M on higher cloud hosting costs, amortization of acquired intangibles and headcount growth.",
+      "source_citation": "MD&A — COST OF SUBSCRIPTION AND SUPPORT REVENUE"
+    },
+    {
+      "name": "Total revenue (single operating and reportable segment)",
+      "revenue": "$11,480 million (FY2026)",
+      "yoy_change": "+24.5% (FY2026 vs FY2025: $11,480M vs $9,221M)",
+      "commentary": "The company reports one operating and reportable segment, with sales managed primarily on a geographic theater basis. Revenue includes an acquisition contribution that the company says varies with business acquisitions.",
+      "source_citation": "Financial Statements"
+    }
+  ],
+  "forward_guidance": {
+    "text": "\"We expect our revenue to vary from quarter to quarter based on seasonal and cyclical factors and business acquisitions.\"",
+    "source_citation": "MD&A — REVENUE"
+  },
+  "key_risks": [
+    {
+      "description": "Acquisition integration and dilution risk: the $21.1B CyberArk deal added 112M shares and $945M of replacement equity awards, goodwill rose to $22.0B and intangibles to $7.0B, and GAAP results absorbed accelerated vesting, severance and amortization. Weighted-average diluted shares rose to 764M from 709M and diluted EPS fell to $0.40 from $1.60.",
+      "is_new": true,
+      "source_citation": "Quantitative Disclosures"
+    },
+    {
+      "description": "Gross margin compression: total gross margin fell to 70.4% from 73.4% on hardware supply chain challenges, higher cloud hosting costs and amortization of acquired intangibles. Subscription and support margin fell to 69.2% from 72.5%.",
+      "is_new": true,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Competition from vendor consolidation and native security offerings: customer trends toward vendor consolidation may favor competitors with broader platforms, and cloud infrastructure providers and advanced AI companies increasingly offer native security and observability capabilities that compete directly with the company's offerings.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Entry into a new product category: the company expects the CyberArk acquisition to result in increased competition. The identity security market also lacks a universally accepted definition, which could lead to mischaracterization of the offerings and adverse evaluations by industry stakeholders.",
+      "is_new": true,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "2030 convertible notes: if the sale-price condition is met, the company would be obligated to settle the $1.1B principal in cash, plus any excess conversion obligation. Fair-value changes on the notes (a $620M loss in FY2026) and the Capped Calls ($58M gain) add volatility to reported other income and net income.",
+      "is_new": true,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Stock-based compensation burden: share-based compensation was $1,774M in FY2026, and about $3.3B of unrecognized share-based compensation expense is expected to be recognized over a weighted-average period of about 2.5 years, including replacement awards from acquisitions.",
+      "is_new": false,
+      "source_citation": "MD&A"
+    },
+    {
+      "description": "Purchase-accounting and revenue comparability: the CyberArk allocation recorded acquired deferred revenue at $776M and $3.5B of platform renewals intangibles amortized over 12-14 years. This affects the comparability of reported revenue, deferred revenue and backlog with prior periods, and the filing does not separate organic from acquired results.",
+      "is_new": true,
+      "source_citation": "Quantitative Disclosures"
+    }
+  ],
+  "recent_news": [
+    {
+      "headline": "Palo Alto Networks beats estimates but margin concerns send shares lower - SiliconANGLE",
+      "date": "2026-09-01",
+      "url": "https://siliconangle.com/2026/09/01/palo-alto-networks-beats-estimates-but-but-margin-concerns-send-shares-lower",
+      "relevance_note": "Q4 beat and FY27 guide above consensus, but margin concerns weighed on shares."
+    },
+    {
+      "headline": "Palo Alto crushes earnings expectations: stock is down 8%- here's why — TradingView News",
+      "date": "undated",
+      "url": "https://www.tradingview.com/news/invezz:09450edee094b:0-palo-alto-crushes-earnings-expectations-stock-is-down-8-here-s-why",
+      "relevance_note": "FY27 free cash flow margin guide of 37.5%-38% was cited as below buy-side expectations."
+    },
+    {
+      "headline": "PANW Q4 Earnings Beat Estimates on Platformization Strength",
+      "date": "undated",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/panw-q4-earnings-beat-estimates-141200396.html",
+      "relevance_note": "Q1 and FY27 guidance detail: revenue, NGS ARR, RPO and non-GAAP EPS ranges."
+    },
+    {
+      "headline": "Palo Alto Stock Wavers On Fiscal Q4 Earnings Beat, 2027 Outlook | Investor's Business Daily",
+      "date": "undated",
+      "url": "https://www.investors.com/news/technology/palo-alto-stock-panw-palo-alto-earnings-aug26",
+      "relevance_note": "Street debate over organic versus acquisition-fueled growth."
+    },
+    {
+      "headline": "Palo Alto's biggest bet yet pressures forecast, sends shares tumbling | Ctech",
+      "date": "undated",
+      "url": "https://www.calcalistech.com/ctechnews/article/ry2dd4eozg",
+      "relevance_note": "ARR methodology differences reduced expected CyberArk revenue contribution; 112M new shares issued."
+    },
+    {
+      "headline": "Palo Alto Networks Q4 FY2026 slides: record growth, margin concerns",
+      "date": "undated",
+      "url": "https://www.investing.com/news/company-news/palo-alto-networks-q4-fy2026-slides-record-growth-margin-concerns-93CH-4884708",
+      "relevance_note": "FY27 guide: NGS ARR $11.075-11.175B, RPO $25.2-25.4B, revenue $14.10-14.20B, non-GAAP operating margin 29.5%, adjusted FCF margin 38%."
+    },
+    {
+      "headline": "Palo Alto Networks' Q4 Earnings Crossed $20 Billion in RPO. Next Year's Guide Tells a Different Story. | TIKR.com",
+      "date": "undated",
+      "url": "https://www.tikr.com/blog/palo-alto-networks-q4-earnings-crossed-20-billion-in-rpo-next-years-guide-tells-a-different-story",
+      "relevance_note": "Guide shows a sharp step down in ARR growth from FY26's 63% pace."
+    },
+    {
+      "headline": "Is Platformization Becoming Palo Alto Networks' Biggest Growth Lever?",
+      "date": "undated",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/platformization-becoming-palo-alto-networks-094400428.html",
+      "relevance_note": "Network and AI Security revenue +17%, Cortex +25%, target of more than 4,000 platformizations by FY2030."
+    },
+    {
+      "headline": "PANW-US-CORRECTED TRANSCRIPT Palo Alto Networks Inc Q4 2026 Earnings Call",
+      "date": "2026-09-01",
+      "url": "https://investors.paloaltonetworks.com/static-files/b6d9916f-f4ab-4b43-8457-2d345aaa0a47",
+      "relevance_note": "Management's FY27 guidance for NGS ARR, RPO, revenue, operating margin, share count and FCF margin."
+    },
+    {
+      "headline": "PANW's AI Security Push in \"Platformization,\" Acquisition-Heavy Growth",
+      "date": "undated",
+      "url": "https://www.youtube.com/watch?v=Vqs3N4DrCKg",
+      "relevance_note": "Discusses acquisition, dilution, slowing EPS growth and premium valuation risks."
+    },
+    {
+      "headline": "Palo Alto Networks (PANW) Q4 2026 Summary | Quartr",
+      "date": "undated",
+      "url": "https://quartr.com/events/palo-alto-networks-inc-panw-q4-2026_3YZ8mjLB",
+      "relevance_note": "Summary of outlook, including 40% FCF margin target by FY2028 and $20B NGS ARR by FY2030."
+    },
+    {
+      "headline": "FinancialContent - The Identity Fortress: Palo Alto Networks Closes $25 Billion Acquisition of CyberArk to Secure the Era of AI Agents",
+      "date": "2026-02-13",
+      "url": "https://markets.financialcontent.com/stocks/article/marketminute-2026-2-13-the-identity-fortress-palo-alto-networks-closes-25-billion-acquisition-of-cyberark-to-secure-the-era-of-ai-agents",
+      "relevance_note": "Deal context: investor 'sticker shock' on the 17x revenue multiple and dilution questions."
+    },
+    {
+      "headline": "PANW | Palo Alto Networks Inc. Analyst Estimates | MarketWatch",
+      "date": "undated",
+      "url": "https://www.marketwatch.com/investing/stock/panw/analystestimates",
+      "relevance_note": "Consensus EPS for Q1 and Q2 FY27 and recent beat history."
+    }
+  ],
+  "bull_case": [
+    "Cash generation is strong: operating cash flow rose to $4,553M from $3,716M (+22%) and free cash flow to $4,113M from $3,469M (+19%), even after $4.7B of acquisition cash outlay in the year.",
+    "Revenue grew 24.5% to $11,480M, with subscription and support at $9,200M (80.1% of revenue). Management guides FY27 revenue of $14.1-14.2B (23-24% growth), NGS ARR of $11.075-11.175B (22-23%) and RPO of $25.2-25.4B (19-20%), all above consensus at the time of the print.",
+    "Much of the GAAP margin decline looks like deal accounting: adjusted for Chronosphere and CyberArk's $797M operating loss, operating income would be about $1.49B, a margin of roughly 14%, flat with 13.5% in FY2025. Accelerated vesting, severance and intangible amortization should fade as integration progresses.",
+    "The platform strategy is gaining traction, with Cortex revenue up 25%, large platformization wins in Q4, and a stated target of more than 4,000 platformizations and $20B of NGS ARR by FY2030. Identity (CyberArk) adds a new control layer across network, cloud and AI-agent security.",
+    "Balance sheet liquidity is adequate, with about $5.4B in short- and long-term investments and $1,637M of cash equivalents, and management targets a 40% adjusted FCF margin by FY2028.",
+    "Q1 FY27 guidance of revenue $3.30-3.31B and non-GAAP EPS of $0.96-0.98 sits above the prior Street view of $3.22B and $0.93, which sets up a beat-and-raise setup if execution holds."
+  ],
+  "bear_case": [
+    "GAAP earnings power deteriorated sharply: net income fell to $307M from $1,134M and diluted EPS to $0.40 from $1.60, while operating income was only $695M, a 6.1% margin versus 13.5% the year before.",
+    "Headline growth is heavily acquired. Chronosphere and CyberArk contributed $930M of revenue, which implies roughly 14% organic growth against 24% reported. The FY27 revenue guide of $14.1-14.2B is only about 14.5-15.3% growth on the $12.3B pro forma base, so the guide largely reflects annualizing acquisitions.",
+    "Gross margin compressed about 300bp to 70.4%, with subscription and support margin down about 330bp to 69.2%. Incremental gross margin was only about 58%, and the dilution sits in the recurring line that the ARR thesis depends on.",
+    "Cash conversion is not as strong as it looks. FCF margin on reported figures was about 35.8% versus 37.6% in FY2025, FCF growth (+19%) lagged revenue growth, and SBC of $1,774M is a large non-cash add-back (FCF after SBC is about $2.3B). Acquired deferred revenue ($776M) and acquired RPO complicate the read on organic billings.",
+    "Dilution and capital allocation are weak: basic weighted-average shares rose to 749M from 663M and 112M shares were issued for CyberArk plus $945M of replacement equity awards, while the $1.0B buyback offsets only a small part. The $1.1B 2030 convertible notes could require cash settlement.",
+    "The FY27 29.5% operating margin and 38% FCF margin are non-GAAP and not directly comparable with the 6.1% GAAP FY26 operating margin. Management's FY27 FCF margin guide was seen as below buy-side expectations, the stock fell after the print, and valuation leaves little room for slippage.",
+    "Competitive and integration risks: vendor consolidation, native security from cloud and AI providers, and entry into the new identity category could pressure growth, while the ARR methodology differences between the companies make the NGS ARR step-up not like-for-like."
+  ],
+  "what_to_watch": [
+    {
+      "text": "**Organic Growth Versus Acquired Growth:** FY2026 revenue grew 24.5% to $11,480M, but Chronosphere and CyberArk contributed $930M of revenue and an $797M operating loss. Excluding that contribution, revenue growth was roughly 14% and operating margin about 14%, flat with 13.5% a year earlier. That said, the FY27 revenue guide of $14.1-14.2B is only about 14.5-15.3% growth on the $12.3B pro forma revenue base, so much of the headline 23-24% reflects annualizing the deals.\n\n-> Monitor any disclosure of organic revenue and organic NGS ARR growth, and how Q1 FY27 revenue of $3.30-3.31B compares with the pro forma base.",
+      "relevant_urls": [
+        "https://www.investors.com/news/technology/palo-alto-stock-panw-palo-alto-earnings-aug26",
+        "https://www.tikr.com/blog/palo-alto-networks-q4-earnings-crossed-20-billion-in-rpo-next-years-guide-tells-a-different-story",
+        "https://www.calcalistech.com/ctechnews/article/ry2dd4eozg"
+      ]
+    },
+    {
+      "text": "**GAAP Margin Recovery and Gross Margin:** Total gross margin fell to 70.4% from 73.4%, subscription and support margin fell to 69.2% from 72.5%, and G&A more than doubled to $899M on accelerated vesting, severance and headcount, leaving GAAP operating margin at 6.1%. Management guides to a 29.5% non-GAAP operating margin for FY27, which looks like a large rebound but is measured on a different basis, since non-GAAP excludes SBC of $1,774M, intangible amortization and acquisition charges. On the other hand, ex-deal operating margin was roughly flat year over year, which suggests the GAAP decline is largely purchase accounting that should ease as charges roll off.\n\n-> Monitor GAAP gross margin by line, G&A as a percentage of revenue, and the GAAP-to-non-GAAP operating margin reconciliation.",
+      "relevant_urls": [
+        "https://www.investing.com/news/company-news/palo-alto-networks-q4-fy2026-slides-record-growth-margin-concerns-93CH-4884708",
+        "https://siliconangle.com/2026/09/01/palo-alto-networks-beats-estimates-but-but-margin-concerns-send-shares-lower"
+      ]
+    },
+    {
+      "text": "**Cash Flow Quality:** Operating cash flow was $4,553M and free cash flow $4,113M, a clear strength against GAAP net income of $307M, and FCF grew about 19%. However, FCF margin on reported figures slipped to about 35.8% from 37.6%, SBC of $1,774M is a large add-back (FCF after SBC is about $2.3B), the deferred revenue change slowed to $1,202M from $1,239M, and acquired deferred revenue of $776M complicates comparisons. Management's FY27 FCF margin guide of 37.5-38% was also described as below buy-side expectations.\n\n-> Monitor operating cash flow, capex (up to $440M), the change in deferred revenue, and progress toward the 40% FCF margin target.",
+      "relevant_urls": [
+        "https://www.tradingview.com/news/invezz:09450edee094b:0-palo-alto-crushes-earnings-expectations-stock-is-down-8-here-s-why",
+        "https://quartr.com/events/palo-alto-networks-inc-panw-q4-2026_3YZ8mjLB"
+      ]
+    },
+    {
+      "text": "**NGS ARR and RPO Trajectory:** Management guides FY27 NGS ARR to $11.075-11.175B (22-23% growth) and RPO to $25.2-25.4B (19-20%), with Q1 NGS ARR of $9.54-9.56B and RPO of $20.8-20.9B. The step-down from the roughly 63% ARR growth pace in FY26 shows how much of the step-up came from CyberArk and Chronosphere, and the ARR definitions differ between the companies. That said, the 22-23% guide is on the combined base and is a cleaner test of whether platform demand keeps compounding after the acquisition effect laps.\n\n-> Monitor Q1 NGS ARR versus the $9.54-9.56B guide, sequential RPO change, and any organic ARR disclosure ex-CyberArk.",
+      "relevant_urls": [
+        "https://finance.yahoo.com/markets/stocks/articles/panw-q4-earnings-beat-estimates-141200396.html",
+        "https://investors.paloaltonetworks.com/static-files/b6d9916f-f4ab-4b43-8457-2d345aaa0a47",
+        "https://www.tikr.com/blog/palo-alto-networks-q4-earnings-crossed-20-billion-in-rpo-next-years-guide-tells-a-different-story"
+      ]
+    },
+    {
+      "text": "**Dilution and Capital Allocation:** FY2026 included $4,663M of acquisition spending against $1,000M of buybacks, and basic weighted-average shares rose to 749M from 663M, with 112M shares issued for CyberArk and $945M of replacement equity awards. Liquidity looks adequate, with about $5.4B of short- and long-term investments, but the $1.1B 2030 convertible notes could require cash settlement if the sale-price condition is met and their fair value swings reported earnings (a $620M loss in FY2026). Management guides to a diluted share count of 844-847M for FY27.\n\n-> Monitor the diluted share count against the guided range, buyback pace, SBC, and any update on 2030 note conversion and settlement.",
+      "relevant_urls": [
+        "https://www.calcalistech.com/ctechnews/article/ry2dd4eozg",
+        "https://www.youtube.com/watch?v=Vqs3N4DrCKg"
+      ]
+    },
+    {
+      "text": "**Platformization and Identity Cross-Sell:** Cortex revenue rose 25%, Network and AI Security revenue grew 17%, and management targets more than 4,000 platformizations and $20B of NGS ARR by FY2030, with large Q4 wins that include identity cross-sell. The $21.1B CyberArk purchase also carries $3.5B of platform renewals intangibles amortized over 12-14 years, which implies long-duration renewal economics. However, no identity-specific ARR is disclosed, and the 10-K flags vendor consolidation, native security from cloud and AI providers, and competition in the new identity category as risks.\n\n-> Monitor platformization counts, identity attach rates and net expansion on the acquired base, and any identity-specific metrics.",
+      "relevant_urls": [
+        "https://finance.yahoo.com/markets/stocks/articles/platformization-becoming-palo-alto-networks-094400428.html",
+        "https://investors.paloaltonetworks.com/static-files/8864c425-7c5d-4471-85c9-cdbf9072cfe5",
+        "https://markets.financialcontent.com/stocks/article/marketminute-2026-2-13-the-identity-fortress-palo-alto-networks-closes-25-billion-acquisition-of-cyberark-to-secure-the-era-of-ai-agents"
+      ]
+    },
+    {
+      "text": "**Near-Term EPS Path and Guidance Cadence:** Q1 FY27 non-GAAP EPS guidance of $0.96-0.98 sits just under to in line with the $0.97 consensus average (versus $0.93 a year ago), while Q2 FY27 consensus of $1.01 is slightly below the $1.03 reported in Q2 FY26. The implied FY27 consensus of $4.19 against the $4.16-4.19 guide requires roughly $2.21 in the second half, about 18% above last year's second half. That said, these consensus figures come from aggregator pages and should be verified before relying on the second-half math.\n\n-> Monitor Q1 non-GAAP EPS against $0.96-0.98, Q2 guidance, and whether management reaffirms the FY27 second-half margin ramp.",
+      "relevant_urls": [
+        "https://www.marketwatch.com/investing/stock/panw/analystestimates",
+        "https://finance.yahoo.com/quote/PANW/analysis",
+        "https://www.tipranks.com/stocks/panw/forecast"
+      ]
+    }
+  ],
+  "data_gaps": [
+    "Prior-year operating income (FY2025) and the total operating margin line are truncated in the filing chunks provided, so the FY2026 vs FY2025 operating income comparison could not be verified from the chunks.",
+    "The balance sheet line for 'Cash and cash equivalents' and the end-of-period cash, cash equivalents, and restricted cash total are truncated in the filing chunks, so total cash could not be extracted directly.",
+    "The filing chunks do not split organic from acquired revenue, free cash flow, RPO or NGS ARR, nor do they give revenue by geographic theater, so organic growth and margin must be estimated indirectly.",
+    "The explanation for subscription and support gross margin compression is truncated in the filing chunks beyond cloud hosting, intangible amortization and headcount drivers."
+  ],
+  "hypotheses_explored": [
+    {
+      "id": "h1",
+      "proposing_personality": "Conservative",
+      "question": "Is PANW's strong free cash flow real earnings power, or is it flattered by stock-based compensation and deferred revenue timing, given GAAP net income fell sharply?",
+      "summary": "Free cash flow of about $4.1B ($4,553M operating cash flow less $440M capex) contrasts with GAAP net income of $307M versus $1,134M and $2,578M. Stock-based compensation of $1,774M is a large non-cash add-back, and deferred revenue change slowed to $1,202M from $1,239M and $2,180M. FCF after SBC is roughly $2.3B, so the cash-to-GAAP gap needs explanation before treating cash as high-quality earnings.",
+      "evidence_quotes": [
+        "Net income $307 (FY2026) vs $1,134 (FY2025) vs $2,578 (FY2024)",
+        "Share-based compensation for equity-based awards 1,774 / 1,295 / 1,076",
+        "Deferred revenue 1,202 / 1,239 / 2,180",
+        "Net cash provided by operating activities during fiscal 2026 was $4.6 billion, an increase of $837 million compared to fiscal 2025"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h2",
+      "proposing_personality": "Conservative",
+      "question": "Is capital allocation disciplined? Do the $1.0B buyback and acquisition spending offset dilution, and can PANW settle the 2030 convertible notes without straining liquidity?",
+      "summary": "FY2026 spent $4,663M on acquisitions against $1,000M of buybacks while basic weighted shares rose to 749M from 663M, so buybacks did not offset dilution. The $1.1B of 2030 convertible notes could require cash settlement. Liquidity looks adequate at about $5.4B of investments, but the capital return story is weaker than headline buybacks suggest.",
+      "evidence_quotes": [
+        "Business acquisitions, net of cash and restricted cash acquired (4,663) (1,054) (611)",
+        "Repurchases of common stock (1,000) — (567)",
+        "the remaining outstanding principal balance of the 2030 Notes was $1.1 billion",
+        "Weighted-average shares used to compute net income per share, basic 749 / 663 / 638"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h3",
+      "proposing_personality": "Contrarian",
+      "question": "Is the Street's bull case built on acquired ARR and revenue rather than organic momentum, and does the core business still show margin and growth durability once Chronosphere and CyberArk are excluded?",
+      "summary": "Chronosphere and CyberArk added $930M of revenue and an $797M operating loss in FY2026. Removing them implies revenue near $10.55B (about 14% growth) and operating income near $1.49B (about 14% margin, flat with 13.5%), so the margin drop is mostly deal accounting but organic growth is well below the 24% headline. The FY27 revenue guide largely reflects annualizing acquisitions, and ARR definitions differ between the two companies.",
+      "evidence_quotes": [
+        "Since the date of acquisitions, the combined net impact of the Chronosphere and CyberArk acquisitions on our consolidated statements of operations was revenue of $930 million and operating loss of $797 million for the year ended July 31, 2026.",
+        "Unaudited pro forma total revenue $12,312 (2026) vs $10,486 (2025)",
+        "Part of the weaker revenue outlook stems from differences between Palo Alto's and CyberArk's methods of calculating annual recurring revenue (ARR)."
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h4",
+      "proposing_personality": "Contrarian",
+      "question": "Is the strong free cash flow and 34% RPO growth a durable quality signal, or is it partly inflated by acquired deferred revenue and multi-year billings that will not repeat at the same pace?",
+      "summary": "Free cash flow rose to $4.1B (up about 19%) and operating cash flow to $4.55B while GAAP operating income fell to $695M and net income to $307M. CyberArk brought $776M of deferred revenue onto the balance sheet and RPO growth of about 34% to $21.2B includes acquired backlog. The filing does not split organic from acquired RPO or FCF, so confidence is moderate.",
+      "evidence_quotes": [
+        "Free cash flow (non-GAAP) $4,113 vs $3,469",
+        "Deferred revenue (776)",
+        "Total purchase consideration for the acquisition of CyberArk was $21.1 billion, consisting of cash $2,308 and common stock (112 million shares) $18,488",
+        "Remaining performance obligations $21.2 billion vs $15.8 billion"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h5",
+      "proposing_personality": "Dreamer",
+      "question": "Can PANW's platformization push (Cortex, Prisma AIRS, CyberArk identity) turn Next-Generation Security ARR into a multi-year compounding base that extends well beyond the firewall refresh cycle, making AI security a long-duration growth engine?",
+      "summary": "PANW is building a consolidated platform across network, cloud, SOC, identity and AI security, with Prisma AIRS positioned to secure AI agents, models and data. Cortex revenue rose 25% and the company targets more than 4,000 platformizations by fiscal 2030. Caveats include that ARR and platformization figures come from news and a press release rather than the 10-K, the $21.1B CyberArk deal adds integration and dilution risk, and the filing flags vendor consolidation and native cloud/AI security as competitive threats.",
+      "evidence_quotes": [
+        "Prisma AIRS: comprehensive AI security platform designed to help organizations discover, assess, and protect AI agents, applications, models and data across the AI lifecycle",
+        "Customer trends toward vendor consolidation in cybersecurity may favor competitors offering broader platforms",
+        "Network and AI Security revenues grew 17% in fiscal 2026, while Cortex revenues rose 25%",
+        "PANW is targeting more than 4,000 platformizations by fiscal 2030"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h6",
+      "proposing_personality": "Dreamer",
+      "question": "Does the CyberArk identity acquisition create a credible second long-duration franchise (identity as the control plane for AI agents and workloads), or does it mainly add integration risk and dilution that the platform thesis has to absorb?",
+      "summary": "If identity becomes the control plane for non-human actors such as AI agents and workloads, PANW owns a sticky layer across network, cloud, endpoint and identity. The filing gives the deal scale ($21.1B price, $3.5B platform renewals intangibles, $945M replacement awards) and flags increased competition from a new product category. No identity-specific ARR is disclosed, so confidence is low.",
+      "evidence_quotes": [
+        "CyberArk shareholders received $45.00 in cash and 2.2005 shares of our common stock for each CyberArk share",
+        "the Company recognized platform renewals intangible assets of $3.5 billion",
+        "we expect that the CyberArk acquisition will result in increased competition, including as a result of our entry into a new product category"
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h8",
+      "proposing_personality": "Optimist",
+      "question": "Is platformization demand durable enough that NGS ARR can keep compounding at 22-23% after the CyberArk step-up, making the post-earnings organic-growth worry an entry point?",
+      "summary": "NGS ARR reached $9.1B from $5.6B, and management guides FY27 NGS ARR to $11.075-11.175B (22-23% growth) and RPO to $25.2-25.4B (19-20%). Q1 FY27 NGS ARR guidance of $9.54-9.56B implies continued sequential growth. The headline jumps are largely acquisition-driven, so organic growth is the number to watch; the 22-23% guide on the combined base is the cleaner test, though organic ARR was not isolated.",
+      "evidence_quotes": [
+        "Next-Generation Security Annualized Recurring Revenue $9.1B (FY2026) vs $5.6B (FY2025)",
+        "For the fiscal year 2027, we expect NGS ARR of $11.075 billion to $11.175 billion or 22% to 23% growth, we expect RPO of $25.2 billion to $25.4 billion or 19% to 20% growth, and we expect revenue of $14.1 billion to $14.2 billion or 23% to 24% growth.",
+        "In Q2, they secured 110 net new platform customers"
+      ],
+      "confidence": 2
+    },
+    {
+      "id": "h9",
+      "proposing_personality": "Pessimist",
+      "question": "Is PANW's headline profitability and FY27 margin guidance flattered by CyberArk-related purchase accounting, stock-based compensation, and non-GAAP exclusions, so that GAAP earnings power and free cash flow quality are weaker than the adjusted figures suggest?",
+      "summary": "The adjusted story sits on top of large GAAP deterioration: diluted EPS fell from $1.60 to $0.40, G&A more than doubled on acquisition-related charges, subscription gross margin compressed, and CyberArk added about 22% more shares. Management guides to non-GAAP operating margin and adjusted FCF, and the market reacted negatively to margin and FCF guidance. Further GAAP margin erosion from integration costs, SBC and amortization is the downside risk.",
+      "evidence_quotes": [
+        "Net income per share, diluted $0.40 $1.60 $3.64",
+        "General and administrative 899 443",
+        "we expect to recognize approximately $3.3 billion of share-based compensation expense over a weighted-average period of approximately 2.5 years",
+        "The company expects a fiscal 2027 free cash flow margin of 37.5% to 38%, which DeGasperi said was below buy-side consensus expectations."
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h10",
+      "proposing_personality": "Pessimist",
+      "question": "Are the quality and durability of PANW's reported growth and RPO being overstated by acquired platform renewals, purchase-accounting haircuts, and convertible/hedge mark-to-market effects that do not reflect organic economics?",
+      "summary": "A large part of the reported balance-sheet and backlog strength was acquired. Acquired deferred revenue was written down by $776M, $3.5B of platform renewals intangibles will amortize, and other income swung on convertible note fair-value changes. Total equity rose from $7.8B to $27.5B almost entirely from stock issued for CyberArk. Organic growth, renewal rates and backlog conversion could look weaker once acquisition effects are stripped out.",
+      "evidence_quotes": [
+        "Deferred revenue (776)",
+        "Total stockholders' equity 27,492 7,824",
+        "Change in fair value of convertible senior notes (620)",
+        "we issued $945 million of replacement equity awards"
+      ],
+      "confidence": 3
+    },
+    {
+      "id": "h11",
+      "proposing_personality": "Quant",
+      "question": "Is PANW's FY26 gross margin compression (74.3% to 70.4%) mainly driven by CyberArk-related mix and amortization, and is the incremental gross margin on the added revenue far below the company's historical level?",
+      "summary": "Revenue rose 24.5% in FY26 versus 14.9% in FY25. Gross profit rose $1,307M on $2,259M of incremental revenue, an incremental gross margin of about 58%, while reported gross margin fell about 300bp to 70.4%. Subscription margin fell about 330bp and product margin about 200bp. The filing attributes the product decline to hardware supply chain costs and intangible amortization, and organic growth and margin could not be isolated.",
+      "evidence_quotes": [
+        "Total gross profit $8,077 70.4% (FY26) vs $6,770 73.4% (FY25) vs $5,968 74.3% (FY24)",
+        "Subscription and support $6,365 69.2% (FY26) vs $5,381 72.5% (FY25)",
+        "Product gross margin decreased for fiscal 2026 compared to fiscal 2025 primarily due to a decrease in gross margin on our hardware products, including the impact from supply chain challenges, and higher amortization of intangible assets"
+      ],
+      "confidence": 4
+    },
+    {
+      "id": "h12",
+      "proposing_personality": "Quant",
+      "question": "Does the Street consensus EPS path imply a back-half-weighted FY27 that depends on CyberArk synergies, with Q2 FY27 EPS expected to fall year over year?",
+      "summary": "Q1 FY27 consensus averages $0.97 versus $0.93 actual a year ago (+4.3%), and Q2 FY27 averages $1.01 versus $1.03 (about -2%). FY27 averages $4.19 versus $3.84, which implies roughly $2.21 in the second half against $1.87 last year (about +18%). That points to a sharp second-half acceleration consistent with a margin-recovery and synergy case, but the data come from aggregator pages with inconsistent labels, so confidence is low.",
+      "evidence_quotes": [
+        "Q1 2027 Average 0.97 (High 1.01, Low 0.96); Q2 2027 Average 1.01 (High 1.12, Low 0.95)",
+        "Current Year (2027) Avg. Estimate 4.19; Year Ago EPS 3.84",
+        "Next quarter's earnings estimate for PANW is $0.97 with a range of $0.96 to $1.01."
+      ],
+      "confidence": 2
+    }
+  ]
+}

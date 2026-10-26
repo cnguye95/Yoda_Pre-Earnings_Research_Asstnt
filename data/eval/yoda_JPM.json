@@ -1,300 +1,553 @@
 {
   "ticker": "JPM",
-  "company_name": "JPMorgan Chase & Co.",
+  "company_name": "JPM",
   "filing_type": "10-Q",
-  "filing_date": "2026-05-01",
-  "supplemental_filing_type": "10-K",
-  "supplemental_filing_date": "2026-02-13",
-  "report_generated_at": "2026-05-12T11:24:00.442486+00:00",
+  "filing_date": "2026-08-06",
+  "supplemental_filing_type": null,
+  "supplemental_filing_date": null,
+  "report_generated_at": "2026-10-26T13:15:51.703727+00:00",
   "key_metrics": [
     {
-      "name": "Total net revenue",
-      "value": "49,836",
-      "unit": "USD Millions",
+      "name": "Net income",
+      "value": "21,155 (three months ended June 30, 2026 vs 14,987 in 2025, about +41%); 37,649 (six months 2026 vs 29,630 in 2025)",
+      "unit": "USD millions",
       "source_citation": "Other"
     },
     {
-      "name": "Net income",
-      "value": "16,494",
-      "unit": "USD Millions",
+      "name": "Net income applicable to common stockholders",
+      "value": "20,752 (three months ended June 30, 2026 vs 14,630 in 2025); 36,901 (six months 2026 vs 28,948)",
+      "unit": "USD millions",
       "source_citation": "Other"
     },
     {
       "name": "Basic earnings per share",
-      "value": "5.95",
-      "unit": "USD",
+      "value": "7.71 (three months ended June 30, 2026 vs 5.25 in 2025); 13.65 (six months 2026 vs 10.32)",
+      "unit": "USD per share",
       "source_citation": "Other"
     },
     {
       "name": "Diluted earnings per share",
-      "value": "5.94",
-      "unit": "USD",
+      "value": "7.70 (three months ended June 30, 2026 vs 5.24 in 2025); 13.63 (six months 2026 vs 10.31)",
+      "unit": "USD per share",
       "source_citation": "Other"
     },
     {
+      "name": "Total net revenue",
+      "value": "107,183 (six months ended June 30, 2026 vs 90,222 in 2025, about +19%)",
+      "unit": "USD millions",
+      "source_citation": "Financial Statements — Corporate"
+    },
+    {
+      "name": "Noninterest revenue",
+      "value": "56,306 (six months ended June 30, 2026 vs 43,740 in 2025)",
+      "unit": "USD millions",
+      "source_citation": "Financial Statements — Corporate"
+    },
+    {
       "name": "Net interest income",
-      "value": "25,366",
-      "unit": "USD Millions",
+      "value": "50,877 (six months ended June 30, 2026 vs 46,482 in 2025)",
+      "unit": "USD millions",
+      "source_citation": "Financial Statements — Corporate"
+    },
+    {
+      "name": "Total noninterest expense",
+      "value": "27,316 (three months ended June 30, 2026 vs 23,779 in 2025, about +15%); 54,166 (six months 2026 vs 47,376)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Income before income tax expense",
+      "value": "27,516 (three months ended June 30, 2026 vs 18,284 in 2025); 47,995 (six months 2026 vs 36,692)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Income tax expense",
+      "value": "6,361 (three months ended June 30, 2026 vs 3,297 in 2025); 10,346 (six months 2026 vs 7,062)",
+      "unit": "USD millions",
       "source_citation": "Other"
     },
     {
       "name": "Provision for credit losses",
-      "value": "2,507",
-      "unit": "USD Millions",
-      "source_citation": "Other"
+      "value": "5,022 (six months ended June 30, 2026 vs 6,154 in 2025); about 2.5 billion in Q2 2026 vs 2.8 billion in Q2 2025",
+      "unit": "USD millions",
+      "source_citation": "Financial Statements — Corporate"
     },
     {
-      "name": "Total noninterest expense",
-      "value": "26,850",
-      "unit": "USD Millions",
-      "source_citation": "Other"
+      "name": "ROE",
+      "value": "22% (six months ended June 30, 2026 vs 18% in 2025)",
+      "unit": "percent",
+      "source_citation": "Financial Statements — Corporate"
     },
     {
-      "name": "Interest income",
-      "value": "49,191",
-      "unit": "USD Millions",
-      "source_citation": "Other"
+      "name": "Overhead ratio",
+      "value": "51% (six months ended June 30, 2026 vs 53% in 2025)",
+      "unit": "percent",
+      "source_citation": "Financial Statements — Corporate"
     },
     {
-      "name": "Interest expense",
-      "value": "23,825",
-      "unit": "USD Millions",
+      "name": "Total weighted-average diluted shares outstanding",
+      "value": "2,694.2 (three months ended June 30, 2026 vs 2,793.7 in 2025)",
+      "unit": "millions of shares",
       "source_citation": "Other"
     },
     {
       "name": "Total assets",
-      "value": "4,900,475",
-      "unit": "USD Millions",
-      "source_citation": "Financial Statements"
-    },
-    {
-      "name": "Total liabilities",
-      "value": "4,536,437",
-      "unit": "USD Millions",
-      "source_citation": "Financial Statements"
-    },
-    {
-      "name": "Total equity",
-      "value": "364,038",
-      "unit": "USD Millions",
+      "value": "5,015,069 (June 30, 2026 vs 4,424,900 at December 31, 2025, +13%)",
+      "unit": "USD millions",
       "source_citation": "Other"
+    },
+    {
+      "name": "Cash and due from banks",
+      "value": "24,720 (June 30, 2026 vs 21,742 at December 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Deposits with banks",
+      "value": "285,091 (June 30, 2026 vs 321,596 at December 31, 2025, -11%)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Trading assets",
+      "value": "1,062,072 (June 30, 2026 vs 802,873 at December 31, 2025, +32%)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Loans",
+      "value": "1,542,462 (June 30, 2026 vs 1,493,429 at December 31, 2025, +3%)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Allowance for loan losses",
+      "value": "(26,152) (June 30, 2026 vs (25,765) at December 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Deposits",
+      "value": "2,713,700 (June 30, 2026 vs 2,559,320 at December 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Short-term borrowings",
+      "value": "72,430 (June 30, 2026 vs 64,776 at December 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Long-term debt",
+      "value": "460,523 (June 30, 2026 vs 435,206 at December 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Federal funds purchased and securities loaned or sold under repurchase agreements",
+      "value": "704,918 (June 30, 2026 vs 442,396 at December 31, 2025)",
+      "unit": "USD millions",
+      "source_citation": "Other"
+    },
+    {
+      "name": "Allowance for loan losses to retained loans coverage ratio",
+      "value": "1.79% (June 30, 2026 vs 1.85% in the prior year); total allowance for credit losses of 31.5 billion",
+      "unit": "percent",
+      "source_citation": "Other — Noninterest expense"
     }
   ],
   "revenue_segments": [
     {
-      "name": "Investment banking fees",
-      "revenue": "2,858",
-      "yoy_change": "31.2%",
-      "commentary": "Strong growth in advisory and equity underwriting fees.",
-      "source_citation": "Other"
+      "name": "Banking & Wealth Management",
+      "revenue": "11,229 (three months ended June 30, 2026 vs 10,698 in 2025); 21,806 (six months vs 20,952)",
+      "yoy_change": "+5% (Q2 2026 vs Q2 2025); +4% (six months 2026 vs 2025)",
+      "commentary": "Steady but slower growth than Card Services & Auto. Segment ROE was 34% vs 36% in the prior-year quarter and the overhead ratio rose to 55% from 52%.",
+      "source_citation": "Other — Banking & Wealth Management"
     },
     {
-      "name": "Principal transactions",
-      "revenue": "7,987",
-      "yoy_change": "4.9%",
-      "commentary": "Driven by market volatility and client demand.",
-      "source_citation": "Other"
+      "name": "Home Lending",
+      "revenue": "1,285 (three months ended June 30, 2026 vs 1,250 in 2025); 2,517 (six months vs 2,457)",
+      "yoy_change": "+3% (Q2 2026 vs Q2 2025); +2% (six months 2026 vs 2025)",
+      "commentary": "Little growth. Mortgage fees and related income were 325 vs 347 (-6%) in Q2, with production revenue of 147 vs 151 and net mortgage servicing revenue of 178 vs 196.",
+      "source_citation": "Other — Banking & Wealth Management"
     },
     {
-      "name": "Asset management fees",
-      "revenue": "5,515",
-      "yoy_change": "17.3%",
-      "commentary": "Reflects increased client assets and favorable market conditions.",
-      "source_citation": "Other"
+      "name": "Card Services & Auto",
+      "revenue": "7,758 (three months ended June 30, 2026 vs 6,899 in 2025); 15,517 (six months vs 13,751)",
+      "yoy_change": "+12% (Q2 2026 vs Q2 2025); +13% (six months 2026 vs 2025)",
+      "commentary": "Fastest-growing consumer line. Higher auto operating lease income helped: it was 1.2 billion vs 896 million in Q2. Card net interest income is driven by higher revolving balances, which ties growth to credit-cycle exposure.",
+      "source_citation": "Other — Banking & Wealth Management"
     },
     {
-      "name": "Card income",
-      "revenue": "1,190",
-      "yoy_change": "-2.1%",
-      "commentary": "Slight decline due to competitive pressures.",
-      "source_citation": "Other"
+      "name": "Corporate",
+      "revenue": "7,261 total net revenue (six months ended June 30, 2026 vs 3,842 in 2025); net income 4,908 vs 3,388",
+      "yoy_change": "+89% total net revenue (six months 2026 vs 2025)",
+      "commentary": "Noninterest revenue of 5,413 vs 702 reflects the net gain on Visa shares of about 4.6 billion in Q2, which is non-recurring and should be excluded from any run-rate view. Net interest income was 1,848 vs 3,140.",
+      "source_citation": "Financial Statements — Corporate"
     }
   ],
   "forward_guidance": {
-    "text": "No forward guidance issued in this filing.",
-    "source_citation": "MD&A"
+    "text": "\"Management expects net interest income to be approximately $105.5 billion and net interest income excluding Markets to be approximately $96.5 billion, market dependent.\"",
+    "source_citation": "Other — Full-year 2026"
   },
   "key_risks": [
     {
-      "description": "JPMorgan Chase faces risks related to its unit economics and off-balance-sheet liabilities, which could negatively impact its financial performance.",
-      "is_new": true,
-      "source_citation": "MD&A — Risk Factors"
+      "description": "Expense growth is running ahead of the guide. Q2 total noninterest expense was $27.3 billion, up 15%, on revenue-related compensation, wage inflation, headcount growth, brokerage and distribution fees, marketing, technology and occupancy. The roughly $107.5 billion adjusted expense guide implies H2 expense below the Q2 pace. That is hard to reconcile with revenue-linked pay if fees stay strong, and the adjusted-to-reported bridge is not shown in the excerpts.",
+      "is_new": false,
+      "source_citation": "Other — Noninterest expense"
     },
     {
-      "description": "The bank's financial health is under pressure due to a significant increase in reserves for bad loans, indicating potential issues in credit quality.",
+      "description": "Credit support may be thin. The Q2 provision of $2.5 billion (down from $2.8 billion) was supported by net charge-offs of $2.4 billion, down only $44 million. The net reserve build was $149 million, primarily in Wholesale, and Q1 included a $128 million consumer release tied to home prices. Adverse-scenario sensitivities of about $4.8 billion for credit card and $5.0 billion for wholesale show a modest cushion against a macro shock.",
+      "is_new": false,
+      "source_citation": "Other — Noninterest expense"
+    },
+    {
+      "description": "Net interest income depends on volatile Markets activity. Markets NII was $1.9 billion in Q2 vs $0.56 billion a year earlier, while NII excluding Markets grew only 4% to $23.7 billion. The ex-Markets net yield slipped to 3.65% from 3.71%. The full-year guide is explicitly market dependent and implies a sequential H2 step-up.",
+      "is_new": false,
+      "source_citation": "Other"
+    },
+    {
+      "description": "Balance sheet growth is concentrated in Markets and securities financing. Trading assets rose 32% to $1.06 trillion, securities borrowed rose 27%, and repurchase funding rose to $704.9 billion from $442.4 billion. Long-term debt rose to $460.5 billion on net structured note issuance in Markets. This raises sensitivity to client activity, funding conditions and risk-weighted asset (RWA) growth.",
+      "is_new": false,
+      "source_citation": "Other — Beneficial interests issued by consolidated VIEs"
+    },
+    {
+      "description": "Regulatory capital requirements may rise. The Standardized CET1 requirement, including buffers, was 11.5% against a 14.2% actual ratio, which has fallen from 15.1% a year earlier. The Firm expects the U.S. Basel III and GSIB surcharge re-proposals, taken together, to raise required CET1 capital by about 4%, which could limit buyback expansion.",
+      "is_new": false,
+      "source_citation": "Other"
+    },
+    {
+      "description": "Earnings quality is affected by non-recurring items. Q2 noninterest revenue includes a $4.6 billion net gain related to Visa shares, and Investment Banking revenue includes net gains on equity investments. The effective tax rate rose to about 23% in Q2 from about 18% a year earlier, when Corporate included a $774 million tax benefit, so year-over-year comparisons are flattered.",
       "is_new": true,
-      "source_citation": "MD&A — Risk Factors"
+      "source_citation": "Other"
+    },
+    {
+      "description": "Rate sensitivity remains a headwind if rates fall. The earnings-at-risk disclosure shows a -200bp parallel shift costing about $5.1 billion, versus $6.0 billion at year-end. The narrower exposure is positive, but the guide still depends on lower rates not compressing deposit and loan margins faster than balance growth offsets.",
+      "is_new": false,
+      "source_citation": "Other"
+    },
+    {
+      "description": "The Apple Card forward purchase commitment adds consumer credit exposure. The transaction is expected to close about 24 months after the December 30, 2025 commitment and will add to card balances and charge-off exposure.",
+      "is_new": true,
+      "source_citation": "Other"
     }
   ],
   "recent_news": [
     {
-      "headline": "Payments Outlook 2026 Trends Report Released - J.P. Morgan",
-      "date": "",
-      "url": "https://www.jpmorgan.com/payments/newsroom/payments-outlook-2026-trends-report-released",
-      "relevance_note": "Highlights key trends in payments that could impact JPMorgan's growth."
+      "headline": "JPMorgan Chase Q2 2026 earnings: Record profit on trading surge",
+      "date": "Not provided",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/jpmorgan-chase-q2-2026-earnings-115434127.html",
+      "relevance_note": "Reports the full-year NII outlook raised to about $105.5 billion from $103 billion and Q2 NII of $25.6 billion, up 10%."
     },
     {
-      "headline": "JPMorganChase's profits climb on investment banking surge",
-      "date": "",
-      "url": "https://www.americanbanker.com/news/jpmorganchases-profits-climb-on-investment-banking-surge",
-      "relevance_note": "Discusses the impact of investment banking on JPMorgan's earnings."
+      "headline": "2Q26 Earnings Press Release",
+      "date": "Not provided",
+      "url": "https://www.jpmorganchase.com/content/dam/jpmc/jpmorgan-chase-and-co/investor-relations/documents/quarterly-earnings/2026/2nd-quarter/6cded9fd-a164-4e6c-8cff-377357cf105c.pdf",
+      "relevance_note": "Company release giving NII ex-Markets of $23.7 billion (+4%), the provision of $2.5 billion and the $149 million net reserve build."
     },
     {
-      "headline": "JPMorgan Q1 profit drops 70% as it readies for loan defaults",
-      "date": "",
-      "url": "https://www.investmentexecutive.com/news/industry/jpmorgan-1q-profit-drops-70-as-it-readies-for-loan-defaults/",
-      "relevance_note": "Covers the increase in reserves for bad loans and its implications."
+      "headline": "JPMorgan Just Reported $21.2 Billion in Q2 Net Income -- Up 41% -- and CEO Jamie Dimon Said the Economy Is \"Close to as Good as It Gets.\"",
+      "date": "Not provided",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/jpmorgan-just-reported-21-2-210400257.html",
+      "relevance_note": "Covers the Q2 net income, Card Services net charge-off rate and the lowered full-year card charge-off guidance of about 3.2%."
+    },
+    {
+      "headline": "JPMorgan Chase Raises Full-Year Net Interest Income Outlook Despite Missing Q3 Revenue Expectations | TIKR.com",
+      "date": "Not provided",
+      "url": "https://www.tikr.com/blog/jpmorgan-chase-stock-raises-net-interest-income-outlook-q3-2026",
+      "relevance_note": "Post-period coverage citing a further raise in the NII and expense outlook, including expense to about $108.6 billion from $107.5 billion. These figures are not in the filing and need verification."
+    },
+    {
+      "headline": "JPMorgan Q3 2026 Earnings: EPS Miss, Higher NII Outlook, 84% Buyback Cut | Money365.Market",
+      "date": "Not provided",
+      "url": "https://www.money365.market/articles/jp-morgan-q3-2026-earnings-analysis",
+      "relevance_note": "Secondary source citing gross repurchases of $1,057 million and a lower CET1 estimate. This conflicts with the filed H1 repurchase pace and is unverified."
+    },
+    {
+      "headline": "JPMorgan Chase (JPM) Posts +6% Net Income Growth in Q3 2026 with Strong NII Momentum",
+      "date": "Not provided",
+      "url": "https://tickeron.com/blogs/jpmorgan-chase-jpm-posts-6-net-income-growth-in-q3-2026-with-strong-nii-momentum-18984",
+      "relevance_note": "Post-period summary of NII, expense and buyback commentary, with Q4 guidance markers. Not reconciled to the filing."
+    },
+    {
+      "headline": "JPMorgan, Wells Fargo Earnings: Credit Card Defaults Fell",
+      "date": "Not provided",
+      "url": "https://www.stocktitan.net/articles/jpmorgan-wells-fargo-q3-2026-earnings-consumer-credit",
+      "relevance_note": "Discusses provision, net charge-off and reserve build trends relevant to the credit-quality debate."
+    },
+    {
+      "headline": "JPMorgan's Strong Interest Income Offsets Earnings Miss as Dimon Warns of Economic Risks",
+      "date": "Not provided",
+      "url": "https://brief.sharpertrades.com/jpmorgans-strong-interest-income-offsets-earnings-miss-as-dimon-warns-of-economic-risks",
+      "relevance_note": "Cites NII growth and a preliminary 2027 outlook of about $107 billion for NII excluding Markets."
+    },
+    {
+      "headline": "JPMorgan Q2 2026 Earnings Surpass Expectations - Borderless",
+      "date": "Not provided",
+      "url": "https://alpha-blog.stockal.com/2026/07/24/jpmorgan-q2-2026-earnings-surpass-expectations",
+      "relevance_note": "Summarizes record Q2 net income of $21.2 billion and the NII guidance raise to about $105.5 billion."
+    },
+    {
+      "headline": "JPMorgan Is Blocking Outside AI Agents and Taking Its Deposit Token to Ethereum. Here's What Both Moves Protect",
+      "date": "Not provided",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/jpmorgan-blocking-outside-ai-agents-203533771.html",
+      "relevance_note": "Covers deposit-franchise defense through AI-agent blocking and the JPM Coin expansion to Ethereum."
+    },
+    {
+      "headline": "JPM Coin: Bank-Backed USD Deposit Token from Kinexys by J.P. Morgan",
+      "date": "Not provided",
+      "url": "https://www.jpmorgan.com/kinexys/jpm-coin",
+      "relevance_note": "Company description of the tokenized deposit product; no financial contribution is disclosed."
+    },
+    {
+      "headline": "JPMorgan blocks outside AI agents from operating customer accounts",
+      "date": "Not provided",
+      "url": "https://cryptobriefing.com/jpmorgan-blocks-external-ai-agents-accounts",
+      "relevance_note": "Describes restrictions on agent-led payments and transfers as the bank pilots its own Smart Cash tool."
     }
   ],
   "bull_case": [
-    "JPMorgan Chase has demonstrated strong growth in investment banking and payments, with investment banking revenue rising 38% year-over-year and payments revenue increasing by 12%. This suggests robust demand and operational strength, positioning the firm for continued success.",
-    "The firm's strategic focus on renewable energy financing and acquisitions, such as the purchase of First Republic Bank, enhances its competitive advantage and positions it for long-term growth.",
-    "JPMorgan's effective management of credit losses and tax benefits, evidenced by a decrease in the provision for credit losses and an improved effective tax rate, indicates strong risk management and profitability."
+    "Q2 2026 net income was $21.2 billion, up about 41%, with diluted EPS of $7.70 vs $5.24. Six-month ROE reached 22% vs 18% and the overhead ratio improved to 51% from 53%.",
+    "Capital generation comfortably funds the payout. Six-month net income applicable to common equity of $37.1 billion covered $8.1 billion of dividends and $13.8 billion of net treasury stock purchases, and CET1 capital still grew about $14.2 billion to $302.6 billion. A new $50 billion repurchase authorization became effective July 1, 2026 and the quarterly dividend was lifted to $1.65.",
+    "Fee franchises are compounding. Investment Banking revenue was $3.9 billion, up 45%, with fees up 30%, and the Firm ranked #2 globally. Asset Management revenue was $3.3 billion, up 23%, on higher average market levels and strong net inflows.",
+    "Core spread income is growing on volume. NII excluding Markets was $23.7 billion, up 4%, on higher deposits, revolving card balances and wholesale loans despite lower rates. Management raised full-year NII guidance to about $105.5 billion.",
+    "Card Services & Auto revenue grew 12% and the Apple Card portfolio adds a long-dated growth option. The deposit-token and Kinexys stack could widen the deposit moat over time.",
+    "The balance sheet has ample cushion. The CET1 ratio of 14.2% compares with a requirement of 11.5%, and the allowance for credit losses of $31.5 billion (1.79% of retained loans) remains substantial."
   ],
   "bear_case": [
-    "JPMorgan Chase faces significant risks related to its unit economics and off-balance-sheet liabilities, which could lead to a decline in financial performance. The increased reserve for bad loans signals potential issues in credit quality.",
-    "The bank's capital allocation strategy is under pressure due to high levels of cash used in investing activities, which may hinder its ability to support long-term growth without adjustments.",
-    "Despite strong revenue growth in key segments, the broader economic context and potential regulatory changes could impact future growth, especially in the investment banking sector."
+    "Headline growth is flattered by non-recurring items: a $4.6 billion Visa share gain, net gains on equity investments in Investment Banking, and a lower year-over-year effective tax rate comparison. Run-rate earnings power is lower than the reported $7.70 diluted EPS suggests.",
+    "The NII guide is market dependent. Markets NII was $1.9 billion in Q2, ex-Markets growth was only 4%, and the ex-Markets net yield slipped to 3.65% from 3.71%. The $105.5 billion guide implies roughly $27.3 billion of NII per quarter in H2 vs $25.5 billion reported in Q2 (about +7%), a ramp that depends on volatile trading balances.",
+    "Expense growth of 15% in Q2 is hard to square with the roughly $107.5 billion adjusted expense guide, which implies about $26.7 billion per quarter in H2 vs $27.3 billion in Q2 if the definitions are comparable. Revenue-linked compensation should not fall if fees stay strong, so operating leverage is not assured.",
+    "Credit support is thin. Net charge-offs fell only $44 million, the net reserve build was $149 million and the allowance is flat year to date. Adverse-scenario sensitivities of about $4.8 billion for card and $5.0 billion for wholesale could reverse provision relief quickly.",
+    "The CET1 ratio has declined for four consecutive quarters, to 14.2% from 15.1%, because RWA growth is outpacing capital. Basel III and GSIB re-proposals could raise required CET1 by about 4%, which supports holding the buyback pace flat rather than expanding it.",
+    "Balance sheet growth in trading assets (+32%) and repo financing is client-activity dependent and consumes capital. Unverified secondary reports of a sharply lower buyback pace add noise until management confirms the repurchase run rate."
   ],
   "what_to_watch": [
     {
-      "text": "**Investment Banking Performance:** JPMorgan Chase's investment banking revenue rose 38% year-over-year, indicating strong demand and operational strength. This growth is a critical factor for the firm's future success and market positioning. However, potential regulatory changes and market volatility could impact sustainability. \n\n-> Monitor investment banking revenue growth and any regulatory updates affecting this segment.",
+      "text": "**Net Interest Income Guide and the H2 Ramp:** Management guides to about $105.5 billion of full-year NII and $96.5 billion ex-Markets, up from $103 billion previously. H1 NII was $50.9 billion, so the guide implies roughly $27.3 billion per quarter in H2 vs $25.5 billion in Q2, and the implied $9 billion of Markets NII needs about $4.9 billion in H2 vs $4.1 billion in H1. NII ex-Markets grew 4% on deposit, card revolving and wholesale loan growth, which is a volume-driven base. However, the ex-Markets net yield compressed to 3.65% from 3.71% and the guide is explicitly market dependent, so the raise depends on trading activity holding up. Later news cites a further raise to about $106.2 billion, which must be reconciled to company disclosure.\n\n-> Monitor Markets NII, NII ex-Markets vs the roughly $24 billion-plus quarterly run rate needed, the ex-Markets net yield, and any revision to the $105.5 billion and $96.5 billion guides.",
       "relevant_urls": [
-        "https://www.americanbanker.com/news/jpmorganchases-profits-climb-on-investment-banking-surge"
+        "https://finance.yahoo.com/markets/stocks/articles/jpmorgan-chase-q2-2026-earnings-115434127.html",
+        "https://www.jpmorganchase.com/content/dam/jpmc/jpmorgan-chase-and-co/investor-relations/documents/quarterly-earnings/2026/2nd-quarter/6cded9fd-a164-4e6c-8cff-377357cf105c.pdf",
+        "https://www.tikr.com/blog/jpmorgan-chase-stock-raises-net-interest-income-outlook-q3-2026"
       ]
     },
     {
-      "text": "**Credit Quality and Loan Reserves:** The significant increase in reserves for bad loans suggests potential issues in credit quality. While this may indicate proactive risk management, it also raises concerns about underlying credit risks. \n\n-> Watch for changes in loan reserves and management commentary on credit quality.",
+      "text": "**Fee Momentum and the Beat-and-Raise Setup:** Investment Banking revenue was $3.9 billion, up 45%, with fees up 30% and a #2 global ranking. Management has already raised NII guidance, and Asset Management revenue grew 23%, which supports an upside setup. However, the Investment Banking gain includes net gains on equity investments that are not durable. The NII guide already requires about a 7% sequential step-up with ex-Markets growth of only 4%, so a beat is not assured and a miss is plausible. Post-period news also shows Investment Banking fees falling 8% sequentially despite year-over-year growth.\n\n-> Monitor Investment Banking fee trends and pipeline commentary, equity investment gains vs fees, and Asset Management net inflows against the guide.",
       "relevant_urls": [
-        "https://www.investmentexecutive.com/news/industry/jpmorgan-1q-profit-drops-70-as-it-readies-for-loan-defaults/"
+        "https://www.tikr.com/blog/jpmorgan-chase-stock-raises-net-interest-income-outlook-q3-2026",
+        "https://www.jpmorganchase.com/content/dam/jpmc/jpmorgan-chase-and-co/investor-relations/documents/quarterly-earnings/2026/2nd-quarter/6cded9fd-a164-4e6c-8cff-377357cf105c.pdf"
       ]
     },
     {
-      "text": "**Capital Allocation Strategy:** JPMorgan's high levels of cash used in investing activities could pressure its ability to support long-term growth. The firm's strategy in managing these investments will be crucial for sustaining growth. \n\n-> Focus on cash flow statements and strategic investment disclosures.",
+      "text": "**Capital Returns and CET1:** H1 net income applicable to common equity of $37.1 billion covered $8.1 billion of dividends and $13.8 billion of net treasury stock purchases, and CET1 capital grew about $14.2 billion to $302.6 billion. Repurchases were $6.7 billion in Q2 and $15.0 billion in H1, in line with a year earlier, and a new $50 billion authorization began July 1 with about $18.4 billion left under the prior program. However, the CET1 ratio has slid to 14.2% from 15.1% on RWA growth, and the Basel III and GSIB re-proposals could raise required CET1 by about 4%. Secondary reports of a sharp buyback cut cite figures that conflict with the filed data and remain unconfirmed.\n\n-> Monitor quarterly gross repurchases vs the roughly $7.5 billion H1 run rate, the CET1 ratio vs the 11.5% requirement, and any commentary on the pace under the new $50 billion authorization.",
+      "relevant_urls": [
+        "https://www.money365.market/articles/jp-morgan-q3-2026-earnings-analysis",
+        "https://tickeron.com/blogs/jpmorgan-chase-jpm-posts-6-net-income-growth-in-q3-2026-with-strong-nii-momentum-18984"
+      ]
+    },
+    {
+      "text": "**Expense Trajectory and Operating Leverage:** Q2 noninterest expense was $27.3 billion, up 15%, driven by revenue-related compensation, wage inflation and headcount growth. Annualized, that is about $109 billion against a roughly $107.5 billion adjusted expense guide, implying H2 spending near $26.7 billion per quarter. Fee strength in wealth and investment banking means variable compensation should scale with revenue, and the adjusted and reported definitions may differ. However, if revenue cools the fee thesis weakens, and if it does not, expenses may overshoot, so margin expansion is not guaranteed. Later news cites an expense forecast raised to about $108.6 billion.\n\n-> Monitor adjusted expense vs the guide, the adjusted-to-reported bridge, the overhead ratio and compensation commentary.",
+      "relevant_urls": [
+        "https://www.tikr.com/blog/jpmorgan-chase-stock-raises-net-interest-income-outlook-q3-2026",
+        "https://www.jpmorganchase.com/content/dam/jpmc/jpmorgan-chase-and-co/investor-relations/documents/quarterly-earnings/2026/2nd-quarter/6cded9fd-a164-4e6c-8cff-377357cf105c.pdf"
+      ]
+    },
+    {
+      "text": "**Credit Quality and Reserve Posture:** The Q2 provision was $2.5 billion vs $2.8 billion, net charge-offs were $2.4 billion (down $44 million), and the allowance coverage ratio was 1.79% vs 1.85%. Management lowered the full-year Card Services net charge-off rate guidance to about 3.2% from 3.4%, which supports a benign view. However, the net reserve build of $149 million was concentrated in Wholesale and the allowance is flat year to date, so lower provisions reflect smaller builds more than demonstrated improvement. Adverse-scenario sensitivities of roughly $4.8 billion for card and $5.0 billion for wholesale show how fast the benefit could reverse.\n\n-> Monitor the Card Services net charge-off rate vs the guide, the size and mix of the net reserve build, wholesale nonaccruals and the allowance coverage ratio.",
+      "relevant_urls": [
+        "https://www.stocktitan.net/articles/jpmorgan-wells-fargo-q3-2026-earnings-consumer-credit",
+        "https://finance.yahoo.com/markets/stocks/articles/jpmorgan-just-reported-21-2-210400257.html"
+      ]
+    },
+    {
+      "text": "**Card Franchise and the Apple Card Transaction:** Card Services & Auto revenue rose 12% to $7.76 billion in Q2 and 13% in H1, supporting the case that card economics cushion rate sensitivity alongside deposit growth. The Apple Card forward purchase commitment is expected to close about 24 months after December 30, 2025, so it is optionality rather than near-term earnings. However, card NII depends on revolving balances and card is also the main source of net charge-offs, so the diversification away from rates comes with greater credit-cycle exposure. Auto operating lease income of $1.2 billion also contributed to growth.\n\n-> Monitor card loan and revolving balance growth, Card NII, the card charge-off rate and any update on Apple Card closing timing and portfolio size.",
+      "relevant_urls": [
+        "https://finance.yahoo.com/markets/stocks/articles/jpmorgan-just-reported-21-2-210400257.html"
+      ]
+    },
+    {
+      "text": "**Markets Balance Sheet Growth and Funding:** Trading assets rose 32% to $1.06 trillion, securities borrowed rose 27%, and repurchase funding rose to $704.9 billion from $442.4 billion. Long-term debt reached $460.5 billion on net structured note issuance tied to client demand, and the filing links this growth to client-driven activity and prime brokerage. This supports Markets revenue and NII, but it also drives RWA growth and the decline in the CET1 ratio. On the other hand, a larger financing book carries more sensitivity to market conditions.\n\n-> Monitor trading assets, RWA growth, structured note issuance and Markets NII and noninterest revenue together.",
       "relevant_urls": []
     },
     {
-      "text": "**Payments Segment Growth:** The payments segment showed a 12% increase in revenue, driven by key trends such as real-time liquidity and AI-powered fraud defense. This growth trajectory is vital for JPMorgan's earnings outlook. \n\n-> Track developments in the payments segment and related technological advancements.",
+      "text": "**Deposit Franchise, Tokenized Deposits and AI Agents:** Deposits rose to $2.71 trillion from $2.56 trillion, driven in part by net inflows in Corporate and Investment Bank Payments. Kinexys and JPM Coin extend the deposit franchise toward on-chain settlement, and management has said it blocks outside AI agents that log in with customer credentials. However, the filing gives no Kinexys revenue or deposit-token volume, so this is a strategic option rather than a sized earnings driver.\n\n-> Monitor deposit growth and mix, Payments volumes and any quantified disclosure on tokenized deposits or agentic-payments policy.",
       "relevant_urls": [
-        "https://www.jpmorgan.com/payments/newsroom/payments-outlook-2026-trends-report-released"
+        "https://finance.yahoo.com/markets/stocks/articles/jpmorgan-blocking-outside-ai-agents-203533771.html",
+        "https://www.jpmorgan.com/kinexys/jpm-coin",
+        "https://cryptobriefing.com/jpmorgan-blocks-external-ai-agents-accounts"
       ]
-    },
-    {
-      "text": "**Off-Balance-Sheet Liabilities:** Concerns about off-balance-sheet liabilities could impact JPMorgan's financial health. These liabilities may present hidden risks that need careful monitoring. \n\n-> Examine disclosures related to off-balance-sheet commitments and any changes in risk management strategies.",
-      "relevant_urls": []
     }
   ],
   "data_gaps": [
-    "The filing did not provide specific forward guidance on revenue or earnings expectations for the upcoming quarters."
+    "Net cash provided by/(used in) operating activities for the six months ended June 30, 2026 is truncated in the provided chunks, so operating cash flow and free cash flow cannot be reported.",
+    "Gross margin or gross profit is not a reported line item in the provided chunks.",
+    "The adjusted expense outlook amount is truncated in the retrieved guidance text (approximately $107.5, with the unit cut off), and the adjusted-to-reported expense reconciliation was not provided.",
+    "Q2 2026 total net revenue and Q2 net interest income on a reported basis were not shown in the provided chunks; only six-month figures and the managed-basis NII were available.",
+    "CET1 ratio, capital rollforward and repurchase tables were referenced in the analysis but their filing chunks were not included in the provided chunks.",
+    "Segment revenue for Commercial & Investment Bank and Asset & Wealth Management was not included in the provided chunks."
   ],
   "hypotheses_explored": [
     {
+      "id": "h1",
+      "proposing_personality": "Conservative",
+      "question": "Are JPM's H1 2026 capital returns funded by organic earnings rather than by drawing down CET1, and is the CET1 decline from 15.1% to 14.2% a sign that buybacks will have to slow?",
+      "summary": "Earnings cover the payout: H1 net income applicable to common equity of $37,065M funded $8,100M of dividends and $13,842M of net treasury stock purchases, and CET1 capital still grew $14,150M to $302,619M. The ratio fell from 15.1% to 14.2% because RWA growth outpaced capital. Buybacks were steady at about $15B for H1. The CET1 requirement is 11.5% and the Basel and GSIB re-proposals could add about 4%, so the pace looks sustainable but not expandable.",
+      "evidence_quotes": [
+        "Net income applicable to common equity 37,065; Dividends declared on common stock (8,100); Net purchase of treasury stock (13,842)",
+        "Change in Standardized/Advanced CET1 capital 14,150; Standardized/Advanced CET1 capital at June 30, 2026 $302,619",
+        "Aggregate purchase price of common stock repurchases: three months ended June 30, 2026 $6,703M vs $7,500M in 2025; six months $15,031M vs $15,063M",
+        "The Firm's Standardized CET1 capital ratio requirement, including regulatory buffers, was 11.5% as of June 30, 2026.",
+        "The Firm expects that the changes in requirements reflected in the U.S. Basel III Re-Proposal and the GSIB Surcharge Re-Proposal, taken together, would result in an increase in the Firm's required CET1 capital of approximately 4%"
+      ],
+      "confidence": 4
+    },
+    {
       "id": "h2",
       "proposing_personality": "Conservative",
-      "question": "Is JPM's capital allocation strategy disciplined enough to support long-term growth?",
-      "summary": "JPM's capital allocation appears to be under pressure due to high levels of cash used in investing activities, which may hinder its ability to support long-term growth without adjustments to its current strategy.",
+      "question": "Is there a verified reduction in JPM's buyback pace after Q2 2026, such as the reported 84% cut, and does it conflict with the filed repurchase data?",
+      "summary": "The reported buyback cut is unverified and inconsistent with the filing. Q2 2026 repurchases were $6,703M, a new $50B authorization took effect July 1, 2026, and about $18.4B remained under the old program. The excess-capital estimate and cautious-buyback language in the news are not in the filing. The earnings call should test whether the post-Q2 pace falls below the H1 run rate of about $7.5B per quarter.",
       "evidence_quotes": [
-        "In 2026, cash used resulted from higher securities purchased under resale agreements, net purchases of investment securities and net originations of loans.; In 2025, cash used resulted from net loan originations, net purchases of investment securities and higher securities purchased under resale agreements."
+        "JPMorgan Q3 2026 Earnings: EPS Miss, Higher NII Outlook, 84% Buyback Cut — gross repurchases of $1,057 million and an estimated CET1",
+        "including a more cautious approach to share buybacks in favor of organic growth — will shape how efficiently the firm deploys its roughly $30 billion in estimated excess capital",
+        "On June 24, 2026, the Firm announced that its Board of Directors had authorized a new $50 billion common share repurchase program, effective July 1, 2026. Dollar value of remaining authorized repurchase (in millions) June $18,392",
+        "Aggregate purchase price of common stock repurchases three months ended June 30, 2026: $6,703"
       ],
-      "confidence": 3
+      "confidence": 2
     },
     {
       "id": "h3",
       "proposing_personality": "Contrarian",
-      "question": "Is JPMorgan Chase's recent performance being underestimated due to its strong growth in investment banking and payment services?",
-      "summary": "Despite the prevailing bearish sentiment, JPMorgan's strong revenue growth in investment banking and payments suggests that it is well-positioned for continued success. The firm's investment banking revenue rose 38% year-over-year, and payments revenue increased by 12%, indicating robust demand and operational strength.",
+      "question": "Is the raised 2026 NII guide ($105.5B) durable, or does it rest on Markets NII that is volatile and implies a steep second-half ramp?",
+      "summary": "The raise depends on Markets NII, which is volatile and was excluded from the core trend. NII ex-Markets grew only 4% in Q2 and its net yield slipped. The guide implies roughly $9B of Markets NII for the year against $4.1B in H1, so H2 must run well above the first-half pace. The guide is explicitly market dependent.",
       "evidence_quotes": [
-        "\"Investment Banking revenue rose 38% year-over-year, reaching $3,136 million\" (1Q26).; \"Payments revenue increased by 12%, totaling $5,123 million\" (1Q26)."
+        "Management expects net interest income to be approximately $105.5 billion and net interest income excluding Markets to be approximately $96.5 billion, market dependent.",
+        "Less: Markets net interest income (b) 1,945 561 247 4,144 1,346 208",
+        "Net interest income excluding Markets $ 23,677 $ 22,753 4",
+        "Net yield on average interest-earning assets excluding Markets 3.65 % 3.71 %",
+        "JPMorgan also revised its full-year net interest income outlook upward to roughly $105.5 billion, compared with the $103 billion guidance the bank had issued three months earlier, according to Bloomberg."
       ],
-      "confidence": 4
+      "confidence": 3
     },
     {
       "id": "h4",
       "proposing_personality": "Contrarian",
-      "question": "Could the market be overlooking JPMorgan's effective management of credit losses and tax benefits that enhance its profitability?",
-      "summary": "The decrease in the provision for credit losses and the improved effective tax rate indicate that JPMorgan is managing risks effectively while benefiting from favorable tax conditions, which could lead to stronger net income than the market anticipates.",
+      "question": "Is the credit and expense backdrop as benign as the consensus assumes, given provisions are falling while expense guidance implies a second-half slowdown?",
+      "summary": "Provision fell year over year, nonaccrual loans improved and reserves are flat, but the provision decline is itself a source of earnings support that can reverse. The adjusted expense guide implies an H2 run rate below the first half, which only holds if expense definitions are comparable, and the excerpts do not confirm this. Card net charge-offs still sit inside a revolving-balance-driven NII engine.",
       "evidence_quotes": [
-        "\"Provision for credit losses decreased to $2,507 million from $4,655 million in the previous quarter\" (1Q26).; \"The effective tax rate decreased to 19.5%, driven by higher tax benefits related to the vesting of employee share-based awards\" (1Q26)."
+        "The provision for credit losses was $2.5 billion. Net charge-offs were $2.4 billion, down $44 million. The net reserve build was $149 million, primarily in Wholesale.",
+        "Net interest income was $29.8 billion, up 5%, reflecting higher Card Services NII, largely driven by higher revolving balances.",
+        "net charge-offs were $2.1 billion and the allowance for credit losses was relatively flat.",
+        "Consolidated six-month total noninterest expense of $54,166 million versus full-year adjusted expense guidance of approximately $107.5 (truncated in source)"
       ],
-      "confidence": 4
+      "confidence": 2
     },
     {
       "id": "h5",
       "proposing_personality": "Dreamer",
-      "question": "What are the potential long-term growth drivers for JPMorgan Chase, and how is the company positioning itself to capitalize on these opportunities over the next 5-10 years?",
-      "summary": "JPMorgan Chase is strategically positioning itself for long-term growth through targeted acquisitions and a strong focus on renewable energy financing, which could enhance its competitive advantage in an evolving market.",
+      "question": "Could JPM's tokenized deposit rail (JPM Coin / Kinexys) become a settlement layer that widens the deposit franchise over 5-10 years, and is that optionality visible in current disclosures?",
+      "summary": "The tokenized deposit and Kinexys stack is a long-dated option on becoming a default on-chain settlement layer for institutional and possibly agent-driven payments, extending the deposit moat beyond the NII cycle. The evidence supports the strategic direction but not a financial contribution: the filing gives no Kinexys revenue or deposit-token volume, so this is directional and not a sized thesis.",
       "evidence_quotes": [
-        "The 2023 acquisition of First Republic Bank for $10.6 billion perfectly illustrates JPMorgan Chase's core growth strategy: turning market turmoil into a decisive competitive advantage.; JPMorgan Chase's commitment to financing renewable energy projects on a large scale reflects its strategic initiative to align with global sustainability trends and capitalize on the growing demand for green financing."
+        "A tokenized deposit is a digital representation of a commercial bank deposit recorded on a blockchain network. With JPM Coin, the token is backed by USD deposits held in J.P. Morgan bank accounts.",
+        "JPMorgan Kinexys's Digital Assets platform processed over US$430 billion repo transactions since launching in November 2020.",
+        "On October 19, the bank expanded JPM Coin, a token representing dollar deposits held at JPMorgan, from Base to Ethereum for institutional clients.",
+        "an increase in CIB due to net inflows related to client-driven activities, primarily in Payments, partially offset by net maturities of structured notes in Markets"
       ],
-      "confidence": 4
+      "confidence": 2
     },
     {
       "id": "h6",
       "proposing_personality": "Dreamer",
-      "question": "How is JPMorgan Chase leveraging its acquisitions to enhance its market position and long-term growth potential?",
-      "summary": "JPMorgan Chase's acquisition of First Republic Bank not only expands its asset base significantly but also reinforces its status as a 'fortress' bank, positioning it to better withstand market fluctuations and capitalize on future opportunities.",
+      "question": "Is JPM's consumer card franchise, now expanding via the Apple Card transaction, a durable compounding engine that makes the bank less dependent on rate-sensitive NII?",
+      "summary": "If card balances and the Apple Card portfolio compound over a multi-year horizon, the earnings mix shifts toward fee and card economics less exposed to the rate cycle. Q2 supports this directionally: card revenue grew 12% and NII ex-Markets grew 4%. The Visa gain inflates the headline and should be excluded from run-rate views. The Apple Card close is about 24 months out, so it is optionality and not near-term earnings.",
       "evidence_quotes": [
-        "JPMorgan Chase's acquisition of First Republic underscored its status as the banking system's 'fortress,' adding roughly $200 billion in assets and stabilizing its market position."
+        "Card Services & Auto 7,758 vs 6,899 (up 12%)",
+        "NII excluding Markets was $23.7 billion, up 4%.",
+        "NIR was $31.8 billion, up 47%, predominantly driven by the $4.6 billion net gain related to Visa shares",
+        "The Firm entered into a forward purchase commitment on December 30, 2025 to acquire the Apple credit card portfolio, with an expected closing date approximately 24 months thereafter."
       ],
-      "confidence": 5
-    },
-    {
-      "id": "h7",
-      "proposing_personality": "Optimist",
-      "question": "What evidence supports the notion that JPMorgan Chase is experiencing sustainable growth in its key business segments, particularly in investment banking and payments, and how might this impact its earnings outlook?",
-      "summary": "JPMorgan Chase is poised for continued growth driven by robust performance in investment banking and a favorable outlook in payments, supported by key trends that enhance its market position.",
-      "evidence_quotes": [
-        "JPMorganChase saw profits climb in the first quarter of 2026, as strong investment banking activity driven by market volatility lifted earnings. (American Banker); In the latest Payments Outlook, J.P. Morgan Payments outlines five key trends shaping the treasury and payments landscape in 2026. (J.P. Morgan Payments)"
-      ],
-      "confidence": 4
+      "confidence": 3
     },
     {
       "id": "h8",
       "proposing_personality": "Optimist",
-      "question": "What evidence supports the notion that JPMorgan Chase is experiencing sustainable growth in its key business segments, particularly in investment banking and payments, and how might this impact its earnings outlook?",
-      "summary": "The combination of a surge in investment banking profits and strategic trends in payments indicates a strong growth trajectory for JPMorgan, enhancing its earnings potential.",
+      "question": "Is JPM's wealth and asset management franchise a durable fee engine that can offset expense growth and drive operating leverage into 2027?",
+      "summary": "Asset Management and Global Private Bank are compounding through net inflows and market levels, creating recurring fee revenue that is less cyclical than deal fees. Expense growth is elevated but largely tied to revenue-linked compensation and advisor growth. The counterpoint is that expense is growing at a pace similar to revenue, so margin expansion is not guaranteed. The roughly $107.5B adjusted expense guide may be manageable if fees keep compounding, though part of the support comes from news summaries.",
       "evidence_quotes": [
-        "Explore five trends shaping payments, from real-time liquidity and AI-powered fraud defense to blockchain settlements and personalized experiences. (J.P. Morgan Payments); We expect a year of promise and pressure in 2026, characterized by positive economic growth and higher equity markets. (J.P. Morgan Private Bank)"
+        "Revenue from Asset Management was $3.3 billion, up 23%, driven by: higher asset management fees, reflecting higher average market levels and strong net inflows",
+        "Noninterest expense was $4.2 billion, up 13%, largely driven by higher compensation, primarily higher revenue-related compensation and continued growth in private banking advisor teams",
+        "Noninterest expense was $27.3 billion, up 15%, predominantly driven by higher compensation expense as a result of higher revenue-related compensation, wage inflation and growth in the number of employees",
+        "Management expects adjusted expense to be approximately $107.5",
+        "Net interest income rose 13% to $27.1 billion, helped by higher deposit balances and loan growth."
       ],
-      "confidence": 4
+      "confidence": 3
+    },
+    {
+      "id": "h9",
+      "proposing_personality": "Pessimist",
+      "question": "Is JPM's falling consumer credit cost partly a reserve-release and loan-growth artifact that flatters 2026 provisions, rather than underlying improvement in card and wholesale credit?",
+      "summary": "Provision relief looks more flattering than it is. Consumer reserves were cut by a net $128M on home-price improvement, card net charge-offs were driven by loan growth, and wholesale reserve builds are offset by allowance reductions elsewhere. The adverse-scenario sensitivity shows roughly $4.8B of card and $5.0B of wholesale exposure, so a modest macro shock could reverse the benefit quickly.",
+      "evidence_quotes": [
+        "a net reduction in the allowance for credit losses of $128 million, predominantly driven by improvements in home prices in the first quarter of 2026",
+        "$2.2 billion in consumer, reflecting net charge-offs of $2.2 billion, predominantly driven by Card Services, primarily due to loan growth. The allowance for credit losses was relatively flat",
+        "An increase of approximately $4.8 billion for credit card loans",
+        "An increase of approximately $5.0 billion for wholesale loans and lending-related commitments"
+      ],
+      "confidence": 3
     },
     {
       "id": "h10",
       "proposing_personality": "Pessimist",
-      "question": "What are the specific risks related to JPMorgan Chase's unit economics and off-balance-sheet liabilities that could negatively impact its financial performance in the upcoming earnings call?",
-      "summary": "The bank's financial health is under pressure, with indications of a significant increase in reserves for bad loans and a potential need for further adjustments in its off-balance-sheet commitments. This suggests that JPMorgan may be masking deeper issues in its lending practices and overall risk management.",
+      "question": "Is the full-year NII guidance overstated, because ex-Markets net interest income is growing slowly and the rate sensitivity cushion has shrunk?",
+      "summary": "Core banking NII growth is decelerating: ex-Markets NII grew only 4% and the ex-Markets net yield compressed, while headline growth depends on volatile Markets revenue. The full-year guide is explicitly market dependent. A -200bp shift costs $5.1B vs $6.0B at year-end; this indicates a narrower downside exposure than at year-end, which cuts against the claim that the cushion has shrunk.",
       "evidence_quotes": [
-        "JPMorgan Chase has total assets of $4,900.5B and total equity of $364.0B. Total deposits are $2,675.5B, and total loans are $1,526.4B. It has sufficient allowance for bad loans, which are currently at 0.6% of total loans."
+        "Net interest income excluding Markets 23,677 vs 22,753, change 4%",
+        "Net yield on average interest-earning assets excluding Markets 3.65% vs 3.71%",
+        "Management expects net interest income to be approximately $105.5 billion and net interest income excluding Markets to be approximately $96.5 billion, market dependent.",
+        "-200 bps shift in rates (5.1) (6.0)"
       ],
       "confidence": 3
     },
     {
       "id": "h11",
       "proposing_personality": "Quant",
-      "question": "What is the year-over-year growth in net interest income and total revenue for JPMorgan Chase, and what does this indicate about its financial health?",
-      "summary": "JPMorgan Chase has demonstrated solid year-over-year growth in both net interest income and total revenue, indicating a positive trajectory for the firm's financial health.",
+      "question": "Does JPM's full-year 2026 guidance imply a second-half step-up in net interest income and a second-half decline in expense versus the Q2 run-rate, and is that math credible?",
+      "summary": "Guided FY26 NII of about $105.5B against H1 reported NII of $50.9B implies roughly $54.6B in H2, or about $27.3B per quarter, vs $25.5B reported in Q2 (about +7% QoQ). Guided adjusted expense of about $107.5B against H1 reported expense of $54.2B implies roughly $53.3B in H2, or about $26.7B per quarter, vs $27.3B in Q2 (about -2% QoQ). These are derivations from the filing's numbers and not company disclosures, and they mix reported and adjusted bases. The NII lift is more dependent on Markets NII.",
       "evidence_quotes": [
-        "Net interest income – reported: $25,366 million for Q1 2026, up 9% from $23,273 million in Q1 2025 (retrieve_filing).; Total net revenue was reported at $50.5 billion for Q1 2026, reflecting a 10% growth compared to the previous year (search_news)."
+        "Management expects net interest income to be approximately $105.5 billion and net interest income excluding Markets to be approximately $96.5 billion, market dependent.",
+        "Management expects adjusted expense to be approximately $107.5 (guidance text truncated in retrieval)",
+        "Noninterest expense was $27.3 billion, up 15%, predominantly driven by higher compensation expense as a result of higher revenue-related compensation, wage inflation and growth in the number of employees",
+        "Total noninterest expense 54,166 (six months 2026, reported) vs 47,376 (six months 2025)",
+        "Net interest income – managed basis $25,622 (three months ended June 30, 2026) vs $23,314 (2025), up 10%"
       ],
-      "confidence": 5
+      "confidence": 3
     },
     {
       "id": "h12",
       "proposing_personality": "Quant",
-      "question": "How does the growth in net income and revenue for JPMorgan Chase compare to previous years, and what implications does this have for future performance?",
-      "summary": "JPMorgan Chase's net income and revenue growth in Q1 2026 suggests a strong performance compared to previous years, indicating a robust outlook for future earnings.",
+      "question": "Is JPM's NII growth of 10% in Q2 2026 broad-based, or is it being driven by Markets NII that may not repeat?",
+      "summary": "The 10% reported NII growth in Q2 is largely a Markets story: Markets NII rose to $1.9B from $0.56B while NII excluding Markets grew only 4% to $23.7B. The ex-Markets net yield compressed to 3.65% from 3.71% and the managed net yield fell to 2.40% from 2.43%. Core spread income is growing on balance-sheet volume and not on margin, so the guidance raise to $105.5B is sensitive to trading activity. A counterpoint is that Markets NII is largely offset by Markets noninterest revenue and the ex-Markets guide is the cleaner signal.",
       "evidence_quotes": [
-        "Net income was $16.5 billion for Q1 2026, up 13% year over year (search_news).; Total net revenue was $49.8 billion for Q1 2026, indicating a 10% increase compared to Q1 2025 (search_news)."
+        "Net interest income excluding Markets was $23.7 billion, up 4%, driven by higher deposit balances, higher revolving balances in Card Services and higher wholesale loan balances, largely offset by the impact of lower rates.",
+        "Less: Markets net interest income (b) 1,945 561 247 — Net interest income excluding Markets 23,677 22,753 4",
+        "Net yield on average interest-earning assets excluding Markets 3.65% 3.71%",
+        "Net yield on average interest-earning assets – managed basis 2.40% 2.43%",
+        "JPMorgan also revised its full-year net interest income outlook upward to roughly $105.5 billion, compared with the $103 billion guidance the bank had issued three months earlier, according to Bloomberg."
       ],
-      "confidence": 5
+      "confidence": 4
     },
     {
-      "id": "h9",
-      "proposing_personality": "Pessimist",
-      "question": "What are the specific risks related to JPMorgan Chase's unit economics and off-balance-sheet liabilities that could negatively impact its financial performance in the upcoming earnings call?",
-      "summary": "JPMorgan Chase is facing significant risks related to deteriorating unit economics and increased off-balance-sheet liabilities, which could lead to a substantial decline in its financial performance. The bank's increased reserve for bad loans signals a worrying trend in credit quality, while its reliance on off-balance-sheet commitments presents hidden risks that may not be fully disclosed.",
+      "id": "h7",
+      "proposing_personality": "Optimist",
+      "question": "Can JPM's fee momentum and NII ex-Markets outlook support upside to the full-year 2026 guidance, given Investment Banking strength and the recent guidance raise?",
+      "summary": "Investment Banking is re-accelerating with share gains, and management has lifted NII ex-Markets guidance and set a preliminary 2027 estimate, which points to a possible beat-and-raise setup. However, the guidance is explicitly market dependent, the Investment Banking gain includes non-durable equity investment gains, and the guide already requires about a 7% sequential NII step-up with ex-Markets growth of only 4%. News NII figures for Q3 do not reconcile with the filing's Q2 NII of $25.5B and should be checked against official releases.",
       "evidence_quotes": [
-        "JPMorgan Q1 profit drops 70% as it readies for loan defaults. The New York-based bank put $8.29 billion in reserve to cover potentially bad loans, up from $1.5 billion last year."
+        "Investment Banking revenue was $3.9 billion, up 45%, predominantly driven by higher investment banking fees and net gains on equity investments. Investment banking fees were up 30%, driven by higher fees across all products, with particularly strong performance in equity underwriting fees.",
+        "The Firm ranked #2 for global investment banking fees for the three months ended June 30, 2026, according to Dealogic.",
+        "Management expects net interest income to be approximately $105.5 billion and net interest income excluding Markets to be approximately $96.5 billion, market dependent.",
+        "The bank raised its full-year net interest income forecast to about $106.2 billion, up from $105.5 billion.",
+        "The bank also raised its full-year outlook for net interest income excluding Markets and provided a preliminary estimate of approximately $107 billion for 2027."
       ],
       "confidence": 4
     }

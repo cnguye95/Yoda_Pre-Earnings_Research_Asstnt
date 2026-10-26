@@ -1,60 +1,53 @@
-"""Prompt-only baseline mode for Yoda.
+"""Single-pass baseline mode for Yoda.
 
-run_baseline() takes a ticker and a manually supplied filing excerpt, makes
-one consensus call and one news search, then asks gpt-4o to produce a fully
-structured EarningsReport in a single call using OpenAI structured outputs.
+run_baseline() is the "just hand the LLM the filings" approach: it puts the
+full text of the latest SEC filing (plus the supplemental 10-K when there is
+one) into ONE prompt and asks Claude Sonnet 5.5 for the brief in ONE response.
 
-This baseline intentionally does no RAG or agent loop — it exists as the
-lower bound to compare Modes 1 and 2 against in Phase 9 evaluation.
+No retrieval, no news, no agent loop, no second pass. It exists as the
+lower bound that the Yoda personality panel is evaluated against. It reads
+the same filings Yoda reads, so the comparison isolates what Yoda's extra
+steps add — not how much filing text each side was allowed to see.
+
+_validate_citations() also lives here; the panel imports it.
 """
 
-import json
 import pathlib
+import time
 from datetime import datetime, timezone
 
-from openai import OpenAI
+from anthropic import Anthropic
 
 from yoda import config
 from yoda.schema import EarningsReport
-from yoda.tools.news import search_news
 
 
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
 
-# gpt-4o is locked in by PLAN.md for all final generation calls.
-GPT4O_MODEL = "gpt-4o"
+# Same model the panel uses for its final report, so the baseline isn't
+# handicapped by a weaker writer.
+BASELINE_MODEL = "claude-sonnet-5-5"
 
-# System prompt that enforces the 'cite or skip' rule.
-_SYSTEM_PROMPT = """You are a financial analyst assistant that produces structured
-pre-earnings research reports in JSON format.
+# Output ceiling: the report plus the model's thinking must fit in this.
+# Large enough that the call must stream (see run_baseline).
+_MAX_TOKENS = 64000
 
-Rules you must follow without exception:
-1. Every entry in key_metrics, revenue_segments, key_risks, and the
-   forward_guidance block MUST have a non-empty source_citation field. The
-   citation must name the specific section or sentence in the filing excerpt
-   that supports the fact (e.g. "MD&A, paragraph 3" or "Item 1A, risk #2").
-2. If a fact is not directly supported by the filing excerpt, the consensus
-   block, or the news items provided, do NOT include it in the main fields.
-   Instead, add a plain-English description of what is missing to data_gaps.
-3. Never fabricate financial figures. If a number is not in the provided
-   sources, it goes in data_gaps.
-4. For recent_news, populate from the news items provided. Use the url field
-   exactly as given; do not invent URLs.
-5. Set report_generated_at to the ISO-8601 UTC timestamp provided in the
-   user message.
-6. Populate bull_case, bear_case, and what_to_watch from evidence in the
-   excerpt and news — not from general knowledge about the company."""
+# Minimal instruction — "here are the filings, write the brief" — plus the
+# one rule the report format enforces: every fact needs a citation.
+_SYSTEM_PROMPT = (
+    "Write a pre-earnings research brief from these SEC filings. Every metric, "
+    "segment, risk and guidance item needs a source_citation naming the filing "
+    "section it came from; put anything you can't cite in data_gaps."
+)
 
 
 # ---------------------------------------------------------------------------
-# Module-level OpenAI client (created once, reused across calls)
+# Module-level Anthropic client (created once, reused across calls)
 # ---------------------------------------------------------------------------
 
-# Matches the pattern in yoda/retrieval/embeddings.py: single instantiation
-# at module load avoids re-reading the API key on every call.
-_client = OpenAI(api_key=config.OPENAI_API_KEY)
+_client = Anthropic(api_key=config.ANTHROPIC_API_KEY, max_retries=3)
 
 
 # ---------------------------------------------------------------------------
@@ -91,95 +84,123 @@ def _validate_citations(report: EarningsReport) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Invented-link guard
+# ---------------------------------------------------------------------------
+
+def _strip_invented_links(report: EarningsReport) -> int:
+    # The baseline is given no news, so any news item or URL in its report
+    # was made up. Clear them (like the panel strips URLs outside its news
+    # pool) and return how many were removed so the caller can log it.
+    removed = len(report.recent_news) + sum(len(w.relevant_urls) for w in report.what_to_watch)
+    report.recent_news = []
+    for w in report.what_to_watch:
+        w.relevant_urls = []
+    return removed
+
+
+# ---------------------------------------------------------------------------
+# Prompt builder
+# ---------------------------------------------------------------------------
+
+def _build_prompt(ticker: str, filing: dict, now_utc: str) -> str:
+    # Put the full primary filing text in the prompt, then the full
+    # supplemental 10-K when one exists. Each gets a header naming its type
+    # and date so the model can cite the right document.
+    parts = [
+        f"Ticker: {ticker}",
+        f"Report timestamp (use for report_generated_at): {now_utc}",
+        "",
+        f"--- {filing['filing_type']} filed {filing['filing_date']} ---",
+        filing["clean_text"],
+    ]
+    supplemental = filing.get("supplemental")
+    if supplemental:
+        parts += [
+            "",
+            f"--- {supplemental['filing_type']} filed {supplemental['filing_date']} ---",
+            supplemental["clean_text"],
+        ]
+    return "\n".join(parts)
+
+
+# ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
-def run_baseline(ticker: str, manual_excerpt: str) -> EarningsReport:
-    """Produce an EarningsReport from a filing excerpt using a single LLM call.
+def run_baseline(ticker: str, filing: dict) -> EarningsReport:
+    """Produce an EarningsReport from the full filings in a single LLM call.
 
-    No RAG, no agent loop — this is the prompt-only baseline. The caller
-    supplies a manually extracted (or auto-sliced) excerpt from the most
-    recent 10-Q or 10-K. The function adds one consensus call and one news
-    search, then asks gpt-4o to fill the full schema in one shot.
+    *filing* is the dict returned by fetch_latest_filing(); its optional
+    "supplemental" key carries the 10-K that accompanies a 10-Q.
 
-    Raises ValueError if the model returns any empty source_citation fields.
-    Raises RuntimeError if any external tool call fails.
+    Prints "Wall time:" and "Total cost:" lines that the eval runner parses.
+    Raises ValueError if the model returns any empty source_citation fields,
+    RuntimeError if it returns no report at all. Any news items or URLs in
+    the report are cleared, since the baseline is given no news.
     """
     ticker = ticker.upper().strip()
+    started = time.perf_counter()
     now_utc = datetime.now(timezone.utc).isoformat()
 
-    # Fetch recent news relevant to the ticker's upcoming earnings.
-    news_results = search_news(f"{ticker} earnings", max_results=5)
+    # One prompt, one response, validated as an EarningsReport. Streaming is
+    # only how the reply is delivered (required for a max_tokens this large);
+    # get_final_message() waits for the complete reply — still a single pass.
+    with _client.messages.stream(
+        model=BASELINE_MODEL,
+        max_tokens=_MAX_TOKENS,
+        system=_SYSTEM_PROMPT,
+        messages=[{"role": "user", "content": _build_prompt(ticker, filing, now_utc)}],
+        output_format=EarningsReport,
+    ) as stream:
+        resp = stream.get_final_message()
+    report = resp.parsed_output
+    if report is None:
+        raise RuntimeError(f"Baseline returned no report (stop_reason={resp.stop_reason})")
 
-    # Build the user message combining all data sources the LLM may cite.
-    user_prompt = (
-        f"Ticker: {ticker}\n"
-        f"Report timestamp (use for report_generated_at): {now_utc}\n\n"
-        f"--- FILING EXCERPT ---\n{manual_excerpt}\n\n"
-        f"--- RECENT NEWS (JSON) ---\n{json.dumps(news_results, default=str)}\n\n"
-        "Produce the structured EarningsReport now."
-    )
-
-    # Call gpt-4o with structured outputs. response_format=EarningsReport tells
-    # the OpenAI client to generate a strict JSON schema and return a parsed
-    # Pydantic instance directly — no manual JSON parsing needed.
-    completion = _client.beta.chat.completions.parse(
-        model=GPT4O_MODEL,
-        messages=[
-            {"role": "system", "content": _SYSTEM_PROMPT},
-            {"role": "user",   "content": user_prompt},
-        ],
-        response_format=EarningsReport,
-        temperature=0,
-    )
-
-    report = completion.choices[0].message.parsed
+    # Stamp the supplemental filing's metadata on directly, as the panel does.
+    supplemental = filing.get("supplemental")
+    if supplemental:
+        report.supplemental_filing_type = supplemental["filing_type"]
+        report.supplemental_filing_date = supplemental["filing_date"]
 
     # Validate that every citable field has a non-empty citation.
     _validate_citations(report)
+
+    # No news went in, so no news or URLs may come out (README: links are
+    # never fabricated). Enforced in code to keep the prompt minimal.
+    removed = _strip_invented_links(report)
+    if removed:
+        print(f"[baseline] WARNING: stripped {removed} invented news item(s)/URL(s)")
+
+    # Cost + wall-time lines in the format the eval runner's regexes expect.
+    in_tok, out_tok = resp.usage.input_tokens, resp.usage.output_tokens
+    cost = config.model_cost(BASELINE_MODEL, in_tok, out_tok)
+    print(f"[baseline] Tokens:     {in_tok} in / {out_tok} out")
+    print(f"[baseline] Wall time:  {time.perf_counter() - started:.2f}s")
+    print(f"[baseline] Total cost: ${cost:.5f}")
 
     return report
 
 
 # ---------------------------------------------------------------------------
-# Smoke test — run with: python -m yoda.modes.baseline
+# Smoke test — run with: python -m yoda.modes.baseline [TICKER]
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
+    import sys
     from yoda.ingest.edgar import fetch_latest_filing
-    from yoda.ingest.chunker import chunk_filing
 
-    ticker = "NFLX"
+    ticker = (sys.argv[1] if len(sys.argv) > 1 else "NFLX").upper()
 
-    # Load the cached NFLX filing from Phase 1 (avoids a network round-trip).
-    print(f"Loading cached filing for {ticker}...")
+    # Load the filing (from the disk cache when available).
+    print(f"Loading filing for {ticker}...")
     filing = fetch_latest_filing(ticker)
 
-    # Build a high-quality ~5000-char excerpt using Phase 2's section-aware
-    # chunker. We prefer MD&A (substantive management commentary) and fall back
-    # to Financial Statements if MD&A chunks are too short.
-    chunks = chunk_filing(filing["clean_text"], filing["raw_html"])
-    preferred = ["MD&A", "Financial Statements"]
-    excerpt_parts: list[str] = []
-    total_chars = 0
-
-    for section_name in preferred:
-        for chunk in chunks:
-            if chunk.section == section_name and total_chars < 5000:
-                excerpt_parts.append(chunk.text)
-                total_chars += len(chunk.text)
-        if total_chars >= 5000:
-            break
-
-    # Trim to exactly 5000 chars so the context window stays predictable.
-    excerpt = " ".join(excerpt_parts)[:5000]
-    print(f"Excerpt: {len(excerpt)} chars (sections: {preferred})")
-
     # Run the baseline.
-    print(f"Running baseline for {ticker} via {GPT4O_MODEL}...")
-    report = run_baseline(ticker, excerpt)
+    print(f"Running baseline for {ticker} via {BASELINE_MODEL}...")
+    report = run_baseline(ticker, filing)
 
-    # Save to data/eval/ for Phase 9 evaluation comparison.
+    # Save to data/eval/ alongside the eval runner's outputs.
     out_dir = pathlib.Path("data/eval")
     out_dir.mkdir(parents=True, exist_ok=True)
     out_file = out_dir / f"baseline_{ticker}.json"
