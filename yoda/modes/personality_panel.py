@@ -10,7 +10,9 @@ run_personality_panel() is the top-level mode for the Streamlit UI. The design:
   Phase 3 — Cross-critique: each personality reads peers' hypotheses and emits
                             typed messages (SUPPORTS, CHALLENGES, EXTENDS)
                             using CRITIQUE_MODEL.
-  Phase 4 — Synthesis:      SYNTH_MODEL produces the final EarningsReport using the
+  Phase 4 — Synthesis:      SYNTH_MODEL reads the FULL filing text and produces
+                            the final EarningsReport, citing the filing's own
+                            Item numbers and headings, using the
                             filtered hypothesis set + critique messages + the
                             full pool of news data.
 
@@ -36,7 +38,7 @@ from pydantic import BaseModel
 from yoda import config
 from yoda.ingest.edgar import fetch_latest_filing
 from yoda.ingest.chunker import chunk_filing, Chunk
-from yoda.modes.baseline import _validate_citations
+from yoda.modes.baseline import _validate_citations, full_filing_text, supplemental_dropped_note
 from yoda.modes.tools import (
     ToolContext,
     TOOL_SCHEMAS,
@@ -648,36 +650,39 @@ Rules you must follow without exception:
 
 1. Every entry in key_metrics, revenue_segments, key_risks, and the
    forward_guidance block MUST have a non-empty source_citation field
-   that points to a FILING LOCATION ONLY. Use the section label of the
-   FILING CHUNK that supports the fact, copied VERBATIM (e.g., if the
-   chunk is tagged "[Financial Statements — Consolidated Statements of
-   Operations]", use exactly "Financial Statements — Consolidated
-   Statements of Operations"). Do NOT rephrase, abbreviate, or
-   reconstruct citation labels. If the chunk heading after the dash
-   looks like a fragment (starts with a lowercase letter, is a
-   sentence remnant, or is missing the leading character of a word —
-   e.g. "inancial instruments." or "r working capital balances."),
-   use ONLY the section label before the dash (e.g. "MD&A" or
-   "Financial Statements") as the source_citation. Never propagate a
-   corrupted heading.
+   that points to a FILING LOCATION ONLY. You are given the FULL TEXT
+   of the filing(s), so cite the location the way the filing itself
+   labels it: the filing type, the Item number and title, and the
+   nearest heading or table title above the fact, each copied as it
+   is printed in the filing. Format:
+     "<filing type> <Item number and title> — <heading or table title>"
+   Examples:
+     "10-Q Part I, Item 1. Financial Statements — Condensed Consolidated
+      Statements of Operations"
+     "10-Q Part I, Item 2. Management's Discussion and Analysis —
+      Liquidity and Capital Resources"
+     "10-K Item 1A. Risk Factors — Risks Related to Our Business"
+   Use the heading text exactly as printed — do not paraphrase,
+   shorten, or invent a heading, and never cite a generic bucket like
+   "Other" or "MD&A" alone when a specific heading exists. The bracketed
+   labels inside the panel's evidence quotes are search-chunk tags, NOT
+   filing headings — never copy them into source_citation; find the
+   fact in the filing text and cite its real location.
 
    Source citations must NEVER contain a news URL, news outlet name
    (e.g. "Yahoo Finance", "Reuters", "Cyber Magazine"), peer company
    name, analyst-report title, or any external source. Those belong
    in recent_news ONLY. If a fact came from a news article and you
-   cannot back it with a filing chunk, omit the fact from key_metrics
+   cannot back it with the filing text, omit the fact from key_metrics
    / revenue_segments / forward_guidance entirely, OR for risks move
    the substance into key_risks.text prose without naming the source
-   in source_citation. Pick the closest matching filing section label
-   for key_risks.source_citation (e.g. "MD&A — Risk Factors" or
-   "Notes — Commitments and Contingencies"). When in doubt, use the
-   bare section name ("MD&A", "Financial Statements", "Notes").
+   in source_citation, citing the closest matching filing location.
 
    The metric `name` field MUST be the LITERAL line-item label from
-   the filing chunks — copy the exact wording the filing uses. If
-   the chunk shows a row labeled "Cash and cash equivalents", use
+   the filing — copy the exact wording the filing uses. If
+   the filing shows a row labeled "Cash and cash equivalents", use
    exactly "Cash and cash equivalents" (not "Total Cash"). If the
-   chunk shows "Streaming content obligations, due after one year",
+   filing shows "Streaming content obligations, due after one year",
    use that wording (not "Long-Term Debt"). Do NOT relabel a filing
    line item into a category name you think fits — the analyst needs
    to see what the filing actually reports. Do NOT mix sub-lines
@@ -686,27 +691,27 @@ Rules you must follow without exception:
    extract, not a single component of a sum.
 
    key_metrics and revenue_segments figures MUST come from the
-   FILING CHUNKS provided in the user message, NOT from hypotheses
-   that mention external figures. The FILING CHUNKS block is the
+   FILING TEXT provided in the user message, NOT from hypotheses
+   that mention external figures. The FILING TEXT is the
    authoritative source for every quantitative fact about the
    company's reporting period. If a hypothesis quotes a different
-   number for a metric the chunks also report, trust the chunks.
+   number for a metric the filing also reports, trust the filing.
    If a metric is only known from external sources, omit it from
    key_metrics and record it in data_gaps instead.
 
-   EXTRACTION TARGET: From the FILING CHUNKS, populate key_metrics
+   EXTRACTION TARGET: From the FILING TEXT, populate key_metrics
    with AT LEAST the following when each is reported: total revenue,
    net income (or net loss), EPS (basic and diluted), operating
    income/loss, gross margin or gross profit, operating cash flow,
    free cash flow, total cash and equivalents, total debt, and any
    segment revenue figures (geographic or product). Add more as the
-   chunks support them. A sparse key_metrics list when the chunks
-   contain these line items is a failure.
+   filing supports them. A sparse key_metrics list when the filing
+   contains these line items is a failure.
 
    When populating revenue_segments or key_metrics with YoY figures,
    label periods explicitly (e.g. "Q1 FY2026 vs Q1 FY2025"). The
    CURRENT reporting period value goes in the `value` field. When a
-   table in the chunks shows two figures side-by-side, the first
+   table in the filing shows two figures side-by-side, the first
    column is typically current period and the second is prior period —
    verify this from context before copying. If you cannot determine
    which period is current, omit the metric and note it in data_gaps.
@@ -715,11 +720,11 @@ Rules you must follow without exception:
    are given. Do NOT synthesize URLs. Do NOT shorten URLs. Do NOT omit URLs.
 
    forward_guidance.text MUST be a VERBATIM quote from the FILING
-   CHUNKS — wrap it in double quotes to make this explicit. Pull from
+   TEXT — wrap it in double quotes to make this explicit. Pull from
    the MD&A outlook, "subsequent events," or any management commentary
-   subsection in the chunks. Do NOT synthesize a guidance sentence
+   subsection in the filing. Do NOT synthesize a guidance sentence
    from external news, analyst projections, or your own inference.
-   If no outlook/guidance language exists in the chunks, set
+   If no outlook/guidance language exists in the filing, set
    forward_guidance.text to "No forward guidance issued in this
    filing." and add an entry to data_gaps stating which guidance
    topics the filing did not address.
@@ -803,40 +808,6 @@ Rules you must follow without exception:
    internal process — the user is reading a finished research note."""
 
 
-# Queries used to pull the financial sections directly to the synthesizer so
-# it can populate key_metrics/revenue_segments from primary source material
-# instead of relying on whatever the personalities happened to surface.
-_FINANCIAL_QUERIES = [
-    "consolidated statements of operations revenue net income EPS earnings per share",
-    "consolidated balance sheet total assets liabilities cash and equivalents debt",
-    "consolidated statements of cash flows operating investing financing",
-    "segment revenue geographic breakdown product mix",
-    "operating income margin gross profit cost of revenue",
-]
-
-
-def _retrieve_financial_chunks(ctx) -> list[Chunk]:
-    # Query ChromaDB for the five financial categories above and return a
-    # deduped chunk list. Each query gets up to 3 chunks; we dedupe by
-    # (section, first 80 chars of text) to avoid the same chunk appearing
-    # under multiple queries.
-    seen: set[tuple[str, str]] = set()
-    out: list[Chunk] = []
-    for q in _FINANCIAL_QUERIES:
-        for c in ctx.store.query(ctx.primary_accession, q, k=3):
-            key = (c.section, c.text[:80])
-            if key not in seen:
-                seen.add(key)
-                out.append(c)
-        if ctx.supplemental_accession:
-            for c in ctx.store.query(ctx.supplemental_accession, q, k=2):
-                key = (c.section, c.text[:80])
-                if key not in seen:
-                    seen.add(key)
-                    out.append(c)
-    return out
-
-
 def _synthesize_report(
     ticker: str,
     primary_filing: dict,
@@ -844,9 +815,14 @@ def _synthesize_report(
     contested: list[Hypothesis],
     critique_messages: list[CritiqueMessage],
     news_pool: list[dict],
-    financial_chunks: list[Chunk],
+    filing_text: str,
 ) -> tuple[EarningsReport, int, int]:
     """One SYNTH_MODEL call producing the final EarningsReport.
+
+    *filing_text* is the FULL filing text (from baseline.full_filing_text),
+    so the synthesizer extracts figures and cites locations from the whole
+    filing — the same text the single-pass baseline reads — rather than from
+    a handful of retrieved chunks.
 
     Returns (report, input_tokens, output_tokens).
     """
@@ -873,17 +849,16 @@ def _synthesize_report(
 
     now_utc = datetime.now(timezone.utc).isoformat()
 
-    # Render the financial chunks with their section labels so the synthesizer
-    # can copy the labels verbatim into source_citation fields.
-    chunks_block = _render_chunks(financial_chunks)
-
+    # The full filing goes first (largest, most stable block), followed by
+    # the panel's findings. The filing is the authority for every figure
+    # and every source_citation.
     user_prompt = (
         f"Ticker: {ticker}\n"
         f"Company: {primary_filing.get('ticker', ticker)}\n"
         f"Filing: {primary_filing['filing_type']} filed {primary_filing['filing_date']}\n"
         f"Report timestamp (use for report_generated_at): {now_utc}\n\n"
-        f"--- FILING CHUNKS (authoritative for key_metrics, revenue_segments, "
-        f"forward_guidance, key_risks) ---\n{chunks_block}\n\n"
+        f"--- FILING TEXT (full; authoritative for key_metrics, revenue_segments, "
+        f"forward_guidance, key_risks and every source_citation) ---\n{filing_text}\n\n"
         f"--- HYPOTHESES (final, from panel investigation) ---\n{hyp_text}\n\n"
         f"--- {contested_block} ---\n\n"
         f"--- CRITIQUE MESSAGES (peer review) ---\n{msg_text}\n\n"
@@ -1142,11 +1117,14 @@ def run_personality_panel(
     # Phase 4 — Synthesis
     # ------------------------------------------------------------------
     print(f"{log_prefix} Phase 4: synthesizing report via {SYNTH_MODEL}...")
-    # Pull the financial sections directly so the synthesizer can mine them
-    # for key_metrics and revenue_segments instead of relying on whatever
-    # the personalities happened to surface.
-    financial_chunks = _retrieve_financial_chunks(ctx)
-    print(f"{log_prefix} Retrieved {len(financial_chunks)} financial chunks for synthesis")
+    # Give the synthesizer the FULL filing text — the same text the baseline
+    # reads — so it can extract every figure and cite the filing's own
+    # headings. The supplemental 10-K is left out only if the pair is too
+    # large for the model's context window.
+    filing_text, sup_dropped = full_filing_text(filing, supplemental)
+    print(f"{log_prefix} Full filing for synthesis: {len(filing_text):,} chars")
+    if sup_dropped:
+        print(f"{log_prefix} WARNING: supplemental {supplemental['filing_type']} dropped — filings too large")
 
     t0 = time.perf_counter()
     report, syn_in, syn_out = _synthesize_report(
@@ -1156,7 +1134,7 @@ def run_personality_panel(
         contested=contested,
         critique_messages=critique_messages,
         news_pool=ctx.news_pool,
-        financial_chunks=financial_chunks,
+        filing_text=filing_text,
     )
     synth_in  += syn_in
     synth_out += syn_out
@@ -1202,8 +1180,11 @@ def run_personality_panel(
     if not report.hypotheses_explored:
         report.hypotheses_explored = final_hypotheses
 
-    # Attach supplemental filing metadata directly — not via LLM, just stamped on.
-    if supplemental:
+    # Attach supplemental filing metadata directly — not via LLM, just stamped
+    # on — or record that it was left out of synthesis for size.
+    if supplemental and sup_dropped:
+        report.data_gaps.append(supplemental_dropped_note(supplemental))
+    elif supplemental:
         report.supplemental_filing_type = supplemental["filing_type"]
         report.supplemental_filing_date = supplemental["filing_date"]
 

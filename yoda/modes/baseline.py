@@ -99,28 +99,49 @@ def _strip_invented_links(report: EarningsReport) -> int:
 
 
 # ---------------------------------------------------------------------------
+# Full filing text (shared with the panel's synthesis step)
+# ---------------------------------------------------------------------------
+
+# Most filing text one prompt may carry. Filings tokenize at ~2.3 characters
+# per token (dense numbers and tables), so 2.0M characters is ~870K tokens —
+# leaving room under Sonnet 5.5's 1M-token context for instructions and the
+# report. Only a 10-Q + 10-K pair from a very large filer (e.g. JPM, ~2.3M
+# characters together) goes over.
+MAX_FILING_CHARS = 2_000_000
+
+
+def full_filing_text(primary: dict, supplemental: dict | None) -> tuple[str, bool]:
+    # Return the full primary filing text — plus the full supplemental 10-K
+    # when there is one and both fit under MAX_FILING_CHARS — each under a
+    # header naming its type and date so the model can cite the right
+    # document. The second value is True when the supplemental was dropped
+    # for size, so the caller can log it and record a data gap.
+    parts = [f"=== {primary['filing_type']} filed {primary['filing_date']} ===", primary["clean_text"]]
+    if not supplemental:
+        return "\n".join(parts), False
+    if len(primary["clean_text"]) + len(supplemental["clean_text"]) > MAX_FILING_CHARS:
+        return "\n".join(parts), True
+    parts += ["", f"=== {supplemental['filing_type']} filed {supplemental['filing_date']} ===",
+              supplemental["clean_text"]]
+    return "\n".join(parts), False
+
+
+def supplemental_dropped_note(supplemental: dict) -> str:
+    # The data_gaps entry recorded when the supplemental filing didn't fit.
+    return (f"The supplemental {supplemental['filing_type']} filed {supplemental['filing_date']} "
+            f"was not analyzed: together with the primary filing it exceeds the model's context limit.")
+
+
+# ---------------------------------------------------------------------------
 # Prompt builder
 # ---------------------------------------------------------------------------
 
-def _build_prompt(ticker: str, filing: dict, now_utc: str) -> str:
-    # Put the full primary filing text in the prompt, then the full
-    # supplemental 10-K when one exists. Each gets a header naming its type
-    # and date so the model can cite the right document.
-    parts = [
-        f"Ticker: {ticker}",
-        f"Report timestamp (use for report_generated_at): {now_utc}",
-        "",
-        f"--- {filing['filing_type']} filed {filing['filing_date']} ---",
-        filing["clean_text"],
-    ]
-    supplemental = filing.get("supplemental")
-    if supplemental:
-        parts += [
-            "",
-            f"--- {supplemental['filing_type']} filed {supplemental['filing_date']} ---",
-            supplemental["clean_text"],
-        ]
-    return "\n".join(parts)
+def _build_prompt(ticker: str, filing: dict, now_utc: str) -> tuple[str, bool]:
+    # The ticker and timestamp, then the full filing text. Also returns
+    # whether the supplemental 10-K was dropped for size.
+    filings, dropped = full_filing_text(filing, filing.get("supplemental"))
+    header = f"Ticker: {ticker}\nReport timestamp (use for report_generated_at): {now_utc}\n\n"
+    return header + filings, dropped
 
 
 # ---------------------------------------------------------------------------
@@ -141,6 +162,10 @@ def run_baseline(ticker: str, filing: dict) -> EarningsReport:
     ticker = ticker.upper().strip()
     started = time.perf_counter()
     now_utc = datetime.now(timezone.utc).isoformat()
+    prompt, dropped = _build_prompt(ticker, filing, now_utc)
+    supplemental = filing.get("supplemental")
+    if dropped:
+        print(f"[baseline] WARNING: supplemental {supplemental['filing_type']} dropped — filings too large")
 
     # One prompt, one response, validated as an EarningsReport. Streaming is
     # only how the reply is delivered (required for a max_tokens this large);
@@ -149,7 +174,7 @@ def run_baseline(ticker: str, filing: dict) -> EarningsReport:
         model=BASELINE_MODEL,
         max_tokens=_MAX_TOKENS,
         system=_SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": _build_prompt(ticker, filing, now_utc)}],
+        messages=[{"role": "user", "content": prompt}],
         output_format=EarningsReport,
     ) as stream:
         resp = stream.get_final_message()
@@ -157,9 +182,11 @@ def run_baseline(ticker: str, filing: dict) -> EarningsReport:
     if report is None:
         raise RuntimeError(f"Baseline returned no report (stop_reason={resp.stop_reason})")
 
-    # Stamp the supplemental filing's metadata on directly, as the panel does.
-    supplemental = filing.get("supplemental")
-    if supplemental:
+    # Stamp the supplemental filing's metadata on directly, as the panel does,
+    # or record that it was left out for size.
+    if supplemental and dropped:
+        report.data_gaps.append(supplemental_dropped_note(supplemental))
+    elif supplemental:
         report.supplemental_filing_type = supplemental["filing_type"]
         report.supplemental_filing_date = supplemental["filing_date"]
 

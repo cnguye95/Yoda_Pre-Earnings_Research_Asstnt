@@ -20,6 +20,7 @@ from yoda.eval.rubric import DimensionScore, JudgeScores
 from yoda.eval.runner import _RE_COST, _RE_WALL_TIME, SCORE_COLS, _paired_comparison, _verdict
 from yoda.ingest.chunker import Chunk
 from yoda.modes import personality_panel as panel
+from yoda.modes import baseline as baseline_mod
 from yoda.modes.baseline import BASELINE_MODEL, _build_prompt, _strip_invented_links, _validate_citations
 from yoda.modes.tools import TOOL_DISPATCH, TOOL_SCHEMAS
 from yoda.retrieval import vector_store
@@ -196,9 +197,21 @@ _PRIMARY = {"filing_type": "10-Q", "filing_date": "2026-05-01", "clean_text": "Q
 def test_baseline_prompt_includes_supplemental_filing():
     filing = {**_PRIMARY, "supplemental": {
         "filing_type": "10-K", "filing_date": "2026-02-01", "clean_text": "ANNUAL TEXT"}}
-    prompt = _build_prompt("TEST", filing, "2026-10-26T00:00:00+00:00")
-    assert "QUARTERLY TEXT" in prompt and "ANNUAL TEXT" in prompt
-    assert "--- 10-K filed 2026-02-01 ---" in prompt
+    prompt, dropped = _build_prompt("TEST", filing, "2026-10-26T00:00:00+00:00")
+    assert "QUARTERLY TEXT" in prompt and "ANNUAL TEXT" in prompt and not dropped
+    # Each filing gets a header naming its type and date, primary first.
+    assert "=== 10-Q filed 2026-05-01 ===" in prompt and "=== 10-K filed 2026-02-01 ===" in prompt
+    assert prompt.index("QUARTERLY TEXT") < prompt.index("ANNUAL TEXT")
+
+
+def test_full_filing_text_drops_supplemental_when_too_large(monkeypatch):
+    # When primary + supplemental exceed the size cap, the primary is kept
+    # whole and the supplemental is left out (and reported as dropped).
+    monkeypatch.setattr(baseline_mod, "MAX_FILING_CHARS", 20)
+    supplemental = {"filing_type": "10-K", "filing_date": "2026-02-01", "clean_text": "ANNUAL TEXT"}
+    text, dropped = baseline_mod.full_filing_text(dict(_PRIMARY), supplemental)
+    assert dropped and "QUARTERLY TEXT" in text and "ANNUAL TEXT" not in text
+    assert "10-K filed 2026-02-01" in baseline_mod.supplemental_dropped_note(supplemental)
 
 
 def test_baseline_strips_invented_news_and_urls():
@@ -211,8 +224,8 @@ def test_baseline_strips_invented_news_and_urls():
 
 
 def test_baseline_prompt_without_supplemental():
-    prompt = _build_prompt("TEST", dict(_PRIMARY), "2026-10-26T00:00:00+00:00")
-    assert "QUARTERLY TEXT" in prompt and "10-K" not in prompt
+    prompt, dropped = _build_prompt("TEST", dict(_PRIMARY), "2026-10-26T00:00:00+00:00")
+    assert "QUARTERLY TEXT" in prompt and "10-K" not in prompt and not dropped
 
 
 # ---------------------------------------------------------------------------
