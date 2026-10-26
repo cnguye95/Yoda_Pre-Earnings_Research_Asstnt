@@ -50,6 +50,8 @@ from yoda import config
 _FMP_EARNINGS_URL = "https://financialmodelingprep.com/stable/earnings"
 _FMP_GRADES_URL = "https://financialmodelingprep.com/stable/grades"
 _FMP_PRICE_TARGET_URL = "https://financialmodelingprep.com/stable/price-target-consensus"
+# The free FMP plan rejects a 'limit' above 5 with HTTP 402.
+_FMP_MAX_LIMIT = 5
 
 # Public URLs used as citations for each Finnhub data source.
 _FINNHUB_CALENDAR_URL = "https://finnhub.io/api/v1/calendar/earnings"
@@ -193,8 +195,9 @@ def _next_report_finnhub(client: finnhub.Client, ticker: str) -> dict | None:
 
 def _next_report_fmp(ticker: str) -> dict | None:
     # Return FMP's row for the next report that has not happened yet
-    # (no actual EPS), earliest date first.
-    rows = _fmp_get(_FMP_EARNINGS_URL, {"symbol": ticker, "limit": 8}) or []
+    # (no actual EPS), earliest date first. FMP lists newest reports first,
+    # and the free plan allows at most 5 rows per call (more returns HTTP 402).
+    rows = _fmp_get(_FMP_EARNINGS_URL, {"symbol": ticker, "limit": _FMP_MAX_LIMIT}) or []
     today = date.today().isoformat()
     upcoming = [
         r for r in rows
@@ -205,6 +208,7 @@ def _next_report_fmp(ticker: str) -> dict | None:
 
 def _analyst_count_finnhub(client: finnhub.Client, ticker: str) -> int | None:
     # Sum buy/hold/sell counts from the most recent recommendation period.
+    # This counts analysts with a rating, not analysts behind the EPS estimate.
     trends = _finnhub_call(lambda: client.recommendation_trends(symbol=ticker)) or []
     if not trends:
         return None
@@ -233,6 +237,11 @@ def get_consensus(ticker: str) -> dict:
         ticker, next_earnings_date, report_hour, fiscal_quarter, fiscal_year,
         eps_estimate, revenue_estimate, analyst_count,
         sources ({field: {name, url}}), data_gaps (list of str), fetched_at
+
+    Caveat: analyst_count is the number of analysts with a buy/hold/sell
+    rating in Finnhub's latest recommendation period. It is NOT the number of
+    analysts behind eps_estimate — that figure is not available on the free
+    plans — so do not describe it as "N analysts expect EPS of X".
     """
     ticker = ticker.upper().strip()
     fetched_at = _now()

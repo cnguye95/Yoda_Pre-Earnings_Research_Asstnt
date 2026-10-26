@@ -205,6 +205,21 @@ def test_fmp_key_or_plan_errors_fail_loud(monkeypatch, status):
         consensus.get_consensus("TEST")
 
 
+def test_fmp_earnings_limit_fits_free_plan(monkeypatch):
+    # The free FMP plan rejects limit > 5 with HTTP 402 (found in a live run).
+    sent = []
+
+    def fake_get(url, params=None, headers=None, timeout=None):
+        sent.append(params)
+        return _response(data=[])
+
+    _fake_finnhub(monkeypatch)
+    monkeypatch.setattr(consensus.requests, "get", fake_get)
+    consensus.get_consensus("TEST")
+
+    assert sent and sent[0]["limit"] <= 5
+
+
 # ---------------------------------------------------------------------------
 # get_basic_metrics — trailing EPS
 # ---------------------------------------------------------------------------
