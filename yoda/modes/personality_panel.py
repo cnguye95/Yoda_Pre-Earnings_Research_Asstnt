@@ -809,9 +809,7 @@ Rules you must follow without exception:
 4. hypotheses_explored MUST echo the FINAL list of hypotheses (included +
    contested, NOT dropped). The orchestrator will validate this.
 
-5. If a fact is not supported by hypothesis evidence or news,
-   put it in data_gaps rather than inventing it.
-   data_gaps is ONLY for facts the filing/news pool SHOULD have
+5. data_gaps is ONLY for facts the filing/news pool SHOULD have
    covered but did not (e.g., a segment revenue figure missing from MD&A,
    a guidance number the company has historically given but omitted this
    quarter). Do NOT list forward-looking or inherently-external items as
