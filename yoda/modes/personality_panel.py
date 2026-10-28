@@ -51,6 +51,7 @@ from yoda.schema import (
     Hypothesis,
     CritiqueMessage,
     Filing,
+    NewsSearchResult,
     PersonalityResult,
 )
 
@@ -265,19 +266,20 @@ def _render_chunks(chunks: list[Chunk]) -> str:
     return "\n\n".join(parts)
 
 
-def _render_news(items: list[dict]) -> str:
-    # Format a list of Tavily news dicts. URLs are preserved verbatim so the
-    # agent can include them in evidence_quotes.
+def _render_news(items: list[NewsSearchResult]) -> str:
+    """Format news search results as text for a personality to read.
+
+    URLs are preserved verbatim so the agent can include them in
+    evidence_quotes; an article with no known date says "no-date".
+    """
     if not items:
         return "No news results."
-    parts = []
-    for r in items:
-        parts.append(
-            f"- {r.get('title', '')} ({r.get('published_date') or 'no-date'})\n"
-            f"  URL: {r.get('url', '')}\n"
-            f"  {r.get('snippet', '')[:300]}"
-        )
-    return "\n".join(parts)
+    return "\n".join(
+        f"- {item.title} ({item.published_date or 'no-date'})\n"
+        f"  URL: {item.url}\n"
+        f"  {item.snippet[:300]}"
+        for item in items
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -815,7 +817,7 @@ def _synthesize_report(
     final_hypotheses: list[Hypothesis],
     contested: list[Hypothesis],
     critique_messages: list[CritiqueMessage],
-    news_pool: list[dict],
+    news_pool: list[NewsSearchResult],
     filing_text: str,
 ) -> tuple[EarningsReport, int, int]:
     """One SYNTH_MODEL call producing the final EarningsReport.
@@ -862,7 +864,7 @@ def _synthesize_report(
         f"--- HYPOTHESES (final, from panel investigation) ---\n{hyp_text}\n\n"
         f"--- {contested_block} ---\n\n"
         f"--- CRITIQUE MESSAGES (peer review) ---\n{msg_text}\n\n"
-        f"--- NEWS POOL (JSON, URLs preserved) ---\n{json.dumps(news_pool, default=str)}\n\n"
+        f"--- NEWS POOL (JSON, URLs preserved) ---\n{json.dumps([item.model_dump() for item in news_pool])}\n\n"
         f"Produce the EarningsReport. Echo final_hypotheses in hypotheses_explored."
     )
 
@@ -990,7 +992,7 @@ def run_personality_panel(
     # For news-only runs the ChromaStore stays empty; retrieve_filing returns [].
     store = ChromaStore()
     if filing is not None:
-        chunks = chunk_filing(filing.clean_text, filing.raw_html)
+        chunks = chunk_filing(filing.clean_text)
         t0 = time.perf_counter()
         if store.index_if_missing(filing.accession_number, chunks):
             embed_tokens += sum(len(c.text) for c in chunks) // 4
@@ -1000,7 +1002,7 @@ def run_personality_panel(
 
     # Same for the supplemental 10-K, if present.
     if supplemental:
-        sup_chunks = chunk_filing(supplemental.clean_text, supplemental.raw_html)
+        sup_chunks = chunk_filing(supplemental.clean_text)
         t0 = time.perf_counter()
         if store.index_if_missing(supplemental.accession_number, sup_chunks):
             embed_tokens += sum(len(c.text) for c in sup_chunks) // 4
@@ -1177,7 +1179,7 @@ def run_personality_panel(
 
     # Assert every news URL in the final report appears in the collected pool.
     # This catches LLM hallucination of URLs at synthesis time.
-    pool_urls = {item.get("url", "") for item in ctx.news_pool}
+    pool_urls = {item.url for item in ctx.news_pool}
     for nitem in report.recent_news:
         if nitem.url and nitem.url not in pool_urls:
             raise ValueError(

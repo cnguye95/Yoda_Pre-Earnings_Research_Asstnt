@@ -23,6 +23,7 @@ import time
 from yoda.ingest.edgar import fetch_latest_filing
 from yoda.ingest.chunker import chunk_filing, Chunk
 from yoda.retrieval.vector_store import ChromaStore
+from yoda.schema import NewsSearchResult
 from yoda.tools.news import search_news as _tavily_search
 
 
@@ -56,7 +57,7 @@ class ToolContext:
         # Accumulator for news items collected across all personalities so the
         # synthesis step has the full pool with URLs intact. Personality threads
         # append; the synthesizer reads after Phase 2 completes.
-        self.news_pool: list[dict] = []
+        self.news_pool: list[NewsSearchResult] = []
         self._news_lock = threading.Lock()
 
 
@@ -83,7 +84,7 @@ def retrieve_filing(ctx: ToolContext, query: str, k: int = 5) -> list[Chunk]:
 # Tool 2 — search_news
 # ---------------------------------------------------------------------------
 
-def search_news(ctx: ToolContext, query: str, max_results: int = 3) -> list[dict]:
+def search_news(ctx: ToolContext, query: str, max_results: int = 3) -> list[NewsSearchResult]:
     """Tavily news search. Results are also appended to the shared news_pool
     so the synthesizer can see every URL any personality discovered.
     """
@@ -120,7 +121,7 @@ def lookup_peer(ctx: ToolContext, peer_ticker: str, query: str, k: int = 3) -> l
             peer_filing = fetch_latest_filing(peer_ticker)
             if peer_filing is None:
                 raise ValueError(f"{peer_ticker} has no 10-Q or 10-K filed recently enough to search.")
-            peer_chunks = chunk_filing(peer_filing.clean_text, peer_filing.raw_html)
+            peer_chunks = chunk_filing(peer_filing.clean_text)
             # Embeds only if an earlier run hasn't already stored this filing.
             ctx.store.index_if_missing(peer_filing.accession_number, peer_chunks)
             ctx._ingested_peers[peer_ticker] = peer_filing.accession_number
@@ -264,7 +265,7 @@ if __name__ == "__main__":
     filing = fetch_latest_filing(ticker)
     if filing is None:
         sys.exit(f"{ticker} has no recent 10-Q or 10-K to smoke-test against.")
-    chunks = chunk_filing(filing.clean_text, filing.raw_html)
+    chunks = chunk_filing(filing.clean_text)
 
     store = ChromaStore()
     store.index_if_missing(filing.accession_number, chunks)
@@ -289,7 +290,7 @@ if __name__ == "__main__":
     sn = search_news(ctx, f"{ticker} earnings", max_results=2)
     print(f"  -> {len(sn)} articles in {time.perf_counter() - t0:.2f}s")
     for r in sn:
-        print(f"    {r['title'][:80]}  ({r['url']})")
+        print(f"    {r.title[:80]}  ({r.url})")
 
     # Pick a sensible peer for the smoke test by ticker. DIS is a reasonable
     # default for media tickers; HOOD pairs with COIN; we fall back to MSFT.

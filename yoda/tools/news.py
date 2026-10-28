@@ -1,30 +1,51 @@
 """News search for a given query using the Tavily API.
 
 The one public function, search_news(), returns a list of citation-ready
-result dicts. Each result includes the article title, URL, publication date,
-a short snippet, and the domain name (for citations).
+NewsSearchResult records (see yoda/schema.py): the article title, URL,
+publication date, a short snippet, and the domain name for citations.
 """
 
-import sys
 from urllib.parse import urlparse
 
-from tavily import TavilyClient
+import requests
+from tavily import (
+    BadRequestError,
+    InvalidAPIKeyError,
+    MissingAPIKeyError,
+    TavilyClient,
+    UsageLimitExceededError,
+)
 
 from yoda import config
+from yoda.schema import NewsSearchResult
+
+# Every way a Tavily search can fail that is about Tavily, not about a bug in
+# Yoda: a rejected or missing key, the plan's usage limit, a malformed
+# request, or a network/HTTP problem (requests.RequestException also covers a
+# reply that isn't valid JSON).
+_TAVILY_ERRORS = (
+    InvalidAPIKeyError,
+    MissingAPIKeyError,
+    UsageLimitExceededError,
+    BadRequestError,
+    requests.RequestException,
+)
+
+# Longest snippet kept per article, in characters.
+_SNIPPET_CHARS = 500
 
 
-def search_news(query: str, max_results: int = 5) -> list[dict]:
-    """Search for recent news articles matching the given query.
+def search_news(query: str, max_results: int = 5) -> list[NewsSearchResult]:
+    """Search for recent news articles matching *query*.
 
-    Uses the Tavily API (LLM-friendly search). Raises RuntimeError on
-    network or auth failures. An empty results list is a valid return value
-    when no articles match the query.
+    Uses the Tavily API (LLM-friendly search) and returns up to *max_results*
+    NewsSearchResult records. Results that come back without a URL are
+    dropped, because a claim the reader can't follow back can't be cited.
+    An empty list is a valid answer when nothing matches.
 
-    Returns a list of dicts, each with:
-        title, url, published_date (ISO date string or None),
-        snippet (up to 500 chars), source (domain name)
+    Raises RuntimeError naming the cause when Tavily can't be reached or
+    rejects the request, or answers with something other than search results.
     """
-    # Build the Tavily client from the key stored in config.
     client = TavilyClient(api_key=config.TAVILY_API_KEY)
 
     # Issue the search. search_depth="basic" avoids crawling full page content,
@@ -36,29 +57,29 @@ def search_news(query: str, max_results: int = 5) -> list[dict]:
             search_depth="basic",
             include_raw_content=False,
         )
-    except Exception as exc:
-        raise RuntimeError(f"Tavily search failed: {exc}") from exc
+    except _TAVILY_ERRORS as exc:
+        raise RuntimeError(f"Tavily search failed: {type(exc).__name__}: {exc}") from exc
 
-    results = response.get("results") or []
+    # Tavily returns None (not an error) for unusual HTTP statuses, so check
+    # the reply really is a results object before reading it.
+    if not isinstance(response, dict):
+        raise RuntimeError(f"Tavily search returned an unexpected reply: {response!r}")
 
-    # Map each Tavily result to our standard citation-ready dict shape.
-    output = []
-    for item in results:
-        url = item.get("url") or ""
-        # Extract the bare domain from the URL (strip www. for clean citations).
-        domain = urlparse(url).netloc.removeprefix("www.")
-        # Tavily's "content" field is the article snippet; cap at 500 chars.
-        snippet = (item.get("content") or "")[:500]
-
-        output.append({
-            "title":          item.get("title") or "",
-            "url":            url,
-            "published_date": item.get("published_date"),  # ISO string or None
-            "snippet":        snippet,
-            "source":         domain,
-        })
-
-    return output
+    # Turn each usable hit into a NewsSearchResult. The domain is taken from
+    # the URL with "www." removed, so citations read "reuters.com".
+    results = []
+    for item in response.get("results") or []:
+        url = item.get("url")
+        if not url:
+            continue
+        results.append(NewsSearchResult(
+            title=item.get("title") or "(untitled)",
+            url=url,
+            published_date=item.get("published_date"),
+            snippet=(item.get("content") or "")[:_SNIPPET_CHARS],
+            source_domain=urlparse(url).netloc.removeprefix("www."),
+        ))
+    return results
 
 
 # ---------------------------------------------------------------------------
@@ -69,11 +90,11 @@ if __name__ == "__main__":
     query = "Netflix subscriber growth Q1 2026"
     print(f'Searching: "{query}"\n')
 
-    results = search_news(query)
-    if not results:
+    found = search_news(query)
+    if not found:
         print("No results returned.")
-    for i, r in enumerate(results, 1):
-        print(f"[{i}] {r['title']} — {r['source']} — {r['published_date']}")
-        print(f"    {r['url']}")
-        print(f"    {r['snippet'][:200]}")
+    for number, result in enumerate(found, 1):
+        print(f"[{number}] {result.title} — {result.source_domain} — {result.published_date}")
+        print(f"    {result.url}")
+        print(f"    {result.snippet[:200]}")
         print()

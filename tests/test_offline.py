@@ -239,21 +239,24 @@ def test_baseline_prompt_without_supplemental():
 # ---------------------------------------------------------------------------
 
 class _FakeCollection:
-    # Stands in for a Chroma collection: just remembers which IDs are stored.
+    # Stands in for a Chroma collection: remembers each stored chunk's metadata.
     def __init__(self):
-        self.ids: dict[str, str] = {}   # chunk id -> accession
+        self.metas: dict[str, dict] = {}   # chunk id -> metadata
 
     def get(self, where, include):
-        return {"ids": [i for i, acc in self.ids.items() if acc == where["accession"]]}
+        matches = {i: m for i, m in self.metas.items() if m["accession"] == where["accession"]}
+        result = {"ids": list(matches)}
+        if "metadatas" in include:
+            result["metadatas"] = list(matches.values())
+        return result
 
     def upsert(self, ids, documents, embeddings, metadatas):
         # Real Chroma rejects parallel lists of different lengths.
         assert len(ids) == len(documents) == len(embeddings) == len(metadatas)
-        for chunk_id, meta in zip(ids, metadatas):
-            self.ids[chunk_id] = meta["accession"]
+        self.metas.update(zip(ids, metadatas))
 
     def delete(self, where):
-        self.ids = {i: acc for i, acc in self.ids.items() if acc != where["accession"]}
+        self.metas = {i: m for i, m in self.metas.items() if m["accession"] != where["accession"]}
 
 
 @pytest.fixture
@@ -294,6 +297,21 @@ def test_shrunk_filing_is_re_embedded_once_then_skipped(fake_store):
     assert store.count("ACC1") == 2
     assert store.index_if_missing("ACC1", shrunk) is False
     assert calls == [3, 2]
+
+
+def test_changed_chunk_text_is_re_embedded(fake_store):
+    # Same number of chunks but different text (e.g. after a chunker fix):
+    # the stored vectors describe old text, so they must be replaced.
+    store, calls = fake_store
+    store.index_if_missing("ACC1", [_chunk("old a", index=0), _chunk("old b", index=1)])
+    assert store.index_if_missing("ACC1", [_chunk("new a", index=0), _chunk("new b", index=1)]) is True
+    assert calls == [2, 2]
+
+
+def test_upsert_rejects_mismatched_embeddings(fake_store):
+    store, _ = fake_store
+    with pytest.raises(ValueError, match="2 chunks but 1 embeddings"):
+        store.upsert("ACC1", [_chunk("a", index=0), _chunk("b", index=1)], [[0.0]])
 
 
 # ---------------------------------------------------------------------------
