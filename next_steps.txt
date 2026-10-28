@@ -2,22 +2,206 @@
 IDEAS for Improvements/Changes
 
 
+- NEXT: Live smoke test of the standards-retrofit branch (costs money):
+Nothing in the retrofit has been run against live APIs yet; 150 offline
+tests pass. Run before merging into master.
+1. Panel from the command line (~$0.30-0.65):
+   .venv/Scripts/python -m yoda.modes.personality_panel NFLX
+   Check: report saved to data/eval/panel_NFLX.json; TOTALS block prints;
+   no "CRASHED" lines; data_gaps read sensibly (no fake "MD&A" citations,
+   "UNVERIFIED" only where a URL was cited); filing_type/date match the 10-Q.
+2. Streamlit (streamlit run app.py): Single ticker -> Generate Report for
+   NFLX, view watchlist / bull-bear / news / data gaps, Download PDF and open
+   it (cover caveats, tables wrap, no broken text).
+3. Queue: run 2 tickers including one with no recent filing or a typo
+   (e.g. NFLX + ZZZZ) -> one complete, one failed with a readable error and
+   a "Details" traceback; ZIP downloads.
+4. Expect once: every filing cache is re-downloaded (new cache format) and
+   re-embedded (chunker fix) — ~$0.004 per filing.
+5. Optional: baseline (python -m yoda.modes.baseline NFLX) and a 1-ticker
+   eval (python -m yoda.eval.runner NFLX) to confirm summary.md Failures
+   section and cost columns.
+6. UI bugs (to debug later):
+   a. CONFIRMED: scroll-to-top uses "section.main", which doesn't exist in
+      Streamlit 1.40 (the element is section.stMain, data-testid="stMain"),
+      so the page never scrolls to the "Queue complete" notice.
+   b. unverified: queue download buttons read PDFs that a later run of the
+      same ticker may have pruned (FileNotFoundError on rerun).
+   c. CONFIRMED: after a failed generation (ZZZZ) the previous ticker's
+      report (NFLX) is still shown under the new error.
+   d. unverified (minor): "Add to Queue (N)" counts tickers already queued.
+   e. NEW (minor): a failed generation prints the error twice (st.error
+      line + st.exception block repeat the same message).
+   f. NEW (minor): after a queue run finishes, the page reruns and jumps back
+      to the "Single ticker" tab; the results are on the Queue tab.
+
+SMOKE TEST RESULTS (2026-10-27, branch standards-retrofit):
+   - Step 1 PASS: CLI panel NFLX — 6/6 personalities clean, 12 hypotheses,
+     $0.52 (budget $0.65), 171s; 30 metrics, 5 segments, 8 risks, 11 news,
+     7 watch items; 0 UNVERIFIED citations, 0 bare "MD&A"; 5 sensible
+     filing-specific data gaps; re-embedded once (122 chunks) as expected.
+   - Step 2 PASS: Streamlit single ticker NFLX renders caveat, watchlist with
+     source links, bull/bear, news, data gaps; PDF built (download button
+     shown). Unknown ticker fails fast with a clear error, no paid calls.
+   - Step 3 PASS: queue NFLX + ZZZZ -> 1 complete (172s), 1 failed with
+     readable error + traceback in Details; ZIP (23 KB) offered.
+   - Not clicked: the PDF/ZIP download buttons themselves (they save files
+     to disk); PDF rendering was checked separately from a saved report.
+   - Not run: optional step 5 (baseline, 1-ticker eval).
+   - Total spent: ~$1.55 (3 NFLX panel runs).
+   - Observation for the 8-K work: the NFLX report already leans on
+     press-reported Q4 guidance ("guidance reported in the press") in the
+     bull case and watchlist — exactly the unlabelled post-filing layer the
+     evidence tags are meant to fix.
+
+
 - Improve Report Content:
 1. Add implied volatility, expectations, and whisper number discourse
+   (yoda/tools/consensus.py already fetches consensus EPS/revenue, whisper,
+   implied move, beat/miss history, analyst actions and price target, each
+   with source + timestamp — but nothing imports it yet. Wiring it in is
+   step 3 of the 8-K task below.)
 
-- Improve Retrieval Quality:
-1. better chunking - recursive/semantic chunking instead of fixed splits?
-2. Fine-Tune Embedding Model to SEC Filings + Stock/Financial news?
+- Incorporate 8-K filings and post-filing developments ("Option 2 + tool"):
+Goal: the 10-Q/10-K is ground truth for its period but is already stale on
+release. Add the layers analysts use to see what changed since, keeping every
+claim labelled by source, as-of date and evidence type — never letting news
+overwrite filing numbers.
 
-- Create Master Repo txt File:
-1. Contains detailed description and explanation of each file 
-2. Contains all relationships with other files
+1. Ingest 8-Ks filed after the primary 10-Q/10-K (yoda/ingest/edgar.py)
+   - Fetch 8-Ks with filing_date > primary filing_date (SEC submissions JSON
+     already lists them; same _sec_get + cache path).
+   - Read the Item codes to know what each 8-K is: 2.02 = earnings release
+     (Exhibit 99.1 press release — often out days/weeks BEFORE the 10-Q),
+     1.01 = material agreement, 2.01 = acquisition/disposal, 2.03 = new debt,
+     5.02 = executive change, 7.01/8.01 = Reg FD / other events.
+   - Model: a Filing-like record per 8-K (date, items, exhibit text, url).
+   - Embed into ChromaStore so personalities can retrieve it.
 
-- Fine-tune the model on financial and earnings-specific language
-1. 
+2. Evidence types — tag every claim
+   reported  = company actuals for a closed period (10-Q/10-K, 8-K 2.02 release)
+   guided    = management's own outlook (release, call, 8-K 7.01)
+   estimate  = third-party expectation (consensus, analyst targets, whisper)
+   proxy     = indirect signal (alt data, peer read-through, industry stats)
+   no evidence = claim lacks evidence to be tagged reported, guided, estimate, or proxy
+   - Add evidence_type + as_of_date + source to Hypothesis evidence quotes and
+     to a new report section (see 5).
+   - News articles are tagged by the ORIGINAL source the article names for
+     the claim, not as "news". The personality may tag the claim when the
+     article attributes it, e.g.:
+       "Netflix reported revenue of $X in its Q2 filing"  -> reported
+       "management expects Q3 margins of Y%"               -> guided
+       "analysts polled by LSEG expect EPS of $Z"          -> estimate
+       "card-spending data from <firm> shows sales down"   -> proxy
+     The attributed source is recorded alongside the tag.
+     - news article source should also be tagged (e.g. marketbeat, SeekingAlpha)
+   - Edge case: if the article does not say where the claim comes from, the
+     claim is tagged "no evidence".
 
-- Restructure README:
-1. Put evaluation result at top
+
+3. New personality tool: search_developments(query)
+   - Searches post-filing 8-Ks + news + consensus.py data; every result comes
+     back pre-tagged with evidence_type, as_of_date and source.
+   - Wire consensus.py into this tool and into synthesis.
+
+4. Weigh claims — two dimensions: reliability and relevance (AGREED DESIGN)
+   - Recommendation (agreed):
+     * Reliability: categorical tag (reported > guided > estimate > proxy).
+       Assigned in code wherever the source type is known (SEC filings,
+       consensus feed). For news articles the personality assigns it from
+       the source the article names, and code checks the tag fits that
+       stated source (item 2); no stated source -> "no evidence".
+     * Relevance: coarse category judged by the personality per hypothesis
+       — "direct" (same metric/period as the question) vs "context" — with a
+       one-line reason, which the critique step can challenge.
+     * No numeric weights at first. Rules instead: a hypothesis needs at
+       least one direct claim; proxy-only hypotheses are capped at 3/5;
+       on conflicts for the same metric/period, the more reliable tier wins
+       and both are shown.
+     * Revisit numeric weighting only if the eval shows the categorical
+       rules aren't enough.
+
+5. Report schema (yoda/schema.py)
+   - key_metrics stays filing-only ("reported", with the period it covers).
+   - New section, e.g. since_filing: list of {claim, evidence_type,
+     as_of_date, source, url} — 8-K events, guidance, consensus, proxies.
+   - New section, e.g. market_expectations: consensus EPS/revenue, whisper,
+     implied move (from consensus.py), each with source + as-of.
+   - Every Metric gains a period/as-of field so staleness is visible.
+
+6. Synthesis prompt rules (yoda/modes/personality_panel.py _SYNTHESIS_SYSTEM)
+   - Rule 1: keep "FILING TEXT is the only source for key_metrics,
+     revenue_segments and their citations" (reported history). Amend to say
+     post-filing information goes in since_filing / market_expectations with
+     its evidence_type — never into key_metrics, never overwriting a filing
+     number. An 8-K 2.02 press release counts as a reported source for its
+     own period and may be cited like a filing.
+   - Rule 5: DONE (commit 709ae6e) — retired the conflicting first sentence
+     ("not supported by hypothesis evidence or news -> data_gaps"), which
+     contradicted rule 1
+     (a figure in the filing is supported even if no personality looked at
+     it). KEEP its data_gaps definition — "only facts the filing/8-Ks/news
+     SHOULD have covered but did not; forward-looking items like consensus
+     are NOT gaps" — moved into its own data_gaps rule. Without it, the
+     model fills data_gaps with "Q3 consensus not in filing"-style noise.
+   - New rule: label every since_filing claim with its evidence_type and
+     as-of date; when tiers conflict on the same metric/period, state both
+     and say which is more reliable.
+   - Citations: allow "8-K Item 2.02, Exhibit 99.1 — <heading>" format.
+   - Update baseline prompt too, or the eval comparison is no longer fair.
+   - REMEMBER TO UPDATE RULE 1 AND 5 TO MAKE SURE THEY ARE CONSISTENT WITH NEW 8-K FEATURE
+    - Rule 1’s “only known from external sources → data_gaps” overlaps with rule 5’s 
+    “external items are NOT gaps”. Rule 5’s “SHOULD have covered” test mostly settles it. 
+    The real fix is the “since filing” section in the 8-K work, which gives external facts 
+    their own home, so I left the wording alone for now.
+
+7. Eval
+   - Judge rubric: add a dimension (or criterion under accuracy) for
+     "post-filing information is labelled and not mixed into reported figures".
+   - Re-run baseline vs Yoda after; expect cost/latency increase — measure it.
+
+8. Earnings press release + call transcript as context
+   - Press release: on EDGAR as 8-K Item 2.02, Exhibit 99.1 — free, covered
+     by step 1. Usually the first "reported" numbers for the quarter and
+     the main source of quarterly guidance.
+   - Call transcript: NOT on EDGAR. Needs a vendor (FMP/Finnhub transcript
+     endpoints — check plan cost and terms). Valuable for guidance wording
+     and analyst Q&A; long, so retrieve chunks rather than send in full.
+
+9. Personality "analyst playbook" + source vetting (current gap)
+   - Today the personality prompts give a lens (3-5 sentences) and tool
+     rules, but nothing on what moves a stock on earnings (results vs
+     consensus, guidance changes, key KPIs, margins), what news to look
+     for, or how to judge a source. The models have general financial
+     knowledge but are not told to apply it.
+   - Code does no source vetting: search_news (Tavily) has no news-topic,
+     date-range or domain filter; the URL-pool check only proves a URL came
+     from a search, not that the source is credible.
+   - Add: a shared playbook section in _BASE_LOOP_CONTRACT; a source-tier
+     list (company primary > data vendors > major financial press >
+     aggregators/blogs); Tavily topic="news" + a time window starting at the
+     filing date; tag-vs-source validation — a tag must match the source
+     the article attributes the claim to (see item 2); a claim with no
+     stated source is tagged "no evidence".
+
+10. Tests (offline, per CLAUDE.md)
+   - 8-K item parsing and date filtering; tool result tagging; schema
+     validation of evidence_type; confidence cap for proxy-only hypotheses;
+     key_metrics never sourced from a since_filing claim.
+
+11. Improve Retrieval Quality:
+  - better chunking - recursive/semantic chunking instead of fixed splits?
+  - Fine-Tune Embedding Model to SEC Filings + Stock/Financial news?
+
+12. Create Master Repo txt File:
+  - Contains detailed description and explanation of each file 
+  - Contains all relationships with other files
+
+13. Fine-tune the model on financial and earnings-specific language
+  -
+
+14. Restructure README:
+  - Put evaluation result at top
 
 Acceptance. A reader who stops after the first screen knows 
 
