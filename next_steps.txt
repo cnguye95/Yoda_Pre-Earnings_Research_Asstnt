@@ -73,6 +73,29 @@ IDEAS for Improvements/Changes
      EarningsWatcher has no confirmed report date yet, so it publishes no
      implied move. The whisper lookup still cost
      $0.12 — skipping it when the report is far off would save that.
+   - RUN 2 (BA, 2026-10-28, user-approved, to exercise 8-Ks and news):
+     $0.984 total, 274s, 6/6 clean. Loops $0.082, critique $0.142,
+     synthesis $0.629 (161K in / 31K out tokens), whisper $0.130. Inputs:
+     10-Q 2026-07-28 (189K chars), 4 post-filing 8-Ks / 5 documents (46K
+     chars: 2.02 Q3 release, 1.01+2.03 credit agreement, two 5.02), 48
+     news results, 5 articles read (63K chars; one was a 512-char stub).
+     * WORKED: 18 since_filing items (10 reported from the 8-Ks with the
+       "8-K Item 2.02, Exhibit 99.1 — <table>" source and Q3 FY2026
+       period; 3 guided, 2 estimate (LSEG), 2 proxy, 1 unverifiable);
+       5.02/1.01 events have period None. Spot-checked Q3 figures
+       (revenue $24,188M, FCF $464M, backlog $745,431M ...) all appear in
+       Exhibit 99.1. key_metrics stayed on the 10-Q (Q2 / H1 FY2026), none
+       cited an 8-K. No since_filing item dropped or retagged. Evidence:
+       71 quotes, 32 cite an 8-K, 19 a news URL; 16 unverifiable (8 quote
+       not found, 3 article doesn't name the source, 3 tagged so by the
+       analyst). Bundle: 5 documents, 48 news, 4 of 5 read articles kept
+       (cited), 0 peer passages (no lookup_peer call).
+     * COST: ~$1 for a mid-size filer with fresh news, well over the $0.65
+       budget; synthesis output (31K tokens incl. thinking) is the largest
+       single cost. Revisit REPORT_BUDGET_USD and synthesis effort before
+       eval runs.
+     * MINOR: the tool log prints read_article('') — it shows the query
+       argument, which read_article doesn't have.
 
 3.1 Ingest 8-Ks filed after the primary 10-Q/10-K (yoda/ingest/edgar.py)
    - Fetch 8-Ks with filing_date > primary filing_date (SEC submissions JSON
