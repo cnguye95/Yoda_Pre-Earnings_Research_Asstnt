@@ -66,6 +66,9 @@ from yoda.schema import (
     ArticleText,
     EarningsReport,
     EightKFiling,
+    EvidenceBundle,
+    EvidenceDocument,
+    EvidencePassage,
     EvidenceQuote,
     EvidenceType,
     ExpectationValue,
@@ -1443,6 +1446,66 @@ def _completeness_gaps(report: EarningsReport, eight_k_count: int, news_count: i
 
 
 # ---------------------------------------------------------------------------
+# Evidence bundle — the external sources behind the report, for the eval judge
+# ---------------------------------------------------------------------------
+
+def _cited_urls(report: EarningsReport) -> set[str]:
+    """Return every link the finished report cites: news items, watchlist links, since_filing links.
+
+    hypotheses_explored is not counted: it is Yoda's own reasoning, which the
+    eval removes before scoring.
+    """
+    return ({item.url for item in report.recent_news}
+            | {url for item in report.what_to_watch for url in item.relevant_urls}
+            | {item.url for item in report.since_filing})
+
+
+def _evidence_bundle(
+    ticker: str,
+    filing: Filing | None,
+    supplemental_used: Filing | None,
+    eight_ks: list[EightKFiling],
+    context_block: str,
+    ctx: ToolContext,
+    report: EarningsReport,
+) -> EvidenceBundle:
+    """Collect the external sources *report* was written from, each with its own citation.
+
+    Holds the filing(s) synthesis read in full (*supplemental_used* is None
+    when the 10-K was left out for size), every 8-K document, the CONTEXT
+    block, the news pool, which articles were read (full text only for those
+    the report cites), and the competitor passages personalities were shown.
+    It never holds hypotheses or critique — those are Yoda's reasoning, not
+    sources. Built on every run; only the eval runner saves it.
+    """
+    # The 10-Q/10-K, then every 8-K document, each in full.
+    documents = [
+        EvidenceDocument(label=_describe_filing(doc), accession_number=doc.accession_number,
+                         filing_date=doc.filing_date, url=doc.url, text=doc.clean_text)
+        for doc in (filing, supplemental_used) if doc is not None
+    ]
+    documents += [
+        EvidenceDocument(label=eight_k_label(eight_k, doc), accession_number=eight_k.accession_number,
+                         filing_date=eight_k.filing_date, url=doc.url, text=doc.clean_text)
+        for eight_k in eight_ks for doc in eight_k.documents
+    ]
+
+    # Full article text only where a personality read it AND the report cites it.
+    cited = _cited_urls(report)
+    articles = [article for url, article in ctx.read_articles.items() if url in cited]
+
+    # Competitor passages exactly as personalities saw them, each kept once
+    # (in first-seen order) even when two personalities pulled the same one.
+    passages = dict.fromkeys((_chunk_label(chunk), chunk.text[:_CHUNK_PREVIEW_CHARS]) for chunk in ctx.peer_chunks)
+
+    return EvidenceBundle(
+        ticker=ticker, documents=documents, market_context=context_block,
+        news_results=list(ctx.news_pool), read_urls=list(ctx.read_articles), articles=articles,
+        peer_passages=[EvidencePassage(label=label, text=text) for label, text in passages],
+    )
+
+
+# ---------------------------------------------------------------------------
 # No-filing handling
 # ---------------------------------------------------------------------------
 
@@ -1793,16 +1856,32 @@ def _market_expectations(market: MarketSnapshot) -> MarketExpectations:
 # Public API
 # ---------------------------------------------------------------------------
 
+class PanelRun(NamedTuple):
+    """Everything one panel run produces.
+
+    *report* is the finished EarningsReport. *personality_results* and
+    *critique_messages* are the panel's own working (telemetry, hypotheses,
+    peer review). *evidence* is the external sources the report was written
+    from, for the eval judge; only the eval runner saves it.
+    """
+    report: EarningsReport
+    personality_results: list[PersonalityResult]
+    critique_messages: list[CritiqueMessage]
+    evidence: EvidenceBundle
+
+
 def run_personality_panel(
     ticker: str,
     market: MarketSnapshot | None = None,
     allow_missing_market_data: bool = False,
-) -> tuple[EarningsReport, list[PersonalityResult], list[CritiqueMessage]]:
+) -> PanelRun:
     """Run the multi-agent personality panel against *ticker*.
 
-    Returns (report, personality_results, critique_messages). Raises
-    RuntimeError if no personality produced a hypothesis, and ValueError if
-    synthesis invents a news URL (the report would cite a fake article).
+    Returns a PanelRun: the report, the personality results, the critique
+    messages, and the evidence bundle (the external sources behind the
+    report). Raises RuntimeError if no personality produced a hypothesis,
+    and ValueError if synthesis invents a news URL (the report would cite a
+    fake article).
 
     Market data is fetched once, before any personality runs. If a provider
     refuses the request (a rejected key, a paid-only endpoint, an Anthropic
@@ -2144,6 +2223,11 @@ def run_personality_panel(
     # Problems from the input-gathering phase, so the reader sees them too.
     report.data_gaps.extend(gap for gap in run_gaps if gap not in report.data_gaps)
 
+    # The external sources the finished report was written from, for the
+    # eval judge. Built last, so "cited" means cited by the final report.
+    evidence = _evidence_bundle(ticker, filing, None if sup_dropped else supplemental,
+                                eight_ks, context_block, ctx, report)
+
     # ------------------------------------------------------------------
     # Cost + wall-time totals (regex-parseable by the eval runner)
     # ------------------------------------------------------------------
@@ -2181,7 +2265,7 @@ def run_personality_panel(
         print(f"{log_prefix} WARNING: total cost ${total_cost:.4f} "
               f"exceeded budget ${REPORT_BUDGET_USD:.2f}")
 
-    return report, personality_results, critique_messages
+    return PanelRun(report, personality_results, critique_messages, evidence)
 
 
 # ---------------------------------------------------------------------------
@@ -2197,14 +2281,14 @@ if __name__ == "__main__":
     # A market-data provider that refuses the request pauses the run; ask
     # whether to go on without that data (reusing the data already fetched).
     try:
-        report, results, messages = run_personality_panel(ticker)
+        run = run_personality_panel(ticker)
     except MarketDataUnavailable as exc:
         print(f"\n{exc}")
         answer = input(f"Continue without {', '.join(exc.apis)} data? [y/N] ").strip().lower()
         if answer != "y":
             sys.exit("Stopped: market data unavailable.")
-        report, results, messages = run_personality_panel(ticker, market=exc.snapshot,
-                                                          allow_missing_market_data=True)
+        run = run_personality_panel(ticker, market=exc.snapshot, allow_missing_market_data=True)
+    report, results = run.report, run.personality_results
 
     # Save report to data/eval for downstream comparison.
     out_dir = config.DATA_DIR / "eval"
@@ -2221,6 +2305,12 @@ if __name__ == "__main__":
     print(f"Key risks:         {len(report.key_risks)}")
     print(f"Recent news:       {len(report.recent_news)}")
     print(f"Since filing:      {len(report.since_filing)}")
+
+    # What the eval judge would see (only the eval runner saves the bundle).
+    evidence = run.evidence
+    print(f"Evidence bundle:   {len(evidence.documents)} documents, {len(evidence.news_results)} news results, "
+          f"{len(evidence.read_urls)} articles read ({len(evidence.articles)} kept in full: cited), "
+          f"{len(evidence.peer_passages)} peer passages")
     print(f"Hypotheses:        {len(report.hypotheses_explored)}")
     print(f"What to watch:     {len(report.what_to_watch)}")
     print(f"Data gaps:         {len(report.data_gaps)}")

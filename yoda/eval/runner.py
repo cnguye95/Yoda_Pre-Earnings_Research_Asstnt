@@ -5,6 +5,10 @@ judges each report with judge_report(), and returns a long-format DataFrame
 with per-row scores, latency, and cost.
 
 Outputs written to disk (data/eval/ unless another folder is passed):
+  {mode}_{ticker}.json          — each report
+  {mode}_{ticker}_evidence.json — the external sources a report was written
+                    from (filings, 8-Ks, market data, news, articles read),
+                    for the judge; Yoda only until the baseline builds one
   results.csv     — full long-format DataFrame
   summary.md      — run date + models, mean scores per mode, the paired
                     Yoda-vs-baseline confidence table, and a Failures
@@ -43,7 +47,7 @@ from yoda.eval.rubric import JudgeScores
 from yoda.ingest.edgar import fetch_latest_filing
 from yoda.modes.baseline import BASELINE_MODEL, run_baseline
 from yoda.modes.personality_panel import CRITIQUE_MODEL, LOOP_MODEL, SYNTH_MODEL, run_personality_panel
-from yoda.schema import EarningsReport, Filing
+from yoda.schema import EarningsReport, EvidenceBundle, Filing
 from yoda.tickers import normalize_tickers
 
 
@@ -97,14 +101,20 @@ class ModeRun(NamedTuple):
     latency_source: str            # "logged" (from the mode's own log) or "measured" (timed here)
     cost_usd: float | None         # None when the log had no "Total cost:" line
     log: str
+    # The external sources the report was written from, saved for the judge.
+    # None for a mode that doesn't build one yet (the baseline).
+    evidence: EvidenceBundle | None = None
 
 
-def _capture(fn: Callable[..., EarningsReport], *args) -> ModeRun:
-    """Run fn(*args) with its printed output captured, and read cost and time from that log."""
+def _capture(fn: Callable[..., tuple[EarningsReport, EvidenceBundle | None]], *args) -> ModeRun:
+    """Run fn(*args) with its printed output captured, and read cost and time from that log.
+
+    *fn* returns (report, evidence bundle or None).
+    """
     buf = io.StringIO()
     started = time.perf_counter()
     with contextlib.redirect_stdout(buf):
-        report = fn(*args)
+        report, evidence = fn(*args)
     elapsed = time.perf_counter() - started
     log = buf.getvalue()
 
@@ -117,19 +127,28 @@ def _capture(fn: Callable[..., EarningsReport], *args) -> ModeRun:
         latency_source="logged" if wall_match else "measured",
         cost_usd=float(cost_match.group(1)) if cost_match else None,
         log=log,
+        evidence=evidence,
     )
 
 
-def _run_mode(mode: str, ticker: str, filing: Filing | None) -> ModeRun:
-    """Run one mode for one ticker and return its ModeRun.
+def _yoda_run(ticker: str) -> tuple[EarningsReport, EvidenceBundle]:
+    """Run the panel for *ticker* and return its report and evidence bundle.
 
-    The panel returns (report, personality_results, critique_messages); only
-    the report is scored, so the rest is discarded here.
+    The panel's own working (personality results, critique messages) is
+    dropped: only the report is scored, and the judge must never see Yoda's
+    reasoning as if it were a source.
     """
+    run = run_personality_panel(ticker)
+    return run.report, run.evidence
+
+
+def _run_mode(mode: str, ticker: str, filing: Filing | None) -> ModeRun:
+    """Run one mode for one ticker and return its ModeRun."""
     if mode == "baseline":
-        return _capture(run_baseline, ticker, filing)
+        # The baseline builds no evidence bundle yet (next_steps section 4).
+        return _capture(lambda symbol, primary: (run_baseline(symbol, primary), None), ticker, filing)
     if mode == "yoda":
-        return _capture(lambda symbol: run_personality_panel(symbol)[0], ticker)
+        return _capture(_yoda_run, ticker)
     raise ValueError(f"Unknown mode: {mode}")
 
 
@@ -219,6 +238,14 @@ def run_eval(
             (out_dir / f"{mode}_{ticker}.json").write_text(
                 run.report.model_dump_json(indent=2), encoding="utf-8"
             )
+
+            # Save the sources the report was written from next to it, so the
+            # judge can check the report against what it saw. Only the eval
+            # runner writes these files.
+            if run.evidence is not None:
+                (out_dir / f"{mode}_{ticker}_evidence.json").write_text(
+                    run.evidence.model_dump_json(indent=2), encoding="utf-8"
+                )
 
             # Judge the report against the filing text. A judge failure
             # (refusal, cut-off, API error after retries) skips this row like a

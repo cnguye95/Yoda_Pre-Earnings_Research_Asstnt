@@ -81,8 +81,12 @@ class ToolContext:
     # label, e.g. "PEER DIS 10-Q filed 2026-08-04", goes on its chunks.
     _ingested_peers: dict[str, tuple[str, str]] = field(default_factory=dict)
 
-    # Locks so two threads never update the peer map, news pool or read
-    # articles at once.
+    # Every competitor passage lookup_peer returned (labelled "PEER ..."), so
+    # the eval's evidence bundle holds the peer text personalities saw.
+    peer_chunks: list[Chunk] = field(default_factory=list)
+
+    # Locks so two threads never update the peer map or peer passages, news
+    # pool or read articles at once.
     _peer_lock: threading.Lock = field(default_factory=threading.Lock)
     _news_lock: threading.Lock = field(default_factory=threading.Lock)
     _read_lock: threading.Lock = field(default_factory=threading.Lock)
@@ -201,7 +205,12 @@ def lookup_peer(ctx: ToolContext, peer_ticker: str, query: str, k: int = 3) -> l
 
     # Query is read-only, safe outside the lock. The "PEER" label marks these
     # as a competitor's figures — only an indirect signal (proxy) for this company.
-    return _labelled(ctx.store.query(peer_accession, query, k=k), peer_label)
+    chunks = _labelled(ctx.store.query(peer_accession, query, k=k), peer_label)
+
+    # Keep a record of what was returned, for the eval's evidence bundle.
+    with ctx._peer_lock:
+        ctx.peer_chunks.extend(chunks)
+    return chunks
 
 
 # ---------------------------------------------------------------------------

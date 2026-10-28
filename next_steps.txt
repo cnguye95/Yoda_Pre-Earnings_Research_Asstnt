@@ -33,7 +33,7 @@ IDEAS for Improvements/Changes
    Build order (AGREED): steps 1-5 = anchors, schema, historical move, 8-K
    ingest, news tools (all DONE). Step 6, the panel, is split into 6a inputs
    (DONE) → 6b evidence tags + weighting (DONE) → 6c synthesis + report
-   (DONE) → 6d evidence bundle → 6e PDF/app display. Then step 7 (eval), step 8
+   (DONE) → 6d evidence bundle (DONE) → 6e PDF/app display. Then step 7 (eval), step 8
    (transcripts).
    SMOKE TEST (AGREED 2026-10-28): one live panel run is allowed once all of
    step 6 (6a-6e) is done, to check the panel end to end before step 7.
@@ -458,6 +458,19 @@ IDEAS for Improvements/Changes
        hypotheses_explored from the report before scoring. This also lets
        the archive load for re-scoring: 8 archived baseline reports hold
        invented hypotheses that today's schema rejects (see section 4).
+     * DONE (6d) for the panel: run_personality_panel returns a PanelRun
+       (report, personality_results, critique_messages, evidence). The
+       EvidenceBundle (schema.py) holds the 10-Q (+ the 10-K only if
+       synthesis got it) and every 8-K document in full, the CONTEXT text
+       synthesis read (AGREED: not the raw snapshot), the news pool as
+       synthesis saw it, read_urls (every article read), the full text of
+       articles read AND cited (recent_news, watchlist or since_filing
+       links), and the competitor passages lookup_peer returned (AGREED:
+       included, as shown — first 1,200 chars). The eval runner writes
+       {mode}_{ticker}_evidence.json next to the report; app, queue and the
+       smoke test don't save it (the smoke test prints counts, AGREED). The
+       baseline returns none until section 4. The judge doesn't read it
+       yet (step 7). Tests: tests/test_panel.py, tests/test_outputs.py.
    - Reliability checks (AGREED):
      * Quote check: for each dimension the judge quotes the evidence
        passages behind its score, and code checks that each quote really
@@ -576,6 +589,10 @@ IDEAS for Improvements/Changes
      evidence bundle holds only cited external sources (no hypotheses or
      critique) and records which articles were read; read_article rejects
      URLs outside the news pool and caps its output.
+   - DONE (6d): the evidence-bundle tests — a marker planted in every
+     hypothesis and critique message never reaches the bundle; read_urls
+     lists every article read, full text only for cited ones
+     (tests/test_panel.py).
    - Rubric, judge and runner tests live in tests/test_rubric.py (3.7).
 
 

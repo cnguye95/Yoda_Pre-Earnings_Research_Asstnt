@@ -321,6 +321,58 @@ class ArticleText(BaseModel):
 
 
 # ---------------------------------------------------------------------------
+# Evidence bundle — the external sources behind one report, for the eval judge
+# (never sent to Claude as a schema, so these use normal docstrings)
+# ---------------------------------------------------------------------------
+
+class EvidenceDocument(BaseModel):
+    """One SEC document the report's writer read in full: the 10-Q/10-K or an 8-K document.
+
+    *label* names the document and its date the way the panel shows it, e.g.
+    "10-Q filed 2026-08-06" or "8-K Items 2.02, 9.01, Exhibit 99.1 (filed
+    2026-10-13)", so a report citation can be matched to it.
+    """
+    label: str
+    accession_number: str              # SEC's unique filing ID
+    filing_date: str                   # ISO date
+    url: str | None                    # None when the archive URL is unknown
+    text: str
+
+
+class EvidencePassage(BaseModel):
+    """One passage of a competitor's filing a personality was shown (via lookup_peer).
+
+    *label* names the competitor, its filing and the passage, e.g. "PEER DIS
+    10-Q filed 2026-08-04 · MD&A — Revenue"; *text* is exactly what the
+    personality saw.
+    """
+    label: str
+    text: str
+
+
+class EvidenceBundle(BaseModel):
+    """The external sources one panel report was written from (next_steps 3.7).
+
+    Built on every run, but only the eval runner saves it, next to the report,
+    so the judge can check the report against what it saw. It never holds
+    Yoda's own hypotheses or critique: those are reasoning, not sources.
+
+    *market_context* is the CONTEXT block synthesis read (the 8-K list and
+    the market data, each figure with its provider and as-of date).
+    *news_results* is the news pool exactly as synthesis saw it. *read_urls*
+    lists every article a personality read in full; *articles* holds the
+    full text only of those the report also cites.
+    """
+    ticker: str
+    documents: list[EvidenceDocument]
+    market_context: str
+    news_results: list[NewsSearchResult]
+    read_urls: list[str]
+    articles: list[ArticleText]
+    peer_passages: list[EvidencePassage]
+
+
+# ---------------------------------------------------------------------------
 # Top-level report model
 # ---------------------------------------------------------------------------
 

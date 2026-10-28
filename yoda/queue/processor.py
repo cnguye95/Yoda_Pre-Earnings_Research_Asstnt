@@ -110,9 +110,9 @@ def _build_pdf(ticker: str, market: MarketSnapshot | None = None,
     passed to the panel (see run_personality_panel); without them a refused
     market-data request raises MarketDataUnavailable.
     """
-    report, _personality_results, _critique = run_personality_panel(
+    report = run_personality_panel(
         ticker, market=market, allow_missing_market_data=allow_missing_market_data,
-    )
+    ).report
 
     # Fetch the filing again only for its URL, used to hyperlink citations.
     # fetch_latest_filing is cached on disk, so this is fast after the panel.

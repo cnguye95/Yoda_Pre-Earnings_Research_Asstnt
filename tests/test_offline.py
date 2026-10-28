@@ -256,6 +256,8 @@ def test_peer_chunks_are_labelled_as_a_competitors(monkeypatch):
     [chunk] = tools.lookup_peer(ctx, "dis", "revenue")
 
     assert chunk.document == "PEER DIS 10-Q filed 2026-08-04"
+    # Recorded for the eval's evidence bundle.
+    assert ctx.peer_chunks == [chunk]
 
 
 # ---------------------------------------------------------------------------

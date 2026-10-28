@@ -15,10 +15,10 @@ import pytest
 
 from yoda.eval import judge, runner
 from yoda.eval.rubric import DimensionScore, JudgeScores
-from yoda.modes.personality_panel import MarketDataUnavailable
+from yoda.modes.personality_panel import MarketDataUnavailable, PanelRun
 from yoda.queue import processor
 from yoda.report import pdf
-from yoda.schema import EarningsReport, ForwardGuidance, Metric, NewsItem, Risk, Segment, WatchItem
+from yoda.schema import EarningsReport, EvidenceBundle, ForwardGuidance, Metric, NewsItem, Risk, Segment, WatchItem
 from yoda.tickers import normalize_tickers
 from yoda.tools.consensus import ApiFailure, MarketSnapshot
 
@@ -266,12 +266,43 @@ def test_single_mode_run_keeps_other_modes_reports(monkeypatch, tmp_path):
     assert not (tmp_path / "panel_AAA.json").exists()
 
 
+def _bundle() -> EvidenceBundle:
+    # A small evidence bundle; its contents don't matter to the runner.
+    return EvidenceBundle(ticker="AAA", documents=[], market_context="- Consensus EPS: $1.23", news_results=[],
+                          read_urls=["https://news.example/a"], articles=[], peer_passages=[])
+
+
+def test_yoda_evidence_is_saved_next_to_its_report(monkeypatch, tmp_path):
+    # Yoda's bundle is written beside its report and survives the stale-file
+    # cleanup; the baseline builds none yet, so it gets no evidence file.
+    def run_mode(mode, ticker, filing):
+        return runner.ModeRun(_report(), 1.0, "logged", 0.1, "", _bundle() if mode == "yoda" else None)
+    _stub_runner(monkeypatch, run_mode)
+
+    runner.run_eval(["AAA"], out_dir=tmp_path)
+
+    saved = (tmp_path / "yoda_AAA_evidence.json").read_text(encoding="utf-8")
+    assert EvidenceBundle.model_validate_json(saved) == _bundle()
+    assert (tmp_path / "yoda_AAA.json").exists()
+    assert not (tmp_path / "baseline_AAA_evidence.json").exists()
+
+
+def test_run_mode_passes_on_the_panel_evidence(monkeypatch):
+    # The panel's bundle reaches the runner; its hypotheses and critique don't.
+    monkeypatch.setattr(runner, "run_personality_panel",
+                        lambda ticker: PanelRun(_report(), ["working"], ["critique"], _bundle()))
+    monkeypatch.setattr(runner, "run_baseline", lambda ticker, filing: _report())
+
+    assert runner._run_mode("yoda", "AAA", None).evidence == _bundle()
+    assert runner._run_mode("baseline", "AAA", None).evidence is None
+
+
 def test_unparsed_cost_is_unknown_not_zero():
     # A mode whose log has no "Total cost:" line has an unknown cost.
-    run = runner._capture(lambda: print("Wall time: 2.00s") or _report())
+    run = runner._capture(lambda: print("Wall time: 2.00s") or (_report(), None))
     assert run.cost_usd is None
     assert (run.latency_seconds, run.latency_source) == (2.0, "logged")
-    timed = runner._capture(lambda: _report())
+    timed = runner._capture(lambda: (_report(), None))
     assert timed.latency_source == "measured"
 
 

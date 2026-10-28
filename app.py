@@ -84,10 +84,10 @@ def _generate_report(ticker: str, pause: MarketDataUnavailable | None = None) ->
     try:
         with st.spinner(f"Generating report for {ticker}..."):
             if pause is None:
-                report, _, _ = run_personality_panel(ticker)
+                report = run_personality_panel(ticker).report
             else:
-                report, _, _ = run_personality_panel(ticker, market=pause.snapshot,
-                                                     allow_missing_market_data=True)
+                report = run_personality_panel(ticker, market=pause.snapshot,
+                                               allow_missing_market_data=True).report
     except MarketDataUnavailable as exc:
         st.session_state["market_pause"] = (ticker, exc)
         return

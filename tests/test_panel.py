@@ -15,7 +15,8 @@ from yoda.modes import personality_panel as panel
 from yoda.modes import tools
 from yoda.schema import (
     ArticleText, CritiqueMessage, EarningsReport, EightKDocument, EightKFiling, EvidenceQuote, ExpectationValue,
-    ForwardGuidance, Hypothesis, Metric, NewsSearchResult, PersonalityResult, Risk, Segment, SinceFilingItem,
+    Filing, ForwardGuidance, Hypothesis, Metric, NewsItem, NewsSearchResult, PersonalityResult, Risk, Segment,
+    SinceFilingItem,
 )
 from yoda.tools.consensus import ApiFailure, MarketSnapshot
 
@@ -360,7 +361,7 @@ def test_continuing_reuses_the_snapshot_and_lists_the_gap(monkeypatch):
     refused = _snapshot([ApiFailure("signals", "FMP", "HTTP 402")], signals=None)
     started = _no_filing_run(monkeypatch, lambda ticker: pytest.fail("market data fetched twice"))
 
-    report, _, _ = panel.run_personality_panel("TEST", market=refused, allow_missing_market_data=True)
+    report = panel.run_personality_panel("TEST", market=refused, allow_missing_market_data=True).report
 
     assert len(started) == len(panel._PERSONALITY_PROMPTS)
     assert any(gap.startswith("Market data: signals figures are N/A because FMP refused")
@@ -759,9 +760,75 @@ def test_report_gets_market_expectations_and_hypotheses_in_code(monkeypatch):
     # synthesis left.
     _no_filing_run(monkeypatch, lambda ticker: _snapshot())
 
-    report, _, _ = panel.run_personality_panel("TEST")
+    report = panel.run_personality_panel("TEST").report
 
     assert report.market_expectations == panel._market_expectations(_snapshot())
     assert report.market_expectations.consensus_eps.value == "$1.23"
     assert len(report.hypotheses_explored) == len(panel._PERSONALITY_PROMPTS)
     assert "key_metrics[0] (Revenue): the period it covers was not stated." in report.data_gaps
+
+
+# ---------------------------------------------------------------------------
+# Evidence bundle — the external sources behind the report, for the eval judge
+# ---------------------------------------------------------------------------
+
+def test_evidence_bundle_holds_external_sources_with_full_text_only_where_cited():
+    filing = Filing(ticker="TEST", filing_type="10-Q", filing_date="2026-08-06", accession_number="q-1",
+                    url="https://www.sec.gov/q", clean_text="QUARTERLY TEXT")
+    annual = Filing(ticker="TEST", filing_type="10-K", filing_date="2026-02-01", accession_number="k-1",
+                    clean_text="ANNUAL TEXT")
+    cited_url, uncited_url = "https://news.example/cited", "https://news.example/uncited"
+    ctx = tools.ToolContext(primary_ticker="TEST", primary_accession="q-1", store=None)
+    ctx.news_pool += [NewsSearchResult(title="a", url=cited_url, snippet="the full Tavily snippet"),
+                      NewsSearchResult(title="b", url=uncited_url)]
+    for url in (cited_url, uncited_url):
+        ctx.read_articles[url] = ArticleText(url=url, text=f"BODY {url}", full_chars=40, truncated=False)
+    # Two personalities pulled the same competitor passage.
+    peer = Chunk(text="Parks revenue\n" + "x" * 2000, section="MD&A", chunk_index=0, char_start=0,
+                 char_end=2000, document="PEER DIS 10-Q filed 2026-08-04")
+    ctx.peer_chunks += [peer, peer]
+    report = _report()
+    report.recent_news = [NewsItem(headline="h", date="2026-10-01", url=cited_url, relevance_note="n")]
+
+    bundle = panel._evidence_bundle("TEST", filing, annual, [_earnings_8k()], "CONTEXT TEXT", ctx, report)
+
+    assert [doc.label for doc in bundle.documents] == [
+        "10-Q filed 2026-08-06", "10-K filed 2026-02-01",
+        "8-K Items 2.02, 9.01 (filed 2026-10-13)", "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)"]
+    assert (bundle.documents[0].text, bundle.documents[0].url) == ("QUARTERLY TEXT", "https://www.sec.gov/q")
+    assert bundle.documents[3].accession_number == "0001-26-000042"
+    assert bundle.market_context == "CONTEXT TEXT"
+    assert bundle.news_results == ctx.news_pool
+    # Both reads are recorded; only the cited article keeps its full text.
+    assert bundle.read_urls == [cited_url, uncited_url]
+    assert [article.url for article in bundle.articles] == [cited_url]
+    [passage] = bundle.peer_passages
+    assert passage.label == "PEER DIS 10-Q filed 2026-08-04 · MD&A — Parks revenue"
+    assert len(passage.text) == panel._CHUNK_PREVIEW_CHARS   # what the personality was shown
+
+    # A 10-K left out of synthesis for size is not in the bundle either.
+    without_annual = panel._evidence_bundle("TEST", filing, None, [], "", ctx, report)
+    assert [doc.label for doc in without_annual.documents] == ["10-Q filed 2026-08-06"]
+
+
+def test_evidence_bundle_never_holds_hypotheses_or_critique(monkeypatch):
+    # A marker planted in every hypothesis and critique message reaches the
+    # panel's working, but never the evidence bundle the judge will read.
+    marker = "YODA-REASONING-MARKER"
+    _no_filing_run(monkeypatch, lambda ticker: _snapshot())
+
+    def personality(name, *args):
+        hypothesis = Hypothesis(id="x", proposing_personality=name, question=marker, summary=marker,
+                                evidence_quotes=[], confidence=3)
+        return PersonalityResult(personality=name, hypotheses=[hypothesis], tool_calls_used=1,
+                                 wall_seconds=1.0, cost_usd=0.01, finished_cleanly=True)
+    monkeypatch.setattr(panel, "_run_personality", personality)
+    critique = _critique("h1", "SUPPORTS", "Quant").model_copy(update={"content": marker})
+    monkeypatch.setattr(panel, "_run_critique", lambda *args: ([critique], 0, 0))
+
+    run = panel.run_personality_panel("TEST")
+
+    assert isinstance(run, panel.PanelRun)
+    assert marker in run.report.model_dump_json() and run.critique_messages
+    assert run.evidence.market_context == panel._render_context_block([], _snapshot())
+    assert marker not in run.evidence.model_dump_json()
