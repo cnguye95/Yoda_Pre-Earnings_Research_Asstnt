@@ -6,12 +6,22 @@ raises RuntimeError so problems surface immediately instead of later.
 """
 
 import os
+import pathlib
+
 from dotenv import load_dotenv
+
+# The repo's top folder, worked out from this file's own location
+# (yoda/config.py → two levels up). Every data path is built from it, so
+# Yoda reads and writes the same data/ folder no matter which folder the
+# program is launched from.
+REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
+DATA_DIR = REPO_ROOT / "data"
 
 # Read the .env file at the repo root and add its key=value pairs to the
 # process environment. python-dotenv silently does nothing if .env is absent;
-# the validation step below catches that case.
-load_dotenv()
+# the validation step below catches that case. Variables that are already set
+# (for example the fake keys the test suite sets) are not overwritten.
+load_dotenv(REPO_ROOT / ".env")
 
 # The list of keys Yoda needs. If any of these is missing or blank in the
 # environment, the import will fail with a clear message naming the offender.

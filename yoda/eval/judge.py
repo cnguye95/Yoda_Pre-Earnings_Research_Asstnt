@@ -33,7 +33,7 @@ from yoda.schema import EarningsReport
 _JUDGE_MODEL = "gpt-6.1-sol"
 
 # Where to persist cached judge results. Created on first use.
-_CACHE_DIR = pathlib.Path("data/eval/judge_cache")
+_CACHE_DIR = config.DATA_DIR / "eval" / "judge_cache"
 
 # System prompt that instructs the judge how to grade.
 _SYSTEM_PROMPT = (
@@ -196,7 +196,6 @@ def prune_judge_cache(keep_runs: int = 2) -> None:
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    import pathlib
     from yoda.ingest.edgar import fetch_latest_filing
 
     # Load the NFLX Yoda report JSON saved by the last eval run.

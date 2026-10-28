@@ -40,6 +40,11 @@ reportlab==4.2.5
 # Eval comparison chart (data/eval/comparison.png)
 matplotlib==3.10.9
 
+# Eval results tables (yoda/eval/runner.py and tests/). Versions are the ones
+# pip resolves alongside streamlit 1.40.0, which caps both below 3.0.
+pandas==2.3.3
+numpy==2.5.4
+
 # Local Qwen embedding model — alternative to OpenAI text-embedding-3-small
 # (~1.2 GB model download on first use, cached in ~/.cache/huggingface/)
 sentence-transformers==3.3.1

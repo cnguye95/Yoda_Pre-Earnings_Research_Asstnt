@@ -16,6 +16,7 @@ gitignored (added in Phase 0).
 
 import chromadb
 
+from yoda import config
 from yoda.ingest.chunker import Chunk
 from yoda.retrieval.embeddings import embed_texts
 
@@ -35,7 +36,7 @@ class ChromaStore:
     def __init__(self) -> None:
         # Open (or create) the persistent Chroma database at data/chroma/.
         # Chroma creates the directory if it doesn't exist.
-        self._client = chromadb.PersistentClient(path="data/chroma")
+        self._client = chromadb.PersistentClient(path=str(config.DATA_DIR / "chroma"))
 
         # Get or create the collection. Cosine distance is the standard metric
         # for unit-vector embeddings from text-embedding-3-small.

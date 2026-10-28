@@ -16,6 +16,7 @@ import zipfile
 from datetime import datetime
 from typing import Callable
 
+from yoda import config
 from yoda.ingest.edgar import fetch_latest_filing
 from yoda.modes.personality_panel import run_personality_panel
 from yoda.report.pdf import report_to_pdf
@@ -25,8 +26,8 @@ from yoda.report.pdf import report_to_pdf
 # Output directories — created lazily on first run
 # ---------------------------------------------------------------------------
 
-_REPORTS_DIR = pathlib.Path("data/reports")
-_ZIPS_DIR    = pathlib.Path("data/queue_zips")
+_REPORTS_DIR = config.DATA_DIR / "reports"
+_ZIPS_DIR    = config.DATA_DIR / "queue_zips"
 
 
 # ---------------------------------------------------------------------------

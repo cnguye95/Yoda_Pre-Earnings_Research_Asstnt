@@ -13,26 +13,24 @@ SEC rules:
 
 import json
 import time
-import pathlib
-from datetime import date, timedelta
-
 import warnings
+from datetime import date, timedelta
 
 import requests
 from bs4 import BeautifulSoup, XMLParsedAsHTMLWarning
 
+from yoda import config
+
 # SEC filings are XHTML/XML but lxml's HTML parser handles them correctly.
 # Suppress the warning so it doesn't surface in the Streamlit log.
 warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
-
-from yoda import config
 
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
 
 # Root directory for cached HTML filings. Created on first use.
-_CACHE_DIR = pathlib.Path("data/filings")
+_CACHE_DIR = config.DATA_DIR / "filings"
 
 # SEC endpoint that maps every ticker to its CIK (company identifier) number.
 _TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
