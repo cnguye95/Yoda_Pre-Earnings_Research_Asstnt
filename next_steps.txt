@@ -36,6 +36,24 @@ IDEAS for Improvements/Changes
      implied move, beat/miss history, analyst actions and price target, each
      with source + timestamp — but nothing imports it yet. Wiring it in is
      step 3.3 below.)
+   - DONE (2026-10-28): first advanced search setting — the whisper lookup.
+     * RESEARCH: no public rule on timing (Earnings Whispers: "dynamic",
+       updated up to the release; AAII: whispers appear very close to the
+       announcement). Live check 2026-10-28: MSFT and AMZN (reporting that
+       day / the next) still showed only last quarter's whisper on their
+       earningswhispers.com pages; AMZN's upcoming one was in a homepage
+       preview one day out; AMD/NVDA (1-3 weeks out) showed none. So a
+       public whisper appears ~1-2 days before, not 1-1.5 weeks.
+     * RULE (AGREED): looked up by default only when the next report is
+       <= 3 days away (consensus.WHISPER_WINDOW_DAYS); an unknown or past
+       date opts out. The person can tick it anyway (a warning says it
+       will likely find nothing) or untick it. The skipped whisper shows
+       why in the report ("not looked up: next report is 82 days away").
+     * App: an "Advanced search settings" box after the ticker is entered
+       (a free next_report_date() check, once per ticker) with the cost
+       note ($0.12-0.15, measured $0.121 and $0.130). Queue: the rule per
+       ticker, or skip for the whole batch. Eval runner and CLI: the rule.
+       Tests: test_market_data.py, test_panel.py, test_outputs.py.
 
 
 3. Incorporate 8-K filings and post-filing developments ("Option 2 + tool")

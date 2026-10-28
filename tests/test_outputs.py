@@ -9,6 +9,7 @@ here calls Claude, OpenAI or the SEC.
 
 import pathlib
 import zipfile
+from datetime import timedelta
 from types import SimpleNamespace
 
 import pandas as pd
@@ -26,7 +27,9 @@ from yoda.schema import (
     EarningsReport, EvidenceBundle, ExpectationValue, ForwardGuidance, MarketExpectations, Metric, NewsItem, Risk,
     Segment, SinceFilingItem, WatchItem,
 )
+from yoda.dates import market_today
 from yoda.tickers import normalize_tickers
+from yoda.tools import consensus
 from yoda.tools.consensus import ApiFailure, MarketSnapshot
 
 
@@ -224,7 +227,7 @@ def test_pdf_builds_with_the_new_sections(tmp_path):
 
 def test_queue_records_failures_and_keeps_going(monkeypatch):
     # One bad ticker fails with its reason and traceback; the others finish.
-    def fake_build(ticker, market=None, allow_missing_market_data=False):
+    def fake_build(ticker, market=None, allow_missing_market_data=False, whisper_lookup=None):
         if ticker == "BAD":
             raise RuntimeError("SEC unreachable")
         path = processor._REPORTS_DIR / f"{ticker}_20260101-000000.pdf"
@@ -252,7 +255,7 @@ def _pausing_build(calls: list):
     snapshot = MarketSnapshot(consensus=None, whisper=None, signals=None, implied_move={}, historical_move={},
                               failures=[ApiFailure("consensus", "Finnhub", "key rejected")], whisper_cost_usd=0.0)
 
-    def build(ticker, market=None, allow_missing_market_data=False):
+    def build(ticker, market=None, allow_missing_market_data=False, whisper_lookup=None):
         calls.append((ticker, market is snapshot, allow_missing_market_data))
         if ticker == "PAUSE" and not allow_missing_market_data:
             raise MarketDataUnavailable(snapshot)
@@ -304,7 +307,7 @@ def test_continued_queue_reuses_the_data_and_bundles_everything(monkeypatch):
 def test_finished_pdfs_are_kept_in_memory_so_a_pruned_file_still_downloads(monkeypatch):
     # Bug 1b: download buttons (and a continued queue's ZIP) re-read PDFs
     # from disk, which a later run of the same ticker may have deleted.
-    def fake_build(ticker, market=None, allow_missing_market_data=False):
+    def fake_build(ticker, market=None, allow_missing_market_data=False, whisper_lookup=None):
         path = processor._REPORTS_DIR / f"{ticker}_20260101-000000.pdf"
         path.write_bytes(b"%PDF " + ticker.encode())
         return path
@@ -499,6 +502,7 @@ def test_failed_generation_shows_one_error_and_no_stale_report(monkeypatch):
     def fail(ticker, **kwargs):
         raise RuntimeError("ZZZZ has no filing")
     monkeypatch.setattr(personality_panel, "run_personality_panel", fail)
+    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: (None, "no source had a date"))
     # A report for TEST is on screen (its PDF already cached, so no SEC fetch).
     app = _app(report=_report(), pdf_bytes=b"%PDF", pdf_ticker="TEST")
     assert any(header.value.startswith("TEST —") for header in app.subheader)
@@ -531,6 +535,67 @@ def test_finished_queue_stays_on_the_queue_view(monkeypatch, tmp_path):
 
     assert app.radio(key="view").value == _QUEUE_VIEW
     assert app.success[0].value.startswith("Queue complete")
+
+
+def _days_from_now(days: int) -> str:
+    # A YYYY-MM-DD date *days* after today's market (New York) date.
+    return (market_today() + timedelta(days=days)).isoformat()
+
+
+@pytest.mark.parametrize("found, ticked", [
+    ((_days_from_now(2), None), True),             # inside the 3-day window
+    ((_days_from_now(82), None), False),           # far off: opted out
+    ((None, "Finnhub refused the request"), False),  # date not found: opted out
+])
+def test_whisper_setting_is_preset_from_the_next_report_date(monkeypatch, found, ticked):
+    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: found)
+    app = _app()
+
+    app.text_input(key="single_ticker_input").input("NFLX").run()
+
+    assert app.checkbox(key="whisper_NFLX").value is ticked
+    captions = " ".join(caption.value for caption in app.caption)
+    assert "about \\$0.12–0.15" in captions                       # the cost note, always shown
+    if found[0] is None:
+        assert "Next report date not found — Finnhub refused the request" in captions
+
+
+def test_ticking_whisper_outside_the_window_warns_and_is_passed_on(monkeypatch):
+    # The person may still ask for a lookup when the report is far off; the
+    # page warns it will likely find nothing, and the choice reaches the panel.
+    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: (_days_from_now(82), None))
+    choices = []
+
+    def panel_run(ticker, **kwargs):
+        choices.append(kwargs.get("whisper_lookup"))
+        raise RuntimeError("stop here")
+    monkeypatch.setattr(personality_panel, "run_personality_panel", panel_run)
+    app = _app()
+    app.text_input(key="single_ticker_input").input("NFLX").run()
+    assert not app.warning
+
+    app.checkbox(key="whisper_NFLX").check().run()
+    assert "The report is 82 days away" in app.warning[0].value
+
+    app.button(key="single_generate").click().run()
+    assert choices == [True]
+
+
+def test_queue_whisper_setting_reaches_each_ticker(monkeypatch):
+    # None lets each ticker follow the rule; False switches lookups off for the batch.
+    seen = []
+
+    def fake_build(ticker, market=None, allow_missing_market_data=False, whisper_lookup=None):
+        seen.append(whisper_lookup)
+        path = processor._REPORTS_DIR / f"{ticker}_20260101-000000.pdf"
+        path.write_bytes(b"%PDF")
+        return path
+    monkeypatch.setattr(processor, "_build_pdf", fake_build)
+
+    processor.process_queue(["aaa"])
+    processor.process_queue(["bbb"], whisper_lookup=False)
+
+    assert seen == [None, False]
 
 
 def test_scroll_to_top_targets_streamlit_1_40s_main_area():

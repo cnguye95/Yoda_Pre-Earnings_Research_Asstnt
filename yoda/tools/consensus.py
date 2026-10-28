@@ -1,8 +1,9 @@
 """Market expectations for a ticker: what Wall Street expects before a report.
 
-Six public functions, each returning a plain dict that names where every
+Six data functions, each returning a plain dict that names where every
 number came from and when it was fetched, plus get_market_snapshot(), which
-gathers them for one report. Anything that cannot be verified
+gathers them for one report, and next_report_date() with the whisper-setting
+rule (days_to_report, whisper_by_default). Anything that cannot be verified
 comes back as None with a reason in `data_gaps` (or `reason`) — never a guess.
 The exact shape of each dict is declared as a TypedDict below.
 
@@ -30,6 +31,10 @@ The exact shape of each dict is declared as a TypedDict below.
   get_market_snapshot(ticker)           — all of the above that a report uses,
                                           fetched once, with any provider that
                                           refused the request listed by name.
+                                          The paid whisper lookup follows the
+                                          search setting (see whisper_by_default).
+  next_report_date(ticker)              — the next report date alone, so the
+                                          app can pre-set that setting.
 
 Terms used below:
   consensus EPS  — the average earnings-per-share forecast of the analysts
@@ -112,6 +117,18 @@ _WHISPER_TOOLS = [
     {"type": "web_fetch_20260209", "name": "web_fetch", "max_uses": 1,
      "allowed_domains": [_WHISPER_DOMAIN]},
 ]
+
+# The whisper lookup runs by default only when the next report is at most
+# this many days away. Checked 2026-10-28: earningswhispers.com's company
+# pages showed no whisper for reports 1-3 weeks out, and even for MSFT and
+# AMZN (reporting that day and the next) only last quarter's; AMZN's upcoming
+# whisper appeared in a homepage preview one day before. Earlier lookups
+# find nothing and still cost money. The person can override the default.
+WHISPER_WINDOW_DAYS = 3
+
+# What one whisper lookup costs, for the app's warning. Measured: $0.121
+# (NFLX) and $0.130 (BA) in the 2026-10-28 live runs.
+WHISPER_COST_NOTE = "A whisper lookup costs about $0.12–0.15 (measured $0.12 and $0.13 on two runs)."
 
 # How far back the fallback signals look: analyst rating actions in the
 # last 30 days, and the beat/miss record over the last 4 reported quarters.
@@ -1243,7 +1260,56 @@ class MarketSnapshot(NamedTuple):
     whisper_cost_usd: float | None
 
 
-def get_market_snapshot(ticker: str) -> MarketSnapshot:
+def days_to_report(next_report_date: str | None) -> int | None:
+    """Return how many days from today (New York date) until *next_report_date*.
+
+    None when the date is missing or isn't a YYYY-MM-DD date. A report that
+    already happened gives a negative number.
+    """
+    report = _to_date(next_report_date)
+    return None if report is None else (report - market_today()).days
+
+
+def whisper_by_default(days: int | None) -> bool:
+    """True when the whisper lookup should run without being asked.
+
+    Only for a report 0 to WHISPER_WINDOW_DAYS days away; a report further
+    off, already past, or with an unknown date gets no lookup, because no
+    whisper is published that early and the call would be paid for nothing.
+    """
+    return days is not None and 0 <= days <= WHISPER_WINDOW_DAYS
+
+
+def next_report_date(ticker: str) -> tuple[str | None, str | None]:
+    """Find *ticker*'s next report date before a search, to pre-set the whisper setting.
+
+    Uses the free get_consensus() call. Returns (YYYY-MM-DD, None), or
+    (None, why) when the date can't be found: a provider refused the
+    request, or no source had a date.
+    """
+    try:
+        consensus = get_consensus(ticker)
+    except ApiAccessError as exc:
+        return None, f"{exc.api} refused the request"
+    if consensus["next_earnings_date"] is None:
+        reason = next((gap for gap in consensus["data_gaps"] if gap.startswith("next_earnings_date:")),
+                      "no source had a date")
+        return None, reason
+    return consensus["next_earnings_date"], None
+
+
+def _skipped_whisper(ticker: str, reason: str) -> WhisperResult:
+    """Return the whisper result for a lookup that wasn't made: nothing found, nothing paid, and why."""
+    return {
+        "ticker": ticker, "whisper_status": "not_found", "whisper_eps": None,
+        "fiscal_quarter": None, "fiscal_year": None, "source_url": None,
+        "page_date": None, "matches_consensus": False, "reason": reason,
+        "rejected_candidate": None, "signals": None, "note": None,
+        "retrieved_at": _now(), "cost_usd": 0.0,
+    }
+
+
+def get_market_snapshot(ticker: str, whisper_lookup: bool | None = None) -> MarketSnapshot:
     """Fetch every market-expectation figure for *ticker* once, for one report.
 
     Each part is fetched on its own, so one provider refusing (a rejected key
@@ -1251,6 +1317,11 @@ def get_market_snapshot(ticker: str) -> MarketSnapshot:
     whisper lookup) leaves the other parts intact and is listed in
     `failures` instead of stopping everything. The caller decides whether to
     go on without the failed parts.
+
+    *whisper_lookup* is the search setting for the paid whisper lookup: True
+    or False is the person's choice; None applies the default rule (only
+    when the next report is at most WHISPER_WINDOW_DAYS days away). A lookup
+    that isn't made costs nothing and its reason is shown in the report.
     """
     ticker = ticker.upper().strip()
     failures: list[ApiFailure] = []
@@ -1264,11 +1335,20 @@ def get_market_snapshot(ticker: str) -> MarketSnapshot:
         failures.append(ApiFailure("consensus", exc.api, str(exc)))
 
     # The whisper lookup is the one paid call. It is skipped when there is no
-    # consensus to match it against; an Anthropic error leaves its cost
-    # unknown. Its own fallback signals are not fetched, because they are
-    # fetched once below.
+    # consensus to match it against, or when the search setting says no (the
+    # reason then says which); an Anthropic error leaves its cost unknown.
+    # Its own fallback signals are not fetched, because they are fetched once
+    # below.
     whisper, whisper_cost = None, 0.0
-    if consensus is not None:
+    days = days_to_report(consensus["next_earnings_date"]) if consensus else None
+    if consensus is not None and whisper_lookup is False:
+        whisper = _skipped_whisper(ticker, "not looked up: turned off in the search settings.")
+    elif consensus is not None and whisper_lookup is None and not whisper_by_default(days):
+        reason = ("not looked up: next report date unknown." if days is None else
+                  f"not looked up: next report is {days} days away (looked up automatically "
+                  f"within {WHISPER_WINDOW_DAYS} days).")
+        whisper = _skipped_whisper(ticker, reason)
+    elif consensus is not None:
         try:
             whisper = get_eps_whisper(ticker, consensus, include_signals=False)
             whisper_cost = whisper["cost_usd"]

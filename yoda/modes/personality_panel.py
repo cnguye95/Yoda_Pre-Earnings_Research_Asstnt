@@ -1874,6 +1874,7 @@ def run_personality_panel(
     ticker: str,
     market: MarketSnapshot | None = None,
     allow_missing_market_data: bool = False,
+    whisper_lookup: bool | None = None,
 ) -> PanelRun:
     """Run the multi-agent personality panel against *ticker*.
 
@@ -1890,6 +1891,12 @@ def run_personality_panel(
     that data, call again with market=<the error>.snapshot and
     allow_missing_market_data=True: the snapshot is reused (no second paid
     lookup) and the missing figures are listed in the report's data_gaps.
+
+    *whisper_lookup* is the search setting for the paid whisper lookup: True
+    or False is the person's choice, None applies the default rule (look it
+    up only when the next report is a few days away; see
+    consensus.whisper_by_default). It is ignored when *market* is given,
+    since that snapshot already holds the whisper decision.
     """
     ticker = ticker.upper().strip()
     log_prefix = "[panel]"
@@ -1934,7 +1941,7 @@ def run_personality_panel(
     # the caller has already chosen to go on without it.
     if market is None:
         print(f"{log_prefix} Fetching market data...")
-        market = get_market_snapshot(ticker)
+        market = get_market_snapshot(ticker, whisper_lookup=whisper_lookup)
     if market.failures and not allow_missing_market_data:
         raise MarketDataUnavailable(market)
     run_gaps.extend(

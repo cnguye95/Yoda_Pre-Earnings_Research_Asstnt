@@ -106,16 +106,18 @@ def _prune_zips(keep: int = 2) -> None:
 
 
 def _build_pdf(ticker: str, market: MarketSnapshot | None = None,
-               allow_missing_market_data: bool = False) -> pathlib.Path:
+               allow_missing_market_data: bool = False, whisper_lookup: bool | None = None) -> pathlib.Path:
     """Run the panel for *ticker*, save its PDF in data/reports/, and return the path.
 
     The PDF filename carries a timestamp so re-runs of the same ticker don't
-    overwrite earlier outputs. *market* and *allow_missing_market_data* are
-    passed to the panel (see run_personality_panel); without them a refused
-    market-data request raises MarketDataUnavailable.
+    overwrite earlier outputs. *market*, *allow_missing_market_data* and
+    *whisper_lookup* are passed to the panel (see run_personality_panel);
+    without the first two a refused market-data request raises
+    MarketDataUnavailable.
     """
     report = run_personality_panel(
         ticker, market=market, allow_missing_market_data=allow_missing_market_data,
+        whisper_lookup=whisper_lookup,
     ).report
 
     # Fetch the filing again only for its URL, used to hyperlink citations.
@@ -138,6 +140,7 @@ def process_queue(
     allow_missing_market_data: bool = False,
     known_market: dict[str, MarketSnapshot] | None = None,
     prior_results: list[TickerResult] | None = None,
+    whisper_lookup: bool | None = None,
 ) -> QueueRun:
     """Run the personality panel sequentially for each ticker.
 
@@ -166,6 +169,10 @@ def process_queue(
     prior_results : optional list of TickerResult
         Results from the run that paused, so the continued run's results and
         ZIP include every finished ticker.
+    whisper_lookup : None or False
+        None: each ticker's paid whisper lookup follows the default rule
+        (only when its own next report is a few days away). False: no
+        whisper lookups for the whole batch.
 
     Returns
     -------
@@ -198,7 +205,8 @@ def process_queue(
         # running the queue, so the queue pauses before paying for anything.
         try:
             pdf_path = _build_pdf(ticker, market=known_market.get(ticker),
-                                  allow_missing_market_data=allow_missing_market_data)
+                                  allow_missing_market_data=allow_missing_market_data,
+                                  whisper_lookup=whisper_lookup)
         except MarketDataUnavailable as exc:
             pause = QueuePause(ticker=ticker, apis=exc.apis, message=str(exc),
                                snapshot=exc.snapshot, remaining=queued[position:])

@@ -345,7 +345,7 @@ def _no_filing_run(monkeypatch, snapshot_fn) -> list:
 
 def test_refused_market_data_pauses_before_any_personality(monkeypatch):
     refused = _snapshot([ApiFailure("signals", "FMP", "HTTP 402: premium endpoint")], signals=None)
-    started = _no_filing_run(monkeypatch, lambda ticker: refused)
+    started = _no_filing_run(monkeypatch, lambda ticker, **kwargs: refused)
 
     with pytest.raises(panel.MarketDataUnavailable) as caught:
         panel.run_personality_panel("TEST")
@@ -355,11 +355,20 @@ def test_refused_market_data_pauses_before_any_personality(monkeypatch):
     assert started == []
 
 
+def test_whisper_setting_reaches_the_market_data_fetch(monkeypatch):
+    settings = []
+    _no_filing_run(monkeypatch, lambda ticker, whisper_lookup=None: settings.append(whisper_lookup) or _snapshot())
+
+    panel.run_personality_panel("TEST", whisper_lookup=False)
+
+    assert settings == [False]
+
+
 def test_continuing_reuses_the_snapshot_and_lists_the_gap(monkeypatch):
     # Going on without the data makes no second (paid) lookup, and the
     # missing figures are named in the report's data gaps.
     refused = _snapshot([ApiFailure("signals", "FMP", "HTTP 402")], signals=None)
-    started = _no_filing_run(monkeypatch, lambda ticker: pytest.fail("market data fetched twice"))
+    started = _no_filing_run(monkeypatch, lambda ticker, **kwargs: pytest.fail("market data fetched twice"))
 
     report = panel.run_personality_panel("TEST", market=refused, allow_missing_market_data=True).report
 
@@ -758,7 +767,7 @@ def test_report_gets_market_expectations_and_hypotheses_in_code(monkeypatch):
     # End to end (no filing): code fills market_expectations from the
     # snapshot and hypotheses_explored from the panel, and names the gaps
     # synthesis left.
-    _no_filing_run(monkeypatch, lambda ticker: _snapshot())
+    _no_filing_run(monkeypatch, lambda ticker, **kwargs: _snapshot())
 
     report = panel.run_personality_panel("TEST").report
 
@@ -815,7 +824,7 @@ def test_evidence_bundle_never_holds_hypotheses_or_critique(monkeypatch):
     # A marker planted in every hypothesis and critique message reaches the
     # panel's working, but never the evidence bundle the judge will read.
     marker = "YODA-REASONING-MARKER"
-    _no_filing_run(monkeypatch, lambda ticker: _snapshot())
+    _no_filing_run(monkeypatch, lambda ticker, **kwargs: _snapshot())
 
     def personality(name, *args):
         hypothesis = Hypothesis(id="x", proposing_personality=name, question=marker, summary=marker,

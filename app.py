@@ -16,6 +16,9 @@ from yoda.modes.personality_panel import MarketDataUnavailable, run_personality_
 from yoda.queue.processor import process_queue
 from yoda.report.pdf import NO_MARKET_DATA, expectation_rows, filing_caveats, is_url, report_to_pdf, site_label
 from yoda.retrieval.embeddings import EMBEDDING_MODEL
+from yoda.tools.consensus import (
+    WHISPER_COST_NOTE, WHISPER_WINDOW_DAYS, days_to_report, next_report_date, whisper_by_default,
+)
 from yoda.schema import EarningsReport
 from yoda.tickers import normalize_tickers
 
@@ -80,14 +83,50 @@ def _ensure_pdf(report: EarningsReport) -> bytes:
 # Report generation helper (single ticker)
 # ---------------------------------------------------------------------------
 
-def _generate_report(ticker: str, pause: MarketDataUnavailable | None = None) -> None:
+def _whisper_setting(ticker: str) -> bool:
+    """Draw the "Advanced search settings" box for *ticker* and return the whisper choice.
+
+    The next report date is checked once per ticker (a free call, kept in
+    session state so reruns don't repeat it). The whisper lookup is ticked
+    by default only when that report is at most WHISPER_WINDOW_DAYS days
+    away; an unknown date leaves it unticked. The person can change it.
+    """
+    # Find the next report date once per ticker.
+    dates = st.session_state.setdefault("next_report", {})
+    if ticker not in dates:
+        with st.spinner(f"Checking {ticker}'s next report date..."):
+            dates[ticker] = next_report_date(ticker)
+    report_date, problem = dates[ticker]
+    days = days_to_report(report_date)
+
+    with st.expander("Advanced search settings", expanded=True):
+        if report_date is None:
+            st.caption(f"Next report date not found — {problem}. The whisper lookup is off by default.")
+        else:
+            st.caption(f"Next report: {report_date} ({days} days away). The whisper lookup runs by default "
+                       f"only when the report is {WHISPER_WINDOW_DAYS} days away or less.")
+
+        # The checkbox key carries the ticker, so each ticker starts from its own default.
+        lookup = st.checkbox("Look up the whisper number (paid)", value=whisper_by_default(days),
+                             key=f"whisper_{ticker}")
+        st.caption(_md(WHISPER_COST_NOTE))
+        if lookup and not whisper_by_default(days):
+            when = f"The report is {days} days away" if days is not None else "The report date is unknown"
+            st.warning(_md(f"{when}; a whisper number is usually published only 1–2 days before the "
+                           "report, so this lookup will likely cost about $0.12–0.15 and find nothing."))
+    return lookup
+
+
+def _generate_report(ticker: str, pause: MarketDataUnavailable | None = None,
+                     whisper_lookup: bool | None = None) -> None:
     """Run the panel for *ticker* and keep the report in session state.
 
+    *whisper_lookup* is the search setting for the paid whisper lookup.
     *pause* is the earlier MarketDataUnavailable when the person chose to
     continue without that data: its market data is reused (no second paid
-    lookup) and the missing figures go into the report's data gaps. A new
-    refusal is kept in session state as "market_pause", so the page can ask
-    whether to continue or stop.
+    lookup, and the whisper decision it holds is kept) and the missing
+    figures go into the report's data gaps. A new refusal is kept in session
+    state as "market_pause", so the page can ask whether to continue or stop.
     """
     # Clear the previous report (and its cached PDF) first, so a failure or
     # pause for this ticker never leaves another ticker's report on screen.
@@ -97,7 +136,7 @@ def _generate_report(ticker: str, pause: MarketDataUnavailable | None = None) ->
     try:
         with st.spinner(f"Generating report for {ticker}..."):
             if pause is None:
-                report = run_personality_panel(ticker).report
+                report = run_personality_panel(ticker, whisper_lookup=whisper_lookup).report
             else:
                 report = run_personality_panel(ticker, market=pause.snapshot,
                                                allow_missing_market_data=True).report
@@ -216,6 +255,10 @@ if view == _SINGLE_VIEW:
     )
     ticker = ticker_raw.strip().upper()
 
+    # Search settings for this ticker, set before searching (only once a
+    # ticker is entered, since the defaults depend on its next report date).
+    whisper_lookup = _whisper_setting(ticker) if ticker else False
+
     # Generate button is disabled until the user enters a ticker.
     generate_clicked = st.button(
         "Generate Report",
@@ -227,7 +270,7 @@ if view == _SINGLE_VIEW:
     # Generation handler — runs when the button is clicked.
     if generate_clicked:
         st.session_state.pop("market_pause", None)
-        _generate_report(ticker)
+        _generate_report(ticker, whisper_lookup=whisper_lookup)
 
     # A market-data provider refused a request: the report is paused before
     # anything else was paid for. Say which provider failed and let the user
@@ -394,6 +437,16 @@ if view == _QUEUE_VIEW:
     else:
         st.info("Queue is empty. Add tickers above.")
 
+    # Search settings for the batch: each ticker's paid whisper lookup follows
+    # the default rule from its own next report date, unless switched off for
+    # the whole batch (None = the rule, False = off).
+    with st.expander("Advanced search settings", expanded=True):
+        st.caption(f"Each ticker's whisper number is looked up automatically only when its next report "
+                   f"is {WHISPER_WINDOW_DAYS} days away or less.")
+        skip_whispers = st.checkbox("Skip whisper lookups for this batch", key="queue_skip_whispers")
+        st.caption(_md(WHISPER_COST_NOTE))
+    queue_whisper_lookup = False if skip_whispers else None
+
     # Disabled while the queue is empty, already running, or paused waiting
     # for the user to choose continue or stop.
     run_clicked = st.button(
@@ -464,7 +517,7 @@ if view == _QUEUE_VIEW:
 
     if run_clicked:
         st.session_state["queue_stopped_at"] = None
-        _run_queue(st.session_state["queue"])
+        _run_queue(st.session_state["queue"], whisper_lookup=queue_whisper_lookup)
 
     # A market-data provider refused a request: the queue stopped before
     # paying for that ticker. Say which provider failed and let the user
@@ -478,7 +531,8 @@ if view == _QUEUE_VIEW:
         if col_continue.button("Continue without this data", key="queue_continue"):
             _run_queue(pause.remaining, allow_missing_market_data=True,
                        known_market={pause.ticker: pause.snapshot},
-                       prior_results=st.session_state["queue_results"] or [])
+                       prior_results=st.session_state["queue_results"] or [],
+                       whisper_lookup=queue_whisper_lookup)
         if col_stop.button("Stop", key="queue_stop"):
             st.session_state["queue_stopped_at"] = pause.ticker
             st.session_state["queue_pause"] = None

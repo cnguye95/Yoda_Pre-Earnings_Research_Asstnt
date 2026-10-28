@@ -284,6 +284,8 @@ The app has two tabs: **Single ticker** (interactive, one report at a time) and 
 
 The downloaded PDF contains: cover page (ticker, company name, primary filing date — and the supplemental 10-K date when both filings are within the 92-day window), the Pre-Earnings Watchlist (each entry followed by clickable "Sources:" URLs when the synthesizer found relevant news in the pool), market expectations (consensus, whisper, implied and historical move, beat/miss record, analyst actions, price target — each with its quarter, source and date, and N/A with the reason when missing), developments since the filing (each claim with its evidence type, period, date and a link to its source), key metrics table (each figure with the period it covers), revenue segments table, forward guidance blockquote, key risks (new risks flagged in red), recent news with hyperlinks, bull/bear bullets, and data gaps in amber. The app shows market expectations and developments since the filing in two expanders under the watchlist.
 
+**Advanced search settings.** Before searching, the app checks the ticker's next earnings date (a free call). The paid whisper-number lookup (about $0.12–0.15) is ticked only when that report is 3 days away or less, because whisper numbers are published only a day or two before. An unknown date leaves it unticked. You can tick or untick it yourself. In the queue, each ticker follows the same rule from its own date, or you can skip whisper lookups for the whole batch. The eval runner and the command-line smoke tests apply the same rule.
+
 ---
 
 ## 5. Setup and Usage

@@ -869,7 +869,7 @@ def test_snapshot_whisper_api_error_is_a_failure_with_unknown_cost(monkeypatch):
     _snapshot_parts(monkeypatch, lambda ticker: {"next_earnings_date": "2026-11-01"}, anthropic_down,
                     lambda ticker: {"beat_history": None})
 
-    snapshot = consensus.get_market_snapshot("TEST")
+    snapshot = consensus.get_market_snapshot("TEST", whisper_lookup=True)
 
     assert [(f.part, f.api) for f in snapshot.failures] == [("whisper", "Anthropic (whisper lookup)")]
     assert snapshot.whisper is None and snapshot.whisper_cost_usd is None
@@ -887,7 +887,72 @@ def test_snapshot_fetches_signals_once(monkeypatch):
     _snapshot_parts(monkeypatch, lambda ticker: {"next_earnings_date": "2026-11-01"}, whisper,
                     lambda ticker: {"beat_history": None})
 
-    snapshot = consensus.get_market_snapshot("TEST")
+    snapshot = consensus.get_market_snapshot("TEST", whisper_lookup=True)
 
     assert calls == [False]
     assert snapshot.failures == [] and snapshot.whisper_cost_usd == 0.04
+
+
+# ---------------------------------------------------------------------------
+# The whisper search setting — looked up by default only close to the report
+# ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize("offset, expected", [
+    (0, True), (consensus.WHISPER_WINDOW_DAYS, True),     # report today, or at the edge of the window
+    (consensus.WHISPER_WINDOW_DAYS + 1, False), (82, False),
+    (-1, False),                                         # already reported
+])
+def test_whisper_runs_by_default_only_close_to_the_report(offset, expected):
+    days = consensus.days_to_report(_day(offset))
+    assert days == offset
+    assert consensus.whisper_by_default(days) is expected
+
+
+def test_unknown_report_date_means_no_default_lookup():
+    assert consensus.days_to_report(None) is None and consensus.days_to_report("soon") is None
+    assert consensus.whisper_by_default(None) is False
+
+
+def _whisper_calls(monkeypatch, report_offset: int | None) -> list:
+    # get_market_snapshot's parts faked, with the next report *report_offset*
+    # days away (None = unknown). Returns the list of whisper lookups made.
+    calls = []
+
+    def whisper(ticker, consensus_row, include_signals=True):
+        calls.append(ticker)
+        return {"cost_usd": 0.13, "whisper_status": "not_found"}
+    date_value = None if report_offset is None else _day(report_offset)
+    _snapshot_parts(monkeypatch, lambda ticker: {"next_earnings_date": date_value}, whisper,
+                    lambda ticker: {"beat_history": None})
+    return calls
+
+
+@pytest.mark.parametrize("setting, offset, looked_up, reason", [
+    (None, 2, True, None),                                   # the rule: close enough
+    (None, 82, False, "not looked up: next report is 82 days away (looked up automatically within 3 days)."),
+    (None, None, False, "not looked up: next report date unknown."),
+    (True, 82, True, None),                                  # the person asked for it anyway
+    (False, 2, False, "not looked up: turned off in the search settings."),
+])
+def test_snapshot_follows_the_whisper_setting(monkeypatch, setting, offset, looked_up, reason):
+    calls = _whisper_calls(monkeypatch, offset)
+
+    snapshot = consensus.get_market_snapshot("TEST", whisper_lookup=setting)
+
+    assert bool(calls) is looked_up
+    if not looked_up:
+        # Nothing paid, and the reason the report will show.
+        assert snapshot.whisper_cost_usd == 0.0
+        assert (snapshot.whisper["whisper_status"], snapshot.whisper["reason"]) == ("not_found", reason)
+
+
+def test_next_report_date_says_why_it_is_missing(monkeypatch):
+    monkeypatch.setattr(consensus, "get_consensus", _refuse("Finnhub"))
+    assert consensus.next_report_date("TEST") == (None, "Finnhub refused the request")
+
+    gap = "next_earnings_date: not available from Finnhub earnings calendar or FMP earnings."
+    monkeypatch.setattr(consensus, "get_consensus", lambda ticker: {"next_earnings_date": None, "data_gaps": [gap]})
+    assert consensus.next_report_date("TEST") == (None, gap)
+
+    monkeypatch.setattr(consensus, "get_consensus", lambda ticker: {"next_earnings_date": "2027-01-18", "data_gaps": []})
+    assert consensus.next_report_date("TEST") == ("2027-01-18", None)
