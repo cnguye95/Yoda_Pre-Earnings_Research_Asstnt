@@ -1,6 +1,6 @@
 """Market expectations for a ticker: what Wall Street expects before a report.
 
-Five public functions, each returning a plain dict that names where every
+Six public functions, each returning a plain dict that names where every
 number came from and when it was fetched. Anything that cannot be verified
 comes back as None with a reason in `data_gaps` (or `reason`) — never a guess.
 The exact shape of each dict is declared as a TypedDict below.
@@ -23,6 +23,9 @@ The exact shape of each dict is declared as a TypedDict below.
                                           target (FMP).
   get_implied_move(ticker, report_date) — the options-implied earnings move from
                                           EarningsWatcher's free feed.
+  get_historical_move(ticker)           — the average closing move after the
+                                          last 8 earnings reports, from the
+                                          same EarningsWatcher file.
 
 Terms used below:
   consensus EPS  — the average earnings-per-share forecast of the analysts
@@ -31,6 +34,10 @@ Terms used below:
                    can differ from the published consensus.
   implied move   — how far (±%) options prices say the stock may move on
                    the report.
+  historical move — how far the stock actually moved, on average, after
+                   recent past reports; set against the implied move, it
+                   shows whether options price a bigger or smaller move
+                   than usual.
 """
 
 import json
@@ -115,6 +122,10 @@ _IN_LINE_TOLERANCE = 0.005
 _SAME_REPORT_DAYS = 7
 # EarningsWatcher's date may differ from ours by a day or two.
 _IMPLIED_DATE_TOLERANCE_DAYS = 3
+# The historical move averages this many of the most recent past reports:
+# recent enough to reflect how the stock trades now, enough to smooth out one
+# unusual quarter. Fewer are used when fewer exist.
+_HISTORICAL_MOVE_REPORTS = 8
 
 # A browser-like header so the cited page is served normally when we check it.
 _PAGE_HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; Yoda research tool)"}
@@ -232,6 +243,20 @@ class ImpliedMove(TypedDict):
     as_of: str | None
     source_name: str
     source_url: str
+    retrieved_at: str
+    reason: str | None
+
+
+class HistoricalMove(TypedDict):
+    """What get_historical_move() returns."""
+    ticker: str
+    avg_close_move_pct: float | None    # average absolute closing move, in %
+    reports_used: int                   # how many past reports the average covers
+    first_report_date: str | None       # oldest and newest report in the average
+    last_report_date: str | None
+    source_name: str
+    source_url: str
+    as_of: str | None                   # EarningsWatcher's data date
     retrieved_at: str
     reason: str | None
 
@@ -1015,6 +1040,31 @@ def get_eps_whisper(ticker: str, consensus: dict) -> WhisperResult:
 # Options-implied earnings move (EarningsWatcher)
 # ---------------------------------------------------------------------------
 
+def _earnings_watcher_feed(ticker: str) -> tuple[dict | None, str | None]:
+    """Download EarningsWatcher's JSON file for *ticker* (already upper-cased).
+
+    Returns (data, None) on success, or (None, reason) when the file can't
+    be used: the site is unreachable, doesn't cover the ticker (HTTP 404),
+    returns another HTTP error, or sends something other than a JSON object.
+    The reason has no prefix, so each caller can say which figure it was for.
+    """
+    try:
+        resp = session.get(_EARNINGS_WATCHER_URL.format(ticker=ticker), timeout=15)
+    except requests.exceptions.RequestException as exc:
+        return None, f"EarningsWatcher unreachable ({type(exc).__name__})."
+    if resp.status_code == 404:
+        return None, "ticker not covered by EarningsWatcher."
+    if not resp.ok:
+        return None, f"EarningsWatcher returned HTTP {resp.status_code}."
+    try:
+        data = resp.json()
+    except requests.exceptions.JSONDecodeError:
+        return None, "EarningsWatcher's reply was not JSON."
+    if not isinstance(data, dict):
+        return None, "EarningsWatcher's reply had an unexpected format."
+    return data, None
+
+
 def get_implied_move(ticker: str, report_date: str | None) -> ImpliedMove:
     """Options-implied earnings move (±%) from EarningsWatcher's free feed.
 
@@ -1034,25 +1084,10 @@ def get_implied_move(ticker: str, report_date: str | None) -> ImpliedMove:
         "source_url": feed_url, "retrieved_at": _now(), "reason": None,
     }
 
-    # Fetch the ticker's JSON file; 404 means EarningsWatcher doesn't cover it.
-    try:
-        resp = session.get(feed_url, timeout=15)
-    except requests.exceptions.RequestException as exc:
-        move["reason"] = f"implied move: EarningsWatcher unreachable ({type(exc).__name__})."
-        return move
-    if resp.status_code == 404:
-        move["reason"] = "implied move: ticker not covered by EarningsWatcher."
-        return move
-    if not resp.ok:
-        move["reason"] = f"implied move: EarningsWatcher returned HTTP {resp.status_code}."
-        return move
-    try:
-        data = resp.json()
-    except requests.exceptions.JSONDecodeError:
-        move["reason"] = "implied move: EarningsWatcher's reply was not JSON."
-        return move
-    if not isinstance(data, dict):
-        move["reason"] = "implied move: EarningsWatcher's reply had an unexpected format."
+    # Fetch the ticker's JSON file; a 404 means EarningsWatcher doesn't cover it.
+    data, problem = _earnings_watcher_feed(ticker)
+    if data is None:
+        move["reason"] = f"implied move: {problem}"
         return move
 
     # Record the attribution and report details EarningsWatcher provides.
@@ -1087,6 +1122,66 @@ def get_implied_move(ticker: str, report_date: str | None) -> ImpliedMove:
 
 
 # ---------------------------------------------------------------------------
+# Historical earnings move (EarningsWatcher)
+# ---------------------------------------------------------------------------
+
+def get_historical_move(ticker: str) -> HistoricalMove:
+    """Average absolute stock move after the company's last 8 earnings reports.
+
+    Uses the closing move EarningsWatcher records for each past report (the
+    same free file get_implied_move reads), so it compares like-for-like
+    with the implied move. EarningsWatcher decides which trading day a
+    before-open or after-close report moved. Fewer than 8 reports are
+    averaged when fewer exist; reports_used says how many.
+
+    Never raises for missing data: a company that has never reported, a
+    ticker EarningsWatcher doesn't cover, or an unreachable feed gives
+    avg_close_move_pct None and a `reason`. Attribution as for
+    get_implied_move: credit `source_name` and link `source_url`.
+    """
+    ticker = ticker.upper().strip()
+    history: HistoricalMove = {
+        "ticker": ticker, "avg_close_move_pct": None, "reports_used": 0,
+        "first_report_date": None, "last_report_date": None,
+        "source_name": "EarningsWatcher", "source_url": _EARNINGS_WATCHER_URL.format(ticker=ticker),
+        "as_of": None, "retrieved_at": _now(), "reason": None,
+    }
+
+    data, problem = _earnings_watcher_feed(ticker)
+    if data is None:
+        history["reason"] = f"historical move: {problem}"
+        return history
+    history["source_name"] = data.get("cite_as") or history["source_name"]
+    history["source_url"] = data.get("url") or history["source_url"]
+    history["as_of"] = data.get("as_of")
+
+    # Keep past reports with a real date and a numeric closing move, newest
+    # first. The feed's order isn't relied on, and a malformed entry is
+    # skipped rather than counted as a zero move.
+    entries = data.get("implied_history")
+    reports: list[tuple[date, float]] = []
+    for entry in entries if isinstance(entries, list) else []:
+        if not isinstance(entry, dict):
+            continue
+        report_date = _to_date(entry.get("date"))
+        close_pct = _to_float(entry.get("close_pct"))
+        if report_date is not None and close_pct is not None:
+            reports.append((report_date, close_pct))
+    recent = sorted(reports, reverse=True)[:_HISTORICAL_MOVE_REPORTS]
+    if not recent:
+        history["reason"] = "historical move: no past earnings reports with a recorded move."
+        return history
+
+    # The size of each move matters, not its direction, so average the
+    # absolute values.
+    history["avg_close_move_pct"] = round(sum(abs(pct) for _, pct in recent) / len(recent), 1)
+    history["reports_used"] = len(recent)
+    history["first_report_date"] = recent[-1][0].isoformat()
+    history["last_report_date"] = recent[0][0].isoformat()
+    return history
+
+
+# ---------------------------------------------------------------------------
 # Smoke test — run with: python -m yoda.tools.consensus [TICKER]
 # Makes live API calls, including one paid Claude web-search call.
 # ---------------------------------------------------------------------------
@@ -1097,4 +1192,5 @@ if __name__ == "__main__":
     print(json.dumps(smoke_consensus, indent=2))
     print(json.dumps(get_basic_metrics(smoke_ticker), indent=2))
     print(json.dumps(get_implied_move(smoke_ticker, smoke_consensus["next_earnings_date"]), indent=2))
+    print(json.dumps(get_historical_move(smoke_ticker), indent=2))
     print(json.dumps(get_eps_whisper(smoke_ticker, smoke_consensus), indent=2))

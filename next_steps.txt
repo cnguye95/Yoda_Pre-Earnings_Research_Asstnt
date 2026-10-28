@@ -80,14 +80,20 @@ IDEAS for Improvements/Changes
      MAX_TOOL_CALLS (6) after the first measured run.
    - Historical earnings move (AGREED): a new consensus.py function giving
      the average stock move after each of the last 8 earnings reports
-     (fewer if fewer exist; the count is shown). Reports before the open
-     are measured on the same day, after the close on the next day.
+     (fewer if fewer exist; the count is shown).
      * A company with no past reports, or data that can't be fetched,
        returns None with a reason — never an error, never 0. The report
        shows N/A.
-     * Data source to confirm before building: FMP /stable/earnings for
-       past report dates (already used) plus a free end-of-day price
-       source (Finnhub's price history is a paid endpoint).
+     * DONE (step 3, 2026-10-28): get_historical_move(ticker) averages the
+       absolute CLOSING moves EarningsWatcher records per past report
+       (implied_history in the same free file get_implied_move reads), so
+       it compares like-for-like with the implied move. EarningsWatcher
+       decides which trading day a before-open or after-close report
+       moved. Covers 340 symbols, incl. all 20 eval tickers and COIN.
+       Not used: EarningsWatcher's headline 10-year PEAK intraday average
+       (larger, so implied moves would look cheap next to it), and FMP
+       prices (free plan: only 5 earnings rows, so at most ~4 past reports).
+       Tests: tests/test_market_data.py.
    - Wire consensus.py into this block and into synthesis.
 
 3.4 Weigh claims — two dimensions: reliability and relevance (AGREED DESIGN)

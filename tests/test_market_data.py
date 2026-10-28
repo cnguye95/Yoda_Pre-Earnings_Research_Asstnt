@@ -723,3 +723,87 @@ def test_implied_move_uncovered_ticker(monkeypatch):
     _fake_http(monkeypatch, {_EW_FEED: _response(404, text="Not Found")})
     m = consensus.get_implied_move("TEST", _day(22))
     assert m["implied_move_pct"] is None and "not covered" in m["reason"]
+
+
+# ---------------------------------------------------------------------------
+# get_historical_move
+# ---------------------------------------------------------------------------
+
+def _past_report(report_date: str, close_pct) -> dict:
+    # One implied_history entry the way EarningsWatcher lists it.
+    return {"date": report_date, "implied_pct": 6.0, "peak_pct": 9.9, "close_pct": close_pct}
+
+
+def test_historical_move_averages_the_newest_eight_closing_moves(monkeypatch):
+    # Ten past reports, old and new interleaved so that taking the feed's
+    # first or last eight would include the two big old moves. Only the
+    # newest eight count, and down moves count by their size, not their sign.
+    moves = dict(zip(range(1, 11), [50, 40, 2, -4, 6, -8, 2, -4, 6, -8]))
+    history = [_past_report(f"2024-{month:02d}-15", moves[month]) for month in (3, 1, 10, 4, 9, 5, 8, 2, 7, 6)]
+    _fake_http(monkeypatch, {_EW_FEED: _response(data=_ew_data(implied_history=history))})
+
+    h = consensus.get_historical_move("test")
+
+    # Newest eight are March-October: |2,-4,6,-8,2,-4,6,-8| averages 5.0.
+    assert h["avg_close_move_pct"] == 5.0
+    assert h["reports_used"] == 8
+    assert (h["first_report_date"], h["last_report_date"]) == ("2024-03-15", "2024-10-15")
+    assert h["reason"] is None
+    assert h["source_name"] == "EarningsWatcher, https://ew/test"
+    assert h["as_of"] == _day(-1)
+
+
+def test_historical_move_uses_fewer_reports_when_fewer_exist(monkeypatch):
+    # A recently listed company with three past reports: all three are
+    # averaged, and the count says so.
+    history = [_past_report("2025-02-01", 3.0), _past_report("2025-05-01", -6.0),
+               _past_report("2025-08-01", 4.5)]
+    _fake_http(monkeypatch, {_EW_FEED: _response(data=_ew_data(implied_history=history))})
+
+    h = consensus.get_historical_move("TEST")
+
+    assert h["avg_close_move_pct"] == 4.5
+    assert h["reports_used"] == 3
+
+
+def test_historical_move_skips_entries_without_a_move_or_date(monkeypatch):
+    # A missing or non-numeric move, or a bad date, must be skipped rather
+    # than counted as a zero move that would drag the average down.
+    history = [_past_report("2025-02-01", 4.0), _past_report("2025-05-01", None),
+               _past_report("2025-06-01", "n/a"), _past_report("not-a-date", 9.0),
+               "not an entry"]
+    _fake_http(monkeypatch, {_EW_FEED: _response(data=_ew_data(implied_history=history))})
+
+    h = consensus.get_historical_move("TEST")
+
+    assert h["avg_close_move_pct"] == 4.0
+    assert h["reports_used"] == 1
+
+
+@pytest.mark.parametrize("data", [_ew_data(implied_history=[]), _ew_data()])
+def test_historical_move_for_a_company_that_never_reported(monkeypatch, data):
+    # No past reports (an empty list, or no implied_history at all) gives
+    # N/A with a reason, not an error and not a 0% move.
+    _fake_http(monkeypatch, {_EW_FEED: _response(data=data)})
+
+    h = consensus.get_historical_move("TEST")
+
+    assert h["avg_close_move_pct"] is None
+    assert h["reports_used"] == 0
+    assert "no past earnings reports" in h["reason"]
+
+
+@pytest.mark.parametrize("route, reason_part", [
+    (_response(404, text="Not Found"), "not covered"),
+    (requests.exceptions.ConnectionError("down"), "unreachable"),
+    (_response(data=["not", "an", "object"]), "unexpected format"),
+])
+def test_historical_move_when_the_feed_cannot_be_used(monkeypatch, route, reason_part):
+    # An uncovered ticker, an unreachable site or a malformed reply gives N/A
+    # with a reason that names the historical move.
+    _fake_http(monkeypatch, {_EW_FEED: route})
+
+    h = consensus.get_historical_move("TEST")
+
+    assert h["avg_close_move_pct"] is None
+    assert h["reason"].startswith("historical move:") and reason_part in h["reason"]
