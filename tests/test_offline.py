@@ -355,6 +355,16 @@ def test_full_filing_text_drops_supplemental_when_too_large(monkeypatch):
     assert "10-K filed 2026-02-01" in baseline_mod.supplemental_dropped_note(supplemental)
 
 
+def test_reserved_room_counts_against_the_size_cap(monkeypatch):
+    # The panel reserves room for its 8-Ks and read articles: the pair fits
+    # on its own (25 chars) but not with 10 more reserved, so the 10-K goes.
+    monkeypatch.setattr(baseline_mod, "MAX_FILING_CHARS", 30)
+    supplemental = _filing("10-K", "2026-02-01", "ANNUAL TEXT")
+    assert baseline_mod.full_filing_text(_PRIMARY, supplemental)[1] is False
+    text, dropped = baseline_mod.full_filing_text(_PRIMARY, supplemental, reserved_chars=10)
+    assert dropped and "ANNUAL TEXT" not in text
+
+
 def test_baseline_strips_invented_news_and_urls():
     # The baseline gets no news, so any news item or watchlist URL is invented.
     report = _report()

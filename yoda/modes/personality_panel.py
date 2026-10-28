@@ -18,7 +18,12 @@ run_personality_panel() is the top-level mode for the Streamlit UI. The design:
                             the final EarningsReport, citing the filing's own
                             Item numbers and headings, using the
                             filtered hypothesis set + critique messages + the
-                            full pool of news data.
+                            full pool of news data. It also reads the full
+                            8-K text, the shared context block and the
+                            articles personalities read, and writes the
+                            since_filing section from them. Code then fills
+                            market_expectations from the market data and
+                            checks the new sections (links, tags, gaps).
 
 Six loop hedges keep Phase 2 honest: iteration cap, wall-clock cap,
 repetition detector, empty-result short-circuit, graceful degradation, and a
@@ -44,7 +49,7 @@ import pydantic
 from pydantic import BaseModel, Field
 
 from yoda import config
-from yoda.ingest.chunker import Chunk, chunk_8k, chunk_filing
+from yoda.ingest.chunker import Chunk, chunk_8k, chunk_filing, eight_k_label
 from yoda.ingest.edgar import FILING_FRESHNESS_DAYS, fetch_latest_filing, fetch_post_filing_8ks
 from yoda.modes.baseline import apply_supplemental, full_filing_text, iter_citation_holders, validate_citations
 from yoda.modes.llm import NoStructuredOutput, client as _client, structured_call as _structured_call
@@ -63,11 +68,14 @@ from yoda.schema import (
     EightKFiling,
     EvidenceQuote,
     EvidenceType,
+    ExpectationValue,
     Hypothesis,
     CritiqueMessage,
     Filing,
+    MarketExpectations,
     NewsSearchResult,
     PersonalityResult,
+    SinceFilingItem,
 )
 from yoda.tools.consensus import MarketSnapshot, get_market_snapshot
 
@@ -127,6 +135,20 @@ REPORT_BUDGET_USD = 0.65
 # The termination clause is one of the six hedges — it materially reduces
 # over-investigation at zero cost.
 
+# The evidence tier order and the three agreed conflict rules (next_steps
+# 3.4). Personalities and synthesis both read this one text, so the wording
+# can never drift apart between the two prompts.
+_CONFLICT_RULES = """Evidence tiers, most reliable first: reported > guided > estimate > proxy >
+unverifiable. When sources disagree:
+  - For the same metric and period, the more reliable tier wins and both
+    are shown.
+  - Newer information is preferred only within the same tier, or when it
+    covers a later period.
+  - Guidance, consensus and whisper for the same period are different
+    quantities, not conflicting claims. Showing the gap between them is
+    good. The tier rule applies only when sources give different values for
+    the same fact."""
+
 _BASE_LOOP_CONTRACT = """You are investigating {ticker} for an upcoming earnings call.
 You have access to four tools (retrieve_filing, search_news, read_article,
 lookup_peer). Each iteration, decide whether to call a tool or to FINISH.
@@ -157,16 +179,7 @@ releases > data vendors (consensus feeds) > major financial press (Reuters,
 Bloomberg, WSJ, FT) > aggregators and blogs. Prefer the most reliable source
 available; trace an aggregator's claim to the source it names.
 
-Evidence tiers, most reliable first: reported > guided > estimate > proxy >
-unverifiable. When sources disagree:
-  - For the same metric and period, the more reliable tier wins and both
-    are shown.
-  - Newer information is preferred only within the same tier, or when it
-    covers a later period.
-  - Guidance, consensus and whisper for the same period are different
-    quantities, not conflicting claims. Showing the gap between them is
-    good. The tier rule applies only when sources give different values for
-    the same fact."""
+""" + _CONFLICT_RULES
 
 # How a personality reports each piece of evidence in its wrap-up. Code then
 # checks every field against what the personality was shown.
@@ -957,6 +970,12 @@ def _apply_filter(
 _SYNTHESIS_SYSTEM = """You are a senior equity analyst synthesizing a panel of
 six junior analysts' hypotheses into a single pre-earnings research report.
 
+You are given the full filing text, the full text of every 8-K filed since
+the filing, a CONTEXT block (the 8-K list and the market's expectations for
+the next report), the full text of the news articles the analysts read, the
+analysts' hypotheses with their tagged evidence, their peer review, and the
+pool of news search results.
+
 Produce a thorough, analyst-grade report. Populate every list field with as
 many well-supported entries as the evidence allows. Do not truncate or
 summarize when you have evidence for more detail.
@@ -1011,8 +1030,22 @@ Rules you must follow without exception:
    authoritative source for every quantitative fact about the
    company's reporting period. If a hypothesis quotes a different
    number for a metric the filing also reports, trust the filing.
-   If a metric is only known from external sources, omit it from
-   key_metrics and record it in data_gaps instead.
+
+   Post-filing information — the 8-K TEXT, news articles, and the
+   market data in CONTEXT — goes in since_filing (8-Ks and news) or
+   market_expectations (market data), each with its evidence_type.
+   It NEVER goes into key_metrics or revenue_segments and NEVER
+   overwrites a filing number. An 8-K Item 2.02 earnings release
+   counts as a reported source for its own period, but its figures
+   go in since_filing (tagged reported, with their period), never in
+   key_metrics. Never cite an 8-K in any source_citation. If a metric
+   is only known from an 8-K or a news article, put it in
+   since_filing; if it is known from no source you were given, leave
+   it out.
+
+   Every key_metrics entry MUST give `period`: the fiscal period the
+   figure covers, in the form "Q3 FY2026" (or "FY2025" for a full
+   year), the same form since_filing uses.
 
    EXTRACTION TARGET: From the FILING TEXT, populate key_metrics
    with AT LEAST the following when each is reported: total revenue,
@@ -1039,6 +1072,9 @@ Rules you must follow without exception:
    the MD&A outlook, "subsequent events," or any management commentary
    subsection in the filing. Do NOT synthesize a guidance sentence
    from external news, analyst projections, or your own inference.
+   Guidance given after the filing (in an 8-K earnings release, or
+   management quoted in the news) goes in since_filing tagged guided,
+   not in forward_guidance.
    If no outlook/guidance language exists in the filing, set
    forward_guidance.text to "No forward guidance issued in this
    filing." and add an entry to data_gaps stating which guidance
@@ -1100,16 +1136,40 @@ Rules you must follow without exception:
    reference to internal personalities or process anywhere in any output
    field. Do NOT use internal hypothesis IDs (h1, h2, ...) anywhere.
 
-4. hypotheses_explored MUST echo the FINAL list of hypotheses (included +
-   contested, NOT dropped). The orchestrator will validate this.
+4. since_filing lists what has happened since the filing: every material
+   8-K event or earnings-release figure, guidance updates, and credible
+   news claims. Every 8-K in the 8-K TEXT that reports something material
+   should appear. Market data from CONTEXT does NOT go here — it is in
+   market_expectations. Label every item:
+     - evidence_type: reported (company actuals for a closed period, e.g.
+       an 8-K 2.02 release), guided (management's own outlook), estimate
+       (third-party expectation, e.g. analysts polled by LSEG), proxy
+       (indirect signal, e.g. card-spending data or a peer's results),
+       unverifiable (the article names no source for the claim).
+     - period: the fiscal period the claim covers, e.g. "Q3 FY2026"; null
+       only for an event with no fiscal period, such as an executive change.
+     - as_of_date: the ISO date the source published it (the 8-K's filing
+       date, or the article's date).
+     - source: the ORIGINAL source the claim is attributed to, not the
+       outlet that repeated it. For an 8-K, cite its item, exhibit and
+       heading as printed:
+         "8-K Item 2.02, Exhibit 99.1 — <heading>"
+       For news, the source the article names (e.g. "LSEG", "the
+       company"); if it names none, write "none stated" and tag the claim
+       unverifiable.
+     - url: for an 8-K, the document URL from its === header; for news,
+       the article's url copied verbatim from the NEWS POOL. Never invent,
+       shorten or alter a URL.
 
-5. data_gaps is ONLY for facts the filing/news pool SHOULD have
-   covered but did not (e.g., a segment revenue figure missing from MD&A,
-   a guidance number the company has historically given but omitted this
-   quarter). Do NOT list forward-looking or inherently-external items as
-   data gaps — analyst EPS consensus for the upcoming call, future
-   guidance, post-period announcements, and other things that would never
-   appear in this filing are NOT data gaps. If unsure, leave it out.
+5. data_gaps is ONLY for facts the filing, the 8-Ks or the news pool
+   SHOULD have covered but did not (e.g., a segment revenue figure missing
+   from MD&A, a guidance number the company has historically given but
+   omitted this quarter). Do NOT list forward-looking or inherently-external
+   items as data gaps — analyst EPS consensus for the upcoming call, future
+   guidance, and other things that would never appear in these sources are
+   NOT data gaps. Market figures shown as N/A in CONTEXT are already listed,
+   with their reason, in market_expectations — do not repeat them. If
+   unsure, leave it out.
 
 6. Weigh CRITIQUE MESSAGE CONTENT — not just counts — when deciding whether
    a contested hypothesis is more likely true or false. A well-evidenced
@@ -1118,7 +1178,64 @@ Rules you must follow without exception:
 7. The same anti-personality rule applies to bull_case and bear_case:
    present every point as a single coherent analyst voice. Never attribute
    a view to a named personality, never mention "the panel" or any
-   internal process — the user is reading a finished research note."""
+   internal process — the user is reading a finished research note.
+
+8. Conflicts between sources follow these rules:
+""" + _CONFLICT_RULES + """
+
+9. Every piece of the analysts' evidence shows its evidence_type. When a
+   bull_case, bear_case or what_to_watch point rests ONLY on unverifiable
+   claims, say so in plain words inside that point, e.g. "(unverified: no
+   source named for this claim)". A point supported by at least one
+   verifiable claim (reported, guided, estimate or proxy) is more reliable
+   than one supported only by unverifiable claims, even if unverifiable
+   claims also support it.
+
+10. market_expectations is filled automatically from the market data in
+    CONTEXT; you do not write it. Use those figures in your analysis — the
+    gap between guidance, consensus and whisper, and the implied move
+    against the historical move — naming the provider and as-of date. A
+    figure shown as N/A is missing: never turn it into a number."""
+
+
+# Report fields code fills after synthesis: the panel's own hypotheses, and
+# the market data copied straight from the snapshot. Leaving them out of
+# what synthesis writes saves output tokens and rules out copying mistakes.
+_SET_IN_CODE = {"hypotheses_explored", "market_expectations"}
+
+# What synthesis writes: the EarningsReport minus the fields above, with
+# since_filing required (in the full report it defaults to empty only so
+# old reports load). It keeps the name "EarningsReport", so the schema
+# Claude is shown differs from the full report only by those fields.
+_SynthesisDraft = pydantic.create_model(
+    "EarningsReport",
+    **{name: (list[SinceFilingItem], ...) if name == "since_filing" else (field.annotation, field)
+       for name, field in EarningsReport.model_fields.items() if name not in _SET_IN_CODE},
+)
+
+
+def _render_eight_k_text(eight_ks: list[EightKFiling]) -> str:
+    """Return the full text of every 8-K document, for synthesis to read.
+
+    Each document sits under a header naming its 8-K label (form, item
+    codes, exhibit, filing date) and its URL, e.g. "=== 8-K Items 2.02,
+    9.01, Exhibit 99.1 (filed 2026-10-13) — https://... ===", so synthesis
+    can cite it and link a since_filing item to it.
+    """
+    if not eight_ks:
+        return "(No 8-Ks were filed since the 10-Q/10-K.)"
+    return "\n\n".join(
+        f"=== {eight_k_label(eight_k, doc)} — {doc.url} ===\n{doc.clean_text}"
+        for eight_k in eight_ks
+        for doc in eight_k.documents
+    )
+
+
+def _render_read_articles(articles: list[ArticleText]) -> str:
+    """Return the full text of every article a personality read, for synthesis."""
+    if not articles:
+        return "(No articles were read in full.)"
+    return "\n\n".join(_render_article(article) for article in articles)
 
 
 def _synthesize_report(
@@ -1129,13 +1246,22 @@ def _synthesize_report(
     critique_messages: list[CritiqueMessage],
     news_pool: list[NewsSearchResult],
     filing_text: str,
+    eight_k_text: str,
+    context_block: str,
+    articles_text: str,
 ) -> tuple[EarningsReport, int, int]:
     """One SYNTH_MODEL call producing the final EarningsReport.
 
     *filing_text* is the FULL filing text (from baseline.full_filing_text),
     so the synthesizer extracts figures and cites locations from the whole
     filing — the same text the single-pass baseline reads — rather than from
-    a handful of retrieved chunks.
+    a handful of retrieved chunks. *eight_k_text* is the full text of the
+    8-Ks filed since (_render_eight_k_text), *context_block* the shared
+    CONTEXT personalities started from, and *articles_text* the articles
+    personalities read in full (_render_read_articles).
+
+    The report comes back without hypotheses_explored and
+    market_expectations, which the caller fills in code.
 
     Returns (report, input_tokens, output_tokens).
     """
@@ -1163,27 +1289,36 @@ def _synthesize_report(
 
     now_utc = datetime.now(timezone.utc).isoformat()
 
-    # The full filing goes first (largest, most stable block), followed by
-    # the panel's findings. The filing is the authority for every figure
-    # and every source_citation.
+    # The full filing goes first (largest, most stable block), then what
+    # happened since (8-Ks, market data, articles read), then the panel's
+    # findings. The filing is the authority for every figure and every
+    # source_citation; the later blocks feed since_filing and the analysis.
     user_prompt = (
         f"Ticker: {ticker}\n"
         f"Filing: {_describe_filing(primary_filing)}\n"
         f"Report timestamp (use for report_generated_at): {now_utc}\n\n"
         f"--- FILING TEXT (full; authoritative for key_metrics, revenue_segments, "
         f"forward_guidance, key_risks and every source_citation) ---\n{filing_text}\n\n"
+        f"--- 8-K TEXT (full; every 8-K filed since the filing — for since_filing, "
+        f"never key_metrics) ---\n{eight_k_text}\n\n"
+        f"--- CONTEXT (8-K list and market expectations; market_expectations is "
+        f"filled from this automatically) ---\n{context_block}\n\n"
+        f"--- ARTICLES READ IN FULL (by the analysts) ---\n{articles_text}\n\n"
         f"--- HYPOTHESES (final, from panel investigation) ---\n{hyp_text}\n\n"
         f"--- {contested_block} ---\n\n"
         f"--- CRITIQUE MESSAGES (peer review) ---\n{msg_text}\n\n"
         f"--- NEWS POOL (JSON, URLs preserved) ---\n{json.dumps([item.model_dump() for item in news_pool])}\n\n"
-        f"Produce the EarningsReport. Echo final_hypotheses in hypotheses_explored."
+        f"Produce the EarningsReport."
     )
 
-    return _structured_call(
-        SYNTH_MODEL, _SYNTH_MAX_TOKENS, EarningsReport,
+    draft, input_tokens, output_tokens = _structured_call(
+        SYNTH_MODEL, _SYNTH_MAX_TOKENS, _SynthesisDraft,
         system=_SYNTHESIS_SYSTEM,
         messages=[{"role": "user", "content": user_prompt}],
     )
+    # Turn the draft into a full report; the fields set in code start at
+    # their defaults until the caller fills them.
+    return EarningsReport.model_validate(draft.model_dump()), input_tokens, output_tokens
 
 
 # ---------------------------------------------------------------------------
@@ -1200,27 +1335,111 @@ _URL_RE = re.compile(r"https?://|www\.", re.IGNORECASE)
 UNVERIFIED_CITATION = "UNVERIFIED — the cited source was not the filing"
 
 
-def _scrub_source_citations(report: EarningsReport, log_prefix: str) -> None:
-    """Replace citations that contain a URL with an explicit "unverified" label.
+# Detects a citation that points to an 8-K ("8-K Item 2.02, Exhibit 99.1 —
+# ...", "Form 8-K/A ..."). Only the start is checked, so a 10-K heading that
+# merely mentions Form 8-K further along is not caught.
+_EIGHT_K_CITATION_RE = re.compile(r"^\W*(form\s+)?8-K", re.IGNORECASE)
 
-    These fields must point to a place in the filing; a URL means the model
-    cited a news article instead. Each replaced citation also gets a
+
+def _scrub_source_citations(report: EarningsReport, log_prefix: str) -> None:
+    """Replace citations that point outside the 10-Q/10-K with an explicit "unverified" label.
+
+    These fields must point to a place in the filing. A URL means the model
+    cited a news article instead; a citation starting "8-K" means it took a
+    post-filing figure, which belongs in since_filing, never in key_metrics
+    and the other filing fields. Each replaced citation also gets a
     data_gaps entry naming the item and the original citation, so the
     reader can see exactly which facts lack a filing location.
     """
     scrubbed: list[str] = []
     for path, item in iter_citation_holders(report):
         if _URL_RE.search(item.source_citation):
-            scrubbed.append(item.source_citation)
-            report.data_gaps.append(
-                f"{path}: cited an external source ({item.source_citation[:120]}) "
-                "instead of the filing, so its filing location is unverified."
-            )
-            item.source_citation = UNVERIFIED_CITATION
+            kind = "an external source"
+        elif _EIGHT_K_CITATION_RE.match(item.source_citation):
+            kind = "an 8-K (post-filing figures belong in since_filing)"
+        else:
+            continue
+        scrubbed.append(item.source_citation)
+        report.data_gaps.append(
+            f"{path}: cited {kind} ({item.source_citation[:120]}) "
+            "instead of the filing, so its filing location is unverified."
+        )
+        item.source_citation = UNVERIFIED_CITATION
 
     if scrubbed:
-        print(f"{log_prefix} WARNING: marked {len(scrubbed)} URL-bearing "
-              f"source_citation(s) unverified: {scrubbed[:3]}")
+        print(f"{log_prefix} WARNING: marked {len(scrubbed)} source_citation(s) "
+              f"pointing outside the filing unverified: {scrubbed[:3]}")
+
+
+# ---------------------------------------------------------------------------
+# Post-filing sections — checked after synthesis
+# ---------------------------------------------------------------------------
+
+def _check_since_filing(
+    report: EarningsReport, news_urls: set[str], eight_k_urls: set[str], log_prefix: str,
+) -> None:
+    """Check every since_filing item's link and, for 8-Ks, its evidence tag.
+
+    The link must be a news article from this run's news pool or one of the
+    8-K documents synthesis was given; any other link was invented, so the
+    item is dropped. An item linked to an 8-K must be tagged reported or
+    guided (what a company filing can be); any other tag becomes
+    unverifiable, because code can't tell which was meant. Every change gets
+    a data_gaps entry, so the reader sees it.
+    """
+    known_urls = news_urls | eight_k_urls
+    kept = []
+    for item in report.since_filing:
+        # An invented link: the claim can't be traced, so it is dropped.
+        if item.url not in known_urls:
+            report.data_gaps.append(
+                f"since_filing: dropped \"{item.claim[:120]}\" — its link ({item.url}) "
+                "is not a news article or 8-K from this run."
+            )
+            print(f"{log_prefix} WARNING: dropped since_filing item with unknown link {item.url!r}")
+            continue
+        # An 8-K is the company's own filing: reported results or guidance.
+        if item.url in eight_k_urls and item.evidence_type not in ("reported", "guided"):
+            report.data_gaps.append(
+                f"since_filing: \"{item.claim[:120]}\" was tagged {item.evidence_type}, but an 8-K "
+                "is reported or guided, so it is marked unverifiable."
+            )
+            item.evidence_type = "unverifiable"
+        kept.append(item)
+    report.since_filing = kept
+
+
+def _completeness_gaps(report: EarningsReport, eight_k_count: int, news_count: int) -> list[str]:
+    """Return a data_gaps entry for each part of the new report sections left unfilled.
+
+    Every new Yoda report must give each key metric its period, fill
+    since_filing when there was anything since the filing to report (an
+    8-K or a news result), and give every N/A market figure a reason. A gap
+    is reported, not raised, so a partly filled report still reaches the
+    reader with its holes named.
+    """
+    gaps = [
+        f"key_metrics[{index}] ({metric.name}): the period it covers was not stated."
+        for index, metric in enumerate(report.key_metrics)
+        if not (metric.period or "").strip()
+    ]
+
+    # An empty since_filing is right only when nothing happened that could
+    # fill it.
+    if not report.since_filing and (eight_k_count or news_count):
+        gaps.append(f"since_filing is empty although this run had {eight_k_count} 8-K(s) "
+                    f"and {news_count} news result(s) from after the filing.")
+
+    # Every market figure must be either present or explained.
+    if report.market_expectations is None:
+        gaps.append("market_expectations is missing.")
+    else:
+        gaps.extend(
+            f"market_expectations.{name}: N/A with no reason given."
+            for name, slot in report.market_expectations
+            if slot.value is None and not (slot.missing_reason or "").strip()
+        )
+    return gaps
 
 
 # ---------------------------------------------------------------------------
@@ -1316,10 +1535,15 @@ def _usd(amount: float) -> str:
     return f"${amount:,.2f}"
 
 
+def _refusal(market: MarketSnapshot, part: str) -> str:
+    """Return "<provider> refused the request" for a snapshot part that failed."""
+    apis = ", ".join(sorted({failure.api for failure in market.failures if failure.part == part}))
+    return f"{apis or 'the provider'} refused the request"
+
+
 def _refused(market: MarketSnapshot, part: str) -> str:
     """Return "N/A — <provider> refused the request" for a snapshot part that failed."""
-    apis = ", ".join(sorted({failure.api for failure in market.failures if failure.part == part}))
-    return f"N/A — {apis or 'the provider'} refused the request"
+    return f"N/A — {_refusal(market, part)}"
 
 
 def _market_lines(market: MarketSnapshot) -> list[str]:
@@ -1421,6 +1645,148 @@ def _render_context_block(eight_ks: list[EightKFiling], market: MarketSnapshot) 
         lines.append(f"- {eight_k.filing_date} {eight_k.form}: {items}")
     lines += ["", "Market expectations for the next report:", *_market_lines(market)]
     return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# The report's market_expectations section, filled in code from the snapshot
+# ---------------------------------------------------------------------------
+
+def _missing(reason: str | None) -> ExpectationValue:
+    """Return an N/A expectation slot: no value, only the reason it is missing."""
+    return ExpectationValue(value=None, fiscal_quarter=None, fiscal_year=None, source=None,
+                            as_of_date=None, missing_reason=reason)
+
+
+def _gap_for(gaps: list[str], field: str) -> str:
+    """Return consensus.py's own reason for an empty *field*.
+
+    consensus.py explains every empty field in its data_gaps list with an
+    entry that starts "<field>:", e.g. "eps_estimate: not available from
+    Finnhub earnings calendar or FMP earnings.".
+    """
+    return next((gap for gap in gaps if gap.startswith(f"{field}:")), f"{field}: not available")
+
+
+def _consensus_slot(market: MarketSnapshot, field: str) -> ExpectationValue:
+    """Return the consensus EPS or revenue slot (*field* is eps_estimate or revenue_estimate)."""
+    consensus = market.consensus
+    if consensus is None:
+        return _missing(_refusal(market, "consensus"))
+    if consensus[field] is None:
+        return _missing(_gap_for(consensus["data_gaps"], field))
+    # Every filled consensus field has its own source entry.
+    return ExpectationValue(value=_usd(consensus[field]), fiscal_quarter=consensus["fiscal_quarter"],
+                            fiscal_year=consensus["fiscal_year"], source=consensus["sources"][field]["name"],
+                            as_of_date=consensus["fetched_at"][:10], missing_reason=None)
+
+
+def _whisper_slot(market: MarketSnapshot) -> ExpectationValue:
+    """Return the whisper slot: the unofficial EPS figure traders expect, only when verified."""
+    whisper = market.whisper
+    if whisper is None and market.consensus is None:
+        return _missing("not looked up (no consensus to match it to)")
+    if whisper is None:
+        return _missing(_refusal(market, "whisper"))
+    if whisper["whisper_status"] != "verified":
+        return _missing(whisper["reason"] or "no verified whisper found")
+    # The source is the page the whisper was read from: its URL is the only
+    # way for a reader to check it.
+    return ExpectationValue(value=_usd(whisper["whisper_eps"]), fiscal_quarter=whisper["fiscal_quarter"],
+                            fiscal_year=whisper["fiscal_year"], source=whisper["source_url"],
+                            as_of_date=whisper["page_date"] or whisper["retrieved_at"][:10], missing_reason=None)
+
+
+def _move_slots(market: MarketSnapshot) -> tuple[ExpectationValue, ExpectationValue]:
+    """Return the implied-move and historical-move slots.
+
+    The implied move is what options prices expect for the next report, so it
+    takes the consensus quarter when both describe the same report date. The
+    historical move averages past reports, so it belongs to no one quarter.
+    """
+    implied, history, consensus = market.implied_move, market.historical_move, market.consensus
+
+    if implied["implied_move_pct"] is None:
+        implied_slot = _missing(implied["reason"])
+    else:
+        same_report = consensus is not None and implied["report_date"] == consensus["next_earnings_date"]
+        implied_slot = ExpectationValue(
+            value=f"±{implied['implied_move_pct']}%",
+            fiscal_quarter=consensus["fiscal_quarter"] if same_report else None,
+            fiscal_year=consensus["fiscal_year"] if same_report else None,
+            source=implied["source_name"], as_of_date=implied["as_of"], missing_reason=None,
+        )
+
+    if history["avg_close_move_pct"] is None:
+        history_slot = _missing(history["reason"])
+    else:
+        history_slot = ExpectationValue(
+            value=(f"±{history['avg_close_move_pct']}% average closing move over the last "
+                   f"{history['reports_used']} reports ({history['first_report_date']} to "
+                   f"{history['last_report_date']})"),
+            fiscal_quarter=None, fiscal_year=None, source=history["source_name"],
+            as_of_date=history["as_of"], missing_reason=None,
+        )
+    return implied_slot, history_slot
+
+
+def _signal_slots(market: MarketSnapshot) -> tuple[ExpectationValue, ExpectationValue, ExpectationValue]:
+    """Return the beat/miss record, analyst actions and price target slots.
+
+    These describe the recent past and today's analyst views, not one fiscal
+    quarter, so their quarter and year are left empty.
+    """
+    signals = market.signals
+    if signals is None:
+        refused = _missing(_refusal(market, "signals"))
+        return refused, refused, refused
+    beats, actions, target = signals["beat_history"], signals["analyst_actions"], signals["price_target"]
+
+    def filled(text: str, signal: dict) -> ExpectationValue:
+        """Return a filled slot for *signal*, credited to its provider."""
+        return ExpectationValue(value=text, fiscal_quarter=None, fiscal_year=None, source=signal["source"]["name"],
+                                as_of_date=signals["fetched_at"][:10], missing_reason=None)
+
+    # Each signal gets the same wording as the CONTEXT block, or
+    # consensus.py's reason when the provider had nothing.
+    beat_slot = _missing(_gap_for(signals["data_gaps"], "beat_history"))
+    if beats:
+        surprise = (f", average surprise {beats['avg_surprise_pct']:+}%"
+                    if beats["avg_surprise_pct"] is not None else "")
+        beat_slot = filled(f"{beats['beats']} beats, {beats['misses']} misses in the last "
+                           f"{beats['quarters']} quarters{surprise}", beats)
+
+    actions_slot = _missing(_gap_for(signals["data_gaps"], "analyst_actions"))
+    if actions:
+        actions_slot = filled(f"{actions['total']} total, {actions['upgrades']} upgrades, "
+                              f"{actions['downgrades']} downgrades (last {actions['days']} days)", actions)
+
+    target_slot = _missing(_gap_for(signals["data_gaps"], "price_target"))
+    if target:
+        upside = ""
+        if target["upside_pct"] is not None and target["current_price"] is not None:
+            upside = f", {target['upside_pct']:+}% vs current {_usd(target['current_price'])}"
+        target_slot = filled(f"{_usd(target['consensus'])}{upside}", target)
+
+    return beat_slot, actions_slot, target_slot
+
+
+def _market_expectations(market: MarketSnapshot) -> MarketExpectations:
+    """Build the report's market_expectations section straight from the snapshot.
+
+    Filled in code, not by synthesis, so no figure can be miscopied. Each
+    figure carries its provider, the date it was fetched or published, and
+    the fiscal quarter it refers to when it refers to one. A figure that
+    isn't available has value None and the reason why — never 0 or a guess.
+    """
+    implied, history = _move_slots(market)
+    beats, actions, target = _signal_slots(market)
+    return MarketExpectations(
+        consensus_eps=_consensus_slot(market, "eps_estimate"),
+        consensus_revenue=_consensus_slot(market, "revenue_estimate"),
+        whisper_eps=_whisper_slot(market),
+        implied_move=implied, historical_move=history,
+        beat_miss_record=beats, analyst_actions=actions, price_target=target,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -1678,15 +2044,25 @@ def run_personality_panel(
     # Phase 4 — Synthesis
     # ------------------------------------------------------------------
     print(f"{log_prefix} Phase 4: synthesizing report via {SYNTH_MODEL}...")
+    # What happened since the filing, in full: every 8-K's text and every
+    # article a personality read, so the report's writer sees the text its
+    # since_filing claims rest on.
+    eight_k_text = _render_eight_k_text(eight_ks)
+    articles_text = _render_read_articles(list(ctx.read_articles.values()))
+
     # Give the synthesizer the FULL filing text — the same text the baseline
     # reads — so it can extract every figure and cite the filing's own
-    # headings. The supplemental 10-K is left out only if the pair is too
-    # large for the model's context window.
+    # headings. The 8-Ks and articles share the same size limit; the
+    # supplemental 10-K is the first thing left out if everything together
+    # is too large for the model's context window.
     if filing is not None:
-        filing_text, sup_dropped = full_filing_text(filing, supplemental)
+        filing_text, sup_dropped = full_filing_text(filing, supplemental,
+                                                    reserved_chars=len(eight_k_text) + len(articles_text))
     else:
         filing_text, sup_dropped = _NO_FILING_TEXT, False
-    print(f"{log_prefix} Full filing for synthesis: {len(filing_text):,} chars")
+    print(f"{log_prefix} Full filing for synthesis: {len(filing_text):,} chars; "
+          f"8-Ks: {len(eight_k_text):,} chars; articles read: {len(ctx.read_articles)} "
+          f"({len(articles_text):,} chars)")
     if sup_dropped:
         print(f"{log_prefix} WARNING: supplemental {supplemental.filing_type} dropped — filings too large")
 
@@ -1699,6 +2075,9 @@ def run_personality_panel(
         critique_messages=critique_messages,
         news_pool=ctx.news_pool,
         filing_text=filing_text,
+        eight_k_text=eight_k_text,
+        context_block=context_block,
+        articles_text=articles_text,
     )
     print(f"{log_prefix} Synthesis -> {time.perf_counter()-t0:.2f}s "
           f"({synth_in} in / {synth_out} out tokens)")
@@ -1737,9 +2116,16 @@ def run_personality_panel(
                   f"watchlist URL(s): {bad}")
             watch_item.relevant_urls = [url for url in watch_item.relevant_urls if url in pool_urls]
 
-    # hypotheses_explored is always the panel's own final list, set in code,
-    # so the transparency section can't be dropped or altered by the model.
+    # since_filing guard: every item must link to a news article or 8-K this
+    # run actually had, and an 8-K item must carry a tag an 8-K can have.
+    eight_k_urls = {doc.url for eight_k in eight_ks for doc in eight_k.documents}
+    _check_since_filing(report, pool_urls, eight_k_urls, log_prefix)
+
+    # hypotheses_explored is always the panel's own final list, and
+    # market_expectations the snapshot's own figures — both set in code, so
+    # neither can be dropped, altered or miscopied by the model.
     report.hypotheses_explored = final_hypotheses
+    report.market_expectations = _market_expectations(market)
 
     # Attach supplemental filing metadata directly — not via LLM — or record
     # that it was left out of synthesis for size.
@@ -1749,6 +2135,11 @@ def run_personality_panel(
     # on rather than trusted to the model ("N/A" when there was none).
     report.filing_type = filing.filing_type if filing else "N/A"
     report.filing_date = filing.filing_date if filing else "N/A"
+
+    # Parts of the new sections synthesis left unfilled (a metric with no
+    # period, an empty since_filing, an unexplained N/A) are named for the
+    # reader rather than failing the run.
+    report.data_gaps.extend(_completeness_gaps(report, len(eight_ks), len(ctx.news_pool)))
 
     # Problems from the input-gathering phase, so the reader sees them too.
     report.data_gaps.extend(gap for gap in run_gaps if gap not in report.data_gaps)
@@ -1829,6 +2220,7 @@ if __name__ == "__main__":
     print(f"Revenue segments:  {len(report.revenue_segments)}")
     print(f"Key risks:         {len(report.key_risks)}")
     print(f"Recent news:       {len(report.recent_news)}")
+    print(f"Since filing:      {len(report.since_filing)}")
     print(f"Hypotheses:        {len(report.hypotheses_explored)}")
     print(f"What to watch:     {len(report.what_to_watch)}")
     print(f"Data gaps:         {len(report.data_gaps)}")

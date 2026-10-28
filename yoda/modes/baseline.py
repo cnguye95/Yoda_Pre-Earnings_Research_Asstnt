@@ -110,19 +110,24 @@ def _strip_invented_links(report: EarningsReport) -> int:
 MAX_FILING_CHARS = 2_000_000
 
 
-def full_filing_text(primary: Filing, supplemental: Filing | None) -> tuple[str, bool]:
+def full_filing_text(
+    primary: Filing, supplemental: Filing | None, reserved_chars: int = 0,
+) -> tuple[str, bool]:
     """Return the text of the filing(s) to put in a prompt, and whether the 10-K was dropped.
 
     The full primary filing is always included; the full supplemental 10-K is
     added when there is one and both fit under MAX_FILING_CHARS. Each filing
     sits under a header naming its type and date so the model can cite the
-    right document. The second value is True when the supplemental was left
-    out for size, so the caller can log it and record a data gap.
+    right document. *reserved_chars* is room the caller needs for other long
+    text in the same prompt (the panel's 8-Ks and read articles), counted
+    against the same limit so the supplemental is the first thing left out.
+    The second value is True when the supplemental was left out for size, so
+    the caller can log it and record a data gap.
     """
     parts = [f"=== {primary.filing_type} filed {primary.filing_date} ===", primary.clean_text]
     if not supplemental:
         return "\n".join(parts), False
-    if len(primary.clean_text) + len(supplemental.clean_text) > MAX_FILING_CHARS:
+    if len(primary.clean_text) + len(supplemental.clean_text) + reserved_chars > MAX_FILING_CHARS:
         return "\n".join(parts), True
     parts += ["", f"=== {supplemental.filing_type} filed {supplemental.filing_date} ===",
               supplemental.clean_text]

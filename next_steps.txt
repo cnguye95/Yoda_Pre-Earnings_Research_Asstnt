@@ -32,8 +32,8 @@ IDEAS for Improvements/Changes
    letting news overwrite filing numbers.
    Build order (AGREED): steps 1-5 = anchors, schema, historical move, 8-K
    ingest, news tools (all DONE). Step 6, the panel, is split into 6a inputs
-   (DONE) → 6b evidence tags + weighting (DONE) → 6c synthesis + report →
-   6d evidence bundle → 6e PDF/app display. Then step 7 (eval), step 8
+   (DONE) → 6b evidence tags + weighting (DONE) → 6c synthesis + report
+   (DONE) → 6d evidence bundle → 6e PDF/app display. Then step 7 (eval), step 8
    (transcripts).
    SMOKE TEST (AGREED 2026-10-28): one live panel run is allowed once all of
    step 6 (6a-6e) is done, to check the panel end to end before step 7.
@@ -151,6 +151,12 @@ IDEAS for Improvements/Changes
        eval runner, with no one to ask, records the row as failed. Ordinary
        "no data" (network blip, not covered, no whisper) is N/A, not a pause.
      * Budget left at $0.65 (warning only) until the first measured run.
+   - DONE (6c): synthesis gets the same CONTEXT block. The report's
+     market_expectations is filled in code from the snapshot, not written
+     by synthesis (AGREED): _market_expectations() copies each figure with
+     its provider, as-of date and fiscal quarter (backward-looking figures
+     have none); an N/A figure carries consensus.py's own reason or "<API>
+     refused the request". Est. +$0.03-0.10 per run for 6c, not measured.
 
 3.4 Weigh claims — two dimensions: reliability and relevance (AGREED DESIGN)
    - Recommendation (agreed):
@@ -218,6 +224,15 @@ IDEAS for Improvements/Changes
      since_filing section, tagged reported with the period they cover. They
      are never placed in key_metrics, which holds only figures from the
      10-Q/10-K."
+   - DONE (6c): the README note is in. After synthesis, code adds a
+     data_gaps entry (never fails the run) for a key metric with no period,
+     an empty since_filing when the run had 8-Ks or news results, and an
+     N/A market figure with no reason. since_filing items must link to a
+     news-pool article or one of the run's 8-K documents, else they are
+     dropped with a gap; an 8-K item tagged anything but reported/guided
+     becomes unverifiable with a gap (AGREED). A filing-field citation
+     starting "8-K" is marked UNVERIFIED like a URL (3.10's "key_metrics
+     never sourced from an 8-K"). Tests: tests/test_panel.py.
 
 3.6 Synthesis prompt rules (yoda/modes/personality_panel.py _SYNTHESIS_SYSTEM)
    - Rule 1: keep "FILING TEXT is the only source for key_metrics,
@@ -255,6 +270,23 @@ IDEAS for Improvements/Changes
        test mostly settles it. The real fix is the “since filing” section in
        the 8-K work, which gives external facts their own home, so I left
        the wording alone for now.
+   - DONE (6c): synthesis gets the full 8-K text (form + every Exhibit
+     99.x, each headed by its label and URL; AGREED: all of it), the
+     CONTEXT block and the articles read in full; the supplemental 10-K is
+     dropped first if everything together passes the context limit. Rule 1
+     amended (post-filing info → since_filing / market_expectations, 8-K
+     2.02 figures → since_filing tagged reported, never key_metrics, every
+     metric gives its period; "only known from external sources" now goes
+     to since_filing, which settles the rule 1/5 overlap); rule 2 sends
+     post-filing guidance to since_filing; rule 4 (the echo) replaced by
+     the since_filing labelling rule with the "8-K Item 2.02, Exhibit 99.1
+     — <heading>" format; rule 5 covers 8-Ks and skips N/A market figures;
+     new rule 8 = the 3.4 conflict rules (one shared text, so word for
+     word the same as the personality prompt); rule 9 = say so inside a
+     bull/bear/watch point that rests only on unverifiable claims (AGREED:
+     inline, prompt only); rule 10 = use the market data, never turn N/A
+     into a number. hypotheses_explored and market_expectations are left
+     out of synthesis's output schema; code sets both.
 
 3.7 Eval — new rubric and judge (AGREED; yoda/eval/rubric.py, judge.py,
     runner.py). No eval or re-score runs until the rest of next_steps is
@@ -532,7 +564,7 @@ IDEAS for Improvements/Changes
      * DONE (6b): the playbook and the source-tier list are in
        _BASE_LOOP_CONTRACT (source tiers: prompt only, AGREED); tag-vs-source
        validation is in code (see 3.2).
-     * NOT done yet: passing read articles to synthesis (6c).
+     * DONE (6c): synthesis gets the full text of every article read.
 
 3.10 Tests (offline, per CLAUDE.md)
    - 8-K item parsing and date filtering; 8-K chunk labels (item code +

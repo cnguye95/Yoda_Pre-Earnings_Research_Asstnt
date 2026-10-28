@@ -14,8 +14,8 @@ from yoda.modes import baseline, llm
 from yoda.modes import personality_panel as panel
 from yoda.modes import tools
 from yoda.schema import (
-    ArticleText, CritiqueMessage, EarningsReport, EightKDocument, EightKFiling, EvidenceQuote, ForwardGuidance,
-    Hypothesis, Metric, NewsSearchResult, PersonalityResult, Risk, Segment,
+    ArticleText, CritiqueMessage, EarningsReport, EightKDocument, EightKFiling, EvidenceQuote, ExpectationValue,
+    ForwardGuidance, Hypothesis, Metric, NewsSearchResult, PersonalityResult, Risk, Segment, SinceFilingItem,
 )
 from yoda.tools.consensus import ApiFailure, MarketSnapshot
 
@@ -242,19 +242,24 @@ def _snapshot(failures: list | None = None, **parts) -> MarketSnapshot:
     values = dict(
         consensus={"next_earnings_date": "2026-11-01", "report_hour": "amc", "fiscal_quarter": 3,
                    "fiscal_year": 2026, "eps_estimate": 1.23, "revenue_estimate": 11_520_000_000,
-                   "sources": {"eps_estimate": _src("Finnhub earnings calendar")}, "data_gaps": []},
+                   "sources": {"eps_estimate": _src("Finnhub earnings calendar"),
+                               "revenue_estimate": _src("Finnhub earnings calendar")},
+                   "data_gaps": [], "fetched_at": "2026-10-28T14:00:00+00:00"},
         whisper={"whisper_status": "not_found", "whisper_eps": None, "reason": "whisper: none on the page",
-                 "source_url": None, "page_date": None},
+                 "source_url": None, "page_date": None, "fiscal_quarter": None, "fiscal_year": None,
+                 "retrieved_at": "2026-10-28T14:00:05+00:00"},
         signals={"beat_history": {"beats": 3, "misses": 1, "quarters": 4, "avg_surprise_pct": 2.5,
                                   "source": _src("Finnhub earnings surprises")},
                  "analyst_actions": None,
                  "price_target": {"consensus": 330.0, "upside_pct": 10.0, "current_price": 300.0,
                                   "source": _src("FMP price target consensus")},
-                 "data_gaps": ["analyst actions: FMP returned no grades."]},
-        implied_move={"implied_move_pct": None, "as_of": None, "source_name": "EarningsWatcher",
-                      "reason": "implied move: no live implied move yet."},
+                 "data_gaps": ["analyst actions: FMP returned no grades."],
+                 "fetched_at": "2026-10-28T14:00:10+00:00"},
+        implied_move={"implied_move_pct": None, "report_date": None, "as_of": None,
+                      "source_name": "EarningsWatcher", "reason": "implied move: no live implied move yet."},
         historical_move={"avg_close_move_pct": 6.1, "reports_used": 8, "first_report_date": "2024-07-18",
-                         "last_report_date": "2026-07-16", "source_name": "EarningsWatcher"},
+                         "last_report_date": "2026-07-16", "source_name": "EarningsWatcher",
+                         "as_of": "2026-10-27", "reason": None},
         failures=failures or [], whisper_cost_usd=0.04,
     )
     values.update(parts)
@@ -571,3 +576,192 @@ def test_read_article_reaches_the_personality_and_cut_articles_say_so(monkeypatc
 
     assert observation.startswith(f"ARTICLE {url} (cut at 20,000 of 25,000 characters)")
     assert outcome == "20000 chars"
+
+
+# ---------------------------------------------------------------------------
+# Synthesis — post-filing inputs, rules, and the fields code fills
+# ---------------------------------------------------------------------------
+
+def test_synthesis_gets_post_filing_inputs_and_writes_no_code_set_fields(monkeypatch):
+    # Synthesis sees the 8-K text (with label and URL), the CONTEXT block and
+    # the articles read in full; it is not asked to echo the hypotheses, and
+    # the schema it fills has no hypotheses_explored or market_expectations.
+    calls = []
+
+    def capture(model, max_tokens, output_format, system, messages):
+        calls.append((output_format, messages[0]["content"]))
+        draft = output_format(**_report().model_dump(exclude=panel._SET_IN_CODE))
+        return draft, 5, 7
+    monkeypatch.setattr(panel, "_structured_call", capture)
+    article = ArticleText(url="https://a.example/story", text="ARTICLE BODY", full_chars=12, truncated=False)
+
+    report, input_tokens, output_tokens = panel._synthesize_report(
+        ticker="TEST", primary_filing=None, final_hypotheses=[], contested=[], critique_messages=[],
+        news_pool=[], filing_text="FILING BODY", eight_k_text=panel._render_eight_k_text([_earnings_8k()]),
+        context_block="- Consensus EPS: $1.23", articles_text=panel._render_read_articles([article]),
+    )
+
+    [(output_format, prompt)] = calls
+    assert "=== 8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13) — u ===\nThird-quarter revenue" in prompt
+    assert "--- CONTEXT" in prompt and "- Consensus EPS: $1.23" in prompt
+    assert "ARTICLE https://a.example/story\n\nARTICLE BODY" in prompt
+    assert prompt.index("FILING BODY") < prompt.index("Third-quarter revenue")
+    assert "Echo" not in prompt
+    assert "hypotheses_explored" not in output_format.model_fields
+    assert "market_expectations" not in output_format.model_fields
+    assert output_format.model_fields["since_filing"].is_required()
+    # The caller gets a full report, with the code-set fields still empty.
+    assert isinstance(report, EarningsReport) and report.market_expectations is None
+    assert (input_tokens, output_tokens) == (5, 7)
+
+
+def test_synthesis_is_told_when_there_were_no_8ks_or_articles():
+    assert panel._render_eight_k_text([]) == "(No 8-Ks were filed since the 10-Q/10-K.)"
+    assert panel._render_read_articles([]) == "(No articles were read in full.)"
+
+
+def test_conflict_rules_are_word_for_word_the_same_for_personalities_and_synthesis():
+    assert "Newer information is preferred only within the same tier" in panel._CONFLICT_RULES
+    assert panel._CONFLICT_RULES in panel._SYNTHESIS_SYSTEM
+    assert all(panel._CONFLICT_RULES in prompt for prompt in panel._PERSONALITY_PROMPTS.values())
+    # The new rules: the 8-K citation format, and no hypotheses echo.
+    assert '"8-K Item 2.02, Exhibit 99.1 — <heading>"' in panel._SYNTHESIS_SYSTEM
+    assert "hypotheses_explored" not in panel._SYNTHESIS_SYSTEM
+
+
+# ---------------------------------------------------------------------------
+# market_expectations — filled in code from the snapshot
+# ---------------------------------------------------------------------------
+
+def test_market_expectations_copy_each_figure_with_its_source_date_and_quarter():
+    verified = {"whisper_status": "verified", "whisper_eps": 1.30, "reason": None, "fiscal_quarter": 3,
+                "fiscal_year": 2026, "source_url": "https://www.earningswhispers.com/epsdetails/test",
+                "page_date": "2026-10-26", "retrieved_at": "2026-10-28T14:00:05+00:00"}
+    implied = {"implied_move_pct": 7.2, "report_date": "2026-11-01", "as_of": "2026-10-27",
+               "source_name": "EarningsWatcher", "reason": None}
+
+    # Revenue filled from FMP: each consensus figure is credited to its own provider.
+    base = _snapshot()
+    consensus = dict(base.consensus, sources=dict(base.consensus["sources"], revenue_estimate=_src("FMP earnings")))
+
+    expectations = panel._market_expectations(_snapshot(consensus=consensus, whisper=verified, implied_move=implied))
+
+    assert expectations.consensus_eps == ExpectationValue(
+        value="$1.23", fiscal_quarter=3, fiscal_year=2026, source="Finnhub earnings calendar",
+        as_of_date="2026-10-28", missing_reason=None)
+    assert (expectations.consensus_revenue.value, expectations.consensus_revenue.source) == ("$11.52B", "FMP earnings")
+    assert expectations.whisper_eps.value == "$1.30"
+    assert expectations.whisper_eps.source == verified["source_url"]
+    assert expectations.whisper_eps.as_of_date == "2026-10-26"
+    # The implied move is for the same report date as the consensus, so it gets its quarter.
+    assert (expectations.implied_move.value, expectations.implied_move.fiscal_quarter) == ("±7.2%", 3)
+    # Backward-looking figures belong to no single quarter.
+    assert expectations.historical_move.value == ("±6.1% average closing move over the last 8 reports "
+                                                  "(2024-07-18 to 2026-07-16)")
+    assert expectations.historical_move.fiscal_quarter is None
+    assert expectations.historical_move.as_of_date == "2026-10-27"
+    assert expectations.beat_miss_record.value == "3 beats, 1 misses in the last 4 quarters, average surprise +2.5%"
+    assert expectations.beat_miss_record.as_of_date == "2026-10-28"
+    assert expectations.price_target.value == "$330.00, +10.0% vs current $300.00"
+    assert expectations.price_target.source == "FMP price target consensus"
+
+
+def test_missing_market_figures_are_none_with_a_reason_never_zero():
+    # A refused provider, a whisper never looked up, and a figure the provider didn't have.
+    failures = [ApiFailure("consensus", "Finnhub", "key rejected"), ApiFailure("signals", "FMP", "HTTP 402")]
+    refused = panel._market_expectations(_snapshot(failures, consensus=None, whisper=None, signals=None))
+
+    assert refused.consensus_eps.value is None
+    assert refused.consensus_eps.missing_reason == "Finnhub refused the request"
+    assert refused.whisper_eps.missing_reason == "not looked up (no consensus to match it to)"
+    assert refused.implied_move.missing_reason == "implied move: no live implied move yet."
+    assert refused.price_target.missing_reason == "FMP refused the request"
+    assert all(slot.value is None for name, slot in refused if name != "historical_move")
+
+    # consensus.py's own reason for an empty field is passed on word for word.
+    base = _snapshot()
+    eps_gap = "eps_estimate: not available from Finnhub earnings calendar or FMP earnings."
+    actions_gap = "analyst_actions: not available from FMP grades."
+    partial = panel._market_expectations(_snapshot(
+        [ApiFailure("whisper", "Anthropic (whisper lookup)", "overloaded")],
+        consensus=dict(base.consensus, eps_estimate=None, data_gaps=[eps_gap]),
+        whisper=None,
+        signals=dict(base.signals, data_gaps=[actions_gap]),
+    ))
+    assert partial.consensus_eps == ExpectationValue(value=None, fiscal_quarter=None, fiscal_year=None,
+                                                     source=None, as_of_date=None, missing_reason=eps_gap)
+    assert partial.consensus_revenue.value == "$11.52B"
+    assert partial.whisper_eps.missing_reason == "Anthropic (whisper lookup) refused the request"
+    assert partial.analyst_actions.missing_reason == actions_gap
+
+
+# ---------------------------------------------------------------------------
+# Post-synthesis checks — since_filing links and tags, 8-K citations, gaps
+# ---------------------------------------------------------------------------
+
+def _since(url: str, evidence_type: str = "reported") -> SinceFilingItem:
+    # One since_filing item linked to *url*.
+    return SinceFilingItem(claim="Third-quarter revenue rose 9%.", evidence_type=evidence_type,
+                           period="Q3 FY2026", as_of_date="2026-10-13",
+                           source="8-K Item 2.02, Exhibit 99.1 — Results", url=url)
+
+
+def test_since_filing_drops_invented_links_and_fixes_8k_tags():
+    eight_k_url, news_url = "https://www.sec.gov/ex99.htm", "https://news.example/a"
+    report = _report()
+    report.since_filing = [_since("https://invented.example"), _since(eight_k_url, "estimate"),
+                           _since(news_url, "estimate")]
+
+    panel._check_since_filing(report, {news_url}, {eight_k_url}, "[t]")
+
+    assert [item.url for item in report.since_filing] == [eight_k_url, news_url]
+    # An 8-K can only be reported or guided; a news claim keeps its tag.
+    assert [item.evidence_type for item in report.since_filing] == ["unverifiable", "estimate"]
+    assert len(report.data_gaps) == 2
+    assert report.data_gaps[0].startswith("since_filing: dropped") and "https://invented.example" in report.data_gaps[0]
+    assert "was tagged estimate, but an 8-K is reported or guided" in report.data_gaps[1]
+
+
+def test_key_metric_citing_an_8k_is_marked_unverified():
+    # key_metrics come only from the 10-Q/10-K; an 8-K figure belongs in since_filing.
+    report = _report(citation="8-K Item 2.02, Exhibit 99.1 — Third-Quarter Results")
+    panel._scrub_source_citations(report, "[t]")
+    assert report.key_metrics[0].source_citation == panel.UNVERIFIED_CITATION
+    assert report.data_gaps[0].startswith("key_metrics[0]: cited an 8-K")
+
+    # A filing heading that only mentions Form 8-K further along is left alone.
+    report = _report(citation="10-K Item 9B. Other Information — Form 8-K Disclosures")
+    panel._scrub_source_citations(report, "[t]")
+    assert report.key_metrics[0].source_citation.startswith("10-K Item 9B") and report.data_gaps == []
+
+
+def test_completeness_gaps_name_each_unfilled_part():
+    # _report() has a metric with no period, no since_filing and no market_expectations.
+    report = _report()
+    assert panel._completeness_gaps(report, eight_k_count=1, news_count=0) == [
+        "key_metrics[0] (Revenue): the period it covers was not stated.",
+        "since_filing is empty although this run had 1 8-K(s) and 0 news result(s) from after the filing.",
+        "market_expectations is missing.",
+    ]
+
+    # Filled in, with nothing since the filing to report: only an N/A
+    # figure without a reason is left to flag.
+    report.key_metrics[0].period = "Q3 FY2026"
+    report.market_expectations = panel._market_expectations(_snapshot())
+    report.market_expectations.whisper_eps.missing_reason = None
+    assert panel._completeness_gaps(report, eight_k_count=0, news_count=0) == [
+        "market_expectations.whisper_eps: N/A with no reason given."]
+
+
+def test_report_gets_market_expectations_and_hypotheses_in_code(monkeypatch):
+    # End to end (no filing): code fills market_expectations from the
+    # snapshot and hypotheses_explored from the panel, and names the gaps
+    # synthesis left.
+    _no_filing_run(monkeypatch, lambda ticker: _snapshot())
+
+    report, _, _ = panel.run_personality_panel("TEST")
+
+    assert report.market_expectations == panel._market_expectations(_snapshot())
+    assert report.market_expectations.consensus_eps.value == "$1.23"
+    assert len(report.hypotheses_explored) == len(panel._PERSONALITY_PROMPTS)
+    assert "key_metrics[0] (Revenue): the period it covers was not stated." in report.data_gaps
