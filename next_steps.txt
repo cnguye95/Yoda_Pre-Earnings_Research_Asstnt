@@ -2,851 +2,36 @@
 IDEAS for Improvements/Changes
 
 
-1. UI bugs (found in the 2026-10-27 smoke test) — ALL FIXED 2026-10-28,
-   each with an offline test in tests/test_outputs.py (Streamlit AppTest):
-   a. selector is now [data-testid="stMain"] (checked in the browser: it
-      exists and is the scrolling area). b. each finished PDF's bytes are
-      kept on its TickerResult; download buttons and the ZIP use them, so a
-      pruned file no longer breaks either. c. starting a generation clears
-      the previous report and cached PDF. d. the button counts only tickers
-      not already queued ("Add to Queue (1 new ticker)"). e. one st.error
-      line, traceback in a closed "Details" expander. f. st.tabs replaced
-      by a horizontal st.radio held in session state; a queue run switches
-      it to Queue (AGREED; a segmented control was chosen first, but
-      Streamlit 1.40's AppTest crashes on it). 1f can't be fully seen
-      without a live queue run; the test checks the view after a faked run.
-   Original notes:
-   a. CONFIRMED: scroll-to-top uses "section.main", which doesn't exist in
-      Streamlit 1.40 (the element is section.stMain, data-testid="stMain"),
-      so the page never scrolls to the "Queue complete" notice.
-   b. unverified: queue download buttons read PDFs that a later run of the
-      same ticker may have pruned (FileNotFoundError on rerun).
-   c. CONFIRMED: after a failed generation (ZZZZ) the previous ticker's
-      report (NFLX) is still shown under the new error.
-   d. unverified (minor): "Add to Queue (N)" counts tickers already queued.
-   e. NEW (minor): a failed generation prints the error twice (st.error
-      line + st.exception block repeat the same message).
-   f. NEW (minor): after a queue run finishes, the page reruns and jumps back
-      to the "Single ticker" tab; the results are on the Queue tab.
+1. Open items found while building steps 6-8 (added 2026-10-28)
+   a. Cost vs budget: a Yoda report costs ~$0.80-1.00 (BA runs: $0.98,
+      $0.89, $0.80) against REPORT_BUDGET_USD = $0.65, which only warns.
+      It was agreed to revisit the budget and MAX_TOOL_CALLS (6) after the
+      first measured runs; not done yet. Synthesis (~$0.3-0.6) is the
+      largest cost.
+   b. Judge output cap: the step-8 judge call used exactly 4,096
+      completion tokens. Check whether that is a hidden output limit
+      (judge.py sets no max_completion_tokens) that could cut long
+      justifications or reasoning short.
+   c. Token estimate near the 272K line: chars / 4 ran ~7% low on BA in
+      step 7 and was close after the HTML fix (85.8K est. vs 84.6K real),
+      but a JPM-size report near the line is untested. Check the estimate
+      on JPM before a full eval (it decides whether uncited news is cut).
+   d. Whisper lookup may rarely verify even inside the 3-day window:
+      upcoming whispers were seen only in earningswhispers.com homepage
+      previews, not on the company pages the lookup checks the number
+      against (e.g. AMZN, 1 day out). Each failed lookup still costs
+      ~$0.12-0.15. Consider accepting the homepage preview as a source, or
+      another check.
+   e. UI bug (queue run jumping back to the Single ticker view) is
+      fixed and tested offline, but never seen working in the browser:
+      that needs a live queue run.
+   f. Personalities rarely copy evidence labels exactly: in the step-8 run
+      all 22 call citations needed code correction ("citation corrected
+      to ..."). The checked evidence is right, but the prompt or the label
+      format should make exact citation easier.
 
 
-2. Improve Report Content
-   - Add implied volatility, expectations, and whisper number discourse
-     (yoda/tools/consensus.py already fetches consensus EPS/revenue, whisper,
-     implied move, beat/miss history, analyst actions and price target, each
-     with source + timestamp — but nothing imports it yet. Wiring it in is
-     step 3.3 below.)
-   - DONE (2026-10-28): first advanced search setting — the whisper lookup.
-     * RESEARCH: no public rule on timing (Earnings Whispers: "dynamic",
-       updated up to the release; AAII: whispers appear very close to the
-       announcement). Live check 2026-10-28: MSFT and AMZN (reporting that
-       day / the next) still showed only last quarter's whisper on their
-       earningswhispers.com pages; AMZN's upcoming one was in a homepage
-       preview one day out; AMD/NVDA (1-3 weeks out) showed none. So a
-       public whisper appears ~1-2 days before, not 1-1.5 weeks.
-     * RULE (AGREED): looked up by default only when the next report is
-       <= 3 days away (consensus.WHISPER_WINDOW_DAYS); an unknown or past
-       date opts out. The person can tick it anyway (a warning says it
-       will likely find nothing) or untick it. The skipped whisper shows
-       why in the report ("not looked up: next report is 82 days away").
-     * App: an "Advanced search settings" box after the ticker is entered
-       (a free next_report_date() check, once per ticker) with the cost
-       note ($0.12-0.15, measured $0.121 and $0.130). Queue: the rule per
-       ticker, or skip for the whole batch. Eval runner and CLI: the rule.
-       Tests: test_market_data.py, test_panel.py, test_outputs.py.
-
-
-3. Incorporate 8-K filings and post-filing developments ("Option 2 + tool")
-   Goal: the 10-Q/10-K is ground truth for its period but is already stale on
-   release. Add the layers analysts use to see what changed since, keeping
-   every claim labelled by source, as-of date and evidence type — never
-   letting news overwrite filing numbers.
-   Build order (AGREED): steps 1-5 = anchors, schema, historical move, 8-K
-   ingest, news tools (all DONE). Step 6, the panel, is split into 6a inputs
-   (DONE) → 6b evidence tags + weighting (DONE) → 6c synthesis + report
-   (DONE) → 6d evidence bundle (DONE) → 6e PDF/app display (DONE). Then step 7 (eval), step 8
-   (transcripts).
-   SMOKE TEST (AGREED 2026-10-28): one live panel run is allowed once all of
-   step 6 (6a-6e) is done, to check the panel end to end before step 7.
-   - RUN (NFLX, 2026-10-28): $0.635 total, 169s wall, 6/6 personalities
-     clean, 12 hypotheses (11 kept). Loops $0.047, critique $0.150,
-     synthesis $0.318 (83K in / 15K out tokens, with NO news or articles),
-     whisper lookup $0.121 (above the $0.03-0.08 estimate). 10-Q filed
-     2026-10-21, so no 8-Ks since. market_expectations filled in code as
-     designed (consensus Q4 FY2026, historical move, signals; whisper and
-     implied move N/A with reasons); all 33 metrics have a period.
-   - BUG FOUND: every search_news call failed with Tavily HTTP 400, so news,
-     read_article, since_filing and the evidence bundle's news were never
-     exercised. Suspect the step-5 request (topic="news" + days +
-     start_date); the client hides Tavily's error text. With news working,
-     synthesis input grows, so a run likely lands above the $0.65 budget.
-     A second live run needs fresh consent.
-   - FIXED (2026-10-28): probes showed Tavily's error "When days is set,
-     start_date or end_date cannot be set". search_news now sends days
-     only (filing date → today) and turns Tavily's RFC dates ("Tue, 27 Oct
-     2026 12:00:00 GMT") into ISO. One live call returned 3 dated NFLX
-     articles. The panel's news path is still unexercised end to end.
-   - Whisper and implied move N/A were correct: NFLX's next report is
-     2027-01-18, ~12 weeks out; no whisper is published that early, and
-     EarningsWatcher has no confirmed report date yet, so it publishes no
-     implied move. The whisper lookup still cost
-     $0.12 — skipping it when the report is far off would save that.
-   - RUN 2 (BA, 2026-10-28, user-approved, to exercise 8-Ks and news):
-     $0.984 total, 274s, 6/6 clean. Loops $0.082, critique $0.142,
-     synthesis $0.629 (161K in / 31K out tokens), whisper $0.130. Inputs:
-     10-Q 2026-07-28 (189K chars), 4 post-filing 8-Ks / 5 documents (46K
-     chars: 2.02 Q3 release, 1.01+2.03 credit agreement, two 5.02), 48
-     news results, 5 articles read (63K chars; one was a 512-char stub).
-     * WORKED: 18 since_filing items (10 reported from the 8-Ks with the
-       "8-K Item 2.02, Exhibit 99.1 — <table>" source and Q3 FY2026
-       period; 3 guided, 2 estimate (LSEG), 2 proxy, 1 unverifiable);
-       5.02/1.01 events have period None. Spot-checked Q3 figures
-       (revenue $24,188M, FCF $464M, backlog $745,431M ...) all appear in
-       Exhibit 99.1. key_metrics stayed on the 10-Q (Q2 / H1 FY2026), none
-       cited an 8-K. No since_filing item dropped or retagged. Evidence:
-       71 quotes, 32 cite an 8-K, 19 a news URL; 16 unverifiable (8 quote
-       not found, 3 article doesn't name the source, 3 tagged so by the
-       analyst). Bundle: 5 documents, 48 news, 4 of 5 read articles kept
-       (cited), 0 peer passages (no lookup_peer call).
-     * COST: ~$1 for a mid-size filer with fresh news, well over the $0.65
-       budget; synthesis output (31K tokens incl. thinking) is the largest
-       single cost. Revisit REPORT_BUDGET_USD and synthesis effort before
-       eval runs.
-     * MINOR: the tool log prints read_article('') — it shows the query
-       argument, which read_article doesn't have.
-
-3.1 Ingest 8-Ks filed after the primary 10-Q/10-K (yoda/ingest/edgar.py)
-   - Fetch 8-Ks with filing_date > primary filing_date (SEC submissions JSON
-     already lists them; same _sec_get + cache path).
-   - Read the Item codes to know what each 8-K is: 2.02 = earnings release
-     (Exhibit 99.1 press release — often out days/weeks BEFORE the 10-Q),
-     1.01 = material agreement, 2.01 = acquisition/disposal, 2.03 = new debt,
-     5.02 = executive change, 7.01/8.01 = Reg FD / other events.
-   - Model: a Filing-like record per 8-K (date, items, exhibit text, url).
-   - Embed into ChromaStore so personalities can retrieve it through
-     retrieve_filing (AGREED, option B in 3.3). Each 8-K chunk is labelled
-     with its 8-K item code and filing date, so a result says which
-     document it came from.
-   - DONE (step 4, 2026-10-28) — data layer:
-     * edgar.fetch_post_filing_8ks(filing) returns every 8-K and 8-K/A
-       filed after the primary filing, oldest first, as EightKFiling records
-       (schema.py), plus a list of errors. The SEC filing list is re-read
-       on every call so new 8-Ks appear; each 8-K is downloaded once and
-       cached in data/filings/{ticker}/8k/{accession}/. A failed 8-K or
-       list download is recorded in errors, never raised.
-     * Documents kept: the form itself plus every Exhibit 99.x (press
-       release, supplements); EX-10 contracts, graphics and XBRL skipped.
-     * chunker.chunk_8k() labels each chunk, e.g. "8-K Items 2.02, 9.01,
-       Exhibit 99.1 (filed 2026-10-21)"; Chunk.document holds the label and
-       the vector store keeps it (older chunks read back as "").
-     * Tests: tests/test_ingest.py, tests/test_retrieval.py.
-     * DONE (6a): the panel embeds the 8-Ks; retrieve_filing adds the k
-       best matches across all of them (ChromaStore.query_any, still
-       filtered by accession); _render_chunks shows the 8-K label.
-
-3.2 Evidence types — tag every claim
-   reported     = company actuals for a closed period (10-Q/10-K, 8-K 2.02 release)
-   guided       = management's own outlook (release, call, 8-K 7.01)
-   estimate     = third-party expectation (consensus, analyst targets, whisper)
-   proxy        = indirect signal (alt data, peer read-through, industry stats)
-   unverifiable = claim lacks evidence to be tagged reported, guided, estimate, or proxy
-   - Add evidence_type + as_of_date + source to Hypothesis evidence quotes and
-     to a new report section (see 3.5).
-   - News articles are tagged by the ORIGINAL source the article names for
-     the claim, not as "news". The personality may tag the claim when the
-     article attributes it, e.g.:
-       "Netflix reported revenue of $X in its Q2 filing"  -> reported
-       "management expects Q3 margins of Y%"               -> guided
-       "analysts polled by LSEG expect EPS of $Z"          -> estimate
-       "card-spending data from <firm> shows sales down"   -> proxy
-     The attributed source is recorded alongside the tag.
-     * The outlet (e.g. marketbeat, SeekingAlpha) is recorded too: it comes
-       from the article URL's domain, so no extra field is needed (AGREED).
-   - Edge case: if the article does not say where the claim comes from, the
-     claim is tagged "unverifiable".
-   - DONE (6b) for hypotheses: every piece of evidence is an EvidenceQuote
-     (quote, citation, source, evidence_type, as_of_date, direct/context +
-     reason, check_note). The panel keeps a record of everything each
-     personality was shown and checks each quote against it (AGREED):
-     * the quote must appear in the cited text (case/spacing ignored; parts
-       around "..." checked separately), else unverifiable; a wrong
-       citation is corrected when the quote is found elsewhere;
-     * filing / 8-K → reported or guided, any other tag → unverifiable with
-       the reason (code can't tell which was meant); a competitor's filing
-       (label "PEER ...") → proxy; CONTEXT → estimate; news keeps its tag
-       only if the article names the given source;
-     * date, and source for filings/market data, are set by code.
-     * Chunks now carry their filing label ("10-Q filed 2026-08-06 · MD&A
-       — ...") so code knows each passage's filing and date.
-     * Old reports' plain-text quotes load as unverifiable, noted "written
-       before evidence tags".
-     The report section (since_filing) is filled in 6c.
-
-3.3 Post-filing context + market data for personalities (AGREED: option B,
-    no new search tool)
-   - No search_developments tool. Instead every personality's prompt and
-     synthesis get one fixed block, built once per ticker:
-     * the 8-Ks filed since the 10-Q/10-K (date + item codes), and
-     * the market data from consensus.py: consensus EPS/revenue, whisper,
-       implied move, historical move (below), and the expectation signals
-       (beat/miss record, analyst rating actions, consensus price target).
-     Why: reuses the existing tools, gives no two routes to the same data,
-     and the market data costs no tool calls.
-   - Tools stay at four: retrieve_filing (10-Q/10-K + 8-K chunks, 3.1),
-     search_news (filters in 3.9), read_article (3.9), lookup_peer. Revisit
-     MAX_TOOL_CALLS (6) after the first measured run.
-   - Historical earnings move (AGREED): a new consensus.py function giving
-     the average stock move after each of the last 8 earnings reports
-     (fewer if fewer exist; the count is shown).
-     * A company with no past reports, or data that can't be fetched,
-       returns None with a reason — never an error, never 0. The report
-       shows N/A.
-     * DONE (step 3, 2026-10-28): get_historical_move(ticker) averages the
-       absolute CLOSING moves EarningsWatcher records per past report
-       (implied_history in the same free file get_implied_move reads), so
-       it compares like-for-like with the implied move. EarningsWatcher
-       decides which trading day a before-open or after-close report
-       moved. Covers 340 symbols, incl. all 20 eval tickers and COIN.
-       Not used: EarningsWatcher's headline 10-year PEAK intraday average
-       (larger, so implied moves would look cheap next to it), and FMP
-       prices (free plan: only 5 earnings rows, so at most ~4 past reports).
-       Tests: tests/test_market_data.py.
-   - Wire consensus.py into this block and into synthesis.
-   - DONE (6a) for personalities; synthesis gets the block in 6c (AGREED):
-     * consensus.get_market_snapshot() fetches everything once per run (one
-       paid whisper lookup; its cost is in the "Total cost:" line).
-     * The panel's _render_context_block() lists each 8-K's date, form and
-       item names, and every market figure with its source and as-of date;
-       a missing figure says "N/A — <reason>", never 0.
-     * PAUSE RULE (AGREED): a provider that refuses the request (rejected
-       key, paid-only endpoint — consensus.ApiAccessError — or an Anthropic
-       error in the whisper lookup) pauses the report before any
-       personality is paid for, naming the API. The person chooses to
-       continue without that data (the snapshot is reused, the missing
-       figures go into data_gaps) or stop. In the app (single ticker and
-       queue) this is two buttons; on the command line a y/N prompt; the
-       eval runner, with no one to ask, records the row as failed. Ordinary
-       "no data" (network blip, not covered, no whisper) is N/A, not a pause.
-     * Budget left at $0.65 (warning only) until the first measured run.
-   - DONE (6c): synthesis gets the same CONTEXT block. The report's
-     market_expectations is filled in code from the snapshot, not written
-     by synthesis (AGREED): _market_expectations() copies each figure with
-     its provider, as-of date and fiscal quarter (backward-looking figures
-     have none); an N/A figure carries consensus.py's own reason or "<API>
-     refused the request". Est. +$0.03-0.10 per run for 6c, not measured.
-
-3.4 Weigh claims — two dimensions: reliability and relevance (AGREED DESIGN)
-   - Recommendation (agreed):
-     * Reliability: categorical tag (reported > guided > estimate > proxy >
-       unverifiable; unverifiable ranks last — AGREED).
-       Assigned in code wherever the source type is known (SEC filings,
-       consensus feed). For news articles the personality assigns it from
-       the source the article names, and code checks the tag fits that
-       stated source (3.2); no stated source -> "unverifiable".
-     * Relevance: coarse category judged by the personality per hypothesis
-       — "direct" (same metric/period as the question) vs "context" — with a
-       one-line reason, which the critique step can challenge.
-     * No numeric weights at first. Rules instead: a hypothesis needs at
-       least one direct claim; proxy-only hypotheses are capped at 3/5;
-       unverifiable-only hypotheses are capped at 2/5 (AGREED).
-     * Conflict rules (AGREED; the same wording goes in 3.6 and in the
-       reasoning_quality anchor, 3.7):
-       - For the same metric and period, the more reliable tier wins and
-         both are shown.
-       - Newer information is preferred only within the same tier, or when
-         it covers a later period.
-       - Guidance, consensus and whisper for the same period are different
-         quantities, not conflicting claims. Showing the gap between them
-         is good. The tier rule applies only when sources give different
-         values for the same fact.
-     * Revisit numeric weighting only if the eval shows the categorical
-       rules aren't enough.
-   - DONE (6b): caps applied in code after the checks (only ever lowering
-     confidence, with Hypothesis.confidence_note saying why): no verifiable
-     evidence → 2/5; only proxy → 3/5; no verifiable direct claim → 2/5
-     (AGREED: a hypothesis without a direct claim is capped, not dropped).
-     Relevance (direct/context + one-line reason) is given per piece of
-     evidence. The conflict rules and tier order are in the personality
-     prompt; critique and synthesis see every quote with its tags and notes.
-
-3.5 Report schema (yoda/schema.py)
-   - key_metrics stays filing-only ("reported", with the period it covers).
-     Figures from post-filing 8-K earnings releases go in since_filing,
-     tagged reported with their period — never in key_metrics (AGREED).
-   - New section, e.g. since_filing: list of {claim, evidence_type, period,
-     as_of_date, source, url} — 8-K events, guidance, consensus, proxies.
-     source = the original source the claim is attributed to (e.g. LSEG,
-     the company); the outlet comes from url's domain (AGREED).
-   - New section, e.g. market_expectations: consensus EPS/revenue, whisper,
-     implied move, historical move and the expectation signals (beat/miss
-     record, analyst actions, price target), all from consensus.py. Each
-     item carries its source, as-of date and the fiscal quarter/year it
-     refers to (consensus.py already returns them; missing shows as N/A).
-   - Every Metric gains a period/as-of field so staleness is visible; it
-     uses the same period format as since_filing (e.g. "Q3 FY2026").
-   - The new sections default to empty lists, so the deferred baseline
-     (section 4) still produces valid reports without changes.
-   - DONE (step 2, 2026-10-28): yoda/schema.py has EvidenceType,
-     Metric.period, SinceFilingItem, ExpectationValue and a fixed-slot
-     MarketExpectations (one slot per item; an unavailable figure is
-     value None + missing_reason). Tests: tests/test_schema.py.
-     * The defaults exist only so reports written before this change still
-       load. Step 6 adds a code check that every new Yoda report fills
-       Metric.period, since_filing and market_expectations (gaps go to
-       data_gaps rather than failing the run).
-     * The PDF and app display of since_filing and market_expectations is
-       built in step 6, when the panel fills them.
-     * DONE (6e): the PDF shows Market Expectations and Since the Filing
-       tables right after the watchlist (AGREED: newest first), and each
-       key metric's period on a small grey line under its value (AGREED:
-       no new column; "period not stated" for old reports). N/A figures
-       and unverifiable claims show in amber; a report with no
-       market_expectations says "Market expectations were not collected
-       for this report." The app has two expanders under the watchlist
-       (AGREED), built from the same expectation_rows() helper as the PDF.
-       Section headers now stay with their section across page breaks.
-       Tests: tests/test_outputs.py.
-   - REMINDER: when 3.5 and 3.6 are built, add this note to the README:
-     "Figures from 8-K earnings releases appear in the report's
-     since_filing section, tagged reported with the period they cover. They
-     are never placed in key_metrics, which holds only figures from the
-     10-Q/10-K."
-   - DONE (6c): the README note is in. After synthesis, code adds a
-     data_gaps entry (never fails the run) for a key metric with no period,
-     an empty since_filing when the run had 8-Ks or news results, and an
-     N/A market figure with no reason. since_filing items must link to a
-     news-pool article or one of the run's 8-K documents, else they are
-     dropped with a gap; an 8-K item tagged anything but reported/guided
-     becomes unverifiable with a gap (AGREED). A filing-field citation
-     starting "8-K" is marked UNVERIFIED like a URL (3.10's "key_metrics
-     never sourced from an 8-K"). Tests: tests/test_panel.py.
-
-3.6 Synthesis prompt rules (yoda/modes/personality_panel.py _SYNTHESIS_SYSTEM)
-   - Rule 1: keep "FILING TEXT is the only source for key_metrics,
-     revenue_segments and their citations" (reported history). Amend to say
-     post-filing information goes in since_filing / market_expectations with
-     its evidence_type — never into key_metrics, never overwriting a filing
-     number. An 8-K 2.02 press release counts as a reported source for its
-     own period; its figures go in since_filing (tagged reported, with
-     their period), never in key_metrics (AGREED, 3.5).
-   - Rule 5: DONE (commit 709ae6e) — retired the conflicting first sentence
-     ("not supported by hypothesis evidence or news -> data_gaps"), which
-     contradicted rule 1 (a figure in the filing is supported even if no
-     personality looked at it). KEEP its data_gaps definition — "only facts
-     the filing/8-Ks/news SHOULD have covered but did not; forward-looking
-     items like consensus are NOT gaps" — moved into its own data_gaps rule.
-     Without it, the model fills data_gaps with "Q3 consensus not in
-     filing"-style noise.
-   - New rule: label every since_filing claim with its evidence_type,
-     period and as-of date. Conflicts follow the three conflict rules in
-     3.4, worded the same.
-   - New rule: say when a conclusion rests only on unverifiable claims
-     (AGREED).
-   - Synthesis also gets the full text of the articles personalities read
-     with read_article (AGREED, 3.9).
-   - Citations: allow "8-K Item 2.02, Exhibit 99.1 — <heading>" format.
-   - FOUND (6b), for 6c: synthesis's output schema still includes
-     hypotheses_explored, which rule 4 tells it to echo — but code
-     overwrites it anyway, and each tagged quote now has 8 fields, so the
-     echo only costs output tokens. Drop it from what synthesis writes (and
-     rule 4) in 6c; code keeps setting it.
-   - REMEMBER TO UPDATE RULE 1 AND 5 TO MAKE SURE THEY ARE CONSISTENT WITH
-     NEW 8-K FEATURE.
-     * Rule 1’s “only known from external sources → data_gaps” overlaps with
-       rule 5’s “external items are NOT gaps”. Rule 5’s “SHOULD have covered”
-       test mostly settles it. The real fix is the “since filing” section in
-       the 8-K work, which gives external facts their own home, so I left
-       the wording alone for now.
-   - DONE (6c): synthesis gets the full 8-K text (form + every Exhibit
-     99.x, each headed by its label and URL; AGREED: all of it), the
-     CONTEXT block and the articles read in full; the supplemental 10-K is
-     dropped first if everything together passes the context limit. Rule 1
-     amended (post-filing info → since_filing / market_expectations, 8-K
-     2.02 figures → since_filing tagged reported, never key_metrics, every
-     metric gives its period; "only known from external sources" now goes
-     to since_filing, which settles the rule 1/5 overlap); rule 2 sends
-     post-filing guidance to since_filing; rule 4 (the echo) replaced by
-     the since_filing labelling rule with the "8-K Item 2.02, Exhibit 99.1
-     — <heading>" format; rule 5 covers 8-Ks and skips N/A market figures;
-     new rule 8 = the 3.4 conflict rules (one shared text, so word for
-     word the same as the personality prompt); rule 9 = say so inside a
-     bull/bear/watch point that rests only on unverifiable claims (AGREED:
-     inline, prompt only); rule 10 = use the market data, never turn N/A
-     into a number. hypotheses_explored and market_expectations are left
-     out of synthesis's output schema; code sets both.
-
-3.7 Eval — new rubric and judge (AGREED; yoda/eval/rubric.py, judge.py,
-    runner.py). No eval or re-score runs until the rest of next_steps is
-    done, and each run needs explicit consent.
-   - Rules for every dimension (rubric header):
-     * Scores 2 and 4 sit between the neighbouring anchors.
-     * Score only from the evidence given; anything not in it is
-       unverifiable.
-     * Length is not quality: do not reward a longer report for length
-       alone.
-     * Score each dimension on its own; a strength in one must not raise
-       another.
-     * Each justification quotes the evidence passages behind the score
-       (the quote check, below).
-     * Dimensions code marks N/A are not scored.
-     * No double counting: numeric correctness is scored only in
-       figure_accuracy; source/date labelling only in evidence_labelling
-       and source_traceability.
-   - Nine dimensions, each scored 1-5 with written 1, 3 and 5 anchors
-     (AGREED 2026-10-28; step 7 copies them into judge.py word for word):
-     * filing_extraction — material facts in the 10-Q/10-K (key_metrics,
-       segments, risks, forward_guidance) and in post-filing 8-Ks
-       (since_filing: earnings-release results, guidance updates,
-       material events). Company guidance, from filing or 8-K, is scored
-       here. Judge materiality, not volume.
-       1 = misses most headline figures (revenue, EPS, segment results) or
-           the filing's guidance; ignores post-filing 8-Ks that were in the
-           evidence.
-       3 = headline figures and most segments captured, but misses some
-           material items: guidance details, a new or changed risk, or a
-           material 8-K event or release figure.
-       5 = all headline figures, every reported segment, the filing's
-           guidance and new or changed risks, and every material
-           post-filing 8-K captured.
-       The 8-K part is N/A when the mode had no 8-Ks.
-     * market_expectations — third-party expectations only: consensus
-       EPS/revenue, whisper, implied move, historical move. Scores coverage
-       and the right quarter; the numbers are checked in figure_accuracy.
-       1 = no expectation figures, or figures for the wrong quarter.
-       3 = consensus EPS and revenue for the right quarter, but whisper,
-           implied move or historical move missing although the market
-           data had them.
-       5 = every item the market data had is present for the right
-           quarter; items the data lacked are shown as N/A with the reason,
-           not left out or guessed.
-       N/A when the mode had no market data.
-     * figure_accuracy — "A figure is accurate if it matches the source it
-       is attributed to, as that source appears in the evidence. A
-       consensus number is checked against consensus, not reported
-       results. A figure whose source is not in the evidence is
-       unverifiable: list it, and do not count it as an error."
-       Rounding that keeps the stated precision ($10.2B for $10,246M)
-       matches.
-       1 = several figures don't match their source, or a key figure
-           (revenue, EPS, guidance, consensus) is wrong.
-       3 = key figures match; one or two minor figures are wrong (wrong
-           period, unit, or rounding beyond the stated precision).
-       5 = every checkable figure matches its source, with the right
-           period and unit.
-       N/A (set by code) when no figure in the report is checkable against
-       the evidence (AGREED); leaning on unverifiable claims is penalized
-       under reasoning_quality instead. The judge reports how many figures
-       it could check, so code can apply this.
-     * reasoning_quality — the three conflict rules in 3.4, word for word;
-       contradictions flagged; and "A conclusion resting only on
-       unverifiable claims is weak and lowers the score. A conclusion
-       supported by at least one verifiable claim (reported, guided,
-       estimate or proxy) is more reliable than one supported only by
-       unverifiable claims, even if unverifiable claims also support it."
-       Judged against the evidence the mode had: a report with one dated
-       source can score 5.
-       1 = a conclusion contradicts the evidence; a less reliable or older
-           figure overrides a more reliable one for the same fact without
-           saying so; or key conclusions rest only on unverifiable claims.
-       3 = conclusions mostly follow the evidence and the conflict rules,
-           but a conflict is left unflagged, a stale figure is used where a
-           newer one of the same tier existed, or some conclusions rest
-           only on unverifiable claims.
-       5 = every conclusion follows from cited evidence; every conflict is
-           shown with which source is more reliable; the
-           guidance/consensus/whisper gap is treated as a gap, not a
-           conflict; no conclusion rests only on unverifiable claims.
-     * evidence_labelling — a separate dimension: post-filing information
-       is labelled and not mixed into reported figures. Judged
-       tag-agnostic — for each post-filing claim, can a reader tell where
-       it came from, as of when, and whether it is a reported result,
-       management outlook or third-party estimate? Plain wording ("the
-       Street expects", "per the 8-K", "according to Reuters") scores the
-       same as an evidence_type tag. Tag correctness is checked by 3.10's
-       tests, not by the judge.
-       1 = post-filing information mixed into the filing's reported
-           figures without saying so, or most post-filing claims give no
-           source or date.
-       3 = post-filing claims kept apart from filing figures, but some lack
-           a clear source, date, or kind (reported / outlook / estimate).
-       5 = every post-filing claim says where it came from, as of when, and
-           its kind; none mixed into the filing's figures; claims with no
-           stated source are marked unverifiable.
-       N/A only when the mode had no post-filing evidence AND the report
-       makes no post-filing claims (post-filing claims with no evidence
-       still score 1).
-     * source_traceability — every citation resolves to a real location:
-       a filing section, "8-K Item 2.02, Exhibit 99.1 — <heading>", a news
-       URL, or a consensus.py source + timestamp.
-       1 = most citations missing, vague ("Other", "MD&A") or pointing to
-           places not in the evidence.
-       3 = most citations resolve, but some are missing or too broad to
-           find the fact.
-       5 = every citation resolves to a real place in the evidence that
-           contains the fact.
-       An explicit "UNVERIFIED — the cited source was not the filing" label
-       counts as a missing citation, which is better than a made-up
-       location.
-     * relevance — focus on what matters for the upcoming report. Same
-       meaning as the old rubric, with sharper anchors (AGREED) because the
-       baseline scored 5.0 on all 20 tickers in the last run.
-       1 = mostly generic company description or boilerplate not tied to
-           the upcoming report.
-       3 = on-topic but padded: standard risk-factor boilerplate, stale
-           items, or detail that won't affect this quarter's results or
-           guidance.
-       5 = nearly everything bears on the upcoming report: this quarter's
-           drivers, guidance, KPIs, and the risks and developments that
-           could move results or the stock; boilerplate left out.
-     * sell_side_usefulness — 1 = restates the filing, no
-       consensus-relative view; 3 = names the key metrics and guidance
-       items but no consensus comparison or questions for management;
-       5 = metrics to model vs consensus, specific questions for
-       management, which guidance items matter, what would surprise the
-       Street.
-     * buy_side_usefulness — 1 = no view on expectations;
-       3 = covers part of the expectations gap, implied move or catalysts,
-       but no clear setup; 5 = whisper vs consensus vs guidance, implied vs
-       historical move, beat/miss record, analyst actions and price
-       target, catalysts and risks, and a clear setup summary. Comparing
-       guidance against consensus is credited here.
-   - N/A: code marks a dimension N/A for a mode that never had that kind
-     of evidence (e.g. no 8-Ks, no market data). Stored as an empty cell,
-     never 0. The paired comparison and the chart drop N/A pairs, and
-     summary.md shows how many pairs each dimension compared.
-   - Judge input: the full evidence, no 30K-character truncation.
-     gpt-6.1-sol takes up to 922K input tokens; prompts over 272K cost 2x
-     input / 1.5x output for the whole call. The filing goes first in the
-     prompt so both modes' calls for a ticker share the cached part.
-     Measured in step 4: JPM's three 8-Ks since its 10-Q add ~155K chars
-     (~39K tokens; the 99.2 financial supplement alone is 90K chars), so
-     JPM's 10-Q + 8-Ks come to ~250K tokens before the report and news —
-     close to the 272K line. Decide in step 7 how to stay under it (e.g.
-     only the 8-K documents the report cites).
-   - Evidence cache for the judge (eval runs only): every mode returns its
-     evidence bundle on every run (already in memory, no extra cost); only
-     the eval runner writes it to disk, next to the report JSON. The judge
-     reads that bundle, so it sees what the report saw.
-     * Contents: external sources only — filings, 8-Ks, news results,
-       consensus.py data, transcript chunks. Each item carries its own
-       citation (source, URL or accession number, as-of date) so the
-       report's citations can be matched to it.
-     * News: full article text only for articles the report cites AND a
-       personality actually read (read_article); every other news-pool
-       item as the full Tavily snippet synthesis saw (AGREED). The bundle
-       records which articles were read. Keeps the judge's prompt small
-       and free of text the report never relied on.
-     * Never Yoda's own hypotheses or critique messages: they are Yoda's
-       reasoning, not sources, and would let a claim be "verified" by Yoda
-       quoting itself. (They get their own grading in 5.)
-     * The report itself carries them too: EarningsReport.hypotheses_explored
-       holds the panel's hypotheses, and every archived Yoda report contains
-       it, so the old judge saw them. The new judge removes
-       hypotheses_explored from the report before scoring. This also lets
-       the archive load for re-scoring: 8 archived baseline reports hold
-       invented hypotheses that today's schema rejects (see section 4).
-     * DONE (6d) for the panel: run_personality_panel returns a PanelRun
-       (report, personality_results, critique_messages, evidence). The
-       EvidenceBundle (schema.py) holds the 10-Q (+ the 10-K only if
-       synthesis got it) and every 8-K document in full, the CONTEXT text
-       synthesis read (AGREED: not the raw snapshot), the news pool as
-       synthesis saw it, read_urls (every article read), the full text of
-       articles read AND cited (recent_news, watchlist or since_filing
-       links), and the competitor passages lookup_peer returned (AGREED:
-       included, as shown — first 1,200 chars). The eval runner writes
-       {mode}_{ticker}_evidence.json next to the report; app, queue and the
-       smoke test don't save it (the smoke test prints counts, AGREED). The
-       baseline returns none until section 4. The judge doesn't read it
-       yet (step 7). Tests: tests/test_panel.py, tests/test_outputs.py.
-   - Reliability checks (AGREED):
-     * Quote check: for each dimension the judge quotes the evidence
-       passages behind its score, and code checks that each quote really
-       appears in the evidence (ignoring spacing). A failed quote flags the
-       score — kept, not retried, so a retry can't quietly pick a
-       favourable score. summary.md shows failed-quote counts per
-       dimension. Adds ~$0.03 per report in output tokens.
-     * Judge version: no dated gpt-6.1-sol snapshot can be pinned today
-       (OpenAI's model page lists only "gpt-6.1-sol"), so record the
-       version OpenAI reports for each call (judge_snapshot column in
-       results.csv). summary.md warns if a run mixes versions or differs
-       from the run it is compared with. Set reasoning effort explicitly
-       (medium, the archived run's default) and record it in the run line.
-     * Report length: report_chars column in results.csv; summary.md shows
-       the correlation between length and score for each dimension.
-     * Repeat scoring: ~6 reports (both modes, 3 tickers) scored a second
-       time with the judge cache skipped; the second score is stored
-       separately. summary.md shows, per dimension, how often the two
-       scores match and their average difference. ~$1-1.5, only with
-       explicit consent at run time.
-   - Runner: update SCORE_COLS, the paired comparison table, the chart and
-     the summary.md headings for the new dimensions. Offline tests go in a
-     new tests/test_rubric.py.
-   - Validation, each pass only with explicit consent:
-     * Re-score a subset of the archived 2026-10-26 reports
-       (data/eval/archive_2026-10-26_claude-panel_old-rubric/) and show
-       2-3 judge justifications per dimension. The archive predates the
-       retrofit and has no since_filing, market_expectations or evidence
-       bundle, so it only tests the filing-based dimensions.
-     * Then score 2-3 fresh tickers to test the new dimensions.
-     * Human hand-scoring, required before the first published result
-       (not before development runs): 6-10 reports from both modes, scored
-       blind (mode and judge scores hidden), at least usefulness and
-       reasoning_quality; check how often you and the judge are within one
-       point. ~2-3 hours.
-   - Re-run baseline vs Yoda once section 4 is built; expect cost/latency
-     increase — measure it.
-   - STEP 7 SPLIT (AGREED 2026-10-28): 7a rubric + judge output → 7b judge
-     input → 7c runner, each planned/approved/committed, then one judge
-     smoke test (cost stated first). Decisions: 272K = full filing + cited
-     8-K documents, other 8-Ks as label + ~2K chars, then drop uncited
-     news snippets, all listed for the judge; baseline judged on a
-     filing-only bundle with N/A set by code; quotes may come from the
-     report or the evidence, each checked against the text it names.
-   - DONE (7a): yoda/eval/rubric.py has the nine dimensions, header rules
-     and 1/3/5 anchors word for word (only bookkeeping notes such as
-     "(AGREED)" and the reasons behind anchors left out), reasoning_quality
-     using the shared CONFLICT_RULES (moved to yoda/evidence_text.py with
-     the quote matcher; panel prompts byte-identical). Output: score (null
-     when N/A), justification, quotes (report/evidence), figures_checked,
-     unverifiable_figures. check_scores() applies N/A (figure_accuracy N/A
-     when 0 figures checked) and the 1-5 check; failed_quotes() flags
-     quotes not found, or none given. judge_report(report, evidence_text,
-     na) returns a cached JudgeResult; the cache key adds the rubric, N/A
-     list and evidence. Runner: nine SCORE_COLS (N/A = empty cell); the
-     paired comparison drops an N/A pair per dimension and shows "pairs".
-     The judge still reads the filing's first 30K chars until 7b.
-     Tests: tests/test_rubric.py (new), test_offline.py, test_outputs.py.
-   - DONE (7b): yoda/eval/evidence.py — the judge reads each report's own
-     evidence (Yoda's bundle; the baseline's filing_bundle: 10-Q + the 10-K
-     only if the baseline got it). Order: filing(s) first (shared,
-     cacheable start), 8-Ks (cited in full, others label + first 2,000
-     chars), market data, articles read, news results, peer passages, then
-     a LEFT OUT list. Over 272K (estimated chars ÷ 4, AGREED): uncited news
-     snippets dropped; still over → sent and flagged (AGREED). Prompt order
-     rubric → evidence → N/A → report. hypotheses_explored removed before
-     judging (load_report_for_judge also loads archived reports with
-     invalid hypotheses). N/A by code: market_expectations without market
-     data; evidence_labelling without post-filing evidence (market data
-     counts, AGREED) and without post-filing claims. Judge called with
-     reasoning_effort "medium"; JudgeResult records judge_snapshot, effort
-     and OpenAI's token counts. Both modes' evidence saved by the runner.
-     Size check (offline, real filings): BA ~72K tokens; JPM (archived
-     report, all 8-Ks uncited) ~224K, under the line.
-   - DONE (7c): results.csv rows add figures_checked, failed_quote_dims,
-     judge_snapshot, prompt/completion tokens, over_272k (real count),
-     judge_cost_usd (upper bound: $2/$10 per M, 2x/1.5x over 272K, cache
-     discount not applied — price from anotherwrapper/techenclave
-     2026-10-28, not yet checked on OpenAI's page; AGREED) and report_chars.
-     summary.md: judge cost, judge versions (warns on mixed versions or a
-     change from the previous run), over-272K count, failed quotes per
-     dimension and mode, length vs score (Spearman with row count, AGREED);
-     reasoning effort in the run line. justifications.md: 3 per dimension
-     with quotes. Chart: means over N/A-free pairs only, "no pairs" label.
-     rescore(dir, tickers, modes, out, repeat) judges saved reports without
-     re-running the modes (AGREED: one function for the archive check and
-     the repeat check); archived reports use the filing on disk only if it
-     is the one they were written from, else skipped and listed (AGREED);
-     repeat=True adds a second, independently cached score, repeat.csv and
-     an agreement table (match rate, mean abs difference). CLI: argparse —
-     `runner [TICKERS] [--modes]`, `runner --rescore DIR [--repeat] [--out]`.
-     Tests: tests/test_rubric.py.
-   - JUDGE SMOKE TEST (user-approved, 2026-10-28): `runner BA --modes yoda
-     --out data/eval/smoke_7_BA`. Panel $0.891 (whisper skipped by the
-     rule), judge $0.254 upper bound (109,188 prompt / 3,539 completion
-     tokens; estimate was ~102K, so chars ÷ 4 ran ~7% low). Scores:
-     filing_extraction 4, market_expectations 5, figure_accuracy 5 (292
-     figures checked, 0 unverifiable), reasoning_quality 2, evidence_
-     labelling 5, source_traceability 3, relevance 4, sell/buy-side 4/4.
-     No N/A, no failed quotes; only the uncited 8-K cover form was cut.
-     Justifications are specific (reasoning_quality: an inverted GAAP vs
-     core pension argument and an unsupported Spirit/Europe link;
-     filing_extraction: missed the 767 end date and 777-8 timing).
-     * FOUND: OpenAI reported the model as plain "gpt-6.1-sol" (no dated
-       snapshot), so a silent judge update can't be detected this way.
-     * INVESTIGATED (user asked): the short quote "excluding the" was NOT
-       a nonsense fragment. 35 of the judge's 38 quotes were full,
-       relevant sentences; the 3 short ones are one sentence from Exhibit
-       99.1 ("Core operating earnings/(loss) is defined as GAAP
-       Earnings/(loss) from operations excluding the FAS/CAS service cost
-       adjustment."), the definition behind its reasoning_quality point,
-       split around a garbled span: Yoda's extracted text reads
-       "Earnings/(\nl\noss)". The judge quoted around it. A minimum quote
-       length would not help (rejected).
-     * ROOT CAUSE (ingest): edgar._clean_html uses
-       soup.get_text(separator="\n"), which puts a line break between
-       inline HTML elements even inside a word ("l\noss", "t\nhereto").
-       A handful per BA document (10-Q, credit-agreement 8-K, Ex-99.1).
-       It affects everything that reads filing text — personalities,
-       synthesis, the panel's and the judge's quote checks — not just the
-       judge.
-     * FIXED (2026-10-28): _clean_html breaks lines only at block elements
-       (p, div, td, tr, br, h1-h6, li, ...) and joins inline ones, drops
-       the hidden inline-XBRL header (ix:header, ~43K chars of tag codes in
-       BA's 10-Q), and keeps no blank lines (nothing read them). Checked on
-       22 cached documents (BA, JPM, NFLX, AAPL, KO, UNH filings + 8-Ks):
-       split words 22 -> 0, Item headings and chunk sections unchanged, the
-       only new words are ones that used to be split (e.g. signature names),
-       total text 2.04M -> 1.65M chars. Filings are re-cleaned from cached
-       HTML on load and re-embedded on their next run (changed chunk
-       fingerprints; small embedding cost). Saved evidence bundles keep the
-       text their report saw. Tests: tests/test_ingest.py.
-     * FOUND: the run's cache prune deleted 13 old judge-cache files (the
-       2026-10-26 old-rubric scores, unusable under the new rubric's keys).
-     * The estimate running low matters near the line: a JPM report that
-       cites its 2.02 release could cross 272K while estimated just under.
-
-3.8 Earnings press release + call transcript as context
-   - Press release: on EDGAR as 8-K Item 2.02, Exhibit 99.1 — free, covered
-     by 3.1. Usually the first "reported" numbers for the quarter and the
-     main source of quarterly guidance.
-   - Call transcript: NOT on EDGAR. Needs a vendor (FMP/Finnhub transcript
-     endpoints — check plan cost and terms). Valuable for guidance wording
-     and analyst Q&A; long, so retrieve chunks rather than send in full.
-   - VENDOR CHECK (2026-10-28): Yoda's FMP key gets HTTP 402 and its
-     Finnhub key 403 on transcripts. Alpha Vantage's EARNINGS_CALL_TRANSCRIPT
-     takes a free key (~25 requests/day; paid from $49.99/mo), not marked
-     premium, speaker-by-speaker (demo checked on IBM 2024Q1). Its terms
-     of service (a PDF) were not read; the user CONFIRMED (2026-10-28) that
-     Yoda's use fits them.
-     AGREED: Alpha Vantage free; chunks for personalities + full text to
-     synthesis and the judge (8b); citation URL = the Alpha Vantage query
-     URL without the key; split 8a (data + retrieval) / 8b (synthesis,
-     bundle, judge, display, smoke test).
-   - DONE (8a): ALPHAVANTAGE_API_KEY required (config, .env.example).
-     yoda/ingest/transcripts.py: find_last_call() = the last reported
-     quarter (consensus next fiscal quarter - 1), else one quarter back
-     (noted); found transcripts cached in data/transcripts/; not found,
-     rate limit, rejected key → None with the reason (a data gap, never a
-     pause). Turns marked company vs analyst/operator. chunk_transcript():
-     one chunk per turn (long turns split), each starting "Speaker, Title:",
-     labelled "CALL Q3 FY2026 (date) · company|analyst"; stored as
-     transcript:{TICKER}:{YYYYQn}. Call date = the latest post-filing 8-K
-     2.02 date when the latest call is used, else unknown. retrieve_filing
-     adds the top-k call passages; CONTEXT names the call (or why none);
-     the loop prompt says what to look for on the call. Evidence checks:
-     company speakers reported/guided only; analyst/operator words →
-     unverifiable ("said by an analyst on the call, not the company").
-     Tests block the transcript module's network (conftest) so none can
-     reach Alpha Vantage. Tests: test_ingest.py, test_offline.py,
-     test_panel.py.
-   - LIVE CHECK (2026-10-28, free, 3 requests): BA, NFLX and AAPL each
-     returned their latest call (Q3 FY2026) on the first try — BA 70 turns
-     / 47K chars, NFLX 51 / 36K, AAPL 61 / 48K (~9-12K tokens each). AAPL's
-     call opens "Apple Q3 fiscal year 2026", so Alpha Vantage numbers
-     quarters by FISCAL year, matching the consensus. Every speaker was
-     classified right (executives and IR = company; "Analyst..." titles and
-     the Operator = not). Cached in data/transcripts/.
-   - DONE (8b): synthesis reads the full call (render_call_text: header with
-     quarter, date, source URL; each turn marked [company] or [analyst]),
-     after the 8-K text; the 10-K is still dropped first for size. since_
-     filing = information beyond the 10-Q/10-K, call claims included even
-     when the call came before the filing (AGREED); rule 4: only [company]
-     turns are company claims, source "Q3 FY2026 earnings call — <speaker>",
-     url = the transcript URL. _check_since_filing accepts the call URL and
-     holds call items to reported/guided. EarningsReport.earnings_call (set
-     in code) shown on the PDF cover and app caption ("Earnings call: Q3
-     FY2026 (2026-10-27)" / "not available"; old reports show nothing).
-     EvidenceBundle.transcript; the judge reads the call in full after the
-     8-Ks, never cut (over the line → sent and flagged, AGREED); a call
-     counts as post-filing evidence for evidence_labelling's N/A. Old
-     reports and bundles still load. Tests: test_panel.py, test_rubric.py,
-     test_outputs.py.
-   - SMOKE TEST (user-approved, 2026-10-28): `runner BA --modes yoda --out
-     data/eval/smoke_8_BA`. Panel $0.804, judge $0.210 upper bound (84,609
-     prompt / 4,096 completion tokens; estimate ~85.8K — closer than before
-     now that filing text is cleaner). earnings_call = "Q3 FY2026 earnings
-     call (2026-10-27)" (dated from the 8-K 2.02); bundle holds the 70-turn
-     call. since_filing: 29 items, 10 from the call (7 guided, 3 reported),
-     each sourced "Q3 FY2026 earnings call — <executive>" with the
-     transcript URL; no analyst words as company claims. Personalities:
-     22 of 69 quotes cite the call, all company speakers (most citations
-     code-corrected to the exact chunk label). Scores: filing_extraction 4,
-     market_expectations 5, figure_accuracy 4, reasoning_quality 4 (2 in
-     the step-7 run), evidence_labelling 4, source_traceability 3,
-     relevance 4, sell/buy-side 4/4; no failed quotes. The judge quoted the
-     call and caught one misread: the CFO's planned 10-15 777X deliveries
-     presented as the impact of a certification delay.
-
-3.9 Personality "analyst playbook" + source vetting (current gap)
-   - Today the personality prompts give a lens (3-5 sentences) and tool
-     rules, but nothing on what moves a stock on earnings (results vs
-     consensus, guidance changes, key KPIs, margins), what news to look
-     for, or how to judge a source. The models have general financial
-     knowledge but are not told to apply it.
-   - Code does no source vetting: search_news (Tavily) has no news-topic,
-     date-range or domain filter; the URL-pool check only proves a URL came
-     from a search, not that the source is credible.
-   - Add: a shared playbook section in _BASE_LOOP_CONTRACT; a source-tier
-     list (company primary > data vendors > major financial press >
-     aggregators/blogs); Tavily topic="news" + a time window starting at the
-     filing date; tag-vs-source validation — a tag must match the source
-     the article attributes the claim to (see 3.2); a claim with no
-     stated source is tagged "unverifiable".
-   - Full-article reading (AGREED; cost accepted for now, may cut later).
-     Personalities see Tavily snippets cut to 300 characters, which often
-     drops the sentence saying where a claim came from — the attribution
-     3.2's tagging depends on.
-     * Add a read_article(url) tool (Tavily Extract) returning the cleaned
-       article, capped at ~5K tokens (AGREED). A typical extracted article
-       is ~2-3K tokens, so ~90% come through whole; the cap only cuts long
-       pages such as transcripts posted as articles (15-20K tokens). Only
-       URLs already in the news pool are accepted, so the URL-pool check
-       still holds. Personalities call it only for articles they want to
-       rely on.
-     * Estimated +$0.08 per ticker, not yet measured: ~9 reads per run,
-       ~3K tokens each on average (Haiku ~$0.01; Tavily Extract ~2 credits
-       = ~$0.016 once past the free 1,000 credits/month; synthesis ~$0.05
-       for the read articles). Judge: ~+$0.06 per report (cited articles
-       only, 3.7). Measure on the first 1-ticker run.
-     * Synthesis gets the full text of every article a personality read,
-       so the report's writer sees the text its claims rest on (AGREED).
-     * Rejected: no cap — ~$0.12 per run typical but ~$0.25-0.30 when long
-       pages push a Haiku prompt past 100K tokens (5x price), and can push
-       JPM's judge call past 272K tokens (2x price for the whole call).
-     * Each read uses one of MAX_TOOL_CALLS (6) and adds seconds against
-       WALL_TIMEOUT_SECONDS (45s); raise them if reads crowd out other tools.
-     * Rejected: full text on every search result (include_raw_content) —
-       est. +$0.25-0.55 per run, pushes Haiku prompts past 100K tokens
-       (5x price) and floods synthesis and the judge with articles no one
-       cited.
-   - DONE (step 5, 2026-10-28) — tool parts:
-     * News window: search_news uses Tavily's news search from the filing
-       date on (ToolContext.news_since, set by the panel); with no filing,
-       the last 30 days (AGREED). Undated articles are kept and show as
-       "no-date" (AGREED). Tavily's old "days" field is set to the same
-       window so its 3-day default can't cut the search short.
-     * read_article: yoda/tools/news.py reads one article with Tavily
-       Extract, cut at 20,000 chars (~5K tokens) and marked when cut; the
-       tool in yoda/modes/tools.py opens only URLs in the news pool, reads
-       each once per run and records it in ToolContext.read_articles.
-     * Tests: tests/test_retrieval.py, tests/test_offline.py.
-     * DONE (6a): read_article is registered with personalities (schema,
-       dispatch, argument check, repeat detection), shown to them with a
-       "cut at N of M characters" note when cut, and listed in the loop
-       prompt with one rule on when to use it.
-     * DONE (6b): the playbook and the source-tier list are in
-       _BASE_LOOP_CONTRACT (source tiers: prompt only, AGREED); tag-vs-source
-       validation is in code (see 3.2).
-     * DONE (6c): synthesis gets the full text of every article read.
-
-3.10 Tests (offline, per CLAUDE.md)
-   - 8-K item parsing and date filtering; 8-K chunk labels (item code +
-     date) and the fixed context block (8-K list + market data, 3.3);
-     schema validation of evidence_type and period; confidence caps
-     (proxy-only 3/5, unverifiable-only 2/5); key_metrics never sourced
-     from a since_filing claim or an 8-K; historical move returns None with
-     a reason (no past reports, missing prices) and never raises for those;
-     evidence bundle holds only cited external sources (no hypotheses or
-     critique) and records which articles were read; read_article rejects
-     URLs outside the news pool and caps its output.
-   - DONE (6d): the evidence-bundle tests — a marker planted in every
-     hypothesis and critique message never reaches the bundle; read_urls
-     lists every article read, full text only for cited ones
-     (tests/test_panel.py).
-   - Rubric, judge and runner tests live in tests/test_rubric.py (3.7).
-
-
-4. Eval baseline: replace the filing-only baseline (AGREED: option B now,
+2. Eval baseline: replace the filing-only baseline (AGREED: option B now,
    option C later)
    The baseline is the simplest credible alternative to Yoda; what it is
    given decides what a Yoda win proves.
@@ -856,8 +41,8 @@ IDEAS for Improvements/Changes
      They are addressed together with this baseline; no eval runs before
      then (AGREED).
    - Update the baseline prompt (yoda/modes/baseline.py) for the new report
-     sections, or the comparison is no longer fair (moved from 3.6).
-   - FOUND (step 2): the baseline fills panel-only fields it was never
+     sections, or the comparison is no longer fair.
+   - FOUND (schema step): the baseline fills panel-only fields it was never
      meant to. 8 of the 20 archived baseline reports (AMD, AMZN, CRM, DIS,
      JPM, PANW, PG, UNH) contain hypotheses_explored with invented analysts
      ("Growth analyst", confidence 65-80); baseline.py strips recent_news
@@ -869,7 +54,7 @@ IDEAS for Improvements/Changes
    Option B — NEW BASELINE: one Claude call, given what an analyst would
    have on hand:
    - SEC filings: the 10-Q/10-K (+ supplemental 10-K) and every 8-K filed
-     after it, incl. the Exhibit 99.1 press release (3.1 and 3.8).
+     after it, incl. the Exhibit 99.1 press release.
    - Market data from consensus.py (consensus EPS/revenue, whisper,
      implied move). Ideally fetched once per ticker and shared with Yoda,
      so both modes see identical numbers.
@@ -892,11 +77,11 @@ IDEAS for Improvements/Changes
        and evidence bundle on disk, build the baseline prompt, and assert
        the marker never appears in it.
    - The baseline's evidence goes into the same eval evidence cache as
-     Yoda's (3.7).
+     Yoda's, so the judge sees what the baseline saw.
    - Prompt asks for the since_filing section but NOT Yoda's tagging rules
      (an analyst wouldn't run an equivalent tagging system). It still sees
      the tag names in the shared report schema and fills them by judgement;
-     the judge scores labelling tag-agnostic (3.7).
+     the judge scores labelling tag-agnostic.
 
    Option C — ADD LATER as a second baseline: the SEC filings above plus
    Claude's web search tool.
@@ -908,9 +93,29 @@ IDEAS for Improvements/Changes
      evidence cache so the judge sees what it saw.
 
 
-5. Yoda-only process check (LATER, separate from Yoda vs baseline)
+3. Eval validation passes (carried over from the old 3.7; each pass only
+   with explicit consent — no eval or re-score runs without a yes)
+   - Re-score a subset of the archived 2026-10-26 reports
+     (data/eval/archive_2026-10-26_claude-panel_old-rubric/) and show
+     2-3 judge justifications per dimension. The archive predates the
+     retrofit and has no since_filing, market_expectations or evidence
+     bundle, so it only tests the filing-based dimensions.
+   - Then score 2-3 fresh tickers to test the new dimensions.
+   - Repeat scoring: ~6 reports (both modes, 3 tickers) scored a second
+     time with the judge cache skipped (runner --rescore DIR --repeat);
+     ~$1-1.5.
+   - Human hand-scoring, required before the first published result
+     (not before development runs): 6-10 reports from both modes, scored
+     blind (mode and judge scores hidden), at least usefulness and
+     reasoning_quality; check how often you and the judge are within one
+     point. ~2-3 hours.
+   - Re-run baseline vs Yoda once item 2 is built; expect cost/latency
+     increase — measure it.
+
+
+4. Yoda-only process check (LATER, separate from Yoda vs baseline)
    The head-to-head eval grades only the final report, so hypotheses and
-   critique are kept out of it (3.7). They are still worth grading on
+   critique are kept out of it. They are still worth grading on
    their own, to find out whether Yoda's extra steps earn their cost:
    - Does each personality add something the others don't?
    - Does the critique catch real errors (CHALLENGES that were right)?
@@ -921,58 +126,33 @@ IDEAS for Improvements/Changes
      the comparison toward Yoda.
 
 
-6. Improve Retrieval Quality
-   - Better chunking — recursive/semantic chunking instead of fixed splits?
-   - Fine-tune the embedding model on SEC filings + stock/financial news?
-
-
-7. Create Master Repo txt File
-   - Contains detailed description and explanation of each file.
-   - Contains all relationships with other files.
-
-
-8. Fine-tune the model on financial and earnings-specific language
-   - Is this realistic? 
-    - needs a large dataset
-  - would this actually improve Yoda?
-    - fine-tuning could improve interpretation of articles and SEC filing
-    - outputting reports in domain-specific language could hurt readibility of reports
-
-9. Restructure README
+5. Restructure README
    - Put evaluation result at top.
    - Acceptance: a reader who stops after the first screen knows (a) what
      problem Yoda solves, (b) that it was evaluated against a baseline, and
      (c) that it won, with numbers.
 
-10. Investigate Chroma usage reporting
-  - do full inspection of chromaDB pipeline
 
-11. Add diagram of system architecture
+6. Add diagram of system architecture
 
-12. Open items found while building steps 6-8 (added 2026-10-28)
-   a. Cost vs budget: a Yoda report costs ~$0.80-1.00 (BA runs: $0.98,
-      $0.89, $0.80) against REPORT_BUDGET_USD = $0.65, which only warns.
-      3.3 agreed to revisit the budget and MAX_TOOL_CALLS (6) after the
-      first measured runs; not done yet. Synthesis (~$0.3-0.6) is the
-      largest cost.
-   b. Judge output cap: the step-8 judge call used exactly 4,096
-      completion tokens. Check whether that is a hidden output limit
-      (judge.py sets no max_completion_tokens) that could cut long
-      justifications or reasoning short.
-   c. Token estimate near the 272K line: chars / 4 ran ~7% low on BA in
-      step 7 and was close after the HTML fix (85.8K est. vs 84.6K real),
-      but a JPM-size report near the line is untested. Check the estimate
-      on JPM before a full eval (it decides whether uncited news is cut).
-   d. Whisper lookup may rarely verify even inside the 3-day window:
-      upcoming whispers were seen only in earningswhispers.com homepage
-      previews, not on the company pages the lookup checks the number
-      against (e.g. AMZN, 1 day out). Each failed lookup still costs
-      ~$0.12-0.15. Consider accepting the homepage preview as a source, or
-      another check.
-   e. UI bug 1f (queue run jumping back to the Single ticker view) is
-      fixed and tested offline, but never seen working in the browser:
-      that needs a live queue run.
-   f. Personalities rarely copy evidence labels exactly: in the step-8 run
-      all 22 call citations needed code correction ("citation corrected
-      to ..."). The checked evidence is right, but the prompt or the label
-      format should make exact citation easier.
+
+7. Investigate Chroma usage reporting
+   - do full inspection of chromaDB pipeline
+
+
+8. Create Master Repo txt File
+   - Contains detailed description and explanation of each file.
+   - Contains all relationships with other files.
+
+
+9. Improve Retrieval Quality
+   - Better chunking — recursive/semantic chunking instead of fixed splits?
+   - Fine-tune the embedding model on SEC filings + stock/financial news?
+
+
+10. Fine-tune the model on financial and earnings-specific language
+   - Is this realistic?
+    - needs a large dataset
+  - would this actually improve Yoda?
+    - fine-tuning could improve interpretation of articles and SEC filing
+    - outputting reports in domain-specific language could hurt readibility of reports

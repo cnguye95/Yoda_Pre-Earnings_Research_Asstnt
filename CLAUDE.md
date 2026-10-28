@@ -54,6 +54,7 @@
 
 ## Commit Messages
 - Commit messages should state what was done in a commit (e.g. ".gitignored smoke test outputs")
+- Commit messages should be written in consideration of non-contributor reviewers
 - Commit messages SHOULD NOT include or be based on step names 
   - Bad Example: "recorded the step 8b smoke test (BA with the earnings call)"
   - Good Example: "smoke test for BA, including new earnings call features"
