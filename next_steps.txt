@@ -2,26 +2,7 @@
 IDEAS for Improvements/Changes
 
 
-- NEXT: Live smoke test of the standards-retrofit branch (costs money):
-Nothing in the retrofit has been run against live APIs yet; 150 offline
-tests pass. Run before merging into master.
-1. Panel from the command line (~$0.30-0.65):
-   .venv/Scripts/python -m yoda.modes.personality_panel NFLX
-   Check: report saved to data/eval/panel_NFLX.json; TOTALS block prints;
-   no "CRASHED" lines; data_gaps read sensibly (no fake "MD&A" citations,
-   "UNVERIFIED" only where a URL was cited); filing_type/date match the 10-Q.
-2. Streamlit (streamlit run app.py): Single ticker -> Generate Report for
-   NFLX, view watchlist / bull-bear / news / data gaps, Download PDF and open
-   it (cover caveats, tables wrap, no broken text).
-3. Queue: run 2 tickers including one with no recent filing or a typo
-   (e.g. NFLX + ZZZZ) -> one complete, one failed with a readable error and
-   a "Details" traceback; ZIP downloads.
-4. Expect once: every filing cache is re-downloaded (new cache format) and
-   re-embedded (chunker fix) — ~$0.004 per filing.
-5. Optional: baseline (python -m yoda.modes.baseline NFLX) and a 1-ticker
-   eval (python -m yoda.eval.runner NFLX) to confirm summary.md Failures
-   section and cost columns.
-6. UI bugs (to debug later):
+1. UI bugs (found in the 2026-10-27 smoke test; to debug later)
    a. CONFIRMED: scroll-to-top uses "section.main", which doesn't exist in
       Streamlit 1.40 (the element is section.stMain, data-testid="stMain"),
       so the page never scrolls to the "Queue complete" notice.
@@ -35,40 +16,22 @@ tests pass. Run before merging into master.
    f. NEW (minor): after a queue run finishes, the page reruns and jumps back
       to the "Single ticker" tab; the results are on the Queue tab.
 
-SMOKE TEST RESULTS (2026-10-27, branch standards-retrofit):
-   - Step 1 PASS: CLI panel NFLX — 6/6 personalities clean, 12 hypotheses,
-     $0.52 (budget $0.65), 171s; 30 metrics, 5 segments, 8 risks, 11 news,
-     7 watch items; 0 UNVERIFIED citations, 0 bare "MD&A"; 5 sensible
-     filing-specific data gaps; re-embedded once (122 chunks) as expected.
-   - Step 2 PASS: Streamlit single ticker NFLX renders caveat, watchlist with
-     source links, bull/bear, news, data gaps; PDF built (download button
-     shown). Unknown ticker fails fast with a clear error, no paid calls.
-   - Step 3 PASS: queue NFLX + ZZZZ -> 1 complete (172s), 1 failed with
-     readable error + traceback in Details; ZIP (23 KB) offered.
-   - Not clicked: the PDF/ZIP download buttons themselves (they save files
-     to disk); PDF rendering was checked separately from a saved report.
-   - Not run: optional step 5 (baseline, 1-ticker eval).
-   - Total spent: ~$1.55 (3 NFLX panel runs).
-   - Observation for the 8-K work: the NFLX report already leans on
-     press-reported Q4 guidance ("guidance reported in the press") in the
-     bull case and watchlist — exactly the unlabelled post-filing layer the
-     evidence tags are meant to fix.
+
+2. Improve Report Content
+   - Add implied volatility, expectations, and whisper number discourse
+     (yoda/tools/consensus.py already fetches consensus EPS/revenue, whisper,
+     implied move, beat/miss history, analyst actions and price target, each
+     with source + timestamp — but nothing imports it yet. Wiring it in is
+     step 3.3 below.)
 
 
-- Improve Report Content:
-1. Add implied volatility, expectations, and whisper number discourse
-   (yoda/tools/consensus.py already fetches consensus EPS/revenue, whisper,
-   implied move, beat/miss history, analyst actions and price target, each
-   with source + timestamp — but nothing imports it yet. Wiring it in is
-   step 3 of the 8-K task below.)
+3. Incorporate 8-K filings and post-filing developments ("Option 2 + tool")
+   Goal: the 10-Q/10-K is ground truth for its period but is already stale on
+   release. Add the layers analysts use to see what changed since, keeping
+   every claim labelled by source, as-of date and evidence type — never
+   letting news overwrite filing numbers.
 
-- Incorporate 8-K filings and post-filing developments ("Option 2 + tool"):
-Goal: the 10-Q/10-K is ground truth for its period but is already stale on
-release. Add the layers analysts use to see what changed since, keeping every
-claim labelled by source, as-of date and evidence type — never letting news
-overwrite filing numbers.
-
-1. Ingest 8-Ks filed after the primary 10-Q/10-K (yoda/ingest/edgar.py)
+3.1 Ingest 8-Ks filed after the primary 10-Q/10-K (yoda/ingest/edgar.py)
    - Fetch 8-Ks with filing_date > primary filing_date (SEC submissions JSON
      already lists them; same _sec_get + cache path).
    - Read the Item codes to know what each 8-K is: 2.02 = earnings release
@@ -78,14 +41,14 @@ overwrite filing numbers.
    - Model: a Filing-like record per 8-K (date, items, exhibit text, url).
    - Embed into ChromaStore so personalities can retrieve it.
 
-2. Evidence types — tag every claim
-   reported  = company actuals for a closed period (10-Q/10-K, 8-K 2.02 release)
-   guided    = management's own outlook (release, call, 8-K 7.01)
-   estimate  = third-party expectation (consensus, analyst targets, whisper)
-   proxy     = indirect signal (alt data, peer read-through, industry stats)
-   no evidence = claim lacks evidence to be tagged reported, guided, estimate, or proxy
+3.2 Evidence types — tag every claim
+   reported     = company actuals for a closed period (10-Q/10-K, 8-K 2.02 release)
+   guided       = management's own outlook (release, call, 8-K 7.01)
+   estimate     = third-party expectation (consensus, analyst targets, whisper)
+   proxy        = indirect signal (alt data, peer read-through, industry stats)
+   unverifiable = claim lacks evidence to be tagged reported, guided, estimate, or proxy
    - Add evidence_type + as_of_date + source to Hypothesis evidence quotes and
-     to a new report section (see 5).
+     to a new report section (see 3.5).
    - News articles are tagged by the ORIGINAL source the article names for
      the claim, not as "news". The personality may tag the claim when the
      article attributes it, e.g.:
@@ -94,23 +57,22 @@ overwrite filing numbers.
        "analysts polled by LSEG expect EPS of $Z"          -> estimate
        "card-spending data from <firm> shows sales down"   -> proxy
      The attributed source is recorded alongside the tag.
-     - news article source should also be tagged (e.g. marketbeat, SeekingAlpha)
+     * News article source should also be tagged (e.g. marketbeat, SeekingAlpha).
    - Edge case: if the article does not say where the claim comes from, the
-     claim is tagged "no evidence".
+     claim is tagged "unverifiable".
 
-
-3. New personality tool: search_developments(query)
+3.3 New personality tool: search_developments(query)
    - Searches post-filing 8-Ks + news + consensus.py data; every result comes
      back pre-tagged with evidence_type, as_of_date and source.
    - Wire consensus.py into this tool and into synthesis.
 
-4. Weigh claims — two dimensions: reliability and relevance (AGREED DESIGN)
+3.4 Weigh claims — two dimensions: reliability and relevance (AGREED DESIGN)
    - Recommendation (agreed):
      * Reliability: categorical tag (reported > guided > estimate > proxy).
        Assigned in code wherever the source type is known (SEC filings,
        consensus feed). For news articles the personality assigns it from
        the source the article names, and code checks the tag fits that
-       stated source (item 2); no stated source -> "no evidence".
+       stated source (3.2); no stated source -> "unverifiable".
      * Relevance: coarse category judged by the personality per hypothesis
        — "direct" (same metric/period as the question) vs "context" — with a
        one-line reason, which the critique step can challenge.
@@ -121,7 +83,7 @@ overwrite filing numbers.
      * Revisit numeric weighting only if the eval shows the categorical
        rules aren't enough.
 
-5. Report schema (yoda/schema.py)
+3.5 Report schema (yoda/schema.py)
    - key_metrics stays filing-only ("reported", with the period it covers).
    - New section, e.g. since_filing: list of {claim, evidence_type,
      as_of_date, source, url} — 8-K events, guidance, consensus, proxies.
@@ -129,7 +91,7 @@ overwrite filing numbers.
      implied move (from consensus.py), each with source + as-of.
    - Every Metric gains a period/as-of field so staleness is visible.
 
-6. Synthesis prompt rules (yoda/modes/personality_panel.py _SYNTHESIS_SYSTEM)
+3.6 Synthesis prompt rules (yoda/modes/personality_panel.py _SYNTHESIS_SYSTEM)
    - Rule 1: keep "FILING TEXT is the only source for key_metrics,
      revenue_segments and their citations" (reported history). Amend to say
      post-filing information goes in since_filing / market_expectations with
@@ -138,37 +100,60 @@ overwrite filing numbers.
      own period and may be cited like a filing.
    - Rule 5: DONE (commit 709ae6e) — retired the conflicting first sentence
      ("not supported by hypothesis evidence or news -> data_gaps"), which
-     contradicted rule 1
-     (a figure in the filing is supported even if no personality looked at
-     it). KEEP its data_gaps definition — "only facts the filing/8-Ks/news
-     SHOULD have covered but did not; forward-looking items like consensus
-     are NOT gaps" — moved into its own data_gaps rule. Without it, the
-     model fills data_gaps with "Q3 consensus not in filing"-style noise.
+     contradicted rule 1 (a figure in the filing is supported even if no
+     personality looked at it). KEEP its data_gaps definition — "only facts
+     the filing/8-Ks/news SHOULD have covered but did not; forward-looking
+     items like consensus are NOT gaps" — moved into its own data_gaps rule.
+     Without it, the model fills data_gaps with "Q3 consensus not in
+     filing"-style noise.
    - New rule: label every since_filing claim with its evidence_type and
      as-of date; when tiers conflict on the same metric/period, state both
      and say which is more reliable.
    - Citations: allow "8-K Item 2.02, Exhibit 99.1 — <heading>" format.
-   - Update baseline prompt too, or the eval comparison is no longer fair.
-   - REMEMBER TO UPDATE RULE 1 AND 5 TO MAKE SURE THEY ARE CONSISTENT WITH NEW 8-K FEATURE
-    - Rule 1’s “only known from external sources → data_gaps” overlaps with rule 5’s 
-    “external items are NOT gaps”. Rule 5’s “SHOULD have covered” test mostly settles it. 
-    The real fix is the “since filing” section in the 8-K work, which gives external facts 
-    their own home, so I left the wording alone for now.
+   - Update baseline prompt too, or the eval comparison is no longer fair
+     (see 4 for what the baseline is given).
+   - REMEMBER TO UPDATE RULE 1 AND 5 TO MAKE SURE THEY ARE CONSISTENT WITH
+     NEW 8-K FEATURE.
+     * Rule 1’s “only known from external sources → data_gaps” overlaps with
+       rule 5’s “external items are NOT gaps”. Rule 5’s “SHOULD have covered”
+       test mostly settles it. The real fix is the “since filing” section in
+       the 8-K work, which gives external facts their own home, so I left
+       the wording alone for now.
 
-7. Eval
+3.7 Eval
    - Judge rubric: add a dimension (or criterion under accuracy) for
      "post-filing information is labelled and not mixed into reported figures".
+     AGREED: judged tag-agnostic — for each post-filing claim, can a reader
+     tell where it came from, as of when, and whether it is a reported
+     result, management outlook or third-party estimate? Plain wording
+     ("the Street expects", "per the 8-K", "according to Reuters") scores
+     the same as an evidence_type tag. Tag correctness is checked by 3.10's
+     tests, not by the judge.
+   - Evidence cache for the judge (eval runs only): every mode returns its
+     evidence bundle on every run (already in memory, no extra cost); only
+     the eval runner writes it to disk, next to the report JSON. The judge
+     reads that bundle, so it sees what the report saw.
+     * Contents: external sources only — filings, 8-Ks, news results,
+       consensus.py data, transcript chunks. Each item carries its own
+       citation (source, URL or accession number, as-of date) so the
+       report's citations can be matched to it.
+     * News: full article text only for articles the report cites; every
+       other news-pool item as its snippet. Keeps the judge's prompt small
+       and free of text the report never relied on.
+     * Never Yoda's own hypotheses or critique messages: they are Yoda's
+       reasoning, not sources, and would let a claim be "verified" by Yoda
+       quoting itself. (They get their own grading in 5.)
    - Re-run baseline vs Yoda after; expect cost/latency increase — measure it.
 
-8. Earnings press release + call transcript as context
+3.8 Earnings press release + call transcript as context
    - Press release: on EDGAR as 8-K Item 2.02, Exhibit 99.1 — free, covered
-     by step 1. Usually the first "reported" numbers for the quarter and
-     the main source of quarterly guidance.
+     by 3.1. Usually the first "reported" numbers for the quarter and the
+     main source of quarterly guidance.
    - Call transcript: NOT on EDGAR. Needs a vendor (FMP/Finnhub transcript
      endpoints — check plan cost and terms). Valuable for guidance wording
      and analyst Q&A; long, so retrieve chunks rather than send in full.
 
-9. Personality "analyst playbook" + source vetting (current gap)
+3.9 Personality "analyst playbook" + source vetting (current gap)
    - Today the personality prompts give a lens (3-5 sentences) and tool
      rules, but nothing on what moves a stock on earnings (results vs
      consensus, guidance changes, key KPIs, margins), what news to look
@@ -181,29 +166,122 @@ overwrite filing numbers.
      list (company primary > data vendors > major financial press >
      aggregators/blogs); Tavily topic="news" + a time window starting at the
      filing date; tag-vs-source validation — a tag must match the source
-     the article attributes the claim to (see item 2); a claim with no
-     stated source is tagged "no evidence".
+     the article attributes the claim to (see 3.2); a claim with no
+     stated source is tagged "unverifiable".
+   - Full-article reading (AGREED; cost accepted for now, may cut later).
+     Personalities see Tavily snippets cut to 300 characters, which often
+     drops the sentence saying where a claim came from — the attribution
+     3.2's tagging depends on.
+     * Add a read_article(url) tool (Tavily Extract) returning the cleaned
+       article, capped at ~5K tokens (AGREED). A typical extracted article
+       is ~2-3K tokens, so ~90% come through whole; the cap only cuts long
+       pages such as transcripts posted as articles (15-20K tokens). Only
+       URLs already in the news pool are accepted, so the URL-pool check
+       still holds. Personalities call it only for articles they want to
+       rely on.
+     * Estimated +$0.08 per ticker, not yet measured: ~9 reads per run,
+       ~3K tokens each on average (Haiku ~$0.01; Tavily Extract ~2 credits
+       = ~$0.016 once past the free 1,000 credits/month; synthesis ~$0.05
+       if it gets the read articles). Judge: ~+$0.06 per report (cited
+       articles only, 3.7). Measure on the first 1-ticker run.
+     * Rejected: no cap — ~$0.12 per run typical but ~$0.25-0.30 when long
+       pages push a Haiku prompt past 100K tokens (5x price), and can push
+       JPM's judge call past 272K tokens (2x price for the whole call).
+     * Each read uses one of MAX_TOOL_CALLS (6) and adds seconds against
+       WALL_TIMEOUT_SECONDS (45s); raise them if reads crowd out other tools.
+     * Rejected: full text on every search result (include_raw_content) —
+       est. +$0.25-0.55 per run, pushes Haiku prompts past 100K tokens
+       (5x price) and floods synthesis and the judge with articles no one
+       cited.
 
-10. Tests (offline, per CLAUDE.md)
+3.10 Tests (offline, per CLAUDE.md)
    - 8-K item parsing and date filtering; tool result tagging; schema
      validation of evidence_type; confidence cap for proxy-only hypotheses;
-     key_metrics never sourced from a since_filing claim.
+     key_metrics never sourced from a since_filing claim; evidence bundle
+     holds only cited external sources (no hypotheses or critique); the
+     baseline prompt never contains Yoda's content (see 4);
+     read_article rejects URLs outside the news pool and caps its output.
 
-11. Improve Retrieval Quality:
-  - better chunking - recursive/semantic chunking instead of fixed splits?
-  - Fine-Tune Embedding Model to SEC Filings + Stock/Financial news?
 
-12. Create Master Repo txt File:
-  - Contains detailed description and explanation of each file 
-  - Contains all relationships with other files
+4. Eval baseline: replace the filing-only baseline (AGREED: option B now,
+   option C later)
+   The baseline is the simplest credible alternative to Yoda; what it is
+   given decides what a Yoda win proves.
 
-13. Fine-tune the model on financial and earnings-specific language
-  -
+   Option B — NEW BASELINE: one Claude call, given what an analyst would
+   have on hand:
+   - SEC filings: the 10-Q/10-K (+ supplemental 10-K) and every 8-K filed
+     after it, incl. the Exhibit 99.1 press release (3.1 and 3.8).
+   - Market data from consensus.py (consensus EPS/revenue, whisper,
+     implied move). Ideally fetched once per ticker and shared with Yoda,
+     so both modes see identical numbers.
+   - ONE fixed, generic news search (e.g. "<TICKER> earnings", same Tavily
+     settings as Yoda) — not the queries Yoda's personalities choose.
+   - Question it answers: "Does Yoda's multi-agent panel write a better
+     pre-earnings brief than a single model call given the same kinds of
+     information an analyst has on hand (SEC filings, market data, a
+     generic news search)?" A Yoda win then points to Yoda's method (its
+     research choices and multiple perspectives), not to extra data.
+   - HARD GUARDRAIL — Yoda's research must never leak into the baseline:
+     * The baseline's inputs come from one builder function that can only
+       read SEC filings, the market data and its own generic search. It
+       never takes Yoda's news_pool, hypotheses, critique messages, report
+       JSON or evidence bundle.
+     * Running the baseline first (the runner already does, per ticker) is
+       not enough on its own: Yoda's files from an earlier ticker or run
+       are still on disk, and a baseline-only run can happen after Yoda.
+     * Offline test: plant a marker string in a fake Yoda report, news pool
+       and evidence bundle on disk, build the baseline prompt, and assert
+       the marker never appears in it.
+   - The baseline's evidence goes into the same eval evidence cache as
+     Yoda's (3.7).
+   - Prompt asks for the since_filing section but NOT Yoda's tagging rules
+     (an analyst wouldn't run an equivalent tagging system). It still sees
+     the tag names in the shared report schema and fills them by judgement;
+     the judge scores labelling tag-agnostic (3.7).
 
-14. Restructure README:
-  - Put evaluation result at top
+   Option C — ADD LATER as a second baseline: the SEC filings above plus
+   Claude's web search tool.
+   - Question it answers: "Does Yoda beat an analyst using a general AI
+     assistant with web search (e.g. Google AI Mode, ChatGPT search)?" —
+     likely the most common way analysts do quick research today.
+   - Results vary run to run, it costs more, and it is a small agent rather
+     than one call; every search it runs must be saved to the eval
+     evidence cache so the judge sees what it saw.
 
-Acceptance. A reader who stops after the first screen knows 
 
-(a) what problem Yoda solves, (b) that it was evaluated against a baseline, and (c) that it won, with numbers.
+5. Yoda-only process check (LATER, separate from Yoda vs baseline)
+   The head-to-head eval grades only the final report, so hypotheses and
+   critique are kept out of it (3.7). They are still worth grading on
+   their own, to find out whether Yoda's extra steps earn their cost:
+   - Does each personality add something the others don't?
+   - Does the critique catch real errors (CHALLENGES that were right)?
+   - Does synthesis carry well-supported findings into the report
+     faithfully — not dropping them, not inventing new ones?
+   - Never mixed into the Yoda-vs-baseline scores: the baseline has no
+     process to grade, and showing the judge Yoda's working would tilt
+     the comparison toward Yoda.
 
+
+6. Improve Retrieval Quality
+   - Better chunking — recursive/semantic chunking instead of fixed splits?
+   - Fine-tune the embedding model on SEC filings + stock/financial news?
+
+
+7. Create Master Repo txt File
+   - Contains detailed description and explanation of each file.
+   - Contains all relationships with other files.
+
+
+8. Fine-tune the model on financial and earnings-specific language
+   - Is this realistic? 
+    - needs a large dataset
+  - would this actually improve Yoda?
+    - fine-tuning could improve interpretation of articles and SEC filing
+    - outputting reports in domain-specific language could hurt readibility of reports
+
+9. Restructure README
+   - Put evaluation result at top.
+   - Acceptance: a reader who stops after the first screen knows (a) what
+     problem Yoda solves, (b) that it was evaluated against a baseline, and
+     (c) that it won, with numbers.

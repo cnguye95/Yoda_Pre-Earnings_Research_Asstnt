@@ -48,9 +48,11 @@ Each personality uses three tools: `retrieve_filing` (semantic search across bot
 | ChromaDB persistent client (`filings_openai` collection) | No native deps on Windows; cosine-distance index over 1536-dim OpenAI vectors |
 | `reportlab` for PDF (not weasyprint) | weasyprint requires GTK3/Pango/Cairo native libs on Windows; reportlab is pure Python |
 | Cite-or-skip rule + URL-pool validation | Any uncitable fact goes to `data_gaps`; every news URL and watchlist URL is validated against the investigation's news pool so synthesis cannot fabricate links |
-| Filing-only `source_citation` enforcement | `key_metrics`, `revenue_segments`, `key_risks`, and `forward_guidance` source citations are restricted to filing section labels — a post-synthesis scrubber replaces any leaked news URLs / outlet names with a bare section fallback, and the chunk-heading extractor rejects mid-word fragments so the judge can verify traceability |
+| Filing-only `source_citation` enforcement | `key_metrics`, `revenue_segments`, `key_risks`, and `forward_guidance` source citations are restricted to filing section labels — a post-synthesis check replaces any citation containing a URL with `UNVERIFIED — the cited source was not the filing` and adds a `data_gaps` entry naming the item, and the chunk-heading extractor rejects mid-word fragments so the judge can verify traceability |
 | OpenAI `gpt-6.1-sol` as eval judge | Different model family from the Claude-based generation system; prevents self-preference bias in scoring. Sol is OpenAI's counterpart to Sonnet 5.5 |
 | Embed only filings not already stored | ChromaDB is checked first; a filing is embedded only when its stored chunk count differs from its current one (new, half-stored, or re-chunked) |
+
+> **`UNVERIFIED` vs `unverifiable` — two different labels.** `UNVERIFIED` is the citation label above: a filing figure whose citation pointed outside the filing. `unverifiable` is a planned evidence tag (8-K work in `next_steps.txt`): a post-filing claim whose source does not say where the claim came from. The eval judge will treat it the same way — a claim whose source is not in the evidence the judge sees is listed as unverifiable, not counted as an error.
 
 ### Architecture
 
