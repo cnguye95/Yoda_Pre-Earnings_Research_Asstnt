@@ -2,7 +2,20 @@
 IDEAS for Improvements/Changes
 
 
-1. UI bugs (found in the 2026-10-27 smoke test; to debug later)
+1. UI bugs (found in the 2026-10-27 smoke test) — ALL FIXED 2026-10-28,
+   each with an offline test in tests/test_outputs.py (Streamlit AppTest):
+   a. selector is now [data-testid="stMain"] (checked in the browser: it
+      exists and is the scrolling area). b. each finished PDF's bytes are
+      kept on its TickerResult; download buttons and the ZIP use them, so a
+      pruned file no longer breaks either. c. starting a generation clears
+      the previous report and cached PDF. d. the button counts only tickers
+      not already queued ("Add to Queue (1 new ticker)"). e. one st.error
+      line, traceback in a closed "Details" expander. f. st.tabs replaced
+      by a horizontal st.radio held in session state; a queue run switches
+      it to Queue (AGREED; a segmented control was chosen first, but
+      Streamlit 1.40's AppTest crashes on it). 1f can't be fully seen
+      without a live queue run; the test checks the view after a faked run.
+   Original notes:
    a. CONFIRMED: scroll-to-top uses "section.main", which doesn't exist in
       Streamlit 1.40 (the element is section.stMain, data-testid="stMain"),
       so the page never scrolls to the "Queue complete" notice.
@@ -50,6 +63,16 @@ IDEAS for Improvements/Changes
      start_date); the client hides Tavily's error text. With news working,
      synthesis input grows, so a run likely lands above the $0.65 budget.
      A second live run needs fresh consent.
+   - FIXED (2026-10-28): probes showed Tavily's error "When days is set,
+     start_date or end_date cannot be set". search_news now sends days
+     only (filing date → today) and turns Tavily's RFC dates ("Tue, 27 Oct
+     2026 12:00:00 GMT") into ISO. One live call returned 3 dated NFLX
+     articles. The panel's news path is still unexercised end to end.
+   - Whisper and implied move N/A were correct: NFLX's next report is
+     2027-01-18, ~12 weeks out; no whisper is published that early, and
+     EarningsWatcher has no confirmed report date yet, so it publishes no
+     implied move. The whisper lookup still cost
+     $0.12 — skipping it when the report is far off would save that.
 
 3.1 Ingest 8-Ks filed after the primary 10-Q/10-K (yoda/ingest/edgar.py)
    - Fetch 8-Ks with filing_date > primary filing_date (SEC submissions JSON

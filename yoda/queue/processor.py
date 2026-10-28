@@ -49,6 +49,10 @@ class TickerResult:
     status: Literal["complete", "failed"]
     seconds: float
     pdf_path: pathlib.Path | None = None
+    # The PDF itself, read as soon as it is built, so its download button and
+    # the queue's ZIP still work after a later run of the same ticker prunes
+    # the file from data/reports/.
+    pdf_bytes: bytes | None = None
     error: str | None = None               # "Type: message" when the ticker failed
     error_details: str | None = None       # the full traceback, for debugging
 
@@ -175,7 +179,6 @@ def process_queue(
     _ZIPS_DIR.mkdir(parents=True, exist_ok=True)
 
     results: list[TickerResult] = list(prior_results or [])
-    pdf_paths: list[pathlib.Path] = [result.pdf_path for result in results if result.pdf_path is not None]
     known_market = known_market or {}
     pause: QueuePause | None = None
 
@@ -211,9 +214,9 @@ def process_queue(
                 on_progress(ticker, f"failed: {exc}")
             continue
 
-        pdf_paths.append(pdf_path)
-        results.append(TickerResult(ticker=ticker, status="complete",
-                                    seconds=time.perf_counter() - started, pdf_path=pdf_path))
+        # Keep the PDF's bytes before pruning can touch any file.
+        results.append(TickerResult(ticker=ticker, status="complete", seconds=time.perf_counter() - started,
+                                    pdf_path=pdf_path, pdf_bytes=pdf_path.read_bytes()))
         _prune_reports(ticker)
         if on_progress is not None:
             on_progress(ticker, "complete")
@@ -224,10 +227,13 @@ def process_queue(
     zip_timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     zip_path = _ZIPS_DIR / f"yoda_queue_{zip_timestamp}.zip"
     with zipfile.ZipFile(zip_path, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
-        for pdf in pdf_paths:
-            # Store under just the basename so users extracting the ZIP get
-            # files in their current directory, not nested under data/reports/.
-            zf.write(pdf, arcname=pdf.name)
+        for result in results:
+            if result.pdf_bytes is None:
+                continue
+            # Written from the bytes kept on the result (a continued queue's
+            # earlier PDFs may have been pruned from disk since), under just
+            # the file name, so extracting the ZIP doesn't nest data/reports/.
+            zf.writestr(result.pdf_path.name, result.pdf_bytes)
 
     _prune_zips()
     return QueueRun(zip_path, results, pause)

@@ -7,15 +7,18 @@ The PDF tests build real PDFs with ReportLab in a temporary folder. Nothing
 here calls Claude, OpenAI or the SEC.
 """
 
+import pathlib
 import zipfile
 from types import SimpleNamespace
 
 import pandas as pd
 import pytest
 from reportlab.platypus import Paragraph
+from streamlit.testing.v1 import AppTest
 
 from yoda.eval import judge, runner
 from yoda.eval.rubric import DimensionScore, JudgeScores
+from yoda.modes import personality_panel
 from yoda.modes.personality_panel import MarketDataUnavailable, PanelRun
 from yoda.queue import processor
 from yoda.report import pdf
@@ -298,6 +301,26 @@ def test_continued_queue_reuses_the_data_and_bundles_everything(monkeypatch):
     assert calls[-2:] == [("PAUSE", True, True), ("LATER", False, True)]
 
 
+def test_finished_pdfs_are_kept_in_memory_so_a_pruned_file_still_downloads(monkeypatch):
+    # Bug 1b: download buttons (and a continued queue's ZIP) re-read PDFs
+    # from disk, which a later run of the same ticker may have deleted.
+    def fake_build(ticker, market=None, allow_missing_market_data=False):
+        path = processor._REPORTS_DIR / f"{ticker}_20260101-000000.pdf"
+        path.write_bytes(b"%PDF " + ticker.encode())
+        return path
+    monkeypatch.setattr(processor, "_build_pdf", fake_build)
+    _, first, _ = processor.process_queue(["aaa"])
+    assert first[0].pdf_bytes == b"%PDF AAA"
+
+    # The file is deleted (as a later run's pruning would); continuing the
+    # queue still bundles it, from the bytes kept on the result.
+    first[0].pdf_path.unlink()
+    zip_path, results, _ = processor.process_queue(["bbb"], prior_results=first)
+    with zipfile.ZipFile(zip_path) as bundle:
+        assert bundle.read("AAA_20260101-000000.pdf") == b"%PDF AAA"
+    assert [result.ticker for result in results] == ["AAA", "BBB"]
+
+
 def test_zip_pruning_refuses_to_keep_zero():
     with pytest.raises(ValueError):
         processor._prune_zips(keep=0)
@@ -450,3 +473,69 @@ def test_judge_wrong_model_raises_even_without_asserts(monkeypatch):
 
 def test_normalize_tickers_splits_cleans_and_dedupes():
     assert normalize_tickers(["nflx, COIN", "  panw  ", "", "NFLX coin"]) == ["NFLX", "COIN", "PANW"]
+
+
+# ---------------------------------------------------------------------------
+# Streamlit app — the UI bugs in next_steps item 1, run with Streamlit's own
+# test harness (no browser, nothing live: the panel and queue are faked)
+# ---------------------------------------------------------------------------
+
+_APP = pathlib.Path(__file__).resolve().parents[1] / "app.py"
+_QUEUE_VIEW = "Queue (batch)"
+
+
+def _app(**session) -> AppTest:
+    # The app with *session* values already in its session state. The first
+    # run imports the whole of Yoda, so the time limit is generous.
+    app = AppTest.from_file(str(_APP), default_timeout=60)
+    for key, value in session.items():
+        app.session_state[key] = value
+    return app.run()
+
+
+def test_failed_generation_shows_one_error_and_no_stale_report(monkeypatch):
+    # Bugs 1c and 1e: after a failed generation the previous ticker's report
+    # stayed on the page, and the error was printed twice.
+    def fail(ticker, **kwargs):
+        raise RuntimeError("ZZZZ has no filing")
+    monkeypatch.setattr(personality_panel, "run_personality_panel", fail)
+    # A report for TEST is on screen (its PDF already cached, so no SEC fetch).
+    app = _app(report=_report(), pdf_bytes=b"%PDF", pdf_ticker="TEST")
+    assert any(header.value.startswith("TEST —") for header in app.subheader)
+
+    app.text_input(key="single_ticker_input").input("ZZZZ").run()
+    app.button(key="single_generate").click().run()
+
+    assert [error.value for error in app.error] == ["Could not generate report for ZZZZ: RuntimeError: ZZZZ has no filing"]
+    details = [expander for expander in app.expander if expander.label == "Details"]
+    assert details and details[0].exception             # the traceback, folded away
+    assert not any(header.value.startswith("TEST —") for header in app.subheader)
+
+
+def test_add_to_queue_counts_only_new_tickers():
+    # Bug 1d: the button counted tickers already in the queue.
+    app = _app(queue=["NFLX"], view=_QUEUE_VIEW)
+    app.text_area(key="queue_text").input("NFLX, COIN").run()
+    assert app.button(key="queue_add").label == "Add to Queue (1 new ticker)"
+
+
+def test_finished_queue_stays_on_the_queue_view(monkeypatch, tmp_path):
+    # Bug 1f: after a queue run the page went back to the Single ticker view.
+    zip_path = tmp_path / "yoda_queue_x.zip"
+    zipfile.ZipFile(zip_path, "w").close()
+    monkeypatch.setattr(processor, "process_queue",
+                        lambda tickers, **kwargs: processor.QueueRun(zip_path, [], None))
+    app = _app(queue=["AAA"], view=_QUEUE_VIEW)
+
+    app.button(key="queue_run").click().run()
+
+    assert app.radio(key="view").value == _QUEUE_VIEW
+    assert app.success[0].value.startswith("Queue complete")
+
+
+def test_scroll_to_top_targets_streamlit_1_40s_main_area():
+    # Bug 1a: the script looked for "section.main", which Streamlit 1.40 no
+    # longer has; its main area is marked data-testid="stMain".
+    source = _APP.read_text(encoding="utf-8")
+    assert "querySelector('[data-testid=" in source and "stMain" in source
+    assert "section.main" not in source

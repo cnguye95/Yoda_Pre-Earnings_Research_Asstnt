@@ -1,7 +1,8 @@
 """Streamlit entry point for Yoda. Run with: `streamlit run app.py`.
 
-Two tabs: Single ticker (generate one report) and Queue
-(batch multiple tickers overnight, download all PDFs as a ZIP).
+Two views, chosen with a toggle at the top: Single ticker (generate one
+report) and Queue (batch multiple tickers overnight, download all PDFs as a
+ZIP).
 """
 
 import pathlib
@@ -33,6 +34,13 @@ st.set_page_config(page_title="Yoda", layout="centered")
 def _md(text: str) -> str:
     """Escape bare dollar signs so Streamlit doesn't read "$5 ... $6" as LaTeX math."""
     return text.replace("$", r"\$")
+
+
+def _show_failure(what: str, exc: Exception) -> None:
+    """Show a failure once: "<what>: Type: message", with the traceback in a closed "Details" box."""
+    st.error(f"{what}: {type(exc).__name__}: {exc}")
+    with st.expander("Details"):
+        st.exception(exc)
 
 
 # ---------------------------------------------------------------------------
@@ -81,6 +89,11 @@ def _generate_report(ticker: str, pause: MarketDataUnavailable | None = None) ->
     refusal is kept in session state as "market_pause", so the page can ask
     whether to continue or stop.
     """
+    # Clear the previous report (and its cached PDF) first, so a failure or
+    # pause for this ticker never leaves another ticker's report on screen.
+    for key in ("report", "ticker", "pdf_bytes", "pdf_ticker"):
+        st.session_state.pop(key, None)
+
     try:
         with st.spinner(f"Generating report for {ticker}..."):
             if pause is None:
@@ -92,18 +105,14 @@ def _generate_report(ticker: str, pause: MarketDataUnavailable | None = None) ->
         st.session_state["market_pause"] = (ticker, exc)
         return
     except Exception as exc:
-        # The UI boundary: any failure is shown to the user (with the full
-        # traceback in an expandable box) instead of a blank page.
-        st.error(f"Could not generate report for {ticker}: {type(exc).__name__}: {exc}")
-        st.exception(exc)
+        # The UI boundary: any failure is shown to the user instead of a
+        # blank page — once, with the full traceback folded away.
+        _show_failure(f"Could not generate report for {ticker}", exc)
         return
 
-    # Persist report in session state so it survives reruns, and invalidate
-    # any previously cached PDF.
+    # Persist report in session state so it survives reruns.
     st.session_state["report"] = report
     st.session_state["ticker"] = ticker
-    st.session_state.pop("pdf_bytes",  None)
-    st.session_state.pop("pdf_ticker", None)
 
 
 # ---------------------------------------------------------------------------
@@ -168,24 +177,39 @@ if st.session_state["queue_status"] == "complete":
         )
 
     # Auto-scroll to top so the notification is immediately visible.
+    # Streamlit 1.40 marks its scrolling main area data-testid="stMain".
     components.html(
-        "<script>window.parent.document.querySelector('section.main').scrollTo(0, 0);</script>",
+        "<script>window.parent.document.querySelector('[data-testid=\"stMain\"]').scrollTo(0, 0);</script>",
         height=0,
     )
 
 
 # ---------------------------------------------------------------------------
-# Tabs — Single ticker (live exploration) and Queue (overnight batch)
+# Views — Single ticker (live exploration) and Queue (overnight batch)
 # ---------------------------------------------------------------------------
 
-tab_single, tab_queue = st.tabs(["Single ticker", "Queue (batch)"])
+# A horizontal radio rather than st.tabs: Streamlit can't choose a tab from
+# code, and its tabs reset to the first one after a queue run's rerun, hiding
+# the results. The radio's choice lives in session state ("view"), so code
+# can switch to the Queue view when a run finishes or pauses. (A segmented
+# control would look closer to tabs, but Streamlit 1.40's test harness
+# can't run an app that has one.)
+_SINGLE_VIEW, _QUEUE_VIEW = "Single ticker", "Queue (batch)"
+
+# A queue run asks for the Queue view by setting a flag before it reruns;
+# the radio's value can only be changed here, before it is drawn.
+if st.session_state.pop("show_queue_view", False):
+    st.session_state["view"] = _QUEUE_VIEW
+
+view = st.radio("View", [_SINGLE_VIEW, _QUEUE_VIEW], horizontal=True, key="view",
+                label_visibility="collapsed")
 
 
 # ---------------------------------------------------------------------------
-# Tab 1 — single ticker
+# View 1 — single ticker
 # ---------------------------------------------------------------------------
 
-with tab_single:
+if view == _SINGLE_VIEW:
     # Ticker input: normalize to uppercase and strip whitespace.
     ticker_raw = st.text_input(
         "Ticker", placeholder="e.g. NFLX", key="single_ticker_input",
@@ -318,10 +342,10 @@ with tab_single:
 
 
 # ---------------------------------------------------------------------------
-# Tab 2 — queue / batch
+# View 2 — queue / batch
 # ---------------------------------------------------------------------------
 
-with tab_queue:
+if view == _QUEUE_VIEW:
     st.caption(
         "Queue multiple tickers and run them sequentially. PDFs save to "
         "`data/reports/` as they complete; all are bundled into a ZIP at "
@@ -341,18 +365,19 @@ with tab_queue:
 
     with col_actions:
         # Parse the textarea into a clean ticker list whenever the user types,
-        # so the button label shows the count. Newlines, commas and spaces
-        # all separate tickers; repeats count once.
+        # so the button label shows how many would be added. Newlines, commas
+        # and spaces all separate tickers; repeats count once, and tickers
+        # already in the queue don't count.
         raw_tickers = normalize_tickers((queue_text or "").splitlines())
+        new_tickers = [ticker for ticker in raw_tickers if ticker not in st.session_state["queue"]]
 
         add_btn = st.button(
-            f"Add to Queue ({len(raw_tickers)} ticker{'s' if len(raw_tickers) != 1 else ''})",
-            disabled=not raw_tickers,
+            f"Add to Queue ({len(new_tickers)} new ticker{'s' if len(new_tickers) != 1 else ''})",
+            disabled=not new_tickers,
             key="queue_add",
         )
         if add_btn:
-            # Extend the queue with new entries, deduplicated against current.
-            st.session_state["queue"] = normalize_tickers(st.session_state["queue"] + raw_tickers)
+            st.session_state["queue"] = st.session_state["queue"] + new_tickers
 
     # Display the current queue with a clear-all button.
     if st.session_state["queue"]:
@@ -422,8 +447,7 @@ with tab_queue:
             zip_bytes = pathlib.Path(run.zip_path).read_bytes()
         except Exception as exc:
             st.session_state["queue_status"] = "idle"
-            st.error(f"Queue run failed: {type(exc).__name__}: {exc}")
-            st.exception(exc)
+            _show_failure("Queue run failed", exc)
             return
 
         # Keep the results (and the ZIP in memory, for the download button),
@@ -435,6 +459,7 @@ with tab_queue:
         st.session_state["queue_zip_name"]  = run.zip_path.name
         st.session_state["queue_pause"]     = run.pause
         st.session_state["queue_status"]    = "paused" if run.pause else "complete"
+        st.session_state["show_queue_view"] = True   # stay on the Queue view after the rerun
         st.rerun()
 
     if run_clicked:
@@ -466,10 +491,12 @@ with tab_queue:
         st.subheader("Results")
         for result in st.session_state["queue_results"]:
             if result.status == "complete":
+                # The bytes were kept when the PDF was built, so this works
+                # even after a later run of the same ticker deleted the file.
                 pdf = pathlib.Path(result.pdf_path)
                 st.download_button(
                     label=f"✅ {result.ticker} — {pdf.name} ({result.seconds:.0f}s)",
-                    data=pdf.read_bytes(),
+                    data=result.pdf_bytes,
                     file_name=pdf.name,
                     mime="application/pdf",
                     key=f"qdl_{result.ticker}_{pdf.stem}",

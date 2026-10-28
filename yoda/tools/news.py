@@ -9,6 +9,7 @@ Two public functions:
 """
 
 from datetime import date, timedelta
+from email.utils import parsedate_to_datetime
 from urllib.parse import urlparse
 
 import requests
@@ -49,6 +50,27 @@ _NO_FILING_WINDOW_DAYS = 30
 _ARTICLE_MAX_CHARS = 20_000
 
 
+def _iso_date(raw: str | None) -> str | None:
+    """Return an article date as ISO "YYYY-MM-DD", or None when it is missing or unreadable.
+
+    Tavily's news search dates articles like "Tue, 27 Oct 2026 12:00:00 GMT"
+    (the email date format), while evidence and since_filing dates are ISO.
+    A date that is already ISO is kept. An unreadable date is treated as
+    missing rather than guessed.
+    """
+    if not raw:
+        return None
+    try:
+        return date.fromisoformat(raw[:10]).isoformat()
+    except ValueError:
+        pass
+    # Not ISO: try the email date format Tavily's news search uses.
+    try:
+        return parsedate_to_datetime(raw).date().isoformat()
+    except (TypeError, ValueError):
+        return None
+
+
 def search_news(query: str, max_results: int = 5, since: date | None = None) -> list[NewsSearchResult]:
     """Search for news articles matching *query*, published since *since*.
 
@@ -65,9 +87,11 @@ def search_news(query: str, max_results: int = 5, since: date | None = None) -> 
     """
     client = TavilyClient(api_key=config.TAVILY_API_KEY)
 
-    # The window runs from *since* to today. The Tavily client always sends a
-    # "days" value (3 unless told otherwise), so it is set to the same window
-    # as start_date; otherwise it could quietly shrink the search to 3 days.
+    # The window runs from *since* to today, given to Tavily as a number of
+    # days. Only "days" is sent: Tavily rejects a request that also has a
+    # start_date ("When days is set, start_date or end_date cannot be set"),
+    # and its client always sends days (3 unless told otherwise), so days is
+    # the one window setting that can be used. At least one day is asked for.
     today = market_today()
     window_start = since or today - timedelta(days=_NO_FILING_WINDOW_DAYS)
     window_days = max((today - window_start).days, 1)
@@ -82,7 +106,6 @@ def search_news(query: str, max_results: int = 5, since: date | None = None) -> 
             include_raw_content=False,
             topic="news",
             days=window_days,
-            start_date=window_start.isoformat(),
         )
     except _TAVILY_ERRORS as exc:
         raise RuntimeError(f"Tavily search failed: {type(exc).__name__}: {exc}") from exc
@@ -102,7 +125,7 @@ def search_news(query: str, max_results: int = 5, since: date | None = None) -> 
         results.append(NewsSearchResult(
             title=item.get("title") or "(untitled)",
             url=url,
-            published_date=item.get("published_date"),
+            published_date=_iso_date(item.get("published_date")),
             snippet=(item.get("content") or "")[:_SNIPPET_CHARS],
             source_domain=urlparse(url).netloc.removeprefix("www."),
         ))

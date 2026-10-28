@@ -239,23 +239,35 @@ def test_news_bug_in_yoda_is_not_relabelled_as_tavily_failure(monkeypatch):
 
 
 def test_news_search_starts_at_the_filing_date(monkeypatch):
-    # A news search from the filing date on. The old "days" field must cover
-    # the same window, or Tavily's 3-day default would quietly cut it short.
+    # A news search from the filing date on, set with "days" alone: Tavily
+    # rejects a request that also has start_date (HTTP 400 "When days is set,
+    # start_date or end_date cannot be set", found in the 2026-10-28 smoke test).
     calls = _fake_tavily(monkeypatch, reply={"results": []})
     filing_date = market_today() - timedelta(days=60)
 
     news.search_news("q", since=filing_date)
 
     assert calls[0]["topic"] == "news"
-    assert calls[0]["start_date"] == filing_date.isoformat()
     assert calls[0]["days"] == 60
+    assert "start_date" not in calls[0] and "end_date" not in calls[0]
 
 
 def test_news_search_without_a_filing_covers_30_days(monkeypatch):
     calls = _fake_tavily(monkeypatch, reply={"results": []})
     news.search_news("q")
-    assert calls[0]["start_date"] == (market_today() - timedelta(days=30)).isoformat()
     assert calls[0]["days"] == 30
+    assert "start_date" not in calls[0]
+
+
+@pytest.mark.parametrize("raw, expected", [
+    ("Tue, 27 Oct 2026 12:00:00 GMT", "2026-10-27"),   # what Tavily's news search sends
+    ("2026-10-01", "2026-10-01"),                      # already ISO
+    ("sometime last week", None),                      # unreadable: missing, never guessed
+    (None, None),
+])
+def test_news_dates_become_iso(monkeypatch, raw, expected):
+    _fake_tavily(monkeypatch, reply={"results": [{"title": "t", "url": "https://x.com/a", "published_date": raw}]})
+    assert news.search_news("q")[0].published_date == expected
 
 
 def test_news_search_from_today_still_asks_for_one_day(monkeypatch):
