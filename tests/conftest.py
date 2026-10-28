@@ -20,6 +20,7 @@ _FAKE_ENV = {
     "FMP_API_KEY":       "test-fmp-key",
     "TAVILY_API_KEY":    "test-tavily-key",
     "SEC_USER_AGENT":    "Yoda Tests test@example.com",
+    "ALPHAVANTAGE_API_KEY": "test-alphavantage-key",
 }
 os.environ.update(_FAKE_ENV)
 
@@ -33,12 +34,27 @@ def _keep_real_data_safe(monkeypatch, tmp_path):
     Individual tests may still point a folder somewhere more specific.
     """
     from yoda.eval import judge, runner
-    from yoda.ingest import edgar
+    from yoda.ingest import edgar, transcripts
     from yoda.queue import processor
 
     data = tmp_path / "data"
     monkeypatch.setattr(runner, "DEFAULT_OUT_DIR", data / "eval")
     monkeypatch.setattr(judge, "_CACHE_DIR", data / "eval" / "judge_cache")
     monkeypatch.setattr(edgar, "_CACHE_DIR", data / "filings")
+    monkeypatch.setattr(transcripts, "_CACHE_DIR", data / "transcripts")
     monkeypatch.setattr(processor, "_REPORTS_DIR", data / "reports")
     monkeypatch.setattr(processor, "_ZIPS_DIR", data / "queue_zips")
+
+
+class _NoNetwork:
+    # A stand-in web session that fails any request, so a test can't reach a
+    # live service by accident; tests that need replies fake them on purpose.
+    def get(self, url, **kwargs):
+        raise AssertionError(f"test tried to reach the network: {url}")
+
+
+@pytest.fixture(autouse=True)
+def _no_live_transcripts(monkeypatch):
+    """Block the transcript module's web session in every test (tests must not call live APIs)."""
+    from yoda.ingest import transcripts
+    monkeypatch.setattr(transcripts, "session", _NoNetwork())

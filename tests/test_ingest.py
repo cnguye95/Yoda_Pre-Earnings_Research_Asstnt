@@ -3,18 +3,19 @@ shared date and HTTP helpers.
 
 Run with: python -m pytest -q
 
-No test reaches the SEC: the network functions are replaced with fakes and
-the disk cache is pointed at a temporary folder.
+No test reaches the SEC or Alpha Vantage: the network functions are replaced
+with fakes and the disk caches are pointed at a temporary folder.
 """
 
 import json
 from datetime import timedelta
+from types import SimpleNamespace
 
 import pytest
 import requests
 
 from yoda import dates, http_session
-from yoda.ingest import edgar
+from yoda.ingest import chunker, edgar, transcripts
 from yoda.schema import Filing
 
 
@@ -423,3 +424,110 @@ def test_http_session_does_not_retry_client_errors(local_server):
     resp = http_session.make_session().get(url, timeout=5)
     assert resp.status_code == 403
     assert len(hits) == 1
+
+
+# ---------------------------------------------------------------------------
+# Earnings call transcripts (yoda/ingest/transcripts.py) — Alpha Vantage faked
+# ---------------------------------------------------------------------------
+
+# A reply shaped like Alpha Vantage's EARNINGS_CALL_TRANSCRIPT response.
+_CALL_REPLY = {"symbol": "BA", "quarter": "2026Q3", "transcript": [
+    {"speaker": "Operator", "title": "Operator", "content": "Welcome to the Boeing third quarter call."},
+    {"speaker": "Brian West", "title": "Chief Financial Officer",
+     "content": "We expect free cash flow of approximately $2 billion for 2026.", "sentiment": "0.6"},
+    {"speaker": "Jane Doe", "title": "Analyst, Morgan Stanley", "content": "Can you walk us through 737 rates?"},
+    {"speaker": "Kelly Ortberg", "title": "President and CEO", "content": ""},       # empty: left out
+]}
+
+
+class _AlphaVantage:
+    # A fake web session answering with *replies* in turn; records each request's params.
+    def __init__(self, *replies):
+        self.replies, self.calls = list(replies), []
+
+    def get(self, url, params=None, timeout=None):
+        self.calls.append(params)
+        reply = self.replies.pop(0)
+        return SimpleNamespace(ok=True, status_code=200, json=lambda: reply)
+
+
+def test_transcript_turns_mark_who_speaks_for_the_company(monkeypatch):
+    fake = _AlphaVantage(_CALL_REPLY)
+    monkeypatch.setattr(transcripts, "session", fake)
+
+    found = transcripts.fetch_transcript("ba", 3, 2026)
+
+    turns = found.transcript.turns
+    assert [(turn.speaker, turn.is_company) for turn in turns] == [
+        ("Operator", False), ("Brian West", True), ("Jane Doe", False)]     # the empty turn is left out
+    assert found.reason is None and found.transcript.call_date is None
+    assert fake.calls[0]["quarter"] == "2026Q3" and fake.calls[0]["symbol"] == "BA"
+    # The source URL a reader can open never carries the key.
+    assert found.transcript.source_url == ("https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT"
+                                           "&symbol=BA&quarter=2026Q3")
+    assert "test-alphavantage-key" not in found.transcript.model_dump_json()
+
+
+@pytest.mark.parametrize("reply, refused, reason", [
+    ({"Information": "Our standard API rate limit is 25 requests per day."}, True, "rate limit is 25"),
+    ({"Error Message": "Invalid API call."}, True, "Invalid API call"),
+    ({"symbol": "BA", "quarter": "2026Q3", "transcript": []}, False, "has no transcript for BA 2026Q3"),
+])
+def test_missing_or_refused_transcripts_say_why(monkeypatch, reply, refused, reason):
+    monkeypatch.setattr(transcripts, "session", _AlphaVantage(reply))
+    found = transcripts.fetch_transcript("BA", 3, 2026)
+    assert found.transcript is None and found.refused is refused and reason in found.reason
+
+
+def test_found_transcripts_are_cached_and_not_fetched_again(monkeypatch):
+    fake = _AlphaVantage(_CALL_REPLY)
+    monkeypatch.setattr(transcripts, "session", fake)
+    first = transcripts.fetch_transcript("BA", 3, 2026)
+    again = transcripts.fetch_transcript("BA", 3, 2026)        # the fake has no reply left: must be the cache
+    assert again.transcript == first.transcript and len(fake.calls) == 1
+
+
+@pytest.mark.parametrize("next_report, last", [((3, 2026), (2, 2026)), ((1, 2027), (4, 2026))])
+def test_last_reported_quarter(next_report, last):
+    assert transcripts.last_reported_quarter(*next_report) == last
+
+
+def test_latest_call_falls_back_one_quarter_and_says_so(monkeypatch):
+    # Next report Q4 2026 -> the Q3 call; not there yet -> the Q2 call.
+    q2_reply = dict(_CALL_REPLY, quarter="2026Q2")
+    fake = _AlphaVantage({"symbol": "BA", "quarter": "2026Q3", "transcript": []}, q2_reply)
+    monkeypatch.setattr(transcripts, "session", fake)
+
+    found = transcripts.find_last_call("BA", {"fiscal_quarter": 4, "fiscal_year": 2026})
+
+    assert [call["quarter"] for call in fake.calls] == ["2026Q3", "2026Q2"]
+    assert (found.transcript.fiscal_quarter, found.transcript.fiscal_year) == (2, 2026)
+    assert "the Q3 FY2026 call isn't available yet" in found.reason
+
+
+def test_refusal_is_not_retried_and_unknown_quarter_is_not_looked_up(monkeypatch):
+    fake = _AlphaVantage({"Information": "rate limit"})
+    monkeypatch.setattr(transcripts, "session", fake)
+    refused = transcripts.find_last_call("BA", {"fiscal_quarter": 4, "fiscal_year": 2026})
+    assert refused.transcript is None and refused.refused and len(fake.calls) == 1
+
+    unknown = transcripts.find_last_call("BA", None)
+    assert unknown.transcript is None and "last reported quarter is unknown" in unknown.reason
+
+
+def test_transcript_chunks_name_the_call_and_the_side():
+    fake_transcript = transcripts.CallTranscript(
+        ticker="BA", fiscal_quarter=3, fiscal_year=2026, call_date="2026-10-27",
+        turns=[transcripts.TranscriptTurn(speaker="Brian West", title="Chief Financial Officer",
+                                          content="We expect free cash flow of about $2 billion.", is_company=True),
+               transcripts.TranscriptTurn(speaker="Jane Doe", title="Analyst, Morgan Stanley",
+                                          content="What about 737 rates?", is_company=False)],
+        source_url="https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3")
+
+    chunks = chunker.chunk_transcript(fake_transcript)
+
+    assert [chunk.document for chunk in chunks] == ["CALL Q3 FY2026 (2026-10-27) · company",
+                                                    "CALL Q3 FY2026 (2026-10-27) · analyst"]
+    assert chunks[0].text.startswith("Brian West, Chief Financial Officer:\nWe expect free cash flow")
+    assert [chunk.chunk_index for chunk in chunks] == [0, 1]
+    assert chunker.transcript_key(fake_transcript) == "transcript:BA:2026Q3"

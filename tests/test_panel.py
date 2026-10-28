@@ -9,15 +9,16 @@ import pydantic
 import pytest
 
 from yoda import evidence_text
-from yoda.ingest.chunker import Chunk
+from yoda.ingest.chunker import Chunk, chunk_transcript
 from yoda.ingest.edgar import PostFilingEightKs
+from yoda.ingest.transcripts import TranscriptFetch
 from yoda.modes import baseline, llm
 from yoda.modes import personality_panel as panel
 from yoda.modes import tools
 from yoda.schema import (
     ArticleText, CritiqueMessage, EarningsReport, EightKDocument, EightKFiling, EvidenceQuote, ExpectationValue,
     Filing, ForwardGuidance, Hypothesis, Metric, NewsItem, NewsSearchResult, PersonalityResult, Risk, Segment,
-    SinceFilingItem,
+    SinceFilingItem, CallTranscript, TranscriptTurn,
 )
 from yoda.tools.consensus import ApiFailure, MarketSnapshot
 
@@ -333,6 +334,7 @@ def _no_filing_run(monkeypatch, snapshot_fn) -> list:
     monkeypatch.setattr(panel, "fetch_latest_filing", lambda ticker: None)
     monkeypatch.setattr(panel, "get_market_snapshot", snapshot_fn)
     monkeypatch.setattr(panel, "ChromaStore", lambda: None)
+    monkeypatch.setattr(panel, "find_last_call", lambda ticker, consensus: TranscriptFetch(None, "no transcript (test)"))
 
     def fake_personality(personality, *args):
         started.append(personality)
@@ -842,5 +844,87 @@ def test_evidence_bundle_never_holds_hypotheses_or_critique(monkeypatch):
 
     assert isinstance(run, panel.PanelRun)
     assert marker in run.report.model_dump_json() and run.critique_messages
-    assert run.evidence.market_context == panel._render_context_block([], _snapshot())
+    assert run.evidence.market_context == panel._render_context_block(
+        [], _snapshot(), TranscriptFetch(None, "no transcript (test)"))
     assert marker not in run.evidence.model_dump_json()
+
+
+# ---------------------------------------------------------------------------
+# Earnings call transcripts — retrieval, evidence checks, CONTEXT, ingest
+# ---------------------------------------------------------------------------
+
+def _call(call_date: str | None = "2026-10-27") -> CallTranscript:
+    # A short Q3 FY2026 call: the CFO's guidance and an analyst's question.
+    return CallTranscript(
+        ticker="TEST", fiscal_quarter=3, fiscal_year=2026, call_date=call_date,
+        turns=[TranscriptTurn(speaker="Brian West", title="Chief Financial Officer",
+                              content="We expect free cash flow of approximately $2 billion for 2026.", is_company=True),
+               TranscriptTurn(speaker="Jane Doe", title="Analyst, Morgan Stanley",
+                              content="Free cash flow looks like it will miss consensus badly.", is_company=False)],
+        source_url="https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=TEST&quarter=2026Q3")
+
+
+def test_call_quotes_from_the_company_keep_their_tag_and_analyst_quotes_do_not():
+    seen = {}
+    panel._remember(seen, "retrieve_filing", chunk_transcript(_call()))
+    cfo_label, analyst_label = (entry.label for entry in seen.values())
+
+    guided = panel._check_evidence(_draft("free cash flow of approximately $2 billion", cfo_label, "guided"), seen)
+    assert (guided.evidence_type, guided.check_note, guided.as_of_date) == ("guided", None, "2026-10-27")
+    assert guided.source == "Brian West, Chief Financial Officer (Q3 FY2026 call)"
+
+    # The company's words on its call are reported or guided, never an estimate.
+    estimate = panel._check_evidence(_draft("free cash flow of approximately $2 billion", cfo_label, "estimate"), seen)
+    assert estimate.evidence_type == "unverifiable" and "company speaking on its call" in estimate.check_note
+
+    # An analyst's opinion on the call is not the company's.
+    analyst = panel._check_evidence(_draft("will miss consensus badly", analyst_label, "estimate"), seen)
+    assert analyst.evidence_type == "unverifiable"
+    assert analyst.check_note == "said by an analyst on the call, not the company"
+
+
+def test_context_names_the_call_or_why_there_is_none():
+    found = panel._render_context_block([], _snapshot(), TranscriptFetch(_call(), None))
+    assert "Earnings call transcript: Q3 FY2026 call (2026-10-27) — search it with retrieve_filing" in found
+    earlier = panel._call_line(TranscriptFetch(_call(None), "the Q3 FY2026 call isn't available yet; Q2 used"))
+    assert "(date unknown)" in earlier and "Q2 used" in earlier
+    missing = panel._call_line(TranscriptFetch(None, "Alpha Vantage: rate limit"))
+    assert missing == "Earnings call transcript: not available — Alpha Vantage: rate limit"
+
+
+class _RecordingStore:
+    # A vector store that records what is stored and says it embedded it.
+    def __init__(self):
+        self.stored = {}
+
+    def index_if_missing(self, key, chunks):
+        self.stored[key] = chunks
+        return True
+
+
+def test_ingest_dates_the_latest_call_from_its_release_and_stores_it(monkeypatch):
+    monkeypatch.setattr(panel, "find_last_call", lambda ticker, consensus: TranscriptFetch(_call(None), None))
+    store, gaps = _RecordingStore(), []
+
+    call, key, tokens = panel._ingest_transcript("TEST", _snapshot(), [_earnings_8k()], store, gaps, "[t]")
+
+    assert call.transcript.call_date == "2026-10-13"                 # the 2.02 release's filing date
+    assert key == "transcript:TEST:2026Q3" and store.stored[key][0].document.startswith("CALL Q3 FY2026 (2026-10-13)")
+    assert tokens > 0 and gaps == []
+
+
+def test_ingest_notes_an_earlier_call_or_a_missing_one(monkeypatch):
+    # An earlier call is used: noted, and not dated from this quarter's release.
+    note = "the Q3 FY2026 call isn't available yet (none); the Q2 FY2026 call is used instead"
+    monkeypatch.setattr(panel, "find_last_call", lambda ticker, consensus: TranscriptFetch(_call(None), note))
+    gaps = []
+    call, _, _ = panel._ingest_transcript("TEST", _snapshot(), [_earnings_8k()], _RecordingStore(), gaps, "[t]")
+    assert call.transcript.call_date is None and gaps == [f"Earnings call transcript: {note}."]
+
+    # None at all: a data gap, nothing stored, and the run goes on.
+    monkeypatch.setattr(panel, "find_last_call",
+                        lambda ticker, consensus: TranscriptFetch(None, "Alpha Vantage: rate limit", refused=True))
+    gaps, store = [], _RecordingStore()
+    call, key, tokens = panel._ingest_transcript("TEST", _snapshot(), [], store, gaps, "[t]")
+    assert key is None and tokens == 0 and store.stored == {}
+    assert gaps == ["Earnings call transcript not analyzed: Alpha Vantage: rate limit."]

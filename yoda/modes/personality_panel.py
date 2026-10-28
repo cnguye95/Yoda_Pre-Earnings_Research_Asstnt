@@ -3,10 +3,11 @@
 run_personality_panel() is the top-level mode for the Streamlit UI. The design:
 
   Phase 1 — Ingest:         fetch the market data (pausing if a provider refuses),
-                            fetch + chunk the filing and the 8-Ks filed since;
-                            embed only what isn't stored yet. Every
-                            personality starts from the same context block:
-                            the 8-K list and the market's expectations.
+                            fetch + chunk the filing, the 8-Ks filed since and
+                            the latest earnings call transcript; embed only
+                            what isn't stored yet. Every personality starts
+                            from the same context block: the 8-K list, the
+                            call, and the market's expectations.
   Phase 2 — Investigations: 6 personalities (Optimist, Pessimist, Conservative,
                             Dreamer, Contrarian, Quant) each run a tool-use
                             loop in parallel using LOOP_MODEL. Each emits
@@ -54,8 +55,9 @@ from yoda import config
 from yoda.evidence_text import CONFLICT_RULES as _CONFLICT_RULES
 from yoda.evidence_text import normalize as _norm
 from yoda.evidence_text import quote_in as _quote_in
-from yoda.ingest.chunker import Chunk, chunk_8k, chunk_filing, eight_k_label
+from yoda.ingest.chunker import Chunk, chunk_8k, chunk_filing, chunk_transcript, eight_k_label, transcript_key
 from yoda.ingest.edgar import FILING_FRESHNESS_DAYS, fetch_latest_filing, fetch_post_filing_8ks
+from yoda.ingest.transcripts import TranscriptFetch, find_last_call
 from yoda.modes.baseline import apply_supplemental, full_filing_text, iter_citation_holders, validate_citations
 from yoda.modes.llm import NoStructuredOutput, client as _client, structured_call as _structured_call
 from yoda.modes.tools import (
@@ -170,6 +172,9 @@ What moves a stock on earnings — look for evidence on these:
   - Margins and costs: gross and operating margin trends and their drivers.
   - What changed since the filing: 8-Ks (earnings release, deals, debt,
     management changes) and credible news.
+  - What management said on the latest earnings call (retrieve_filing
+    searches it; see CONTEXT): guidance wording, tone, and what analysts
+    pressed on. An analyst's words are not the company's.
 
 Judging a source (most reliable first): the company's own filings and
 releases > data vendors (consensus feeds) > major financial press (Reuters,
@@ -383,11 +388,13 @@ def _render_news(items: list[NewsSearchResult]) -> str:
 class _SeenSource(NamedTuple):
     """One source a personality was shown, kept to check the evidence it cites.
 
-    *kind* is "filing" (the company's 10-Q/10-K), "8-K", "peer" (a
-    competitor's filing), "news" (a search result, plus the article text if
-    it was read) or "market" (the shared CONTEXT block). *text* is exactly
-    what the personality was shown. *source* is who the content comes from
-    when code knows it ("" for news, whose source the article must name).
+    *kind* is "filing" (the company's 10-Q/10-K), "8-K", "call" (the
+    company speaking on its earnings call), "call-analyst" (an analyst or
+    the operator on the call), "peer" (a competitor's filing), "news" (a
+    search result, plus the article text if it was read) or "market" (the
+    shared CONTEXT block). *text* is exactly what the personality was shown.
+    *source* is who the content comes from when code knows it ("" for news,
+    whose source the article must name; the speaker for a call).
     """
     label: str
     kind: str
@@ -420,18 +427,26 @@ def _remember(seen: dict[str, _SeenSource], tool_name: str, raw) -> None:
                                                 item.published_date, "")
         return
 
-    # Filing chunks: the label says which filing (and date) they came from.
-    # Two chunks can share a label, so their texts are kept together.
+    # Filing and call chunks: the label says which document (and date) they
+    # came from. Two chunks can share a label, so their texts are kept together.
     for chunk in raw:
         label = _chunk_label(chunk)
-        kind = ("peer" if chunk.document.startswith("PEER ")
-                else "8-K" if chunk.document.startswith("8-K") else "filing")
+        source = chunk.document or "the company's filing"
+        if chunk.document.startswith("CALL "):
+            # A call passage: the company's side or an analyst's, and the
+            # speaker (the chunk's first line, "Name, Title:") is the source.
+            kind = "call" if chunk.document.endswith("· company") else "call-analyst"
+            which_call = chunk.document.split(" (")[0].removeprefix("CALL ")      # "Q3 FY2026"
+            source = f"{chunk.text.splitlines()[0].rstrip(':')} ({which_call} call)"
+        else:
+            kind = ("peer" if chunk.document.startswith("PEER ")
+                    else "8-K" if chunk.document.startswith("8-K") else "filing")
         date_found = _DATE_RE.search(chunk.document)
         earlier = seen.get(_norm(label))
         shown = chunk.text[:_CHUNK_PREVIEW_CHARS]
         seen[_norm(label)] = _SeenSource(
             label, kind, f"{earlier.text}\n{shown}" if earlier else shown,
-            date_found.group() if date_found else None, chunk.document or "the company's filing",
+            date_found.group() if date_found else None, source,
         )
 
 
@@ -440,12 +455,14 @@ def _check_evidence(draft: "_EvidenceDraft", seen: dict[str, _SeenSource]) -> Ev
 
     The quote must appear in the source it cites (if the citation is wrong
     but the quote is found in something else the personality saw, the
-    citation is corrected). The tag must fit that source: a filing or 8-K is
-    reported or guided; a competitor's filing is proxy; the market data in
-    CONTEXT is estimate; a news claim keeps its tag only if the article
-    names the source the personality gave. Anything that fails becomes
-    unverifiable, and check_note says why. The date, and the source of
-    filings and market data, are set from what code knows.
+    citation is corrected). The tag must fit that source: a filing, an 8-K
+    or the company speaking on its earnings call is reported or guided; an
+    analyst's words on the call are unverifiable (not the company's); a
+    competitor's filing is proxy; the market data in CONTEXT is estimate; a
+    news claim keeps its tag only if the article names the source the
+    personality gave. Anything that fails becomes unverifiable, and
+    check_note says why. The date, and the source of filings, calls and
+    market data, are set from what code knows.
     """
     notes: list[str] = []
 
@@ -471,6 +488,12 @@ def _check_evidence(draft: "_EvidenceDraft", seen: dict[str, _SeenSource]) -> Ev
     tag, source = draft.evidence_type, entry.source or draft.source
     if entry.kind in ("filing", "8-K") and tag not in ("reported", "guided"):
         notes.append(f"tagged {tag}, but a filing is reported or guided")
+        tag = "unverifiable"
+    elif entry.kind == "call" and tag not in ("reported", "guided"):
+        notes.append(f"tagged {tag}, but the company speaking on its call is reported or guided")
+        tag = "unverifiable"
+    elif entry.kind == "call-analyst" and tag != "unverifiable":
+        notes.append("said by an analyst on the call, not the company")
         tag = "unverifiable"
     elif entry.kind == "peer" and tag != "proxy":
         notes.append("set to proxy: a competitor's filing is an indirect signal")
@@ -1666,13 +1689,27 @@ def _market_lines(market: MarketSnapshot) -> list[str]:
     return lines
 
 
-def _render_context_block(eight_ks: list[EightKFiling], market: MarketSnapshot) -> str:
+def _call_line(call: TranscriptFetch | None) -> str:
+    """Return the CONTEXT line naming the earnings call transcript personalities can search, or why there is none."""
+    if call is None:
+        return "Earnings call transcript: not looked up"
+    if call.transcript is None:
+        return f"Earnings call transcript: not available — {call.reason}"
+    transcript = call.transcript
+    note = f" ({call.reason})" if call.reason else ""
+    return (f"Earnings call transcript: Q{transcript.fiscal_quarter} FY{transcript.fiscal_year} call "
+            f"({transcript.call_date or 'date unknown'}) — search it with retrieve_filing{note}")
+
+
+def _render_context_block(eight_ks: list[EightKFiling], market: MarketSnapshot,
+                          call: TranscriptFetch | None = None) -> str:
     """Return the shared context every personality starts with, as plain text.
 
-    It lists the 8-Ks filed since the 10-Q/10-K (what each reports) and the
-    market's expectations for the next report, each figure with its source.
-    Personalities search the 8-Ks' text with retrieve_filing; this block
-    tells them which 8-Ks exist without spending a tool call.
+    It lists the 8-Ks filed since the 10-Q/10-K (what each reports), the
+    latest earnings call transcript (or why there is none), and the market's
+    expectations for the next report, each figure with its source.
+    Personalities search the 8-Ks' and the call's text with retrieve_filing;
+    this block tells them what exists without spending a tool call.
     """
     lines = ["8-Ks filed since the 10-Q/10-K:"]
     if not eight_ks:
@@ -1681,8 +1718,44 @@ def _render_context_block(eight_ks: list[EightKFiling], market: MarketSnapshot) 
         items = "; ".join(f"Item {code} {_EIGHT_K_ITEM_NAMES.get(code, '(unlisted item)')}"
                           for code in eight_k.items) or "no items listed"
         lines.append(f"- {eight_k.filing_date} {eight_k.form}: {items}")
+    lines += ["", _call_line(call)]
     lines += ["", "Market expectations for the next report:", *_market_lines(market)]
     return "\n".join(lines)
+
+
+def _ingest_transcript(
+    ticker: str, market: MarketSnapshot, eight_ks: list[EightKFiling], store: ChromaStore,
+    run_gaps: list[str], log_prefix: str,
+) -> tuple[TranscriptFetch, str | None, int]:
+    """Find the latest earnings call transcript, store its chunks, and return it.
+
+    Returns (what was found, its vector-store key or None, estimated
+    embedding tokens spent). The call date comes from the latest 8-K
+    earnings release (Item 2.02) filed since the 10-Q/10-K, since calls are
+    held the day results are released — but only for the latest call, not
+    when an earlier one had to be used. A missing transcript, or the use of
+    an earlier call, is noted in *run_gaps* for the reader.
+    """
+    call = find_last_call(ticker, market.consensus)
+    if call.transcript is None:
+        run_gaps.append(f"Earnings call transcript not analyzed: {call.reason}.")
+        print(f"{log_prefix} Earnings call transcript: none ({call.reason})")
+        return call, None, 0
+    if call.reason:
+        run_gaps.append(f"Earnings call transcript: {call.reason}.")
+
+    # The call date, when this is the latest call and its release is known.
+    releases = [eight_k.filing_date for eight_k in eight_ks if "2.02" in eight_k.items]
+    if releases and not call.reason:
+        call = call._replace(transcript=call.transcript.model_copy(update={"call_date": max(releases)}))
+
+    # Embed the call's chunks only if the vector store doesn't already hold them.
+    key = transcript_key(call.transcript)
+    chunks = chunk_transcript(call.transcript)
+    tokens = sum(len(chunk.text) for chunk in chunks) // 4 if store.index_if_missing(key, chunks) else 0
+    print(f"{log_prefix} Earnings call transcript: Q{call.transcript.fiscal_quarter} FY{call.transcript.fiscal_year}, "
+          f"{len(call.transcript.turns)} turns, {len(chunks)} chunks")
+    return call, key, tokens
 
 
 # ---------------------------------------------------------------------------
@@ -1954,6 +2027,11 @@ def run_personality_panel(
         eight_ks, eight_k_tokens = _ingest_post_filing_8ks(filing, store, run_gaps, log_prefix)
         embed_tokens += eight_k_tokens
 
+    # The latest earnings call transcript: fetched (free, cached), stored
+    # for retrieve_filing, and named in the shared context below.
+    call, call_key, call_tokens = _ingest_transcript(ticker, market, eight_ks, store, run_gaps, log_prefix)
+    embed_tokens += call_tokens
+
     # News searches cover what was published from the filing date on (the
     # last 30 days when there is no filing).
     ctx = ToolContext(
@@ -1965,12 +2043,13 @@ def run_personality_panel(
         primary_label=_describe_filing(filing) if filing else "",
         supplemental_label=_describe_filing(supplemental) if supplemental else "",
         eight_k_accessions=[eight_k.accession_number for eight_k in eight_ks],
+        transcript_key=call_key,
         news_since=date.fromisoformat(filing.filing_date) if filing else None,
     )
 
-    # The context every personality starts from: which 8-Ks exist and what
-    # the market expects for the next report.
-    context_block = _render_context_block(eight_ks, market)
+    # The context every personality starts from: which 8-Ks and which call
+    # exist, and what the market expects for the next report.
+    context_block = _render_context_block(eight_ks, market, call)
 
     # ------------------------------------------------------------------
     # Phase 2 — Personality investigations in parallel.

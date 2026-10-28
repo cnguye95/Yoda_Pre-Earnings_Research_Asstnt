@@ -216,6 +216,12 @@ def test_retrieve_filing_also_searches_the_8ks_together():
 
     assert calls == [("query", "q", 4), ("query", "k", 4), ("query_any", ("8k-a", "8k-b"), 4)]
 
+    # With a call transcript stored, its best passages are searched too.
+    calls.clear()
+    ctx.transcript_key = "transcript:TEST:2026Q3"
+    tools.retrieve_filing(ctx, "guidance", k=4)
+    assert calls[-1] == ("query", "transcript:TEST:2026Q3", 4)
+
 
 def _fake_chunk(document: str = "") -> Chunk:
     return Chunk(text="Revenue rose.", section="MD&A", chunk_index=0, char_start=0, char_end=13, document=document)

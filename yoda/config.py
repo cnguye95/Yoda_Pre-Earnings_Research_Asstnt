@@ -32,6 +32,7 @@ _REQUIRED_KEYS = (
     "FMP_API_KEY",
     "TAVILY_API_KEY",
     "SEC_USER_AGENT",
+    "ALPHAVANTAGE_API_KEY",
 )
 
 # Walk the required keys and raise RuntimeError on the first one that is
@@ -52,6 +53,7 @@ FINNHUB_API_KEY = os.environ["FINNHUB_API_KEY"]
 FMP_API_KEY = os.environ["FMP_API_KEY"]
 TAVILY_API_KEY = os.environ["TAVILY_API_KEY"]
 SEC_USER_AGENT = os.environ["SEC_USER_AGENT"]
+ALPHAVANTAGE_API_KEY = os.environ["ALPHAVANTAGE_API_KEY"]
 
 # Model prices in USD per 1K tokens as (input, output), as of 2026-10-26.
 # The single source for every cost figure Yoda logs — the baseline and the

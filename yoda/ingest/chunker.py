@@ -5,7 +5,9 @@ returns a list of Chunk objects. Each Chunk carries the text, its section
 label (e.g. "MD&A"), its position in the original text, and a sequential
 index so callers can reconstruct ordering. chunk_8k() does the same for every
 document of an 8-K, labelling each chunk with the 8-K's form, item codes,
-exhibit and filing date (eight_k_label()).
+exhibit and filing date (eight_k_label()). chunk_transcript() splits an
+earnings call transcript by speaker turn, labelling each chunk with the call
+and whether the speaker is the company or an analyst (transcript_label()).
 
 Section detection strategy:
   - Scan every line for short heading-like lines (3–150 chars) that match a
@@ -28,7 +30,7 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-from yoda.schema import EightKDocument, EightKFiling
+from yoda.schema import CallTranscript, EightKDocument, EightKFiling
 
 
 # ---------------------------------------------------------------------------
@@ -50,7 +52,8 @@ class Chunk(BaseModel):
 
     *document* names the document the chunk came from when it isn't the
     10-Q/10-K itself, e.g. "8-K Items 2.02, 9.01, Exhibit 99.1 (filed
-    2026-10-21)". It is empty for 10-Q/10-K chunks.
+    2026-10-21)" or "CALL Q3 FY2026 (2026-10-27) · company". It is empty
+    for 10-Q/10-K chunks.
     """
     text: str
     section: SectionLabel
@@ -292,6 +295,47 @@ def chunk_8k(eight_k: EightKFiling) -> list[Chunk]:
         label = eight_k_label(eight_k, doc)
         for chunk in chunk_filing(doc.clean_text):
             chunks.append(chunk.model_copy(update={"chunk_index": len(chunks), "document": label}))
+    return chunks
+
+
+# Where an earnings call transcript is kept in the vector store: one key per
+# company and quarter (the store's "accession" slot holds it).
+def transcript_key(transcript: CallTranscript) -> str:
+    """Return the vector-store key for *transcript*, e.g. "transcript:BA:2026Q3"."""
+    return f"transcript:{transcript.ticker}:{transcript.fiscal_year}Q{transcript.fiscal_quarter}"
+
+
+def transcript_label(transcript: CallTranscript, is_company: bool) -> str:
+    """Return the label that tells a reader which call, and which side, a transcript chunk is from.
+
+    E.g. "CALL Q3 FY2026 (2026-10-27) · company" or "CALL Q3 FY2026 (date
+    unknown) · analyst". "analyst" covers analysts' questions and the
+    operator — words that are not the company's own.
+    """
+    when = transcript.call_date or "date unknown"
+    side = "company" if is_company else "analyst"
+    return f"CALL Q{transcript.fiscal_quarter} FY{transcript.fiscal_year} ({when}) · {side}"
+
+
+def chunk_transcript(transcript: CallTranscript) -> list[Chunk]:
+    """Split an earnings call transcript into Chunks, one or more per speaker turn.
+
+    Each chunk starts with its "Speaker, Title:" line, so it shows (and is
+    labelled with) who said it, and its document label names the call and
+    whether the speaker is the company or an analyst (transcript_label()).
+    A long turn is split with the filing splitter; every piece keeps the
+    speaker line. Sections don't apply to a call, so every chunk is "Other".
+    chunk_index runs across the whole call; char offsets are within the turn.
+    """
+    chunks: list[Chunk] = []
+    for turn in transcript.turns:
+        speaker_line = f"{turn.speaker}, {turn.title}:" if turn.title else f"{turn.speaker}:"
+        label = transcript_label(transcript, turn.is_company)
+        for piece in chunk_filing(turn.content):
+            chunks.append(piece.model_copy(update={
+                "text": f"{speaker_line}\n{piece.text}", "section": "Other",
+                "chunk_index": len(chunks), "document": label,
+            }))
     return chunks
 
 

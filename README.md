@@ -421,6 +421,7 @@ python -m yoda.report.pdf NFLX
 | `FINNHUB_API_KEY` | Yes | Analyst consensus estimates (primary source) |
 | `FMP_API_KEY` | Yes | Financial Modeling Prep — backup source when Finnhub returns no consensus |
 | `TAVILY_API_KEY` | Yes | News and web search |
+| `ALPHAVANTAGE_API_KEY` | Yes | Earnings call transcripts (free key from alphavantage.co; about 25 requests a day, transcripts cached in `data/transcripts/`) |
 | `SEC_USER_AGENT` | Yes | SEC EDGAR requires a contact string, e.g. `"Name email@example.com"` |
 
 ---

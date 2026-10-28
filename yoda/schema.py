@@ -294,6 +294,36 @@ class EightKFiling(BaseModel):
     documents: list[EightKDocument]
 
 
+class TranscriptTurn(BaseModel):
+    """One speaker's turn in an earnings call, as fetched by yoda.ingest.transcripts.
+
+    *is_company* is False for analysts asking questions and for the call
+    operator: their words are not the company's own reported results or
+    guidance.
+    """
+    speaker: str
+    title: str
+    content: str
+    is_company: bool
+
+
+class CallTranscript(BaseModel):
+    """The transcript of one earnings call, as fetched by yoda.ingest.transcripts.find_last_call().
+
+    *fiscal_quarter* / *fiscal_year* name the quarter the call discussed.
+    *call_date* is None when it isn't known (the source gives none; the
+    panel takes it from that quarter's 8-K earnings release when there is
+    one). *source_url* is where it came from, without the API key, so a
+    reader can open it with their own key.
+    """
+    ticker: str
+    fiscal_quarter: int
+    fiscal_year: int
+    call_date: str | None
+    turns: list[TranscriptTurn]
+    source_url: str
+
+
 class NewsSearchResult(BaseModel):
     """One web search hit returned by yoda.tools.news.search_news().
 

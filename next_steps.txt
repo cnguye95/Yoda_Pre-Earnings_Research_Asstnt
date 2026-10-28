@@ -702,6 +702,32 @@ IDEAS for Improvements/Changes
    - Call transcript: NOT on EDGAR. Needs a vendor (FMP/Finnhub transcript
      endpoints — check plan cost and terms). Valuable for guidance wording
      and analyst Q&A; long, so retrieve chunks rather than send in full.
+   - VENDOR CHECK (2026-10-28): Yoda's FMP key gets HTTP 402 and its
+     Finnhub key 403 on transcripts. Alpha Vantage's EARNINGS_CALL_TRANSCRIPT
+     takes a free key (~25 requests/day; paid from $49.99/mo), not marked
+     premium, speaker-by-speaker (demo checked on IBM 2024Q1). Its terms
+     of service (a PDF) were not read; the user confirms internal use fits.
+     AGREED: Alpha Vantage free; chunks for personalities + full text to
+     synthesis and the judge (8b); citation URL = the Alpha Vantage query
+     URL without the key; split 8a (data + retrieval) / 8b (synthesis,
+     bundle, judge, display, smoke test).
+   - DONE (8a): ALPHAVANTAGE_API_KEY required (config, .env.example).
+     yoda/ingest/transcripts.py: find_last_call() = the last reported
+     quarter (consensus next fiscal quarter - 1), else one quarter back
+     (noted); found transcripts cached in data/transcripts/; not found,
+     rate limit, rejected key → None with the reason (a data gap, never a
+     pause). Turns marked company vs analyst/operator. chunk_transcript():
+     one chunk per turn (long turns split), each starting "Speaker, Title:",
+     labelled "CALL Q3 FY2026 (date) · company|analyst"; stored as
+     transcript:{TICKER}:{YYYYQn}. Call date = the latest post-filing 8-K
+     2.02 date when the latest call is used, else unknown. retrieve_filing
+     adds the top-k call passages; CONTEXT names the call (or why none);
+     the loop prompt says what to look for on the call. Evidence checks:
+     company speakers reported/guided only; analyst/operator words →
+     unverifiable ("said by an analyst on the call, not the company").
+     Tests block the transcript module's network (conftest) so none can
+     reach Alpha Vantage. Tests: test_ingest.py, test_offline.py,
+     test_panel.py.
 
 3.9 Personality "analyst playbook" + source vetting (current gap)
    - Today the personality prompts give a lens (3-5 sentences) and tool

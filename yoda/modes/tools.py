@@ -64,6 +64,11 @@ class ToolContext:
     # store, so retrieve_filing can search them too.
     eight_k_accessions: list[str] = field(default_factory=list)
 
+    # The latest earnings call transcript's vector-store key (e.g.
+    # "transcript:BA:2026Q3"), so retrieve_filing searches it as well; None
+    # when no transcript was found.
+    transcript_key: str | None = None
+
     # The primary filing's date: news searches cover what was published from
     # then on. None (no filing) means the last 30 days.
     news_since: date | None = None
@@ -101,10 +106,12 @@ def retrieve_filing(ctx: ToolContext, query: str, k: int = 5) -> list[Chunk]:
 
     Queries the primary filing (10-Q) and the supplemental filing (10-K)
     when both are available, plus the k best matches across all 8-Ks filed
-    since — up to 3k chunks, so personalities see the freshest quarterly
-    data, annual context, and what was announced after the filing. Every
-    chunk's `document` names the filing it came from, e.g. "10-Q filed
-    2026-08-06" or "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)".
+    since, plus the k best passages of the latest earnings call transcript
+    — up to 4k chunks, so personalities see the freshest quarterly data,
+    annual context, what was announced after the filing, and what
+    management said on the call. Every chunk's `document` names where it
+    came from, e.g. "10-Q filed 2026-08-06", "8-K Items 2.02, 9.01, Exhibit
+    99.1 (filed 2026-10-13)" or "CALL Q3 FY2026 (2026-10-27) · company".
     """
     # ChromaStore queries are safe to call concurrently from multiple
     # personality threads since reads don't mutate the on-disk index. Each
@@ -116,6 +123,8 @@ def retrieve_filing(ctx: ToolContext, query: str, k: int = 5) -> list[Chunk]:
     if ctx.supplemental_accession:
         chunks += _labelled(ctx.store.query(ctx.supplemental_accession, query, k=k), ctx.supplemental_label)
     chunks += ctx.store.query_any(ctx.eight_k_accessions, query, k=k)
+    if ctx.transcript_key:
+        chunks += ctx.store.query(ctx.transcript_key, query, k=k)
     return chunks
 
 
@@ -225,10 +234,12 @@ TOOL_SCHEMAS = [
         "name": "retrieve_filing",
         "description": (
             "Semantic search over the primary company's most recent 10-Q "
-            "or 10-K and the 8-Ks it filed since (earnings releases, new "
-            "debt, executive changes). Returns chunks of filing text relevant "
-            "to your query; 8-K chunks are labelled with the 8-K they came "
-            "from. Use this for facts directly stated in the filings."
+            "or 10-K, the 8-Ks it filed since (earnings releases, new "
+            "debt, executive changes) and its latest earnings call "
+            "transcript. Returns chunks relevant to your query, each "
+            "labelled with the document it came from; call chunks say "
+            "whether the company or an analyst is speaking. Use this for "
+            "facts the company stated in its filings or on its call."
         ),
         "input_schema": {
             "type": "object",
