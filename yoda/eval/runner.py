@@ -43,7 +43,7 @@ import requests
 
 from yoda import config
 from yoda.eval.judge import JUDGE_MODEL, cache_key_for, judge_report, prune_judge_cache, write_run_manifest
-from yoda.eval.rubric import JudgeScores
+from yoda.eval.rubric import DIMENSIONS, JudgeScores
 from yoda.ingest.edgar import fetch_latest_filing
 from yoda.modes.baseline import BASELINE_MODEL, run_baseline
 from yoda.modes.personality_panel import CRITIQUE_MODEL, LOOP_MODEL, SYNTH_MODEL, run_personality_panel
@@ -67,11 +67,9 @@ CURATED_TICKERS = [
     "PANW", "CRM",    # Software — cybersecurity, SaaS
 ]
 
-# The five rubric dimensions, in display order.
-SCORE_COLS = [
-    "extraction_completeness", "accuracy",
-    "source_traceability", "relevance", "usefulness",
-]
+# The nine rubric dimensions, in display order. A dimension marked N/A for a
+# report is an empty cell, never 0.
+SCORE_COLS = list(DIMENSIONS)
 
 # Every mode the runner knows. Report files named after one of these are
 # results; any other *.json in the output folder (e.g. an old panel_* smoke
@@ -156,8 +154,8 @@ def _run_mode(mode: str, ticker: str, filing: Filing | None) -> ModeRun:
 # Score extraction helper
 # ---------------------------------------------------------------------------
 
-def _scores_to_dict(scores: JudgeScores) -> dict[str, int]:
-    """Flatten the five DimensionScore objects into plain integer columns."""
+def _scores_to_dict(scores: JudgeScores) -> dict[str, int | None]:
+    """Flatten the nine DimensionScore objects into plain columns (None for an N/A dimension)."""
     return {col: getattr(scores, col).score for col in SCORE_COLS}
 
 
@@ -173,8 +171,8 @@ def run_eval(
     """Run each (ticker, mode) pair, judge it, and return a long-format DataFrame.
 
     DataFrame columns:
-        ticker, mode, extraction_completeness, accuracy, source_traceability,
-        relevance, usefulness, latency_seconds, latency_source, cost_usd
+        ticker, mode, latency_seconds, latency_source, cost_usd, and one
+        column per rubric dimension (SCORE_COLS; empty when N/A)
 
     A failure for one ticker or mode (filing fetch, report generation or
     judging) skips just that row; it is printed and listed in the Failures
@@ -247,16 +245,19 @@ def run_eval(
                     run.evidence.model_dump_json(indent=2), encoding="utf-8"
                 )
 
-            # Judge the report against the filing text. A judge failure
-            # (refusal, cut-off, API error after retries) skips this row like a
-            # mode failure does, instead of ending the whole run.
+            # Judge the report against the filing text (step 7b replaces this
+            # with the evidence bundle and code-set N/A dimensions). A judge
+            # failure (refusal, cut-off, API error after retries) skips this
+            # row like a mode failure does, instead of ending the whole run.
+            na: dict[str, str] = {}
             try:
-                scores = judge_report(run.report, filing_text)
+                result = judge_report(run.report, filing_text, na)
             except Exception as exc:
                 failures.append((ticker, f"judge {mode}", f"{type(exc).__name__}: {exc}"))
                 print(f"  ERROR judging mode={mode}: {exc}")
                 continue
-            run_cache_keys.add(cache_key_for(run.report))
+            scores = result.scores
+            run_cache_keys.add(cache_key_for(run.report, filing_text, na))
 
             row = {
                 "ticker": ticker,
@@ -313,31 +314,38 @@ def run_eval(
 def _paired_comparison(df: pd.DataFrame, n_boot: int = 10_000) -> pd.DataFrame:
     """Compare Yoda and the baseline ticker by ticker.
 
-    For each rubric dimension (plus the average of all five) it computes, over
-    the tickers where BOTH modes produced a report:
+    For each rubric dimension (plus the average over the dimensions both
+    modes were scored on) it computes, over the tickers where BOTH modes have
+    a score for that dimension:
+      - pairs: how many tickers that is (an N/A dimension leaves a ticker out
+        of that dimension only, never out of the others)
       - mean_gap: average of (Yoda score - baseline score)
       - ci_low / ci_high: 95% confidence range for that mean, by bootstrap —
         resample the tickers with replacement n_boot times and take the
         2.5th and 97.5th percentiles of the resampled means
       - wins / ties / losses: tickers where Yoda scored higher / equal / lower
     """
-    # One row per ticker, one column per (mode, dimension); dropna keeps only
-    # tickers where both modes succeeded so every gap is a true pair.
-    wide = df.pivot(index="ticker", columns="mode", values=SCORE_COLS).dropna()
+    # One row per ticker, one column per (mode, dimension). Only tickers where
+    # both modes produced a report are kept; within them an N/A score stays
+    # empty, so its gap is empty too.
+    has_both = df.groupby("ticker")["mode"].apply(set).map({"baseline", "yoda"}.issubset)
+    wide = df.pivot(index="ticker", columns="mode", values=SCORE_COLS).loc[has_both[has_both].index]
     gaps = pd.DataFrame({col: wide[(col, "yoda")] - wide[(col, "baseline")] for col in SCORE_COLS})
-    gaps["average"] = gaps.mean(axis=1)
+    gaps["average"] = gaps.mean(axis=1)   # skips the empty (N/A) gaps
 
     # Fixed seed so the same results always give the same confidence range.
     rng = np.random.default_rng(0)
-    n = len(gaps)
-    sample_idx = rng.integers(0, n, size=(n_boot, n))
 
     rows = {}
     for col in gaps.columns:
-        values = gaps[col].to_numpy(dtype=float)
+        values = gaps[col].dropna().to_numpy(dtype=float)
+        if len(values) == 0:
+            continue                      # N/A for every ticker: nothing to compare
+        sample_idx = rng.integers(0, len(values), size=(n_boot, len(values)))
         boot_means = values[sample_idx].mean(axis=1)
         low, high = np.percentile(boot_means, [2.5, 97.5])
         rows[col] = {
+            "pairs":    len(values),
             "mean_gap": round(values.mean(), 2),
             "ci_low":   round(low, 2),
             "ci_high":  round(high, 2),
@@ -444,7 +452,7 @@ def _write_summary(
 
 
 # ---------------------------------------------------------------------------
-# Comparison chart — grouped bar chart, baseline vs Yoda across 5 metrics
+# Comparison chart — grouped bar chart, baseline vs Yoda across the nine dimensions
 # ---------------------------------------------------------------------------
 
 # Display-name mapping for the chart legend / title. Keep the underlying

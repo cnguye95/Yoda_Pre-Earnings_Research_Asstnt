@@ -100,9 +100,9 @@ def test_every_model_in_use_has_a_price():
 
 def test_cache_key_changes_with_judge_model(monkeypatch):
     report = _report()
-    key_a = judge.cache_key_for(report)
+    key_a = judge.cache_key_for(report, "evidence", {})
     monkeypatch.setattr(judge, "JUDGE_MODEL", "some-other-judge")
-    assert judge.cache_key_for(report) != key_a
+    assert judge.cache_key_for(report, "evidence", {}) != key_a
 
 
 def test_cache_key_is_stable_and_report_specific():
@@ -110,10 +110,11 @@ def test_cache_key_is_stable_and_report_specific():
     # keys (one report's scores are never handed to another).
     # The pause makes a key that depends on the clock differ between the two
     # calls (Windows' clock can return the same value for back-to-back calls).
-    first = judge.cache_key_for(_report())
+    first = judge.cache_key_for(_report(), "evidence", {})
     time.sleep(0.05)
-    assert judge.cache_key_for(_report()) == first
-    assert judge.cache_key_for(_report("MD&A")) != judge.cache_key_for(_report("Risk Factors"))
+    assert judge.cache_key_for(_report(), "evidence", {}) == first
+    assert (judge.cache_key_for(_report("MD&A"), "evidence", {})
+            != judge.cache_key_for(_report("Risk Factors"), "evidence", {}))
 
 
 # ---------------------------------------------------------------------------
@@ -486,8 +487,21 @@ def test_paired_comparison_counts_and_mean():
 
 
 def test_paired_comparison_identical_gaps_give_point_range():
-    row = _paired_comparison(_scores_df([1, 1, 1])).loc["accuracy"]
+    row = _paired_comparison(_scores_df([1, 1, 1])).loc["figure_accuracy"]
     assert row["ci_low"] == row["ci_high"] == row["mean_gap"] == 1.0
+
+
+def test_na_dimension_drops_only_that_pair():
+    # T0's baseline has market_expectations N/A (empty): T0 leaves that one
+    # dimension's comparison, but still counts in every other dimension.
+    df = _scores_df([1, 1, 1])
+    df.loc[(df["ticker"] == "T0") & (df["mode"] == "baseline"), "market_expectations"] = None
+
+    result = _paired_comparison(df)
+
+    assert result.loc["market_expectations", "pairs"] == 2
+    assert result.loc["relevance", "pairs"] == 3
+    assert result.loc["average", "pairs"] == 3
 
 
 def test_paired_comparison_ignores_unpaired_tickers():
@@ -506,6 +520,14 @@ def test_paired_comparison_ignores_unpaired_tickers():
 # run_eval — one judge failure must not end the whole run
 # ---------------------------------------------------------------------------
 
+def _judge_result(value: int) -> judge.JudgeResult:
+    # A judge answer scoring every dimension *value*, with nothing flagged.
+    score = DimensionScore(score=value, justification="ok", quotes=[])
+    scores = JudgeScores(**{c: score for c in SCORE_COLS}, figures_checked=1, unverifiable_figures=[],
+                         overall_comment="")
+    return judge.JudgeResult(scores=scores, failed_quotes={})
+
+
 def test_judge_failure_skips_row_not_run(monkeypatch, tmp_path):
     # Write to a temp folder so the real data/eval outputs are untouched.
     monkeypatch.setattr(runner, "fetch_latest_filing", lambda t: _filing("10-Q", "2026-05-01", "text"))
@@ -514,13 +536,12 @@ def test_judge_failure_skips_row_not_run(monkeypatch, tmp_path):
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
 
     # The judge fails for ticker BAD only; everything else gets score 3.
-    score = DimensionScore(score=3, justification="ok")
-    def fake_judge(report, filing_text):
+    def fake_judge(report, evidence_text, na):
         if fake_judge.calls == 2:     # 3rd call = BAD's baseline report
             fake_judge.calls += 1
             raise RuntimeError("judge refused")
         fake_judge.calls += 1
-        return JudgeScores(**{c: score for c in SCORE_COLS}, overall_comment="")
+        return _judge_result(3)
     fake_judge.calls = 0
     monkeypatch.setattr(runner, "judge_report", fake_judge)
 
@@ -577,9 +598,7 @@ def test_duplicate_tickers_run_once(monkeypatch, tmp_path):
     monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: runner.ModeRun(_report(), 1.0, "logged", 0.1, ""))
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
-    score = DimensionScore(score=3, justification="ok")
-    monkeypatch.setattr(runner, "judge_report",
-                        lambda r, f: JudgeScores(**{c: score for c in SCORE_COLS}, overall_comment=""))
+    monkeypatch.setattr(runner, "judge_report", lambda report, evidence_text, na: _judge_result(3))
 
     df = runner.run_eval(["NFLX", "nflx"], out_dir=tmp_path / "data/eval")
     assert len(df) == 2   # one ticker x two modes

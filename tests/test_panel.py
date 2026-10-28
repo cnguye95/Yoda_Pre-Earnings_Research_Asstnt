@@ -8,6 +8,7 @@ Claude is never called: the panel's model calls are replaced with fakes.
 import pydantic
 import pytest
 
+from yoda import evidence_text
 from yoda.ingest.chunker import Chunk
 from yoda.ingest.edgar import PostFilingEightKs
 from yoda.modes import baseline, llm
@@ -631,6 +632,8 @@ def test_synthesis_is_told_when_there_were_no_8ks_or_articles():
 
 
 def test_conflict_rules_are_word_for_word_the_same_for_personalities_and_synthesis():
+    # One shared text (yoda/evidence_text.py), also read by the eval judge.
+    assert panel._CONFLICT_RULES is evidence_text.CONFLICT_RULES
     assert "Newer information is preferred only within the same tier" in panel._CONFLICT_RULES
     assert panel._CONFLICT_RULES in panel._SYNTHESIS_SYSTEM
     assert all(panel._CONFLICT_RULES in prompt for prompt in panel._PERSONALITY_PROMPTS.values())

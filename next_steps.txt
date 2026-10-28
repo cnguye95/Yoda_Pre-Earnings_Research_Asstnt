@@ -595,6 +595,27 @@ IDEAS for Improvements/Changes
        point. ~2-3 hours.
    - Re-run baseline vs Yoda once section 4 is built; expect cost/latency
      increase — measure it.
+   - STEP 7 SPLIT (AGREED 2026-10-28): 7a rubric + judge output → 7b judge
+     input → 7c runner, each planned/approved/committed, then one judge
+     smoke test (cost stated first). Decisions: 272K = full filing + cited
+     8-K documents, other 8-Ks as label + ~2K chars, then drop uncited
+     news snippets, all listed for the judge; baseline judged on a
+     filing-only bundle with N/A set by code; quotes may come from the
+     report or the evidence, each checked against the text it names.
+   - DONE (7a): yoda/eval/rubric.py has the nine dimensions, header rules
+     and 1/3/5 anchors word for word (only bookkeeping notes such as
+     "(AGREED)" and the reasons behind anchors left out), reasoning_quality
+     using the shared CONFLICT_RULES (moved to yoda/evidence_text.py with
+     the quote matcher; panel prompts byte-identical). Output: score (null
+     when N/A), justification, quotes (report/evidence), figures_checked,
+     unverifiable_figures. check_scores() applies N/A (figure_accuracy N/A
+     when 0 figures checked) and the 1-5 check; failed_quotes() flags
+     quotes not found, or none given. judge_report(report, evidence_text,
+     na) returns a cached JudgeResult; the cache key adds the rubric, N/A
+     list and evidence. Runner: nine SCORE_COLS (N/A = empty cell); the
+     paired comparison drops an N/A pair per dimension and shows "pairs".
+     The judge still reads the filing's first 30K chars until 7b.
+     Tests: tests/test_rubric.py (new), test_offline.py, test_outputs.py.
 
 3.8 Earnings press release + call transcript as context
    - Press release: on EDGAR as 8-K Item 2.02, Exhibit 99.1 — free, covered

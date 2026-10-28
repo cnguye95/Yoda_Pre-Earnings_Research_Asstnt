@@ -1,11 +1,14 @@
-"""Model-as-judge scoring for Phase 9 evaluation.
+"""Model-as-judge scoring for the evaluation.
 
 judge_report() calls OpenAI gpt-6.1-sol to score an EarningsReport against
-the source filing text using a five-dimension rubric. Results are cached on
-disk so re-running the same report does not re-spend API budget.
+the evidence it was written from, using the nine-dimension rubric in
+yoda/eval/rubric.py. Code then applies the N/A rules and the quote check
+(rubric.check_scores, rubric.failed_quotes). Results are cached on disk so
+re-running the same report does not re-spend API budget.
 
-Cache key: first 16 hex chars of SHA256(judge model + report JSON). Including
-the model means switching judges never reuses another judge's scores.
+Cache key: first 16 hex chars of SHA256(judge model + rubric text + N/A
+list + report JSON + evidence). Including the model and the rubric means a
+different judge or a changed rubric never reuses old scores.
 Cache location: data/eval/judge_cache/{hash}.json
 
 Cross-family choice: OpenAI judges Claude-generated reports so the grader
@@ -21,7 +24,7 @@ import pydantic
 from openai import OpenAI
 
 from yoda import config
-from yoda.eval.rubric import JudgeScores
+from yoda.eval.rubric import DIMENSIONS, RUBRIC_TEXT, JudgeScores, check_scores, failed_quotes
 from yoda.schema import EarningsReport
 
 
@@ -35,40 +38,29 @@ JUDGE_MODEL = "gpt-6.1-sol"
 # Where to persist cached judge results. Created on first use.
 _CACHE_DIR = config.DATA_DIR / "eval" / "judge_cache"
 
-# The five scored dimensions, as named in JudgeScores.
-_DIMENSIONS = ("extraction_completeness", "accuracy", "source_traceability", "relevance", "usefulness")
-
 # System prompt that instructs the judge how to grade.
 _SYSTEM_PROMPT = (
     "You are an expert financial analyst grading a pre-earnings research "
-    "report against the source 10-Q/10-K filing. Score the report on the "
-    "five rubric dimensions. "
-    "Base your scores only on the provided report JSON and filing text."
+    "report against the evidence it was written from: the 10-Q/10-K and, "
+    "when the report had them, 8-Ks filed since, market data and news. "
+    "Score the report on the nine rubric dimensions. "
+    "Base your scores only on the provided report JSON and evidence."
 )
 
-# Human-readable rubric appended to the user message so the judge understands
-# each dimension before scoring.
-_RUBRIC_TEXT = """
-RUBRIC (score each dimension 1-5):
 
-1. extraction_completeness — Did the report extract the key facts that were
-   actually available in the filing? 1 = almost nothing extracted,
-   5 = all major facts captured.
+# ---------------------------------------------------------------------------
+# The cached result — scores plus the quote check
+# ---------------------------------------------------------------------------
 
-2. accuracy — Are the figures and claims in the report correct relative to
-   the source filing? 1 = multiple errors, 5 = fully accurate.
+class JudgeResult(pydantic.BaseModel):
+    """What judge_report() returns and caches: the checked scores and the quote check.
 
-3. source_traceability — Do the source_citation fields in the report resolve
-   to real sections or chunks in the filing? 1 = citations fabricated or
-   missing, 5 = every citation pinpoints a real location.
-
-4. relevance — Is the content focused on what matters for pre-earnings
-   analysis (guidance, risks, segment performance)? 1 = mostly off-topic,
-   5 = tightly relevant.
-
-5. usefulness — Would a sell-side analyst find this report actionable before
-   an earnings call? 1 = not useful, 5 = immediately useful.
-"""
+    *scores* has the N/A rules applied (rubric.check_scores). *failed_quotes*
+    maps each dimension whose quotes didn't check out to those quotes
+    (rubric.failed_quotes); an empty dict means every quote was found.
+    """
+    scores: JudgeScores
+    failed_quotes: dict[str, list[str]]
 
 
 # ---------------------------------------------------------------------------
@@ -83,36 +75,36 @@ _client = OpenAI(api_key=config.OPENAI_API_KEY, max_retries=3)
 # Public API
 # ---------------------------------------------------------------------------
 
-def check_scores(scores: JudgeScores) -> None:
-    """Raise RuntimeError if any rubric score is outside 1-5.
-
-    The range is checked here in code rather than in the schema sent to
-    OpenAI, so an out-of-range answer can never be averaged into the results.
-    """
-    bad = {name: getattr(scores, name).score for name in _DIMENSIONS
-           if not 1 <= getattr(scores, name).score <= 5}
-    if bad:
-        raise RuntimeError(f"Judge returned scores outside 1-5: {bad}")
+def _na_text(na: dict[str, str]) -> str:
+    """List the dimensions code marked N/A, with why, for the judge to leave unscored."""
+    if not na:
+        return "N/A dimensions: none — score all nine."
+    return "N/A dimensions (give score null):\n" + "\n".join(f"- {name}: {reason}" for name, reason in na.items())
 
 
-def judge_report(report: EarningsReport, filing_text: str) -> JudgeScores:
-    """Score *report* against *filing_text* using OpenAI gpt-6.1-sol as the judge.
+def judge_report(report: EarningsReport, evidence_text: str, na: dict[str, str]) -> JudgeResult:
+    """Score *report* against *evidence_text* using OpenAI gpt-6.1-sol as the judge.
 
-    *filing_text* is the source 10-Q/10-K text the report was generated from;
-    truncate it to ~30K characters before passing. Results are cached in
-    data/eval/judge_cache/ keyed by the judge model + the report's JSON, so
-    re-running the same report doesn't re-spend; a corrupt cache file is
-    simply re-scored. Raises RuntimeError if the judge refuses, answers as a
-    different model, or returns a score outside 1-5.
+    *evidence_text* is the evidence the report was written from, as the judge
+    should see it. *na* maps each dimension code marks N/A for this report to
+    the reason (the judge is told, and code removes any score it gives them).
+    Every quote behind a score is then checked against the report or the
+    evidence; failures are kept on the result, never retried.
+
+    Results are cached in data/eval/judge_cache/ (see cache_key_for), so
+    re-running the same report on the same evidence doesn't re-spend; a
+    corrupt or old-format cache file is simply re-scored. Raises
+    RuntimeError if the judge refuses, answers as a different model, or
+    leaves a scored dimension without a 1-5 score.
     """
     report_json = report.model_dump_json()
-    cache_key = cache_key_for(report)
+    cache_key = cache_key_for(report, evidence_text, na)
     cache_file = _CACHE_DIR / f"{cache_key}.json"
 
     # Return cached result if it exists and is readable, avoiding API spend.
     if cache_file.exists():
         try:
-            cached = JudgeScores.model_validate_json(cache_file.read_text(encoding="utf-8"))
+            cached = JudgeResult.model_validate_json(cache_file.read_text(encoding="utf-8"))
         except pydantic.ValidationError:
             print(f"  [judge] cache file {cache_file.name} is unreadable; re-scoring")
         else:
@@ -121,11 +113,12 @@ def judge_report(report: EarningsReport, filing_text: str) -> JudgeScores:
 
     print(f"  [judge] scoring via {JUDGE_MODEL} (key={cache_key})...")
 
-    # Build the user message: rubric + report JSON + truncated filing.
+    # Build the user message: rubric, which dimensions are N/A, the report
+    # JSON and the evidence.
     user_message = (
-        f"{_RUBRIC_TEXT}\n\n"
+        f"{RUBRIC_TEXT}\n\n{_na_text(na)}\n\n"
         f"--- REPORT JSON ---\n{report_json}\n\n"
-        f"--- FILING TEXT (truncated) ---\n{filing_text}"
+        f"--- EVIDENCE ---\n{evidence_text}"
     )
 
     # Structured outputs: response_format=JudgeScores makes OpenAI return JSON
@@ -152,28 +145,35 @@ def judge_report(report: EarningsReport, filing_text: str) -> JudgeScores:
             f"Judge returned no scores (refusal={message.refusal!r}, "
             f"finish_reason={response.choices[0].finish_reason})"
         )
-    scores = message.parsed
-    check_scores(scores)
+    # Apply the N/A rules and the 1-5 check, then check every quote against
+    # the text it says it comes from.
+    scores = check_scores(message.parsed, na)
+    result = JudgeResult(scores=scores, failed_quotes=failed_quotes(scores, report_json, evidence_text))
+    if result.failed_quotes:
+        print(f"  [judge] quotes not found for: {', '.join(result.failed_quotes)}")
 
     # Persist to cache before returning.
     _CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    cache_file.write_text(scores.model_dump_json(indent=2), encoding="utf-8")
+    cache_file.write_text(result.model_dump_json(indent=2), encoding="utf-8")
     print(f"  [judge] cached to {cache_file}")
 
-    return scores
+    return result
 
 
 # ---------------------------------------------------------------------------
 # Cache management helpers — used by runner.py at the end of each eval run
 # ---------------------------------------------------------------------------
 
-def cache_key_for(report: EarningsReport) -> str:
+def cache_key_for(report: EarningsReport, evidence_text: str, na: dict[str, str]) -> str:
     """Return the judge-cache key for *report* without calling the judge API.
 
-    The judge model is part of the key, so a different judge never gets a
-    cache hit on another judge's scores.
+    Everything the judge's answer depends on is part of the key: the judge
+    model, the rubric text, the N/A list, the report and the evidence. So a
+    different judge, a changed rubric or different evidence never gets a
+    cache hit on old scores.
     """
-    payload = f"{JUDGE_MODEL}\n{report.model_dump_json()}"
+    na_lines = "\n".join(f"{name}: {reason}" for name, reason in sorted(na.items()))
+    payload = f"{JUDGE_MODEL}\n{RUBRIC_TEXT}\n{na_lines}\n{report.model_dump_json()}\n{evidence_text}"
     return hashlib.sha256(payload.encode()).hexdigest()[:16]
 
 
@@ -236,10 +236,12 @@ if __name__ == "__main__":
 
     # Call the judge (first run hits API; second run should be instant cache hit).
     print("Calling judge...")
-    scores = judge_report(report, filing_text)
+    result = judge_report(report, filing_text, na={})
 
-    # Print all five dimension scores plus the overall comment.
-    for name in _DIMENSIONS:
-        dimension = getattr(scores, name)
-        print(f"{name:24s} {dimension.score}/5 — {dimension.justification}")
-    print(f"\nOverall: {scores.overall_comment}")
+    # Print every dimension's score (N/A when unscored) plus the overall comment.
+    for name in DIMENSIONS:
+        dimension = getattr(result.scores, name)
+        score = "N/A" if dimension.score is None else f"{dimension.score}/5"
+        print(f"{name:22s} {score} — {dimension.justification}")
+    print(f"\nFigures checked: {result.scores.figures_checked}; quotes not found: {result.failed_quotes or 'none'}")
+    print(f"Overall: {result.scores.overall_comment}")

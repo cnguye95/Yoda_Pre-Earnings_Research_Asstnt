@@ -49,6 +49,11 @@ import pydantic
 from pydantic import BaseModel, Field
 
 from yoda import config
+# Shared with the eval judge (yoda/evidence_text.py); kept under their old
+# names here. _norm/_quote_in match quotes, _CONFLICT_RULES weighs sources.
+from yoda.evidence_text import CONFLICT_RULES as _CONFLICT_RULES
+from yoda.evidence_text import normalize as _norm
+from yoda.evidence_text import quote_in as _quote_in
 from yoda.ingest.chunker import Chunk, chunk_8k, chunk_filing, eight_k_label
 from yoda.ingest.edgar import FILING_FRESHNESS_DAYS, fetch_latest_filing, fetch_post_filing_8ks
 from yoda.modes.baseline import apply_supplemental, full_filing_text, iter_citation_holders, validate_citations
@@ -138,20 +143,9 @@ REPORT_BUDGET_USD = 0.65
 # The termination clause is one of the six hedges — it materially reduces
 # over-investigation at zero cost.
 
-# The evidence tier order and the three agreed conflict rules (next_steps
-# 3.4). Personalities and synthesis both read this one text, so the wording
-# can never drift apart between the two prompts.
-_CONFLICT_RULES = """Evidence tiers, most reliable first: reported > guided > estimate > proxy >
-unverifiable. When sources disagree:
-  - For the same metric and period, the more reliable tier wins and both
-    are shown.
-  - Newer information is preferred only within the same tier, or when it
-    covers a later period.
-  - Guidance, consensus and whisper for the same period are different
-    quantities, not conflicting claims. Showing the gap between them is
-    good. The tier rule applies only when sources give different values for
-    the same fact."""
-
+# The conflict rules (_CONFLICT_RULES, from yoda.evidence_text) are added to
+# both the personality prompt and synthesis, so the wording is the same in
+# both — and in the eval judge's rubric.
 _BASE_LOOP_CONTRACT = """You are investigating {ticker} for an upcoming earnings call.
 You have access to four tools (retrieve_filing, search_news, read_article,
 lookup_peer). Each iteration, decide whether to call a tool or to FINISH.
@@ -408,25 +402,6 @@ _DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
 # The key the shared context block is filed under (what "CONTEXT", the
 # citation personalities use for it, becomes once normalized).
 _CONTEXT_KEY = "context"
-
-
-def _norm(text: str) -> str:
-    """Lower-case *text*, drop brackets and quote marks, and collapse spacing, for matching."""
-    for mark in "[]\"“”‘’'":
-        text = text.replace(mark, " ")
-    return " ".join(text.lower().split())
-
-
-def _quote_in(quote: str, text: str) -> bool:
-    """True if *quote* appears in *text*, ignoring case and spacing.
-
-    A quote shortened with "..." matches when every part around the dots
-    appears. An empty quote never matches.
-    """
-    parts = [_norm(part) for part in re.split(r"\.\.\.|…", quote)]
-    parts = [part for part in parts if part]
-    haystack = _norm(text)
-    return bool(parts) and all(part in haystack for part in parts)
 
 
 def _remember(seen: dict[str, _SeenSource], tool_name: str, raw) -> None:

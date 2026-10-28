@@ -17,7 +17,7 @@ import pytest
 from reportlab.platypus import Paragraph
 from streamlit.testing.v1 import AppTest
 
-from yoda.eval import judge, runner
+from yoda.eval import judge, rubric, runner
 from yoda.eval.rubric import DimensionScore, JudgeScores
 from yoda.modes import personality_panel
 from yoda.modes.personality_panel import MarketDataUnavailable, PanelRun
@@ -334,8 +334,10 @@ def test_zip_pruning_refuses_to_keep_zero():
 # ---------------------------------------------------------------------------
 
 def _scores(value: int = 3) -> JudgeScores:
-    score = DimensionScore(score=value, justification="ok")
-    return JudgeScores(**{col: score for col in runner.SCORE_COLS}, overall_comment="")
+    # A judge answer scoring every dimension *value*, one checkable figure.
+    score = DimensionScore(score=value, justification="ok", quotes=[])
+    return JudgeScores(**{col: score for col in runner.SCORE_COLS}, figures_checked=1,
+                       unverifiable_figures=[], overall_comment="")
 
 
 def _stub_runner(monkeypatch, run_mode=None):
@@ -343,7 +345,8 @@ def _stub_runner(monkeypatch, run_mode=None):
     monkeypatch.setattr(runner, "fetch_latest_filing", lambda ticker: None)
     monkeypatch.setattr(runner, "_run_mode", run_mode or (
         lambda mode, ticker, filing: runner.ModeRun(_report(), 1.0, "logged", 0.1, "")))
-    monkeypatch.setattr(runner, "judge_report", lambda report, text: _scores())
+    monkeypatch.setattr(runner, "judge_report",
+                        lambda report, text, na: judge.JudgeResult(scores=_scores(), failed_quotes={}))
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
 
@@ -439,7 +442,7 @@ def test_summary_notes_rows_with_unknown_cost(tmp_path):
 
 def test_out_of_range_judge_score_is_rejected():
     with pytest.raises(RuntimeError, match="outside 1-5"):
-        judge.check_scores(_scores(7))
+        rubric.check_scores(_scores(7), na={})
 
 
 def test_judge_cache_pruning_refuses_to_keep_zero():
@@ -451,7 +454,7 @@ def test_corrupt_judge_cache_is_rescored(monkeypatch):
     # A half-written cache file must not crash the run; the report is re-judged.
     report = _report()
     judge._CACHE_DIR.mkdir(parents=True)
-    (judge._CACHE_DIR / f"{judge.cache_key_for(report)}.json").write_text("{broken", encoding="utf-8")
+    (judge._CACHE_DIR / f"{judge.cache_key_for(report, 'filing', {})}.json").write_text("{broken", encoding="utf-8")
     reply = SimpleNamespace(
         model=f"{judge.JUDGE_MODEL}-2026-09-29",
         choices=[SimpleNamespace(message=SimpleNamespace(parsed=_scores(4), refusal=None), finish_reason="stop")],
@@ -459,7 +462,7 @@ def test_corrupt_judge_cache_is_rescored(monkeypatch):
     monkeypatch.setattr(judge, "_client", SimpleNamespace(
         chat=SimpleNamespace(completions=SimpleNamespace(parse=lambda **kwargs: reply))))
 
-    assert judge.judge_report(report, "filing").accuracy.score == 4
+    assert judge.judge_report(report, "filing", {}).scores.figure_accuracy.score == 4
 
 
 def test_judge_wrong_model_raises_even_without_asserts(monkeypatch):
@@ -467,7 +470,7 @@ def test_judge_wrong_model_raises_even_without_asserts(monkeypatch):
     monkeypatch.setattr(judge, "_client", SimpleNamespace(
         chat=SimpleNamespace(completions=SimpleNamespace(parse=lambda **kwargs: reply))))
     with pytest.raises(RuntimeError, match="Model mismatch"):
-        judge.judge_report(_report(), "filing")
+        judge.judge_report(_report(), "filing", {})
 
 
 # ---------------------------------------------------------------------------
