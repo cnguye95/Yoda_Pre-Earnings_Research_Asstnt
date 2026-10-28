@@ -37,6 +37,19 @@ IDEAS for Improvements/Changes
    (transcripts).
    SMOKE TEST (AGREED 2026-10-28): one live panel run is allowed once all of
    step 6 (6a-6e) is done, to check the panel end to end before step 7.
+   - RUN (NFLX, 2026-10-28): $0.635 total, 169s wall, 6/6 personalities
+     clean, 12 hypotheses (11 kept). Loops $0.047, critique $0.150,
+     synthesis $0.318 (83K in / 15K out tokens, with NO news or articles),
+     whisper lookup $0.121 (above the $0.03-0.08 estimate). 10-Q filed
+     2026-10-21, so no 8-Ks since. market_expectations filled in code as
+     designed (consensus Q4 FY2026, historical move, signals; whisper and
+     implied move N/A with reasons); all 33 metrics have a period.
+   - BUG FOUND: every search_news call failed with Tavily HTTP 400, so news,
+     read_article, since_filing and the evidence bundle's news were never
+     exercised. Suspect the step-5 request (topic="news" + days +
+     start_date); the client hides Tavily's error text. With news working,
+     synthesis input grows, so a run likely lands above the $0.65 budget.
+     A second live run needs fresh consent.
 
 3.1 Ingest 8-Ks filed after the primary 10-Q/10-K (yoda/ingest/edgar.py)
    - Fetch 8-Ks with filing_date > primary filing_date (SEC submissions JSON
