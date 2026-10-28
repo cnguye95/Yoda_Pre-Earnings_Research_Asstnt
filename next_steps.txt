@@ -134,6 +134,16 @@ IDEAS for Improvements/Changes
      uses the same period format as since_filing (e.g. "Q3 FY2026").
    - The new sections default to empty lists, so the deferred baseline
      (section 4) still produces valid reports without changes.
+   - DONE (step 2, 2026-10-28): yoda/schema.py has EvidenceType,
+     Metric.period, SinceFilingItem, ExpectationValue and a fixed-slot
+     MarketExpectations (one slot per item; an unavailable figure is
+     value None + missing_reason). Tests: tests/test_schema.py.
+     * The defaults exist only so reports written before this change still
+       load. Step 6 adds a code check that every new Yoda report fills
+       Metric.period, since_filing and market_expectations (gaps go to
+       data_gaps rather than failing the run).
+     * The PDF and app display of since_filing and market_expectations is
+       built in step 6, when the panel fills them.
    - REMINDER: when 3.5 and 3.6 are built, add this note to the README:
      "Figures from 8-K earnings releases appear in the report's
      since_filing section, tagged reported with the period they cover. They
@@ -331,6 +341,12 @@ IDEAS for Improvements/Changes
      * Never Yoda's own hypotheses or critique messages: they are Yoda's
        reasoning, not sources, and would let a claim be "verified" by Yoda
        quoting itself. (They get their own grading in 5.)
+     * The report itself carries them too: EarningsReport.hypotheses_explored
+       holds the panel's hypotheses, and every archived Yoda report contains
+       it, so the old judge saw them. The new judge removes
+       hypotheses_explored from the report before scoring. This also lets
+       the archive load for re-scoring: 8 archived baseline reports hold
+       invented hypotheses that today's schema rejects (see section 4).
    - Reliability checks (AGREED):
      * Quote check: for each dimension the judge quotes the evidence
        passages behind its score, and code checks that each quote really
@@ -444,6 +460,14 @@ IDEAS for Improvements/Changes
      then (AGREED).
    - Update the baseline prompt (yoda/modes/baseline.py) for the new report
      sections, or the comparison is no longer fair (moved from 3.6).
+   - FOUND (step 2): the baseline fills panel-only fields it was never
+     meant to. 8 of the 20 archived baseline reports (AMD, AMZN, CRM, DIS,
+     JPM, PANW, PG, UNH) contain hypotheses_explored with invented analysts
+     ("Growth analyst", confidence 65-80); baseline.py strips recent_news
+     but not this. Today's stricter Hypothesis rules would reject such a
+     reply and fail the run. When this baseline is built, strip
+     hypotheses_explored, and decide how it fills since_filing and
+     market_expectations (it shares the report schema).
 
    Option B — NEW BASELINE: one Claude call, given what an analyst would
    have on hand:

@@ -2,9 +2,16 @@
 
 Every downstream phase — baseline, personality panel, PDF, and eval — imports
 from here. The schema enforces the project's core 'cite or skip' rule: any
-field that carries a financial fact must also carry a source_citation. Both
-the baseline and the panel are responsible for populating data_gaps when a
-fact cannot be cited.
+field that carries a financial fact must also carry a source_citation (or,
+for facts from outside the filing, a source and url). Both the baseline and
+the panel are responsible for populating data_gaps when a fact cannot be
+cited.
+
+Facts from after the filing live in their own sections, never mixed into the
+filing's figures: since_filing (8-K events, guidance, news-reported claims)
+and market_expectations (what the market expects for the next report). Both
+default to empty, and Metric.period to None, only so reports written before
+these fields existed still load; every new Yoda report fills them.
 
 These models are also passed directly to Claude structured outputs
 (client.messages.parse(output_format=...)), so all types stay within the
@@ -32,6 +39,17 @@ PersonalityName = Literal["Optimist", "Pessimist", "Conservative", "Dreamer", "C
 # filing was found inside the freshness window.
 FilingType = Literal["10-Q", "10-K", "N/A"]
 
+# What kind of evidence backs a claim, most reliable first. When two sources
+# give different values for the same fact and period, the more reliable tag
+# wins and both are shown.
+#   reported     = company actuals for a closed period (10-Q/10-K, 8-K 2.02 release)
+#   guided       = management's own outlook (release, call, 8-K 7.01)
+#   estimate     = third-party expectation (consensus, analyst targets, whisper)
+#   proxy        = indirect signal (alt data, peer read-through, industry stats)
+#   unverifiable = the claim names no source that could back it
+# A Literal means any other tag from Claude is rejected when the reply is parsed.
+EvidenceType = Literal["reported", "guided", "estimate", "proxy", "unverifiable"]
+
 
 # ---------------------------------------------------------------------------
 # Sub-models — one per distinct fact type in the report
@@ -44,6 +62,10 @@ class Metric(BaseModel):
     value: str
     unit: str
     source_citation: str   # which section / sentence this came from
+    # The fiscal period the figure covers, e.g. "Q3 FY2026", so a stale figure
+    # is visible. Its as-of date is the report's filing_date. None only in
+    # reports written before this field existed.
+    period: str | None = None
 
 
 class Segment(BaseModel):
@@ -74,6 +96,56 @@ class NewsItem(BaseModel):
     date: str              # ISO date string, e.g. "2026-04-15"
     url: str
     relevance_note: str    # one sentence on why this matters for earnings
+
+
+class SinceFilingItem(BaseModel):
+    # One development since the 10-Q/10-K was filed: an 8-K event or earnings
+    # release figure, a guidance update, or a claim reported in the news. Kept
+    # apart from key_metrics so post-filing information never overwrites a
+    # filing number. All fields are required inside an item.
+    claim: str
+    evidence_type: EvidenceType
+    # Fiscal period the claim covers, e.g. "Q3 FY2026". None for events that
+    # have no fiscal period, such as an executive change.
+    period: str | None
+    as_of_date: str        # ISO date the source published it, e.g. "2026-10-21"
+    # The original source the claim is attributed to (the company, LSEG,
+    # "8-K Item 2.02"), not the outlet that repeated it.
+    source: str
+    # Where the reader can check the claim. A news outlet is read from its domain.
+    url: str
+
+
+class ExpectationValue(BaseModel):
+    # One market-expectation figure for the upcoming report. value is a
+    # display string like Metric.value; None means the figure is not
+    # available (N/A), and missing_reason then says why. Never a guessed or
+    # zero value in place of a missing one.
+    value: str | None
+    fiscal_quarter: int | None
+    fiscal_year: int | None
+    source: str | None      # data provider, e.g. "Finnhub"
+    as_of_date: str | None  # ISO date the figure was fetched or published
+    missing_reason: str | None
+
+
+class MarketExpectations(BaseModel):
+    # What the market expects for the upcoming report, from third-party data.
+    # One required slot per item, so an item can't silently disappear: a
+    # figure that isn't available is still present, with value None and a
+    # missing_reason.
+    consensus_eps: ExpectationValue
+    consensus_revenue: ExpectationValue
+    # The unofficial EPS figure traders actually expect, which can differ
+    # from the published consensus.
+    whisper_eps: ExpectationValue
+    # How far (±%) options prices say the stock may move on the report.
+    implied_move: ExpectationValue
+    # The average stock move after recent past earnings reports.
+    historical_move: ExpectationValue
+    beat_miss_record: ExpectationValue   # beats vs misses over recent quarters
+    analyst_actions: ExpectationValue    # rating upgrades/downgrades, last 30 days
+    price_target: ExpectationValue       # consensus analyst price target
 
 
 class WatchItem(BaseModel):
@@ -190,6 +262,12 @@ class EarningsReport(BaseModel):
     # External data — news from Tavily
     recent_news: list[NewsItem]
 
+    # Post-filing developments and market expectations, kept apart from the
+    # filing figures above. Defaulted only so reports written before these
+    # fields existed still load; every new Yoda report fills them.
+    since_filing: list[SinceFilingItem] = []
+    market_expectations: MarketExpectations | None = None
+
     # Synthesis — LLM-generated, no citation required for these lists
     bull_case:    list[str]
     bear_case:    list[str]
@@ -214,6 +292,12 @@ if __name__ == "__main__":
     # This catches regressions in field order, optional defaults, and new model
     # additions before downstream code depends on them.
 
+    # One available and one missing expectation figure, to exercise both shapes.
+    available = ExpectationValue(value="$5.12", fiscal_quarter=2, fiscal_year=2026, source="Finnhub",
+                                 as_of_date="2026-05-10", missing_reason=None)
+    missing = ExpectationValue(value=None, fiscal_quarter=None, fiscal_year=None, source=None,
+                               as_of_date=None, missing_reason="No verified whisper number found.")
+
     sample = EarningsReport(
         ticker="NFLX",
         company_name="Netflix, Inc.",
@@ -221,7 +305,8 @@ if __name__ == "__main__":
         filing_date="2026-04-18",
         report_generated_at="2026-05-11T00:00:00+00:00",
         key_metrics=[
-            Metric(name="Revenue", value="$12.2B", unit="", source_citation="MD&A — Revenue Recognition"),
+            Metric(name="Revenue", value="$12.2B", unit="", source_citation="MD&A — Revenue Recognition",
+                   period="Q1 FY2026"),
         ],
         revenue_segments=[
             Segment(name="UCAN", revenue="$5.1B", yoy_change="+12%", commentary="ad-tier growth",
@@ -240,6 +325,16 @@ if __name__ == "__main__":
             NewsItem(headline="Netflix Q1 beat", date="2026-04-18",
                      url="https://example.com/article", relevance_note="setup for next call"),
         ],
+        since_filing=[
+            SinceFilingItem(claim="Management expects Q2 operating margin of 31%.", evidence_type="guided",
+                            period="Q2 FY2026", as_of_date="2026-04-18", source="8-K Item 2.02",
+                            url="https://www.sec.gov/example-8k"),
+        ],
+        market_expectations=MarketExpectations(
+            consensus_eps=available, consensus_revenue=available, whisper_eps=missing,
+            implied_move=available, historical_move=missing, beat_miss_record=available,
+            analyst_actions=available, price_target=available,
+        ),
         bull_case=["Ad-tier ARPU rising"],
         bear_case=["Content cost pressure"],
         what_to_watch=[
@@ -284,3 +379,4 @@ if __name__ == "__main__":
     print("schema round-trip OK")
     print(f"  EarningsReport JSON length: {len(raw)} chars")
     print(f"  hypotheses_explored field present: {len(parsed.hypotheses_explored)} entries")
+    print(f"  since_filing field present: {len(parsed.since_filing)} entries")
