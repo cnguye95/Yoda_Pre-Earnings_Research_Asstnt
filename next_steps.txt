@@ -750,6 +750,21 @@ IDEAS for Improvements/Changes
      counts as post-filing evidence for evidence_labelling's N/A. Old
      reports and bundles still load. Tests: test_panel.py, test_rubric.py,
      test_outputs.py.
+   - SMOKE TEST (user-approved, 2026-10-28): `runner BA --modes yoda --out
+     data/eval/smoke_8_BA`. Panel $0.804, judge $0.210 upper bound (84,609
+     prompt / 4,096 completion tokens; estimate ~85.8K — closer than before
+     now that filing text is cleaner). earnings_call = "Q3 FY2026 earnings
+     call (2026-10-27)" (dated from the 8-K 2.02); bundle holds the 70-turn
+     call. since_filing: 29 items, 10 from the call (7 guided, 3 reported),
+     each sourced "Q3 FY2026 earnings call — <executive>" with the
+     transcript URL; no analyst words as company claims. Personalities:
+     22 of 69 quotes cite the call, all company speakers (most citations
+     code-corrected to the exact chunk label). Scores: filing_extraction 4,
+     market_expectations 5, figure_accuracy 4, reasoning_quality 4 (2 in
+     the step-7 run), evidence_labelling 4, source_traceability 3,
+     relevance 4, sell/buy-side 4/4; no failed quotes. The judge quoted the
+     call and caught one misread: the CFO's planned 10-15 777X deliveries
+     presented as the impact of a certification delay.
 
 3.9 Personality "analyst playbook" + source vetting (current gap)
    - Today the personality prompts give a lens (3-5 sentences) and tool
