@@ -728,6 +728,13 @@ IDEAS for Improvements/Changes
      Tests block the transcript module's network (conftest) so none can
      reach Alpha Vantage. Tests: test_ingest.py, test_offline.py,
      test_panel.py.
+   - LIVE CHECK (2026-10-28, free, 3 requests): BA, NFLX and AAPL each
+     returned their latest call (Q3 FY2026) on the first try — BA 70 turns
+     / 47K chars, NFLX 51 / 36K, AAPL 61 / 48K (~9-12K tokens each). AAPL's
+     call opens "Apple Q3 fiscal year 2026", so Alpha Vantage numbers
+     quarters by FISCAL year, matching the consensus. Every speaker was
+     classified right (executives and IR = company; "Analyst..." titles and
+     the Operator = not). Cached in data/transcripts/.
 
 3.9 Personality "analyst playbook" + source vetting (current gap)
    - Today the personality prompts give a lens (3-5 sentences) and tool
