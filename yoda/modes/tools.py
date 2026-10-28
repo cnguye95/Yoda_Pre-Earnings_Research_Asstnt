@@ -37,7 +37,7 @@ class ToolContext:
     def __init__(
         self,
         primary_ticker: str,
-        primary_accession: str,
+        primary_accession: str | None,
         store: ChromaStore,
         supplemental_accession: str | None = None,
     ) -> None:
@@ -73,7 +73,7 @@ def retrieve_filing(ctx: ToolContext, query: str, k: int = 5) -> list[Chunk]:
     """
     # ChromaStore.query is safe to call concurrently from multiple personality
     # threads since reads don't mutate the on-disk index.
-    chunks = ctx.store.query(ctx.primary_accession, query, k=k)
+    chunks = ctx.store.query(ctx.primary_accession, query, k=k) if ctx.primary_accession else []
     if ctx.supplemental_accession:
         chunks += ctx.store.query(ctx.supplemental_accession, query, k=k)
     return chunks
@@ -118,10 +118,12 @@ def lookup_peer(ctx: ToolContext, peer_ticker: str, query: str, k: int = 3) -> l
             # Fetch is cached on disk by yoda.ingest.edgar so repeat calls
             # for the same peer across runs avoid the SEC round-trip too.
             peer_filing = fetch_latest_filing(peer_ticker)
-            peer_chunks = chunk_filing(peer_filing["clean_text"], peer_filing["raw_html"])
+            if peer_filing is None:
+                raise ValueError(f"{peer_ticker} has no 10-Q or 10-K filed recently enough to search.")
+            peer_chunks = chunk_filing(peer_filing.clean_text, peer_filing.raw_html)
             # Embeds only if an earlier run hasn't already stored this filing.
-            ctx.store.index_if_missing(peer_filing["accession_number"], peer_chunks)
-            ctx._ingested_peers[peer_ticker] = peer_filing["accession_number"]
+            ctx.store.index_if_missing(peer_filing.accession_number, peer_chunks)
+            ctx._ingested_peers[peer_ticker] = peer_filing.accession_number
 
         peer_accession = ctx._ingested_peers[peer_ticker]
 
@@ -260,18 +262,20 @@ if __name__ == "__main__":
     # Build a real context: fetch + chunk + embed + upsert the primary filing.
     print(f"[tools-smoke] Ingesting {ticker} so tools have something to query...")
     filing = fetch_latest_filing(ticker)
-    chunks = chunk_filing(filing["clean_text"], filing["raw_html"])
+    if filing is None:
+        sys.exit(f"{ticker} has no recent 10-Q or 10-K to smoke-test against.")
+    chunks = chunk_filing(filing.clean_text, filing.raw_html)
 
     store = ChromaStore()
-    store.index_if_missing(filing["accession_number"], chunks)
+    store.index_if_missing(filing.accession_number, chunks)
 
     ctx = ToolContext(
         primary_ticker=ticker,
-        primary_accession=filing["accession_number"],
+        primary_accession=filing.accession_number,
         store=store,
     )
     print(f"[tools-smoke] Indexed {len(chunks)} chunks for {ticker} "
-          f"({filing['filing_type']} {filing['filing_date']})")
+          f"({filing.filing_type} {filing.filing_date})")
 
     # Exercise each tool once and print a one-line summary.
     print("\n[tools-smoke] retrieve_filing('revenue segment breakdown'):")

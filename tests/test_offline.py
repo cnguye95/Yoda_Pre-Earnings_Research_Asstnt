@@ -24,7 +24,7 @@ from yoda.modes import baseline as baseline_mod
 from yoda.modes.baseline import BASELINE_MODEL, _build_prompt, _strip_invented_links, _validate_citations
 from yoda.modes.tools import TOOL_DISPATCH, TOOL_SCHEMAS
 from yoda.retrieval import vector_store
-from yoda.schema import EarningsReport, ForwardGuidance, Metric, NewsItem, Risk, Segment, WatchItem
+from yoda.schema import EarningsReport, Filing, ForwardGuidance, Metric, NewsItem, Risk, Segment, WatchItem
 
 
 # ---------------------------------------------------------------------------
@@ -191,12 +191,18 @@ def test_chunk_heading_falls_back_to_section():
 # Baseline prompt
 # ---------------------------------------------------------------------------
 
-_PRIMARY = {"filing_type": "10-Q", "filing_date": "2026-05-01", "clean_text": "QUARTERLY TEXT"}
+def _filing(filing_type: str, filing_date: str, clean_text: str, **extra) -> Filing:
+    # A minimal Filing with just the fields the prompt builders read.
+    return Filing(ticker="TEST", filing_type=filing_type, filing_date=filing_date,
+                  accession_number=f"acc-{filing_type}", clean_text=clean_text, **extra)
+
+
+_PRIMARY = _filing("10-Q", "2026-05-01", "QUARTERLY TEXT")
 
 
 def test_baseline_prompt_includes_supplemental_filing():
-    filing = {**_PRIMARY, "supplemental": {
-        "filing_type": "10-K", "filing_date": "2026-02-01", "clean_text": "ANNUAL TEXT"}}
+    filing = _filing("10-Q", "2026-05-01", "QUARTERLY TEXT",
+                     supplemental=_filing("10-K", "2026-02-01", "ANNUAL TEXT"))
     prompt, dropped = _build_prompt("TEST", filing, "2026-10-26T00:00:00+00:00")
     assert "QUARTERLY TEXT" in prompt and "ANNUAL TEXT" in prompt and not dropped
     # Each filing gets a header naming its type and date, primary first.
@@ -208,8 +214,8 @@ def test_full_filing_text_drops_supplemental_when_too_large(monkeypatch):
     # When primary + supplemental exceed the size cap, the primary is kept
     # whole and the supplemental is left out (and reported as dropped).
     monkeypatch.setattr(baseline_mod, "MAX_FILING_CHARS", 20)
-    supplemental = {"filing_type": "10-K", "filing_date": "2026-02-01", "clean_text": "ANNUAL TEXT"}
-    text, dropped = baseline_mod.full_filing_text(dict(_PRIMARY), supplemental)
+    supplemental = _filing("10-K", "2026-02-01", "ANNUAL TEXT")
+    text, dropped = baseline_mod.full_filing_text(_PRIMARY, supplemental)
     assert dropped and "QUARTERLY TEXT" in text and "ANNUAL TEXT" not in text
     assert "10-K filed 2026-02-01" in baseline_mod.supplemental_dropped_note(supplemental)
 
@@ -224,7 +230,7 @@ def test_baseline_strips_invented_news_and_urls():
 
 
 def test_baseline_prompt_without_supplemental():
-    prompt, dropped = _build_prompt("TEST", dict(_PRIMARY), "2026-10-26T00:00:00+00:00")
+    prompt, dropped = _build_prompt("TEST", _PRIMARY, "2026-10-26T00:00:00+00:00")
     assert "QUARTERLY TEXT" in prompt and "10-K" not in prompt and not dropped
 
 
@@ -338,7 +344,7 @@ def test_paired_comparison_ignores_unpaired_tickers():
 def test_judge_failure_skips_row_not_run(monkeypatch, tmp_path):
     # Run in a temp folder so the real data/eval outputs are untouched.
     monkeypatch.chdir(tmp_path)
-    monkeypatch.setattr(runner, "fetch_latest_filing", lambda t: {"clean_text": "text"})
+    monkeypatch.setattr(runner, "fetch_latest_filing", lambda t: _filing("10-Q", "2026-05-01", "text"))
     monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: (_report(), 1.0, 0.1, ""))
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
@@ -404,7 +410,7 @@ def test_runner_regexes_read_panel_and_baseline_logs():
 def test_duplicate_tickers_run_once(monkeypatch, tmp_path):
     # "NFLX nflx" must not produce duplicate rows (which would break the pivot).
     monkeypatch.chdir(tmp_path)
-    monkeypatch.setattr(runner, "fetch_latest_filing", lambda t: {"clean_text": "text"})
+    monkeypatch.setattr(runner, "fetch_latest_filing", lambda t: _filing("10-Q", "2026-05-01", "text"))
     monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: (_report(), 1.0, 0.1, ""))
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)

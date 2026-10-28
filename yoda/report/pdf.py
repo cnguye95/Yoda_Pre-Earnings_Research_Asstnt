@@ -438,6 +438,6 @@ if __name__ == "__main__":
 
     # Generate the PDF
     out_path = f"data/eval/report_{ticker}.pdf"
-    result = report_to_pdf(report, out_path, filing_url=filing["url"])
+    result = report_to_pdf(report, out_path, filing_url=filing.url if filing else None)
 
     print(f"PDF saved to {result}")

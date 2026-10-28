@@ -117,7 +117,7 @@ def process_queue(
             # ticker don't overwrite previous outputs.
             ts = datetime.now().strftime("%Y%m%d-%H%M%S")
             pdf_path = _REPORTS_DIR / f"{ticker}_{ts}.pdf"
-            report_to_pdf(report, str(pdf_path), filing_url=filing["url"])
+            report_to_pdf(report, str(pdf_path), filing_url=filing.url if filing else None)
             pdf_paths.append(pdf_path)
             _prune_reports(ticker)
 

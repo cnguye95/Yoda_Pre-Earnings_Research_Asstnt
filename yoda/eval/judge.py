@@ -205,7 +205,7 @@ if __name__ == "__main__":
     # Fetch the cached NFLX filing for source text (no network hit if cached).
     print("Loading NFLX filing text...")
     filing = fetch_latest_filing("NFLX")
-    filing_text = filing["clean_text"][:30000]
+    filing_text = filing.clean_text[:30000] if filing else ""
 
     # Call the judge (first run hits API; second run should be instant cache hit).
     print("Calling judge...")

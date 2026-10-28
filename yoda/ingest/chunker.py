@@ -256,9 +256,11 @@ if __name__ == "__main__":
     print(f"Fetching filing for {ticker_arg}...")
     filing = fetch_latest_filing(ticker_arg)
 
-    print(f"Clean text length: {len(filing['clean_text'])} chars")
+    if filing is None:
+        sys.exit(f"{ticker_arg} has no recent 10-Q or 10-K to chunk.")
+    print(f"Clean text length: {len(filing.clean_text)} chars")
     print("Chunking...")
-    chunks = chunk_filing(filing["clean_text"], filing["raw_html"])
+    chunks = chunk_filing(filing.clean_text, filing.raw_html)
 
     # Print section distribution.
     counts = Counter(c.section for c in chunks)

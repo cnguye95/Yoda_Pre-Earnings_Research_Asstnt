@@ -9,10 +9,28 @@ fact cannot be cited.
 These models are also passed directly to Claude structured outputs
 (client.messages.parse(output_format=...)), so all types stay within the
 simple subset structured outputs support (str, int, float, bool, list,
-nested BaseModel, T | None).
+nested BaseModel, T | None, Literal). Numeric limits such as Field(ge=1)
+are not enforced by the API itself: the Anthropic SDK moves them into the
+field description for Claude to read, then Pydantic checks them when the
+reply is parsed, so an out-of-range answer raises instead of slipping through.
+
+Classes that Claude fills in are described with `#` comments rather than
+docstrings on purpose: Pydantic copies a class docstring into the JSON schema
+Claude is shown, so a docstring would silently change the prompt.
 """
 
-from pydantic import BaseModel
+from typing import Literal
+
+from pydantic import BaseModel, ConfigDict, Field
+
+# The six analyst personalities in the panel. Listing them as a Literal means
+# a misspelt name from Claude is rejected when the reply is parsed, instead of
+# quietly creating a seventh "personality".
+PersonalityName = Literal["Optimist", "Pessimist", "Conservative", "Dreamer", "Contrarian", "Quant"]
+
+# The SEC filing types Yoda reads. "N/A" marks a report written when no
+# filing was found inside the freshness window.
+FilingType = Literal["10-Q", "10-K", "N/A"]
 
 
 # ---------------------------------------------------------------------------
@@ -76,18 +94,18 @@ class WatchItem(BaseModel):
 class Hypothesis(BaseModel):
     # One hypothesis produced by a personality agent after its tool-use loop.
     id: str                        # stable cross-reference ID: "h1", "h2", ...
-    proposing_personality: str     # "Optimist" | "Pessimist" | "Conservative" | ...
+    proposing_personality: PersonalityName
     question: str                  # ticker-specific question the personality investigated
     summary: str                   # 150-250 word answer/finding
     evidence_quotes: list[str]     # short quotes with citation labels appended
-    confidence: int                # 1..5 self-rated by the personality
+    confidence: int = Field(ge=1, le=5)   # self-rated by the personality
 
 
 class CritiqueMessage(BaseModel):
     # One typed message a personality sends about a peer's hypothesis.
-    from_personality: str
+    from_personality: PersonalityName
     target_hypothesis_id: str
-    message_type: str              # "SUPPORTS" | "CHALLENGES" | "EXTENDS"
+    message_type: Literal["SUPPORTS", "CHALLENGES", "EXTENDS"]
     content: str                   # 1-3 sentence justification
     referenced_evidence: str       # citation label or "" if none
 
@@ -95,12 +113,58 @@ class CritiqueMessage(BaseModel):
 class PersonalityResult(BaseModel):
     # The output of one personality's full investigation, including telemetry
     # so the orchestrator can decide whether the personality finished cleanly.
+    # cost_usd and wall_seconds are None when the personality crashed before
+    # they could be measured — "unknown", never a made-up $0.00.
     personality: str
     hypotheses: list[Hypothesis]   # 1-2 hypotheses per personality
     tool_calls_used: int
-    wall_seconds: float
-    cost_usd: float
-    finished_cleanly: bool         # False if iteration cap or timeout fired
+    wall_seconds: float | None
+    cost_usd: float | None
+    finished_cleanly: bool         # True when at least one hypothesis was produced
+    error: str | None = None       # what went wrong, when something did
+
+
+# ---------------------------------------------------------------------------
+# Input records — data Yoda fetches before any analysis (never sent to Claude
+# as a schema, so these use normal docstrings)
+# ---------------------------------------------------------------------------
+
+class Filing(BaseModel):
+    """One SEC filing as fetched by yoda.ingest.edgar.fetch_latest_filing().
+
+    *clean_text* is the readable text the analysis works from; *raw_html* is
+    kept for chunking. *supplemental* is the most recent 10-K attached to a
+    10-Q, when one exists. *supplemental_error* records why a supplemental
+    10-K that should exist could not be downloaded, so the gap is visible.
+    """
+    # Reject unknown fields, so a disk cache written by an older version of
+    # Yoda (which stored the supplemental filing as flat extra keys) fails to
+    # load and is re-downloaded instead of silently losing its 10-K.
+    model_config = ConfigDict(extra="forbid")
+
+    ticker: str
+    cik: int | None = None             # SEC company number; not stored for supplementals
+    filing_type: Literal["10-Q", "10-K"]
+    filing_date: str                   # ISO date, e.g. "2026-04-18"
+    accession_number: str              # SEC's unique filing ID, e.g. "0000320193-26-000123"
+    url: str | None = None             # None when the archive URL is unknown
+    raw_html: str = ""
+    clean_text: str = ""
+    supplemental: "Filing | None" = None
+    supplemental_error: str | None = None
+
+
+class NewsSearchResult(BaseModel):
+    """One web search hit returned by yoda.tools.news.search_news().
+
+    Every result has a URL — hits without one are dropped at the source,
+    because a news claim the reader cannot follow back is uncitable.
+    """
+    title: str
+    url: str
+    published_date: str | None = None  # as reported by the search engine; None if absent
+    snippet: str = ""
+    source_domain: str = ""            # e.g. "reuters.com"
 
 
 # ---------------------------------------------------------------------------
@@ -111,7 +175,7 @@ class EarningsReport(BaseModel):
     # Header fields — who, what, when
     ticker: str
     company_name: str
-    filing_type: str           # "10-Q" or "10-K"
+    filing_type: FilingType
     filing_date: str           # ISO date of the most recent filing
     supplemental_filing_type: str | None = None  # e.g. "10-K" when primary is a 10-Q
     supplemental_filing_date: str | None = None  # ISO date of the supplemental filing

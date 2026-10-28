@@ -184,7 +184,7 @@ def run_eval(
         # and the judge grades against its first 30K characters.
         print(f"  fetching filing for {ticker}...")
         filing = fetch_latest_filing(ticker)
-        filing_text = filing["clean_text"][:30000]
+        filing_text = filing.clean_text[:30000] if filing else ""
 
         for mode in modes:
             print(f"  running mode={mode}...")

@@ -36,7 +36,7 @@ from anthropic import Anthropic
 from pydantic import BaseModel
 
 from yoda import config
-from yoda.ingest.edgar import fetch_latest_filing
+from yoda.ingest.edgar import FILING_FRESHNESS_DAYS, fetch_latest_filing
 from yoda.ingest.chunker import chunk_filing, Chunk
 from yoda.modes.baseline import _validate_citations, full_filing_text, supplemental_dropped_note
 from yoda.modes.tools import (
@@ -50,6 +50,7 @@ from yoda.schema import (
     EarningsReport,
     Hypothesis,
     CritiqueMessage,
+    Filing,
     PersonalityResult,
 )
 
@@ -810,7 +811,7 @@ Rules you must follow without exception:
 
 def _synthesize_report(
     ticker: str,
-    primary_filing: dict,
+    primary_filing: Filing | None,
     final_hypotheses: list[Hypothesis],
     contested: list[Hypothesis],
     critique_messages: list[CritiqueMessage],
@@ -854,8 +855,7 @@ def _synthesize_report(
     # and every source_citation.
     user_prompt = (
         f"Ticker: {ticker}\n"
-        f"Company: {primary_filing.get('ticker', ticker)}\n"
-        f"Filing: {primary_filing['filing_type']} filed {primary_filing['filing_date']}\n"
+        f"Filing: {_describe_filing(primary_filing)}\n"
         f"Report timestamp (use for report_generated_at): {now_utc}\n\n"
         f"--- FILING TEXT (full; authoritative for key_metrics, revenue_segments, "
         f"forward_guidance, key_risks and every source_citation) ---\n{filing_text}\n\n"
@@ -919,6 +919,26 @@ def _scrub_source_citations(report: EarningsReport, log_prefix: str) -> None:
 
 
 # ---------------------------------------------------------------------------
+# No-filing handling
+# ---------------------------------------------------------------------------
+
+# What synthesis is shown, and what the report's data_gaps say, when the
+# company has no 10-Q or 10-K inside the freshness window.
+_NO_FILING_TEXT = "(No recent SEC filing was found for this company. There is no filing text.)"
+_NO_FILING_GAP = (
+    f"No 10-Q or 10-K was filed in the last {FILING_FRESHNESS_DAYS} days, so no "
+    "filing was analyzed; findings rest on news and peer filings only."
+)
+
+
+def _describe_filing(filing: Filing | None) -> str:
+    """Return a short label such as "10-Q filed 2026-04-18" for logs and prompts."""
+    if filing is None:
+        return "none found (no recent 10-Q or 10-K)"
+    return f"{filing.filing_type} filed {filing.filing_date}"
+
+
+# ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
@@ -944,36 +964,35 @@ def run_personality_panel(
     print(f"{log_prefix} Fetching filing for {ticker}...")
     filing = fetch_latest_filing(ticker)
 
-    # Handle the case where no 10-K or 10-Q was filed within the freshness window.
+    # Problems found while gathering inputs. They are added to the report's
+    # data_gaps at the end, so the reader sees them instead of only the console.
+    run_gaps: list[str] = []
+
+    # Handle the case where no 10-K or 10-Q was filed within the freshness
+    # window: the panel carries on with news and peer filings only, and the
+    # report says so.
     if filing is None:
         print(f"{log_prefix} [WARNING] No recent SEC filing found for {ticker}. "
               "Panel will investigate using news and peer filings only.")
-        filing = {
-            "ticker":           ticker,
-            "filing_type":      "N/A",
-            "filing_date":      "N/A",
-            "url":              "",
-            "clean_text":       "",
-            "raw_html":         "",
-            "accession_number": f"{ticker}_no_filing",
-        }
+        run_gaps.append(_NO_FILING_GAP)
+    else:
+        print(f"{log_prefix} Filing: {_describe_filing(filing)}")
 
-    print(f"{log_prefix} Filing: {filing['filing_type']} {filing['filing_date']}")
-
-    # Extract supplemental filing before passing filing downstream.
-    # The supplemental key (if any) is a 10-K providing annual context alongside
+    # The supplemental (if any) is a 10-K providing annual context alongside
     # the primary 10-Q's fresh quarterly data.
-    supplemental = filing.pop("supplemental", None)
+    supplemental = filing.supplemental if filing else None
     if supplemental:
-        print(f"{log_prefix} Supplemental: {supplemental['filing_type']} {supplemental['filing_date']}")
+        print(f"{log_prefix} Supplemental: {_describe_filing(supplemental)}")
+    if filing and filing.supplemental_error:
+        run_gaps.append(f"Supplemental 10-K not analyzed: {filing.supplemental_error}.")
 
     # Chunk the filing and embed it only if ChromaDB doesn't already hold it.
     # For news-only runs the ChromaStore stays empty; retrieve_filing returns [].
     store = ChromaStore()
-    if filing["accession_number"] != f"{ticker}_no_filing":
-        chunks = chunk_filing(filing["clean_text"], filing["raw_html"])
+    if filing is not None:
+        chunks = chunk_filing(filing.clean_text, filing.raw_html)
         t0 = time.perf_counter()
-        if store.index_if_missing(filing["accession_number"], chunks):
+        if store.index_if_missing(filing.accession_number, chunks):
             embed_tokens += sum(len(c.text) for c in chunks) // 4
             print(f"{log_prefix} Embedded {len(chunks)} chunks in {time.perf_counter()-t0:.2f}s")
         else:
@@ -981,9 +1000,9 @@ def run_personality_panel(
 
     # Same for the supplemental 10-K, if present.
     if supplemental:
-        sup_chunks = chunk_filing(supplemental["clean_text"], supplemental["raw_html"])
+        sup_chunks = chunk_filing(supplemental.clean_text, supplemental.raw_html)
         t0 = time.perf_counter()
-        if store.index_if_missing(supplemental["accession_number"], sup_chunks):
+        if store.index_if_missing(supplemental.accession_number, sup_chunks):
             embed_tokens += sum(len(c.text) for c in sup_chunks) // 4
             print(f"{log_prefix} Supplemental: embedded {len(sup_chunks)} chunks in {time.perf_counter()-t0:.2f}s")
         else:
@@ -991,8 +1010,8 @@ def run_personality_panel(
 
     ctx = ToolContext(
         primary_ticker=ticker,
-        primary_accession=filing["accession_number"],
-        supplemental_accession=supplemental["accession_number"] if supplemental else None,
+        primary_accession=filing.accession_number if filing else None,
+        supplemental_accession=supplemental.accession_number if supplemental else None,
         store=store,
     )
 
@@ -1121,10 +1140,13 @@ def run_personality_panel(
     # reads — so it can extract every figure and cite the filing's own
     # headings. The supplemental 10-K is left out only if the pair is too
     # large for the model's context window.
-    filing_text, sup_dropped = full_filing_text(filing, supplemental)
+    if filing is not None:
+        filing_text, sup_dropped = full_filing_text(filing, supplemental)
+    else:
+        filing_text, sup_dropped = _NO_FILING_TEXT, False
     print(f"{log_prefix} Full filing for synthesis: {len(filing_text):,} chars")
     if sup_dropped:
-        print(f"{log_prefix} WARNING: supplemental {supplemental['filing_type']} dropped — filings too large")
+        print(f"{log_prefix} WARNING: supplemental {supplemental.filing_type} dropped — filings too large")
 
     t0 = time.perf_counter()
     report, syn_in, syn_out = _synthesize_report(
@@ -1185,8 +1207,11 @@ def run_personality_panel(
     if supplemental and sup_dropped:
         report.data_gaps.append(supplemental_dropped_note(supplemental))
     elif supplemental:
-        report.supplemental_filing_type = supplemental["filing_type"]
-        report.supplemental_filing_date = supplemental["filing_date"]
+        report.supplemental_filing_type = supplemental.filing_type
+        report.supplemental_filing_date = supplemental.filing_date
+
+    # Problems from the input-gathering phase, so the reader sees them too.
+    report.data_gaps.extend(gap for gap in run_gaps if gap not in report.data_gaps)
 
     # ------------------------------------------------------------------
     # Cost + wall-time totals (regex-parseable by the eval runner)

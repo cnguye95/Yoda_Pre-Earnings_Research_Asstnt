@@ -46,7 +46,7 @@ def _ensure_pdf(report) -> bytes:
     try:
         # fetch_latest_filing is cached on disk so this is fast.
         filing = fetch_latest_filing(report.ticker)
-        report_to_pdf(report, pdf_path, filing_url=filing["url"])
+        report_to_pdf(report, pdf_path, filing_url=filing.url if filing else None)
         pdf_bytes = pathlib.Path(pdf_path).read_bytes()
     finally:
         pathlib.Path(pdf_path).unlink(missing_ok=True)
