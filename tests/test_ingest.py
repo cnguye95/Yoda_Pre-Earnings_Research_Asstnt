@@ -308,13 +308,49 @@ def test_8k_list_failure_returns_no_8ks_and_a_reason(cache_dir, monkeypatch):
 # HTML cleaning
 # ---------------------------------------------------------------------------
 
-def test_clean_html_collapses_blank_runs_and_drops_scripts():
+def test_clean_html_drops_blank_lines_and_scripts():
     html = "<p>One</p><br><br><br><p>  Two  </p><script>var x = 1;</script>"
     text = edgar._clean_html(html)
     assert "var x" not in text
-    assert "One" in text and "Two" in text
-    assert "\n\n\n" not in text                      # at most one blank line in a row
-    assert all(line == line.strip() for line in text.splitlines())
+    assert text == "One\nTwo"                        # no blank lines, spaces trimmed
+
+
+def test_inline_elements_do_not_split_words_or_sentences():
+    # Found in BA's Q3 2026 press release (8-K Exhibit 99.1): each run of
+    # styling is its own <font>, one holding just the "l" of "loss". The text
+    # used to read "Earnings/(\nl\noss) from operations\nexcluding the\n...",
+    # so the eval judge could only quote the sentence in pieces.
+    html = ('<div><font>Core operating earnings&#47;(loss) is defined as GAAP </font>'
+            '<font style="font-style:italic">Earnings&#47;(</font><font>l</font>'
+            '<font style="font-style:italic">oss) from operations</font><font> excluding the </font>'
+            '<font style="font-style:italic">FAS&#47;CAS service cost adjustment. </font></div>'
+            '<div><span>The</span><span> next paragraph.</span></div>')
+    text = edgar._clean_html(html)
+    assert text.splitlines() == [
+        "Core operating earnings/(loss) is defined as GAAP Earnings/(loss) from operations "
+        "excluding the FAS/CAS service cost adjustment.",
+        "The next paragraph.",
+    ]
+
+
+def test_hidden_xbrl_header_is_dropped():
+    # Inline-XBRL filings carry a hidden block of machine-readable tags; with
+    # inline elements joined it would read as one long run of codes.
+    html = ('<div style="display:none"><ix:header><ix:hidden>us-gaap:AsiaMember</ix:hidden>'
+            '<xbrli:context>0000012927</xbrli:context></ix:header></div><p>Revenue rose.</p>')
+    assert edgar._clean_html(html) == "Revenue rose."
+
+
+def test_block_elements_still_start_new_lines():
+    # Paragraphs, headings, line breaks, list items and table cells keep
+    # their own lines, so section headings and table figures stay separate.
+    html = ("<h2>Item 1A. Risk Factors</h2><p>First risk.</p><p>Second<br>line</p>"
+            "<ul><li>One</li><li>Two</li></ul>"
+            "<table><tr><td>Revenue</td><td>$24,188</td></tr><tr><td>Backlog</td><td>$745,431</td></tr></table>")
+    assert edgar._clean_html(html).splitlines() == [
+        "Item 1A. Risk Factors", "First risk.", "Second", "line", "One", "Two",
+        "Revenue", "$24,188", "Backlog", "$745,431",
+    ]
 
 
 # ---------------------------------------------------------------------------

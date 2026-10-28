@@ -296,28 +296,50 @@ def _download_filing_html(cik: int, accession_number: str, primary_doc: str) -> 
     return resp.text, url
 
 
+# HTML elements that start a new line of text: paragraphs, divisions,
+# headings, list items, table rows and cells, line breaks. Everything else
+# (font, span, b, i, a, ...) is inline styling, and its text joins the text
+# around it with nothing in between.
+_BLOCK_TAGS = [
+    "address", "article", "aside", "blockquote", "br", "caption", "dd", "div", "dl", "dt", "figcaption",
+    "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hr", "li", "main", "ol", "p",
+    "pre", "section", "table", "tbody", "td", "tfoot", "th", "thead", "title", "tr", "ul",
+]
+
+
 def _clean_html(raw_html: str) -> str:
     """Turn a filing's HTML into plain readable text.
 
-    Scripts, styles, navigation, headers and footers are removed. Headings
-    such as "Item 1A. Risk Factors" survive as ordinary lines of text, which
-    the chunker later uses to find section boundaries.
+    Scripts, styles, navigation, headers and footers are removed, and so is
+    the hidden inline-XBRL header (machine-readable tags). A new line
+    starts only at a block element (paragraph, heading, table cell, line
+    break ...); inline styling elements are joined to the text around them,
+    so a word or sentence split across several of them stays whole (SEC
+    filings often wrap single letters in their own <font>). Headings such
+    as "Item 1A. Risk Factors" survive as ordinary lines of text, which the
+    chunker later uses to find section boundaries.
     """
     soup = BeautifulSoup(raw_html, "lxml")
 
-    # Remove script, style, nav, header, and footer blocks entirely.
-    for tag in soup(["script", "style", "nav", "header", "footer"]):
+    # Remove script, style, nav, header, and footer blocks entirely, and the
+    # hidden inline-XBRL header (ix:header): tens of thousands of characters
+    # of machine-readable tags ("us-gaap:AsiaMember...") a reader never sees.
+    for tag in soup(["script", "style", "nav", "header", "footer", "ix:header"]):
         tag.decompose()
 
-    # Extract text with newline separators so paragraphs stay separated, then
-    # trim spaces from every line.
-    lines = [line.strip() for line in soup.get_text(separator="\n").splitlines()]
+    # Mark where each block element starts and ends with a line break, then
+    # read the text with no separator, so inline elements run together.
+    for tag in soup.find_all(_BLOCK_TAGS):
+        tag.insert_before("\n")
+        tag.insert_after("\n")
 
-    # Collapse each run of blank lines into a single blank line so paragraphs
-    # stay apart but the text isn't padded with empty space: a blank line is
-    # kept only when the line before it had text.
-    kept = [line for i, line in enumerate(lines) if line or i == 0 or lines[i - 1]]
-    return "\n".join(kept)
+    # Trim spaces (including non-breaking ones) from every line.
+    lines = [line.strip() for line in soup.get_text().splitlines()]
+
+    # One line per block of text, with no blank lines: they only came from
+    # whitespace between tags in the HTML, and nothing downstream reads them
+    # (the chunker works line by line).
+    return "\n".join(line for line in lines if line)
 
 
 # ---------------------------------------------------------------------------

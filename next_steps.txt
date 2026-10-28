@@ -678,7 +678,18 @@ IDEAS for Improvements/Changes
        A handful per BA document (10-Q, credit-agreement 8-K, Ex-99.1).
        It affects everything that reads filing text — personalities,
        synthesis, the panel's and the judge's quote checks — not just the
-       judge. Fix to plan: break lines only at block-level elements.
+       judge.
+     * FIXED (2026-10-28): _clean_html breaks lines only at block elements
+       (p, div, td, tr, br, h1-h6, li, ...) and joins inline ones, drops
+       the hidden inline-XBRL header (ix:header, ~43K chars of tag codes in
+       BA's 10-Q), and keeps no blank lines (nothing read them). Checked on
+       22 cached documents (BA, JPM, NFLX, AAPL, KO, UNH filings + 8-Ks):
+       split words 22 -> 0, Item headings and chunk sections unchanged, the
+       only new words are ones that used to be split (e.g. signature names),
+       total text 2.04M -> 1.65M chars. Filings are re-cleaned from cached
+       HTML on load and re-embedded on their next run (changed chunk
+       fingerprints; small embedding cost). Saved evidence bundles keep the
+       text their report saw. Tests: tests/test_ingest.py.
      * FOUND: the run's cache prune deleted 13 old judge-cache files (the
        2026-10-26 old-rubric scores, unusable under the new rubric's keys).
      * The estimate running low matters near the line: a JPM report that
