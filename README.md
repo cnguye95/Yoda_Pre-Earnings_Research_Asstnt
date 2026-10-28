@@ -3,7 +3,7 @@
 ---
 ## 1. Context, User, and Problem
 
-**Who:** A buy-side or sell-side analyst who covers 10–50 tickers and prepares for earnings calls individually, often the night before.
+**Who:** A buy-side or sell-side analyst who covers 10–50 tickers and prepares for earnings calls individually, often the week(s) leading up to the earnings call.
 
 **The workflow being improved:** Pre-earnings research. Before every earnings call, an analyst reads the most recent 10-Q or 10-K, pulls consensus estimates, scans recent news, and assembles a one-page dossier: key metrics, segment trends, forward guidance, risk flags, and what to watch. This typically takes 60–90 minutes per ticker and is done manually, tab by tab.
 
