@@ -8,13 +8,18 @@ they use the tools.
 
 Tools:
   retrieve_filing(query, k)         — semantic search on the primary ticker's chunks
-  search_news(query, max_results)   — Tavily web search
+  search_news(query, max_results)   — Tavily news search, from the filing date on
   lookup_peer(peer_ticker, query, k) — fetch+chunk+search a competitor filing
 
+read_article(url) — the full text of an article already found by search_news
+— is written and tested here but not yet registered below, so personalities
+can't call it yet; next_steps 3.9 turns it on together with the prompt that
+says when to use it.
+
 A `ToolContext` carries the per-run state that the tool functions need
-(primary ticker, accession numbers, shared ChromaStore, news pool, and locks
-for thread safety). The personality panel builds the context once per ticker
-and passes it into every tool invocation.
+(primary ticker, accession numbers, shared ChromaStore, news pool, articles
+read, and locks for thread safety). The personality panel builds the context
+once per ticker and passes it into every tool invocation.
 
 Claude's tool arguments are checked against TOOL_ARGS (one Pydantic model per
 tool) before a tool runs, so a missing query, an unknown argument or an
@@ -24,13 +29,15 @@ out-of-range `k` comes back to Claude as a clear error instead of a crash.
 import threading
 import time
 from dataclasses import dataclass, field
+from datetime import date
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from yoda.ingest.chunker import Chunk, chunk_filing
 from yoda.ingest.edgar import fetch_latest_filing
 from yoda.retrieval.vector_store import ChromaStore
-from yoda.schema import NewsSearchResult
+from yoda.schema import ArticleText, NewsSearchResult
+from yoda.tools.news import read_article as _tavily_read
 from yoda.tools.news import search_news as _tavily_search
 
 
@@ -50,17 +57,27 @@ class ToolContext:
     store: ChromaStore
     supplemental_accession: str | None = None   # 10-K when the primary is a 10-Q
 
+    # The primary filing's date: news searches cover what was published from
+    # then on. None (no filing) means the last 30 days.
+    news_since: date | None = None
+
     # News items collected across all personalities so synthesis sees every
     # URL any of them found. Threads append; synthesis reads after Phase 2.
     news_pool: list[NewsSearchResult] = field(default_factory=list)
+
+    # Articles read in full (URL -> text), so synthesis and the eval can see
+    # exactly which articles were read, and a second read costs nothing.
+    read_articles: dict[str, ArticleText] = field(default_factory=dict)
 
     # Which peer tickers are already in the store (peer -> accession), so a
     # second lookup_peer call for the same peer skips re-ingestion.
     _ingested_peers: dict[str, str] = field(default_factory=dict)
 
-    # Locks so two threads never update the peer map or news pool at once.
+    # Locks so two threads never update the peer map, news pool or read
+    # articles at once.
     _peer_lock: threading.Lock = field(default_factory=threading.Lock)
     _news_lock: threading.Lock = field(default_factory=threading.Lock)
+    _read_lock: threading.Lock = field(default_factory=threading.Lock)
 
 
 # ---------------------------------------------------------------------------
@@ -91,14 +108,45 @@ def search_news(ctx: ToolContext, query: str, max_results: int = 3) -> list[News
 
     The pool is how the synthesizer sees every URL any personality found.
     The pool may hold the same article twice when two personalities find
-    it; synthesis receives it as-is.
+    it; synthesis receives it as-is. Only news published since
+    ctx.news_since (the filing date) is searched.
     """
-    results = _tavily_search(query, max_results=max_results)
+    results = _tavily_search(query, max_results=max_results, since=ctx.news_since)
 
     # Append under a lock so parallel personalities don't corrupt the list.
     with ctx._news_lock:
         ctx.news_pool.extend(results)
     return results
+
+
+# ---------------------------------------------------------------------------
+# read_article — written and tested; not yet registered (next_steps 3.9)
+# ---------------------------------------------------------------------------
+
+def read_article(ctx: ToolContext, url: str) -> ArticleText:
+    """Return the full text of a news article a personality already found.
+
+    Only a URL that search_news put in the news pool can be opened, so the
+    URL-pool check still holds: a personality can't read, and later cite, a
+    page no search returned. Each article is fetched once per run and kept
+    in ctx.read_articles; a second read of it is free. Raises ValueError for
+    a URL outside the pool, which the panel reports back as a failed call.
+    """
+    url = url.strip()
+    with ctx._news_lock:
+        in_pool = any(item.url == url for item in ctx.news_pool)
+    if not in_pool:
+        raise ValueError(f"{url} is not in this run's news results; find it with search_news first.")
+
+    # Serve a repeat read from memory; otherwise fetch it and remember it.
+    # The fetch happens outside the lock so one slow page doesn't hold up
+    # the other personalities.
+    with ctx._read_lock:
+        if url in ctx.read_articles:
+            return ctx.read_articles[url]
+    article = _tavily_read(url)
+    with ctx._read_lock:
+        return ctx.read_articles.setdefault(url, article)
 
 
 # ---------------------------------------------------------------------------

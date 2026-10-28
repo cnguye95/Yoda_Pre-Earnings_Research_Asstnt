@@ -32,7 +32,7 @@ import re
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 
 import anthropic
 import pydantic
@@ -1021,11 +1021,14 @@ def run_personality_panel(
         else:
             print(f"{log_prefix} Supplemental: {len(sup_chunks)} chunks already indexed; skipped embedding")
 
+    # News searches cover what was published from the filing date on (the
+    # last 30 days when there is no filing).
     ctx = ToolContext(
         primary_ticker=ticker,
         primary_accession=filing.accession_number if filing else None,
         supplemental_accession=supplemental.accession_number if supplemental else None,
         store=store,
+        news_since=date.fromisoformat(filing.filing_date) if filing else None,
     )
 
     # ------------------------------------------------------------------

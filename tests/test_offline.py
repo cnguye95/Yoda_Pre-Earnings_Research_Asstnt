@@ -9,6 +9,7 @@ Yoda-vs-baseline comparison. Importing the modules needs a .env with the API
 keys present (yoda.config checks them), but nothing here calls an API.
 """
 
+import datetime
 import time
 
 import pandas as pd
@@ -22,9 +23,13 @@ from yoda.ingest.chunker import Chunk
 from yoda.modes import personality_panel as panel
 from yoda.modes import baseline as baseline_mod
 from yoda.modes.baseline import BASELINE_MODEL, _build_prompt, _strip_invented_links, validate_citations
+from yoda.modes import tools
 from yoda.modes.tools import TOOL_DISPATCH, TOOL_SCHEMAS
 from yoda.retrieval import vector_store
-from yoda.schema import EarningsReport, Filing, ForwardGuidance, Metric, NewsItem, Risk, Segment, WatchItem
+from yoda.schema import (
+    ArticleText, EarningsReport, Filing, ForwardGuidance, Metric, NewsItem, NewsSearchResult, Risk, Segment,
+    WatchItem,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -122,6 +127,64 @@ def test_tool_schemas_are_claude_format_and_dispatchable():
         assert tool["input_schema"]["type"] == "object"
         names.add(tool["name"])
     assert names == set(TOOL_DISPATCH)
+
+
+# ---------------------------------------------------------------------------
+# News tools — search window and full-article reading
+# ---------------------------------------------------------------------------
+
+_POOL_URL = "https://www.reuters.com/markets/test-article"
+
+
+def _news_ctx() -> tools.ToolContext:
+    # A tool context whose news pool holds one article. The store is never
+    # touched by the news tools, so a placeholder is enough.
+    ctx = tools.ToolContext(primary_ticker="TEST", primary_accession=None, store=None,
+                            news_since=datetime.date(2026, 8, 6))
+    ctx.news_pool.append(NewsSearchResult(title="t", url=_POOL_URL))
+    return ctx
+
+
+def test_search_news_tool_searches_from_the_filing_date(monkeypatch):
+    seen = {}
+    monkeypatch.setattr(tools, "_tavily_search",
+                        lambda query, max_results, since: seen.update(since=since) or [])
+    tools.search_news(_news_ctx(), "q")
+    assert seen["since"] == datetime.date(2026, 8, 6)
+
+
+def test_read_article_tool_only_opens_urls_from_the_news_pool(monkeypatch):
+    # A URL no search returned can't be read (or later cited), and Tavily is
+    # never called for it.
+    calls = []
+    monkeypatch.setattr(tools, "_tavily_read", lambda url: calls.append(url))
+    with pytest.raises(ValueError, match="search_news first"):
+        tools.read_article(_news_ctx(), "https://made-up.example/article")
+    assert calls == []
+
+
+def test_read_article_tool_reads_each_article_once_and_records_it(monkeypatch):
+    # The first read fetches and records the article; a second read of the
+    # same URL (even with stray spaces) is served from memory.
+    calls = []
+
+    def fake_read(url):
+        calls.append(url)
+        return ArticleText(url=url, text="full text", full_chars=9, truncated=False)
+    monkeypatch.setattr(tools, "_tavily_read", fake_read)
+    ctx = _news_ctx()
+
+    first = tools.read_article(ctx, _POOL_URL)
+    second = tools.read_article(ctx, f"  {_POOL_URL} ")
+
+    assert calls == [_POOL_URL]
+    assert first is second and ctx.read_articles == {_POOL_URL: first}
+
+
+def test_read_article_is_not_offered_to_personalities_yet():
+    # It is turned on later (next_steps 3.9), together with the prompt that
+    # says when to use it.
+    assert "read_article" not in TOOL_DISPATCH
 
 
 # ---------------------------------------------------------------------------

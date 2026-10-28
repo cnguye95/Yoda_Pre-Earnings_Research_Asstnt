@@ -5,6 +5,7 @@ Run with: python -m pytest -q
 OpenAI and Tavily are replaced with fakes, so nothing here costs money.
 """
 
+from datetime import timedelta
 from types import SimpleNamespace
 
 import chromadb
@@ -12,6 +13,7 @@ import chromadb.config
 import pytest
 import requests
 
+from yoda.dates import market_today
 from yoda.ingest import chunker
 from yoda.retrieval import embeddings, vector_store
 from yoda.schema import EightKDocument, EightKFiling
@@ -170,13 +172,18 @@ def test_embeddings_count_mismatch_raises(monkeypatch):
 # News search — every result must be citable
 # ---------------------------------------------------------------------------
 
-def _fake_tavily(monkeypatch, reply=None, error=None):
-    # Replace TavilyClient with one that returns *reply* or raises *error*.
-    def search(**kwargs):
+def _fake_tavily(monkeypatch, reply=None, error=None) -> list[dict]:
+    # Replace TavilyClient with one whose search and extract both return
+    # *reply* or raise *error*. Returns the list of arguments each call got.
+    calls = []
+
+    def answer(**kwargs):
+        calls.append(kwargs)
         if error:
             raise error
         return reply
-    monkeypatch.setattr(news, "TavilyClient", lambda api_key: SimpleNamespace(search=search))
+    monkeypatch.setattr(news, "TavilyClient", lambda api_key: SimpleNamespace(search=answer, extract=answer))
+    return calls
 
 
 def test_news_results_without_url_are_dropped(monkeypatch):
@@ -215,3 +222,81 @@ def test_news_bug_in_yoda_is_not_relabelled_as_tavily_failure(monkeypatch):
     _fake_tavily(monkeypatch, error=TypeError("bad argument"))
     with pytest.raises(TypeError):
         news.search_news("q")
+
+
+def test_news_search_starts_at_the_filing_date(monkeypatch):
+    # A news search from the filing date on. The old "days" field must cover
+    # the same window, or Tavily's 3-day default would quietly cut it short.
+    calls = _fake_tavily(monkeypatch, reply={"results": []})
+    filing_date = market_today() - timedelta(days=60)
+
+    news.search_news("q", since=filing_date)
+
+    assert calls[0]["topic"] == "news"
+    assert calls[0]["start_date"] == filing_date.isoformat()
+    assert calls[0]["days"] == 60
+
+
+def test_news_search_without_a_filing_covers_30_days(monkeypatch):
+    calls = _fake_tavily(monkeypatch, reply={"results": []})
+    news.search_news("q")
+    assert calls[0]["start_date"] == (market_today() - timedelta(days=30)).isoformat()
+    assert calls[0]["days"] == 30
+
+
+def test_news_search_from_today_still_asks_for_one_day(monkeypatch):
+    # A filing dated today gives a zero-day window, which Tavily would
+    # reject; at least one day is always asked for.
+    calls = _fake_tavily(monkeypatch, reply={"results": []})
+    news.search_news("q", since=market_today())
+    assert calls[0]["days"] == 1
+
+
+# ---------------------------------------------------------------------------
+# Reading a full article
+# ---------------------------------------------------------------------------
+
+_ARTICLE_URL = "https://www.reuters.com/markets/test-article"
+
+
+def test_read_article_returns_the_full_text(monkeypatch):
+    calls = _fake_tavily(monkeypatch, reply={
+        "results": [{"url": _ARTICLE_URL, "raw_content": "Analysts polled by LSEG expect EPS of $5."}],
+        "failed_results": [],
+    })
+    article = news.read_article(_ARTICLE_URL)
+
+    assert article.text == "Analysts polled by LSEG expect EPS of $5."
+    assert article.truncated is False and article.full_chars == len(article.text)
+    assert calls[0]["urls"] == _ARTICLE_URL
+
+
+def test_long_article_is_cut_and_says_so(monkeypatch):
+    # A 25,000-character page is cut to 20,000 (about 5,000 tokens), and the
+    # record says it was cut and how long the page really was.
+    _fake_tavily(monkeypatch, reply={"results": [{"url": _ARTICLE_URL, "raw_content": "x" * 25_000}]})
+    article = news.read_article(_ARTICLE_URL)
+
+    assert len(article.text) == 20_000
+    assert article.truncated is True and article.full_chars == 25_000
+
+
+@pytest.mark.parametrize("reply, reason", [
+    ({"results": [], "failed_results": [{"url": _ARTICLE_URL, "error": "403 Forbidden"}]}, "could not read"),
+    ({"results": [{"url": _ARTICLE_URL, "raw_content": "   "}], "failed_results": []}, "no text"),
+    ({"results": [], "failed_results": []}, "no text"),
+    (None, "unexpected reply"),
+])
+def test_read_article_failures_name_the_cause(monkeypatch, reply, reason):
+    # A page Tavily couldn't read, an empty page, no result at all, or a
+    # malformed reply each raise an error naming the problem — never an
+    # empty article that looks like a real one.
+    _fake_tavily(monkeypatch, reply=reply)
+    with pytest.raises(RuntimeError, match=reason):
+        news.read_article(_ARTICLE_URL)
+
+
+def test_read_article_tavily_failure_names_the_cause(monkeypatch):
+    _fake_tavily(monkeypatch, error=requests.ConnectionError("offline"))
+    with pytest.raises(RuntimeError, match="Tavily extract failed: ConnectionError"):
+        news.read_article(_ARTICLE_URL)

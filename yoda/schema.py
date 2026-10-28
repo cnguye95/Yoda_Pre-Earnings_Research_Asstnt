@@ -274,6 +274,19 @@ class NewsSearchResult(BaseModel):
     source_domain: str = ""            # e.g. "reuters.com"
 
 
+class ArticleText(BaseModel):
+    """The full text of one news article, as read by yoda.tools.news.read_article().
+
+    Long articles are cut to a fixed length; *truncated* says when that
+    happened and *full_chars* gives the length before the cut, so a reader
+    never mistakes a cut article for the whole thing.
+    """
+    url: str
+    text: str
+    full_chars: int
+    truncated: bool
+
+
 # ---------------------------------------------------------------------------
 # Top-level report model
 # ---------------------------------------------------------------------------

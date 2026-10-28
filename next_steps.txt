@@ -461,6 +461,21 @@ IDEAS for Improvements/Changes
        est. +$0.25-0.55 per run, pushes Haiku prompts past 100K tokens
        (5x price) and floods synthesis and the judge with articles no one
        cited.
+   - DONE (step 5, 2026-10-28) — tool parts:
+     * News window: search_news uses Tavily's news search from the filing
+       date on (ToolContext.news_since, set by the panel); with no filing,
+       the last 30 days (AGREED). Undated articles are kept and show as
+       "no-date" (AGREED). Tavily's old "days" field is set to the same
+       window so its 3-day default can't cut the search short.
+     * read_article: yoda/tools/news.py reads one article with Tavily
+       Extract, cut at 20,000 chars (~5K tokens) and marked when cut; the
+       tool in yoda/modes/tools.py opens only URLs in the news pool, reads
+       each once per run and records it in ToolContext.read_articles.
+     * Tests: tests/test_retrieval.py, tests/test_offline.py.
+     * NOT done yet (step 6): registering read_article with personalities
+       (TOOL_SCHEMAS / TOOL_DISPATCH / TOOL_ARGS, the panel's article
+       display, the prompt's tool list), passing read articles to synthesis,
+       the playbook, the source-tier list and tag-vs-source validation.
 
 3.10 Tests (offline, per CLAUDE.md)
    - 8-K item parsing and date filtering; 8-K chunk labels (item code +
@@ -572,3 +587,6 @@ IDEAS for Improvements/Changes
    - Acceptance: a reader who stops after the first screen knows (a) what
      problem Yoda solves, (b) that it was evaluated against a baseline, and
      (c) that it won, with numbers.
+
+10. Investigate Chroma usage reporting
+  - do full inspection of chromaDB pipeline
