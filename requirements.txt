@@ -47,8 +47,8 @@ numpy==2.5.4
 
 # Local Qwen embedding model — alternative to OpenAI text-embedding-3-small
 # (~1.2 GB model download on first use, cached in ~/.cache/huggingface/)
-sentence-transformers==3.3.1
-torch==2.5.1
+# sentence-transformers==3.3.1
+# torch==2.5.1
 
 urllib3==2.0.7
 # Env loading
