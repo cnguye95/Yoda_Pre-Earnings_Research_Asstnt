@@ -199,10 +199,56 @@ def test_market_today_uses_new_york_time(monkeypatch):
     assert dates.market_today().isoformat() == "2026-01-01"
 
 
-def test_http_session_retries_server_errors_once_and_only_for_get():
-    # The retry rules every module relies on, read from the live session.
-    policy = http_session.session.get_adapter("https://example.com").max_retries
-    assert policy.total == 1
-    assert set(policy.status_forcelist) == {500, 502, 503, 504}
-    assert policy.allowed_methods == frozenset({"GET"})
-    assert policy.raise_on_status is False           # callers still see the final status code
+@pytest.fixture
+def local_server():
+    # A tiny web server on this computer (127.0.0.1) that answers each request
+    # with the next (status, body) from a list the test fills in, and counts
+    # requests. It exercises the real retry code with no outside network.
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+    import threading
+
+    replies: list[tuple[int, str]] = []
+    hits: list[str] = []
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            hits.append(self.path)
+            status, body = replies.pop(0) if replies else (200, "ok")
+            self.send_response(status)
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body.encode())
+
+        def log_message(self, *args):
+            pass  # keep test output quiet
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    yield f"http://127.0.0.1:{server.server_port}/", replies, hits
+    server.shutdown()
+
+
+def test_http_session_retries_a_server_error_once(local_server):
+    url, replies, hits = local_server
+    replies.extend([(503, "busy"), (200, "Whisper $2.60")])
+    resp = http_session.make_session().get(url, timeout=5)
+    assert resp.status_code == 200 and resp.text == "Whisper $2.60"
+    assert len(hits) == 2
+
+
+def test_http_session_returns_final_error_after_one_retry(local_server):
+    # Two server errors in a row: the caller gets the last status, not an exception.
+    url, replies, hits = local_server
+    replies.extend([(503, "busy"), (502, "bad gateway")])
+    resp = http_session.make_session().get(url, timeout=5)
+    assert resp.status_code == 502
+    assert len(hits) == 2
+
+
+def test_http_session_does_not_retry_client_errors(local_server):
+    # A 403 (blocked) won't change on a second try, so it is asked once.
+    url, replies, hits = local_server
+    replies.append((403, "Forbidden"))
+    resp = http_session.make_session().get(url, timeout=5)
+    assert resp.status_code == 403
+    assert len(hits) == 1

@@ -8,11 +8,13 @@ and cost nothing.
 """
 
 import json
-from datetime import date, timedelta
+from datetime import timedelta
 from types import SimpleNamespace
 
 import pytest
+import requests
 
+from yoda.dates import market_today
 from yoda.tools import consensus
 
 
@@ -21,8 +23,9 @@ from yoda.tools import consensus
 # ---------------------------------------------------------------------------
 
 def _day(offset: int) -> str:
-    # A YYYY-MM-DD date `offset` days from today (negative = in the past).
-    return (date.today() + timedelta(days=offset)).isoformat()
+    # A YYYY-MM-DD date `offset` days from today's market (New York) date,
+    # the same "today" the code uses (negative = in the past).
+    return (market_today() + timedelta(days=offset)).isoformat()
 
 
 def _response(status: int = 200, data=None, text: str = ""):
@@ -46,19 +49,22 @@ def _fake_finnhub(monkeypatch, calendar=None, trends=None, quote=None,
 
 
 def _fake_http(monkeypatch, routes: dict):
-    # Replace requests.get: each URL prefix in `routes` maps to a response,
-    # or to a list of responses returned one per call (for retry tests).
-    # Every call is recorded so tests can check what was (not) requested.
+    # Replace the shared web session: each URL prefix in `routes` maps to a
+    # response, or to an exception to raise. Every call is recorded so tests
+    # can check what was (not) requested. (The session's own retry logic is
+    # tested against a real local server in tests/test_ingest.py.)
     calls = []
 
     def fake_get(url, params=None, headers=None, timeout=None):
         calls.append(url)
         for prefix, resp in routes.items():
             if url.startswith(prefix):
-                return resp.pop(0) if isinstance(resp, list) else resp
+                if isinstance(resp, Exception):
+                    raise resp
+                return resp
         raise AssertionError(f"unexpected HTTP call to {url}")
 
-    monkeypatch.setattr(consensus.requests, "get", fake_get)
+    monkeypatch.setattr(consensus, "session", SimpleNamespace(get=fake_get))
     return calls
 
 
@@ -97,7 +103,7 @@ def test_consensus_picks_earliest_future_report(monkeypatch):
     _fake_finnhub(monkeypatch, calendar=[
         _calendar_row(120, quarter=4, eps=2.8),
         _calendar_row(22, quarter=3, eps=2.5),
-    ], trends=[{"period": "2026-10-01", "buy": 40, "hold": 5}])
+    ], trends=[{"period": "2026-10-01", "strongBuy": 0, "buy": 40, "hold": 5, "sell": 0, "strongSell": 0}])
     calls = _fake_http(monkeypatch, {})  # FMP must not be called
 
     c = consensus.get_consensus("test")
@@ -214,7 +220,7 @@ def test_fmp_earnings_limit_fits_free_plan(monkeypatch):
         return _response(data=[])
 
     _fake_finnhub(monkeypatch)
-    monkeypatch.setattr(consensus.requests, "get", fake_get)
+    monkeypatch.setattr(consensus, "session", SimpleNamespace(get=fake_get))
     consensus.get_consensus("TEST")
 
     assert sent and sent[0]["limit"] <= 5
@@ -238,7 +244,8 @@ def test_basic_metrics_separates_ttm_and_fiscal_year_eps(monkeypatch):
     assert m["ttm_eps"] == 7.91
     assert (m["last_fy_eps"], m["last_fy_end"]) == (4.90, "2026-01-25")
     assert m["market_cap"] == 4e12
-    assert set(m["sources"]) == {"current_price", "market_cap", "ttm_eps", "last_fy_eps"}
+    assert set(m["sources"]) == {"current_price", "market_cap", "ttm_eps", "last_fy_eps", "last_fy_end"}
+    assert m["data_gaps"] == []
 
 
 def test_basic_metrics_unknown_ticker_raises(monkeypatch):
@@ -323,27 +330,88 @@ def test_whisper_page_blocked_is_not_retried(monkeypatch):
     assert calls.count(_PAGE_URL) == 1
 
 
-def test_whisper_page_server_error_is_retried_once(monkeypatch):
-    # A momentary 503 followed by a good page still verifies the whisper.
+def test_whisper_page_server_error_is_rejected_with_its_status(monkeypatch):
+    # The shared session has already retried once by the time a 5xx reaches
+    # this code, so the whisper is rejected and the status code is reported.
     _fake_claude(monkeypatch, [("end_turn", _whisper_reply())])
-    calls = _no_signals(monkeypatch, {_PAGE_URL: [_response(503, text="busy"),
-                                                  _response(text="Whisper $2.60")]})
-
-    w = consensus.get_eps_whisper("TEST", _CONSENSUS)
-
-    assert w["whisper_status"] == "verified"
-    assert calls.count(_PAGE_URL) == 2
-
-
-def test_whisper_page_server_error_twice_is_rejected(monkeypatch):
-    _fake_claude(monkeypatch, [("end_turn", _whisper_reply())])
-    calls = _no_signals(monkeypatch, {_PAGE_URL: [_response(503, text="busy"),
-                                                  _response(502, text="bad gateway")]})
+    _no_signals(monkeypatch, {_PAGE_URL: _response(502, text="bad gateway")})
 
     w = consensus.get_eps_whisper("TEST", _CONSENSUS)
 
     assert w["whisper_status"] == "rejected" and "HTTP 502" in w["reason"]
-    assert calls.count(_PAGE_URL) == 2
+
+
+def test_whisper_page_fetches_go_through_the_retrying_session():
+    # The cited page must be fetched with the shared session that retries.
+    from yoda import http_session
+    assert consensus.session is http_session.session
+
+
+def test_whisper_from_another_site_is_rejected_and_never_fetched(monkeypatch):
+    # Claude's tools are limited to earningswhispers.com, but its answer is
+    # still checked: a URL anywhere else is not downloaded at all.
+    other = "https://evil.example.com/earningswhispers.com/test"
+    _fake_claude(monkeypatch, [("end_turn", _whisper_reply(url=other))])
+    calls = _no_signals(monkeypatch)
+
+    w = consensus.get_eps_whisper("TEST", _CONSENSUS)
+
+    assert w["whisper_status"] == "rejected" and "not on earningswhispers.com" in w["reason"]
+    assert other not in calls
+
+
+def test_whisper_number_only_inside_page_script_is_not_verified(monkeypatch):
+    # A number buried in page code isn't "written on the page".
+    _fake_claude(monkeypatch, [("end_turn", _whisper_reply(value=2.6))])
+    _no_signals(monkeypatch, {_PAGE_URL: _response(
+        text="<p>Whisper coming soon</p><script>var whisper = 2.60;</script>")})
+
+    w = consensus.get_eps_whisper("TEST", _CONSENSUS)
+
+    assert w["whisper_status"] == "rejected" and "not found on the cited page" in w["reason"]
+
+
+def test_rejected_whisper_is_kept_apart_from_real_fields(monkeypatch):
+    # A rejected answer's quarter/URL must not look like real whisper data.
+    _fake_claude(monkeypatch, [("end_turn", _whisper_reply(quarter=2))])
+    _no_signals(monkeypatch)
+
+    w = consensus.get_eps_whisper("TEST", _CONSENSUS)
+
+    assert (w["fiscal_quarter"], w["source_url"], w["page_date"]) == (None, None, None)
+    assert w["rejected_candidate"]["fiscal_quarter"] == 2
+
+
+def test_whisper_quarter_as_text_still_matches(monkeypatch):
+    # Claude writing "3" instead of 3 is the same quarter, not a mismatch.
+    reply = json.dumps({"whisper_eps": "2.60", "fiscal_quarter": "3", "fiscal_year": "2027",
+                        "source_url": _PAGE_URL, "page_date": None})
+    _fake_claude(monkeypatch, [("end_turn", reply)])
+    _no_signals(monkeypatch, {_PAGE_URL: _response(text="Whisper $2.60")})
+
+    w = consensus.get_eps_whisper("TEST", _CONSENSUS)
+
+    assert w["whisper_status"] == "verified" and w["fiscal_quarter"] == 3
+
+
+def test_whisper_equal_to_consensus_is_flagged(monkeypatch):
+    _fake_claude(monkeypatch, [("end_turn", _whisper_reply(value=2.47))])
+    _no_signals(monkeypatch, {_PAGE_URL: _response(text="Whisper $2.47")})
+
+    w = consensus.get_eps_whisper("TEST", _CONSENSUS)
+
+    assert w["whisper_status"] == "verified" and w["matches_consensus"] is True
+    assert w["note"].endswith("It is the same figure as the published analyst consensus.")
+
+
+def test_zero_consensus_eps_is_shown_to_claude_as_zero(monkeypatch):
+    # A real 0.0 consensus must reach the prompt as 0.0, not as "unknown".
+    requests_made = _fake_claude(monkeypatch, [("end_turn", _whisper_reply(value=None))])
+    _no_signals(monkeypatch)
+    consensus.get_eps_whisper("TEST", {**_CONSENSUS, "eps_estimate": 0.0})
+
+    prompt = requests_made[0]["messages"][0]["content"]
+    assert "(currently 0.0)" in prompt
 
 
 @pytest.mark.parametrize("reply, status", [
@@ -409,6 +477,85 @@ def test_whisper_request_uses_earningswhispers_search_and_fetch(monkeypatch):
     assert all(t["allowed_domains"] == ["earningswhispers.com"] for t in request["tools"])
 
 
+def test_parse_json_object_ignores_trailing_braces():
+    # The old greedy pattern grabbed up to the LAST "}" and failed here.
+    text = 'Answer: {"whisper_eps": 2.6} (see {note})'
+    assert consensus._parse_json_object(text) == {"whisper_eps": 2.6}
+
+
+# ---------------------------------------------------------------------------
+# Data gaps say what really happened
+# ---------------------------------------------------------------------------
+
+def test_gap_messages_name_only_the_sources_tried(monkeypatch):
+    # report_hour comes only from Finnhub, so its gap must not mention FMP.
+    _fake_finnhub(monkeypatch)
+    _fake_http(monkeypatch, {consensus._FMP_EARNINGS_URL: _response(data=[])})
+
+    gaps = consensus.get_consensus("TEST")["data_gaps"]
+
+    assert "report_hour: not available from Finnhub earnings calendar." in gaps
+    assert "eps_estimate: not available from Finnhub earnings calendar or FMP earnings." in gaps
+    assert "analyst_count: not available from Finnhub recommendation trends." in gaps
+
+
+def test_network_failure_is_named_in_data_gaps(monkeypatch):
+    # An FMP outage must read as an outage, not as "no estimate exists".
+    _fake_finnhub(monkeypatch, calendar=[_calendar_row(22, eps=None)])
+    _fake_http(monkeypatch, {consensus._FMP_EARNINGS_URL: requests.ConnectionError("down")})
+
+    gaps = consensus.get_consensus("TEST")["data_gaps"]
+
+    assert any("network error (ConnectionError)" in gap for gap in gaps)
+
+
+def test_fmp_error_object_with_status_200_is_a_gap_not_a_crash(monkeypatch):
+    # FMP sometimes answers 200 with {"Error Message": ...} instead of rows.
+    _fake_finnhub(monkeypatch, calendar=[_calendar_row(22, eps=None)])
+    _fake_http(monkeypatch, {consensus._FMP_EARNINGS_URL: _response(data={"Error Message": "Limit"})})
+
+    c = consensus.get_consensus("TEST")
+
+    assert c["eps_estimate"] is None
+    assert any("unexpected reply" in gap for gap in c["data_gaps"])
+
+
+def test_finnhub_rate_limit_is_named_in_data_gaps(monkeypatch):
+    # HTTP 429 is "try later", not "no data" — the gap must say which.
+    def rate_limited(**kwargs):
+        raise consensus.FinnhubAPIException(SimpleNamespace(
+            status_code=429, text="", json=lambda: {"error": "API limit reached"}))
+    _fake_finnhub(monkeypatch)
+    monkeypatch.setattr(consensus.finnhub, "Client", lambda api_key: SimpleNamespace(
+        earnings_calendar=rate_limited, recommendation_trends=lambda symbol: []))
+    _fake_http(monkeypatch, {consensus._FMP_EARNINGS_URL: _response(data=[])})
+
+    gaps = consensus.get_consensus("TEST")["data_gaps"]
+
+    assert any("HTTP 429" in gap and "API limit reached" in gap for gap in gaps)
+
+
+def test_missing_rating_bucket_is_not_counted_as_zero(monkeypatch):
+    # A period missing some rating counts can't give a true total.
+    _fake_finnhub(monkeypatch, calendar=[_calendar_row(22)],
+                  trends=[{"period": "2026-10-01", "buy": 40, "hold": 5}])
+    _fake_http(monkeypatch, {})
+
+    c = consensus.get_consensus("TEST")
+
+    assert c["analyst_count"] is None
+    assert any("missing rating counts" in gap for gap in c["data_gaps"])
+
+
+def test_basic_metrics_lists_gaps_for_missing_eps(monkeypatch):
+    _fake_finnhub(monkeypatch, quote={"c": 180.0}, profile={"marketCapitalization": 10})
+
+    m = consensus.get_basic_metrics("TEST")
+
+    assert m["ttm_eps"] is None and m["last_fy_eps"] is None and m["last_fy_end"] is None
+    assert "ttm_eps: not available from Finnhub basic financials." in m["data_gaps"]
+
+
 # ---------------------------------------------------------------------------
 # get_expectation_signals — free fallback facts
 # ---------------------------------------------------------------------------
@@ -456,6 +603,35 @@ def test_expectation_signals_are_computed_with_sources(monkeypatch):
     assert s["data_gaps"] == [] and s["fetched_at"]
 
 
+def test_rounding_noise_is_not_a_beat(monkeypatch):
+    # 0.1 + 0.2 is stored as 0.30000000000000004 — a rounding remainder, not a beat.
+    _fake_finnhub(monkeypatch, earnings=[
+        {"period": "2026-06-30", "actual": 0.1 + 0.2, "estimate": 0.3, "surprisePercent": 0.0},
+    ])
+    _fake_http(monkeypatch, {consensus._FMP_GRADES_URL: _response(data=[]),
+                             consensus._FMP_PRICE_TARGET_URL: _response(data=[])})
+
+    beats = consensus.get_expectation_signals("TEST")["beat_history"]
+
+    assert (beats["beats"], beats["misses"]) == (0, 0)
+
+
+def test_average_surprise_says_how_many_quarters_it_covers(monkeypatch):
+    # Two quarters have results but only one has a surprise percentage.
+    _fake_finnhub(monkeypatch, earnings=[
+        {"period": "2026-06-30", "actual": 2.0, "estimate": 1.0, "surprisePercent": 100.0},
+        {"period": "2026-03-31", "actual": 1.0, "estimate": 1.0, "surprisePercent": None},
+    ])
+    _fake_http(monkeypatch, {consensus._FMP_GRADES_URL: _response(data=[]),
+                             consensus._FMP_PRICE_TARGET_URL: _response(data=[])})
+
+    signals = consensus.get_expectation_signals("TEST")
+
+    assert signals["beat_history"]["quarters"] == 2
+    assert signals["beat_history"]["avg_over_quarters"] == 1
+    assert "(over 1 quarters)" in consensus._signals_sentence("TEST", signals)
+
+
 def test_expectation_signals_missing_data_listed_as_gaps(monkeypatch):
     _no_signals(monkeypatch)
 
@@ -497,7 +673,7 @@ def test_signals_sentence_skips_unknown_price(monkeypatch):
 # get_implied_move — EarningsWatcher feed
 # ---------------------------------------------------------------------------
 
-_EW_FEED = consensus._EW_URL.format(ticker="TEST")
+_EW_FEED = consensus._EARNINGS_WATCHER_URL.format(ticker="TEST")
 
 
 def _ew_data(**overrides) -> dict:
@@ -533,6 +709,14 @@ def test_implied_move_none_with_reason(monkeypatch, data, our_date, reason_part)
 
     assert m["implied_move_pct"] is None
     assert reason_part in m["reason"]
+
+
+def test_implied_move_non_numeric_value_is_not_used(monkeypatch):
+    _fake_http(monkeypatch, {_EW_FEED: _response(data=_ew_data(implied_live_pct="n/a"))})
+
+    m = consensus.get_implied_move("TEST", _day(22))
+
+    assert m["implied_move_pct"] is None and "no live implied move" in m["reason"]
 
 
 def test_implied_move_uncovered_ticker(monkeypatch):
