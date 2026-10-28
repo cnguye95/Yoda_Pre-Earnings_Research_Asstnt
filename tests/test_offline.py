@@ -216,6 +216,48 @@ def test_retrieve_filing_also_searches_the_8ks_together():
     assert calls == [("query", "q", 4), ("query", "k", 4), ("query_any", ("8k-a", "8k-b"), 4)]
 
 
+def _fake_chunk(document: str = "") -> Chunk:
+    return Chunk(text="Revenue rose.", section="MD&A", chunk_index=0, char_start=0, char_end=13, document=document)
+
+
+def test_filing_chunks_are_labelled_with_their_filing():
+    # A 10-Q chunk and a 10-K chunk say which filing (and date) they are
+    # from; an 8-K chunk keeps the label it was stored with.
+    class _Store:
+        # Returns one chunk per search; the 8-K one already labelled.
+        def query(self, accession, query, k):
+            return [_fake_chunk()]
+
+        def query_any(self, accessions, query, k):
+            return [_fake_chunk("8-K Item 2.02 (filed 2026-10-13)")]
+    ctx = tools.ToolContext(primary_ticker="TEST", primary_accession="q", supplemental_accession="k",
+                            store=_Store(), primary_label="10-Q filed 2026-08-06",
+                            supplemental_label="10-K filed 2026-02-01", eight_k_accessions=["8k"])
+
+    labels = [chunk.document for chunk in tools.retrieve_filing(ctx, "revenue")]
+
+    assert labels == ["10-Q filed 2026-08-06", "10-K filed 2026-02-01", "8-K Item 2.02 (filed 2026-10-13)"]
+
+
+def test_peer_chunks_are_labelled_as_a_competitors(monkeypatch):
+    # lookup_peer marks its chunks "PEER", so their evidence is a proxy.
+    class _Store:
+        # Accepts the peer filing and returns one chunk for it.
+        def index_if_missing(self, accession, chunks):
+            return False
+
+        def query(self, accession, query, k):
+            return [_fake_chunk()]
+    peer_filing = Filing(ticker="DIS", filing_type="10-Q", filing_date="2026-08-04", accession_number="dis-q",
+                         clean_text="Revenue rose.")
+    monkeypatch.setattr(tools, "fetch_latest_filing", lambda ticker: peer_filing)
+    ctx = tools.ToolContext(primary_ticker="NFLX", primary_accession="q", store=_Store())
+
+    [chunk] = tools.lookup_peer(ctx, "dis", "revenue")
+
+    assert chunk.document == "PEER DIS 10-Q filed 2026-08-04"
+
+
 # ---------------------------------------------------------------------------
 # Tool loop — a failing tool must not crash the personality
 # ---------------------------------------------------------------------------

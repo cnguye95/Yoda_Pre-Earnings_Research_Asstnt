@@ -54,6 +54,12 @@ class ToolContext:
     store: ChromaStore
     supplemental_accession: str | None = None   # 10-K when the primary is a 10-Q
 
+    # Labels naming each filing, e.g. "10-Q filed 2026-08-06". retrieve_filing
+    # puts them on every chunk it returns, so a personality (and the checks on
+    # its evidence) can tell which filing, and which date, a passage is from.
+    primary_label: str = ""
+    supplemental_label: str = ""
+
     # The 8-Ks filed after the primary filing, already stored in the vector
     # store, so retrieve_filing can search them too.
     eight_k_accessions: list[str] = field(default_factory=list)
@@ -70,9 +76,10 @@ class ToolContext:
     # exactly which articles were read, and a second read costs nothing.
     read_articles: dict[str, ArticleText] = field(default_factory=dict)
 
-    # Which peer tickers are already in the store (peer -> accession), so a
-    # second lookup_peer call for the same peer skips re-ingestion.
-    _ingested_peers: dict[str, str] = field(default_factory=dict)
+    # Which peer tickers are already in the store (peer -> (accession, label)),
+    # so a second lookup_peer call for the same peer skips re-ingestion. The
+    # label, e.g. "PEER DIS 10-Q filed 2026-08-04", goes on its chunks.
+    _ingested_peers: dict[str, tuple[str, str]] = field(default_factory=dict)
 
     # Locks so two threads never update the peer map, news pool or read
     # articles at once.
@@ -91,16 +98,26 @@ def retrieve_filing(ctx: ToolContext, query: str, k: int = 5) -> list[Chunk]:
     Queries the primary filing (10-Q) and the supplemental filing (10-K)
     when both are available, plus the k best matches across all 8-Ks filed
     since — up to 3k chunks, so personalities see the freshest quarterly
-    data, annual context, and what was announced after the filing. 8-K
-    chunks carry a label naming the 8-K they came from.
+    data, annual context, and what was announced after the filing. Every
+    chunk's `document` names the filing it came from, e.g. "10-Q filed
+    2026-08-06" or "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)".
     """
     # ChromaStore queries are safe to call concurrently from multiple
-    # personality threads since reads don't mutate the on-disk index.
-    chunks = ctx.store.query(ctx.primary_accession, query, k=k) if ctx.primary_accession else []
+    # personality threads since reads don't mutate the on-disk index. Each
+    # 10-Q/10-K chunk is labelled with its filing here, at retrieval time,
+    # so nothing stored changes; 8-K chunks are stored with their labels.
+    chunks = []
+    if ctx.primary_accession:
+        chunks += _labelled(ctx.store.query(ctx.primary_accession, query, k=k), ctx.primary_label)
     if ctx.supplemental_accession:
-        chunks += ctx.store.query(ctx.supplemental_accession, query, k=k)
+        chunks += _labelled(ctx.store.query(ctx.supplemental_accession, query, k=k), ctx.supplemental_label)
     chunks += ctx.store.query_any(ctx.eight_k_accessions, query, k=k)
     return chunks
+
+
+def _labelled(chunks: list[Chunk], label: str) -> list[Chunk]:
+    """Return copies of *chunks* whose `document` names the filing they came from."""
+    return [chunk.model_copy(update={"document": label}) for chunk in chunks] if label else chunks
 
 
 # ---------------------------------------------------------------------------
@@ -177,12 +194,14 @@ def lookup_peer(ctx: ToolContext, peer_ticker: str, query: str, k: int = 3) -> l
             peer_chunks = chunk_filing(peer_filing.clean_text)
             # Embeds only if an earlier run hasn't already stored this filing.
             ctx.store.index_if_missing(peer_filing.accession_number, peer_chunks)
-            ctx._ingested_peers[peer_ticker] = peer_filing.accession_number
+            peer_label = f"PEER {peer_ticker} {peer_filing.filing_type} filed {peer_filing.filing_date}"
+            ctx._ingested_peers[peer_ticker] = (peer_filing.accession_number, peer_label)
 
-        peer_accession = ctx._ingested_peers[peer_ticker]
+        peer_accession, peer_label = ctx._ingested_peers[peer_ticker]
 
-    # Query is read-only, safe outside the lock.
-    return ctx.store.query(peer_accession, query, k=k)
+    # Query is read-only, safe outside the lock. The "PEER" label marks these
+    # as a competitor's figures — only an indirect signal (proxy) for this company.
+    return _labelled(ctx.store.query(peer_accession, query, k=k), peer_label)
 
 
 # ---------------------------------------------------------------------------

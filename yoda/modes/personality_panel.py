@@ -37,6 +37,7 @@ import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timezone
+from typing import Literal, NamedTuple
 
 import anthropic
 import pydantic
@@ -55,10 +56,13 @@ from yoda.modes.tools import (
     normalize_call,
 )
 from yoda.retrieval.vector_store import ChromaStore
+from yoda.dates import market_today
 from yoda.schema import (
     ArticleText,
     EarningsReport,
     EightKFiling,
+    EvidenceQuote,
+    EvidenceType,
     Hypothesis,
     CritiqueMessage,
     Filing,
@@ -137,7 +141,46 @@ Rules:
   - If a tool returns "no new evidence", switch tools or FINISH.
   - When you have enough evidence to answer your hypothesis question, FINISH.
     Calling more tools without a specific new question wastes the analyst's
-    time and the user's budget."""
+    time and the user's budget.
+
+What moves a stock on earnings — look for evidence on these:
+  - Results vs expectations: revenue, EPS and the KPIs this company is
+    judged on, against consensus and the whisper (see CONTEXT).
+  - Guidance: changes to management's outlook, and how it compares with
+    consensus.
+  - Margins and costs: gross and operating margin trends and their drivers.
+  - What changed since the filing: 8-Ks (earnings release, deals, debt,
+    management changes) and credible news.
+
+Judging a source (most reliable first): the company's own filings and
+releases > data vendors (consensus feeds) > major financial press (Reuters,
+Bloomberg, WSJ, FT) > aggregators and blogs. Prefer the most reliable source
+available; trace an aggregator's claim to the source it names.
+
+Evidence tiers, most reliable first: reported > guided > estimate > proxy >
+unverifiable. When sources disagree:
+  - For the same metric and period, the more reliable tier wins and both
+    are shown.
+  - Newer information is preferred only within the same tier, or when it
+    covers a later period.
+  - Guidance, consensus and whisper for the same period are different
+    quantities, not conflicting claims. Showing the gap between them is
+    good. The tier rule applies only when sources give different values for
+    the same fact."""
+
+# How a personality reports each piece of evidence in its wrap-up. Code then
+# checks every field against what the personality was shown.
+_EVIDENCE_FIELDS_GUIDE = """For each piece of evidence give:
+  quote: the exact words, copied from what a tool returned or from CONTEXT.
+  citation: the [label] of the filing passage, the article URL, or CONTEXT.
+  source: who the claim comes from — for news, the source the article names,
+    written as the article writes it (e.g. "LSEG", "Netflix"), not the outlet;
+    "none stated" if it names none.
+  evidence_type: reported (company actuals for a closed period), guided
+    (management's outlook), estimate (third-party expectation), proxy
+    (indirect signal, e.g. a peer's results), unverifiable (no source named).
+  relevance: direct (same metric and period as your question) or context,
+    with a one-line relevance_reason."""
 
 _PERSONALITY_PROMPTS = {
     "Optimist": (
@@ -195,12 +238,24 @@ _PERSONALITY_PROMPTS = {
 # Internal pydantic models — used only for structured-output coercion
 # ---------------------------------------------------------------------------
 
+class _EvidenceDraft(BaseModel):
+    # One piece of evidence as a personality reports it. Code checks it
+    # against what the personality was shown (_check_evidence) and adds the
+    # date before it is kept as an EvidenceQuote.
+    quote: str
+    citation: str
+    source: str
+    evidence_type: EvidenceType
+    relevance: Literal["direct", "context"]
+    relevance_reason: str
+
+
 class _PersonalityHypothesisDraft(BaseModel):
     # What a personality emits at the end of its loop (no ID, no personality
     # field — orchestrator wraps these into final Hypothesis objects).
     question: str
     summary: str
-    evidence_quotes: list[str]
+    evidence_quotes: list[_EvidenceDraft]
     confidence: int = Field(ge=1, le=5)
 
 
@@ -255,19 +310,32 @@ def _chunk_heading(chunk: Chunk) -> str:
 _CHUNK_PREVIEW_CHARS = 1200
 
 
+def _chunk_label(chunk: Chunk) -> str:
+    """Return the label a personality sees for *chunk* (without the brackets).
+
+    It names the filing the chunk came from, its section when known, and a
+    heading: "10-Q filed 2026-08-06 · MD&A — Revenue", "8-K Items 2.02, 9.01,
+    Exhibit 99.1 (filed 2026-10-13) — Third-Quarter Results", or "PEER DIS
+    10-Q filed 2026-08-04 · MD&A — Revenue". A chunk with no filing name
+    shows just "section — heading".
+    """
+    origin = chunk.section
+    if chunk.document:
+        origin = chunk.document if chunk.section == "Other" else f"{chunk.document} · {chunk.section}"
+    return f"{origin} — {_chunk_heading(chunk)}"
+
+
 def _render_chunks(chunks: list[Chunk]) -> str:
     """Format filing chunks as text for a personality to read.
 
-    Each chunk is headed by a "[section — heading]" label the agent can
-    quote back in evidence_quotes as its citation. An 8-K chunk names its
-    8-K instead of a section, e.g. "[8-K Items 2.02, 9.01, Exhibit 99.1
-    (filed 2026-10-13) — Third-Quarter Results]", so the reader can tell
-    post-filing news from the 10-Q/10-K.
+    Each chunk is headed by its "[label]" (see _chunk_label), which the
+    agent quotes back as the citation for its evidence, so the reader can
+    tell the 10-Q, the 10-K, an 8-K and a competitor's filing apart.
     """
     if not chunks:
         return "No chunks returned."
     return "\n\n".join(
-        f"[{chunk.document or chunk.section} — {_chunk_heading(chunk)}]\n{chunk.text[:_CHUNK_PREVIEW_CHARS]}"
+        f"[{_chunk_label(chunk)}]\n{chunk.text[:_CHUNK_PREVIEW_CHARS]}"
         for chunk in chunks
     )
 
@@ -299,10 +367,183 @@ def _render_news(items: list[NewsSearchResult]) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Evidence checks — what each personality saw, and whether its tags fit
+# ---------------------------------------------------------------------------
+
+class _SeenSource(NamedTuple):
+    """One source a personality was shown, kept to check the evidence it cites.
+
+    *kind* is "filing" (the company's 10-Q/10-K), "8-K", "peer" (a
+    competitor's filing), "news" (a search result, plus the article text if
+    it was read) or "market" (the shared CONTEXT block). *text* is exactly
+    what the personality was shown. *source* is who the content comes from
+    when code knows it ("" for news, whose source the article must name).
+    """
+    label: str
+    kind: str
+    text: str
+    as_of: str | None
+    source: str
+
+
+# Finds a YYYY-MM-DD date in a filing label such as "10-Q filed 2026-08-06".
+_DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
+
+# The key the shared context block is filed under (what "CONTEXT", the
+# citation personalities use for it, becomes once normalized).
+_CONTEXT_KEY = "context"
+
+
+def _norm(text: str) -> str:
+    """Lower-case *text*, drop brackets and quote marks, and collapse spacing, for matching."""
+    for mark in "[]\"“”‘’'":
+        text = text.replace(mark, " ")
+    return " ".join(text.lower().split())
+
+
+def _quote_in(quote: str, text: str) -> bool:
+    """True if *quote* appears in *text*, ignoring case and spacing.
+
+    A quote shortened with "..." matches when every part around the dots
+    appears. An empty quote never matches.
+    """
+    parts = [_norm(part) for part in re.split(r"\.\.\.|…", quote)]
+    parts = [part for part in parts if part]
+    haystack = _norm(text)
+    return bool(parts) and all(part in haystack for part in parts)
+
+
+def _remember(seen: dict[str, _SeenSource], tool_name: str, raw) -> None:
+    """Record a tool result in *seen*, keyed by the label or URL the personality was shown."""
+    if tool_name == "read_article":
+        # The full article joins the snippet already on file for its URL.
+        earlier = seen.get(_norm(raw.url))
+        seen[_norm(raw.url)] = _SeenSource(raw.url, "news", f"{earlier.text if earlier else ''}\n{raw.text}",
+                                           earlier.as_of if earlier else None, "")
+        return
+    if tool_name == "search_news":
+        for item in raw:
+            earlier = seen.get(_norm(item.url))
+            shown = f"{item.title}\n{item.snippet[:300]}"
+            seen[_norm(item.url)] = _SeenSource(item.url, "news", f"{earlier.text}\n{shown}" if earlier else shown,
+                                                item.published_date, "")
+        return
+
+    # Filing chunks: the label says which filing (and date) they came from.
+    # Two chunks can share a label, so their texts are kept together.
+    for chunk in raw:
+        label = _chunk_label(chunk)
+        kind = ("peer" if chunk.document.startswith("PEER ")
+                else "8-K" if chunk.document.startswith("8-K") else "filing")
+        date_found = _DATE_RE.search(chunk.document)
+        earlier = seen.get(_norm(label))
+        shown = chunk.text[:_CHUNK_PREVIEW_CHARS]
+        seen[_norm(label)] = _SeenSource(
+            label, kind, f"{earlier.text}\n{shown}" if earlier else shown,
+            date_found.group() if date_found else None, chunk.document or "the company's filing",
+        )
+
+
+def _check_evidence(draft: "_EvidenceDraft", seen: dict[str, _SeenSource]) -> EvidenceQuote:
+    """Check one piece of a personality's evidence against what it was shown.
+
+    The quote must appear in the source it cites (if the citation is wrong
+    but the quote is found in something else the personality saw, the
+    citation is corrected). The tag must fit that source: a filing or 8-K is
+    reported or guided; a competitor's filing is proxy; the market data in
+    CONTEXT is estimate; a news claim keeps its tag only if the article
+    names the source the personality gave. Anything that fails becomes
+    unverifiable, and check_note says why. The date, and the source of
+    filings and market data, are set from what code knows.
+    """
+    notes: list[str] = []
+
+    # Find the cited source; fall back to wherever the quote really is.
+    entry = seen.get(_norm(draft.citation))
+    if entry is None or not _quote_in(draft.quote, entry.text):
+        found = next((other for other in seen.values() if _quote_in(draft.quote, other.text)), None)
+        if found is not None:
+            notes.append(f"citation corrected to {found.label}")
+        elif entry is not None:
+            notes.append("quote not found in the cited source")
+        else:
+            notes.append("cited source was not retrieved by this analyst")
+        entry = found
+
+    # No source holds the quote: nothing to check the tag against.
+    if entry is None:
+        return EvidenceQuote(quote=draft.quote, citation=draft.citation, source=draft.source,
+                             evidence_type="unverifiable", as_of_date=None, relevance=draft.relevance,
+                             relevance_reason=draft.relevance_reason, check_note="; ".join(notes))
+
+    # The tag each kind of source allows.
+    tag, source = draft.evidence_type, entry.source or draft.source
+    if entry.kind in ("filing", "8-K") and tag not in ("reported", "guided"):
+        notes.append(f"tagged {tag}, but a filing is reported or guided")
+        tag = "unverifiable"
+    elif entry.kind == "peer" and tag != "proxy":
+        notes.append("set to proxy: a competitor's filing is an indirect signal")
+        tag = "proxy"
+    elif entry.kind == "market" and tag != "estimate":
+        notes.append("set to estimate: CONTEXT holds third-party expectations")
+        tag = "estimate"
+    elif entry.kind == "news" and tag != "unverifiable":
+        source = draft.source
+        if _norm(source) in ("", "none", "none stated") or _norm(source) not in _norm(entry.text):
+            notes.append(f"the article doesn't name {source or 'a source'}")
+            tag = "unverifiable"
+
+    return EvidenceQuote(quote=draft.quote, citation=entry.label, source=source, evidence_type=tag,
+                         as_of_date=entry.as_of, relevance=draft.relevance,
+                         relevance_reason=draft.relevance_reason, check_note="; ".join(notes) or None)
+
+
+def _apply_caps(hypothesis: Hypothesis) -> Hypothesis:
+    """Lower a hypothesis's confidence when its evidence is weak, and say why.
+
+    The agreed caps: no verifiable evidence (only unverifiable claims, or
+    none) -> at most 2/5; only proxy evidence -> at most 3/5; no direct claim
+    (same metric and period as the question) that is verifiable -> at most
+    2/5. Confidence is only ever lowered; confidence_note records the cap.
+    """
+    verified = [quote for quote in hypothesis.evidence_quotes if quote.evidence_type != "unverifiable"]
+    limits: list[tuple[int, str]] = []
+    if not verified:
+        limits.append((2, "no verifiable evidence"))
+    elif all(quote.evidence_type == "proxy" for quote in verified):
+        limits.append((3, "only proxy evidence"))
+    if not any(quote.relevance == "direct" for quote in verified):
+        limits.append((2, "no direct claim"))
+
+    # Apply the tightest cap that is below the confidence the personality gave.
+    binding = [(cap, reason) for cap, reason in limits if cap < hypothesis.confidence]
+    if not binding:
+        return hypothesis
+    cap = min(limit for limit, _ in binding)
+    note = f"capped from {hypothesis.confidence}/5 to {cap}/5: {', '.join(reason for _, reason in binding)}"
+    return hypothesis.model_copy(update={"confidence": cap, "confidence_note": note})
+
+
+def _render_evidence(quote: EvidenceQuote) -> str:
+    """Show one piece of evidence with its tags, for critique and synthesis to read."""
+    line = (f'"{quote.quote}" — {quote.citation or "no citation"} '
+            f"[{quote.evidence_type}; {quote.source}; as of {quote.as_of_date or 'date unknown'}; {quote.relevance}]")
+    return f"{line} (checked: {quote.check_note})" if quote.check_note else line
+
+
+def _confidence_text(hypothesis: Hypothesis) -> str:
+    """Return "confidence 2/5" plus the cap note when code lowered it."""
+    text = f"confidence {hypothesis.confidence}/5"
+    return f"{text}; {hypothesis.confidence_note}" if hypothesis.confidence_note else text
+
+
+# ---------------------------------------------------------------------------
 # Phase 2 — running one tool call
 # ---------------------------------------------------------------------------
 
-def _execute_tool(ctx: ToolContext, tool_name: str, raw_args: dict) -> tuple[str, str]:
+def _execute_tool(
+    ctx: ToolContext, tool_name: str, raw_args: dict, seen: dict[str, "_SeenSource"] | None = None,
+) -> tuple[str, str]:
     """Run one tool call for a personality and return (observation, outcome).
 
     *observation* is the text sent back to the model; *outcome* is a short
@@ -310,6 +551,8 @@ def _execute_tool(ctx: ToolContext, tool_name: str, raw_args: dict) -> tuple[str
     The arguments are checked first, and bad ones are explained to the model
     so it can correct itself. A tool that raises never crashes the
     personality: the model is told what failed and can try another approach.
+    Every result is also recorded in *seen* (when given), so the evidence
+    the personality cites later can be checked against what it was shown.
     """
     # Check the arguments against the tool's rules before running anything.
     try:
@@ -325,6 +568,8 @@ def _execute_tool(ctx: ToolContext, tool_name: str, raw_args: dict) -> tuple[str
         raw = TOOL_DISPATCH[tool_name](ctx, **args)
     except Exception as exc:
         return f"Tool {tool_name} failed: {type(exc).__name__}: {exc}", f"failed: {type(exc).__name__}: {exc!r}"
+    if seen is not None and raw:
+        _remember(seen, tool_name, raw)
 
     # A read article is one record, never empty (read_article raises
     # instead), so it skips the empty-result check below.
@@ -391,6 +636,14 @@ def _run_personality(
     tool_calls_used = 0
     total_in = total_out = 0
     seen_calls: set[str] = set()   # repetition detector store
+
+    # Everything this personality is shown, so the evidence it cites can be
+    # checked later. The shared context block counts as a source too: its
+    # figures are third-party expectations fetched today.
+    seen: dict[str, _SeenSource] = {}
+    if context_block:
+        seen[_CONTEXT_KEY] = _SeenSource("CONTEXT", "market", context_block, market_today().isoformat(),
+                                         "market data (CONTEXT)")
     started = time.perf_counter()
 
     # Tool-use loop. Each iteration is one messages.create call.
@@ -465,7 +718,7 @@ def _run_personality(
                 obs = f"Unknown tool '{tool_name}'. Choose one of: {list(TOOL_DISPATCH.keys())}."
             else:
                 seen_calls.add(call_key)
-                obs, outcome = _execute_tool(ctx, tool_name, raw_args)
+                obs, outcome = _execute_tool(ctx, tool_name, raw_args, seen)
                 query_label = str(raw_args.get("query", raw_args.get("peer_ticker", "")))[:60]
                 print(f"{log_prefix} [{personality}] iter {iteration}: "
                       f"{tool_name}({query_label!r}) -> {outcome}")
@@ -482,11 +735,11 @@ def _run_personality(
     # This is a separate structured-output call on the same thread.
     wrap_user = (
         "Based on the evidence you've gathered, produce 1-2 hypotheses for "
-        "the analyst. Each hypothesis MUST include direct quotes from your "
-        "evidence with their citation labels, and a confidence score (1-5) "
-        "that reflects how strongly the evidence supports your finding. "
-        "Stay in character — your hypotheses should reflect your personality "
-        "lens, not be generic."
+        "the analyst. Each hypothesis MUST include the evidence behind it and "
+        "a confidence score (1-5) that reflects how strongly the evidence "
+        "supports your finding. Stay in character — your hypotheses should "
+        "reflect your personality lens, not be generic.\n\n"
+        f"{_EVIDENCE_FIELDS_GUIDE}"
     )
     messages.append({"role": "user", "content": wrap_user})
 
@@ -539,17 +792,22 @@ def _run_personality(
     # Build the final Hypothesis list. IDs are placeholder ("local_h{N}") —
     # the orchestrator reassigns globally unique IDs across all personalities.
     # Confidence is already guaranteed to be 1-5 by the draft model's rule.
+    # Each piece of evidence is checked against what this personality was
+    # shown, then the confidence caps for weak evidence are applied.
     hypotheses = [
-        Hypothesis(
+        _apply_caps(Hypothesis(
             id=f"{personality.lower()}_local_h{number}",
             proposing_personality=personality,
             question=draft.question,
             summary=draft.summary,
-            evidence_quotes=draft.evidence_quotes,
+            evidence_quotes=[_check_evidence(evidence, seen) for evidence in draft.evidence_quotes],
             confidence=draft.confidence,
-        )
+        ))
         for number, draft in enumerate(drafts, 1)
     ]
+    for hypothesis in hypotheses:
+        if hypothesis.confidence_note:
+            print(f"{log_prefix} [{personality}] {hypothesis.question[:60]!r}: {hypothesis.confidence_note}")
 
     elapsed = time.perf_counter() - started
     cost = config.model_cost(LOOP_MODEL, total_in, total_out)
@@ -585,11 +843,13 @@ def _run_critique(
     _LLM_ERRORS if the call fails; NoStructuredOutput carries the tokens
     the failed call used.
     """
-    # Build the peer-hypothesis catalog for the personality to react to.
+    # Build the peer-hypothesis catalog for the personality to react to. Each
+    # piece of evidence shows its tags, so a reviewer can challenge evidence
+    # that is only a proxy or unverifiable.
     peers_text = "\n\n".join(
-        f"[{h.id}] proposed by {h.proposing_personality} (confidence {h.confidence}/5)\n"
+        f"[{h.id}] proposed by {h.proposing_personality} ({_confidence_text(h)})\n"
         f"Question: {h.question}\nSummary: {h.summary}\n"
-        f"Evidence: {'; '.join(h.evidence_quotes[:3])}"
+        f"Evidence: {'; '.join(_render_evidence(quote) for quote in h.evidence_quotes[:3])}"
         for h in peer_hypotheses
     )
     own_text = "\n".join(f"  - {h.id}: {h.question}" for h in own_hypotheses)
@@ -879,11 +1139,12 @@ def _synthesize_report(
 
     Returns (report, input_tokens, output_tokens).
     """
-    # Render hypotheses as a structured catalog the synthesizer can read.
+    # Render hypotheses as a structured catalog the synthesizer can read,
+    # each piece of evidence with its tags.
     hyp_text = "\n\n".join(
-        f"[{h.id}] {h.proposing_personality} (confidence {h.confidence}/5)\n"
+        f"[{h.id}] {h.proposing_personality} ({_confidence_text(h)})\n"
         f"Question: {h.question}\nFinding: {h.summary}\n"
-        f"Evidence: {'; '.join(h.evidence_quotes)}"
+        f"Evidence: {'; '.join(_render_evidence(quote) for quote in h.evidence_quotes)}"
         for h in final_hypotheses
     )
 
@@ -1273,6 +1534,9 @@ def run_personality_panel(
         primary_accession=filing.accession_number if filing else None,
         supplemental_accession=supplemental.accession_number if supplemental else None,
         store=store,
+        # "10-Q filed 2026-08-06": every chunk names its filing and date.
+        primary_label=_describe_filing(filing) if filing else "",
+        supplemental_label=_describe_filing(supplemental) if supplemental else "",
         eight_k_accessions=[eight_k.accession_number for eight_k in eight_ks],
         news_since=date.fromisoformat(filing.filing_date) if filing else None,
     )

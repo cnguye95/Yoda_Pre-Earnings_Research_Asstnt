@@ -14,8 +14,8 @@ from yoda.modes import baseline, llm
 from yoda.modes import personality_panel as panel
 from yoda.modes import tools
 from yoda.schema import (
-    ArticleText, CritiqueMessage, EarningsReport, EightKDocument, EightKFiling, ForwardGuidance, Hypothesis,
-    Metric, NewsSearchResult, PersonalityResult, Risk, Segment,
+    ArticleText, CritiqueMessage, EarningsReport, EightKDocument, EightKFiling, EvidenceQuote, ForwardGuidance,
+    Hypothesis, Metric, NewsSearchResult, PersonalityResult, Risk, Segment,
 )
 from yoda.tools.consensus import ApiFailure, MarketSnapshot
 
@@ -396,6 +396,168 @@ def test_8k_chunks_are_labelled_with_their_8k():
 
     assert rendered.startswith("[8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13) — Third-Quarter Results]")
     assert "[MD&A — Revenue]" in rendered
+
+
+# ---------------------------------------------------------------------------
+# Evidence tags — checked against what the personality was shown
+# ---------------------------------------------------------------------------
+
+_Q_LABEL = "10-Q filed 2026-08-06 · MD&A — Revenue"
+_NEWS_URL = "https://www.reuters.com/markets/nflx-preview"
+
+
+def _seen() -> dict:
+    # What one personality was shown: a 10-Q passage, a competitor's passage,
+    # a news snippet, and the shared CONTEXT block.
+    return {
+        panel._norm(_Q_LABEL): panel._SeenSource(_Q_LABEL, "filing", "Revenue was $11.5 billion, up 9%.",
+                                                 "2026-08-06", "10-Q filed 2026-08-06"),
+        panel._norm("PEER DIS 10-Q filed 2026-08-04 · MD&A — Revenue"): panel._SeenSource(
+            "PEER DIS 10-Q filed 2026-08-04 · MD&A — Revenue", "peer", "Streaming revenue rose 12%.",
+            "2026-08-04", "PEER DIS 10-Q filed 2026-08-04"),
+        panel._norm(_NEWS_URL): panel._SeenSource(
+            _NEWS_URL, "news", "Analysts polled by LSEG expect EPS of $5.12 for the quarter.", "2026-10-20", ""),
+        panel._CONTEXT_KEY: panel._SeenSource("CONTEXT", "market", "- Consensus EPS: $5.12", "2026-10-28",
+                                              "market data (CONTEXT)"),
+    }
+
+
+def _draft(quote: str, citation: str, evidence_type: str = "reported", source: str = "the company",
+           relevance: str = "direct") -> "panel._EvidenceDraft":
+    return panel._EvidenceDraft(quote=quote, citation=citation, source=source, evidence_type=evidence_type,
+                                relevance=relevance, relevance_reason="r")
+
+
+def test_filing_quote_keeps_reported_or_guided_and_gets_its_date():
+    for tag in ("reported", "guided"):
+        checked = panel._check_evidence(_draft("revenue was $11.5 billion", f"[{_Q_LABEL}]", tag), _seen())
+        assert (checked.evidence_type, checked.check_note) == (tag, None)
+        assert (checked.as_of_date, checked.source) == ("2026-08-06", "10-Q filed 2026-08-06")
+
+
+def test_wrong_tag_on_a_filing_quote_becomes_unverifiable():
+    checked = panel._check_evidence(_draft("Revenue was $11.5 billion", _Q_LABEL, "estimate"), _seen())
+    assert checked.evidence_type == "unverifiable"
+    assert checked.check_note == "tagged estimate, but a filing is reported or guided"
+
+
+def test_peer_and_context_evidence_get_the_only_tag_that_fits():
+    peer = panel._check_evidence(_draft("Streaming revenue rose 12%", "PEER DIS 10-Q filed 2026-08-04 · MD&A — Revenue"),
+                                 _seen())
+    market = panel._check_evidence(_draft("Consensus EPS: $5.12", "CONTEXT", "reported"), _seen())
+
+    assert peer.evidence_type == "proxy" and "competitor" in peer.check_note
+    assert market.evidence_type == "estimate" and market.as_of_date == "2026-10-28"
+
+
+def test_news_tag_needs_the_source_the_article_names():
+    named = panel._check_evidence(_draft("expect EPS of $5.12", _NEWS_URL, "estimate", source="LSEG"), _seen())
+    unnamed = panel._check_evidence(_draft("expect EPS of $5.12", _NEWS_URL, "estimate", source="FactSet"),
+                                    _seen())
+
+    assert (named.evidence_type, named.source, named.as_of_date) == ("estimate", "LSEG", "2026-10-20")
+    assert unnamed.evidence_type == "unverifiable" and unnamed.check_note == "the article doesn't name FactSet"
+
+
+def test_invented_quote_or_unseen_source_becomes_unverifiable():
+    invented = panel._check_evidence(_draft("Revenue doubled", _Q_LABEL), _seen())
+    unseen = panel._check_evidence(_draft("Revenue doubled", "[10-K filed 2026-02-01 · Risk Factors — FX]"), _seen())
+
+    assert invented.evidence_type == "unverifiable" and invented.check_note == "quote not found in the cited source"
+    assert unseen.evidence_type == "unverifiable"
+    assert unseen.check_note == "cited source was not retrieved by this analyst"
+
+
+def test_wrong_citation_is_corrected_when_the_quote_is_found():
+    checked = panel._check_evidence(_draft("Revenue was $11.5 billion", "MD&A"), _seen())
+    assert checked.citation == _Q_LABEL and checked.evidence_type == "reported"
+    assert checked.check_note == f"citation corrected to {_Q_LABEL}"
+
+
+def test_quote_shortened_with_dots_is_matched_part_by_part():
+    assert panel._check_evidence(_draft("Revenue was ... up 9%", _Q_LABEL), _seen()).check_note is None
+    assert panel._check_evidence(_draft("Revenue was ... down 9%", _Q_LABEL), _seen()).evidence_type == "unverifiable"
+
+
+def _tagged(evidence_type: str, relevance: str = "direct") -> EvidenceQuote:
+    return EvidenceQuote(quote="q", citation="c", source="s", evidence_type=evidence_type, as_of_date=None,
+                         relevance=relevance, relevance_reason="r", check_note=None)
+
+
+@pytest.mark.parametrize("evidence, confidence, expected, reason", [
+    ([_tagged("unverifiable")], 4, 2, "no verifiable evidence"),
+    ([], 3, 2, "no verifiable evidence"),
+    ([_tagged("proxy")], 5, 3, "only proxy evidence"),
+    ([_tagged("reported", relevance="context")], 4, 2, "no direct claim"),
+    ([_tagged("reported"), _tagged("proxy")], 5, 5, None),
+    ([_tagged("proxy")], 2, 2, None),
+])
+def test_confidence_caps(evidence, confidence, expected, reason):
+    hypothesis = Hypothesis(id="h1", proposing_personality="Quant", question="q", summary="s",
+                            evidence_quotes=evidence, confidence=confidence)
+    capped = panel._apply_caps(hypothesis)
+
+    assert capped.confidence == expected
+    if reason is None:
+        assert capped.confidence_note is None
+    else:
+        assert capped.confidence_note.startswith(f"capped from {confidence}/5 to {expected}/5")
+        assert reason in capped.confidence_note
+
+
+def test_seen_record_is_filled_from_tool_results():
+    seen = {}
+    chunk = Chunk(text="Revenue\nRevenue was $11.5 billion.", section="MD&A", chunk_index=0, char_start=0,
+                  char_end=30, document="10-Q filed 2026-08-06")
+    panel._remember(seen, "retrieve_filing", [chunk])
+    panel._remember(seen, "search_news", [NewsSearchResult(title="Preview", url=_NEWS_URL,
+                                                           published_date="2026-10-20", snippet="LSEG expects")])
+    panel._remember(seen, "read_article", ArticleText(url=_NEWS_URL, text="Full article text.", full_chars=18,
+                                                      truncated=False))
+
+    filing = seen[panel._norm("10-Q filed 2026-08-06 · MD&A — Revenue")]
+    news = seen[panel._norm(_NEWS_URL)]
+    assert (filing.kind, filing.as_of) == ("filing", "2026-08-06")
+    assert news.kind == "news" and "LSEG expects" in news.text and "Full article text." in news.text
+    assert news.as_of == "2026-10-20"
+
+
+def test_evidence_shows_its_tags_and_notes():
+    quote = _tagged("unverifiable").model_copy(update={"check_note": "the article doesn't name FactSet"})
+    rendered = panel._render_evidence(quote)
+    assert rendered == '"q" — c [unverifiable; s; as of date unknown; direct] (checked: the article doesn\'t name FactSet)'
+
+
+def test_confidence_text_shows_a_cap():
+    capped = Hypothesis(id="h1", proposing_personality="Quant", question="q", summary="s", evidence_quotes=[],
+                        confidence=2, confidence_note="capped from 4/5 to 2/5: no direct claim")
+    assert panel._confidence_text(capped) == "confidence 2/5; capped from 4/5 to 2/5: no direct claim"
+    assert panel._confidence_text(capped.model_copy(update={"confidence_note": None})) == "confidence 2/5"
+
+
+def test_wrap_up_asks_for_tagged_evidence_and_checks_it(monkeypatch):
+    # The wrap-up prompt explains each field, and what comes back is checked
+    # against what the personality saw: a quote from CONTEXT is kept as an
+    # estimate, and as verifiable direct evidence it needs no cap.
+    monkeypatch.setattr(panel._client.messages, "create", lambda **kw: _Reply())
+    prompts = []
+
+    def wrap_up(model, max_tokens, output_format, messages, **kwargs):
+        prompts.append(messages[-1]["content"])
+        draft = panel._PersonalityHypothesisDraft(
+            question="q", summary="s", confidence=5,
+            evidence_quotes=[_draft("Consensus EPS: $5.12", "CONTEXT", "estimate")])
+        return panel._PersonalityFinalOutput(hypotheses=[draft]), 1, 1
+    monkeypatch.setattr(panel, "_structured_call", wrap_up)
+
+    result = panel._run_personality("Quant", "TEST", ctx=None, max_iterations=6, wall_timeout_seconds=60,
+                                    log_prefix="[t]", context_block="- Consensus EPS: $5.12")
+
+    assert "evidence_type: reported (company actuals" in prompts[0]
+    [hypothesis] = result.hypotheses
+    assert hypothesis.evidence_quotes[0].evidence_type == "estimate"
+    assert hypothesis.evidence_quotes[0].citation == "CONTEXT"
+    assert hypothesis.confidence == 5      # a direct estimate is verifiable evidence: no cap
 
 
 def test_read_article_reaches_the_personality_and_cut_articles_say_so(monkeypatch):

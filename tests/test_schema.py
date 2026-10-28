@@ -16,7 +16,8 @@ import pytest
 
 from yoda import config
 from yoda.schema import (
-    EarningsReport, ExpectationValue, ForwardGuidance, MarketExpectations, Metric, SinceFilingItem,
+    EarningsReport, EvidenceQuote, ExpectationValue, ForwardGuidance, Hypothesis, MarketExpectations, Metric,
+    SinceFilingItem,
 )
 
 # The 40 reports from the 2026-10-26 eval run, written before these fields existed.
@@ -92,6 +93,33 @@ def test_archived_reports_load_with_empty_new_sections():
         assert report.since_filing == [], path.name
         assert report.market_expectations is None, path.name
         assert all(metric.period is None for metric in report.key_metrics), path.name
+
+
+def test_archived_yoda_hypotheses_load_as_untagged_evidence():
+    # The 20 archived Yoda reports keep their hypotheses: each plain-text
+    # quote, written before evidence tags, loads as unverifiable and says
+    # why, so it is never mistaken for checked, tagged evidence.
+    paths = sorted(_ARCHIVE_DIR.glob("yoda_*.json"))
+    assert len(paths) == 20
+
+    quotes = [quote
+              for path in paths
+              for hypothesis in EarningsReport.model_validate_json(path.read_text(encoding="utf-8")).hypotheses_explored
+              for quote in hypothesis.evidence_quotes]
+    assert quotes
+    assert all(quote.evidence_type == "unverifiable" for quote in quotes)
+    assert all(quote.check_note == "written before evidence tags" for quote in quotes)
+
+
+def test_tagged_evidence_round_trips():
+    quote = EvidenceQuote(quote="Revenue rose 9%", citation="10-Q filed 2026-08-06 · MD&A — Revenue",
+                          source="10-Q filed 2026-08-06", evidence_type="reported", as_of_date="2026-08-06",
+                          relevance="direct", relevance_reason="same quarter", check_note=None)
+    hypothesis = Hypothesis(id="h1", proposing_personality="Quant", question="q", summary="s",
+                            evidence_quotes=[quote], confidence=4)
+
+    assert Hypothesis.model_validate_json(hypothesis.model_dump_json()) == hypothesis
+    assert hypothesis.confidence_note is None
 
 
 # ---------------------------------------------------------------------------

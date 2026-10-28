@@ -32,9 +32,11 @@ IDEAS for Improvements/Changes
    letting news overwrite filing numbers.
    Build order (AGREED): steps 1-5 = anchors, schema, historical move, 8-K
    ingest, news tools (all DONE). Step 6, the panel, is split into 6a inputs
-   (DONE) → 6b evidence tags + weighting → 6c synthesis + report → 6d
-   evidence bundle → 6e PDF/app display. Then step 7 (eval), step 8
+   (DONE) → 6b evidence tags + weighting (DONE) → 6c synthesis + report →
+   6d evidence bundle → 6e PDF/app display. Then step 7 (eval), step 8
    (transcripts).
+   SMOKE TEST (AGREED 2026-10-28): one live panel run is allowed once all of
+   step 6 (6a-6e) is done, to check the panel end to end before step 7.
 
 3.1 Ingest 8-Ks filed after the primary 10-Q/10-K (yoda/ingest/edgar.py)
    - Fetch 8-Ks with filing_date > primary filing_date (SEC submissions JSON
@@ -85,6 +87,23 @@ IDEAS for Improvements/Changes
        from the article URL's domain, so no extra field is needed (AGREED).
    - Edge case: if the article does not say where the claim comes from, the
      claim is tagged "unverifiable".
+   - DONE (6b) for hypotheses: every piece of evidence is an EvidenceQuote
+     (quote, citation, source, evidence_type, as_of_date, direct/context +
+     reason, check_note). The panel keeps a record of everything each
+     personality was shown and checks each quote against it (AGREED):
+     * the quote must appear in the cited text (case/spacing ignored; parts
+       around "..." checked separately), else unverifiable; a wrong
+       citation is corrected when the quote is found elsewhere;
+     * filing / 8-K → reported or guided, any other tag → unverifiable with
+       the reason (code can't tell which was meant); a competitor's filing
+       (label "PEER ...") → proxy; CONTEXT → estimate; news keeps its tag
+       only if the article names the given source;
+     * date, and source for filings/market data, are set by code.
+     * Chunks now carry their filing label ("10-Q filed 2026-08-06 · MD&A
+       — ...") so code knows each passage's filing and date.
+     * Old reports' plain-text quotes load as unverifiable, noted "written
+       before evidence tags".
+     The report section (since_filing) is filled in 6c.
 
 3.3 Post-filing context + market data for personalities (AGREED: option B,
     no new search tool)
@@ -159,6 +178,13 @@ IDEAS for Improvements/Changes
          values for the same fact.
      * Revisit numeric weighting only if the eval shows the categorical
        rules aren't enough.
+   - DONE (6b): caps applied in code after the checks (only ever lowering
+     confidence, with Hypothesis.confidence_note saying why): no verifiable
+     evidence → 2/5; only proxy → 3/5; no verifiable direct claim → 2/5
+     (AGREED: a hypothesis without a direct claim is capped, not dropped).
+     Relevance (direct/context + one-line reason) is given per piece of
+     evidence. The conflict rules and tier order are in the personality
+     prompt; critique and synthesis see every quote with its tags and notes.
 
 3.5 Report schema (yoda/schema.py)
    - key_metrics stays filing-only ("reported", with the period it covers).
@@ -217,6 +243,11 @@ IDEAS for Improvements/Changes
    - Synthesis also gets the full text of the articles personalities read
      with read_article (AGREED, 3.9).
    - Citations: allow "8-K Item 2.02, Exhibit 99.1 — <heading>" format.
+   - FOUND (6b), for 6c: synthesis's output schema still includes
+     hypotheses_explored, which rule 4 tells it to echo — but code
+     overwrites it anyway, and each tagged quote now has 8 fields, so the
+     echo only costs output tokens. Drop it from what synthesis writes (and
+     rule 4) in 6c; code keeps setting it.
    - REMEMBER TO UPDATE RULE 1 AND 5 TO MAKE SURE THEY ARE CONSISTENT WITH
      NEW 8-K FEATURE.
      * Rule 1’s “only known from external sources → data_gaps” overlaps with
@@ -498,8 +529,10 @@ IDEAS for Improvements/Changes
        dispatch, argument check, repeat detection), shown to them with a
        "cut at N of M characters" note when cut, and listed in the loop
        prompt with one rule on when to use it.
-     * NOT done yet: passing read articles to synthesis (6c); the playbook,
-       the source-tier list and tag-vs-source validation (6b).
+     * DONE (6b): the playbook and the source-tier list are in
+       _BASE_LOOP_CONTRACT (source tiers: prompt only, AGREED); tag-vs-source
+       validation is in code (see 3.2).
+     * NOT done yet: passing read articles to synthesis (6c).
 
 3.10 Tests (offline, per CLAUDE.md)
    - 8-K item parsing and date filtering; 8-K chunk labels (item code +

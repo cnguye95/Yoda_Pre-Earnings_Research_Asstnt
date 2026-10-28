@@ -28,7 +28,7 @@ Claude is shown, so a docstring would silently change the prompt.
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 # The six analyst personalities in the panel. Listing them as a Literal means
 # a misspelt name from Claude is rejected when the reply is parsed, instead of
@@ -163,14 +163,47 @@ class WatchItem(BaseModel):
 # Multi-agent personality panel models — Phase 10
 # ---------------------------------------------------------------------------
 
+class EvidenceQuote(BaseModel):
+    # One piece of evidence behind a hypothesis, tagged so a reader knows
+    # what kind of evidence it is. The personality fills the fields; code
+    # then checks them against what the personality actually saw, and
+    # check_note says why code changed anything (None when it didn't).
+    quote: str                     # the exact words from the source
+    citation: str                  # the filing passage's [label], the article URL, or "CONTEXT"
+    source: str                    # who the claim comes from (the company, LSEG, ...), not the outlet
+    evidence_type: EvidenceType
+    as_of_date: str | None         # date of the source, set in code when known
+    relevance: Literal["direct", "context"]   # direct = same metric and period as the question
+    relevance_reason: str
+    check_note: str | None
+
+
 class Hypothesis(BaseModel):
     # One hypothesis produced by a personality agent after its tool-use loop.
     id: str                        # stable cross-reference ID: "h1", "h2", ...
     proposing_personality: PersonalityName
     question: str                  # ticker-specific question the personality investigated
     summary: str                   # 150-250 word answer/finding
-    evidence_quotes: list[str]     # short quotes with citation labels appended
-    confidence: int = Field(ge=1, le=5)   # self-rated by the personality
+    evidence_quotes: list[EvidenceQuote]
+    confidence: int = Field(ge=1, le=5)   # self-rated by the personality, capped in code
+    # Why code lowered the confidence, e.g. "capped from 4/5: no direct claim".
+    confidence_note: str | None = None
+
+    # Reports written before evidence tags stored each quote as plain text.
+    # They still load: such a quote becomes an unverifiable EvidenceQuote that
+    # says it predates the tags, so it is never counted as tagged evidence.
+    @field_validator("evidence_quotes", mode="before")
+    @classmethod
+    def _untagged_text_quotes(cls, quotes):
+        if not isinstance(quotes, list):
+            return quotes
+        return [
+            {"quote": quote, "citation": "", "source": "none stated", "evidence_type": "unverifiable",
+             "as_of_date": None, "relevance": "context", "relevance_reason": "",
+             "check_note": "written before evidence tags"}
+            if isinstance(quote, str) else quote
+            for quote in quotes
+        ]
 
 
 class CritiqueMessage(BaseModel):
@@ -398,7 +431,11 @@ if __name__ == "__main__":
                 proposing_personality="Optimist",
                 question="Is ad-tier ARPU rising sustainably?",
                 summary="Evidence suggests ad-tier ARPU is on a rising trend...",
-                evidence_quotes=['"ad-tier ARPU grew 18%" (MD&A — Advertising)'],
+                evidence_quotes=[EvidenceQuote(
+                    quote="ad-tier ARPU grew 18%", citation="10-Q filed 2026-04-18 · MD&A — Advertising",
+                    source="the company (10-Q)", evidence_type="reported", as_of_date="2026-04-18",
+                    relevance="direct", relevance_reason="same metric and quarter", check_note=None,
+                )],
                 confidence=4,
             ),
         ],
