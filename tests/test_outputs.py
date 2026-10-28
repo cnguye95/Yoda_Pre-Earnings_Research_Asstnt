@@ -617,3 +617,25 @@ def test_scroll_to_top_targets_streamlit_1_40s_main_area():
     source = _APP.read_text(encoding="utf-8")
     assert "querySelector('[data-testid=" in source and "stMain" in source
     assert "section.main" not in source
+
+
+# ---------------------------------------------------------------------------
+# Which earnings call a report read — PDF cover and app caption (step 8b)
+# ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize("earnings_call, caption", [
+    ("Q3 FY2026 earnings call (2026-10-27)", "Earnings call: Q3 FY2026 (2026-10-27)"),
+    ("not available", "Earnings call: not available"),
+    (None, None),                                               # a report from before calls: nothing shown
+])
+def test_cover_names_the_earnings_call(earnings_call, caption):
+    report = _report(earnings_call=earnings_call)
+    assert pdf.call_caption(report) == caption
+    cover = " ".join(_texts(pdf._cover_elements(report, pdf._get_styles())))
+    assert (caption in cover) if caption else ("Earnings call" not in cover)
+
+
+def test_app_caption_names_the_earnings_call():
+    app = _app(report=_report(earnings_call="Q3 FY2026 earnings call (2026-10-27)"), pdf_bytes=b"%PDF",
+               pdf_ticker="TEST")
+    assert any("Earnings call: Q3 FY2026 (2026-10-27)" in caption.value for caption in app.caption)

@@ -19,8 +19,8 @@ from yoda.evidence_text import CONFLICT_RULES
 from yoda.modes import baseline, tools
 from yoda.modes import personality_panel as panel
 from yoda.schema import (
-    ArticleText, EarningsReport, EvidenceBundle, EvidenceDocument, Filing, ForwardGuidance, Hypothesis, NewsItem,
-    NewsSearchResult, SinceFilingItem,
+    ArticleText, CallTranscript, EarningsReport, EvidenceBundle, EvidenceDocument, Filing, ForwardGuidance, Hypothesis, NewsItem,
+    NewsSearchResult, SinceFilingItem, TranscriptTurn,
 )
 
 
@@ -516,3 +516,46 @@ def test_command_line_forms():
     assert again.rescore == pathlib.Path("data/eval") and again.repeat and again.tickers == ["NFLX"]
     with pytest.raises(SystemExit):
         runner._parse_args(["--repeat"])                          # repeat only makes sense with --rescore
+
+
+# ---------------------------------------------------------------------------
+# The earnings call in the judge's evidence (step 8b)
+# ---------------------------------------------------------------------------
+
+def _transcript() -> CallTranscript:
+    # A one-turn call, long enough to notice if it were ever cut.
+    return CallTranscript(ticker="TEST", fiscal_quarter=3, fiscal_year=2026, call_date="2026-10-27",
+                          turns=[TranscriptTurn(speaker="Brian West", title="Chief Financial Officer",
+                                                content="We expect free cash flow of about $2 billion. " * 200,
+                                                is_company=True)],
+                          source_url="https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT"
+                                     "&symbol=TEST&quarter=2026Q3")
+
+
+def test_judge_reads_the_call_in_full_after_the_8ks():
+    bundle = _yoda_bundle().model_copy(update={"transcript": _transcript()})
+    rendered = evidence.render_evidence(bundle, _cited_report(), extra_chars=0)
+    call_at = rendered.text.index("=== EARNINGS CALL TRANSCRIPT — Q3 FY2026 (2026-10-27)")
+    assert rendered.text.index("RELEASE") < call_at < rendered.text.index("Consensus EPS")
+    assert ("We expect free cash flow of about $2 billion. " * 200).strip() in rendered.text
+
+
+def test_the_call_is_never_cut_even_over_the_line(monkeypatch):
+    monkeypatch.setattr(evidence, "PROMPT_TOKEN_LINE", 100)
+    bundle = _yoda_bundle().model_copy(update={"transcript": _transcript()})
+    rendered = evidence.render_evidence(bundle, _cited_report(), extra_chars=0)
+    assert ("We expect free cash flow of about $2 billion. " * 200).strip() in rendered.text
+    assert rendered.over_line and not any("CALL" in item.upper() for item in rendered.left_out)
+
+
+def test_no_call_is_said_plainly_and_a_call_alone_counts_as_post_filing_evidence():
+    assert "EARNINGS CALL TRANSCRIPT: none given" in evidence.render_evidence(
+        evidence.filing_bundle("TEST", _Q), _report(), extra_chars=0).text
+    call_only = evidence.filing_bundle("TEST", _Q).model_copy(update={"transcript": _transcript()})
+    assert "evidence_labelling" not in evidence.na_dimensions(call_only, _report())
+
+
+def test_bundles_saved_before_calls_still_load():
+    old = json.loads(_yoda_bundle().model_dump_json())
+    del old["transcript"]
+    assert EvidenceBundle.model_validate(old).transcript is None

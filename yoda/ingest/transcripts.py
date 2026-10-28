@@ -10,6 +10,7 @@ transcript found is cached on disk and fetched only once.
   fetch_transcript()      — one quarter's transcript (cache first).
   find_last_call()        — the latest call: the last reported quarter, or
                             the one before it if that isn't available yet.
+  render_call_text()      — a transcript as text for synthesis and the judge.
 
 A transcript that can't be had (not published yet, rate limit, rejected
 key, network trouble) comes back as None with the reason, never an error:
@@ -136,6 +137,24 @@ def fetch_transcript(ticker: str, fiscal_quarter: int, fiscal_year: int) -> Tran
     cache_file.parent.mkdir(parents=True, exist_ok=True)
     cache_file.write_text(transcript.model_dump_json(indent=2), encoding="utf-8")
     return TranscriptFetch(transcript, None)
+
+
+def render_call_text(transcript: CallTranscript) -> str:
+    """Return a whole earnings call transcript as text, as synthesis and the eval judge read it.
+
+    A header names the call, its date (or "date unknown") and its source
+    URL, e.g. "=== EARNINGS CALL TRANSCRIPT — Q3 FY2026 (2026-10-27),
+    https://... ===". Then one paragraph per turn, starting "Speaker, Title
+    [company]:" or "[analyst]:" (analysts and the operator), so the reader
+    can tell the company's own words from the questions it was asked.
+    """
+    header = (f"=== EARNINGS CALL TRANSCRIPT — Q{transcript.fiscal_quarter} FY{transcript.fiscal_year} "
+              f"({transcript.call_date or 'date unknown'}), {transcript.source_url} ===")
+    turns = []
+    for turn in transcript.turns:
+        who = f"{turn.speaker}, {turn.title}" if turn.title else turn.speaker
+        turns.append(f"{who} [{'company' if turn.is_company else 'analyst'}]: {turn.content}")
+    return "\n\n".join([header, *turns])
 
 
 def find_last_call(ticker: str, consensus: dict | None) -> TranscriptFetch:

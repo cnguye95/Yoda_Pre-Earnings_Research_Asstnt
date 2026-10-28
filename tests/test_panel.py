@@ -11,7 +11,7 @@ import pytest
 from yoda import evidence_text
 from yoda.ingest.chunker import Chunk, chunk_transcript
 from yoda.ingest.edgar import PostFilingEightKs
-from yoda.ingest.transcripts import TranscriptFetch
+from yoda.ingest.transcripts import TranscriptFetch, render_call_text
 from yoda.modes import baseline, llm
 from yoda.modes import personality_panel as panel
 from yoda.modes import tools
@@ -612,16 +612,18 @@ def test_synthesis_gets_post_filing_inputs_and_writes_no_code_set_fields(monkeyp
         ticker="TEST", primary_filing=None, final_hypotheses=[], contested=[], critique_messages=[],
         news_pool=[], filing_text="FILING BODY", eight_k_text=panel._render_eight_k_text([_earnings_8k()]),
         context_block="- Consensus EPS: $1.23", articles_text=panel._render_read_articles([article]),
+        call_text="CALL TEXT BODY",
     )
 
     [(output_format, prompt)] = calls
     assert "=== 8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13) — u ===\nThird-quarter revenue" in prompt
     assert "--- CONTEXT" in prompt and "- Consensus EPS: $1.23" in prompt
     assert "ARTICLE https://a.example/story\n\nARTICLE BODY" in prompt
-    assert prompt.index("FILING BODY") < prompt.index("Third-quarter revenue")
+    assert prompt.index("FILING BODY") < prompt.index("Third-quarter revenue") < prompt.index("CALL TEXT BODY")
     assert "Echo" not in prompt
     assert "hypotheses_explored" not in output_format.model_fields
     assert "market_expectations" not in output_format.model_fields
+    assert "earnings_call" not in output_format.model_fields
     assert output_format.model_fields["since_filing"].is_required()
     # The caller gets a full report, with the code-set fields still empty.
     assert isinstance(report, EarningsReport) and report.market_expectations is None
@@ -928,3 +930,40 @@ def test_ingest_notes_an_earlier_call_or_a_missing_one(monkeypatch):
     call, key, tokens = panel._ingest_transcript("TEST", _snapshot(), [], store, gaps, "[t]")
     assert key is None and tokens == 0 and store.stored == {}
     assert gaps == ["Earnings call transcript not analyzed: Alpha Vantage: rate limit."]
+
+
+# ---------------------------------------------------------------------------
+# The call in synthesis, since_filing, the report field and the bundle (8b)
+# ---------------------------------------------------------------------------
+
+def test_call_text_marks_who_speaks_and_names_its_source():
+    text = render_call_text(_call())
+    assert text.startswith("=== EARNINGS CALL TRANSCRIPT — Q3 FY2026 (2026-10-27), https://www.alphavantage.co/query?")
+    assert "Brian West, Chief Financial Officer [company]: We expect free cash flow" in text
+    assert "Jane Doe, Analyst, Morgan Stanley [analyst]: Free cash flow looks like" in text
+    assert panel._render_call_for_synthesis(TranscriptFetch(None, "rate limit")) == (
+        "(No earnings call transcript was available — rate limit.)")
+
+
+def test_since_filing_accepts_the_call_and_checks_its_tag():
+    call_url = _call().source_url
+    report = _report()
+    report.since_filing = [_since(call_url, "guided"), _since(call_url, "estimate")]
+
+    panel._check_since_filing(report, set(), set(), "[t]", call_url)
+
+    assert [item.evidence_type for item in report.since_filing] == ["guided", "unverifiable"]
+    assert report.data_gaps == [
+        "since_filing: \"Third-quarter revenue rose 9%.\" was tagged estimate, but the earnings call "
+        "is reported or guided, so it is marked unverifiable."]
+
+
+def test_report_names_the_call_it_read(monkeypatch):
+    # No call: "not available". A call: its quarter and date, and the bundle holds it.
+    _no_filing_run(monkeypatch, lambda ticker, **kwargs: _snapshot())
+    assert panel.run_personality_panel("TEST").report.earnings_call == "not available"
+
+    monkeypatch.setattr(panel, "_ingest_transcript", lambda *args: (TranscriptFetch(_call(), None), "key", 0))
+    run = panel.run_personality_panel("TEST")
+    assert run.report.earnings_call == "Q3 FY2026 earnings call (2026-10-27)"
+    assert run.evidence.transcript == _call()

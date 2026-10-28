@@ -99,10 +99,12 @@ class NewsItem(BaseModel):
 
 
 class SinceFilingItem(BaseModel):
-    # One development since the 10-Q/10-K was filed: an 8-K event or earnings
-    # release figure, a guidance update, or a claim reported in the news. Kept
-    # apart from key_metrics so post-filing information never overwrites a
-    # filing number. All fields are required inside an item.
+    # One piece of information beyond the 10-Q/10-K: an 8-K event or earnings
+    # release figure, something the company said on its latest earnings call
+    # (even when the call came before the filing), a guidance update, or a
+    # claim reported in the news, each with the date its source gave it. Kept
+    # apart from key_metrics so this information never overwrites a filing
+    # number. All fields are required inside an item.
     claim: str
     evidence_type: EvidenceType
     # Fiscal period the claim covers, e.g. "Q3 FY2026". None for events that
@@ -110,7 +112,8 @@ class SinceFilingItem(BaseModel):
     period: str | None
     as_of_date: str        # ISO date the source published it, e.g. "2026-10-21"
     # The original source the claim is attributed to (the company, LSEG,
-    # "8-K Item 2.02"), not the outlet that repeated it.
+    # "8-K Item 2.02", "Q3 FY2026 earnings call — <speaker>"), not the outlet
+    # that repeated it.
     source: str
     # Where the reader can check the claim. A news outlet is read from its domain.
     url: str
@@ -391,7 +394,9 @@ class EvidenceBundle(BaseModel):
     the market data, each figure with its provider and as-of date).
     *news_results* is the news pool exactly as synthesis saw it. *read_urls*
     lists every article a personality read in full; *articles* holds the
-    full text only of those the report also cites.
+    full text only of those the report also cites. *transcript* is the
+    earnings call the report's writer read in full (None when there was
+    none, and in bundles saved before calls were added).
     """
     ticker: str
     documents: list[EvidenceDocument]
@@ -400,6 +405,7 @@ class EvidenceBundle(BaseModel):
     read_urls: list[str]
     articles: list[ArticleText]
     peer_passages: list[EvidencePassage]
+    transcript: CallTranscript | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -425,11 +431,15 @@ class EarningsReport(BaseModel):
     # External data — news from Tavily
     recent_news: list[NewsItem]
 
-    # Post-filing developments and market expectations, kept apart from the
-    # filing figures above. Defaulted only so reports written before these
+    # Information beyond the filing and market expectations, kept apart from
+    # the filing figures above. Defaulted only so reports written before these
     # fields existed still load; every new Yoda report fills them.
     since_filing: list[SinceFilingItem] = []
     market_expectations: MarketExpectations | None = None
+    # Which earnings call the report read, set in code, e.g. "Q3 FY2026
+    # earnings call (2026-10-27)", or "not available" (the reason is in
+    # data_gaps). None in reports written before calls were added.
+    earnings_call: str | None = None
 
     # Synthesis — LLM-generated, no citation required for these lists
     bull_case:    list[str]

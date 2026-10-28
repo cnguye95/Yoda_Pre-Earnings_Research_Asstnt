@@ -735,6 +735,21 @@ IDEAS for Improvements/Changes
      quarters by FISCAL year, matching the consensus. Every speaker was
      classified right (executives and IR = company; "Analyst..." titles and
      the Operator = not). Cached in data/transcripts/.
+   - DONE (8b): synthesis reads the full call (render_call_text: header with
+     quarter, date, source URL; each turn marked [company] or [analyst]),
+     after the 8-K text; the 10-K is still dropped first for size. since_
+     filing = information beyond the 10-Q/10-K, call claims included even
+     when the call came before the filing (AGREED); rule 4: only [company]
+     turns are company claims, source "Q3 FY2026 earnings call — <speaker>",
+     url = the transcript URL. _check_since_filing accepts the call URL and
+     holds call items to reported/guided. EarningsReport.earnings_call (set
+     in code) shown on the PDF cover and app caption ("Earnings call: Q3
+     FY2026 (2026-10-27)" / "not available"; old reports show nothing).
+     EvidenceBundle.transcript; the judge reads the call in full after the
+     8-Ks, never cut (over the line → sent and flagged, AGREED); a call
+     counts as post-filing evidence for evidence_labelling's N/A. Old
+     reports and bundles still load. Tests: test_panel.py, test_rubric.py,
+     test_outputs.py.
 
 3.9 Personality "analyst playbook" + source vetting (current gap)
    - Today the personality prompts give a lens (3-5 sentences) and tool

@@ -158,6 +158,18 @@ def expectation_rows(report: EarningsReport) -> list[ExpectationRow]:
     return rows
 
 
+def call_caption(report: EarningsReport) -> str | None:
+    """Return "Earnings call: Q3 FY2026 (2026-10-27)" for the cover and app, or None for older reports.
+
+    report.earnings_call is set in code: e.g. "Q3 FY2026 earnings call
+    (2026-10-27)", or "not available" (the reason is in data_gaps). Reports
+    written before calls were added have none, and show nothing.
+    """
+    if report.earnings_call is None:
+        return None
+    return "Earnings call: " + report.earnings_call.replace(" earnings call", "")
+
+
 def _generated_label(timestamp: str) -> str:
     """Format the report timestamp as "YYYY-MM-DD HH:MM UTC" (or as given, if unreadable).
 
@@ -284,6 +296,9 @@ def _cover_elements(report: EarningsReport, styles: StyleSheet1) -> list[Flowabl
         if report.supplemental_filing_type:
             filing_line += (f" &middot; <b>{_esc(report.supplemental_filing_type)}</b> "
                             f"filed {_esc(report.supplemental_filing_date or '')}")
+    # And which earnings call was read (reports from before calls show nothing).
+    if call_caption(report):
+        filing_line += f" &middot; {_esc(call_caption(report))}"
     elements.append(Paragraph(filing_line, styles['Normal']))
 
     # The same caveats the app shows, so a printed report carries them too.

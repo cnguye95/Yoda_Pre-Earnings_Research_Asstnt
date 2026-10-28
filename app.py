@@ -14,7 +14,9 @@ import streamlit.components.v1 as components
 from yoda.ingest.edgar import fetch_latest_filing
 from yoda.modes.personality_panel import MarketDataUnavailable, run_personality_panel
 from yoda.queue.processor import process_queue
-from yoda.report.pdf import NO_MARKET_DATA, expectation_rows, filing_caveats, is_url, report_to_pdf, site_label
+from yoda.report.pdf import (
+    NO_MARKET_DATA, call_caption, expectation_rows, filing_caveats, is_url, report_to_pdf, site_label,
+)
 from yoda.retrieval.embeddings import EMBEDDING_MODEL
 from yoda.tools.consensus import (
     WHISPER_COST_NOTE, WHISPER_WINDOW_DAYS, days_to_report, next_report_date, whisper_by_default,
@@ -294,10 +296,13 @@ if view == _SINGLE_VIEW:
         st.divider()
         st.subheader(f"{report.ticker} — {report.company_name}")
 
-        # Build the filing caption — show supplemental date when both are present.
+        # Build the filing caption — show supplemental date when both are
+        # present, and which earnings call was read (the same text as the PDF cover).
         filing_caption = f"{report.filing_type} filed {report.filing_date}"
         if report.supplemental_filing_type:
             filing_caption += f" · {report.supplemental_filing_type} filed {report.supplemental_filing_date}"
+        if call_caption(report):
+            filing_caption += f" · {call_caption(report)}"
         st.caption(filing_caption)
 
         # Warn the user when a less-than-ideal filing source was used (the

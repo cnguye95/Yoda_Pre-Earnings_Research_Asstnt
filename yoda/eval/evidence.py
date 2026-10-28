@@ -18,6 +18,7 @@ Nothing here calls an API.
 import json
 from typing import NamedTuple
 
+from yoda.ingest.transcripts import render_call_text
 from yoda.modes.baseline import full_filing_text
 from yoda.schema import EarningsReport, EvidenceBundle, EvidenceDocument, Filing
 
@@ -95,7 +96,7 @@ def na_dimensions(bundle: EvidenceBundle, report: EarningsReport) -> dict[str, s
 
     market_expectations is N/A when the mode had no market data.
     evidence_labelling is N/A only when the mode had no post-filing evidence
-    (8-Ks, news, articles read, or market data) AND the report makes no
+    (8-Ks, the earnings call, news, articles read, or market data) AND the report makes no
     post-filing claims; post-filing claims without evidence are still scored.
     (figure_accuracy's N/A is decided after the call, from the number of
     figures the judge could check.)
@@ -105,7 +106,7 @@ def na_dimensions(bundle: EvidenceBundle, report: EarningsReport) -> dict[str, s
         na["market_expectations"] = "the report's writer had no market data"
 
     post_filing_evidence = (any(_is_eight_k(doc) for doc in bundle.documents) or bundle.news_results
-                            or bundle.articles or bundle.market_context)
+                            or bundle.articles or bundle.market_context or bundle.transcript)
     post_filing_claims = report.since_filing or report.market_expectations is not None
     if not post_filing_evidence and not post_filing_claims:
         na["evidence_labelling"] = "no post-filing evidence and the report makes no post-filing claims"
@@ -153,8 +154,8 @@ def render_evidence(bundle: EvidenceBundle, report: EarningsReport, extra_chars:
     The 10-Q/10-K come first, in full, so both modes' prompts for a ticker
     share a long identical start that OpenAI can cache. Then the 8-Ks (in
     full when the report cites them, otherwise only their start), the
-    market data, the articles read, the news results and the competitor
-    passages. If the whole prompt (*extra_chars* counts the rubric and the
+    earnings call (always in full), the market data, the articles read, the
+    news results and the competitor passages. If the whole prompt (*extra_chars* counts the rubric and the
     report) is estimated above PROMPT_TOKEN_LINE, the news snippets the
     report doesn't cite are dropped. Everything shortened or dropped is
     listed at the end for the judge.
@@ -173,6 +174,11 @@ def render_evidence(bundle: EvidenceBundle, report: EarningsReport, extra_chars:
         parts.append(_document_text(doc, cut=cut))
         if cut:
             left_out.append(f"{doc.label}: all but the first {UNCITED_8K_CHARS:,} characters (not cited)")
+
+    # The earnings call, always in full: first-hand company evidence the
+    # report may rely on (AGREED: never cut for length).
+    parts.append(render_call_text(bundle.transcript) if bundle.transcript
+                 else "=== EARNINGS CALL TRANSCRIPT: none given to the report's writer ===")
 
     # The market data exactly as the report's writer saw it, and the
     # articles read in full (only those the report cites are kept).

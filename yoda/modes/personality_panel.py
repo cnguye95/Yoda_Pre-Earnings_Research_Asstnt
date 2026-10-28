@@ -57,7 +57,7 @@ from yoda.evidence_text import normalize as _norm
 from yoda.evidence_text import quote_in as _quote_in
 from yoda.ingest.chunker import Chunk, chunk_8k, chunk_filing, chunk_transcript, eight_k_label, transcript_key
 from yoda.ingest.edgar import FILING_FRESHNESS_DAYS, fetch_latest_filing, fetch_post_filing_8ks
-from yoda.ingest.transcripts import TranscriptFetch, find_last_call
+from yoda.ingest.transcripts import TranscriptFetch, find_last_call, render_call_text
 from yoda.modes.baseline import apply_supplemental, full_filing_text, iter_citation_holders, validate_citations
 from yoda.modes.llm import NoStructuredOutput, client as _client, structured_call as _structured_call
 from yoda.modes.tools import (
@@ -71,6 +71,7 @@ from yoda.retrieval.vector_store import ChromaStore
 from yoda.dates import market_today
 from yoda.schema import (
     ArticleText,
+    CallTranscript,
     EarningsReport,
     EightKFiling,
     EvidenceBundle,
@@ -972,8 +973,9 @@ _SYNTHESIS_SYSTEM = """You are a senior equity analyst synthesizing a panel of
 six junior analysts' hypotheses into a single pre-earnings research report.
 
 You are given the full filing text, the full text of every 8-K filed since
-the filing, a CONTEXT block (the 8-K list and the market's expectations for
-the next report), the full text of the news articles the analysts read, the
+the filing, the full transcript of the latest earnings call, a CONTEXT
+block (the 8-K list, the call, and the market's expectations for the next
+report), the full text of the news articles the analysts read, the
 analysts' hypotheses with their tagged evidence, their peer review, and the
 pool of news search results.
 
@@ -1032,9 +1034,10 @@ Rules you must follow without exception:
    company's reporting period. If a hypothesis quotes a different
    number for a metric the filing also reports, trust the filing.
 
-   Post-filing information — the 8-K TEXT, news articles, and the
-   market data in CONTEXT — goes in since_filing (8-Ks and news) or
-   market_expectations (market data), each with its evidence_type.
+   Post-filing information — the 8-K TEXT, the EARNINGS CALL TRANSCRIPT,
+   news articles, and the market data in CONTEXT — goes in since_filing
+   (8-Ks, the call and news) or market_expectations (market data), each
+   with its evidence_type.
    It NEVER goes into key_metrics or revenue_segments and NEVER
    overwrites a filing number. An 8-K Item 2.02 earnings release
    counts as a reported source for its own period, but its figures
@@ -1137,11 +1140,15 @@ Rules you must follow without exception:
    reference to internal personalities or process anywhere in any output
    field. Do NOT use internal hypothesis IDs (h1, h2, ...) anywhere.
 
-4. since_filing lists what has happened since the filing: every material
-   8-K event or earnings-release figure, guidance updates, and credible
-   news claims. Every 8-K in the 8-K TEXT that reports something material
+4. since_filing lists the information beyond the 10-Q/10-K: every material
+   8-K event or earnings-release figure, what the company said on the
+   latest earnings call (its results, outlook and guidance — even when the
+   call came before the filing), guidance updates, and credible news
+   claims. Every 8-K in the 8-K TEXT that reports something material
    should appear. Market data from CONTEXT does NOT go here — it is in
-   market_expectations. Label every item:
+   market_expectations. On the call, only turns marked [company] are the
+   company's own words: an analyst's question or opinion ([analyst]) is not
+   a company claim — leave it out, or tag it unverifiable. Label every item:
      - evidence_type: reported (company actuals for a closed period, e.g.
        an 8-K 2.02 release), guided (management's own outlook), estimate
        (third-party expectation, e.g. analysts polled by LSEG), proxy
@@ -1150,19 +1157,22 @@ Rules you must follow without exception:
      - period: the fiscal period the claim covers, e.g. "Q3 FY2026"; null
        only for an event with no fiscal period, such as an executive change.
      - as_of_date: the ISO date the source published it (the 8-K's filing
-       date, or the article's date).
+       date, the call's date from its === header — or, when that says
+       "date unknown", the 8-K earnings release date — or the article's date).
      - source: the ORIGINAL source the claim is attributed to, not the
        outlet that repeated it. For an 8-K, cite its item, exhibit and
        heading as printed:
          "8-K Item 2.02, Exhibit 99.1 — <heading>"
+       For the call, the quarter and the speaker:
+         "Q3 FY2026 earnings call — <speaker, title>"
        For news, the source the article names (e.g. "LSEG", "the
        company"); if it names none, write "none stated" and tag the claim
        unverifiable.
-     - url: for an 8-K, the document URL from its === header; for news,
-       the article's url copied verbatim from the NEWS POOL. Never invent,
-       shorten or alter a URL.
+     - url: for an 8-K, the document URL from its === header; for the call,
+       the transcript URL from its === header; for news, the article's url
+       copied verbatim from the NEWS POOL. Never invent, shorten or alter a URL.
 
-5. data_gaps is ONLY for facts the filing, the 8-Ks or the news pool
+5. data_gaps is ONLY for facts the filing, the 8-Ks, the call or the news pool
    SHOULD have covered but did not (e.g., a segment revenue figure missing
    from MD&A, a guidance number the company has historically given but
    omitted this quarter). Do NOT list forward-looking or inherently-external
@@ -1199,10 +1209,11 @@ Rules you must follow without exception:
     figure shown as N/A is missing: never turn it into a number."""
 
 
-# Report fields code fills after synthesis: the panel's own hypotheses, and
-# the market data copied straight from the snapshot. Leaving them out of
-# what synthesis writes saves output tokens and rules out copying mistakes.
-_SET_IN_CODE = {"hypotheses_explored", "market_expectations"}
+# Report fields code fills after synthesis: the panel's own hypotheses, the
+# market data copied straight from the snapshot, and which earnings call
+# was read. Leaving them out of what synthesis writes saves output tokens
+# and rules out copying mistakes.
+_SET_IN_CODE = {"hypotheses_explored", "market_expectations", "earnings_call"}
 
 # What synthesis writes: the EarningsReport minus the fields above, with
 # since_filing required (in the full report it defaults to empty only so
@@ -1239,6 +1250,22 @@ def _render_read_articles(articles: list[ArticleText]) -> str:
     return "\n\n".join(_render_article(article) for article in articles)
 
 
+def _render_call_for_synthesis(call: TranscriptFetch) -> str:
+    """Return the latest call's full transcript for synthesis, or a line saying why there is none."""
+    if call.transcript is None:
+        return f"(No earnings call transcript was available — {call.reason}.)"
+    return render_call_text(call.transcript)
+
+
+def _call_name(call: TranscriptFetch) -> str:
+    """Return the report's earnings_call value: e.g. "Q3 FY2026 earnings call (2026-10-27)", or "not available"."""
+    if call.transcript is None:
+        return "not available"
+    transcript = call.transcript
+    return (f"Q{transcript.fiscal_quarter} FY{transcript.fiscal_year} earnings call "
+            f"({transcript.call_date or 'date unknown'})")
+
+
 def _synthesize_report(
     ticker: str,
     primary_filing: Filing | None,
@@ -1250,6 +1277,7 @@ def _synthesize_report(
     eight_k_text: str,
     context_block: str,
     articles_text: str,
+    call_text: str,
 ) -> tuple[EarningsReport, int, int]:
     """One SYNTH_MODEL call producing the final EarningsReport.
 
@@ -1257,12 +1285,14 @@ def _synthesize_report(
     so the synthesizer extracts figures and cites locations from the whole
     filing — the same text the single-pass baseline reads — rather than from
     a handful of retrieved chunks. *eight_k_text* is the full text of the
-    8-Ks filed since (_render_eight_k_text), *context_block* the shared
-    CONTEXT personalities started from, and *articles_text* the articles
-    personalities read in full (_render_read_articles).
+    8-Ks filed since (_render_eight_k_text), *call_text* the latest
+    earnings call's full transcript (_render_call_for_synthesis),
+    *context_block* the shared CONTEXT personalities started from, and
+    *articles_text* the articles personalities read in full
+    (_render_read_articles).
 
-    The report comes back without hypotheses_explored and
-    market_expectations, which the caller fills in code.
+    The report comes back without hypotheses_explored, market_expectations
+    and earnings_call, which the caller fills in code.
 
     Returns (report, input_tokens, output_tokens).
     """
@@ -1290,10 +1320,11 @@ def _synthesize_report(
 
     now_utc = datetime.now(timezone.utc).isoformat()
 
-    # The full filing goes first (largest, most stable block), then what
-    # happened since (8-Ks, market data, articles read), then the panel's
-    # findings. The filing is the authority for every figure and every
-    # source_citation; the later blocks feed since_filing and the analysis.
+    # The full filing goes first (largest, most stable block), then the
+    # information beyond it (8-Ks, the latest call, market data, articles
+    # read), then the panel's findings. The filing is the authority for every
+    # figure and every source_citation; the later blocks feed since_filing
+    # and the analysis.
     user_prompt = (
         f"Ticker: {ticker}\n"
         f"Filing: {_describe_filing(primary_filing)}\n"
@@ -1302,7 +1333,9 @@ def _synthesize_report(
         f"forward_guidance, key_risks and every source_citation) ---\n{filing_text}\n\n"
         f"--- 8-K TEXT (full; every 8-K filed since the filing — for since_filing, "
         f"never key_metrics) ---\n{eight_k_text}\n\n"
-        f"--- CONTEXT (8-K list and market expectations; market_expectations is "
+        f"--- EARNINGS CALL TRANSCRIPT (full; the latest call — for since_filing and the "
+        f"analysis, never key_metrics; [analyst] turns are not the company's words) ---\n{call_text}\n\n"
+        f"--- CONTEXT (8-K list, the call, and market expectations; market_expectations is "
         f"filled from this automatically) ---\n{context_block}\n\n"
         f"--- ARTICLES READ IN FULL (by the analysts) ---\n{articles_text}\n\n"
         f"--- HYPOTHESES (final, from panel investigation) ---\n{hyp_text}\n\n"
@@ -1378,31 +1411,35 @@ def _scrub_source_citations(report: EarningsReport, log_prefix: str) -> None:
 
 def _check_since_filing(
     report: EarningsReport, news_urls: set[str], eight_k_urls: set[str], log_prefix: str,
+    call_url: str | None = None,
 ) -> None:
-    """Check every since_filing item's link and, for 8-Ks, its evidence tag.
+    """Check every since_filing item's link and, for the company's own sources, its evidence tag.
 
-    The link must be a news article from this run's news pool or one of the
-    8-K documents synthesis was given; any other link was invented, so the
-    item is dropped. An item linked to an 8-K must be tagged reported or
-    guided (what a company filing can be); any other tag becomes
-    unverifiable, because code can't tell which was meant. Every change gets
-    a data_gaps entry, so the reader sees it.
+    The link must be a news article from this run's news pool, one of the
+    8-K documents synthesis was given, or the earnings call transcript
+    (*call_url*, None when there was none); any other link was invented, so
+    the item is dropped. An item linked to an 8-K or the call is the
+    company speaking, so it must be tagged reported or guided; any other
+    tag becomes unverifiable, because code can't tell which was meant.
+    Every change gets a data_gaps entry, so the reader sees it.
     """
-    known_urls = news_urls | eight_k_urls
+    company_urls = eight_k_urls | ({call_url} if call_url else set())
+    known_urls = news_urls | company_urls
     kept = []
     for item in report.since_filing:
         # An invented link: the claim can't be traced, so it is dropped.
         if item.url not in known_urls:
             report.data_gaps.append(
                 f"since_filing: dropped \"{item.claim[:120]}\" — its link ({item.url}) "
-                "is not a news article or 8-K from this run."
+                "is not a news article, 8-K or earnings call from this run."
             )
             print(f"{log_prefix} WARNING: dropped since_filing item with unknown link {item.url!r}")
             continue
-        # An 8-K is the company's own filing: reported results or guidance.
-        if item.url in eight_k_urls and item.evidence_type not in ("reported", "guided"):
+        # An 8-K or the call is the company itself: reported results or guidance.
+        if item.url in company_urls and item.evidence_type not in ("reported", "guided"):
+            source = "the earnings call" if item.url == call_url else "an 8-K"
             report.data_gaps.append(
-                f"since_filing: \"{item.claim[:120]}\" was tagged {item.evidence_type}, but an 8-K "
+                f"since_filing: \"{item.claim[:120]}\" was tagged {item.evidence_type}, but {source} "
                 "is reported or guided, so it is marked unverifiable."
             )
             item.evidence_type = "unverifiable"
@@ -1466,11 +1503,13 @@ def _evidence_bundle(
     context_block: str,
     ctx: ToolContext,
     report: EarningsReport,
+    transcript: CallTranscript | None = None,
 ) -> EvidenceBundle:
     """Collect the external sources *report* was written from, each with its own citation.
 
     Holds the filing(s) synthesis read in full (*supplemental_used* is None
-    when the 10-K was left out for size), every 8-K document, the CONTEXT
+    when the 10-K was left out for size), every 8-K document, the earnings
+    call transcript synthesis read (*transcript*, None when none), the CONTEXT
     block, the news pool, which articles were read (full text only for those
     the report cites), and the competitor passages personalities were shown.
     It never holds hypotheses or critique — those are Yoda's reasoning, not
@@ -1500,6 +1539,7 @@ def _evidence_bundle(
         ticker=ticker, documents=documents, market_context=context_block,
         news_results=list(ctx.news_pool), read_urls=list(ctx.read_articles), articles=articles,
         peer_passages=[EvidencePassage(label=label, text=text) for label, text in passages],
+        transcript=transcript,
     )
 
 
@@ -2188,21 +2228,22 @@ def run_personality_panel(
     # article a personality read, so the report's writer sees the text its
     # since_filing claims rest on.
     eight_k_text = _render_eight_k_text(eight_ks)
+    call_text = _render_call_for_synthesis(call)
     articles_text = _render_read_articles(list(ctx.read_articles.values()))
 
     # Give the synthesizer the FULL filing text — the same text the baseline
     # reads — so it can extract every figure and cite the filing's own
-    # headings. The 8-Ks and articles share the same size limit; the
-    # supplemental 10-K is the first thing left out if everything together
-    # is too large for the model's context window.
+    # headings. The 8-Ks, the call and the articles share the same size
+    # limit; the supplemental 10-K is the first thing left out if everything
+    # together is too large for the model's context window.
     if filing is not None:
-        filing_text, sup_dropped = full_filing_text(filing, supplemental,
-                                                    reserved_chars=len(eight_k_text) + len(articles_text))
+        reserved = len(eight_k_text) + len(call_text) + len(articles_text)
+        filing_text, sup_dropped = full_filing_text(filing, supplemental, reserved_chars=reserved)
     else:
         filing_text, sup_dropped = _NO_FILING_TEXT, False
     print(f"{log_prefix} Full filing for synthesis: {len(filing_text):,} chars; "
-          f"8-Ks: {len(eight_k_text):,} chars; articles read: {len(ctx.read_articles)} "
-          f"({len(articles_text):,} chars)")
+          f"8-Ks: {len(eight_k_text):,} chars; call: {len(call_text):,} chars; "
+          f"articles read: {len(ctx.read_articles)} ({len(articles_text):,} chars)")
     if sup_dropped:
         print(f"{log_prefix} WARNING: supplemental {supplemental.filing_type} dropped — filings too large")
 
@@ -2218,6 +2259,7 @@ def run_personality_panel(
         eight_k_text=eight_k_text,
         context_block=context_block,
         articles_text=articles_text,
+        call_text=call_text,
     )
     print(f"{log_prefix} Synthesis -> {time.perf_counter()-t0:.2f}s "
           f"({synth_in} in / {synth_out} out tokens)")
@@ -2256,16 +2298,20 @@ def run_personality_panel(
                   f"watchlist URL(s): {bad}")
             watch_item.relevant_urls = [url for url in watch_item.relevant_urls if url in pool_urls]
 
-    # since_filing guard: every item must link to a news article or 8-K this
-    # run actually had, and an 8-K item must carry a tag an 8-K can have.
+    # since_filing guard: every item must link to a news article, 8-K or the
+    # call this run actually had, and an 8-K or call item must carry a tag
+    # the company's own words can have.
     eight_k_urls = {doc.url for eight_k in eight_ks for doc in eight_k.documents}
-    _check_since_filing(report, pool_urls, eight_k_urls, log_prefix)
+    call_url = call.transcript.source_url if call.transcript else None
+    _check_since_filing(report, pool_urls, eight_k_urls, log_prefix, call_url)
 
-    # hypotheses_explored is always the panel's own final list, and
-    # market_expectations the snapshot's own figures — both set in code, so
-    # neither can be dropped, altered or miscopied by the model.
+    # hypotheses_explored is always the panel's own final list,
+    # market_expectations the snapshot's own figures, and earnings_call the
+    # call that was read — all set in code, so none can be dropped, altered
+    # or miscopied by the model.
     report.hypotheses_explored = final_hypotheses
     report.market_expectations = _market_expectations(market)
+    report.earnings_call = _call_name(call)
 
     # Attach supplemental filing metadata directly — not via LLM — or record
     # that it was left out of synthesis for size.
@@ -2287,7 +2333,7 @@ def run_personality_panel(
     # The external sources the finished report was written from, for the
     # eval judge. Built last, so "cited" means cited by the final report.
     evidence = _evidence_bundle(ticker, filing, None if sup_dropped else supplemental,
-                                eight_ks, context_block, ctx, report)
+                                eight_ks, context_block, ctx, report, call.transcript)
 
     # ------------------------------------------------------------------
     # Cost + wall-time totals (regex-parseable by the eval runner)
