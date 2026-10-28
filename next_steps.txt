@@ -663,9 +663,22 @@ IDEAS for Improvements/Changes
      filing_extraction: missed the 767 end date and 777-8 timing).
      * FOUND: OpenAI reported the model as plain "gpt-6.1-sol" (no dated
        snapshot), so a silent judge update can't be detected this way.
-     * FOUND: the judge quoted very short fragments ("excluding the"),
-       which pass the quote check trivially — consider a minimum quote
-       length before the first real eval.
+     * INVESTIGATED (user asked): the short quote "excluding the" was NOT
+       a nonsense fragment. 35 of the judge's 38 quotes were full,
+       relevant sentences; the 3 short ones are one sentence from Exhibit
+       99.1 ("Core operating earnings/(loss) is defined as GAAP
+       Earnings/(loss) from operations excluding the FAS/CAS service cost
+       adjustment."), the definition behind its reasoning_quality point,
+       split around a garbled span: Yoda's extracted text reads
+       "Earnings/(\nl\noss)". The judge quoted around it. A minimum quote
+       length would not help (rejected).
+     * ROOT CAUSE (ingest): edgar._clean_html uses
+       soup.get_text(separator="\n"), which puts a line break between
+       inline HTML elements even inside a word ("l\noss", "t\nhereto").
+       A handful per BA document (10-Q, credit-agreement 8-K, Ex-99.1).
+       It affects everything that reads filing text — personalities,
+       synthesis, the panel's and the judge's quote checks — not just the
+       judge. Fix to plan: break lines only at block-level elements.
      * FOUND: the run's cache prune deleted 13 old judge-cache files (the
        2026-10-26 old-rubric scores, unusable under the new rubric's keys).
      * The estimate running low matters near the line: a JPM report that
