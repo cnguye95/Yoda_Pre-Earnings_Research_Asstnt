@@ -650,6 +650,26 @@ IDEAS for Improvements/Changes
      an agreement table (match rate, mean abs difference). CLI: argparse —
      `runner [TICKERS] [--modes]`, `runner --rescore DIR [--repeat] [--out]`.
      Tests: tests/test_rubric.py.
+   - JUDGE SMOKE TEST (user-approved, 2026-10-28): `runner BA --modes yoda
+     --out data/eval/smoke_7_BA`. Panel $0.891 (whisper skipped by the
+     rule), judge $0.254 upper bound (109,188 prompt / 3,539 completion
+     tokens; estimate was ~102K, so chars ÷ 4 ran ~7% low). Scores:
+     filing_extraction 4, market_expectations 5, figure_accuracy 5 (292
+     figures checked, 0 unverifiable), reasoning_quality 2, evidence_
+     labelling 5, source_traceability 3, relevance 4, sell/buy-side 4/4.
+     No N/A, no failed quotes; only the uncited 8-K cover form was cut.
+     Justifications are specific (reasoning_quality: an inverted GAAP vs
+     core pension argument and an unsupported Spirit/Europe link;
+     filing_extraction: missed the 767 end date and 777-8 timing).
+     * FOUND: OpenAI reported the model as plain "gpt-6.1-sol" (no dated
+       snapshot), so a silent judge update can't be detected this way.
+     * FOUND: the judge quoted very short fragments ("excluding the"),
+       which pass the quote check trivially — consider a minimum quote
+       length before the first real eval.
+     * FOUND: the run's cache prune deleted 13 old judge-cache files (the
+       2026-10-26 old-rubric scores, unusable under the new rubric's keys).
+     * The estimate running low matters near the line: a JPM report that
+       cites its 2.02 release could cross 272K while estimated just under.
 
 3.8 Earnings press release + call transcript as context
    - Press release: on EDGAR as 8-K Item 2.02, Exhibit 99.1 — free, covered
