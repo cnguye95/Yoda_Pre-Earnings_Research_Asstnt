@@ -11,7 +11,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 from yoda.ingest.edgar import fetch_latest_filing
-from yoda.modes.personality_panel import run_personality_panel
+from yoda.modes.personality_panel import MarketDataUnavailable, run_personality_panel
 from yoda.queue.processor import process_queue
 from yoda.report.pdf import filing_caveats, report_to_pdf
 from yoda.retrieval.embeddings import EMBEDDING_MODEL
@@ -69,6 +69,44 @@ def _ensure_pdf(report: EarningsReport) -> bytes:
 
 
 # ---------------------------------------------------------------------------
+# Report generation helper (single ticker)
+# ---------------------------------------------------------------------------
+
+def _generate_report(ticker: str, pause: MarketDataUnavailable | None = None) -> None:
+    """Run the panel for *ticker* and keep the report in session state.
+
+    *pause* is the earlier MarketDataUnavailable when the person chose to
+    continue without that data: its market data is reused (no second paid
+    lookup) and the missing figures go into the report's data gaps. A new
+    refusal is kept in session state as "market_pause", so the page can ask
+    whether to continue or stop.
+    """
+    try:
+        with st.spinner(f"Generating report for {ticker}..."):
+            if pause is None:
+                report, _, _ = run_personality_panel(ticker)
+            else:
+                report, _, _ = run_personality_panel(ticker, market=pause.snapshot,
+                                                     allow_missing_market_data=True)
+    except MarketDataUnavailable as exc:
+        st.session_state["market_pause"] = (ticker, exc)
+        return
+    except Exception as exc:
+        # The UI boundary: any failure is shown to the user (with the full
+        # traceback in an expandable box) instead of a blank page.
+        st.error(f"Could not generate report for {ticker}: {type(exc).__name__}: {exc}")
+        st.exception(exc)
+        return
+
+    # Persist report in session state so it survives reruns, and invalidate
+    # any previously cached PDF.
+    st.session_state["report"] = report
+    st.session_state["ticker"] = ticker
+    st.session_state.pop("pdf_bytes",  None)
+    st.session_state.pop("pdf_ticker", None)
+
+
+# ---------------------------------------------------------------------------
 # Session-state defaults — populate keys we use so we don't need .get() guards
 # everywhere downstream.
 # ---------------------------------------------------------------------------
@@ -77,7 +115,9 @@ st.session_state.setdefault("queue", [])
 st.session_state.setdefault("queue_results", None)
 st.session_state.setdefault("queue_zip_bytes", None)
 st.session_state.setdefault("queue_zip_name",  None)
-st.session_state.setdefault("queue_status", "idle")
+st.session_state.setdefault("queue_status", "idle")      # idle / running / paused / complete
+st.session_state.setdefault("queue_pause", None)         # a QueuePause while paused
+st.session_state.setdefault("queue_stopped_at", None)    # ticker where the user chose Stop
 
 
 # ---------------------------------------------------------------------------
@@ -102,7 +142,13 @@ if st.session_state["queue_status"] == "complete":
     results = st.session_state.get("queue_results") or []
     n_ok   = sum(result.status == "complete" for result in results)
     n_fail = sum(result.status == "failed" for result in results)
-    if n_fail:
+    stopped_at = st.session_state.get("queue_stopped_at")
+    if stopped_at:
+        st.warning(
+            f"Queue stopped at {stopped_at} (market data unavailable) — {n_ok} reports generated, "
+            f"{n_fail} failed. Download ZIP below."
+        )
+    elif n_fail:
         st.success(
             f"Queue complete — {n_ok} reports generated, {n_fail} failed. "
             f"Download ZIP below."
@@ -156,22 +202,23 @@ with tab_single:
 
     # Generation handler — runs when the button is clicked.
     if generate_clicked:
-        try:
-            with st.spinner(f"Generating report for {ticker}..."):
-                report, _, _ = run_personality_panel(ticker)
+        st.session_state.pop("market_pause", None)
+        _generate_report(ticker)
 
-            # Persist report in session state so it survives reruns.
-            st.session_state["report"] = report
-            st.session_state["ticker"] = ticker
-            # Invalidate any previously cached PDF.
-            st.session_state.pop("pdf_bytes",  None)
-            st.session_state.pop("pdf_ticker", None)
-
-        except Exception as exc:
-            # The UI boundary: any failure is shown to the user (with the full
-            # traceback in an expandable box) instead of a blank page.
-            st.error(f"Could not generate report for {ticker}: {type(exc).__name__}: {exc}")
-            st.exception(exc)
+    # A market-data provider refused a request: the report is paused before
+    # anything else was paid for. Say which provider failed and let the user
+    # continue without that data or stop.
+    if "market_pause" in st.session_state:
+        paused_ticker, pause = st.session_state["market_pause"]
+        st.warning(f"Report for {paused_ticker} paused: market data unavailable from "
+                   f"{', '.join(pause.apis)}.\n\n{pause}")
+        col_continue, col_stop = st.columns(2)
+        if col_continue.button("Continue without this data", key="market_continue"):
+            st.session_state.pop("market_pause")
+            _generate_report(paused_ticker, pause=pause)
+        if col_stop.button("Stop", key="market_stop"):
+            st.session_state.pop("market_pause")
+            st.rerun()
 
     # Results section — shown only after a successful generation.
     if "report" in st.session_state:
@@ -289,25 +336,35 @@ with tab_queue:
             st.session_state["queue"] = []
             st.session_state["queue_results"] = None
             st.session_state["queue_status"] = "idle"
+            st.session_state["queue_pause"] = None
+            st.session_state["queue_stopped_at"] = None
             st.rerun()
     else:
         st.info("Queue is empty. Add tickers above.")
 
-    # Disabled while the queue is empty or already running.
+    # Disabled while the queue is empty, already running, or paused waiting
+    # for the user to choose continue or stop.
     run_clicked = st.button(
         "Run Queue",
         disabled=not st.session_state["queue"]
-                  or st.session_state["queue_status"] == "running",
+                  or st.session_state["queue_status"] in ("running", "paused"),
         type="primary",
         key="queue_run",
     )
 
-    if run_clicked:
+    def _run_queue(tickers: list[str], **queue_options) -> None:
+        """Run *tickers* through process_queue with a live status table, then store the outcome.
+
+        *queue_options* go straight to process_queue (they carry a paused
+        queue's choices when it is continued). A paused queue is kept in
+        session state as "queue_pause", so the page can ask whether to
+        continue or stop.
+        """
         st.session_state["queue_status"] = "running"
 
         # Per-ticker live status table updated via the on_progress callback.
         status_placeholder = st.empty()
-        live_status: dict[str, str] = {queued: "pending" for queued in st.session_state["queue"]}
+        live_status: dict[str, str] = {queued: "pending" for queued in tickers}
 
         def _render_status_table() -> None:
             """Redraw the live status table from live_status."""
@@ -317,6 +374,7 @@ with tab_queue:
                     "⏳" if status == "running"
                     else "✅" if status == "complete"
                     else "❌" if status.startswith("failed")
+                    else "⏸️" if status.startswith("paused")
                     else "·"
                 )
                 rows.append(f"| {symbol} | {emoji} {status} |")
@@ -333,21 +391,46 @@ with tab_queue:
         # fail softly inside process_queue, so anything caught here (e.g. the
         # disk is full) is shown in full rather than leaving a frozen page.
         try:
-            zip_path, results = process_queue(st.session_state["queue"], on_progress=on_progress)
-            zip_bytes = pathlib.Path(zip_path).read_bytes()
+            run = process_queue(tickers, on_progress=on_progress, **queue_options)
+            zip_bytes = pathlib.Path(run.zip_path).read_bytes()
         except Exception as exc:
             st.session_state["queue_status"] = "idle"
             st.error(f"Queue run failed: {type(exc).__name__}: {exc}")
             st.exception(exc)
-        else:
-            # Keep the results (and the ZIP in memory, for the download
-            # button), then rerun so the completion notice at the top shows.
-            # st.rerun() stays outside the try: it works by raising a special
-            # signal that must not be caught as an error.
-            st.session_state["queue_results"]   = results
-            st.session_state["queue_zip_bytes"] = zip_bytes
-            st.session_state["queue_zip_name"]  = zip_path.name
-            st.session_state["queue_status"]    = "complete"
+            return
+
+        # Keep the results (and the ZIP in memory, for the download button),
+        # then rerun so the completion or pause notice shows. st.rerun() stays
+        # outside the try: it works by raising a special signal that must not
+        # be caught as an error.
+        st.session_state["queue_results"]   = run.results
+        st.session_state["queue_zip_bytes"] = zip_bytes
+        st.session_state["queue_zip_name"]  = run.zip_path.name
+        st.session_state["queue_pause"]     = run.pause
+        st.session_state["queue_status"]    = "paused" if run.pause else "complete"
+        st.rerun()
+
+    if run_clicked:
+        st.session_state["queue_stopped_at"] = None
+        _run_queue(st.session_state["queue"])
+
+    # A market-data provider refused a request: the queue stopped before
+    # paying for that ticker. Say which provider failed and let the user
+    # continue (that ticker and the rest go on without the data, without
+    # pausing again) or stop (the finished PDFs are already in the ZIP).
+    pause = st.session_state.get("queue_pause")
+    if st.session_state["queue_status"] == "paused" and pause is not None:
+        st.warning(f"Queue paused at {pause.ticker}: market data unavailable from "
+                   f"{', '.join(pause.apis)}.\n\n{pause.message}")
+        col_continue, col_stop = st.columns(2)
+        if col_continue.button("Continue without this data", key="queue_continue"):
+            _run_queue(pause.remaining, allow_missing_market_data=True,
+                       known_market={pause.ticker: pause.snapshot},
+                       prior_results=st.session_state["queue_results"] or [])
+        if col_stop.button("Stop", key="queue_stop"):
+            st.session_state["queue_stopped_at"] = pause.ticker
+            st.session_state["queue_pause"] = None
+            st.session_state["queue_status"] = "complete"
             st.rerun()
 
     # If a queue has completed, show per-ticker download buttons.

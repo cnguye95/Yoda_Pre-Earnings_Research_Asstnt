@@ -181,10 +181,39 @@ def test_read_article_tool_reads_each_article_once_and_records_it(monkeypatch):
     assert first is second and ctx.read_articles == {_POOL_URL: first}
 
 
-def test_read_article_is_not_offered_to_personalities_yet():
-    # It is turned on later (next_steps 3.9), together with the prompt that
-    # says when to use it.
-    assert "read_article" not in TOOL_DISPATCH
+def test_read_article_is_offered_to_personalities():
+    # Registered everywhere the loop looks: the schema Claude sees, the
+    # dispatch table and the argument check.
+    assert "read_article" in TOOL_DISPATCH and "read_article" in tools.TOOL_ARGS
+    assert "read_article" in {tool["name"] for tool in TOOL_SCHEMAS}
+
+
+def test_repeated_read_of_the_same_article_is_spotted():
+    first = tools.normalize_call("read_article", {"url": "https://Reuters.com/a "})
+    assert first == tools.normalize_call("read_article", {"url": "https://reuters.com/a"})
+    assert first != tools.normalize_call("read_article", {"url": "https://reuters.com/b"})
+
+
+def test_retrieve_filing_also_searches_the_8ks_together():
+    # The 10-Q and 10-K are searched one by one as before, plus one search
+    # over all the 8-Ks for their best matches.
+    calls = []
+
+    class _Store:
+        # Records each search the tool makes.
+        def query(self, accession, query, k):
+            calls.append(("query", accession, k))
+            return []
+
+        def query_any(self, accessions, query, k):
+            calls.append(("query_any", tuple(accessions), k))
+            return []
+    ctx = tools.ToolContext(primary_ticker="TEST", primary_accession="q", supplemental_accession="k",
+                            store=_Store(), eight_k_accessions=["8k-a", "8k-b"])
+
+    tools.retrieve_filing(ctx, "revenue", k=4)
+
+    assert calls == [("query", "q", 4), ("query", "k", 4), ("query_any", ("8k-a", "8k-b"), 4)]
 
 
 # ---------------------------------------------------------------------------

@@ -11,6 +11,7 @@ import json
 from datetime import timedelta
 from types import SimpleNamespace
 
+import anthropic
 import pytest
 import requests
 
@@ -807,3 +808,86 @@ def test_historical_move_when_the_feed_cannot_be_used(monkeypatch, route, reason
 
     assert h["avg_close_move_pct"] is None
     assert h["reason"].startswith("historical move:") and reason_part in h["reason"]
+
+
+# ---------------------------------------------------------------------------
+# Refused requests and get_market_snapshot
+# ---------------------------------------------------------------------------
+
+def test_refused_fmp_request_names_the_api(monkeypatch):
+    # A paid-only FMP endpoint raises ApiAccessError naming FMP. It is still a
+    # RuntimeError, so code that already catches RuntimeError is unaffected.
+    _fake_http(monkeypatch, {consensus._FMP_GRADES_URL: _response(402, text="Premium endpoint")})
+    with pytest.raises(consensus.ApiAccessError) as caught:
+        consensus._fmp_get(consensus._FMP_GRADES_URL, {"symbol": "TEST"}, [])
+    assert caught.value.api == "FMP" and isinstance(caught.value, RuntimeError)
+
+
+def _snapshot_parts(monkeypatch, consensus_fn, whisper_fn, signals_fn) -> list:
+    # Replace the five functions get_market_snapshot calls; the two
+    # EarningsWatcher ones record the report date they were given.
+    seen = []
+    monkeypatch.setattr(consensus, "get_consensus", consensus_fn)
+    monkeypatch.setattr(consensus, "get_eps_whisper", whisper_fn)
+    monkeypatch.setattr(consensus, "get_expectation_signals", signals_fn)
+    monkeypatch.setattr(consensus, "get_implied_move",
+                        lambda ticker, report_date: seen.append(report_date) or {"implied_move_pct": None})
+    monkeypatch.setattr(consensus, "get_historical_move", lambda ticker: {"avg_close_move_pct": 5.0})
+    return seen
+
+
+def _refuse(api: str):
+    # A stand-in for a data function whose provider refuses the request.
+    def refuse(*args, **kwargs):
+        raise consensus.ApiAccessError(api, f"{api} refused (HTTP 402).")
+    return refuse
+
+
+def test_snapshot_lists_each_refusal_and_keeps_the_other_parts(monkeypatch):
+    # Finnhub refuses consensus and FMP refuses the signals: both are listed
+    # by name and part, the whisper is skipped (nothing to match it to) at
+    # no cost, and the EarningsWatcher figures still load.
+    seen = _snapshot_parts(monkeypatch, _refuse("Finnhub"),
+                           lambda *a, **k: pytest.fail("whisper must not be looked up"), _refuse("FMP"))
+
+    snapshot = consensus.get_market_snapshot("test")
+
+    assert [(f.part, f.api) for f in snapshot.failures] == [("consensus", "Finnhub"), ("signals", "FMP")]
+    assert snapshot.consensus is None and snapshot.signals is None and snapshot.whisper is None
+    assert snapshot.whisper_cost_usd == 0.0
+    assert snapshot.historical_move == {"avg_close_move_pct": 5.0}
+    assert seen == [None]
+
+
+def test_snapshot_whisper_api_error_is_a_failure_with_unknown_cost(monkeypatch):
+    # An Anthropic error in the paid whisper lookup is listed as a failure,
+    # and its cost is unknown (None), not $0.
+    import httpx2
+
+    def anthropic_down(*args, **kwargs):
+        raise anthropic.APIConnectionError(request=httpx2.Request("POST", "https://api.anthropic.com/v1/messages"))
+    _snapshot_parts(monkeypatch, lambda ticker: {"next_earnings_date": "2026-11-01"}, anthropic_down,
+                    lambda ticker: {"beat_history": None})
+
+    snapshot = consensus.get_market_snapshot("TEST")
+
+    assert [(f.part, f.api) for f in snapshot.failures] == [("whisper", "Anthropic (whisper lookup)")]
+    assert snapshot.whisper is None and snapshot.whisper_cost_usd is None
+    assert snapshot.signals == {"beat_history": None}
+
+
+def test_snapshot_fetches_signals_once(monkeypatch):
+    # The whisper lookup is told not to fetch its own fallback signals,
+    # because the snapshot fetches them itself.
+    calls = []
+
+    def whisper(ticker, consensus_row, include_signals=True):
+        calls.append(include_signals)
+        return {"cost_usd": 0.04, "whisper_status": "not_found"}
+    _snapshot_parts(monkeypatch, lambda ticker: {"next_earnings_date": "2026-11-01"}, whisper,
+                    lambda ticker: {"beat_history": None})
+
+    snapshot = consensus.get_market_snapshot("TEST")
+
+    assert calls == [False]
+    assert snapshot.failures == [] and snapshot.whisper_cost_usd == 0.04

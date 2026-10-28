@@ -131,6 +131,20 @@ def test_vector_store_returns_the_8k_document_label(monkeypatch):
     assert {c.document for c in found} == {c.document for c in chunks}
 
 
+def test_query_any_searches_only_the_listed_filings(monkeypatch):
+    # One search across several 8-Ks still honours the accession filter: a
+    # filing that isn't listed is never returned, and no list means no search.
+    store = _memory_store(monkeypatch, "query_any_filter")
+    for accession in ("8k-a", "8k-b", "other-company"):
+        store.index_if_missing(accession, [chunker.Chunk(text=f"text of {accession}", section="Other",
+                                                         chunk_index=0, char_start=0, char_end=10)])
+
+    found = store.query_any(["8k-a", "8k-b"], "text", k=5)
+
+    assert sorted(c.text for c in found) == ["text of 8k-a", "text of 8k-b"]
+    assert store.query_any([], "text", k=5) == []
+
+
 def test_chunk_stored_before_labels_reads_back_unlabelled(monkeypatch):
     # Chunks embedded before the label existed have no "document" metadata;
     # they must still load (as a 10-Q/10-K chunk) rather than fail.

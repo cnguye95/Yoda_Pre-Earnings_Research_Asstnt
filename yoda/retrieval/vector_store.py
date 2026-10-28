@@ -189,7 +189,29 @@ class ChromaStore:
             n_results=k,
             where={"accession": accession_number},
         )
+        return self._to_chunks(results)
 
+    def query_any(self, accession_numbers: list[str], query_text: str, k: int = 5) -> list[Chunk]:
+        """Return the *k* chunks most similar to *query_text* across several filings.
+
+        Used for a company's 8-Ks: one search over all of them returns the
+        best matches wherever they are, instead of k from every 8-K. The
+        accession filter still applies — only the listed filings are searched.
+        Returns [] when *accession_numbers* is empty.
+        """
+        if not accession_numbers:
+            return []
+        query_vector = embed_texts([query_text])[0]
+        results = self._collection.query(
+            query_embeddings=[query_vector],
+            n_results=k,
+            where={"accession": {"$in": list(accession_numbers)}},
+        )
+        return self._to_chunks(results)
+
+    @staticmethod
+    def _to_chunks(results: dict) -> list[Chunk]:
+        """Turn a raw Chroma query response into Chunk objects, most similar first."""
         # Reconstruct Chunk objects from the raw Chroma response.
         # results["documents"][0] and results["metadatas"][0] are parallel
         # lists of the k nearest neighbours in order of similarity.

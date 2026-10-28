@@ -15,10 +15,12 @@ import pytest
 
 from yoda.eval import judge, runner
 from yoda.eval.rubric import DimensionScore, JudgeScores
+from yoda.modes.personality_panel import MarketDataUnavailable
 from yoda.queue import processor
 from yoda.report import pdf
 from yoda.schema import EarningsReport, ForwardGuidance, Metric, NewsItem, Risk, Segment, WatchItem
 from yoda.tickers import normalize_tickers
+from yoda.tools.consensus import ApiFailure, MarketSnapshot
 
 
 # ---------------------------------------------------------------------------
@@ -125,7 +127,7 @@ def test_no_caveat_when_both_filings_were_used():
 
 def test_queue_records_failures_and_keeps_going(monkeypatch):
     # One bad ticker fails with its reason and traceback; the others finish.
-    def fake_build(ticker):
+    def fake_build(ticker, market=None, allow_missing_market_data=False):
         if ticker == "BAD":
             raise RuntimeError("SEC unreachable")
         path = processor._REPORTS_DIR / f"{ticker}_20260101-000000.pdf"
@@ -134,8 +136,9 @@ def test_queue_records_failures_and_keeps_going(monkeypatch):
     monkeypatch.setattr(processor, "_build_pdf", fake_build)
     progress = []
 
-    zip_path, results = processor.process_queue(["good", "BAD", "good", "ok"],
-                                                on_progress=lambda t, s: progress.append((t, s)))
+    zip_path, results, pause = processor.process_queue(["good", "BAD", "good", "ok"],
+                                                       on_progress=lambda t, s: progress.append((t, s)))
+    assert pause is None
 
     assert [(r.ticker, r.status) for r in results] == [("GOOD", "complete"), ("BAD", "failed"), ("OK", "complete")]
     failed = results[1]
@@ -144,6 +147,61 @@ def test_queue_records_failures_and_keeps_going(monkeypatch):
     assert ("BAD", "failed: SEC unreachable") in progress
     with zipfile.ZipFile(zip_path) as bundle:
         assert sorted(bundle.namelist()) == ["GOOD_20260101-000000.pdf", "OK_20260101-000000.pdf"]
+
+
+def _pausing_build(calls: list):
+    # A fake _build_pdf: "PAUSE" hits a refused market-data request unless
+    # the queue was told to go on without it; every call is recorded.
+    snapshot = MarketSnapshot(consensus=None, whisper=None, signals=None, implied_move={}, historical_move={},
+                              failures=[ApiFailure("consensus", "Finnhub", "key rejected")], whisper_cost_usd=0.0)
+
+    def build(ticker, market=None, allow_missing_market_data=False):
+        calls.append((ticker, market is snapshot, allow_missing_market_data))
+        if ticker == "PAUSE" and not allow_missing_market_data:
+            raise MarketDataUnavailable(snapshot)
+        path = processor._REPORTS_DIR / f"{ticker}_20260101-000000.pdf"
+        path.write_bytes(b"%PDF fake")
+        return path
+    return build, snapshot
+
+
+def test_queue_pauses_on_refused_market_data(monkeypatch):
+    # The queue stops at the ticker whose market data was refused, names the
+    # provider, keeps what finished (zipped), and lists what's left.
+    calls = []
+    build, snapshot = _pausing_build(calls)
+    monkeypatch.setattr(processor, "_build_pdf", build)
+    progress = []
+
+    zip_path, results, pause = processor.process_queue(["done", "pause", "later"],
+                                                       on_progress=lambda t, s: progress.append((t, s)))
+
+    assert [(r.ticker, r.status) for r in results] == [("DONE", "complete")]
+    assert (pause.ticker, pause.apis, pause.remaining) == ("PAUSE", ["Finnhub"], ["PAUSE", "LATER"])
+    assert pause.snapshot is snapshot
+    assert ("PAUSE", "paused: market data unavailable from Finnhub") in progress
+    assert [ticker for ticker, _, _ in calls] == ["DONE", "PAUSE"]   # LATER never started
+    with zipfile.ZipFile(zip_path) as bundle:
+        assert bundle.namelist() == ["DONE_20260101-000000.pdf"]
+
+
+def test_continued_queue_reuses_the_data_and_bundles_everything(monkeypatch):
+    # Continuing runs the paused ticker with its already-fetched market data
+    # and the rest without pausing again; the final ZIP holds every PDF.
+    calls = []
+    build, _ = _pausing_build(calls)
+    monkeypatch.setattr(processor, "_build_pdf", build)
+    _, results, pause = processor.process_queue(["done", "pause", "later"])
+
+    _, results, pause_again = processor.process_queue(
+        pause.remaining, allow_missing_market_data=True,
+        known_market={pause.ticker: pause.snapshot}, prior_results=results,
+    )
+
+    assert pause_again is None
+    assert [(r.ticker, r.status) for r in results] == [("DONE", "complete"), ("PAUSE", "complete"),
+                                                      ("LATER", "complete")]
+    assert calls[-2:] == [("PAUSE", True, True), ("LATER", False, True)]
 
 
 def test_zip_pruning_refuses_to_keep_zero():

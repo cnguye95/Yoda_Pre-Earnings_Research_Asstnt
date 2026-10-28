@@ -2,7 +2,11 @@
 
 run_personality_panel() is the top-level mode for the Streamlit UI. The design:
 
-  Phase 1 — Ingest:         fetch + chunk the filing; embed only if not stored yet.
+  Phase 1 — Ingest:         fetch the market data (pausing if a provider refuses),
+                            fetch + chunk the filing and the 8-Ks filed since;
+                            embed only what isn't stored yet. Every
+                            personality starts from the same context block:
+                            the 8-K list and the market's expectations.
   Phase 2 — Investigations: 6 personalities (Optimist, Pessimist, Conservative,
                             Dreamer, Contrarian, Quant) each run a tool-use
                             loop in parallel using LOOP_MODEL. Each emits
@@ -39,8 +43,8 @@ import pydantic
 from pydantic import BaseModel, Field
 
 from yoda import config
-from yoda.ingest.chunker import Chunk, chunk_filing
-from yoda.ingest.edgar import FILING_FRESHNESS_DAYS, fetch_latest_filing
+from yoda.ingest.chunker import Chunk, chunk_8k, chunk_filing
+from yoda.ingest.edgar import FILING_FRESHNESS_DAYS, fetch_latest_filing, fetch_post_filing_8ks
 from yoda.modes.baseline import apply_supplemental, full_filing_text, iter_citation_holders, validate_citations
 from yoda.modes.llm import NoStructuredOutput, client as _client, structured_call as _structured_call
 from yoda.modes.tools import (
@@ -52,13 +56,16 @@ from yoda.modes.tools import (
 )
 from yoda.retrieval.vector_store import ChromaStore
 from yoda.schema import (
+    ArticleText,
     EarningsReport,
+    EightKFiling,
     Hypothesis,
     CritiqueMessage,
     Filing,
     NewsSearchResult,
     PersonalityResult,
 )
+from yoda.tools.consensus import MarketSnapshot, get_market_snapshot
 
 
 # ---------------------------------------------------------------------------
@@ -117,12 +124,14 @@ REPORT_BUDGET_USD = 0.65
 # over-investigation at zero cost.
 
 _BASE_LOOP_CONTRACT = """You are investigating {ticker} for an upcoming earnings call.
-You have access to three tools (retrieve_filing, search_news, lookup_peer).
-Each iteration, decide whether to call a tool or to FINISH.
+You have access to four tools (retrieve_filing, search_news, read_article,
+lookup_peer). Each iteration, decide whether to call a tool or to FINISH.
 
 Rules:
   - Form a specific question before each tool call. The question must be
     answerable from the tool's response.
+  - Use read_article only on a search_news result whose snippet cuts off
+    where a claim came from or the detail you need.
   - Use lookup_peer sparingly — only when comparing the primary company to a
     named competitor would change your conclusion.
   - If a tool returns "no new evidence", switch tools or FINISH.
@@ -250,14 +259,27 @@ def _render_chunks(chunks: list[Chunk]) -> str:
     """Format filing chunks as text for a personality to read.
 
     Each chunk is headed by a "[section — heading]" label the agent can
-    quote back in evidence_quotes as its citation.
+    quote back in evidence_quotes as its citation. An 8-K chunk names its
+    8-K instead of a section, e.g. "[8-K Items 2.02, 9.01, Exhibit 99.1
+    (filed 2026-10-13) — Third-Quarter Results]", so the reader can tell
+    post-filing news from the 10-Q/10-K.
     """
     if not chunks:
         return "No chunks returned."
     return "\n\n".join(
-        f"[{chunk.section} — {_chunk_heading(chunk)}]\n{chunk.text[:_CHUNK_PREVIEW_CHARS]}"
+        f"[{chunk.document or chunk.section} — {_chunk_heading(chunk)}]\n{chunk.text[:_CHUNK_PREVIEW_CHARS]}"
         for chunk in chunks
     )
+
+
+def _render_article(article: ArticleText) -> str:
+    """Format a fully read news article for a personality to read.
+
+    The URL comes first so the agent can cite it; a cut article says so,
+    so a missing ending is never mistaken for the article's real end.
+    """
+    cut_note = f" (cut at {len(article.text):,} of {article.full_chars:,} characters)" if article.truncated else ""
+    return f"ARTICLE {article.url}{cut_note}\n\n{article.text}"
 
 
 def _render_news(items: list[NewsSearchResult]) -> str:
@@ -304,6 +326,11 @@ def _execute_tool(ctx: ToolContext, tool_name: str, raw_args: dict) -> tuple[str
     except Exception as exc:
         return f"Tool {tool_name} failed: {type(exc).__name__}: {exc}", f"failed: {type(exc).__name__}: {exc!r}"
 
+    # A read article is one record, never empty (read_article raises
+    # instead), so it skips the empty-result check below.
+    if tool_name == "read_article":
+        return _render_article(raw), f"{len(raw.text)} chars"
+
     # Hedge 4 — empty-result short-circuit. Replace an empty list with a
     # message that signals "switch tools or FINISH" rather than "[]".
     if not raw:
@@ -324,8 +351,13 @@ def _run_personality(
     max_iterations: int,
     wall_timeout_seconds: float,
     log_prefix: str,
+    context_block: str = "",
 ) -> PersonalityResult:
     """Run one personality's tool-use loop and return its PersonalityResult.
+
+    *context_block* is the shared context every personality starts with
+    (the 8-Ks filed since the filing and the market data, from
+    _render_context_block); it is added to the first message.
 
     Inputs are immutable from the caller's perspective: we never mutate `ctx`
     state directly, but tools called inside the loop will mutate shared state
@@ -351,6 +383,8 @@ def _run_personality(
         f"Begin by calling whichever tool will surface the most decision-"
         f"relevant evidence first."
     )
+    if context_block:
+        user += f"\n\n--- CONTEXT (shared by every analyst) ---\n{context_block}"
     messages = [{"role": "user", "content": user}]
 
     # Running counters used in the final PersonalityResult.
@@ -949,17 +983,207 @@ def _describe_filing(filing: Filing | None) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Market data and 8-Ks — the context every personality starts from
+# ---------------------------------------------------------------------------
+
+class MarketDataUnavailable(RuntimeError):
+    """A market-data provider refused Yoda's request, so the report is paused.
+
+    Raised before any personality is paid for. *apis* names each provider
+    that failed and the message gives their details, so the person running
+    the report can decide: re-run with market=<this>.snapshot and
+    allow_missing_market_data=True to continue without that data (no second
+    paid lookup), or stop.
+    """
+
+    def __init__(self, snapshot: MarketSnapshot):
+        self.snapshot = snapshot
+        self.apis = sorted({failure.api for failure in snapshot.failures})
+        details = " | ".join(f"{failure.api}: {failure.detail}" for failure in snapshot.failures)
+        super().__init__(f"Market data unavailable from {', '.join(self.apis)}. {details}")
+
+
+def _ingest_post_filing_8ks(
+    filing: Filing, store: ChromaStore, run_gaps: list[str], log_prefix: str,
+) -> tuple[list[EightKFiling], int]:
+    """Fetch the 8-Ks filed after *filing*, store their chunks, and return them.
+
+    Returns (the 8-Ks, estimated embedding tokens spent). An 8-K that couldn't
+    be fetched is listed in *run_gaps*, so the report says it is missing.
+    """
+    post_filing = fetch_post_filing_8ks(filing)
+    run_gaps.extend(f"8-K not analyzed: {error}" for error in post_filing.errors)
+
+    # Embed each 8-K only if the vector store doesn't already hold it.
+    embed_tokens = 0
+    for eight_k in post_filing.filings:
+        chunks = chunk_8k(eight_k)
+        if store.index_if_missing(eight_k.accession_number, chunks):
+            # Rough token count (~4 characters per token) for the cost line.
+            embed_tokens += sum(len(chunk.text) for chunk in chunks) // 4
+    print(f"{log_prefix} 8-Ks since the filing: {len(post_filing.filings)}"
+          + (f" ({len(post_filing.errors)} could not be fetched)" if post_filing.errors else ""))
+    return post_filing.filings, embed_tokens
+
+
+# What each 8-K item code reports, from the SEC's Form 8-K item titles, so a
+# personality can tell an earnings release from an executive change.
+_EIGHT_K_ITEM_NAMES = {
+    "1.01": "material agreement signed",
+    "1.02": "material agreement ended",
+    "2.01": "acquisition or sale of assets completed",
+    "2.02": "results of operations (earnings release)",
+    "2.03": "new debt or other financial obligation",
+    "2.05": "exit or restructuring costs",
+    "2.06": "material impairment",
+    "3.01": "delisting notice",
+    "5.02": "director or officer change",
+    "5.03": "charter or bylaw amendment",
+    "5.07": "shareholder vote results",
+    "7.01": "Regulation FD disclosure",
+    "8.01": "other events",
+    "9.01": "financial statements and exhibits",
+}
+
+
+def _usd(amount: float) -> str:
+    """Format a dollar amount for the context block: $1.23, $412.5M, $11.52B."""
+    if abs(amount) >= 1e9:
+        return f"${amount / 1e9:,.2f}B"
+    if abs(amount) >= 1e6:
+        return f"${amount / 1e6:,.1f}M"
+    return f"${amount:,.2f}"
+
+
+def _refused(market: MarketSnapshot, part: str) -> str:
+    """Return "N/A — <provider> refused the request" for a snapshot part that failed."""
+    apis = ", ".join(sorted({failure.api for failure in market.failures if failure.part == part}))
+    return f"N/A — {apis or 'the provider'} refused the request"
+
+
+def _market_lines(market: MarketSnapshot) -> list[str]:
+    """Return one line per market-data figure, each with its source.
+
+    A figure that isn't available says "N/A" and why — never 0 or a guess.
+    """
+    consensus, whisper, signals = market.consensus, market.whisper, market.signals
+    lines = []
+
+    # Consensus: the next report and the analysts' average estimates for it.
+    if consensus is None:
+        lines.append(f"- Consensus estimates: {_refused(market, 'consensus')}")
+    else:
+        source = ", ".join(sorted({src["name"] for src in consensus["sources"].values()})) or "no source"
+        quarter = (f"fiscal Q{consensus['fiscal_quarter']} {consensus['fiscal_year']}"
+                   if consensus["fiscal_quarter"] else "fiscal quarter unknown")
+        hour = {"bmo": "before the open", "amc": "after the close"}.get(consensus["report_hour"] or "", "time unknown")
+        lines.append(f"- Next report: {consensus['next_earnings_date'] or 'N/A'} ({hour}), {quarter} — {source}")
+        eps, revenue = consensus["eps_estimate"], consensus["revenue_estimate"]
+        lines.append(f"- Consensus EPS: {'N/A' if eps is None else _usd(eps)}")
+        lines.append(f"- Consensus revenue: {'N/A' if revenue is None else _usd(revenue)}")
+        lines.extend(f"  (missing: {gap})" for gap in consensus["data_gaps"])
+
+    # Whisper: the unofficial number traders expect, only when verified. It
+    # is not looked up without a consensus to match it to.
+    if whisper is None and consensus is None:
+        lines.append("- Whisper EPS: N/A — not looked up (no consensus to match it to)")
+    elif whisper is None:
+        lines.append(f"- Whisper EPS: {_refused(market, 'whisper')}")
+    elif whisper["whisper_status"] == "verified":
+        lines.append(f"- Whisper EPS: {_usd(whisper['whisper_eps'])} — {whisper['source_url']}"
+                     + (f" (page dated {whisper['page_date']})" if whisper["page_date"] else ""))
+    else:
+        lines.append(f"- Whisper EPS: N/A — {whisper['reason'] or 'no verified whisper found'}")
+
+    # Implied move (what options prices expect) and historical move (what
+    # the stock actually did after recent reports).
+    implied = market.implied_move
+    if implied["implied_move_pct"] is not None:
+        lines.append(f"- Options-implied move: ±{implied['implied_move_pct']}% "
+                     f"(as of {implied['as_of']}) — {implied['source_name']}")
+    else:
+        lines.append(f"- Options-implied move: N/A — {implied['reason']}")
+    history = market.historical_move
+    if history["avg_close_move_pct"] is not None:
+        lines.append(f"- Historical move: ±{history['avg_close_move_pct']}% average closing move over the "
+                     f"last {history['reports_used']} reports ({history['first_report_date']} to "
+                     f"{history['last_report_date']}) — {history['source_name']}")
+    else:
+        lines.append(f"- Historical move: N/A — {history['reason']}")
+
+    # The free expectation signals: beat/miss record, analyst rating
+    # actions, and the consensus price target.
+    if signals is None:
+        lines.append(f"- Beat/miss record, analyst actions, price target: {_refused(market, 'signals')}")
+        return lines
+    beats = signals["beat_history"]
+    if beats:
+        surprise = (f", average surprise {beats['avg_surprise_pct']:+}%"
+                    if beats["avg_surprise_pct"] is not None else "")
+        lines.append(f"- Beat/miss record: {beats['beats']} beats, {beats['misses']} misses in the last "
+                     f"{beats['quarters']} quarters{surprise} — {beats['source']['name']}")
+    else:
+        lines.append("- Beat/miss record: N/A")
+    actions = signals["analyst_actions"]
+    if actions:
+        lines.append(f"- Analyst rating actions (last {actions['days']} days): {actions['total']} total, "
+                     f"{actions['upgrades']} upgrades, {actions['downgrades']} downgrades — "
+                     f"{actions['source']['name']}")
+    else:
+        lines.append("- Analyst rating actions: N/A")
+    target = signals["price_target"]
+    if target:
+        upside = ""
+        if target["upside_pct"] is not None and target["current_price"] is not None:
+            upside = f", {target['upside_pct']:+}% vs current {_usd(target['current_price'])}"
+        lines.append(f"- Consensus price target: {_usd(target['consensus'])}{upside} — {target['source']['name']}")
+    else:
+        lines.append("- Consensus price target: N/A")
+    lines.extend(f"  (missing: {gap})" for gap in signals["data_gaps"])
+    return lines
+
+
+def _render_context_block(eight_ks: list[EightKFiling], market: MarketSnapshot) -> str:
+    """Return the shared context every personality starts with, as plain text.
+
+    It lists the 8-Ks filed since the 10-Q/10-K (what each reports) and the
+    market's expectations for the next report, each figure with its source.
+    Personalities search the 8-Ks' text with retrieve_filing; this block
+    tells them which 8-Ks exist without spending a tool call.
+    """
+    lines = ["8-Ks filed since the 10-Q/10-K:"]
+    if not eight_ks:
+        lines.append("- none")
+    for eight_k in eight_ks:
+        items = "; ".join(f"Item {code} {_EIGHT_K_ITEM_NAMES.get(code, '(unlisted item)')}"
+                          for code in eight_k.items) or "no items listed"
+        lines.append(f"- {eight_k.filing_date} {eight_k.form}: {items}")
+    lines += ["", "Market expectations for the next report:", *_market_lines(market)]
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
 def run_personality_panel(
     ticker: str,
+    market: MarketSnapshot | None = None,
+    allow_missing_market_data: bool = False,
 ) -> tuple[EarningsReport, list[PersonalityResult], list[CritiqueMessage]]:
     """Run the multi-agent personality panel against *ticker*.
 
     Returns (report, personality_results, critique_messages). Raises
     RuntimeError if no personality produced a hypothesis, and ValueError if
     synthesis invents a news URL (the report would cite a fake article).
+
+    Market data is fetched once, before any personality runs. If a provider
+    refuses the request (a rejected key, a paid-only endpoint, an Anthropic
+    error in the whisper lookup), the run pauses by raising
+    MarketDataUnavailable, which names the provider(s). To continue without
+    that data, call again with market=<the error>.snapshot and
+    allow_missing_market_data=True: the snapshot is reused (no second paid
+    lookup) and the missing figures are listed in the report's data_gaps.
     """
     ticker = ticker.upper().strip()
     log_prefix = "[panel]"
@@ -998,6 +1222,20 @@ def run_personality_panel(
     if filing and filing.supplemental_error:
         run_gaps.append(f"Supplemental 10-K not analyzed: {filing.supplemental_error}.")
 
+    # Market data for the next report, fetched once for the whole run (this
+    # includes the one paid whisper lookup). A provider that refused the
+    # request pauses the run here, before anything else is paid for, unless
+    # the caller has already chosen to go on without it.
+    if market is None:
+        print(f"{log_prefix} Fetching market data...")
+        market = get_market_snapshot(ticker)
+    if market.failures and not allow_missing_market_data:
+        raise MarketDataUnavailable(market)
+    run_gaps.extend(
+        f"Market data: {failure.part} figures are N/A because {failure.api} refused the request ({failure.detail})."
+        for failure in market.failures
+    )
+
     # Chunk the filing and embed it only if ChromaDB doesn't already hold it.
     # For news-only runs the ChromaStore stays empty; retrieve_filing returns [].
     store = ChromaStore()
@@ -1021,6 +1259,13 @@ def run_personality_panel(
         else:
             print(f"{log_prefix} Supplemental: {len(sup_chunks)} chunks already indexed; skipped embedding")
 
+    # The 8-Ks filed since the 10-Q/10-K: fetched, stored for
+    # retrieve_filing, and listed in the shared context below.
+    eight_ks: list[EightKFiling] = []
+    if filing is not None:
+        eight_ks, eight_k_tokens = _ingest_post_filing_8ks(filing, store, run_gaps, log_prefix)
+        embed_tokens += eight_k_tokens
+
     # News searches cover what was published from the filing date on (the
     # last 30 days when there is no filing).
     ctx = ToolContext(
@@ -1028,8 +1273,13 @@ def run_personality_panel(
         primary_accession=filing.accession_number if filing else None,
         supplemental_accession=supplemental.accession_number if supplemental else None,
         store=store,
+        eight_k_accessions=[eight_k.accession_number for eight_k in eight_ks],
         news_since=date.fromisoformat(filing.filing_date) if filing else None,
     )
+
+    # The context every personality starts from: which 8-Ks exist and what
+    # the market expects for the next report.
+    context_block = _render_context_block(eight_ks, market)
 
     # ------------------------------------------------------------------
     # Phase 2 — Personality investigations in parallel.
@@ -1053,6 +1303,7 @@ def run_personality_panel(
                 MAX_TOOL_CALLS,
                 WALL_TIMEOUT_SECONDS,
                 log_prefix,
+                context_block,
             ): personality
             for personality in _PERSONALITY_PROMPTS
         }
@@ -1245,7 +1496,12 @@ def run_personality_panel(
     embed_cost = (embed_tokens / 1000) * EMBEDDING_COST_PER_1K
     critique_cost = config.model_cost(CRITIQUE_MODEL, critique_in, critique_out)
     gen_cost = config.model_cost(SYNTH_MODEL, synth_in, synth_out)
-    total_cost = phase2_cost + critique_cost + gen_cost + embed_cost
+    # The whisper lookup's cost is unknown when it failed part-way; it is
+    # then left out of the total and counted like a crashed personality's.
+    whisper_cost = market.whisper_cost_usd or 0.0
+    if market.whisper_cost_usd is None:
+        unknown_cost_count += 1
+    total_cost = phase2_cost + critique_cost + gen_cost + embed_cost + whisper_cost
 
     # The "Wall time:" and "Total cost:" line formats are parsed by the eval
     # runner's regexes — keep them unchanged. The embedding figure is an
@@ -1257,9 +1513,12 @@ def run_personality_panel(
           + (f" (+ {unknown_cost_count} crashed personality cost(s) unknown)" if unknown_cost_count else ""))
     print(f"{log_prefix} Phase 3 (critique):  ${critique_cost:.5f}")
     print(f"{log_prefix} Phase 4 (synthesis): ${gen_cost:.5f}")
+    print(f"{log_prefix} Whisper lookup:      "
+          + (f"${whisper_cost:.5f}" if market.whisper_cost_usd is not None else "cost unknown (lookup failed)"))
     print(f"{log_prefix} Total cost:          ${total_cost:.5f}")
     if unknown_cost_count:
-        print(f"{log_prefix} NOTE: total excludes {unknown_cost_count} crashed personality cost(s), so it is a minimum")
+        print(f"{log_prefix} NOTE: total excludes {unknown_cost_count} unknown cost(s) "
+              "(crashed personalities or a failed whisper lookup), so it is a minimum")
 
     if total_cost > REPORT_BUDGET_USD:
         # Don't crash — the report has already been generated. Just flag it
@@ -1280,7 +1539,17 @@ if __name__ == "__main__":
     ticker = (sys.argv[1] if len(sys.argv) > 1 else "NFLX").upper()
     print(f"Running personality panel for {ticker}...\n")
 
-    report, results, messages = run_personality_panel(ticker)
+    # A market-data provider that refuses the request pauses the run; ask
+    # whether to go on without that data (reusing the data already fetched).
+    try:
+        report, results, messages = run_personality_panel(ticker)
+    except MarketDataUnavailable as exc:
+        print(f"\n{exc}")
+        answer = input(f"Continue without {', '.join(exc.apis)} data? [y/N] ").strip().lower()
+        if answer != "y":
+            sys.exit("Stopped: market data unavailable.")
+        report, results, messages = run_personality_panel(ticker, market=exc.snapshot,
+                                                          allow_missing_market_data=True)
 
     # Save report to data/eval for downstream comparison.
     out_dir = config.DATA_DIR / "eval"

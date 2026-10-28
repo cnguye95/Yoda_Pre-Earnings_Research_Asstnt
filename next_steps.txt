@@ -30,6 +30,11 @@ IDEAS for Improvements/Changes
    release. Add the layers analysts use to see what changed since, keeping
    every claim labelled by source, as-of date and evidence type — never
    letting news overwrite filing numbers.
+   Build order (AGREED): steps 1-5 = anchors, schema, historical move, 8-K
+   ingest, news tools (all DONE). Step 6, the panel, is split into 6a inputs
+   (DONE) → 6b evidence tags + weighting → 6c synthesis + report → 6d
+   evidence bundle → 6e PDF/app display. Then step 7 (eval), step 8
+   (transcripts).
 
 3.1 Ingest 8-Ks filed after the primary 10-Q/10-K (yoda/ingest/edgar.py)
    - Fetch 8-Ks with filing_date > primary filing_date (SEC submissions JSON
@@ -56,8 +61,9 @@ IDEAS for Improvements/Changes
        Exhibit 99.1 (filed 2026-10-21)"; Chunk.document holds the label and
        the vector store keeps it (older chunks read back as "").
      * Tests: tests/test_ingest.py, tests/test_retrieval.py.
-     * NOT done yet (step 6): the panel embedding the 8-Ks, retrieve_filing
-       searching them, and _render_chunks showing the label.
+     * DONE (6a): the panel embeds the 8-Ks; retrieve_filing adds the k
+       best matches across all of them (ChromaStore.query_any, still
+       filtered by accession); _render_chunks shows the 8-K label.
 
 3.2 Evidence types — tag every claim
    reported     = company actuals for a closed period (10-Q/10-K, 8-K 2.02 release)
@@ -110,6 +116,22 @@ IDEAS for Improvements/Changes
        prices (free plan: only 5 earnings rows, so at most ~4 past reports).
        Tests: tests/test_market_data.py.
    - Wire consensus.py into this block and into synthesis.
+   - DONE (6a) for personalities; synthesis gets the block in 6c (AGREED):
+     * consensus.get_market_snapshot() fetches everything once per run (one
+       paid whisper lookup; its cost is in the "Total cost:" line).
+     * The panel's _render_context_block() lists each 8-K's date, form and
+       item names, and every market figure with its source and as-of date;
+       a missing figure says "N/A — <reason>", never 0.
+     * PAUSE RULE (AGREED): a provider that refuses the request (rejected
+       key, paid-only endpoint — consensus.ApiAccessError — or an Anthropic
+       error in the whisper lookup) pauses the report before any
+       personality is paid for, naming the API. The person chooses to
+       continue without that data (the snapshot is reused, the missing
+       figures go into data_gaps) or stop. In the app (single ticker and
+       queue) this is two buttons; on the command line a y/N prompt; the
+       eval runner, with no one to ask, records the row as failed. Ordinary
+       "no data" (network blip, not covered, no whisper) is N/A, not a pause.
+     * Budget left at $0.65 (warning only) until the first measured run.
 
 3.4 Weigh claims — two dimensions: reliability and relevance (AGREED DESIGN)
    - Recommendation (agreed):
@@ -472,10 +494,12 @@ IDEAS for Improvements/Changes
        tool in yoda/modes/tools.py opens only URLs in the news pool, reads
        each once per run and records it in ToolContext.read_articles.
      * Tests: tests/test_retrieval.py, tests/test_offline.py.
-     * NOT done yet (step 6): registering read_article with personalities
-       (TOOL_SCHEMAS / TOOL_DISPATCH / TOOL_ARGS, the panel's article
-       display, the prompt's tool list), passing read articles to synthesis,
-       the playbook, the source-tier list and tag-vs-source validation.
+     * DONE (6a): read_article is registered with personalities (schema,
+       dispatch, argument check, repeat detection), shown to them with a
+       "cut at N of M characters" note when cut, and listed in the loop
+       prompt with one rule on when to use it.
+     * NOT done yet: passing read articles to synthesis (6c); the playbook,
+       the source-tier list and tag-vs-source validation (6b).
 
 3.10 Tests (offline, per CLAUDE.md)
    - 8-K item parsing and date filtering; 8-K chunk labels (item code +

@@ -1,20 +1,17 @@
 """Tool registry for the multi-agent personality panel.
 
-Three tools, each a plain Python function, registered with a Claude tool
+Four tools, each a plain Python function, registered with a Claude tool
 schema so personality agents can choose to call them inside
 their tool-use loop. The agents see the same tool surface regardless of which
 personality they embody — what differs is the system prompt that shapes how
 they use the tools.
 
 Tools:
-  retrieve_filing(query, k)         — semantic search on the primary ticker's chunks
+  retrieve_filing(query, k)         — semantic search on the ticker's 10-Q/10-K
+                                      and the 8-Ks filed since
   search_news(query, max_results)   — Tavily news search, from the filing date on
+  read_article(url)                 — full text of an article search_news found
   lookup_peer(peer_ticker, query, k) — fetch+chunk+search a competitor filing
-
-read_article(url) — the full text of an article already found by search_news
-— is written and tested here but not yet registered below, so personalities
-can't call it yet; next_steps 3.9 turns it on together with the prompt that
-says when to use it.
 
 A `ToolContext` carries the per-run state that the tool functions need
 (primary ticker, accession numbers, shared ChromaStore, news pool, articles
@@ -57,6 +54,10 @@ class ToolContext:
     store: ChromaStore
     supplemental_accession: str | None = None   # 10-K when the primary is a 10-Q
 
+    # The 8-Ks filed after the primary filing, already stored in the vector
+    # store, so retrieve_filing can search them too.
+    eight_k_accessions: list[str] = field(default_factory=list)
+
     # The primary filing's date: news searches cover what was published from
     # then on. None (no filing) means the last 30 days.
     news_since: date | None = None
@@ -85,17 +86,20 @@ class ToolContext:
 # ---------------------------------------------------------------------------
 
 def retrieve_filing(ctx: ToolContext, query: str, k: int = 5) -> list[Chunk]:
-    """Semantic search over the primary ticker's filing chunks.
+    """Semantic search over the ticker's SEC filings.
 
-    Queries both the primary filing (10-Q) and the supplemental filing (10-K)
-    when both are available, returning up to 2k chunks so personalities see
-    the freshest quarterly data alongside annual context.
+    Queries the primary filing (10-Q) and the supplemental filing (10-K)
+    when both are available, plus the k best matches across all 8-Ks filed
+    since — up to 3k chunks, so personalities see the freshest quarterly
+    data, annual context, and what was announced after the filing. 8-K
+    chunks carry a label naming the 8-K they came from.
     """
-    # ChromaStore.query is safe to call concurrently from multiple personality
-    # threads since reads don't mutate the on-disk index.
+    # ChromaStore queries are safe to call concurrently from multiple
+    # personality threads since reads don't mutate the on-disk index.
     chunks = ctx.store.query(ctx.primary_accession, query, k=k) if ctx.primary_accession else []
     if ctx.supplemental_accession:
         chunks += ctx.store.query(ctx.supplemental_accession, query, k=k)
+    chunks += ctx.store.query_any(ctx.eight_k_accessions, query, k=k)
     return chunks
 
 
@@ -120,7 +124,7 @@ def search_news(ctx: ToolContext, query: str, max_results: int = 3) -> list[News
 
 
 # ---------------------------------------------------------------------------
-# read_article — written and tested; not yet registered (next_steps 3.9)
+# Tool 3 — read_article
 # ---------------------------------------------------------------------------
 
 def read_article(ctx: ToolContext, url: str) -> ArticleText:
@@ -150,7 +154,7 @@ def read_article(ctx: ToolContext, url: str) -> ArticleText:
 
 
 # ---------------------------------------------------------------------------
-# Tool 3 — lookup_peer
+# Tool 4 — lookup_peer
 # ---------------------------------------------------------------------------
 
 def lookup_peer(ctx: ToolContext, peer_ticker: str, query: str, k: int = 3) -> list[Chunk]:
@@ -193,8 +197,10 @@ TOOL_SCHEMAS = [
         "name": "retrieve_filing",
         "description": (
             "Semantic search over the primary company's most recent 10-Q "
-            "or 10-K. Returns chunks of filing text relevant to your query. "
-            "Use this for facts directly stated in the filing."
+            "or 10-K and the 8-Ks it filed since (earnings releases, new "
+            "debt, executive changes). Returns chunks of filing text relevant "
+            "to your query; 8-K chunks are labelled with the 8-K they came "
+            "from. Use this for facts directly stated in the filings."
         ),
         "input_schema": {
             "type": "object",
@@ -236,6 +242,26 @@ TOOL_SCHEMAS = [
                 },
             },
             "required": ["query"],
+            "additionalProperties": False,
+        },
+    },
+    {
+        "name": "read_article",
+        "description": (
+            "Read the full text of a news article that search_news already "
+            "returned in this run (pass its exact URL). Use it when the "
+            "snippet cuts off where a claim came from or the detail you "
+            "need. Long articles are cut at about 5,000 tokens."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string",
+                    "description": "The article's URL, exactly as search_news returned it.",
+                },
+            },
+            "required": ["url"],
             "additionalProperties": False,
         },
     },
@@ -292,6 +318,11 @@ class SearchNewsArgs(_ToolArgs):
     max_results: int = Field(3, ge=1, le=5)
 
 
+class ReadArticleArgs(_ToolArgs):
+    """Arguments for read_article."""
+    url: str = Field(min_length=1)
+
+
 class LookupPeerArgs(_ToolArgs):
     """Arguments for lookup_peer."""
     peer_ticker: str = Field(min_length=1)
@@ -306,11 +337,13 @@ class LookupPeerArgs(_ToolArgs):
 TOOL_DISPATCH = {
     "retrieve_filing": retrieve_filing,
     "search_news":     search_news,
+    "read_article":    read_article,
     "lookup_peer":     lookup_peer,
 }
 TOOL_ARGS: dict[str, type[_ToolArgs]] = {
     "retrieve_filing": RetrieveFilingArgs,
     "search_news":     SearchNewsArgs,
+    "read_article":    ReadArticleArgs,
     "lookup_peer":     LookupPeerArgs,
 }
 
@@ -322,13 +355,15 @@ TOOL_ARGS: dict[str, type[_ToolArgs]] = {
 def normalize_call(tool_name: str, args: dict) -> str:
     """Build a stable key for a tool call, used to spot repeated calls.
 
-    Only the tool name and its main query (plus the peer, for lookup_peer)
-    count, so asking the same question with k=3 vs k=5 is still a repeat.
-    Case and surrounding spaces are ignored.
+    Only the tool name and its main query (plus the peer, for lookup_peer;
+    the URL, for read_article) count, so asking the same question with k=3
+    vs k=5 is still a repeat. Case and surrounding spaces are ignored.
     """
     query = str(args.get("query", "")).strip().lower()
     if tool_name in ("retrieve_filing", "search_news"):
         return f"{tool_name}:{query}"
+    if tool_name == "read_article":
+        return f"read_article:{str(args.get('url', '')).strip().lower()}"
     if tool_name == "lookup_peer":
         peer = str(args.get("peer_ticker", "")).upper().strip()
         return f"lookup_peer:{peer}:{query}"

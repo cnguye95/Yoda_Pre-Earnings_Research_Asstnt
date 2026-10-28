@@ -1,7 +1,8 @@
 """Market expectations for a ticker: what Wall Street expects before a report.
 
 Six public functions, each returning a plain dict that names where every
-number came from and when it was fetched. Anything that cannot be verified
+number came from and when it was fetched, plus get_market_snapshot(), which
+gathers them for one report. Anything that cannot be verified
 comes back as None with a reason in `data_gaps` (or `reason`) — never a guess.
 The exact shape of each dict is declared as a TypedDict below.
 
@@ -26,6 +27,9 @@ The exact shape of each dict is declared as a TypedDict below.
   get_historical_move(ticker)           — the average closing move after the
                                           last 8 earnings reports, from the
                                           same EarningsWatcher file.
+  get_market_snapshot(ticker)           — all of the above that a report uses,
+                                          fetched once, with any provider that
+                                          refused the request listed by name.
 
 Terms used below:
   consensus EPS  — the average earnings-per-share forecast of the analysts
@@ -48,6 +52,7 @@ from datetime import date, datetime, timedelta, timezone
 from typing import Any, Callable, Literal, NamedTuple, TypedDict, TypeVar
 from urllib.parse import urlparse
 
+import anthropic
 import finnhub
 import pydantic
 import requests
@@ -294,6 +299,24 @@ def _to_float(value: Any) -> float | None:
 
 
 # ---------------------------------------------------------------------------
+# API access errors
+# ---------------------------------------------------------------------------
+
+class ApiAccessError(RuntimeError):
+    """A data provider refused Yoda's request in a way that won't fix itself.
+
+    Raised for a rejected API key or an endpoint the plan doesn't include
+    (unlike a network blip or "no data", which come back as None with a
+    reason). *api* names the provider, e.g. "Finnhub" or "FMP", so the person
+    running a report can be told exactly which service failed.
+    """
+
+    def __init__(self, api: str, message: str):
+        super().__init__(message)
+        self.api = api
+
+
+# ---------------------------------------------------------------------------
 # Finnhub call wrapper
 # ---------------------------------------------------------------------------
 
@@ -318,9 +341,9 @@ def _finnhub_call(fn: Callable[[], _T], what: str, problems: list[str]) -> _T | 
             return fn()
         except FinnhubAPIException as exc:
             if exc.status_code == 401:
-                raise RuntimeError(
-                    "Finnhub API key rejected (HTTP 401). "
-                    "Check FINNHUB_API_KEY in .env."
+                raise ApiAccessError(
+                    "Finnhub",
+                    "Finnhub API key rejected (HTTP 401). Check FINNHUB_API_KEY in .env.",
                 ) from exc
             # 403 = premium-only endpoint, 422 = bad parameters, 429 = rate
             # limit, 5xx = Finnhub outage. None of these mean "no data exists",
@@ -366,9 +389,10 @@ def _fmp_get(url: str, params: dict, problems: list[str]) -> list | None:
     # Fail loud on key / plan problems, quoting FMP's own message. The URL is
     # quoted without its query string so the API key never appears in errors.
     if resp.status_code in (401, 402, 403):
-        raise RuntimeError(
+        raise ApiAccessError(
+            "FMP",
             f"FMP refused {url} (HTTP {resp.status_code}): {resp.text[:200]} "
-            "Check FMP_API_KEY in .env and the FMP plan."
+            "Check FMP_API_KEY in .env and the FMP plan.",
         )
     if not resp.ok:
         problems.append(f"FMP {url}: HTTP {resp.status_code}.")
@@ -986,8 +1010,12 @@ def _whisper_note(ticker: str, consensus: dict, whisper: WhisperResult) -> str:
     return f"{note} {signals}" if signals else note
 
 
-def get_eps_whisper(ticker: str, consensus: dict) -> WhisperResult:
+def get_eps_whisper(ticker: str, consensus: dict, include_signals: bool = True) -> WhisperResult:
     """EPS whisper number for the upcoming report, with a fallback.
+
+    *include_signals*=False skips fetching the fallback signals; use it when
+    the caller fetches get_expectation_signals() itself (get_market_snapshot
+    does), so they aren't fetched twice.
 
     *consensus* is the dict from get_consensus(): its next_earnings_date and
     fiscal quarter/year define which report the whisper must apply to.
@@ -1028,7 +1056,7 @@ def get_eps_whisper(ticker: str, consensus: dict) -> WhisperResult:
             whisper["rejected_candidate"] = search.answer
 
     # No verified whisper: gather the free fallback signals instead.
-    if whisper["whisper_status"] != "verified":
+    if whisper["whisper_status"] != "verified" and include_signals:
         whisper["signals"] = get_expectation_signals(ticker)
 
     # Write the sentence the report can use either way.
@@ -1179,6 +1207,91 @@ def get_historical_move(ticker: str) -> HistoricalMove:
     history["first_report_date"] = recent[-1][0].isoformat()
     history["last_report_date"] = recent[0][0].isoformat()
     return history
+
+
+# ---------------------------------------------------------------------------
+# Everything at once — the market data one report uses
+# ---------------------------------------------------------------------------
+
+class ApiFailure(NamedTuple):
+    """One data provider that refused a request.
+
+    *part* is the snapshot part it left empty ("consensus", "whisper" or
+    "signals"), *api* the provider, *detail* what it said.
+    """
+    part: str
+    api: str
+    detail: str
+
+
+class MarketSnapshot(NamedTuple):
+    """All the market data for one ticker, fetched together for one report.
+
+    A part is None when its provider refused the request; *failures* names
+    each such provider. Missing data that isn't a refusal (no whisper found,
+    ticker not covered, a network blip) is not a failure: that part still
+    comes back, with None values and a reason, as each function documents.
+    *whisper_cost_usd* is None when the whisper lookup failed part-way, so
+    its cost is unknown rather than shown as $0.
+    """
+    consensus: ConsensusResult | None
+    whisper: WhisperResult | None
+    signals: ExpectationSignals | None
+    implied_move: ImpliedMove
+    historical_move: HistoricalMove
+    failures: list[ApiFailure]
+    whisper_cost_usd: float | None
+
+
+def get_market_snapshot(ticker: str) -> MarketSnapshot:
+    """Fetch every market-expectation figure for *ticker* once, for one report.
+
+    Each part is fetched on its own, so one provider refusing (a rejected key
+    or a paid-only endpoint, or an Anthropic API error during the paid
+    whisper lookup) leaves the other parts intact and is listed in
+    `failures` instead of stopping everything. The caller decides whether to
+    go on without the failed parts.
+    """
+    ticker = ticker.upper().strip()
+    failures: list[ApiFailure] = []
+
+    # Consensus first: the whisper and the implied move both need its
+    # report date and fiscal quarter.
+    try:
+        consensus = get_consensus(ticker)
+    except ApiAccessError as exc:
+        consensus = None
+        failures.append(ApiFailure("consensus", exc.api, str(exc)))
+
+    # The whisper lookup is the one paid call. It is skipped when there is no
+    # consensus to match it against; an Anthropic error leaves its cost
+    # unknown. Its own fallback signals are not fetched, because they are
+    # fetched once below.
+    whisper, whisper_cost = None, 0.0
+    if consensus is not None:
+        try:
+            whisper = get_eps_whisper(ticker, consensus, include_signals=False)
+            whisper_cost = whisper["cost_usd"]
+        except anthropic.APIError as exc:
+            whisper_cost = None
+            failures.append(ApiFailure("whisper", "Anthropic (whisper lookup)", f"{type(exc).__name__}: {exc}"))
+
+    # The free signals: beat/miss record, analyst actions, price target.
+    try:
+        signals = get_expectation_signals(ticker)
+    except ApiAccessError as exc:
+        signals = None
+        failures.append(ApiFailure("signals", exc.api, str(exc)))
+
+    # The two EarningsWatcher figures never raise for a refusal; they come
+    # back with a reason when they can't be filled.
+    report_date = consensus["next_earnings_date"] if consensus else None
+    return MarketSnapshot(
+        consensus=consensus, whisper=whisper, signals=signals,
+        implied_move=get_implied_move(ticker, report_date),
+        historical_move=get_historical_move(ticker),
+        failures=failures, whisper_cost_usd=whisper_cost,
+    )
 
 
 # ---------------------------------------------------------------------------
