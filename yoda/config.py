@@ -64,6 +64,10 @@ MODEL_COST_PER_1K = {
 
 
 def model_cost(model: str, input_tokens: int, output_tokens: int) -> float:
-    # Compute one Claude call's cost in USD from its token counts.
+    """Return one Claude call's cost in USD from its token counts.
+
+    Raises KeyError for a model with no price in MODEL_COST_PER_1K, so a new
+    model can't be priced at $0 by accident.
+    """
     in_price, out_price = MODEL_COST_PER_1K[model]
     return (input_tokens / 1000) * in_price + (output_tokens / 1000) * out_price

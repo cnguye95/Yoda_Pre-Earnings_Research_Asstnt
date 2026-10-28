@@ -12,7 +12,6 @@ SEC rules:
   - Stay under 10 requests per second — we sleep 0.15s between calls.
 """
 
-import json
 import time
 import warnings
 from datetime import date, timedelta

@@ -1299,11 +1299,14 @@ if __name__ == "__main__":
     print(f"What to watch:     {len(report.what_to_watch)}")
     print(f"Data gaps:         {len(report.data_gaps)}")
     if report.data_gaps:
-        for g in report.data_gaps:
-            print(f"  - {g}")
+        for gap in report.data_gaps:
+            print(f"  - {gap}")
 
-    print(f"\nPersonality results:")
-    for pr in results:
-        print(f"  {pr.personality:14s}: {len(pr.hypotheses)} hyps, "
-              f"{pr.tool_calls_used} tools, {pr.wall_seconds:.1f}s, "
-              f"${pr.cost_usd:.4f}, clean={pr.finished_cleanly}")
+    # One line per personality. A crashed one has unknown time and cost.
+    print("\nPersonality results:")
+    for result in results:
+        seconds = f"{result.wall_seconds:.1f}s" if result.wall_seconds is not None else "time unknown"
+        cost = f"${result.cost_usd:.4f}" if result.cost_usd is not None else "cost unknown"
+        print(f"  {result.personality:14s}: {len(result.hypotheses)} hyps, "
+              f"{result.tool_calls_used} tools, {seconds}, {cost}, clean={result.finished_cleanly}"
+              + (f", error={result.error}" if result.error else ""))
