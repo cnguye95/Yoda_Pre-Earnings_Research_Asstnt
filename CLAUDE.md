@@ -51,3 +51,9 @@
 - API keys and secrets come from environment variables (`.env`), never hard-coded or committed
 - When code needs a new key, add its *name* with an empty value to `.env.example` (e.g. `FMP_API_KEY=`); real values go only in `.env`, which is gitignored
 - Pin every dependency to an exact version in `requirements.txt`, with a comment explaining any non-obvious pin
+
+## Commit Messages
+- Commit messages should state what was done in a commit (e.g. ".gitignored smoke test outputs")
+- Commit messages SHOULD NOT include or be based on step names 
+  - Bad Example: "recorded the step 8b smoke test (BA with the earnings call)"
+  - Good Example: "smoke test for BA, including new earnings call features"
