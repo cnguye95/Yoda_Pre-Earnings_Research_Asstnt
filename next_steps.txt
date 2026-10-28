@@ -706,7 +706,8 @@ IDEAS for Improvements/Changes
      Finnhub key 403 on transcripts. Alpha Vantage's EARNINGS_CALL_TRANSCRIPT
      takes a free key (~25 requests/day; paid from $49.99/mo), not marked
      premium, speaker-by-speaker (demo checked on IBM 2024Q1). Its terms
-     of service (a PDF) were not read; the user confirms internal use fits.
+     of service (a PDF) were not read; the user CONFIRMED (2026-10-28) that
+     Yoda's use fits them.
      AGREED: Alpha Vantage free; chunks for personalities + full text to
      synthesis and the judge (8b); citation URL = the Alpha Vantage query
      URL without the key; split 8a (data + retrieval) / 8b (synthesis,
@@ -947,3 +948,31 @@ IDEAS for Improvements/Changes
   - do full inspection of chromaDB pipeline
 
 11. Add diagram of system architecture
+
+12. Open items found while building steps 6-8 (added 2026-10-28)
+   a. Cost vs budget: a Yoda report costs ~$0.80-1.00 (BA runs: $0.98,
+      $0.89, $0.80) against REPORT_BUDGET_USD = $0.65, which only warns.
+      3.3 agreed to revisit the budget and MAX_TOOL_CALLS (6) after the
+      first measured runs; not done yet. Synthesis (~$0.3-0.6) is the
+      largest cost.
+   b. Judge output cap: the step-8 judge call used exactly 4,096
+      completion tokens. Check whether that is a hidden output limit
+      (judge.py sets no max_completion_tokens) that could cut long
+      justifications or reasoning short.
+   c. Token estimate near the 272K line: chars / 4 ran ~7% low on BA in
+      step 7 and was close after the HTML fix (85.8K est. vs 84.6K real),
+      but a JPM-size report near the line is untested. Check the estimate
+      on JPM before a full eval (it decides whether uncited news is cut).
+   d. Whisper lookup may rarely verify even inside the 3-day window:
+      upcoming whispers were seen only in earningswhispers.com homepage
+      previews, not on the company pages the lookup checks the number
+      against (e.g. AMZN, 1 day out). Each failed lookup still costs
+      ~$0.12-0.15. Consider accepting the homepage preview as a source, or
+      another check.
+   e. UI bug 1f (queue run jumping back to the Single ticker view) is
+      fixed and tested offline, but never seen working in the browser:
+      that needs a live queue run.
+   f. Personalities rarely copy evidence labels exactly: in the step-8 run
+      all 22 call citations needed code correction ("citation corrected
+      to ..."). The checked evidence is right, but the prompt or the label
+      format should make exact citation easier.
