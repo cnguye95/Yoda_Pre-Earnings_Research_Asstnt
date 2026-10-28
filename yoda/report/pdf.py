@@ -1,9 +1,13 @@
 """PDF report generation for EarningsReport.
 
 report_to_pdf() renders a structured EarningsReport to a downloadable PDF,
-in this order: cover (with any filing caveats), pre-earnings watchlist, key
-metrics table, revenue segments table, forward guidance, key risks, recent
-news, bull/bear case, and data gaps.
+in this order: cover (with any filing caveats), pre-earnings watchlist,
+market expectations, developments since the filing, key metrics table (each
+figure with the period it covers), revenue segments table, forward guidance,
+key risks, recent news, bull/bear case, and data gaps.
+
+expectation_rows() and filing_caveats() are shared with the Streamlit app,
+so both show the same wording.
 
 Uses reportlab (pure Python, no native deps on Windows). ReportLab reads
 paragraph text as a small HTML-like markup, so every piece of text from the
@@ -16,6 +20,8 @@ Smoke test: python -m yoda.report.pdf [TICKER] [MODE]
 import os
 import re
 from datetime import datetime, timezone
+from typing import NamedTuple
+from urllib.parse import urlparse
 from xml.sax.saxutils import escape, quoteattr
 
 from reportlab.lib import colors
@@ -29,6 +35,11 @@ from yoda.schema import EarningsReport
 
 # Shown in place of a metric value the report left blank.
 _NOT_REPORTED = "— (not reported)"
+
+# Text colours: grey for secondary detail (a metric's period), amber for
+# anything missing or weak (data gaps, N/A figures, unverifiable claims).
+_GREY = "#666666"
+_AMBER = "#ff8800"
 
 # Finds **bold** markdown pairs; the shortest match, so two bold phrases on
 # one line stay separate. A lone "**" with no partner is left as plain text.
@@ -82,6 +93,71 @@ def filing_caveats(report: EarningsReport) -> list[str]:
     return []
 
 
+# ============================================================================
+# Market expectations — rows shared with the Streamlit app
+# ============================================================================
+
+# Display name for each market_expectations slot, in the schema's order.
+EXPECTATION_LABELS = {
+    "consensus_eps": "Consensus EPS",
+    "consensus_revenue": "Consensus revenue",
+    "whisper_eps": "Whisper EPS",
+    "implied_move": "Options-implied move",
+    "historical_move": "Historical move",
+    "beat_miss_record": "Beat/miss record",
+    "analyst_actions": "Analyst rating actions",
+    "price_target": "Consensus price target",
+}
+
+# Shown when a report has no market_expectations section at all: reports
+# written before the section existed, and baseline reports for now.
+NO_MARKET_DATA = "Market expectations were not collected for this report."
+
+
+class ExpectationRow(NamedTuple):
+    """One market-expectation figure, ready to display.
+
+    *value_text* is the figure, or "N/A — <reason>" when it is missing
+    (*available* is then False). *quarter* is e.g. "Q3 FY2026", or None for
+    a figure that is not about one quarter (such as the historical move).
+    *source* is the provider's name, or a URL for the whisper page.
+    """
+    label: str
+    value_text: str
+    available: bool
+    quarter: str | None
+    source: str | None
+    as_of: str | None
+
+
+def is_url(source: str) -> bool:
+    """True if a market-data source is a web address (the whisper's page) rather than a provider name."""
+    return source.startswith(("http://", "https://"))
+
+
+def site_label(url: str) -> str:
+    """Return the short site name to show for *url*, e.g. "earningswhispers.com"."""
+    return (urlparse(url).netloc or url).removeprefix("www.")
+
+
+def expectation_rows(report: EarningsReport) -> list[ExpectationRow]:
+    """Return one display row per market-expectation figure, or [] if the report has none.
+
+    The PDF and the app both show these rows, so their wording is the same.
+    A missing figure shows its reason, never 0 or a blank.
+    """
+    if report.market_expectations is None:
+        return []
+    rows = []
+    for name, label in EXPECTATION_LABELS.items():
+        slot = getattr(report.market_expectations, name)
+        quarter = (f"Q{slot.fiscal_quarter} FY{slot.fiscal_year}"
+                   if slot.fiscal_quarter and slot.fiscal_year else None)
+        value_text = slot.value if slot.value is not None else f"N/A — {slot.missing_reason or 'no reason given'}"
+        rows.append(ExpectationRow(label, value_text, slot.value is not None, quarter, slot.source, slot.as_of_date))
+    return rows
+
+
 def _generated_label(timestamp: str) -> str:
     """Format the report timestamp as "YYYY-MM-DD HH:MM UTC" (or as given, if unreadable).
 
@@ -105,7 +181,8 @@ def _get_styles() -> StyleSheet1:
     """Create a style sheet with custom overrides for report layout."""
     styles = getSampleStyleSheet()
 
-    # Section header: large, bold, dark blue
+    # Section header: large, bold, dark blue. keepWithNext stops a header
+    # being left alone at the bottom of a page with its section on the next.
     styles.add(ParagraphStyle(
         name='SectionHeader',
         parent=styles['Heading1'],
@@ -113,6 +190,7 @@ def _get_styles() -> StyleSheet1:
         textColor=colors.HexColor('#003366'),
         spaceAfter=12,
         spaceBefore=12,
+        keepWithNext=1,
     ))
 
     # Citation text: small, gray, for table cells
@@ -120,7 +198,7 @@ def _get_styles() -> StyleSheet1:
         name='Citation',
         parent=styles['Normal'],
         fontSize=8,
-        textColor=colors.HexColor('#666666'),
+        textColor=colors.HexColor(_GREY),
     ))
 
     # Table cell text that must word-wrap inside its column
@@ -141,7 +219,7 @@ def _get_styles() -> StyleSheet1:
     styles.add(ParagraphStyle(
         name='DataGap',
         parent=styles['Normal'],
-        textColor=colors.HexColor('#ff8800'),
+        textColor=colors.HexColor(_AMBER),
         fontSize=10,
     ))
 
@@ -223,13 +301,19 @@ def _cover_elements(report: EarningsReport, styles: StyleSheet1) -> list[Flowabl
 
 
 def _metrics_table(report: EarningsReport, styles: StyleSheet1, filing_url: str | None = None) -> list[Flowable]:
-    """Build the Key Metrics table; a blank value shows as "not reported", never as just a unit."""
+    """Build the Key Metrics table; a blank value shows as "not reported", never as just a unit.
+
+    The period each figure covers sits under its value on a small grey line,
+    so a stale figure is visible; reports written before periods were
+    recorded say "period not stated".
+    """
     rows = [['Metric', 'Value', 'Source Citation']]
     for metric in report.key_metrics:
         value = f"{metric.value} {metric.unit}".strip() if metric.value.strip() else _NOT_REPORTED
+        period = (metric.period or "").strip() or "period not stated"
         rows.append([
             Paragraph(_esc(metric.name), styles['Normal']),
-            Paragraph(_esc(value), styles['Cell']),
+            Paragraph(f'{_esc(value)}<br/><font size="7" color="{_GREY}">{_esc(period)}</font>', styles['Cell']),
             Paragraph(_cite(metric.source_citation, filing_url), styles['Citation']),
         ])
     if len(rows) == 1:
@@ -258,6 +342,68 @@ def _segments_table(report: EarningsReport, styles: StyleSheet1, filing_url: str
     table = Table(rows, colWidths=[1.3*inch, 1.0*inch, 0.9*inch, 1.8*inch, 1.5*inch])
     table.setStyle(_table_style(body_font_size=8))
     return [Paragraph("Revenue Segments", styles['SectionHeader']), table, Spacer(1, 0.3*inch)]
+
+
+def _source_markup(source: str | None) -> str:
+    """Return a market-data source as markup: a link labelled with its site for a URL, "—" for none."""
+    if not source:
+        return "—"
+    if is_url(source):
+        return _link(source, site_label(source))
+    return _esc(source)
+
+
+def _market_expectations_section(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
+    """Build the Market Expectations table: each figure with its quarter, source and date.
+
+    A missing figure shows "N/A — <reason>" in amber. A report with no
+    market data at all says so instead of showing an empty table.
+    """
+    elements: list[Flowable] = [Paragraph("Market Expectations", styles['SectionHeader'])]
+    rows = expectation_rows(report)
+    if not rows:
+        return elements + [Paragraph(_esc(NO_MARKET_DATA), styles['DataGap']), Spacer(1, 0.3*inch)]
+
+    table_rows = [['Item', 'Value', 'Quarter', 'Source', 'As of']]
+    for row in rows:
+        value = _esc(row.value_text) if row.available else f'<font color="{_AMBER}">{_esc(row.value_text)}</font>'
+        table_rows.append([
+            Paragraph(_esc(row.label), styles['Cell']),
+            Paragraph(value, styles['Cell']),
+            Paragraph(_esc(row.quarter or "—"), styles['Cell']),
+            Paragraph(_source_markup(row.source), styles['Citation']),
+            Paragraph(_esc(row.as_of or "—"), styles['Cell']),
+        ])
+    table = Table(table_rows, colWidths=[1.4*inch, 2.5*inch, 0.8*inch, 1.4*inch, 0.9*inch])
+    table.setStyle(_table_style(body_font_size=8))
+    return elements + [table, Spacer(1, 0.3*inch)]
+
+
+def _since_filing_section(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
+    """Build the Since the Filing table: each development with its evidence type, period, date and source.
+
+    The source links to where the claim can be checked. A claim tagged
+    unverifiable has its type in amber, so weak claims stand out.
+    """
+    elements: list[Flowable] = [Paragraph("Since the Filing", styles['SectionHeader'])]
+    if not report.since_filing:
+        return elements + [Paragraph('(None)', styles['Normal']), Spacer(1, 0.3*inch)]
+
+    rows = [['Claim', 'Type', 'Period', 'As of', 'Source']]
+    for item in report.since_filing:
+        kind = (_esc(item.evidence_type) if item.evidence_type != "unverifiable"
+                else f'<font color="{_AMBER}">{_esc(item.evidence_type)}</font>')
+        rows.append([
+            Paragraph(_esc(item.claim), styles['Cell']),
+            Paragraph(kind, styles['Cell']),
+            # No period for an event that has none, such as an executive change.
+            Paragraph(_esc(item.period or "—"), styles['Cell']),
+            Paragraph(_esc(item.as_of_date), styles['Cell']),
+            Paragraph(_link(item.url, item.source), styles['Citation']),
+        ])
+    table = Table(rows, colWidths=[3.0*inch, 0.8*inch, 0.8*inch, 0.8*inch, 1.6*inch])
+    table.setStyle(_table_style(body_font_size=8))
+    return elements + [table, Spacer(1, 0.3*inch)]
 
 
 def _guidance_section(report: EarningsReport, styles: StyleSheet1, filing_url: str | None = None) -> list[Flowable]:
@@ -362,29 +508,19 @@ def _data_gaps_section(report: EarningsReport, styles: StyleSheet1) -> list[Flow
 # Main Public API
 # ============================================================================
 
-def report_to_pdf(report: EarningsReport, output_path: str | os.PathLike, filing_url: str | None = None) -> str:
-    """Render *report* to a PDF file at *output_path* and return that path as a string.
+def _story(report: EarningsReport, styles: StyleSheet1, filing_url: str | None) -> list[Flowable]:
+    """Return every section of the PDF in reading order.
 
-    *filing_url*, when given, turns every source_citation into a hyperlink
-    to the SEC filing.
+    The watchlist leads because it is the report's main output. What the
+    market expects and what changed since the filing come next (newest
+    first), then the filing's own figures.
     """
-    output_path = str(output_path)
-    styles = _get_styles()
-    doc = SimpleDocTemplate(
-        output_path,
-        pagesize=letter,
-        topMargin=0.75*inch,
-        bottomMargin=0.75*inch,
-        leftMargin=0.75*inch,
-        rightMargin=0.75*inch,
-    )
-
-    # The sections in reading order; the watchlist leads because it is the
-    # report's main output.
-    story: list[Flowable] = [
+    return [
         *_cover_elements(report, styles),
         Spacer(1, 0.4*inch),
         *_what_to_watch_section(report, styles),
+        *_market_expectations_section(report, styles),
+        *_since_filing_section(report, styles),
         *_metrics_table(report, styles, filing_url),
         *_segments_table(report, styles, filing_url),
         *_guidance_section(report, styles, filing_url),
@@ -393,7 +529,24 @@ def report_to_pdf(report: EarningsReport, output_path: str | os.PathLike, filing
         *_bull_bear_section(report, styles),
         *_data_gaps_section(report, styles),
     ]
-    doc.build(story)
+
+
+def report_to_pdf(report: EarningsReport, output_path: str | os.PathLike, filing_url: str | None = None) -> str:
+    """Render *report* to a PDF file at *output_path* and return that path as a string.
+
+    *filing_url*, when given, turns every source_citation into a hyperlink
+    to the SEC filing.
+    """
+    output_path = str(output_path)
+    doc = SimpleDocTemplate(
+        output_path,
+        pagesize=letter,
+        topMargin=0.75*inch,
+        bottomMargin=0.75*inch,
+        leftMargin=0.75*inch,
+        rightMargin=0.75*inch,
+    )
+    doc.build(_story(report, _get_styles(), filing_url))
     return output_path
 
 

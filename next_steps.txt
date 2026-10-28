@@ -33,7 +33,7 @@ IDEAS for Improvements/Changes
    Build order (AGREED): steps 1-5 = anchors, schema, historical move, 8-K
    ingest, news tools (all DONE). Step 6, the panel, is split into 6a inputs
    (DONE) → 6b evidence tags + weighting (DONE) → 6c synthesis + report
-   (DONE) → 6d evidence bundle (DONE) → 6e PDF/app display. Then step 7 (eval), step 8
+   (DONE) → 6d evidence bundle (DONE) → 6e PDF/app display (DONE). Then step 7 (eval), step 8
    (transcripts).
    SMOKE TEST (AGREED 2026-10-28): one live panel run is allowed once all of
    step 6 (6a-6e) is done, to check the panel end to end before step 7.
@@ -219,6 +219,16 @@ IDEAS for Improvements/Changes
        data_gaps rather than failing the run).
      * The PDF and app display of since_filing and market_expectations is
        built in step 6, when the panel fills them.
+     * DONE (6e): the PDF shows Market Expectations and Since the Filing
+       tables right after the watchlist (AGREED: newest first), and each
+       key metric's period on a small grey line under its value (AGREED:
+       no new column; "period not stated" for old reports). N/A figures
+       and unverifiable claims show in amber; a report with no
+       market_expectations says "Market expectations were not collected
+       for this report." The app has two expanders under the watchlist
+       (AGREED), built from the same expectation_rows() helper as the PDF.
+       Section headers now stay with their section across page breaks.
+       Tests: tests/test_outputs.py.
    - REMINDER: when 3.5 and 3.6 are built, add this note to the README:
      "Figures from 8-K earnings releases appear in the report's
      since_filing section, tagged reported with the period they cover. They

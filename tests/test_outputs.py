@@ -12,13 +12,17 @@ from types import SimpleNamespace
 
 import pandas as pd
 import pytest
+from reportlab.platypus import Paragraph
 
 from yoda.eval import judge, runner
 from yoda.eval.rubric import DimensionScore, JudgeScores
 from yoda.modes.personality_panel import MarketDataUnavailable, PanelRun
 from yoda.queue import processor
 from yoda.report import pdf
-from yoda.schema import EarningsReport, EvidenceBundle, ForwardGuidance, Metric, NewsItem, Risk, Segment, WatchItem
+from yoda.schema import (
+    EarningsReport, EvidenceBundle, ExpectationValue, ForwardGuidance, MarketExpectations, Metric, NewsItem, Risk,
+    Segment, SinceFilingItem, WatchItem,
+)
 from yoda.tickers import normalize_tickers
 from yoda.tools.consensus import ApiFailure, MarketSnapshot
 
@@ -87,8 +91,9 @@ def test_pdf_builds_for_a_report_with_no_filing(tmp_path):
 
 def test_blank_metric_value_is_shown_as_not_reported():
     cells = _texts(pdf._metrics_table(_report(), pdf._get_styles()))
-    assert pdf._NOT_REPORTED in cells
-    assert "USD" not in cells          # a lone unit is not a value
+    # The cell starts with the placeholder (the period follows on its own line).
+    assert any(cell.startswith(f"{pdf._NOT_REPORTED}<br/>") for cell in cells)
+    assert not any(cell.startswith("USD") for cell in cells)   # a lone unit is not a value
 
 
 def test_guidance_placeholder_is_not_put_in_quote_marks():
@@ -119,6 +124,95 @@ def test_filing_caveats(overrides, expected):
 
 def test_no_caveat_when_both_filings_were_used():
     assert pdf.filing_caveats(_report()) == []
+
+
+# ---------------------------------------------------------------------------
+# PDF — market expectations, developments since the filing, metric periods
+# ---------------------------------------------------------------------------
+
+def _expectations() -> MarketExpectations:
+    # A market_expectations section with filled, N/A, URL-sourced and
+    # quarter-less (backward-looking) figures.
+    filled = ExpectationValue(value="$1.23", fiscal_quarter=3, fiscal_year=2026, source="Finnhub earnings calendar",
+                              as_of_date="2026-10-28", missing_reason=None)
+    missing = ExpectationValue(value=None, fiscal_quarter=None, fiscal_year=None, source=None, as_of_date=None,
+                               missing_reason="implied move: no live implied move yet.")
+    whisper = filled.model_copy(update={"value": "$1.30", "source": "https://www.earningswhispers.com/epsdetails/t"})
+    history = ExpectationValue(value="±6.1% average closing move over the last 8 reports", fiscal_quarter=None,
+                               fiscal_year=None, source="EarningsWatcher", as_of_date="2026-10-27", missing_reason=None)
+    return MarketExpectations(consensus_eps=filled, consensus_revenue=filled, whisper_eps=whisper,
+                              implied_move=missing, historical_move=history, beat_miss_record=filled,
+                              analyst_actions=missing.model_copy(update={"missing_reason": None}),
+                              price_target=filled)
+
+
+def _since_items() -> list[SinceFilingItem]:
+    # One checked 8-K figure (with markup characters) and one unverifiable event.
+    return [
+        SinceFilingItem(claim="Revenue rose 9% <ex-FX> & more", evidence_type="reported", period="Q3 FY2026",
+                        as_of_date="2026-10-13", source="8-K Item 2.02, Exhibit 99.1 — Results",
+                        url="https://www.sec.gov/ex99.htm?a=1&b=2"),
+        SinceFilingItem(claim="CFO resigned", evidence_type="unverifiable", period=None, as_of_date="2026-10-20",
+                        source="none stated", url="https://news.example/cfo"),
+    ]
+
+
+def test_metric_period_sits_under_its_value():
+    metrics = [Metric(name="Revenue", value="$1.2B", unit="", source_citation="10-Q Item 2", period="Q3 FY2026"),
+               Metric(name="Backlog", value="$3B", unit="", source_citation="10-Q Item 2")]
+    cells = _texts(pdf._metrics_table(_report(key_metrics=metrics), pdf._get_styles()))
+    assert any(cell.startswith("$1.2B<br/>") and "Q3 FY2026" in cell for cell in cells)
+    # A report written before periods were recorded says so.
+    assert any(cell.startswith("$3B<br/>") and "period not stated" in cell for cell in cells)
+
+
+def test_expectation_rows_show_each_figure_or_why_it_is_missing():
+    rows = pdf.expectation_rows(_report(market_expectations=_expectations()))
+
+    assert [row.label for row in rows] == list(pdf.EXPECTATION_LABELS.values())
+    assert rows[0] == pdf.ExpectationRow("Consensus EPS", "$1.23", True, "Q3 FY2026",
+                                         "Finnhub earnings calendar", "2026-10-28")
+    assert (rows[3].value_text, rows[3].available) == ("N/A — implied move: no live implied move yet.", False)
+    assert rows[4].quarter is None                         # the historical move is not about one quarter
+    assert rows[6].value_text == "N/A — no reason given"   # never a blank or 0
+    # A report with no section has no rows (the caller shows NO_MARKET_DATA).
+    assert pdf.expectation_rows(_report()) == []
+
+
+def test_market_expectations_section_marks_missing_figures_and_links_the_whisper_page():
+    styles = pdf._get_styles()
+    texts = _texts(pdf._market_expectations_section(_report(market_expectations=_expectations()), styles))
+    assert '<font color="#ff8800">N/A — implied move: no live implied move yet.</font>' in texts
+    assert any(text.endswith(">earningswhispers.com</a>") for text in texts)   # short label, full link
+    assert "Q3 FY2026" in texts
+
+    # Reports from before the section existed say the data wasn't collected.
+    assert pdf.NO_MARKET_DATA in _texts(pdf._market_expectations_section(_report(), styles))
+
+
+def test_since_filing_section_labels_each_claim_and_links_its_source():
+    styles = pdf._get_styles()
+    texts = _texts(pdf._since_filing_section(_report(since_filing=_since_items()), styles))
+    assert "Revenue rose 9% &lt;ex-FX&gt; &amp; more" in texts
+    assert "reported" in texts and "—" in texts            # an event with no fiscal period
+    assert '<font color="#ff8800">unverifiable</font>' in texts
+    assert any(text.startswith('<a href="https://www.sec.gov/ex99.htm?a=1&amp;b=2">') for text in texts)
+
+    assert "(None)" in _texts(pdf._since_filing_section(_report(), styles))
+
+
+def test_pdf_sections_come_newest_first():
+    story = pdf._story(_report(), pdf._get_styles(), filing_url=None)
+    headers = [item.text for item in story if isinstance(item, Paragraph) and item.style.name == "SectionHeader"]
+    assert headers == ["Pre-Earnings Watchlist", "Market Expectations", "Since the Filing", "Key Metrics",
+                       "Revenue Segments", "Forward Guidance", "Key Risks", "Recent News", "Bull Case",
+                       "Bear Case", "Data Gaps"]
+
+
+def test_pdf_builds_with_the_new_sections(tmp_path):
+    report = _report(market_expectations=_expectations(), since_filing=_since_items())
+    pdf.report_to_pdf(report, tmp_path / "r.pdf", filing_url="https://sec.gov/x")
+    assert (tmp_path / "r.pdf").stat().st_size > 1000
 
 
 # ---------------------------------------------------------------------------

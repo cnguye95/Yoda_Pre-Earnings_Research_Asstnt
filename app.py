@@ -13,7 +13,7 @@ import streamlit.components.v1 as components
 from yoda.ingest.edgar import fetch_latest_filing
 from yoda.modes.personality_panel import MarketDataUnavailable, run_personality_panel
 from yoda.queue.processor import process_queue
-from yoda.report.pdf import filing_caveats, report_to_pdf
+from yoda.report.pdf import NO_MARKET_DATA, expectation_rows, filing_caveats, is_url, report_to_pdf, site_label
 from yoda.retrieval.embeddings import EMBEDDING_MODEL
 from yoda.schema import EarningsReport
 from yoda.tickers import normalize_tickers
@@ -264,6 +264,33 @@ with tab_single:
             for url in item.relevant_urls:
                 st.markdown(f"- [{url}]({url})")
             st.markdown("")
+
+        # Market expectations: each figure with its quarter, source and date
+        # (the same rows the PDF shows). A missing figure says N/A and why; a
+        # report with no market data at all says so.
+        with st.expander("Market Expectations"):
+            rows = expectation_rows(report)
+            if not rows:
+                st.markdown(NO_MARKET_DATA)
+            for row in rows:
+                quarter = f" ({row.quarter})" if row.quarter else ""
+                # A provider name is plain text; the whisper's source is the
+                # page it came from, shown as a link labelled with its site.
+                source = _md(row.source or "no source")
+                if row.source and is_url(row.source):
+                    source = f"[{site_label(row.source)}]({row.source})"
+                as_of = f", as of {row.as_of}" if row.as_of else ""
+                st.markdown(f"- **{row.label}:** {_md(row.value_text)}{quarter} — {source}{as_of}")
+
+        # Developments since the filing, each with its evidence type, period,
+        # date and a link to its source.
+        with st.expander(f"Since the Filing ({len(report.since_filing)})"):
+            if not report.since_filing:
+                st.markdown("(None recorded)")
+            for item in report.since_filing:
+                period = item.period or "no fiscal period"
+                st.markdown(f"- {item.evidence_type} · {period} · {item.as_of_date} — "
+                            f"{_md(item.claim)} — [{_md(item.source)}]({item.url})")
 
         # Bull / Bear — secondary, in an expander.
         with st.expander("Bull Case / Bear Case"):

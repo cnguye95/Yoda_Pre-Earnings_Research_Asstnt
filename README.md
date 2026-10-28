@@ -282,7 +282,7 @@ The app has two tabs: **Single ticker** (interactive, one report at a time) and 
 
 ### PDF Output Structure
 
-The downloaded PDF contains: cover page (ticker, company name, primary filing date — and the supplemental 10-K date when both filings are within the 92-day window), the Pre-Earnings Watchlist (each entry followed by clickable "Sources:" URLs when the synthesizer found relevant news in the pool), key metrics table, revenue segments table, forward guidance blockquote, key risks (new risks flagged in red), analyst consensus, recent news with hyperlinks, bull/bear bullets, and data gaps in amber.
+The downloaded PDF contains: cover page (ticker, company name, primary filing date — and the supplemental 10-K date when both filings are within the 92-day window), the Pre-Earnings Watchlist (each entry followed by clickable "Sources:" URLs when the synthesizer found relevant news in the pool), market expectations (consensus, whisper, implied and historical move, beat/miss record, analyst actions, price target — each with its quarter, source and date, and N/A with the reason when missing), developments since the filing (each claim with its evidence type, period, date and a link to its source), key metrics table (each figure with the period it covers), revenue segments table, forward guidance blockquote, key risks (new risks flagged in red), recent news with hyperlinks, bull/bear bullets, and data gaps in amber. The app shows market expectations and developments since the filing in two expanders under the watchlist.
 
 ---
 
