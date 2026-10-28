@@ -1229,6 +1229,11 @@ def run_personality_panel(
     # that it was left out of synthesis for size.
     apply_supplemental(report, supplemental, sup_dropped)
 
+    # Which filing the report describes is known in code, so it is stamped
+    # on rather than trusted to the model ("N/A" when there was none).
+    report.filing_type = filing.filing_type if filing else "N/A"
+    report.filing_date = filing.filing_date if filing else "N/A"
+
     # Problems from the input-gathering phase, so the reader sees them too.
     report.data_gaps.extend(gap for gap in run_gaps if gap not in report.data_gaps)
 

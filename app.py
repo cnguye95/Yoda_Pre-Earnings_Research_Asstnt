@@ -13,7 +13,10 @@ import streamlit.components.v1 as components
 from yoda.ingest.edgar import fetch_latest_filing
 from yoda.modes.personality_panel import run_personality_panel
 from yoda.queue.processor import process_queue
-from yoda.report.pdf import report_to_pdf
+from yoda.report.pdf import filing_caveats, report_to_pdf
+from yoda.retrieval.embeddings import EMBEDDING_MODEL
+from yoda.schema import EarningsReport
+from yoda.tickers import normalize_tickers
 
 
 # ---------------------------------------------------------------------------
@@ -24,16 +27,25 @@ st.set_page_config(page_title="Yoda", layout="centered")
 
 
 # ---------------------------------------------------------------------------
-# PDF generation helper (cached per-ticker via session state)
+# Text helper
 # ---------------------------------------------------------------------------
 
 def _md(text: str) -> str:
-    # Escape bare dollar signs so Streamlit doesn't interpret them as LaTeX math.
+    """Escape bare dollar signs so Streamlit doesn't read "$5 ... $6" as LaTeX math."""
     return text.replace("$", r"\$")
 
 
-def _ensure_pdf(report) -> bytes:
-    # Return cached PDF bytes if we already generated one for this ticker.
+# ---------------------------------------------------------------------------
+# PDF generation helper (cached per-ticker via session state)
+# ---------------------------------------------------------------------------
+
+def _ensure_pdf(report: EarningsReport) -> bytes:
+    """Return the PDF for *report* as bytes, building it only once per ticker.
+
+    The bytes are kept in session state, so Streamlit's frequent reruns
+    don't rebuild the PDF. Raises whatever fetching the filing or building
+    the PDF raises; the caller shows the error.
+    """
     if (
         "pdf_bytes" in st.session_state
         and st.session_state.get("pdf_ticker") == report.ticker
@@ -78,7 +90,7 @@ st.caption("A multi-agentic tool built for everyone")
 
 with st.sidebar:
     st.markdown("### Settings")
-    st.caption("Embeddings: OpenAI text-embedding-3-small")
+    st.caption(f"Embeddings: OpenAI {EMBEDDING_MODEL}")
 
 
 # ---------------------------------------------------------------------------
@@ -88,8 +100,8 @@ with st.sidebar:
 
 if st.session_state["queue_status"] == "complete":
     results = st.session_state.get("queue_results") or []
-    n_ok   = sum(1 for r in results if r["status"] == "complete")
-    n_fail = sum(1 for r in results if r["status"] == "failed")
+    n_ok   = sum(result.status == "complete" for result in results)
+    n_fail = sum(result.status == "failed" for result in results)
     if n_fail:
         st.success(
             f"Queue complete — {n_ok} reports generated, {n_fail} failed. "
@@ -156,7 +168,10 @@ with tab_single:
             st.session_state.pop("pdf_ticker", None)
 
         except Exception as exc:
-            st.error(f"Could not generate report for {ticker}: {exc}")
+            # The UI boundary: any failure is shown to the user (with the full
+            # traceback in an expandable box) instead of a blank page.
+            st.error(f"Could not generate report for {ticker}: {type(exc).__name__}: {exc}")
+            st.exception(exc)
 
     # Results section — shown only after a successful generation.
     if "report" in st.session_state:
@@ -171,34 +186,24 @@ with tab_single:
             filing_caption += f" · {report.supplemental_filing_type} filed {report.supplemental_filing_date}"
         st.caption(filing_caption)
 
-        # Warn the user when a less-than-ideal filing source was used.
-        if report.filing_type == "N/A":
-            st.warning(
-                f"No SEC filing found within the last 92 days for {report.ticker}. "
-                "This report is based on recent news and peer filings only — "
-                "no fundamental filing data was available."
-            )
-        elif report.filing_type == "10-K":
-            # 10-K is the fallback; no recent 10-Q was available.
-            st.warning(
-                f"No recent 10-Q available for {report.ticker}. "
-                "Using the annual 10-K — report may not reflect the latest quarterly trends."
-            )
-        elif report.filing_type == "10-Q" and not report.supplemental_filing_type:
-            # 10-Q primary but no 10-K within 92 days to supplement.
-            st.warning(
-                f"No annual 10-K available within the last 92 days for {report.ticker}. "
-                "Report is based on the quarterly filing only."
-            )
+        # Warn the user when a less-than-ideal filing source was used (the
+        # same caveats the PDF cover prints).
+        for caveat in filing_caveats(report):
+            st.warning(caveat)
 
-        # PDF download button — generated once and cached.
-        pdf_bytes = _ensure_pdf(report)
-        st.download_button(
-            label="Download PDF Report",
-            data=pdf_bytes,
-            file_name=f"report_{report.ticker}.pdf",
-            mime="application/pdf",
-        )
+        # PDF download button — generated once and cached. A failure here
+        # (e.g. the SEC unreachable) is shown, and the rest of the page stays.
+        try:
+            pdf_bytes = _ensure_pdf(report)
+        except Exception as exc:
+            st.error(f"Could not build the PDF: {type(exc).__name__}: {exc}")
+        else:
+            st.download_button(
+                label="Download PDF Report",
+                data=pdf_bytes,
+                file_name=f"report_{report.ticker}.pdf",
+                mime="application/pdf",
+            )
 
         # Pre-Earnings Watchlist — primary section, always visible.
         # Each entry is a WatchItem with two-paragraph text (analysis +
@@ -209,8 +214,8 @@ with tab_single:
         st.subheader("Pre-Earnings Watchlist")
         for item in report.what_to_watch:
             st.markdown(_md(item.text))
-            for u in item.relevant_urls:
-                st.markdown(f"- [{u}]({u})")
+            for url in item.relevant_urls:
+                st.markdown(f"- [{url}]({url})")
             st.markdown("")
 
         # Bull / Bear — secondary, in an expander.
@@ -261,15 +266,10 @@ with tab_queue:
         )
 
     with col_actions:
-        # Parse the textarea into a normalized ticker list whenever the user
-        # types — this lets us update the count in the button label.
-        # Accept both newlines and commas as separators.
-        raw_tickers = []
-        for line in (queue_text or "").splitlines():
-            for token in line.split(","):
-                token = token.strip().upper()
-                if token:
-                    raw_tickers.append(token)
+        # Parse the textarea into a clean ticker list whenever the user types,
+        # so the button label shows the count. Newlines, commas and spaces
+        # all separate tickers; repeats count once.
+        raw_tickers = normalize_tickers((queue_text or "").splitlines())
 
         add_btn = st.button(
             f"Add to Queue ({len(raw_tickers)} ticker{'s' if len(raw_tickers) != 1 else ''})",
@@ -278,11 +278,7 @@ with tab_queue:
         )
         if add_btn:
             # Extend the queue with new entries, deduplicated against current.
-            existing = set(st.session_state["queue"])
-            for t in raw_tickers:
-                if t not in existing:
-                    st.session_state["queue"].append(t)
-                    existing.add(t)
+            st.session_state["queue"] = normalize_tickers(st.session_state["queue"] + raw_tickers)
 
     # Display the current queue with a clear-all button.
     if st.session_state["queue"]:
@@ -297,7 +293,7 @@ with tab_queue:
     else:
         st.info("Queue is empty. Add tickers above.")
 
-    # Run button.
+    # Disabled while the queue is empty or already running.
     run_clicked = st.button(
         "Run Queue",
         disabled=not st.session_state["queue"]
@@ -311,60 +307,65 @@ with tab_queue:
 
         # Per-ticker live status table updated via the on_progress callback.
         status_placeholder = st.empty()
-        live_status: dict[str, str] = {t: "pending" for t in st.session_state["queue"]}
+        live_status: dict[str, str] = {queued: "pending" for queued in st.session_state["queue"]}
 
-        def _render_status_table():
-            # Build a markdown table from live_status; re-render on each update.
+        def _render_status_table() -> None:
+            """Redraw the live status table from live_status."""
             rows = ["| Ticker | Status |", "|---|---|"]
-            for t, s in live_status.items():
+            for symbol, status in live_status.items():
                 emoji = (
-                    "⏳" if s == "running"
-                    else "✅" if s == "complete"
-                    else "❌" if s.startswith("failed")
+                    "⏳" if status == "running"
+                    else "✅" if status == "complete"
+                    else "❌" if status.startswith("failed")
                     else "·"
                 )
-                rows.append(f"| {t} | {emoji} {s} |")
+                rows.append(f"| {symbol} | {emoji} {status} |")
             status_placeholder.markdown("\n".join(rows))
 
         _render_status_table()
 
         def on_progress(ticker: str, status: str) -> None:
-            # Called from the main thread between ticker runs.
+            """Record a ticker's new status and redraw (called between ticker runs)."""
             live_status[ticker] = status
             _render_status_table()
 
+        # The UI boundary for the whole batch: individual tickers already
+        # fail softly inside process_queue, so anything caught here (e.g. the
+        # disk is full) is shown in full rather than leaving a frozen page.
         try:
-            zip_path, results = process_queue(
-                st.session_state["queue"],
-                on_progress=on_progress,
-            )
-
-            # Read the ZIP into memory so the download_button can serve it.
+            zip_path, results = process_queue(st.session_state["queue"], on_progress=on_progress)
             zip_bytes = pathlib.Path(zip_path).read_bytes()
-
+        except Exception as exc:
+            st.session_state["queue_status"] = "idle"
+            st.error(f"Queue run failed: {type(exc).__name__}: {exc}")
+            st.exception(exc)
+        else:
+            # Keep the results (and the ZIP in memory, for the download
+            # button), then rerun so the completion notice at the top shows.
+            # st.rerun() stays outside the try: it works by raising a special
+            # signal that must not be caught as an error.
             st.session_state["queue_results"]   = results
             st.session_state["queue_zip_bytes"] = zip_bytes
             st.session_state["queue_zip_name"]  = zip_path.name
             st.session_state["queue_status"]    = "complete"
             st.rerun()
 
-        except Exception as exc:
-            st.session_state["queue_status"] = "idle"
-            st.error(f"Queue run failed: {exc}")
-
     # If a queue has completed, show per-ticker download buttons.
     if st.session_state.get("queue_results"):
         st.divider()
         st.subheader("Results")
-        for r in st.session_state["queue_results"]:
-            if r["status"] == "complete":
-                pdf = pathlib.Path(r["pdf_path"])
+        for result in st.session_state["queue_results"]:
+            if result.status == "complete":
+                pdf = pathlib.Path(result.pdf_path)
                 st.download_button(
-                    label=f"✅ {r['ticker']} — {pdf.name} ({r['seconds']:.0f}s)",
+                    label=f"✅ {result.ticker} — {pdf.name} ({result.seconds:.0f}s)",
                     data=pdf.read_bytes(),
                     file_name=pdf.name,
                     mime="application/pdf",
-                    key=f"qdl_{r['ticker']}_{pdf.stem}",
+                    key=f"qdl_{result.ticker}_{pdf.stem}",
                 )
             else:
-                st.error(f"❌ {r['ticker']} — {r['error']}")
+                st.error(f"❌ {result.ticker} — {result.error}")
+                if result.error_details:
+                    with st.expander("Details"):
+                        st.code(result.error_details)

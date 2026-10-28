@@ -4,20 +4,22 @@ run_eval() runs both modes (baseline, yoda) against a list of tickers,
 judges each report with judge_report(), and returns a long-format DataFrame
 with per-row scores, latency, and cost.
 
-Outputs written to disk:
-  data/eval/results.csv     — full long-format DataFrame
-  data/eval/summary.md      — run date + models, mean scores per mode, and the
-                              paired Yoda-vs-baseline confidence table
-  data/eval/comparison.png  — grouped bar chart, subtitled with the run date
+Outputs written to disk (data/eval/ unless another folder is passed):
+  results.csv     — full long-format DataFrame
+  summary.md      — run date + models, mean scores per mode, the paired
+                    Yoda-vs-baseline confidence table, and a Failures
+                    section listing every (ticker, mode) that didn't score
+  comparison.png  — grouped bar chart, subtitled with the run date
 
 Cost/latency are extracted from each mode's existing stdout log lines:
   "Wall time: X.XXs"  and  "Total cost: $X.XXXXX"
 Both modes print these consistently, so we capture stdout rather than
-refactoring the mode APIs.
+refactoring the mode APIs. When a line is missing, cost is left empty
+(unknown, not $0) and latency falls back to the time measured here — the
+latency_source column says which.
 
 CLI: python -m yoda.eval.runner [TICKER [TICKER ...]]
 Default tickers: CURATED_TICKERS (20 US-listed stocks, two per sector).
-Full run: roughly $0.50-0.80 and 4-5 minutes per ticker (both modes + judge).
 Quick test: python -m yoda.eval.runner NFLX
 Custom override: python -m yoda.eval.runner AAPL AMZN JPM PANW NFLX
 """
@@ -27,17 +29,22 @@ import io
 import pathlib
 import re
 import time
+from collections.abc import Callable, Sequence
 from datetime import datetime, timezone
+from typing import NamedTuple
 
 import numpy as np
 import pandas as pd
+import requests
 
-from yoda.eval.judge import _JUDGE_MODEL, cache_key_for, judge_report, prune_judge_cache, write_run_manifest
+from yoda import config
+from yoda.eval.judge import JUDGE_MODEL, cache_key_for, judge_report, prune_judge_cache, write_run_manifest
 from yoda.eval.rubric import JudgeScores
 from yoda.ingest.edgar import fetch_latest_filing
 from yoda.modes.baseline import BASELINE_MODEL, run_baseline
 from yoda.modes.personality_panel import CRITIQUE_MODEL, LOOP_MODEL, SYNTH_MODEL, run_personality_panel
-from yoda.schema import EarningsReport
+from yoda.schema import EarningsReport, Filing
+from yoda.tickers import normalize_tickers
 
 
 # Curated 20-ticker universe: two per sector/archetype. The second ticker in
@@ -62,6 +69,14 @@ SCORE_COLS = [
     "source_traceability", "relevance", "usefulness",
 ]
 
+# Every mode the runner knows. Report files named after one of these are
+# results; any other *.json in the output folder (e.g. an old panel_* smoke
+# test) is stale and removed at the end of a run.
+KNOWN_MODES = ("baseline", "yoda")
+
+# Where outputs go unless run_eval() is given another folder.
+DEFAULT_OUT_DIR = config.DATA_DIR / "eval"
+
 
 # ---------------------------------------------------------------------------
 # Regex patterns for parsing cost and latency from captured stdout
@@ -72,67 +87,58 @@ _RE_COST      = re.compile(r"Total cost:\s+\$([\d.]+)")
 
 
 # ---------------------------------------------------------------------------
-# Stdout-capture helpers
+# Running one mode, with its log captured
 # ---------------------------------------------------------------------------
 
-def _capture(fn, *args) -> tuple[EarningsReport, float, float, str]:
-    # Run fn(*args) with stdout captured. Returns (report, latency_s, cost_usd, log).
+class ModeRun(NamedTuple):
+    """One mode's output for one ticker, plus what its log said about cost and time."""
+    report: EarningsReport
+    latency_seconds: float
+    latency_source: str            # "logged" (from the mode's own log) or "measured" (timed here)
+    cost_usd: float | None         # None when the log had no "Total cost:" line
+    log: str
+
+
+def _capture(fn: Callable[..., EarningsReport], *args) -> ModeRun:
+    """Run fn(*args) with its printed output captured, and read cost and time from that log."""
     buf = io.StringIO()
-    t0 = time.perf_counter()
+    started = time.perf_counter()
     with contextlib.redirect_stdout(buf):
         report = fn(*args)
-    elapsed = time.perf_counter() - t0
+    elapsed = time.perf_counter() - started
     log = buf.getvalue()
 
+    # Prefer the mode's own figures; never invent a cost that wasn't logged.
     wall_match = _RE_WALL_TIME.search(log)
-    cost_match  = _RE_COST.search(log)
-    latency = float(wall_match.group(1)) if wall_match else elapsed
-    cost    = float(cost_match.group(1))  if cost_match  else 0.0
-
-    return report, latency, cost, log
-
-
-def _capture_panel(ticker: str) -> tuple[EarningsReport, float, float, str]:
-    # Variant of _capture for run_personality_panel which returns
-    # (report, personality_results, critique_messages). Extracts the report
-    # and discards the trace details (the eval rubric scores the report).
-    buf = io.StringIO()
-    t0 = time.perf_counter()
-    with contextlib.redirect_stdout(buf):
-        report, _personality_results, _critique = run_personality_panel(ticker)
-    elapsed = time.perf_counter() - t0
-    log = buf.getvalue()
-
-    wall_match = _RE_WALL_TIME.search(log)
-    cost_match  = _RE_COST.search(log)
-    latency = float(wall_match.group(1)) if wall_match else elapsed
-    cost    = float(cost_match.group(1))  if cost_match  else 0.0
-
-    return report, latency, cost, log
+    cost_match = _RE_COST.search(log)
+    return ModeRun(
+        report=report,
+        latency_seconds=float(wall_match.group(1)) if wall_match else elapsed,
+        latency_source="logged" if wall_match else "measured",
+        cost_usd=float(cost_match.group(1)) if cost_match else None,
+        log=log,
+    )
 
 
-# ---------------------------------------------------------------------------
-# Per-mode dispatch
-# ---------------------------------------------------------------------------
+def _run_mode(mode: str, ticker: str, filing: Filing | None) -> ModeRun:
+    """Run one mode for one ticker and return its ModeRun.
 
-def _run_mode(
-    mode: str, ticker: str, filing: dict
-) -> tuple[EarningsReport, float, float, str]:
-    """Run one mode for one ticker. Returns (report, latency_s, cost_usd, log)."""
+    The panel returns (report, personality_results, critique_messages); only
+    the report is scored, so the rest is discarded here.
+    """
     if mode == "baseline":
         return _capture(run_baseline, ticker, filing)
-    elif mode == "yoda":
-        return _capture_panel(ticker)
-    else:
-        raise ValueError(f"Unknown mode: {mode}")
+    if mode == "yoda":
+        return _capture(lambda symbol: run_personality_panel(symbol)[0], ticker)
+    raise ValueError(f"Unknown mode: {mode}")
 
 
 # ---------------------------------------------------------------------------
 # Score extraction helper
 # ---------------------------------------------------------------------------
 
-def _scores_to_dict(scores: JudgeScores) -> dict:
-    # Flatten the five DimensionScore instances into plain int columns.
+def _scores_to_dict(scores: JudgeScores) -> dict[str, int]:
+    """Flatten the five DimensionScore objects into plain integer columns."""
     return {col: getattr(scores, col).score for col in SCORE_COLS}
 
 
@@ -141,24 +147,28 @@ def _scores_to_dict(scores: JudgeScores) -> dict:
 # ---------------------------------------------------------------------------
 
 def run_eval(
-    tickers: list[str],
-    modes: list[str] = ("baseline", "yoda"),
+    tickers: Sequence[str],
+    modes: Sequence[str] = KNOWN_MODES,
+    out_dir: pathlib.Path | None = None,
 ) -> pd.DataFrame:
-    """Run each (ticker, mode) pair, judge it, return a long-format DataFrame.
+    """Run each (ticker, mode) pair, judge it, and return a long-format DataFrame.
 
     DataFrame columns:
         ticker, mode, extraction_completeness, accuracy, source_traceability,
-        relevance, usefulness, latency_seconds, cost_usd
+        relevance, usefulness, latency_seconds, latency_source, cost_usd
 
-    Also writes data/eval/results.csv, summary.md, and comparison.png.
+    A failure for one ticker or mode (filing fetch, report generation or
+    judging) skips just that row; it is printed and listed in the Failures
+    section of summary.md. Writes results.csv, summary.md and comparison.png
+    to *out_dir* (data/eval/ when not given).
     """
-    out_dir = pathlib.Path("data/eval")
+    out_dir = pathlib.Path(out_dir) if out_dir is not None else DEFAULT_OUT_DIR
     out_dir.mkdir(parents=True, exist_ok=True)
     results_path = out_dir / "results.csv"
 
     # Upper-case and drop repeats (keeping order) so "NFLX nflx" runs once —
     # a duplicate (ticker, mode) row would break the paired comparison.
-    tickers = list(dict.fromkeys(t.upper() for t in tickers))
+    tickers = normalize_tickers(tickers)
 
     # One line describing when and with which models this run happened.
     # It heads summary.md and subtitles the chart.
@@ -167,13 +177,14 @@ def run_eval(
         f"Run: {started} · {len(tickers)} tickers · "
         f"Baseline: {BASELINE_MODEL} · "
         f"Yoda: {SYNTH_MODEL} synthesis, {LOOP_MODEL} loops, {CRITIQUE_MODEL} critique · "
-        f"Judge: {_JUDGE_MODEL}"
+        f"Judge: {JUDGE_MODEL}"
     )
 
     # Remove any partial results file from a previous interrupted run.
     results_path.unlink(missing_ok=True)
 
     rows = []
+    failures: list[tuple[str, str, str]] = []   # (ticker, step, error)
     # Keys of every judge_report() call this run; written to a manifest at the end.
     run_cache_keys: set[str] = set()
 
@@ -181,39 +192,51 @@ def run_eval(
         print(f"\n=== {ticker} ===")
 
         # Fetch the filing once per ticker; the baseline reads it directly
-        # and the judge grades against its first 30K characters.
+        # and the judge grades against its first 30K characters. A fetch
+        # failure skips this ticker only.
         print(f"  fetching filing for {ticker}...")
-        filing = fetch_latest_filing(ticker)
+        try:
+            filing = fetch_latest_filing(ticker)
+        except (requests.RequestException, RuntimeError) as exc:
+            failures.append((ticker, "fetch filing", f"{type(exc).__name__}: {exc}"))
+            print(f"  ERROR fetching filing: {exc}")
+            continue
         filing_text = filing.clean_text[:30000] if filing else ""
 
         for mode in modes:
+            # Each (ticker, mode) is isolated on purpose: whatever one report
+            # hits, the rest of a 20-ticker run still completes. The error is
+            # kept and reported in summary.md, not just printed.
             print(f"  running mode={mode}...")
             try:
-                report, latency, cost, log = _run_mode(mode, ticker, filing)
+                run = _run_mode(mode, ticker, filing)
             except Exception as exc:
+                failures.append((ticker, mode, f"{type(exc).__name__}: {exc}"))
                 print(f"  ERROR in mode={mode}: {exc}")
                 continue
 
             # Save report JSON — overwrites previous run, keeping 1 per (mode, ticker).
             (out_dir / f"{mode}_{ticker}.json").write_text(
-                report.model_dump_json(indent=2), encoding="utf-8"
+                run.report.model_dump_json(indent=2), encoding="utf-8"
             )
 
             # Judge the report against the filing text. A judge failure
             # (refusal, cut-off, API error after retries) skips this row like a
             # mode failure does, instead of ending the whole run.
             try:
-                scores = judge_report(report, filing_text)
+                scores = judge_report(run.report, filing_text)
             except Exception as exc:
+                failures.append((ticker, f"judge {mode}", f"{type(exc).__name__}: {exc}"))
                 print(f"  ERROR judging mode={mode}: {exc}")
                 continue
-            run_cache_keys.add(cache_key_for(report))
+            run_cache_keys.add(cache_key_for(run.report))
 
             row = {
                 "ticker": ticker,
                 "mode": mode,
-                "latency_seconds": round(latency, 2),
-                "cost_usd": round(cost, 5),
+                "latency_seconds": round(run.latency_seconds, 2),
+                "latency_source": run.latency_source,
+                "cost_usd": round(run.cost_usd, 5) if run.cost_usd is not None else None,
                 **_scores_to_dict(scores),
             }
             rows.append(row)
@@ -222,7 +245,8 @@ def run_eval(
             pd.DataFrame([row]).to_csv(
                 results_path, mode="a", header=len(rows) == 1, index=False
             )
-            print(f"  mode={mode} done — latency={latency:.1f}s cost=${cost:.4f}")
+            cost_text = f"${run.cost_usd:.4f}" if run.cost_usd is not None else "unknown"
+            print(f"  mode={mode} done — latency={run.latency_seconds:.1f}s cost={cost_text}")
 
     df = pd.DataFrame(rows)
 
@@ -231,23 +255,26 @@ def run_eval(
     print(f"\nResults saved to {results_path}")
 
     # Build and write the summary markdown.
-    _write_summary(df, out_dir / "summary.md", run_line)
+    _write_summary(df, out_dir / "summary.md", run_line, failures)
     print(f"Summary saved to {out_dir / 'summary.md'}")
 
-    # Generate comparison chart as a top-level output.
-    chart_path = out_dir / "comparison.png"
-    _write_chart(df, chart_path, run_line)
-    print(f"Chart saved to {chart_path}")
+    # The chart needs at least one scored row.
+    if not df.empty:
+        chart_path = out_dir / "comparison.png"
+        _write_chart(df, chart_path, run_line)
+        print(f"Chart saved to {chart_path}")
 
     # Write a manifest for this run and prune cache to the last 2 runs.
     write_run_manifest(run_cache_keys)
     prune_judge_cache(keep_runs=2)
 
-    # Delete report JSONs from modes not in this run (e.g. old panel_* smoke-test files).
-    active_prefixes = tuple(f"{m}_" for m in modes)
-    for f in out_dir.glob("*.json"):
-        if not any(f.name.startswith(p) for p in active_prefixes):
-            f.unlink()
+    # Delete report JSONs that belong to no known mode (e.g. old panel_*
+    # smoke-test files). Results of a known mode that wasn't run this time
+    # are kept, so a baseline-only run never deletes the Yoda reports.
+    known_prefixes = tuple(f"{mode}_" for mode in KNOWN_MODES)
+    for json_file in out_dir.glob("*.json"):
+        if not json_file.name.startswith(known_prefixes):
+            json_file.unlink()
 
     return df
 
@@ -298,8 +325,10 @@ def _paired_comparison(df: pd.DataFrame, n_boot: int = 10_000) -> pd.DataFrame:
 
 
 def _verdict(comparison: pd.DataFrame, n_tickers: int) -> str:
-    # Plain-English reading of the "average" row's confidence range.
-    # Below 5 paired tickers a bootstrap range is meaningless, so say so.
+    """Return a plain-English reading of the "average" row's confidence range.
+
+    Below 5 paired tickers a bootstrap range is meaningless, so it says so.
+    """
     if n_tickers < 5:
         return (f"Only {n_tickers} paired ticker(s) — too few for a meaningful confidence "
                 f"range. Treat these gaps as anecdotal.")
@@ -319,7 +348,7 @@ def _verdict(comparison: pd.DataFrame, n_tickers: int) -> str:
 # ---------------------------------------------------------------------------
 
 def _df_to_markdown(df: pd.DataFrame) -> str:
-    # Render a DataFrame as a GitHub-flavored markdown table without tabulate.
+    """Render a DataFrame as a GitHub-flavored markdown table (no extra library needed)."""
     header = "| " + " | ".join([df.index.name or ""] + list(df.columns)) + " |"
     sep    = "| " + " | ".join(["---"] * (len(df.columns) + 1)) + " |"
     # astype(object) keeps each column's own type, so integer counts don't
@@ -331,43 +360,57 @@ def _df_to_markdown(df: pd.DataFrame) -> str:
     return "\n".join([header, sep] + rows)
 
 
-def _write_summary(df: pd.DataFrame, path, run_line: str) -> None:
-    # Header with the run date + models, then mean scores and operational
-    # metrics grouped by mode.
-    ops_cols = ["latency_seconds", "cost_usd"]
-    mode_means = df.groupby("mode")[SCORE_COLS + ops_cols].mean().round(2)
+def _write_summary(
+    df: pd.DataFrame,
+    path: pathlib.Path,
+    run_line: str,
+    failures: Sequence[tuple[str, str, str]] = (),
+) -> None:
+    """Write summary.md: run details, mean scores by mode, the paired comparison and failures.
 
+    Mean cost skips rows whose cost is unknown, and the summary says how
+    many there were, so an average is never quietly based on made-up zeros.
+    """
     lines = ["# Phase 9 Evaluation Summary", "", run_line, ""]
-    lines.append("## Mean scores by mode")
-    lines.append("")
-    lines.append(_df_to_markdown(mode_means))
-    lines.append("")
 
-    # Paired confidence table, only when at least one ticker has BOTH modes
-    # (otherwise every statistic would be NaN).
-    paired = df.groupby("ticker")["mode"].apply(set).map({"baseline", "yoda"}.issubset).sum()
-    if paired:
-        comparison = _paired_comparison(df)
-        lines.append("## Yoda vs baseline (paired by ticker)")
-        lines.append("")
-        lines.append("mean_gap = average of (Yoda score − baseline score); ci_low/ci_high = "
-                     "95% bootstrap confidence range; wins/ties/losses = tickers where Yoda "
-                     "scored higher/equal/lower.")
-        lines.append("")
-        lines.append(_df_to_markdown(comparison))
-        lines.append("")
-        lines.append(_verdict(comparison, int(paired)))
-        lines.append("")
-    elif df["mode"].nunique() > 1:
-        lines.append("No ticker has reports from both modes, so there is no paired comparison.")
-        lines.append("")
+    # With no scored rows there are no means to show — say so plainly.
+    if df.empty:
+        lines += ["No (ticker, mode) pair produced a scored report in this run.", ""]
+    else:
+        ops_cols = ["latency_seconds", "cost_usd"]
+        mode_means = df.groupby("mode")[SCORE_COLS + ops_cols].mean().round(2)
+        lines += ["## Mean scores by mode", "", _df_to_markdown(mode_means), ""]
+        unknown_costs = int(df["cost_usd"].isna().sum())
+        if unknown_costs:
+            lines += [f"cost_usd averages leave out {unknown_costs} row(s) whose log had no cost line.", ""]
 
-    # Per-ticker mean if more than one ticker was evaluated.
-    if df["ticker"].nunique() > 1:
-        ticker_means = df.groupby("ticker")[SCORE_COLS].mean().round(2)
-        lines.append("## Mean scores by ticker")
-        lines.append("")
-        lines.append(_df_to_markdown(ticker_means))
+        # Paired confidence table, only when at least one ticker has BOTH modes
+        # (otherwise every statistic would be NaN).
+        paired = df.groupby("ticker")["mode"].apply(set).map({"baseline", "yoda"}.issubset).sum()
+        if paired:
+            comparison = _paired_comparison(df)
+            lines += [
+                "## Yoda vs baseline (paired by ticker)", "",
+                "mean_gap = average of (Yoda score − baseline score); ci_low/ci_high = "
+                "95% bootstrap confidence range; wins/ties/losses = tickers where Yoda "
+                "scored higher/equal/lower.", "",
+                _df_to_markdown(comparison), "",
+                _verdict(comparison, int(paired)), "",
+            ]
+        elif df["mode"].nunique() > 1:
+            lines += ["No ticker has reports from both modes, so there is no paired comparison.", ""]
+
+        # Per-ticker mean if more than one ticker was evaluated.
+        if df["ticker"].nunique() > 1:
+            ticker_means = df.groupby("ticker")[SCORE_COLS].mean().round(2)
+            lines += ["## Mean scores by ticker", "", _df_to_markdown(ticker_means), ""]
+
+    # Every step that failed, so the means above can be read in context.
+    if failures:
+        lines += ["## Failures", "", "These were skipped and are not in the scores above.", "",
+                  "| ticker | step | error |", "| --- | --- | --- |"]
+        lines += [f"| {ticker} | {step} | {error.replace('|', '/')[:200]} |"
+                  for ticker, step, error in failures]
         lines.append("")
 
     pathlib.Path(path).write_text("\n".join(lines), encoding="utf-8")
@@ -386,13 +429,11 @@ _MODE_DISPLAY = {
 }
 
 
-def _display(mode: str) -> str:
-    return _MODE_DISPLAY.get(mode, mode)
+def _write_chart(df: pd.DataFrame, path: pathlib.Path, run_line: str) -> None:
+    """Draw a grouped bar chart (one bar per mode within each metric) to *path*.
 
-
-def _write_chart(df: pd.DataFrame, path, run_line: str) -> None:
-    # Grouped bar chart with one bar per mode within each metric group.
-    # Designed for slide embedding: 10x5 figure, value labels above bars.
+    Designed for slide embedding: 10x5 figure, value labels above bars.
+    """
     # "Agg" draws straight to the PNG file. The Windows default backend opens
     # a Tk GUI connection that can fail intermittently and crash a long run.
     import matplotlib
@@ -408,9 +449,9 @@ def _write_chart(df: pd.DataFrame, path, run_line: str) -> None:
 
     fig, ax = plt.subplots(figsize=(10, 5))
     # Render one bar series per mode, offset so they sit side-by-side.
-    for i, mode in enumerate(mode_means.index):
-        offset = (i - (n_modes - 1) / 2) * width
-        bars = ax.bar(x + offset, mode_means.loc[mode], width, label=_display(mode))
+    for position, mode in enumerate(mode_means.index):
+        offset = (position - (n_modes - 1) / 2) * width
+        bars = ax.bar(x + offset, mode_means.loc[mode], width, label=_MODE_DISPLAY.get(mode, mode))
         ax.bar_label(bars, fmt="%.2f", padding=3, fontsize=8)
 
     # Labels, title, run-date subtitle, axis limits, and grid.
@@ -438,6 +479,6 @@ if __name__ == "__main__":
 
     # Default to the curated 20-ticker universe for the full evaluation.
     # Override with CLI args: python -m yoda.eval.runner NFLX AAPL (for quick tests)
-    tickers = sys.argv[1:] if len(sys.argv) > 1 else CURATED_TICKERS
-    df = run_eval(tickers)
-    print(df.to_string(index=False))
+    cli_tickers = sys.argv[1:] if len(sys.argv) > 1 else CURATED_TICKERS
+    results = run_eval(cli_tickers)
+    print(results.to_string(index=False))

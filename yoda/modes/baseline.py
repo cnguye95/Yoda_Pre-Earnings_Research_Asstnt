@@ -192,7 +192,9 @@ def run_baseline(ticker: str, filing: Filing | None) -> EarningsReport:
         messages=[{"role": "user", "content": prompt}],
     )
 
-    # Stamp the supplemental filing's metadata on, or record why it's missing.
+    # Stamp the filing metadata on in code (it's known exactly), and record
+    # the supplemental 10-K or why it's missing.
+    report.filing_type, report.filing_date = filing.filing_type, filing.filing_date
     apply_supplemental(report, filing.supplemental, dropped)
     if filing.supplemental_error:
         report.data_gaps.append(f"Supplemental 10-K not analyzed: {filing.supplemental_error}.")

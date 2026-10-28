@@ -96,7 +96,7 @@ def test_every_model_in_use_has_a_price():
 def test_cache_key_changes_with_judge_model(monkeypatch):
     report = _report()
     key_a = judge.cache_key_for(report)
-    monkeypatch.setattr(judge, "_JUDGE_MODEL", "some-other-judge")
+    monkeypatch.setattr(judge, "JUDGE_MODEL", "some-other-judge")
     assert judge.cache_key_for(report) != key_a
 
 
@@ -361,10 +361,9 @@ def test_paired_comparison_ignores_unpaired_tickers():
 # ---------------------------------------------------------------------------
 
 def test_judge_failure_skips_row_not_run(monkeypatch, tmp_path):
-    # Run in a temp folder so the real data/eval outputs are untouched.
-    monkeypatch.chdir(tmp_path)
+    # Write to a temp folder so the real data/eval outputs are untouched.
     monkeypatch.setattr(runner, "fetch_latest_filing", lambda t: _filing("10-Q", "2026-05-01", "text"))
-    monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: (_report(), 1.0, 0.1, ""))
+    monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: runner.ModeRun(_report(), 1.0, "logged", 0.1, ""))
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
 
@@ -379,7 +378,7 @@ def test_judge_failure_skips_row_not_run(monkeypatch, tmp_path):
     fake_judge.calls = 0
     monkeypatch.setattr(runner, "judge_report", fake_judge)
 
-    df = runner.run_eval(["GOOD", "BAD"])
+    df = runner.run_eval(["GOOD", "BAD"], out_dir=tmp_path / "data/eval")
     assert len(df) == 3                                  # only BAD/baseline missing
     assert (tmp_path / "data/eval/summary.md").exists()  # the run still finished
 
@@ -428,16 +427,15 @@ def test_runner_regexes_read_panel_and_baseline_logs():
 
 def test_duplicate_tickers_run_once(monkeypatch, tmp_path):
     # "NFLX nflx" must not produce duplicate rows (which would break the pivot).
-    monkeypatch.chdir(tmp_path)
     monkeypatch.setattr(runner, "fetch_latest_filing", lambda t: _filing("10-Q", "2026-05-01", "text"))
-    monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: (_report(), 1.0, 0.1, ""))
+    monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: runner.ModeRun(_report(), 1.0, "logged", 0.1, ""))
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
     score = DimensionScore(score=3, justification="ok")
     monkeypatch.setattr(runner, "judge_report",
                         lambda r, f: JudgeScores(**{c: score for c in SCORE_COLS}, overall_comment=""))
 
-    df = runner.run_eval(["NFLX", "nflx"])
+    df = runner.run_eval(["NFLX", "nflx"], out_dir=tmp_path / "data/eval")
     assert len(df) == 2   # one ticker x two modes
 
 
