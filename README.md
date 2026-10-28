@@ -359,6 +359,30 @@ The report is judged without `hypotheses_explored`. To stay under the judge's 27
 
 Dimensions a mode had no evidence for (e.g. market expectations for the baseline) are marked N/A by code.
 
+**Judge reliability.** Each row of `results.csv` records:
+- the judge version OpenAI reports;
+- the prompt and completion tokens, and whether the prompt went over 272K;
+- an upper-bound judge cost ($2 / $10 per million tokens, cache discount not applied);
+- the dimensions whose quoted passages weren't found;
+- the report's length.
+
+`summary.md` warns when judge versions are mixed or differ from the previous run, and shows:
+- failed quotes per dimension;
+- the length-vs-score correlation (Spearman);
+- for the Yoda-vs-baseline comparison and the chart, only tickers where both modes were scored on a dimension.
+
+`justifications.md` lists a few of the judge's justifications per dimension. To judge reports already on disk without running the modes again (every uncached judge call is paid):
+
+```bash
+python -m yoda.eval.runner --rescore data/eval/archive_2026-10-26_claude-panel_old-rubric NFLX JPM
+```
+
+```bash
+python -m yoda.eval.runner --rescore data/eval --repeat AAPL JPM NFLX
+```
+
+The first re-scores archived reports against the filing they were written from, skipping any whose filing has changed since. The second scores the same reports a second time and adds a repeat-agreement table.
+
 Cache cleanup at the end of every run:
 - `data/eval/{mode}_{TICKER}.json` — one report JSON per `(mode, ticker)` (overwrites older copies)
 - `data/eval/judge_cache/` — JSON cache files from the two most recent runs only (older are pruned via run manifests)

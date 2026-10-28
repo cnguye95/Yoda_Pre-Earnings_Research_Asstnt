@@ -537,7 +537,7 @@ def test_judge_failure_skips_row_not_run(monkeypatch, tmp_path):
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
 
     # The judge fails for ticker BAD only; everything else gets score 3.
-    def fake_judge(report, evidence_text, na):
+    def fake_judge(report, evidence_text, na, repeat=False):
         if fake_judge.calls == 2:     # 3rd call = BAD's baseline report
             fake_judge.calls += 1
             raise RuntimeError("judge refused")
@@ -599,7 +599,7 @@ def test_duplicate_tickers_run_once(monkeypatch, tmp_path):
     monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: runner.ModeRun(_report(), 1.0, "logged", 0.1, ""))
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
-    monkeypatch.setattr(runner, "judge_report", lambda report, evidence_text, na: _judge_result(3))
+    monkeypatch.setattr(runner, "judge_report", lambda report, evidence_text, na, repeat=False: _judge_result(3))
 
     df = runner.run_eval(["NFLX", "nflx"], out_dir=tmp_path / "data/eval")
     assert len(df) == 2   # one ticker x two modes

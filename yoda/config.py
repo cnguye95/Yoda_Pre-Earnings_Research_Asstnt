@@ -53,18 +53,23 @@ FMP_API_KEY = os.environ["FMP_API_KEY"]
 TAVILY_API_KEY = os.environ["TAVILY_API_KEY"]
 SEC_USER_AGENT = os.environ["SEC_USER_AGENT"]
 
-# Claude prices in USD per 1K tokens as (input, output), as of 2026-10-26.
+# Model prices in USD per 1K tokens as (input, output), as of 2026-10-26.
 # The single source for every cost figure Yoda logs — the baseline and the
 # panel both price their calls from here. Haiku's price applies to prompts
 # up to 100K tokens, which every Haiku call in Yoda stays under.
 MODEL_COST_PER_1K = {
     "claude-sonnet-5-5": (0.002, 0.01),
     "claude-haiku-5-5":  (0.0001, 0.0005),
+    # The eval judge (OpenAI): $2 / $10 per million tokens, from
+    # anotherwrapper.com and techenclave.com, 2026-10-28 — not yet checked
+    # against OpenAI's own pricing page. Prompts over 272K tokens cost more
+    # (see yoda.eval.judge.judge_cost).
+    "gpt-6.1-sol":       (0.002, 0.01),
 }
 
 
 def model_cost(model: str, input_tokens: int, output_tokens: int) -> float:
-    """Return one Claude call's cost in USD from its token counts.
+    """Return one model call's cost in USD from its token counts.
 
     Raises KeyError for a model with no price in MODEL_COST_PER_1K, so a new
     model can't be priced at $0 by accident.

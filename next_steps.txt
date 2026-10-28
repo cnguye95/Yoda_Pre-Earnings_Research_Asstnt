@@ -632,6 +632,24 @@ IDEAS for Improvements/Changes
      and OpenAI's token counts. Both modes' evidence saved by the runner.
      Size check (offline, real filings): BA ~72K tokens; JPM (archived
      report, all 8-Ks uncited) ~224K, under the line.
+   - DONE (7c): results.csv rows add figures_checked, failed_quote_dims,
+     judge_snapshot, prompt/completion tokens, over_272k (real count),
+     judge_cost_usd (upper bound: $2/$10 per M, 2x/1.5x over 272K, cache
+     discount not applied — price from anotherwrapper/techenclave
+     2026-10-28, not yet checked on OpenAI's page; AGREED) and report_chars.
+     summary.md: judge cost, judge versions (warns on mixed versions or a
+     change from the previous run), over-272K count, failed quotes per
+     dimension and mode, length vs score (Spearman with row count, AGREED);
+     reasoning effort in the run line. justifications.md: 3 per dimension
+     with quotes. Chart: means over N/A-free pairs only, "no pairs" label.
+     rescore(dir, tickers, modes, out, repeat) judges saved reports without
+     re-running the modes (AGREED: one function for the archive check and
+     the repeat check); archived reports use the filing on disk only if it
+     is the one they were written from, else skipped and listed (AGREED);
+     repeat=True adds a second, independently cached score, repeat.csv and
+     an agreement table (match rate, mean abs difference). CLI: argparse —
+     `runner [TICKERS] [--modes]`, `runner --rescore DIR [--repeat] [--out]`.
+     Tests: tests/test_rubric.py.
 
 3.8 Earnings press release + call transcript as context
    - Press release: on EDGAR as 8-K Item 2.02, Exhibit 99.1 — free, covered

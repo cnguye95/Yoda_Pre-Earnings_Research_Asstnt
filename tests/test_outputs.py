@@ -352,7 +352,7 @@ def _stub_runner(monkeypatch, run_mode=None):
     monkeypatch.setattr(runner, "_run_mode", run_mode or (
         lambda mode, ticker, filing: runner.ModeRun(_report(), 1.0, "logged", 0.1, "")))
     monkeypatch.setattr(runner, "judge_report",
-                        lambda report, text, na: _judge_result())
+                        lambda report, text, na, repeat=False: _judge_result())
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
 

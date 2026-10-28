@@ -24,6 +24,7 @@ import pydantic
 from openai import OpenAI
 
 from yoda import config
+from yoda.eval.evidence import PROMPT_TOKEN_LINE
 from yoda.eval.rubric import DIMENSIONS, RUBRIC_TEXT, JudgeScores, check_scores, failed_quotes
 from yoda.schema import EarningsReport
 
@@ -94,7 +95,23 @@ def _na_text(na: dict[str, str]) -> str:
     return "N/A dimensions (give score null):\n" + "\n".join(f"- {name}: {reason}" for name, reason in na.items())
 
 
-def judge_report(report: EarningsReport, evidence_text: str, na: dict[str, str]) -> JudgeResult:
+def judge_cost(prompt_tokens: int, completion_tokens: int) -> float:
+    """Return one judge call's cost in USD from OpenAI's token counts — an upper bound.
+
+    Uses the judge's price in config.MODEL_COST_PER_1K; a prompt over
+    PROMPT_TOKEN_LINE costs 2x for input and 1.5x for output for the whole
+    call. Input OpenAI served from its prompt cache is cheaper, but that
+    discount is not confirmed, so it isn't applied: the figure can only
+    overstate the real cost.
+    """
+    in_price, out_price = config.MODEL_COST_PER_1K[JUDGE_MODEL]
+    if prompt_tokens > PROMPT_TOKEN_LINE:
+        in_price, out_price = in_price * 2, out_price * 1.5
+    return (prompt_tokens / 1000) * in_price + (completion_tokens / 1000) * out_price
+
+
+def judge_report(report: EarningsReport, evidence_text: str, na: dict[str, str],
+                 repeat: bool = False) -> JudgeResult:
     """Score *report* against *evidence_text* using OpenAI gpt-6.1-sol as the judge.
 
     *evidence_text* is the evidence the report was written from, as the judge
@@ -105,12 +122,14 @@ def judge_report(report: EarningsReport, evidence_text: str, na: dict[str, str])
 
     Results are cached in data/eval/judge_cache/ (see cache_key_for), so
     re-running the same report on the same evidence doesn't re-spend; a
-    corrupt or old-format cache file is simply re-scored. Raises
+    corrupt or old-format cache file is simply re-scored. *repeat* asks for
+    a second, independent score for the repeat check: the normal cache entry
+    is skipped and the answer is cached under its own key. Raises
     RuntimeError if the judge refuses, answers as a different model, or
     leaves a scored dimension without a 1-5 score.
     """
     report_json = report.model_dump_json()
-    cache_key = cache_key_for(report, evidence_text, na)
+    cache_key = cache_key_for(report, evidence_text, na, repeat)
     cache_file = _CACHE_DIR / f"{cache_key}.json"
 
     # Return cached result if it exists and is readable, avoiding API spend.
@@ -183,17 +202,19 @@ def judge_report(report: EarningsReport, evidence_text: str, na: dict[str, str])
 # Cache management helpers — used by runner.py at the end of each eval run
 # ---------------------------------------------------------------------------
 
-def cache_key_for(report: EarningsReport, evidence_text: str, na: dict[str, str]) -> str:
+def cache_key_for(report: EarningsReport, evidence_text: str, na: dict[str, str], repeat: bool = False) -> str:
     """Return the judge-cache key for *report* without calling the judge API.
 
     Everything the judge's answer depends on is part of the key: the judge
     model, the rubric text, the N/A list, the report and the evidence. So a
     different judge, a changed rubric or different evidence never gets a
-    cache hit on old scores.
+    cache hit on old scores. A *repeat* score (the repeat check) has its own
+    key, ending "-repeat", so it never reuses the first score.
     """
     na_lines = "\n".join(f"{name}: {reason}" for name, reason in sorted(na.items()))
     payload = f"{JUDGE_MODEL}\n{RUBRIC_TEXT}\n{na_lines}\n{report.model_dump_json()}\n{evidence_text}"
-    return hashlib.sha256(payload.encode()).hexdigest()[:16]
+    key = hashlib.sha256(payload.encode()).hexdigest()[:16]
+    return f"{key}-repeat" if repeat else key
 
 
 def write_run_manifest(cache_keys: set[str]) -> None:
