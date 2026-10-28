@@ -170,6 +170,141 @@ def test_unexpected_sec_json_raises_clear_error(monkeypatch):
 
 
 # ---------------------------------------------------------------------------
+# 8-Ks filed after the primary filing
+# ---------------------------------------------------------------------------
+
+# A typical earnings 8-K index: the form, the press release, a financial
+# supplement, a contract exhibit, a graphic and an XBRL data file.
+_EARNINGS_8K_INDEX = [
+    ("1", "8-K", "form8k.htm"), ("2", "EX-99.1", "ex991.htm"), ("3", "EX-99.2", "ex992.htm"),
+    ("4", "EX-10.1", "ex101.htm"), ("5", "GRAPHIC", "logo.jpg"), ("", "EX-101.SCH", "test.xsd"),
+]
+
+
+def _fake_8k_sec(monkeypatch, filings: list[dict], fail_accessions: tuple[str, ...] = ()) -> list[str]:
+    # Replace the SEC calls used for 8-Ks. Every 8-K has _EARNINGS_8K_INDEX
+    # as its index; downloads of *fail_accessions* raise an HTTP error. The
+    # returned list records every document downloaded, as "accession/file".
+    downloads = []
+    monkeypatch.setattr(edgar, "_get_filings_metadata", lambda cik: filings)
+    monkeypatch.setattr(edgar, "_index_documents", lambda cik, accession: _EARNINGS_8K_INDEX)
+
+    def download(cik, accession, doc):
+        if accession in fail_accessions:
+            raise requests.HTTPError("503 Server Error")
+        downloads.append(f"{accession}/{doc}")
+        return f"<p>{doc} of {accession}</p>", f"https://sec.example/{accession}/{doc}"
+    monkeypatch.setattr(edgar, "_download_filing_html", download)
+    return downloads
+
+
+def _8k(accession: str, filing_date: str, form: str = "8-K", items: str = "2.02,9.01") -> dict:
+    # One 8-K entry as _get_filings_metadata() returns it.
+    return {"form": form, "filing_date": filing_date, "accession_number": accession, "items": items}
+
+
+def test_filings_metadata_includes_8k_item_codes(monkeypatch):
+    # The SEC's "items" list is zipped in with the other columns; a filing
+    # history without it still loads, with empty items.
+    recent = {"form": ["8-K", "10-Q"], "filingDate": ["2026-10-21", "2026-08-01"],
+              "accessionNumber": ["a8k", "a10q"], "items": ["2.02,9.01", ""]}
+    monkeypatch.setattr(edgar, "_sec_json", lambda url: {"filings": {"recent": recent}})
+    rows = edgar._get_filings_metadata(123)
+    assert rows[0]["items"] == "2.02,9.01" and rows[1]["items"] == ""
+
+    del recent["items"]
+    assert [row["items"] for row in edgar._get_filings_metadata(123)] == ["", ""]
+
+
+def test_index_documents_reads_type_and_file_name(monkeypatch):
+    # The index table's Seq, Type and linked file name are read, including
+    # an iXBRL viewer link; rows without a link are skipped.
+    page = """<table>
+      <tr><th>Seq</th><th>Description</th><th>Document</th><th>Type</th><th>Size</th></tr>
+      <tr><td>1</td><td>8-K</td><td><a href="/ix?doc=/Archives/edgar/data/1/2/form8k.htm">form8k.htm</a></td><td>8-K</td><td>9</td></tr>
+      <tr><td>2</td><td>PRESS RELEASE</td><td><a href="/Archives/edgar/data/1/2/ex991.htm">ex991.htm</a></td><td>EX-99.1</td><td>9</td></tr>
+      <tr><td>3</td><td>no link</td><td>missing</td><td>EX-99.2</td><td>9</td></tr>
+    </table>"""
+    monkeypatch.setattr(edgar, "_sec_get", lambda url: type("Resp", (), {"text": page})())
+    assert edgar._index_documents(1, "0001-26-000002") == [("1", "8-K", "form8k.htm"), ("2", "EX-99.1", "ex991.htm")]
+
+
+def test_8k_keeps_the_form_and_every_exhibit_99():
+    # The main form and all Exhibit 99.x are read; contracts, graphics and
+    # XBRL files are not.
+    assert edgar._select_8k_documents(_EARNINGS_8K_INDEX) == [
+        ("8-K", "form8k.htm"), ("EX-99.1", "ex991.htm"), ("EX-99.2", "ex992.htm"),
+    ]
+
+
+def test_8k_without_a_main_document_is_an_error():
+    with pytest.raises(RuntimeError, match="main document"):
+        edgar._select_8k_documents([("2", "EX-99.1", "ex991.htm")])
+
+
+def test_only_8ks_filed_after_the_primary_are_fetched(cache_dir, monkeypatch):
+    # 8-Ks on or before the 10-Q's date, and other forms, are left out; the
+    # rest come back oldest first, amendments included, with parsed items.
+    _fake_8k_sec(monkeypatch, filings=[
+        _8k("late", "2026-10-21"), _8k("same-day", "2026-05-01"), _8k("before", "2026-04-20"),
+        _8k("amend", "2026-06-15", form="8-K/A", items="5.02"),
+        {"form": "4", "filing_date": "2026-07-01", "accession_number": "insider", "items": ""},
+    ])
+    result = edgar.fetch_post_filing_8ks(_filing())
+
+    assert [k.accession_number for k in result.filings] == ["amend", "late"]
+    assert result.filings[0].form == "8-K/A" and result.filings[0].items == ["5.02"]
+    assert result.filings[1].items == ["2.02", "9.01"]
+    assert [doc.doc_type for doc in result.filings[1].documents] == ["8-K", "EX-99.1", "EX-99.2"]
+    assert result.filings[1].documents[1].clean_text == "ex991.htm of late"
+    assert result.errors == []
+
+
+def test_cached_8k_is_not_downloaded_again_but_new_ones_are(cache_dir, monkeypatch):
+    # The filing list is re-read each call: an 8-K already cached costs no
+    # download, while one filed since the last call is fetched.
+    filings = [_8k("first", "2026-06-01")]
+    downloads = _fake_8k_sec(monkeypatch, filings)
+    first = edgar.fetch_post_filing_8ks(_filing())
+    assert len(downloads) == 3
+
+    filings.append(_8k("second", "2026-07-01"))
+    second = edgar.fetch_post_filing_8ks(_filing())
+    assert [k.accession_number for k in second.filings] == ["first", "second"]
+    assert all(d.startswith("second/") for d in downloads[3:]) and len(downloads) == 6
+    assert second.filings[0].model_dump() == first.filings[0].model_dump()
+
+
+def test_corrupt_8k_cache_is_downloaded_again(cache_dir, monkeypatch):
+    downloads = _fake_8k_sec(monkeypatch, [_8k("k1", "2026-06-01")])
+    edgar.fetch_post_filing_8ks(_filing())
+    (cache_dir / "TEST" / "8k" / "k1" / "meta.json").write_text("{not json", encoding="utf-8")
+
+    result = edgar.fetch_post_filing_8ks(_filing())
+    assert len(downloads) == 6 and result.filings[0].accession_number == "k1"
+
+
+def test_one_failed_8k_is_recorded_and_the_rest_returned(cache_dir, monkeypatch):
+    _fake_8k_sec(monkeypatch, [_8k("ok", "2026-06-01"), _8k("broken", "2026-07-01")],
+                 fail_accessions=("broken",))
+    result = edgar.fetch_post_filing_8ks(_filing())
+    assert [k.accession_number for k in result.filings] == ["ok"]
+    assert len(result.errors) == 1 and "broken" in result.errors[0] and "HTTPError" in result.errors[0]
+
+
+def test_8k_list_failure_returns_no_8ks_and_a_reason(cache_dir, monkeypatch):
+    # If the SEC filing list can't be read, the 10-Q analysis can still go
+    # ahead: no 8-Ks, and the reason for the gap, but no exception.
+    def unreachable(cik):
+        raise requests.ConnectionError("SEC down")
+    monkeypatch.setattr(edgar, "_get_filings_metadata", unreachable)
+
+    result = edgar.fetch_post_filing_8ks(_filing())
+    assert result.filings == []
+    assert "could not be listed" in result.errors[0] and "ConnectionError" in result.errors[0]
+
+
+# ---------------------------------------------------------------------------
 # HTML cleaning
 # ---------------------------------------------------------------------------
 

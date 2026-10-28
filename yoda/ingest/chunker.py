@@ -1,9 +1,11 @@
 """Splits a cleaned SEC filing into section-tagged chunks for embedding.
 
-The one public function, chunk_filing(), takes the plain text produced by
-edgar._clean_html() and returns a list of Chunk objects. Each Chunk carries the
-text, its section label (e.g. "MD&A"), its position in the original text, and
-a sequential index so callers can reconstruct ordering.
+chunk_filing() takes the plain text produced by edgar._clean_html() and
+returns a list of Chunk objects. Each Chunk carries the text, its section
+label (e.g. "MD&A"), its position in the original text, and a sequential
+index so callers can reconstruct ordering. chunk_8k() does the same for every
+document of an 8-K, labelling each chunk with the 8-K's form, item codes,
+exhibit and filing date (eight_k_label()).
 
 Section detection strategy:
   - Scan every line for short heading-like lines (3–150 chars) that match a
@@ -26,6 +28,8 @@ from typing import Literal
 
 from pydantic import BaseModel
 
+from yoda.schema import EightKDocument, EightKFiling
+
 
 # ---------------------------------------------------------------------------
 # Data model
@@ -42,12 +46,18 @@ SectionLabel = Literal[
 
 
 class Chunk(BaseModel):
-    """One piece of filing text, tagged with its section and position."""
+    """One piece of filing text, tagged with its section and position.
+
+    *document* names the document the chunk came from when it isn't the
+    10-Q/10-K itself, e.g. "8-K Items 2.02, 9.01, Exhibit 99.1 (filed
+    2026-10-21)". It is empty for 10-Q/10-K chunks.
+    """
     text: str
     section: SectionLabel
     chunk_index: int   # 0-based index across ALL chunks in the filing
     char_start: int    # character offset in clean_text where this chunk starts
     char_end: int      # character offset in clean_text where this chunk ends
+    document: str = ""
 
 
 # ---------------------------------------------------------------------------
@@ -248,6 +258,40 @@ def chunk_filing(clean_text: str) -> list[Chunk]:
             )
             chunk_index += 1
 
+    return chunks
+
+
+def eight_k_label(eight_k: EightKFiling, doc: EightKDocument) -> str:
+    """Return the label that tells a reader which 8-K document a chunk came from.
+
+    It names the form (8-K or the amendment 8-K/A), the item codes saying
+    what was reported, the exhibit for an exhibit document, and the filing
+    date, e.g. "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-21)" or
+    "8-K/A Item 5.02 (filed 2026-11-03)".
+    """
+    parts = [eight_k.form]
+    if eight_k.items:
+        noun = "Item" if len(eight_k.items) == 1 else "Items"
+        parts[0] += f" {noun} {', '.join(eight_k.items)}"
+    # "EX-99.1" -> "Exhibit 99.1"; the form itself adds nothing more.
+    if doc.doc_type.upper().startswith("EX-"):
+        parts.append(f"Exhibit {doc.doc_type[3:]}")
+    return f"{', '.join(parts)} (filed {eight_k.filing_date})"
+
+
+def chunk_8k(eight_k: EightKFiling) -> list[Chunk]:
+    """Split every document of an 8-K into Chunks labelled with eight_k_label().
+
+    Each document is chunked on its own, then chunk_index is renumbered
+    across all of them so every chunk of this 8-K has a unique index (the
+    vector store keys chunks by accession number + index). char_start and
+    char_end are offsets within that chunk's own document.
+    """
+    chunks: list[Chunk] = []
+    for doc in eight_k.documents:
+        label = eight_k_label(eight_k, doc)
+        for chunk in chunk_filing(doc.clean_text):
+            chunks.append(chunk.model_copy(update={"chunk_index": len(chunks), "document": label}))
     return chunks
 
 

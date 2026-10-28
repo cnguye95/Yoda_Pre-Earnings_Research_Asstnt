@@ -1,10 +1,17 @@
-"""Fetches the most recent SEC 10-Q (or 10-K fallback) for a given ticker.
+"""Fetches a ticker's SEC filings: the latest 10-Q/10-K and the 8-Ks filed since.
 
-The one public function, fetch_latest_filing(), returns a Filing (see
-yoda/schema.py) holding the filing metadata and the cleaned text ready for
-chunking — or None when the company has filed nothing recent enough. Raw HTML
-and filing metadata are cached to data/filings/{ticker}/ so that repeated
-calls during development skip all network round-trips.
+Two public functions:
+  fetch_latest_filing(ticker) — the most recent 10-Q (or 10-K fallback) as a
+      Filing (see yoda/schema.py) holding the metadata and the cleaned text
+      ready for chunking, or None when nothing recent enough was filed.
+  fetch_post_filing_8ks(filing) — every 8-K / 8-K/A filed after that filing
+      (an 8-K reports news between quarterly filings: an earnings release,
+      new debt, an executive change), with its Exhibit 99.x documents.
+
+Raw HTML and metadata are cached to data/filings/{ticker}/ (8-Ks under
+8k/{accession}/) so that repeated calls skip the network. The 10-Q/10-K
+cache is used until a forced refresh; the 8-K list is re-read every call
+because new 8-Ks keep arriving, but each 8-K is downloaded only once.
 
 SEC rules:
   - Every request must include a User-Agent header identifying the caller.
@@ -12,9 +19,11 @@ SEC rules:
   - Stay under 10 requests per second — we sleep 0.15s between calls.
 """
 
+import pathlib
 import time
 import warnings
 from datetime import date, timedelta
+from typing import NamedTuple
 
 import pydantic
 import requests
@@ -23,7 +32,7 @@ from bs4 import BeautifulSoup, XMLParsedAsHTMLWarning
 from yoda import config
 from yoda.dates import market_today
 from yoda.http_session import session
-from yoda.schema import Filing
+from yoda.schema import EightKDocument, EightKFiling, Filing
 
 # SEC filings are XHTML/XML but lxml's HTML parser handles them correctly.
 # Suppress the warning so it doesn't surface in the Streamlit log.
@@ -59,6 +68,9 @@ FILING_FRESHNESS_DAYS = 92
 # the HTML on every load).
 _TEXT_FIELDS = {"raw_html": True, "clean_text": True}
 _CACHE_EXCLUDE = {**_TEXT_FIELDS, "supplemental": _TEXT_FIELDS}
+
+# The 8-K forms read after the primary filing: the 8-K and its amendment.
+_EIGHT_K_FORMS = ("8-K", "8-K/A")
 
 # ---------------------------------------------------------------------------
 # Module-level cache for the ticker→CIK mapping so we only fetch it once
@@ -129,9 +141,10 @@ def _load_ticker_cik_map() -> dict[str, int]:
 def _get_filings_metadata(cik: int) -> list[dict]:
     """Return a company's recent filings as a list of small dicts.
 
-    Each dict has: form (e.g. "10-Q"), filing_date ("YYYY-MM-DD") and
-    accession_number. The SEC nests these under data["filings"]["recent"]
-    as three parallel lists, which are zipped back together here.
+    Each dict has: form (e.g. "10-Q"), filing_date ("YYYY-MM-DD"),
+    accession_number, and items — an 8-K's item codes as the SEC writes them
+    ("2.02,9.01"), "" for other forms. The SEC nests these under
+    data["filings"]["recent"] as parallel lists, zipped back together here.
     """
     data = _sec_json(_SUBMISSIONS_URL.format(cik=cik))
     try:
@@ -139,13 +152,21 @@ def _get_filings_metadata(cik: int) -> list[dict]:
     except (KeyError, TypeError) as exc:
         raise RuntimeError(f"SEC filing history for CIK {cik} has an unexpected format") from exc
 
-    # Pair up the three parallel lists, one dict per filing.
+    forms = recent.get("form", [])
+    # Item codes only label 8-Ks, so a missing or mismatched "items" list
+    # leaves every filing's items empty rather than blocking the 10-Q/10-K.
+    items = recent.get("items")
+    if not isinstance(items, list) or len(items) != len(forms):
+        items = [""] * len(forms)
+
+    # Pair up the parallel lists, one dict per filing.
     return [
-        {"form": form, "filing_date": date_str, "accession_number": accession}
-        for form, date_str, accession in zip(
-            recent.get("form", []),
+        {"form": form, "filing_date": date_str, "accession_number": accession, "items": item_codes}
+        for form, date_str, accession, item_codes in zip(
+            forms,
             recent.get("filingDate", []),
             recent.get("accessionNumber", []),
+            items,
         )
     ]
 
@@ -217,6 +238,51 @@ def _get_primary_document(cik: int, accession_number: str) -> str:
         f"Could not find primary .htm document for accession {accession_number}. "
         "The filing index page may have an unexpected structure."
     )
+
+
+def _index_documents(cik: int, accession_number: str) -> list[tuple[str, str, str]]:
+    """Return every document listed on a filing's index page.
+
+    Each entry is (seq, doc_type, file_name), read from the same table
+    _get_primary_document uses (Seq | Description | Document | Type | Size),
+    e.g. ("1", "8-K", "nflx-20261021.htm") or ("2", "EX-99.1", "ex991.htm").
+    Rows without a document link are skipped.
+    """
+    acc_nodashes = accession_number.replace("-", "")
+    idx_url = _INDEX_URL.format(cik=cik, acc_nodashes=acc_nodashes, acc=accession_number)
+    soup = BeautifulSoup(_sec_get(idx_url).text, "lxml")
+
+    documents = []
+    for row in soup.find_all("tr"):
+        cells = row.find_all("td")
+        if len(cells) < 4:
+            continue
+        link = cells[2].find("a")
+        if not (link and link.get("href")):
+            continue
+        # As in _get_primary_document, the href may be an iXBRL viewer path,
+        # so only the part after the last "/" is the file name.
+        file_name = link["href"].rsplit("/", 1)[-1]
+        documents.append((cells[0].get_text(strip=True), cells[3].get_text(strip=True), file_name))
+    return documents
+
+
+def _select_8k_documents(documents: list[tuple[str, str, str]]) -> list[tuple[str, str]]:
+    """Pick the documents of an 8-K worth reading, as (doc_type, file_name).
+
+    Keeps the form itself (Seq 1) and every Exhibit 99.x — the press release
+    (99.1) and supplements such as a bank's financial supplement (99.2).
+    Other exhibits (EX-10 contracts, graphics, XBRL data files) are skipped.
+    Raises RuntimeError if the index has no readable main document.
+    """
+    readable = (".htm", ".html", ".txt")
+    main = [(doc_type, name) for seq, doc_type, name in documents
+            if seq == "1" and name.lower().endswith(readable)]
+    if not main:
+        raise RuntimeError("8-K index page lists no readable main document (Seq 1).")
+    exhibits = [(doc_type, name) for seq, doc_type, name in documents
+                if seq != "1" and doc_type.upper().startswith("EX-99") and name.lower().endswith(readable)]
+    return main[:1] + exhibits
 
 
 def _download_filing_html(cik: int, accession_number: str, primary_doc: str) -> tuple[str, str]:
@@ -310,6 +376,48 @@ def _write_disk_cache(filing: Filing) -> None:
     )
 
 
+def _eight_k_cache_dir(ticker: str, accession_number: str) -> pathlib.Path:
+    """Return the folder that caches one 8-K: data/filings/{ticker}/8k/{accession}/."""
+    return _CACHE_DIR / ticker / "8k" / accession_number
+
+
+def _read_8k_cache(ticker: str, accession_number: str) -> EightKFiling | None:
+    """Load a cached 8-K, or return None if it isn't fully cached.
+
+    A cache miss covers: nothing cached, a corrupt or outdated meta.json, or
+    a document's HTML file missing. Each simply means the 8-K is downloaded
+    again. An 8-K never changes once filed, so a complete cache is final.
+    """
+    cache_dir = _eight_k_cache_dir(ticker, accession_number)
+    meta_path = cache_dir / "meta.json"
+    if not meta_path.exists():
+        return None
+    try:
+        eight_k = EightKFiling.model_validate_json(meta_path.read_text(encoding="utf-8"))
+    except pydantic.ValidationError:
+        return None
+
+    # Re-attach each document's HTML and rebuild its text.
+    for doc in eight_k.documents:
+        html_path = cache_dir / doc.file_name
+        if not html_path.exists():
+            return None
+        doc.raw_html = html_path.read_text(encoding="utf-8")
+        doc.clean_text = _clean_html(doc.raw_html)
+    return eight_k
+
+
+def _write_8k_cache(eight_k: EightKFiling) -> None:
+    """Save one 8-K: each document's HTML under its own file name, the rest in meta.json."""
+    cache_dir = _eight_k_cache_dir(eight_k.ticker, eight_k.accession_number)
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    for doc in eight_k.documents:
+        (cache_dir / doc.file_name).write_text(doc.raw_html, encoding="utf-8")
+    (cache_dir / "meta.json").write_text(
+        eight_k.model_dump_json(exclude={"documents": {"__all__": set(_TEXT_FIELDS)}}), encoding="utf-8",
+    )
+
+
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
@@ -399,6 +507,92 @@ def fetch_latest_filing(ticker: str, force_refresh: bool = False) -> Filing | No
     return filing
 
 
+class PostFilingEightKs(NamedTuple):
+    """What fetch_post_filing_8ks() returns: the 8-Ks it could read, and why any others are missing."""
+    filings: list[EightKFiling]
+    errors: list[str]
+
+
+def _download_8k(cik: int, ticker: str, meta: dict) -> EightKFiling:
+    """Download one 8-K (its form and Exhibit 99.x documents) described by *meta*.
+
+    *meta* is one entry from _get_filings_metadata(). Raises
+    requests.RequestException or RuntimeError when a page can't be fetched
+    or the index has no readable main document.
+    """
+    accession = meta["accession_number"]
+    documents = []
+    for doc_type, file_name in _select_8k_documents(_index_documents(cik, accession)):
+        raw_html, url = _download_filing_html(cik, accession, file_name)
+        documents.append(EightKDocument(doc_type=doc_type, file_name=file_name, url=url,
+                                        raw_html=raw_html, clean_text=_clean_html(raw_html)))
+    return EightKFiling(
+        ticker=ticker,
+        form=meta["form"],
+        filing_date=meta["filing_date"],
+        accession_number=accession,
+        # "2.02,9.01" -> ["2.02", "9.01"]
+        items=[code.strip() for code in meta.get("items", "").split(",") if code.strip()],
+        documents=documents,
+    )
+
+
+def fetch_post_filing_8ks(filing: Filing) -> PostFilingEightKs:
+    """Fetch every 8-K (and 8-K/A) filed after *filing*, oldest first.
+
+    The SEC's filing list is read again on every call, so an 8-K filed since
+    the last run is picked up; each 8-K's documents are downloaded only once
+    and cached under data/filings/{ticker}/8k/{accession}/.
+
+    8-Ks are extra context, like the supplemental 10-K: one that can't be
+    downloaded is left out and the reason added to `errors`, and if the
+    filing list itself can't be read, `filings` is empty and `errors` says
+    why. Nothing here raises for a network or SEC problem.
+    """
+    ticker = filing.ticker
+    errors: list[str] = []
+
+    # Find the company's 8-Ks filed strictly after the primary filing.
+    try:
+        cik = filing.cik
+        if cik is None:
+            cik_map = _load_ticker_cik_map()
+            if ticker not in cik_map:
+                raise RuntimeError(f"Ticker '{ticker}' not found in SEC EDGAR.")
+            cik = cik_map[ticker]
+        all_filings = _get_filings_metadata(cik)
+    except (requests.RequestException, RuntimeError) as exc:
+        return PostFilingEightKs([], [
+            f"8-Ks filed after {filing.filing_date} could not be listed: {type(exc).__name__}: {exc}"
+        ])
+    primary_date = date.fromisoformat(filing.filing_date)
+    wanted = sorted(
+        (meta for meta in all_filings
+         if meta["form"] in _EIGHT_K_FORMS and date.fromisoformat(meta["filing_date"]) > primary_date),
+        key=lambda meta: (meta["filing_date"], meta["accession_number"]),
+    )
+
+    # Use each 8-K from the cache when it's there; otherwise download and cache it.
+    eight_ks = []
+    for meta in wanted:
+        cached = _read_8k_cache(ticker, meta["accession_number"])
+        if cached is not None:
+            eight_ks.append(cached)
+            continue
+        try:
+            eight_k = _download_8k(cik, ticker, meta)
+        except (requests.RequestException, RuntimeError) as exc:
+            errors.append(
+                f"{meta['form']} filed {meta['filing_date']} ({meta['accession_number']}) "
+                f"could not be fetched: {type(exc).__name__}: {exc}"
+            )
+            print(f"[edgar] WARNING: {errors[-1]}")
+            continue
+        _write_8k_cache(eight_k)
+        eight_ks.append(eight_k)
+    return PostFilingEightKs(eight_ks, errors)
+
+
 # ---------------------------------------------------------------------------
 # Smoke test — run with: python -m yoda.ingest.edgar [TICKER]
 # ---------------------------------------------------------------------------
@@ -423,3 +617,12 @@ if __name__ == "__main__":
     # A preview of the cleaned text, to eyeball that the HTML was stripped well.
     print("\n--- First 500 chars of clean text ---")
     print(result.clean_text[:500])
+
+    # The 8-Ks filed since, with their item codes and documents.
+    post_filing = fetch_post_filing_8ks(result)
+    print(f"\n--- 8-Ks filed after {result.filing_date}: {len(post_filing.filings)} ---")
+    for eight_k in post_filing.filings:
+        docs = ", ".join(f"{doc.doc_type} ({len(doc.clean_text)} chars)" for doc in eight_k.documents)
+        print(f"  {eight_k.filing_date} {eight_k.form} items {','.join(eight_k.items) or '-'}: {docs}")
+    for error in post_filing.errors:
+        print(f"  ERROR: {error}")

@@ -226,6 +226,41 @@ class Filing(BaseModel):
     supplemental_error: str | None = None
 
 
+class EightKDocument(BaseModel):
+    """One document inside an 8-K: the 8-K form itself or one of its exhibits.
+
+    *doc_type* is the SEC's label for the document: "8-K" or "8-K/A" for the
+    form, "EX-99.1" for an exhibit such as the earnings press release.
+    *clean_text* is the readable text, rebuilt from *raw_html* on load.
+    """
+    model_config = ConfigDict(extra="forbid")
+
+    doc_type: str
+    file_name: str
+    url: str
+    raw_html: str = ""
+    clean_text: str = ""
+
+
+class EightKFiling(BaseModel):
+    """One 8-K filed after the primary 10-Q/10-K, as fetched by
+    yoda.ingest.edgar.fetch_post_filing_8ks().
+
+    *items* are the 8-K item codes that say what the filing reports, e.g.
+    "2.02" (earnings release), "5.02" (executive change), "9.01" (exhibits).
+    "8-K/A" is an amendment to an earlier 8-K. *documents* holds the form
+    and its Exhibit 99.x documents; other exhibits are not kept.
+    """
+    model_config = ConfigDict(extra="forbid")
+
+    ticker: str
+    form: Literal["8-K", "8-K/A"]
+    filing_date: str                   # ISO date, e.g. "2026-10-21"
+    accession_number: str
+    items: list[str]
+    documents: list[EightKDocument]
+
+
 class NewsSearchResult(BaseModel):
     """One web search hit returned by yoda.tools.news.search_news().
 

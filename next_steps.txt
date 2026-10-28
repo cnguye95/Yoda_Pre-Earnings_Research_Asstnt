@@ -43,6 +43,21 @@ IDEAS for Improvements/Changes
      retrieve_filing (AGREED, option B in 3.3). Each 8-K chunk is labelled
      with its 8-K item code and filing date, so a result says which
      document it came from.
+   - DONE (step 4, 2026-10-28) — data layer:
+     * edgar.fetch_post_filing_8ks(filing) returns every 8-K and 8-K/A
+       filed after the primary filing, oldest first, as EightKFiling records
+       (schema.py), plus a list of errors. The SEC filing list is re-read
+       on every call so new 8-Ks appear; each 8-K is downloaded once and
+       cached in data/filings/{ticker}/8k/{accession}/. A failed 8-K or
+       list download is recorded in errors, never raised.
+     * Documents kept: the form itself plus every Exhibit 99.x (press
+       release, supplements); EX-10 contracts, graphics and XBRL skipped.
+     * chunker.chunk_8k() labels each chunk, e.g. "8-K Items 2.02, 9.01,
+       Exhibit 99.1 (filed 2026-10-21)"; Chunk.document holds the label and
+       the vector store keeps it (older chunks read back as "").
+     * Tests: tests/test_ingest.py, tests/test_retrieval.py.
+     * NOT done yet (step 6): the panel embedding the 8-Ks, retrieve_filing
+       searching them, and _render_chunks showing the label.
 
 3.2 Evidence types — tag every claim
    reported     = company actuals for a closed period (10-Q/10-K, 8-K 2.02 release)
@@ -331,6 +346,11 @@ IDEAS for Improvements/Changes
      gpt-6.1-sol takes up to 922K input tokens; prompts over 272K cost 2x
      input / 1.5x output for the whole call. The filing goes first in the
      prompt so both modes' calls for a ticker share the cached part.
+     Measured in step 4: JPM's three 8-Ks since its 10-Q add ~155K chars
+     (~39K tokens; the 99.2 financial supplement alone is 90K chars), so
+     JPM's 10-Q + 8-Ks come to ~250K tokens before the report and news —
+     close to the 272K line. Decide in step 7 how to stay under it (e.g.
+     only the 8-K documents the report cites).
    - Evidence cache for the judge (eval runs only): every mode returns its
      evidence bundle on every run (already in memory, no extra cost); only
      the eval runner writes it to disk, next to the report JSON. The judge

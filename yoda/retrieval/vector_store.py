@@ -110,6 +110,7 @@ class ChromaStore:
                 "chunk_index": chunk.chunk_index,
                 "char_start":  chunk.char_start,
                 "char_end":    chunk.char_end,
+                "document":    chunk.document,
                 "fingerprint": fingerprint,
             }
             for chunk in chunks
@@ -196,6 +197,8 @@ class ChromaStore:
         documents = results["documents"][0]
         metadatas = results["metadatas"][0]
 
+        # Chunks stored before the "document" label existed read back as ""
+        # (a 10-Q/10-K chunk), so they don't need re-embedding.
         for doc, meta in zip(documents, metadatas):
             chunks.append(
                 Chunk(
@@ -204,6 +207,7 @@ class ChromaStore:
                     chunk_index=meta["chunk_index"],
                     char_start=meta["char_start"],
                     char_end=meta["char_end"],
+                    document=meta.get("document", ""),
                 )
             )
 
