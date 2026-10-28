@@ -340,13 +340,19 @@ def _scores(value: int = 3) -> JudgeScores:
                        unverifiable_figures=[], overall_comment="")
 
 
+def _judge_result() -> judge.JudgeResult:
+    # A cached-style judge result scoring every dimension 3.
+    return judge.JudgeResult(scores=_scores(), failed_quotes={}, judge_snapshot="gpt-6.1-sol-test",
+                             reasoning_effort="medium", prompt_tokens=1, completion_tokens=1)
+
+
 def _stub_runner(monkeypatch, run_mode=None):
     # Replace every outside step of run_eval with a fast fake.
     monkeypatch.setattr(runner, "fetch_latest_filing", lambda ticker: None)
     monkeypatch.setattr(runner, "_run_mode", run_mode or (
         lambda mode, ticker, filing: runner.ModeRun(_report(), 1.0, "logged", 0.1, "")))
     monkeypatch.setattr(runner, "judge_report",
-                        lambda report, text, na: judge.JudgeResult(scores=_scores(), failed_quotes={}))
+                        lambda report, text, na: _judge_result())
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
 
@@ -395,9 +401,10 @@ def _bundle() -> EvidenceBundle:
                           read_urls=["https://news.example/a"], articles=[], peer_passages=[])
 
 
-def test_yoda_evidence_is_saved_next_to_its_report(monkeypatch, tmp_path):
+def test_evidence_is_saved_next_to_each_report(monkeypatch, tmp_path):
     # Yoda's bundle is written beside its report and survives the stale-file
-    # cleanup; the baseline builds none yet, so it gets no evidence file.
+    # cleanup; a mode with no bundle of its own (here the baseline) gets the
+    # filing-only bundle it is judged on.
     def run_mode(mode, ticker, filing):
         return runner.ModeRun(_report(), 1.0, "logged", 0.1, "", _bundle() if mode == "yoda" else None)
     _stub_runner(monkeypatch, run_mode)
@@ -407,7 +414,8 @@ def test_yoda_evidence_is_saved_next_to_its_report(monkeypatch, tmp_path):
     saved = (tmp_path / "yoda_AAA_evidence.json").read_text(encoding="utf-8")
     assert EvidenceBundle.model_validate_json(saved) == _bundle()
     assert (tmp_path / "yoda_AAA.json").exists()
-    assert not (tmp_path / "baseline_AAA_evidence.json").exists()
+    baseline = EvidenceBundle.model_validate_json((tmp_path / "baseline_AAA_evidence.json").read_text(encoding="utf-8"))
+    assert baseline.documents == [] and baseline.market_context == ""   # no filing was fetched in this stub
 
 
 def test_run_mode_passes_on_the_panel_evidence(monkeypatch):
@@ -417,7 +425,8 @@ def test_run_mode_passes_on_the_panel_evidence(monkeypatch):
     monkeypatch.setattr(runner, "run_baseline", lambda ticker, filing: _report())
 
     assert runner._run_mode("yoda", "AAA", None).evidence == _bundle()
-    assert runner._run_mode("baseline", "AAA", None).evidence is None
+    # The baseline's evidence is the filing it read (none here).
+    assert runner._run_mode("baseline", "AAA", None).evidence.documents == []
 
 
 def test_unparsed_cost_is_unknown_not_zero():
@@ -458,6 +467,7 @@ def test_corrupt_judge_cache_is_rescored(monkeypatch):
     reply = SimpleNamespace(
         model=f"{judge.JUDGE_MODEL}-2026-09-29",
         choices=[SimpleNamespace(message=SimpleNamespace(parsed=_scores(4), refusal=None), finish_reason="stop")],
+        usage=SimpleNamespace(prompt_tokens=1200, completion_tokens=300),
     )
     monkeypatch.setattr(judge, "_client", SimpleNamespace(
         chat=SimpleNamespace(completions=SimpleNamespace(parse=lambda **kwargs: reply))))

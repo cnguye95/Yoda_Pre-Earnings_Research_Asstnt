@@ -1,14 +1,15 @@
 """Phase 9 evaluation runner.
 
 run_eval() runs both modes (baseline, yoda) against a list of tickers,
-judges each report with judge_report(), and returns a long-format DataFrame
-with per-row scores, latency, and cost.
+judges each report against the evidence it was written from with
+judge_report() (see yoda/eval/evidence.py), and returns a long-format
+DataFrame with per-row scores, latency, and cost.
 
 Outputs written to disk (data/eval/ unless another folder is passed):
   {mode}_{ticker}.json          — each report
   {mode}_{ticker}_evidence.json — the external sources a report was written
                     from (filings, 8-Ks, market data, news, articles read),
-                    for the judge; Yoda only until the baseline builds one
+                    which the judge reads; for the baseline, its filing(s)
   results.csv     — full long-format DataFrame
   summary.md      — run date + models, mean scores per mode, the paired
                     Yoda-vs-baseline confidence table, and a Failures
@@ -42,8 +43,9 @@ import pandas as pd
 import requests
 
 from yoda import config
+from yoda.eval.evidence import PROMPT_TOKEN_LINE, filing_bundle, na_dimensions, render_evidence, report_for_judge
 from yoda.eval.judge import JUDGE_MODEL, cache_key_for, judge_report, prune_judge_cache, write_run_manifest
-from yoda.eval.rubric import DIMENSIONS, JudgeScores
+from yoda.eval.rubric import DIMENSIONS, RUBRIC_TEXT, JudgeScores
 from yoda.ingest.edgar import fetch_latest_filing
 from yoda.modes.baseline import BASELINE_MODEL, run_baseline
 from yoda.modes.personality_panel import CRITIQUE_MODEL, LOOP_MODEL, SYNTH_MODEL, run_personality_panel
@@ -100,7 +102,7 @@ class ModeRun(NamedTuple):
     cost_usd: float | None         # None when the log had no "Total cost:" line
     log: str
     # The external sources the report was written from, saved for the judge.
-    # None for a mode that doesn't build one yet (the baseline).
+    # None means the run judges it on the filing alone.
     evidence: EvidenceBundle | None = None
 
 
@@ -143,8 +145,10 @@ def _yoda_run(ticker: str) -> tuple[EarningsReport, EvidenceBundle]:
 def _run_mode(mode: str, ticker: str, filing: Filing | None) -> ModeRun:
     """Run one mode for one ticker and return its ModeRun."""
     if mode == "baseline":
-        # The baseline builds no evidence bundle yet (next_steps section 4).
-        return _capture(lambda symbol, primary: (run_baseline(symbol, primary), None), ticker, filing)
+        # The baseline's evidence is the filing(s) it read; it builds no
+        # bundle of its own until next_steps section 4.
+        return _capture(lambda symbol, primary: (run_baseline(symbol, primary), filing_bundle(symbol, primary)),
+                        ticker, filing)
     if mode == "yoda":
         return _capture(_yoda_run, ticker)
     raise ValueError(f"Unknown mode: {mode}")
@@ -208,9 +212,9 @@ def run_eval(
     for ticker in tickers:
         print(f"\n=== {ticker} ===")
 
-        # Fetch the filing once per ticker; the baseline reads it directly
-        # and the judge grades against its first 30K characters. A fetch
-        # failure skips this ticker only.
+        # Fetch the filing once per ticker; the baseline reads it directly,
+        # and it is the evidence for a mode that returns no bundle of its
+        # own. A fetch failure skips this ticker only.
         print(f"  fetching filing for {ticker}...")
         try:
             filing = fetch_latest_filing(ticker)
@@ -218,7 +222,6 @@ def run_eval(
             failures.append((ticker, "fetch filing", f"{type(exc).__name__}: {exc}"))
             print(f"  ERROR fetching filing: {exc}")
             continue
-        filing_text = filing.clean_text[:30000] if filing else ""
 
         for mode in modes:
             # Each (ticker, mode) is isolated on purpose: whatever one report
@@ -238,26 +241,36 @@ def run_eval(
             )
 
             # Save the sources the report was written from next to it, so the
-            # judge can check the report against what it saw. Only the eval
+            # judge can check the report against what it saw. A mode that
+            # returns no bundle is judged on the filing alone. Only the eval
             # runner writes these files.
-            if run.evidence is not None:
-                (out_dir / f"{mode}_{ticker}_evidence.json").write_text(
-                    run.evidence.model_dump_json(indent=2), encoding="utf-8"
-                )
+            evidence = run.evidence or filing_bundle(ticker, filing)
+            (out_dir / f"{mode}_{ticker}_evidence.json").write_text(
+                evidence.model_dump_json(indent=2), encoding="utf-8"
+            )
 
-            # Judge the report against the filing text (step 7b replaces this
-            # with the evidence bundle and code-set N/A dimensions). A judge
-            # failure (refusal, cut-off, API error after retries) skips this
-            # row like a mode failure does, instead of ending the whole run.
-            na: dict[str, str] = {}
+            # What the judge sees: the report without Yoda's own hypotheses,
+            # the evidence (cut where needed to stay under the price line),
+            # and which dimensions code marks N/A for this mode.
+            judged_report = report_for_judge(run.report)
+            na = na_dimensions(evidence, judged_report)
+            rendered = render_evidence(evidence, judged_report,
+                                       extra_chars=len(RUBRIC_TEXT) + len(judged_report.model_dump_json()))
+            print(f"  judge prompt ~{rendered.estimated_tokens:,} tokens (estimate); "
+                  f"N/A: {', '.join(na) or 'none'}; left out: {'; '.join(rendered.left_out) or 'nothing'}")
+            if rendered.over_line:
+                print(f"  WARNING: over {PROMPT_TOKEN_LINE:,} tokens even after cuts; this call costs more")
+
+            # A judge failure (refusal, cut-off, API error after retries) skips
+            # this row like a mode failure does, instead of ending the whole run.
             try:
-                result = judge_report(run.report, filing_text, na)
+                result = judge_report(judged_report, rendered.text, na)
             except Exception as exc:
                 failures.append((ticker, f"judge {mode}", f"{type(exc).__name__}: {exc}"))
                 print(f"  ERROR judging mode={mode}: {exc}")
                 continue
             scores = result.scores
-            run_cache_keys.add(cache_key_for(run.report, filing_text, na))
+            run_cache_keys.add(cache_key_for(judged_report, rendered.text, na))
 
             row = {
                 "ticker": ticker,

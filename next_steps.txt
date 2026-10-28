@@ -616,6 +616,22 @@ IDEAS for Improvements/Changes
      paired comparison drops an N/A pair per dimension and shows "pairs".
      The judge still reads the filing's first 30K chars until 7b.
      Tests: tests/test_rubric.py (new), test_offline.py, test_outputs.py.
+   - DONE (7b): yoda/eval/evidence.py — the judge reads each report's own
+     evidence (Yoda's bundle; the baseline's filing_bundle: 10-Q + the 10-K
+     only if the baseline got it). Order: filing(s) first (shared,
+     cacheable start), 8-Ks (cited in full, others label + first 2,000
+     chars), market data, articles read, news results, peer passages, then
+     a LEFT OUT list. Over 272K (estimated chars ÷ 4, AGREED): uncited news
+     snippets dropped; still over → sent and flagged (AGREED). Prompt order
+     rubric → evidence → N/A → report. hypotheses_explored removed before
+     judging (load_report_for_judge also loads archived reports with
+     invalid hypotheses). N/A by code: market_expectations without market
+     data; evidence_labelling without post-filing evidence (market data
+     counts, AGREED) and without post-filing claims. Judge called with
+     reasoning_effort "medium"; JudgeResult records judge_snapshot, effort
+     and OpenAI's token counts. Both modes' evidence saved by the runner.
+     Size check (offline, real filings): BA ~72K tokens; JPM (archived
+     report, all 8-Ks uncited) ~224K, under the line.
 
 3.8 Earnings press release + call transcript as context
    - Press release: on EDGAR as 8-K Item 2.02, Exhibit 99.1 — free, covered

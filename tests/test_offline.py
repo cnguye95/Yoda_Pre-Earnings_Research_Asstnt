@@ -525,7 +525,8 @@ def _judge_result(value: int) -> judge.JudgeResult:
     score = DimensionScore(score=value, justification="ok", quotes=[])
     scores = JudgeScores(**{c: score for c in SCORE_COLS}, figures_checked=1, unverifiable_figures=[],
                          overall_comment="")
-    return judge.JudgeResult(scores=scores, failed_quotes={})
+    return judge.JudgeResult(scores=scores, failed_quotes={}, judge_snapshot="gpt-6.1-sol-test", reasoning_effort="medium",
+                              prompt_tokens=1, completion_tokens=1)
 
 
 def test_judge_failure_skips_row_not_run(monkeypatch, tmp_path):

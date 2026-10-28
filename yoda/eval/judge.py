@@ -35,6 +35,11 @@ from yoda.schema import EarningsReport
 # Cross-family judge: OpenAI's mid-tier model, the counterpart of Sonnet 5.5.
 JUDGE_MODEL = "gpt-6.1-sol"
 
+# How hard the judge thinks before scoring. Set explicitly (medium was the
+# default the archived 2026-10-26 run used) so a change of default can't
+# silently change the scores; recorded on every result.
+JUDGE_REASONING_EFFORT = "medium"
+
 # Where to persist cached judge results. Created on first use.
 _CACHE_DIR = config.DATA_DIR / "eval" / "judge_cache"
 
@@ -53,14 +58,21 @@ _SYSTEM_PROMPT = (
 # ---------------------------------------------------------------------------
 
 class JudgeResult(pydantic.BaseModel):
-    """What judge_report() returns and caches: the checked scores and the quote check.
+    """What judge_report() returns and caches: the checked scores, the quote check, and the call's details.
 
     *scores* has the N/A rules applied (rubric.check_scores). *failed_quotes*
     maps each dimension whose quotes didn't check out to those quotes
     (rubric.failed_quotes); an empty dict means every quote was found.
+    *judge_snapshot* is the exact model version OpenAI reports (no dated
+    snapshot can be pinned, so it is recorded instead), *reasoning_effort*
+    the effort it was asked for, and the token counts are OpenAI's own.
     """
     scores: JudgeScores
     failed_quotes: dict[str, list[str]]
+    judge_snapshot: str
+    reasoning_effort: str
+    prompt_tokens: int
+    completion_tokens: int
 
 
 # ---------------------------------------------------------------------------
@@ -113,12 +125,14 @@ def judge_report(report: EarningsReport, evidence_text: str, na: dict[str, str])
 
     print(f"  [judge] scoring via {JUDGE_MODEL} (key={cache_key})...")
 
-    # Build the user message: rubric, which dimensions are N/A, the report
-    # JSON and the evidence.
+    # Build the user message: the rubric and the evidence first (the long
+    # part both modes' calls for a ticker share, which OpenAI caches), then
+    # which dimensions are N/A and the report JSON.
     user_message = (
-        f"{RUBRIC_TEXT}\n\n{_na_text(na)}\n\n"
-        f"--- REPORT JSON ---\n{report_json}\n\n"
-        f"--- EVIDENCE ---\n{evidence_text}"
+        f"{RUBRIC_TEXT}\n\n"
+        f"--- EVIDENCE ---\n{evidence_text}\n\n"
+        f"{_na_text(na)}\n\n"
+        f"--- REPORT JSON ---\n{report_json}"
     )
 
     # Structured outputs: response_format=JudgeScores makes OpenAI return JSON
@@ -130,6 +144,7 @@ def judge_report(report: EarningsReport, evidence_text: str, na: dict[str, str])
             {"role": "user",   "content": user_message},
         ],
         response_format=JudgeScores,
+        reasoning_effort=JUDGE_REASONING_EFFORT,
     )
 
     # OpenAI reports dated snapshot names (e.g. "gpt-6.1-sol-2026-09-29"),
@@ -148,7 +163,11 @@ def judge_report(report: EarningsReport, evidence_text: str, na: dict[str, str])
     # Apply the N/A rules and the 1-5 check, then check every quote against
     # the text it says it comes from.
     scores = check_scores(message.parsed, na)
-    result = JudgeResult(scores=scores, failed_quotes=failed_quotes(scores, report_json, evidence_text))
+    result = JudgeResult(
+        scores=scores, failed_quotes=failed_quotes(scores, report_json, evidence_text),
+        judge_snapshot=response.model, reasoning_effort=JUDGE_REASONING_EFFORT,
+        prompt_tokens=response.usage.prompt_tokens, completion_tokens=response.usage.completion_tokens,
+    )
     if result.failed_quotes:
         print(f"  [judge] quotes not found for: {', '.join(result.failed_quotes)}")
 
@@ -223,20 +242,33 @@ def prune_judge_cache(keep_runs: int = 2) -> None:
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
+    import sys
+
+    from yoda.eval.evidence import filing_bundle, load_report_for_judge, na_dimensions, render_evidence
     from yoda.ingest.edgar import fetch_latest_filing
+    from yoda.schema import EvidenceBundle
 
-    # Load the NFLX Yoda report JSON saved by the last eval run.
-    report_path = config.DATA_DIR / "eval" / "yoda_NFLX.json"
-    report = EarningsReport.model_validate_json(report_path.read_text(encoding="utf-8"))
+    # Which saved report to judge: python -m yoda.eval.judge [TICKER] [MODE].
+    ticker = (sys.argv[1] if len(sys.argv) > 1 else "NFLX").upper()
+    mode = sys.argv[2] if len(sys.argv) > 2 else "yoda"
+    eval_dir = config.DATA_DIR / "eval"
+    report = load_report_for_judge((eval_dir / f"{mode}_{ticker}.json").read_text(encoding="utf-8"))
 
-    # Fetch the cached NFLX filing for source text (no network hit if cached).
-    print("Loading NFLX filing text...")
-    filing = fetch_latest_filing("NFLX")
-    filing_text = filing.clean_text[:30000] if filing else ""
+    # Its saved evidence bundle; without one, the filing it was written from.
+    evidence_path = eval_dir / f"{mode}_{ticker}_evidence.json"
+    if evidence_path.exists():
+        bundle = EvidenceBundle.model_validate_json(evidence_path.read_text(encoding="utf-8"))
+    else:
+        print(f"No saved evidence for {mode}_{ticker}; using the filing only.")
+        bundle = filing_bundle(ticker, fetch_latest_filing(ticker))
 
-    # Call the judge (first run hits API; second run should be instant cache hit).
+    # Render it, decide N/A, and call the judge (a second run is a cache hit).
+    na = na_dimensions(bundle, report)
+    rendered = render_evidence(bundle, report, extra_chars=len(RUBRIC_TEXT) + len(report.model_dump_json()))
+    print(f"Evidence: ~{rendered.estimated_tokens:,} tokens (estimate); left out: {rendered.left_out or 'nothing'}; "
+          f"N/A: {list(na) or 'none'}")
     print("Calling judge...")
-    result = judge_report(report, filing_text, na={})
+    result = judge_report(report, rendered.text, na)
 
     # Print every dimension's score (N/A when unscored) plus the overall comment.
     for name in DIMENSIONS:
@@ -244,4 +276,6 @@ if __name__ == "__main__":
         score = "N/A" if dimension.score is None else f"{dimension.score}/5"
         print(f"{name:22s} {score} — {dimension.justification}")
     print(f"\nFigures checked: {result.scores.figures_checked}; quotes not found: {result.failed_quotes or 'none'}")
+    print(f"Judge: {result.judge_snapshot} (effort {result.reasoning_effort}); "
+          f"{result.prompt_tokens:,} prompt / {result.completion_tokens:,} completion tokens")
     print(f"Overall: {result.scores.overall_comment}")

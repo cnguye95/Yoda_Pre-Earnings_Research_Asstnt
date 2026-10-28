@@ -347,6 +347,18 @@ python -m yoda.eval.runner
 
 Outputs `data/eval/results.csv`, `data/eval/summary.md` (headed with the run date and models, and including the paired Yoda-vs-baseline confidence table), and `data/eval/comparison.png` (subtitled with the same run line). Judge results are cached in `data/eval/judge_cache/` so repeated runs are free; only the two most recent runs' cached files are kept on disk.
 
+**What the judge reads** (`yoda/eval/evidence.py`). The judge reads the evidence each report was written from, saved as `{mode}_{ticker}_evidence.json`:
+- **Yoda:** the 10-Q/10-K, the 8-Ks, the market data, the news results and the articles read.
+- **The baseline (for now):** the filing(s) it read.
+
+The report is judged without `hypotheses_explored`. To stay under the judge's 272K-token price line:
+- 8-K documents the report doesn't cite are shortened to their first 2,000 characters;
+- if the prompt is still too long, uncited news snippets are dropped;
+- the judge is told what was left out;
+- a prompt still over the line is sent and flagged.
+
+Dimensions a mode had no evidence for (e.g. market expectations for the baseline) are marked N/A by code.
+
 Cache cleanup at the end of every run:
 - `data/eval/{mode}_{TICKER}.json` — one report JSON per `(mode, ticker)` (overwrites older copies)
 - `data/eval/judge_cache/` — JSON cache files from the two most recent runs only (older are pruned via run manifests)
