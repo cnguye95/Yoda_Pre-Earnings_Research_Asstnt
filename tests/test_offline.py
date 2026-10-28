@@ -21,7 +21,7 @@ from yoda.eval.runner import _RE_COST, _RE_WALL_TIME, SCORE_COLS, _paired_compar
 from yoda.ingest.chunker import Chunk
 from yoda.modes import personality_panel as panel
 from yoda.modes import baseline as baseline_mod
-from yoda.modes.baseline import BASELINE_MODEL, _build_prompt, _strip_invented_links, _validate_citations
+from yoda.modes.baseline import BASELINE_MODEL, _build_prompt, _strip_invented_links, validate_citations
 from yoda.modes.tools import TOOL_DISPATCH, TOOL_SCHEMAS
 from yoda.retrieval import vector_store
 from yoda.schema import EarningsReport, Filing, ForwardGuidance, Metric, NewsItem, Risk, Segment, WatchItem
@@ -53,7 +53,7 @@ def _chunk(text: str, section: str = "MD&A", index: int = 0) -> Chunk:
 # ---------------------------------------------------------------------------
 
 def test_validate_citations_passes_valid_report():
-    _validate_citations(_report())  # no exception
+    validate_citations(_report())  # no exception
 
 
 @pytest.mark.parametrize("field", ["key_metrics", "revenue_segments", "key_risks", "forward_guidance"])
@@ -67,7 +67,7 @@ def test_validate_citations_rejects_blank_citation(field):
     else:
         getattr(report, field)[0].source_citation = "   "
     with pytest.raises(ValueError, match=field):
-        _validate_citations(report)
+        validate_citations(report)
 
 
 # ---------------------------------------------------------------------------
@@ -139,6 +139,7 @@ class _FakeResponse:
     def __init__(self, content):
         self.content = content
         self.usage = _Block(input_tokens=10, output_tokens=10)
+        self.stop_reason = "tool_use" if any(b.type == "tool_use" for b in content) else "end_turn"
 
 
 def test_failing_tool_is_reported_not_crashed(monkeypatch):
@@ -151,7 +152,7 @@ def test_failing_tool_is_reported_not_crashed(monkeypatch):
     def broken_tool(ctx, **args):
         raise TypeError("no filing")
     monkeypatch.setitem(panel.TOOL_DISPATCH, "lookup_peer", broken_tool)
-    monkeypatch.setattr(panel, "_parse", lambda *a, **kw: (panel._PersonalityFinalOutput(hypotheses=[]), 0, 0))
+    monkeypatch.setattr(panel, "_structured_call", lambda *a, **kw: (panel._PersonalityFinalOutput(hypotheses=[]), 0, 0))
 
     result = panel._run_personality("Optimist", "TEST", ctx=None, max_iterations=6,
                                     wall_timeout_seconds=60, log_prefix="[t]")
@@ -166,7 +167,7 @@ def test_time_cap_stops_tool_calls(monkeypatch):
         choices.append(kw["tool_choice"]["type"])
         return _FakeResponse([_Block(type="text", text="done")])
     monkeypatch.setattr(panel._client.messages, "create", fake_create)
-    monkeypatch.setattr(panel, "_parse", lambda *a, **kw: (panel._PersonalityFinalOutput(hypotheses=[]), 0, 0))
+    monkeypatch.setattr(panel, "_structured_call", lambda *a, **kw: (panel._PersonalityFinalOutput(hypotheses=[]), 0, 0))
 
     result = panel._run_personality("Optimist", "TEST", ctx=None, max_iterations=6,
                                     wall_timeout_seconds=0, log_prefix="[t]")

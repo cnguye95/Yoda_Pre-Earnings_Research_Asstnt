@@ -11,17 +11,24 @@ Tools:
   search_news(query, max_results)   — Tavily web search
   lookup_peer(peer_ticker, query, k) — fetch+chunk+search a competitor filing
 
-A `ToolContext` instance carries the per-run state that the tool functions
-need (primary ticker, accession number, shared ChromaStore, news pool, and a
-lock for peer-ingestion serialization). The personality_panel module builds
-the context once per ticker and passes it into every tool invocation.
+A `ToolContext` carries the per-run state that the tool functions need
+(primary ticker, accession numbers, shared ChromaStore, news pool, and locks
+for thread safety). The personality panel builds the context once per ticker
+and passes it into every tool invocation.
+
+Claude's tool arguments are checked against TOOL_ARGS (one Pydantic model per
+tool) before a tool runs, so a missing query, an unknown argument or an
+out-of-range `k` comes back to Claude as a clear error instead of a crash.
 """
 
 import threading
 import time
+from dataclasses import dataclass, field
 
+from pydantic import BaseModel, ConfigDict, Field
+
+from yoda.ingest.chunker import Chunk, chunk_filing
 from yoda.ingest.edgar import fetch_latest_filing
-from yoda.ingest.chunker import chunk_filing, Chunk
 from yoda.retrieval.vector_store import ChromaStore
 from yoda.schema import NewsSearchResult
 from yoda.tools.news import search_news as _tavily_search
@@ -31,34 +38,29 @@ from yoda.tools.news import search_news as _tavily_search
 # Tool context — per-run state shared with each tool invocation
 # ---------------------------------------------------------------------------
 
+@dataclass
 class ToolContext:
-    # Holds the state every tool needs to do its job. One instance is built
-    # in Phase 1 of personality_panel.run() and passed unchanged into every
-    # tool invocation across all personality threads.
-    def __init__(
-        self,
-        primary_ticker: str,
-        primary_accession: str | None,
-        store: ChromaStore,
-        supplemental_accession: str | None = None,
-    ) -> None:
-        self.primary_ticker = primary_ticker
-        self.primary_accession = primary_accession
-        self.supplemental_accession = supplemental_accession  # 10-K when primary is 10-Q
-        self.store = store
+    """The state every tool needs, shared by all personality threads in one run.
 
-        # Tracks which peer tickers have already been ingested into the store
-        # so a second lookup_peer call for the same peer skips re-ingestion.
-        # Protected by _peer_lock so concurrent personalities don't race on
-        # the same peer's first-call ingestion.
-        self._ingested_peers: dict[str, str] = {}   # peer_ticker -> accession
-        self._peer_lock = threading.Lock()
+    *primary_accession* is None when the company has no recent filing, in
+    which case retrieve_filing searches only the supplemental (if any).
+    """
+    primary_ticker: str
+    primary_accession: str | None
+    store: ChromaStore
+    supplemental_accession: str | None = None   # 10-K when the primary is a 10-Q
 
-        # Accumulator for news items collected across all personalities so the
-        # synthesis step has the full pool with URLs intact. Personality threads
-        # append; the synthesizer reads after Phase 2 completes.
-        self.news_pool: list[NewsSearchResult] = []
-        self._news_lock = threading.Lock()
+    # News items collected across all personalities so synthesis sees every
+    # URL any of them found. Threads append; synthesis reads after Phase 2.
+    news_pool: list[NewsSearchResult] = field(default_factory=list)
+
+    # Which peer tickers are already in the store (peer -> accession), so a
+    # second lookup_peer call for the same peer skips re-ingestion.
+    _ingested_peers: dict[str, str] = field(default_factory=dict)
+
+    # Locks so two threads never update the peer map or news pool at once.
+    _peer_lock: threading.Lock = field(default_factory=threading.Lock)
+    _news_lock: threading.Lock = field(default_factory=threading.Lock)
 
 
 # ---------------------------------------------------------------------------
@@ -85,17 +87,17 @@ def retrieve_filing(ctx: ToolContext, query: str, k: int = 5) -> list[Chunk]:
 # ---------------------------------------------------------------------------
 
 def search_news(ctx: ToolContext, query: str, max_results: int = 3) -> list[NewsSearchResult]:
-    """Tavily news search. Results are also appended to the shared news_pool
-    so the synthesizer can see every URL any personality discovered.
+    """Tavily news search; results are also added to the shared news pool.
+
+    The pool is how the synthesizer sees every URL any personality found.
+    The pool may hold the same article twice when two personalities find
+    it; synthesis receives it as-is.
     """
-    # Delegate to the existing Tavily wrapper (yoda.tools.news.search_news).
     results = _tavily_search(query, max_results=max_results)
 
-    # Append to the shared pool under a lock so parallel personalities don't
-    # corrupt the list. We don't dedupe here — the synthesizer handles that.
+    # Append under a lock so parallel personalities don't corrupt the list.
     with ctx._news_lock:
         ctx.news_pool.extend(results)
-
     return results
 
 
@@ -104,20 +106,19 @@ def search_news(ctx: ToolContext, query: str, max_results: int = 3) -> list[News
 # ---------------------------------------------------------------------------
 
 def lookup_peer(ctx: ToolContext, peer_ticker: str, query: str, k: int = 3) -> list[Chunk]:
-    """Fetch + chunk + embed a peer company's filing (cached on disk after
-    first call), then return the k chunks most relevant to *query*.
+    """Return the *k* chunks of a peer company's filing most relevant to *query*.
 
-    Uses an internal lock to ensure two personalities asking for the same
-    peer simultaneously don't both trigger the SEC download.
+    The peer's filing is fetched, chunked and embedded on the first call
+    (and cached on disk, so later runs skip the SEC download). An internal
+    lock ensures two personalities asking for the same peer at once don't
+    both trigger the download. Raises ValueError if the peer has no recent
+    filing, which the panel reports back to Claude as a failed tool call.
     """
     peer_ticker = peer_ticker.upper().strip()
 
-    # First check: is this peer already ingested into our ChromaStore?
-    # We use the per-context lock so the check + ingest pair is atomic.
+    # Check-and-ingest happens under the lock so it is one atomic step.
     with ctx._peer_lock:
         if peer_ticker not in ctx._ingested_peers:
-            # Fetch is cached on disk by yoda.ingest.edgar so repeat calls
-            # for the same peer across runs avoid the SEC round-trip too.
             peer_filing = fetch_latest_filing(peer_ticker)
             if peer_filing is None:
                 raise ValueError(f"{peer_ticker} has no 10-Q or 10-K filed recently enough to search.")
@@ -222,13 +223,47 @@ TOOL_SCHEMAS = [
 ]
 
 
+# ---------------------------------------------------------------------------
+# Tool argument checks — the same rules as the schemas above, enforced in code
+# ---------------------------------------------------------------------------
+
+class _ToolArgs(BaseModel):
+    """Shared settings: reject any argument the tool doesn't define."""
+    model_config = ConfigDict(extra="forbid")
+
+
+class RetrieveFilingArgs(_ToolArgs):
+    """Arguments for retrieve_filing."""
+    query: str = Field(min_length=1)
+    k: int = Field(5, ge=1, le=10)
+
+
+class SearchNewsArgs(_ToolArgs):
+    """Arguments for search_news."""
+    query: str = Field(min_length=1)
+    max_results: int = Field(3, ge=1, le=5)
+
+
+class LookupPeerArgs(_ToolArgs):
+    """Arguments for lookup_peer."""
+    peer_ticker: str = Field(min_length=1)
+    query: str = Field(min_length=1)
+    k: int = Field(3, ge=1, le=5)
+
+
 # Maps the tool name (as returned in the model's tool_use block) to the Python
-# function that implements it. The dispatcher in personality_panel.py looks
-# up the function here and passes (ctx, **args) into it.
+# function that implements it and to the model that checks its arguments.
+# The dispatcher in personality_panel.py validates with TOOL_ARGS, then calls
+# TOOL_DISPATCH with (ctx, **validated_args).
 TOOL_DISPATCH = {
     "retrieve_filing": retrieve_filing,
     "search_news":     search_news,
     "lookup_peer":     lookup_peer,
+}
+TOOL_ARGS: dict[str, type[_ToolArgs]] = {
+    "retrieve_filing": RetrieveFilingArgs,
+    "search_news":     SearchNewsArgs,
+    "lookup_peer":     LookupPeerArgs,
 }
 
 
@@ -237,16 +272,18 @@ TOOL_DISPATCH = {
 # ---------------------------------------------------------------------------
 
 def normalize_call(tool_name: str, args: dict) -> str:
-    # Build a stable string key for repetition detection. We only consider the
-    # tool name + main query so callers asking the same question with k=3 vs
-    # k=5 are still recognised as duplicates.
-    if tool_name == "retrieve_filing":
-        return f"retrieve_filing:{args.get('query', '').strip().lower()}"
-    if tool_name == "search_news":
-        return f"search_news:{args.get('query', '').strip().lower()}"
+    """Build a stable key for a tool call, used to spot repeated calls.
+
+    Only the tool name and its main query (plus the peer, for lookup_peer)
+    count, so asking the same question with k=3 vs k=5 is still a repeat.
+    Case and surrounding spaces are ignored.
+    """
+    query = str(args.get("query", "")).strip().lower()
+    if tool_name in ("retrieve_filing", "search_news"):
+        return f"{tool_name}:{query}"
     if tool_name == "lookup_peer":
-        peer = args.get("peer_ticker", "").upper().strip()
-        return f"lookup_peer:{peer}:{args.get('query', '').strip().lower()}"
+        peer = str(args.get("peer_ticker", "")).upper().strip()
+        return f"lookup_peer:{peer}:{query}"
     # Unknown tool — return a non-empty key so duplicate-unknowns are caught.
     return f"{tool_name}:{repr(sorted(args.items()))}"
 
@@ -270,35 +307,31 @@ if __name__ == "__main__":
     store = ChromaStore()
     store.index_if_missing(filing.accession_number, chunks)
 
-    ctx = ToolContext(
-        primary_ticker=ticker,
-        primary_accession=filing.accession_number,
-        store=store,
-    )
+    ctx = ToolContext(primary_ticker=ticker, primary_accession=filing.accession_number, store=store)
     print(f"[tools-smoke] Indexed {len(chunks)} chunks for {ticker} "
           f"({filing.filing_type} {filing.filing_date})")
 
     # Exercise each tool once and print a one-line summary.
     print("\n[tools-smoke] retrieve_filing('revenue segment breakdown'):")
-    t0 = time.perf_counter()
-    rf = retrieve_filing(ctx, "revenue segment breakdown", k=3)
-    print(f"  -> {len(rf)} chunks in {time.perf_counter() - t0:.2f}s; "
-          f"first section: {rf[0].section if rf else '(none)'}")
+    started = time.perf_counter()
+    filing_hits = retrieve_filing(ctx, "revenue segment breakdown", k=3)
+    print(f"  -> {len(filing_hits)} chunks in {time.perf_counter() - started:.2f}s; "
+          f"first section: {filing_hits[0].section if filing_hits else '(none)'}")
 
-    print("\n[tools-smoke] search_news('Netflix earnings'):")
-    t0 = time.perf_counter()
-    sn = search_news(ctx, f"{ticker} earnings", max_results=2)
-    print(f"  -> {len(sn)} articles in {time.perf_counter() - t0:.2f}s")
-    for r in sn:
-        print(f"    {r.title[:80]}  ({r.url})")
+    print(f"\n[tools-smoke] search_news('{ticker} earnings'):")
+    started = time.perf_counter()
+    news_hits = search_news(ctx, f"{ticker} earnings", max_results=2)
+    print(f"  -> {len(news_hits)} articles in {time.perf_counter() - started:.2f}s")
+    for article in news_hits:
+        print(f"    {article.title[:80]}  ({article.url})")
 
-    # Pick a sensible peer for the smoke test by ticker. DIS is a reasonable
-    # default for media tickers; HOOD pairs with COIN; we fall back to MSFT.
+    # Pick a sensible peer for the smoke test by ticker: DIS for NFLX, HOOD
+    # for COIN, CRWD for PANW, otherwise MSFT.
     peer = {"NFLX": "DIS", "COIN": "HOOD", "PANW": "CRWD"}.get(ticker, "MSFT")
     print(f"\n[tools-smoke] lookup_peer('{peer}', 'revenue trends'):")
-    t0 = time.perf_counter()
-    lp = lookup_peer(ctx, peer, "revenue trends", k=2)
-    print(f"  -> {len(lp)} chunks from {peer} in {time.perf_counter() - t0:.2f}s")
+    started = time.perf_counter()
+    peer_hits = lookup_peer(ctx, peer, "revenue trends", k=2)
+    print(f"  -> {len(peer_hits)} chunks from {peer} in {time.perf_counter() - started:.2f}s")
 
     # Verify the news_pool was populated by the search_news call.
     print(f"\n[tools-smoke] ctx.news_pool has {len(ctx.news_pool)} items collected")
@@ -307,4 +340,4 @@ if __name__ == "__main__":
     key1 = normalize_call("retrieve_filing", {"query": "Revenue Segment Breakdown"})
     key2 = normalize_call("retrieve_filing", {"query": "revenue segment breakdown"})
     assert key1 == key2, "normalize_call must be case-insensitive"
-    print(f"[tools-smoke] normalize_call deduplicates case + whitespace: OK")
+    print("[tools-smoke] normalize_call deduplicates case + whitespace: OK")

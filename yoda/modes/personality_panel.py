@@ -18,31 +18,36 @@ run_personality_panel() is the top-level mode for the Streamlit UI. The design:
 
 Six loop hedges keep Phase 2 honest: iteration cap, wall-clock cap,
 repetition detector, empty-result short-circuit, graceful degradation, and a
-termination-rewarding system prompt. They're documented in the plan and
-called out in-line where they fire.
+termination-rewarding system prompt. They're called out in-line where they fire.
+
+Anything that went wrong along the way (no filing, a failed peer review, a
+citation that pointed outside the filing) is added to the report's
+data_gaps, so the reader sees it — not only the console log.
 
 Verification gate: python -m yoda.modes.personality_panel [TICKER]
 """
 
 import json
-import pathlib
 import re
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 
-from anthropic import Anthropic
-from pydantic import BaseModel
+import anthropic
+import pydantic
+from pydantic import BaseModel, Field
 
 from yoda import config
+from yoda.ingest.chunker import Chunk, chunk_filing
 from yoda.ingest.edgar import FILING_FRESHNESS_DAYS, fetch_latest_filing
-from yoda.ingest.chunker import chunk_filing, Chunk
-from yoda.modes.baseline import _validate_citations, full_filing_text, supplemental_dropped_note
+from yoda.modes.baseline import apply_supplemental, full_filing_text, iter_citation_holders, validate_citations
+from yoda.modes.llm import NoStructuredOutput, client as _client, structured_call as _structured_call
 from yoda.modes.tools import (
-    ToolContext,
-    TOOL_SCHEMAS,
+    TOOL_ARGS,
     TOOL_DISPATCH,
+    TOOL_SCHEMAS,
+    ToolContext,
     normalize_call,
 )
 from yoda.retrieval.vector_store import ChromaStore
@@ -78,8 +83,21 @@ EMBEDDING_COST_PER_1K = 0.00002
 _LOOP_MAX_TOKENS  = 8000
 _SYNTH_MAX_TOKENS = 64000
 
-# Per-personality iteration and wall-clock caps for the panel.
-_CAPS = {"max_iterations": 6, "wall_timeout_seconds": 45, "do_critique": True}
+# Per-personality caps: most tool calls one personality may make, and the
+# seconds after which it must stop calling tools and write up its findings.
+MAX_TOOL_CALLS = 6
+WALL_TIMEOUT_SECONDS = 45
+
+# The panel keeps at least this many hypotheses after the critique filter
+# (restoring the strongest dropped ones if needed) so synthesis has enough
+# material to work with.
+_MIN_SURVIVING = 6
+
+# The ways a structured Claude call can fail that the panel can recover from:
+# an API error the SDK's own retries didn't fix, Claude stopping without an
+# answer, or an answer that breaks a model rule (e.g. confidence of 7).
+# Anything else is a bug and is allowed to crash loudly.
+_LLM_ERRORS = (anthropic.APIError, NoStructuredOutput, pydantic.ValidationError)
 
 # Hard report-level budget — used as a sanity assertion at the end of a run.
 REPORT_BUDGET_USD = 0.65
@@ -174,7 +192,7 @@ class _PersonalityHypothesisDraft(BaseModel):
     question: str
     summary: str
     evidence_quotes: list[str]
-    confidence: int
+    confidence: int = Field(ge=1, le=5)
 
 
 class _PersonalityFinalOutput(BaseModel):
@@ -188,51 +206,21 @@ class _PersonalityCritiqueOutput(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Module-level Anthropic client (one per process, reused across personalities)
-# ---------------------------------------------------------------------------
-
-# max_retries=3: the SDK itself retries rate-limit (429), server (5xx),
-# timeout, and connection errors with exponential backoff — important under
-# 6-way parallelism. Auth and bad-input errors fail immediately.
-_client = Anthropic(api_key=config.ANTHROPIC_API_KEY, max_retries=3)
-
-
-# ---------------------------------------------------------------------------
-# Structured-output helper
-# ---------------------------------------------------------------------------
-
-def _parse(model: str, max_tokens: int, output_format, **kwargs):
-    """Make one structured-output call and return (parsed, input_tokens, output_tokens).
-
-    The reply is validated against the Pydantic model in *output_format*.
-    It streams because the SDK refuses non-streaming calls with a max_tokens
-    as large as synthesis needs; get_final_message() waits for the whole
-    reply. If the model stopped early (refusal or hitting max_tokens) there
-    is no valid object, so raise with the stop reason instead of returning None.
-    """
-    with _client.messages.stream(
-        model=model, max_tokens=max_tokens, output_format=output_format, **kwargs,
-    ) as stream:
-        resp = stream.get_final_message()
-    if resp.parsed_output is None:
-        raise RuntimeError(f"{model} returned no structured output (stop_reason={resp.stop_reason})")
-    return resp.parsed_output, resp.usage.input_tokens, resp.usage.output_tokens
-
-
-# ---------------------------------------------------------------------------
 # Helpers — render tool results for the model
 # ---------------------------------------------------------------------------
 
-def _chunk_heading(chunk) -> str:
-    # Extract the first line that looks like a heading from the chunk text.
-    # A heading is short (<=80 chars), starts with an uppercase letter or
-    # digit, and does not look like a wrapped sentence tail. This avoids
-    # garbage like "inancial instruments" or "r working capital balances"
-    # that originate from mid-word splits across chunk boundaries (the
-    # chunker uses a 1500-char window with 200-char overlap).
+def _chunk_heading(chunk: Chunk) -> str:
+    """Return the first line of *chunk* that looks like a heading, else its section label.
+
+    A heading is short (<=80 chars), starts with an uppercase letter or
+    digit, and does not look like a wrapped sentence tail. This avoids
+    garbage like "inancial instruments" or "r working capital balances"
+    that come from chunks starting mid-word (neighbouring chunks overlap
+    by 200 characters, so a chunk can begin inside a word).
+    """
     for line in chunk.text.splitlines():
         stripped = line.strip()
-        # Skip empty or too-long lines.
+        # Blank lines aren't headings, and real headings are never long.
         if not stripped or len(stripped) > 80:
             continue
         # Reject lines that don't start with a capital or digit -- typical
@@ -253,17 +241,23 @@ def _chunk_heading(chunk) -> str:
     return chunk.section
 
 
+# Longest piece of each chunk shown to a personality, to keep tool results
+# (and so the cost of every later call in the thread) small.
+_CHUNK_PREVIEW_CHARS = 1200
+
+
 def _render_chunks(chunks: list[Chunk]) -> str:
-    # Format a list of Chunk objects as a string the model can read, with
-    # the section-heading citation label baked in so the agent can quote it
-    # back in evidence_quotes.
+    """Format filing chunks as text for a personality to read.
+
+    Each chunk is headed by a "[section — heading]" label the agent can
+    quote back in evidence_quotes as its citation.
+    """
     if not chunks:
         return "No chunks returned."
-    parts = []
-    for c in chunks:
-        label = f"[{c.section} — {_chunk_heading(c)}]"
-        parts.append(f"{label}\n{c.text[:1200]}")  # cap each chunk to 1200 chars
-    return "\n\n".join(parts)
+    return "\n\n".join(
+        f"[{chunk.section} — {_chunk_heading(chunk)}]\n{chunk.text[:_CHUNK_PREVIEW_CHARS]}"
+        for chunk in chunks
+    )
 
 
 def _render_news(items: list[NewsSearchResult]) -> str:
@@ -280,6 +274,43 @@ def _render_news(items: list[NewsSearchResult]) -> str:
         f"  {item.snippet[:300]}"
         for item in items
     )
+
+
+# ---------------------------------------------------------------------------
+# Phase 2 — running one tool call
+# ---------------------------------------------------------------------------
+
+def _execute_tool(ctx: ToolContext, tool_name: str, raw_args: dict) -> tuple[str, str]:
+    """Run one tool call for a personality and return (observation, outcome).
+
+    *observation* is the text sent back to the model; *outcome* is a short
+    word or count for the log ("3", "invalid args", "failed: ValueError").
+    The arguments are checked first, and bad ones are explained to the model
+    so it can correct itself. A tool that raises never crashes the
+    personality: the model is told what failed and can try another approach.
+    """
+    # Check the arguments against the tool's rules before running anything.
+    try:
+        args = TOOL_ARGS[tool_name].model_validate(raw_args).model_dump()
+    except pydantic.ValidationError as exc:
+        problem = exc.errors()[0]
+        return f"Invalid arguments for {tool_name}: {problem['msg']} ({problem['loc']}).", "invalid args"
+
+    # Deliberately broad: whatever the tool hit (a network error, a peer with
+    # no filing, a vector-store problem), this one call fails and the
+    # personality carries on. The exception type is kept for the log.
+    try:
+        raw = TOOL_DISPATCH[tool_name](ctx, **args)
+    except Exception as exc:
+        return f"Tool {tool_name} failed: {type(exc).__name__}: {exc}", f"failed: {type(exc).__name__}: {exc!r}"
+
+    # Hedge 4 — empty-result short-circuit. Replace an empty list with a
+    # message that signals "switch tools or FINISH" rather than "[]".
+    if not raw:
+        return "No new evidence returned. Switch tools or FINISH.", "0"
+    if tool_name == "search_news":
+        return _render_news(raw), str(len(raw))
+    return _render_chunks(raw), str(len(raw))
 
 
 # ---------------------------------------------------------------------------
@@ -355,12 +386,19 @@ def _run_personality(
         )
         total_in  += response.usage.input_tokens
         total_out += response.usage.output_tokens
-        tool_uses = [b for b in response.content if b.type == "tool_use"]
+        tool_uses = [block for block in response.content if block.type == "tool_use"]
 
-        # If the model didn't request a tool, it's emitting a final answer —
+        # A reply cut off at max_tokens may have lost a tool call or its
+        # conclusion; say so in the log rather than treat it as a normal finish.
+        if response.stop_reason == "max_tokens":
+            print(f"{log_prefix} [{personality}] iter {iteration}: WARNING reply cut off at max_tokens")
+
+        # If the model didn't request a tool, it's emitting a final answer.
+        # Keep that answer in the thread (the wrap-up builds on it), then
         # exit the loop and let the wrap-up step extract hypotheses.
         if not tool_uses:
             print(f"{log_prefix} [{personality}] iter {iteration}: FINISH (no tool call)")
+            messages.append({"role": "assistant", "content": response.content})
             break
 
         # Record the assistant's full reply (thinking + text + tool_use blocks)
@@ -371,54 +409,36 @@ def _run_personality(
         # message. We run them sequentially — they're independent in practice
         # but parallelizing them would require more bookkeeping for no gain.
         tool_results = []
-        for tu in tool_uses:
+        for tool_use in tool_uses:
             tool_calls_used += 1
-            tool_name = tu.name
-            args = tu.input if isinstance(tu.input, dict) else {}
+            tool_name = tool_use.name
+            raw_args = tool_use.input if isinstance(tool_use.input, dict) else {}
 
             # Hedge 3 — repetition detector. If we've already executed this
             # exact tool+query, return a synthetic observation that nudges
             # the agent to switch tools or FINISH, without a real API hit.
-            call_key = normalize_call(tool_name, args)
+            call_key = normalize_call(tool_name, raw_args)
             if call_key in seen_calls:
                 obs = (
                     "You already tried this exact call. Pick a new angle "
                     "(different query, different tool) or FINISH."
                 )
                 print(f"{log_prefix} [{personality}] iter {iteration}: "
-                      f"{tool_name}({list(args.values())[:1]}) -> REPEAT, skipped")
+                      f"{tool_name}({list(raw_args.values())[:1]}) -> REPEAT, skipped")
             elif tool_name not in TOOL_DISPATCH:
                 # Defensive — the model shouldn't be able to invent tools, but
                 # if it does, fail soft rather than crashing the thread.
                 obs = f"Unknown tool '{tool_name}'. Choose one of: {list(TOOL_DISPATCH.keys())}."
             else:
                 seen_calls.add(call_key)
-                # raw stays None if the tool raises, so the log line below
-                # reports "failed" instead of crashing the personality.
-                raw = None
-                try:
-                    raw = TOOL_DISPATCH[tool_name](ctx, **args)
-                except Exception as exc:
-                    obs = f"Tool {tool_name} failed: {exc}"
-                else:
-                    # Hedge 4 — empty-result short-circuit. Replace empty
-                    # lists with a message that signals "switch tools or
-                    # FINISH" rather than the literal empty list.
-                    if isinstance(raw, list) and len(raw) == 0:
-                        obs = "No new evidence returned. Switch tools or FINISH."
-                    elif tool_name in ("retrieve_filing", "lookup_peer"):
-                        obs = _render_chunks(raw)
-                    elif tool_name == "search_news":
-                        obs = _render_news(raw)
-                    else:
-                        obs = str(raw)
+                obs, outcome = _execute_tool(ctx, tool_name, raw_args)
+                query_label = str(raw_args.get("query", raw_args.get("peer_ticker", "")))[:60]
                 print(f"{log_prefix} [{personality}] iter {iteration}: "
-                      f"{tool_name}({args.get('query', args.get('peer_ticker', ''))[:60]!r}) "
-                      f"-> {'failed' if raw is None else len(raw) if isinstance(raw, list) else '?'}")
+                      f"{tool_name}({query_label!r}) -> {outcome}")
 
             tool_results.append({
                 "type": "tool_result",
-                "tool_use_id": tu.id,
+                "tool_use_id": tool_use.id,
                 "content": obs,
             })
 
@@ -442,68 +462,59 @@ def _run_personality(
         system=system, tools=TOOL_SCHEMAS, tool_choice={"type": "none"},
     )
 
-    # Wrap-up call is isolated in its own try/except so a failure here (e.g.,
-    # running out of max_tokens on a long message thread) doesn't lose the
-    # evidence we already gathered in the loop above. On failure we proceed
-    # with an empty drafts list, which marks the personality not-clean but
-    # keeps the orchestrator going.
-    drafts = []
-    try:
-        parsed, pi, po = _parse(
-            LOOP_MODEL, _LOOP_MAX_TOKENS, _PersonalityFinalOutput,
-            messages=messages, **wrap_kwargs,
-        )
-        total_in  += pi
-        total_out += po
-        drafts = parsed.hypotheses or []
-    except Exception as exc:
-        print(f"{log_prefix} [{personality}] wrap-up failed: "
-              f"{type(exc).__name__}: {exc!r}")
-
-    # If the wrap-up succeeded but the model emitted zero hypotheses (a soft
-    # abstention), push back once with a stronger instruction. Abstention is
-    # worse than a low-confidence hypothesis for downstream synthesis.
-    if not drafts:
-        messages.append({
-            "role": "user",
-            "content": (
-                "You returned no hypotheses. Based on the evidence you DID "
-                "gather, emit at least one hypothesis even if confidence is "
-                "low (1-2/5). Abstaining is not allowed."
-            ),
-        })
+    # The wrap-up is tried at most twice. A failure here (e.g. running out of
+    # max_tokens on a long thread) must not lose the evidence gathered above,
+    # so recoverable LLM errors are caught, recorded and retried once. The
+    # second attempt also pushes back on a soft abstention (zero hypotheses),
+    # which is worse than a low-confidence hypothesis for synthesis.
+    drafts: list[_PersonalityHypothesisDraft] = []
+    wrap_errors: list[str] = []
+    for attempt in ("wrap-up", "wrap-up retry"):
+        if attempt == "wrap-up retry":
+            messages.append({
+                "role": "user",
+                "content": (
+                    "You returned no hypotheses. Based on the evidence you DID "
+                    "gather, emit at least one hypothesis even if confidence is "
+                    "low (1-2/5). Abstaining is not allowed."
+                ),
+            })
         try:
-            parsed, pi, po = _parse(
+            parsed, in_tok, out_tok = _structured_call(
                 LOOP_MODEL, _LOOP_MAX_TOKENS, _PersonalityFinalOutput,
                 messages=messages, **wrap_kwargs,
             )
-            total_in  += pi
-            total_out += po
-            drafts = parsed.hypotheses or []
-        except Exception as exc:
-            # The SDK already retried transient errors; one structured retry
-            # on the business logic is enough. Empty drafts is acceptable at
-            # this point — the personality just abstains.
-            print(f"{log_prefix} [{personality}] wrap-up retry failed: "
-                  f"{type(exc).__name__}: {exc!r}")
-    # A personality is clean if it produced at least one hypothesis.
-    # We no longer require tool_calls_used >= 1 — a personality that
-    # generates valid hypotheses from context still contributes useful
-    # content to synthesis, and rejecting it lowers clean_count needlessly.
+        except _LLM_ERRORS as exc:
+            # A call that ended without an answer was still paid for.
+            if isinstance(exc, NoStructuredOutput):
+                total_in += exc.input_tokens
+                total_out += exc.output_tokens
+            wrap_errors.append(f"{attempt} failed: {type(exc).__name__}: {exc}")
+            print(f"{log_prefix} [{personality}] {wrap_errors[-1]!r}")
+            continue
+        total_in += in_tok
+        total_out += out_tok
+        drafts = parsed.hypotheses or []
+        if drafts:
+            break
+
+    # A personality is clean if it produced at least one hypothesis — even
+    # one written from context without a tool call still helps synthesis.
     finished_cleanly = len(drafts) > 0
 
     # Build the final Hypothesis list. IDs are placeholder ("local_h{N}") —
     # the orchestrator reassigns globally unique IDs across all personalities.
+    # Confidence is already guaranteed to be 1-5 by the draft model's rule.
     hypotheses = [
         Hypothesis(
-            id=f"{personality.lower()}_local_h{i+1}",
+            id=f"{personality.lower()}_local_h{number}",
             proposing_personality=personality,
-            question=d.question,
-            summary=d.summary,
-            evidence_quotes=d.evidence_quotes,
-            confidence=max(1, min(5, int(d.confidence))),
+            question=draft.question,
+            summary=draft.summary,
+            evidence_quotes=draft.evidence_quotes,
+            confidence=draft.confidence,
         )
-        for i, d in enumerate(drafts)
+        for number, draft in enumerate(drafts, 1)
     ]
 
     elapsed = time.perf_counter() - started
@@ -520,6 +531,7 @@ def _run_personality(
         wall_seconds=elapsed,
         cost_usd=cost,
         finished_cleanly=finished_cleanly,
+        error="; ".join(wrap_errors) if not finished_cleanly and wrap_errors else None,
     )
 
 
@@ -535,7 +547,9 @@ def _run_critique(
 ) -> tuple[list[CritiqueMessage], int, int]:
     """Have one personality critique its peers' hypotheses.
 
-    Returns (messages, input_tokens, output_tokens).
+    Returns (messages, input_tokens, output_tokens). Raises one of
+    _LLM_ERRORS if the call fails; NoStructuredOutput carries the tokens
+    the failed call used.
     """
     # Build the peer-hypothesis catalog for the personality to react to.
     peers_text = "\n\n".join(
@@ -561,19 +575,19 @@ def _run_critique(
         f"Emit your critique messages now."
     )
 
-    parsed, pi, po = _parse(
+    parsed, in_tok, out_tok = _structured_call(
         CRITIQUE_MODEL, _LOOP_MAX_TOKENS, _PersonalityCritiqueOutput,
         system=system,
         messages=[{"role": "user", "content": user}],
     )
-    msgs = parsed.messages or []
+    critiques = parsed.messages or []
     # Defensive: force from_personality to be the actual personality name so
     # the model can't accidentally attribute messages to a peer.
-    for m in msgs:
-        m.from_personality = personality
+    for critique in critiques:
+        critique.from_personality = personality
 
-    print(f"{log_prefix} [{personality}] critique: {len(msgs)} messages emitted")
-    return msgs, pi, po
+    print(f"{log_prefix} [{personality}] critique: {len(critiques)} messages emitted")
+    return critiques, in_tok, out_tok
 
 
 # ---------------------------------------------------------------------------
@@ -590,8 +604,10 @@ def _apply_filter(
       - CONTESTED (-> what_to_watch) if ≥2 CHALLENGES (and not dropped)
       - DROP if ≥3 CHALLENGES from ≥3 distinct personalities
 
-    A floor restoration step ensures at least 6 hypotheses survive: if the
-    filter leaves fewer, we restore the highest-confidence dropped ones.
+    A floor restoration step ensures at least _MIN_SURVIVING hypotheses
+    survive: if the filter leaves fewer, we restore the highest-confidence
+    dropped ones. Critiques aimed at an unknown hypothesis ID are ignored
+    and counted in the log.
 
     Returns (included, contested, dropped) lists. The synthesis prompt sees
     all three and is instructed to render contested ones inside what_to_watch.
@@ -600,40 +616,42 @@ def _apply_filter(
     supports: dict[str, int] = {h.id: 0 for h in hypotheses}
     challenges: dict[str, list[str]] = {h.id: [] for h in hypotheses}
 
-    for m in messages:
-        if m.target_hypothesis_id not in supports:
+    unknown_targets = 0
+    for critique in messages:
+        if critique.target_hypothesis_id not in supports:
+            unknown_targets += 1
             continue
-        if m.message_type in ("SUPPORTS", "EXTENDS"):
-            supports[m.target_hypothesis_id] += 1
-        elif m.message_type == "CHALLENGES":
-            challenges[m.target_hypothesis_id].append(m.from_personality)
+        if critique.message_type in ("SUPPORTS", "EXTENDS"):
+            supports[critique.target_hypothesis_id] += 1
+        elif critique.message_type == "CHALLENGES":
+            challenges[critique.target_hypothesis_id].append(critique.from_personality)
+    if unknown_targets:
+        print(f"[panel] WARNING: ignored {unknown_targets} critique message(s) aimed at unknown hypothesis IDs")
 
     included:  list[Hypothesis] = []
     contested: list[Hypothesis] = []
     dropped:   list[Hypothesis] = []
 
-    for h in hypotheses:
-        ch_count = len(challenges[h.id])
-        ch_distinct = len(set(challenges[h.id]))
+    for hypothesis in hypotheses:
+        challenge_count = len(challenges[hypothesis.id])
+        distinct_challengers = len(set(challenges[hypothesis.id]))
 
-        if ch_count >= 3 and ch_distinct >= 3:
-            dropped.append(h)
-        elif ch_count >= 2:
-            contested.append(h)
+        if challenge_count >= 3 and distinct_challengers >= 3:
+            dropped.append(hypothesis)
+        elif challenge_count >= 2:
+            contested.append(hypothesis)
         else:
             # Default INCLUDE — covers both "supported" and "neutral".
             # No-vote hypotheses still count as included since no one objected.
-            included.append(h)
+            included.append(hypothesis)
 
-    # Floor restoration. We want ≥6 total surviving (included + contested).
-    # If fewer, sort dropped by confidence DESC and promote until we reach 6.
-    surviving = included + contested
-    if len(surviving) < 6 and dropped:
-        dropped.sort(key=lambda h: h.confidence, reverse=True)
-        while len(surviving) < 6 and dropped:
-            promote = dropped.pop(0)
-            contested.append(promote)  # promoted ones land in "contested"
-            surviving.append(promote)
+    # Floor restoration: if fewer than _MIN_SURVIVING remain, promote the
+    # most confident dropped hypotheses into "contested" to make up the gap.
+    shortfall = _MIN_SURVIVING - len(included) - len(contested)
+    if shortfall > 0 and dropped:
+        dropped.sort(key=lambda hypothesis: hypothesis.confidence, reverse=True)
+        contested.extend(dropped[:shortfall])
+        del dropped[:shortfall]
 
     return included, contested, dropped
 
@@ -678,7 +696,7 @@ Rules you must follow without exception:
    in recent_news ONLY. If a fact came from a news article and you
    cannot back it with the filing text, omit the fact from key_metrics
    / revenue_segments / forward_guidance entirely, OR for risks move
-   the substance into key_risks.text prose without naming the source
+   the substance into key_risks.description prose without naming the source
    in source_citation, citing the closest matching filing location.
 
    The metric `name` field MUST be the LITERAL line-item label from
@@ -868,7 +886,7 @@ def _synthesize_report(
         f"Produce the EarningsReport. Echo final_hypotheses in hypotheses_explored."
     )
 
-    return _parse(
+    return _structured_call(
         SYNTH_MODEL, _SYNTH_MAX_TOKENS, EarningsReport,
         system=_SYNTHESIS_SYSTEM,
         messages=[{"role": "user", "content": user_prompt}],
@@ -883,41 +901,33 @@ def _synthesize_report(
 # from news evidence. The judge marks these as un-traceable to the filing.
 _URL_RE = re.compile(r"https?://|www\.", re.IGNORECASE)
 
-# Section names that always exist in a 10-Q/10-K and are safe to use as a
-# generic filing-location fallback when the original citation must be stripped.
-_FALLBACK_CITATION = "MD&A"
+# What replaces a citation that pointed outside the filing. It says plainly
+# that the location is unknown, rather than guessing a plausible-looking
+# filing section the fact may not actually come from.
+UNVERIFIED_CITATION = "UNVERIFIED — the cited source was not the filing"
 
 
 def _scrub_source_citations(report: EarningsReport, log_prefix: str) -> None:
-    # Walk every field that requires a filing-only source_citation and
-    # replace URL-bearing citations with the bare-section fallback. Print
-    # a single warning summarizing how many were scrubbed so the operator
-    # can spot a regression in the synthesis prompt obedience.
+    """Replace citations that contain a URL with an explicit "unverified" label.
+
+    These fields must point to a place in the filing; a URL means the model
+    cited a news article instead. Each replaced citation also gets a
+    data_gaps entry naming the item and the original citation, so the
+    reader can see exactly which facts lack a filing location.
+    """
     scrubbed: list[str] = []
-
-    def _is_leak(cit: str) -> bool:
-        # An empty citation is allowed; only flag URL-shaped strings.
-        return bool(cit) and _URL_RE.search(cit) is not None
-
-    for m in report.key_metrics:
-        if _is_leak(m.source_citation):
-            scrubbed.append(m.source_citation)
-            m.source_citation = _FALLBACK_CITATION
-    for s in report.revenue_segments:
-        if _is_leak(s.source_citation):
-            scrubbed.append(s.source_citation)
-            s.source_citation = _FALLBACK_CITATION
-    for r in report.key_risks:
-        if _is_leak(r.source_citation):
-            scrubbed.append(r.source_citation)
-            r.source_citation = _FALLBACK_CITATION
-    if report.forward_guidance and _is_leak(report.forward_guidance.source_citation):
-        scrubbed.append(report.forward_guidance.source_citation)
-        report.forward_guidance.source_citation = _FALLBACK_CITATION
+    for path, item in iter_citation_holders(report):
+        if _URL_RE.search(item.source_citation):
+            scrubbed.append(item.source_citation)
+            report.data_gaps.append(
+                f"{path}: cited an external source ({item.source_citation[:120]}) "
+                "instead of the filing, so its filing location is unverified."
+            )
+            item.source_citation = UNVERIFIED_CITATION
 
     if scrubbed:
-        print(f"{log_prefix} WARNING: scrubbed {len(scrubbed)} URL-bearing "
-              f"source_citation(s) -> '{_FALLBACK_CITATION}': {scrubbed[:3]}")
+        print(f"{log_prefix} WARNING: marked {len(scrubbed)} URL-bearing "
+              f"source_citation(s) unverified: {scrubbed[:3]}")
 
 
 # ---------------------------------------------------------------------------
@@ -949,11 +959,13 @@ def run_personality_panel(
 ) -> tuple[EarningsReport, list[PersonalityResult], list[CritiqueMessage]]:
     """Run the multi-agent personality panel against *ticker*.
 
-    Returns (report, personality_results, critique_messages).
+    Returns (report, personality_results, critique_messages). Raises
+    RuntimeError if no personality produced a hypothesis, and ValueError if
+    synthesis invents a news URL (the report would cite a fake article).
     """
     ticker = ticker.upper().strip()
-    caps = _CAPS
     log_prefix = "[panel]"
+    panel_size = len(_PERSONALITY_PROMPTS)
 
     wall_start = time.perf_counter()
     embed_tokens = 0
@@ -995,7 +1007,8 @@ def run_personality_panel(
         chunks = chunk_filing(filing.clean_text)
         t0 = time.perf_counter()
         if store.index_if_missing(filing.accession_number, chunks):
-            embed_tokens += sum(len(c.text) for c in chunks) // 4
+            # Rough token count (~4 characters per token) for the cost line.
+            embed_tokens += sum(len(chunk.text) for chunk in chunks) // 4
             print(f"{log_prefix} Embedded {len(chunks)} chunks in {time.perf_counter()-t0:.2f}s")
         else:
             print(f"{log_prefix} {len(chunks)} chunks already indexed; skipped embedding")
@@ -1005,7 +1018,7 @@ def run_personality_panel(
         sup_chunks = chunk_filing(supplemental.clean_text)
         t0 = time.perf_counter()
         if store.index_if_missing(supplemental.accession_number, sup_chunks):
-            embed_tokens += sum(len(c.text) for c in sup_chunks) // 4
+            embed_tokens += sum(len(chunk.text) for chunk in sup_chunks) // 4
             print(f"{log_prefix} Supplemental: embedded {len(sup_chunks)} chunks in {time.perf_counter()-t0:.2f}s")
         else:
             print(f"{log_prefix} Supplemental: {len(sup_chunks)} chunks already indexed; skipped embedding")
@@ -1020,8 +1033,8 @@ def run_personality_panel(
     # ------------------------------------------------------------------
     # Phase 2 — Personality investigations in parallel.
     # ------------------------------------------------------------------
-    print(f"{log_prefix} Phase 2: launching 6 personality investigations "
-          f"(cap {caps['max_iterations']} tools, {caps['wall_timeout_seconds']}s)...")
+    print(f"{log_prefix} Phase 2: launching {panel_size} personality investigations "
+          f"(cap {MAX_TOOL_CALLS} tools, {WALL_TIMEOUT_SECONDS}s)...")
 
     personality_results: list[PersonalityResult] = []
 
@@ -1031,100 +1044,111 @@ def run_personality_panel(
     # (A timeout here would not save time anyway: leaving the `with` block
     # waits for all threads.) The try/except below is hedge 5 (graceful
     # degradation).
-    with ThreadPoolExecutor(max_workers=6) as pool:
+    with ThreadPoolExecutor(max_workers=panel_size) as pool:
         futures = {
             pool.submit(
                 _run_personality,
                 personality, ticker, ctx,
-                caps["max_iterations"],
-                caps["wall_timeout_seconds"],
+                MAX_TOOL_CALLS,
+                WALL_TIMEOUT_SECONDS,
                 log_prefix,
             ): personality
             for personality in _PERSONALITY_PROMPTS
         }
-        for fut, personality in futures.items():
+        for future, personality in futures.items():
             try:
-                pr = fut.result()
+                result = future.result()
             except Exception as exc:
-                # Show the exception type and repr so users see the actual
-                # error, not an empty string when str(exc) is blank.
+                # Deliberately broad: whatever went wrong inside one thread,
+                # the other personalities' paid-for work is kept. The error is
+                # logged with its type, repr and the last traceback lines, and
+                # recorded on the result. Cost and time are unknown (None),
+                # not a made-up $0.00.
                 print(f"{log_prefix} [{personality}] CRASHED: "
                       f"{type(exc).__name__}: {exc!r}")
-                # Print the last few traceback lines so the source line is
-                # visible without flooding the log on every personality.
-                tb_lines = traceback.format_exc().splitlines()[-6:]
-                for ln in tb_lines:
-                    print(f"{log_prefix} [{personality}]   {ln}")
-                pr = PersonalityResult(
+                for line in traceback.format_exc().splitlines()[-6:]:
+                    print(f"{log_prefix} [{personality}]   {line}")
+                result = PersonalityResult(
                     personality=personality, hypotheses=[],
-                    tool_calls_used=0, wall_seconds=0.0,
-                    cost_usd=0.0, finished_cleanly=False,
+                    tool_calls_used=0, wall_seconds=None,
+                    cost_usd=None, finished_cleanly=False,
+                    error=f"{type(exc).__name__}: {exc}",
                 )
-            personality_results.append(pr)
+            personality_results.append(result)
 
-    # Each personality reports its own cost in pr.cost_usd, so Phase 2's
-    # total is just their sum.
-    phase2_cost = sum(pr.cost_usd for pr in personality_results)
+    # Each personality reports its own cost, so Phase 2's total is their sum.
+    # A crashed personality's cost is unknown; it is left out and counted.
+    phase2_cost = sum(result.cost_usd for result in personality_results if result.cost_usd is not None)
+    unknown_cost_count = sum(result.cost_usd is None for result in personality_results)
 
     # Assign globally unique hypothesis IDs across all personalities. The
     # ordering is deterministic — sorted by personality name — so the same
     # panel produces the same IDs run to run.
-    personality_results.sort(key=lambda pr: pr.personality)
+    personality_results.sort(key=lambda result: result.personality)
     all_hypotheses: list[Hypothesis] = []
-    global_idx = 1
-    for pr in personality_results:
-        for h in pr.hypotheses:
-            h.id = f"h{global_idx}"
-            all_hypotheses.append(h)
-            global_idx += 1
+    for result in personality_results:
+        for hypothesis in result.hypotheses:
+            hypothesis.id = f"h{len(all_hypotheses) + 1}"
+            all_hypotheses.append(hypothesis)
 
-    clean_count = sum(1 for pr in personality_results if pr.finished_cleanly)
-    print(f"{log_prefix} Phase 2 done: {clean_count}/6 personalities clean, "
+    clean_count = sum(result.finished_cleanly for result in personality_results)
+    print(f"{log_prefix} Phase 2 done: {clean_count}/{panel_size} personalities clean, "
           f"{len(all_hypotheses)} hypotheses, ${phase2_cost:.4f}")
 
     # Hard floor: abort only when there is literally nothing to synthesize.
     # Even 1 personality with 1 hypothesis is enough to produce a partial
     # report. The only unrecoverable case is zero hypotheses total.
-    total_hypotheses = sum(len(pr.hypotheses) for pr in personality_results)
-    if total_hypotheses == 0:
+    if not all_hypotheses:
         raise RuntimeError(
-            f"No personalities produced any hypotheses ({clean_count}/6 clean) — "
+            f"No personalities produced any hypotheses ({clean_count}/{panel_size} clean) — "
             "the panel cannot synthesize a report. "
             "Check the CRASHED lines above for the root cause."
         )
 
-    # Partial-failure warning: a healthy run is 6/6 clean. Anything less
-    # ships a partial report, but the analyst should know so they can
-    # judge confidence in the conclusions accordingly.
-    if clean_count < 6:
-        print(f"{log_prefix} WARNING: only {clean_count}/6 personalities clean, "
-              f"{total_hypotheses} hypotheses total — report will be partial. "
+    # Partial-failure warning: a healthy run has every personality clean.
+    # Anything less ships a partial report, but the analyst should know so
+    # they can judge confidence in the conclusions accordingly.
+    if clean_count < panel_size:
+        print(f"{log_prefix} WARNING: only {clean_count}/{panel_size} personalities clean, "
+              f"{len(all_hypotheses)} hypotheses total — report will be partial. "
               f"Check CRASHED lines for root cause.")
 
     # ------------------------------------------------------------------
-    # Phase 3 — cross-critique (Deep mode only)
+    # Phase 3 — cross-critique
     # ------------------------------------------------------------------
     critique_messages: list[CritiqueMessage] = []
-    if caps["do_critique"]:
-        print(f"{log_prefix} Phase 3: cross-critique...")
-        with ThreadPoolExecutor(max_workers=6) as pool:
-            futures = {}
-            for pr in personality_results:
-                own = pr.hypotheses
-                peers = [h for h in all_hypotheses if h.proposing_personality != pr.personality]
-                futures[pool.submit(_run_critique, pr.personality, own, peers, log_prefix)] = pr.personality
+    failed_critiques = 0
+    print(f"{log_prefix} Phase 3: cross-critique...")
+    with ThreadPoolExecutor(max_workers=panel_size) as pool:
+        futures = {}
+        for result in personality_results:
+            peers = [hypothesis for hypothesis in all_hypotheses
+                     if hypothesis.proposing_personality != result.personality]
+            futures[pool.submit(_run_critique, result.personality, result.hypotheses,
+                                peers, log_prefix)] = result.personality
 
-            # Wait for every critique (each is one short call) so its tokens
-            # are always counted; a failed call is logged and skipped.
-            for fut, personality in futures.items():
-                try:
-                    msgs, pi, po = fut.result()
-                    critique_messages.extend(msgs)
-                    critique_in += pi
-                    critique_out += po
-                except Exception as exc:
-                    print(f"{log_prefix} [{personality}] critique failed: {exc}")
-        print(f"{log_prefix} Phase 3 done: {len(critique_messages)} messages")
+        # Wait for every critique (each is one short call) so its tokens are
+        # counted — including a failed call's, when the error carries them.
+        # A failed review is logged and the gap noted for the reader.
+        for future, personality in futures.items():
+            try:
+                critiques, in_tok, out_tok = future.result()
+            except _LLM_ERRORS as exc:
+                failed_critiques += 1
+                if isinstance(exc, NoStructuredOutput):
+                    critique_in += exc.input_tokens
+                    critique_out += exc.output_tokens
+                print(f"{log_prefix} [{personality}] critique failed: {type(exc).__name__}: {exc!r}")
+                continue
+            critique_messages.extend(critiques)
+            critique_in += in_tok
+            critique_out += out_tok
+    print(f"{log_prefix} Phase 3 done: {len(critique_messages)} messages")
+    if failed_critiques:
+        run_gaps.append(
+            f"Peer review was incomplete ({failed_critiques} of {panel_size} reviews failed), "
+            "so some findings were checked by fewer reviewers than usual."
+        )
 
     # ------------------------------------------------------------------
     # Hypothesis filter (deterministic)
@@ -1151,7 +1175,7 @@ def run_personality_panel(
         print(f"{log_prefix} WARNING: supplemental {supplemental.filing_type} dropped — filings too large")
 
     t0 = time.perf_counter()
-    report, syn_in, syn_out = _synthesize_report(
+    report, synth_in, synth_out = _synthesize_report(
         ticker=ticker,
         primary_filing=filing,
         final_hypotheses=final_hypotheses,
@@ -1160,30 +1184,28 @@ def run_personality_panel(
         news_pool=ctx.news_pool,
         filing_text=filing_text,
     )
-    synth_in  += syn_in
-    synth_out += syn_out
     print(f"{log_prefix} Synthesis -> {time.perf_counter()-t0:.2f}s "
-          f"({syn_in} in / {syn_out} out tokens)")
+          f"({synth_in} in / {synth_out} out tokens)")
 
     # ------------------------------------------------------------------
     # Validation: citations + news URL preservation
     # ------------------------------------------------------------------
-    _validate_citations(report)
+    validate_citations(report)
 
-    # Strip non-filing leaks (URLs) from source_citation fields. The judge
-    # penalizes traceability when news URLs / outlet names appear in
+    # Mark non-filing leaks (URLs) in source_citation fields as unverified.
+    # The judge penalizes traceability when news URLs appear in
     # source_citation because those fields must point to filing locations.
-    # We replace bad citations with the bare section label fallback rather
-    # than hard-failing — keeps the report usable while removing the leak.
+    # Marking (with a data gap) keeps the report usable without pretending
+    # the fact came from a particular filing section.
     _scrub_source_citations(report, log_prefix)
 
-    # Assert every news URL in the final report appears in the collected pool.
-    # This catches LLM hallucination of URLs at synthesis time.
+    # Every news item in the final report must be a real article from the
+    # collected pool — a missing or unknown URL means synthesis invented it.
     pool_urls = {item.url for item in ctx.news_pool}
-    for nitem in report.recent_news:
-        if nitem.url and nitem.url not in pool_urls:
+    for news_item in report.recent_news:
+        if news_item.url not in pool_urls:
             raise ValueError(
-                f"News URL not in collected pool: {nitem.url!r}. "
+                f"News URL not in collected pool: {news_item.url!r}. "
                 "Synthesis fabricated a URL — re-run."
             )
 
@@ -1192,25 +1214,20 @@ def run_personality_panel(
     # an empty list is acceptable — so we degrade gracefully and log the
     # offenders. (recent_news URLs remain a hard fail because they are core
     # citations surfaced alongside headlines and must be real.)
-    for w in report.what_to_watch:
-        bad = [u for u in w.relevant_urls if u and u not in pool_urls]
+    for watch_item in report.what_to_watch:
+        bad = [url for url in watch_item.relevant_urls if url not in pool_urls]
         if bad:
             print(f"{log_prefix} WARNING: stripped {len(bad)} fabricated "
                   f"watchlist URL(s): {bad}")
-            w.relevant_urls = [u for u in w.relevant_urls if u in pool_urls]
+            watch_item.relevant_urls = [url for url in watch_item.relevant_urls if url in pool_urls]
 
-    # Make sure hypotheses_explored echoes the final list. If the LLM dropped
-    # the field, fill it in ourselves — the analyst needs this for transparency.
-    if not report.hypotheses_explored:
-        report.hypotheses_explored = final_hypotheses
+    # hypotheses_explored is always the panel's own final list, set in code,
+    # so the transparency section can't be dropped or altered by the model.
+    report.hypotheses_explored = final_hypotheses
 
-    # Attach supplemental filing metadata directly — not via LLM, just stamped
-    # on — or record that it was left out of synthesis for size.
-    if supplemental and sup_dropped:
-        report.data_gaps.append(supplemental_dropped_note(supplemental))
-    elif supplemental:
-        report.supplemental_filing_type = supplemental.filing_type
-        report.supplemental_filing_date = supplemental.filing_date
+    # Attach supplemental filing metadata directly — not via LLM — or record
+    # that it was left out of synthesis for size.
+    apply_supplemental(report, supplemental, sup_dropped)
 
     # Problems from the input-gathering phase, so the reader sees them too.
     report.data_gaps.extend(gap for gap in run_gaps if gap not in report.data_gaps)
@@ -1225,14 +1242,18 @@ def run_personality_panel(
     total_cost = phase2_cost + critique_cost + gen_cost + embed_cost
 
     # The "Wall time:" and "Total cost:" line formats are parsed by the eval
-    # runner's regexes — keep them unchanged.
+    # runner's regexes — keep them unchanged. The embedding figure is an
+    # estimate (see embed_tokens above) and is labelled as one.
     print(f"{log_prefix} === TOTALS ===")
     print(f"{log_prefix} Wall time:           {wall_elapsed:.2f}s")
-    print(f"{log_prefix} Embed cost:          ~${embed_cost:.5f} ({embed_tokens} tokens)")
-    print(f"{log_prefix} Phase 2 (loops):     ${phase2_cost:.5f}")
+    print(f"{log_prefix} Embed cost:          ~${embed_cost:.5f} (~{embed_tokens} tokens, estimated)")
+    print(f"{log_prefix} Phase 2 (loops):     ${phase2_cost:.5f}"
+          + (f" (+ {unknown_cost_count} crashed personality cost(s) unknown)" if unknown_cost_count else ""))
     print(f"{log_prefix} Phase 3 (critique):  ${critique_cost:.5f}")
     print(f"{log_prefix} Phase 4 (synthesis): ${gen_cost:.5f}")
     print(f"{log_prefix} Total cost:          ${total_cost:.5f}")
+    if unknown_cost_count:
+        print(f"{log_prefix} NOTE: total excludes {unknown_cost_count} crashed personality cost(s), so it is a minimum")
 
     if total_cost > REPORT_BUDGET_USD:
         # Don't crash — the report has already been generated. Just flag it
@@ -1244,7 +1265,7 @@ def run_personality_panel(
 
 
 # ---------------------------------------------------------------------------
-# Smoke test — run with: python -m yoda.modes.personality_panel [TICKER] [--fast|--deep]
+# Smoke test — run with: python -m yoda.modes.personality_panel [TICKER]
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
@@ -1256,7 +1277,7 @@ if __name__ == "__main__":
     report, results, messages = run_personality_panel(ticker)
 
     # Save report to data/eval for downstream comparison.
-    out_dir = pathlib.Path("data/eval")
+    out_dir = config.DATA_DIR / "eval"
     out_dir.mkdir(parents=True, exist_ok=True)
     out_file = out_dir / f"panel_{ticker}.json"
     out_file.write_text(report.model_dump_json(indent=2), encoding="utf-8")
