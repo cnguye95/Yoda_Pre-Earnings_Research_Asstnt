@@ -14,10 +14,31 @@ The data/chroma/ directory is created by Chroma on first use and is already
 gitignored (added in Phase 0).
 """
 
+import hashlib
+
 import chromadb
 
+from yoda import config
 from yoda.ingest.chunker import Chunk
 from yoda.retrieval.embeddings import embed_texts
+
+
+# ---------------------------------------------------------------------------
+# Chunk-list fingerprint
+# ---------------------------------------------------------------------------
+
+def _fingerprint(chunks: list[Chunk]) -> str:
+    """Return a short code that changes whenever any chunk's text changes.
+
+    It is a SHA-256 hash (a standard way to turn any amount of text into a
+    fixed-length code) of every chunk's text in order, separated by a byte
+    that never appears in text so "ab"+"c" and "a"+"bc" give different codes.
+    """
+    digest = hashlib.sha256()
+    for chunk in chunks:
+        digest.update(chunk.text.encode("utf-8"))
+        digest.update(b"\0")
+    return digest.hexdigest()
 
 
 # ---------------------------------------------------------------------------
@@ -33,9 +54,9 @@ class ChromaStore:
     """
 
     def __init__(self) -> None:
-        # Open (or create) the persistent Chroma database at data/chroma/.
-        # Chroma creates the directory if it doesn't exist.
-        self._client = chromadb.PersistentClient(path="data/chroma")
+        """Open (or create) the on-disk database and its filings collection."""
+        # Chroma creates the data/chroma/ directory if it doesn't exist.
+        self._client = chromadb.PersistentClient(path=str(config.DATA_DIR / "chroma"))
 
         # Get or create the collection. Cosine distance is the standard metric
         # for unit-vector embeddings from text-embedding-3-small.
@@ -65,29 +86,36 @@ class ChromaStore:
             The Chunk objects produced by chunk_filing().
         embeddings : list[list[float]]
             Parallel list of vectors, one per chunk. Must be the same length as *chunks*.
+
+        Raises ValueError if *chunks* and *embeddings* differ in length,
+        because pairing a vector with the wrong chunk would corrupt searches.
         """
         if not chunks:
             return
+        if len(chunks) != len(embeddings):
+            raise ValueError(f"{len(chunks)} chunks but {len(embeddings)} embeddings for {accession_number}")
 
-        # Build parallel lists that Chroma's upsert expects.
-        ids = []
-        documents = []
-        metadatas = []
+        # Every chunk records a fingerprint of the whole chunk list, so a later
+        # run can tell whether the stored chunks still match the current text.
+        fingerprint = _fingerprint(chunks)
 
-        for chunk in chunks:
-            # Unique ID per chunk within this filing.
-            chunk_id = f"{accession_number}_{chunk.chunk_index}"
-            ids.append(chunk_id)
-            documents.append(chunk.text)
-            metadatas.append({
+        # Build the parallel lists Chroma's upsert expects. Each chunk's ID
+        # ("{accession}_{index}") is unique within the whole collection.
+        ids = [f"{accession_number}_{chunk.chunk_index}" for chunk in chunks]
+        documents = [chunk.text for chunk in chunks]
+        metadatas = [
+            {
                 "accession":   accession_number,
                 "section":     chunk.section,
                 "chunk_index": chunk.chunk_index,
                 "char_start":  chunk.char_start,
                 "char_end":    chunk.char_end,
-            })
+                "fingerprint": fingerprint,
+            }
+            for chunk in chunks
+        ]
 
-        # Upsert all chunks at once. Chroma accepts parallel lists.
+        # Upsert all chunks at once.
         self._collection.upsert(
             ids=ids,
             documents=documents,
@@ -102,14 +130,21 @@ class ChromaStore:
         return len(result["ids"])
 
     def index_if_missing(self, accession_number: str, chunks: list[Chunk]) -> bool:
-        """Embed and store *chunks* unless this filing is already fully stored.
+        """Embed and store *chunks* unless exactly these chunks are already stored.
 
         Returns True if it embedded (costing OpenAI tokens), False if it skipped.
-        Comparing counts — not just "does anything exist" — means a filing
-        left half-stored by a crashed run gets re-embedded instead of skipped.
+        "Exactly these" means the same number of chunks AND the same
+        fingerprint of their text. Comparing counts catches a filing left
+        half-stored by a crashed run; comparing fingerprints catches chunks
+        whose text changed (for example after a chunker fix) while the count
+        stayed the same.
         """
-        # Skip when every chunk of this filing is already in the store.
-        if self.count(accession_number) == len(chunks):
+        # Skip when the stored chunks are this exact list of chunks.
+        stored = self._collection.get(where={"accession": accession_number}, include=["metadatas"])
+        fingerprint = _fingerprint(chunks)
+        if len(stored["ids"]) == len(chunks) and all(
+            meta.get("fingerprint") == fingerprint for meta in stored["metadatas"]
+        ):
             return False
 
         # Otherwise clear whatever is stored for this filing first. Upsert only

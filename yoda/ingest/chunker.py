@@ -14,9 +14,11 @@ Section detection strategy:
   - Any text before the first matched heading is labelled "Other".
 
 Within-section splitting:
-  - Sections are split into overlapping 1500-char windows with 200-char
-    overlap. If the cut-point lands mid-paragraph, it backs up to the most
-    recent double-newline so we don't chop sentences.
+  - Sections are split into windows of up to 1500 chars. If the cut-point
+    lands mid-paragraph, it backs up to the most recent double-newline so we
+    don't chop sentences. Each window starts 200 chars before the previous
+    one ended, so neighbouring chunks overlap and every character of the
+    section lands in at least one chunk.
 """
 
 import re
@@ -40,7 +42,7 @@ SectionLabel = Literal[
 
 
 class Chunk(BaseModel):
-    # One piece of filing text, tagged with its section and position.
+    """One piece of filing text, tagged with its section and position."""
     text: str
     section: SectionLabel
     chunk_index: int   # 0-based index across ALL chunks in the filing
@@ -53,7 +55,8 @@ class Chunk(BaseModel):
 # ---------------------------------------------------------------------------
 
 # Each tuple is (compiled_regex, section_label). A line matches if the regex
-# appears anywhere in it (case-insensitive). Order matters only for display.
+# appears anywhere in it (case-insensitive). The first pattern that matches a
+# line decides its label, so the order of this list matters.
 _SECTION_PATTERNS: list[tuple[re.Pattern, SectionLabel]] = [
     (re.compile(r"risk\s+factor", re.IGNORECASE), "Risk Factors"),
     (re.compile(r"management.{0,3}s?\s+discussion", re.IGNORECASE), "MD&A"),
@@ -123,8 +126,10 @@ def _split_text(
     *offset* is the absolute character position of *text* within the full
     clean_text, so char_start/char_end values are filing-level coordinates.
 
-    The cut point prefers the most recent double-newline within the last 300
-    chars of the window so we avoid splitting mid-paragraph.
+    Each window holds at most *max_chars* characters. The cut point prefers
+    the most recent double-newline within the last 300 chars of the window so
+    we avoid splitting mid-paragraph. Consecutive windows share *overlap*
+    characters, and together the windows cover every character of *text*.
     """
     results = []
     pos = 0
@@ -147,15 +152,22 @@ def _split_text(
         else:
             cut = raw_end
 
+        # Keep the window unless it is entirely whitespace.
         window = text[pos:cut]
-        if window.strip():  # Skip windows that are entirely whitespace.
+        if window.strip():
             results.append((offset + pos, offset + cut, window))
 
-        # Advance by (max_chars - overlap) so the next window shares 200 chars
-        # with this one, giving the embedder cross-chunk context.
-        pos += max_chars - overlap
-        if pos >= length:
+        # The window that reached the end of the text is the last one.
+        if cut >= length:
             break
+
+        # Start the next window *overlap* characters before this one ended, so
+        # neighbouring chunks share context and no text falls between two
+        # windows. Measuring from `cut` (not from the raw window size) matters:
+        # when the cut backed up to a paragraph break, stepping a fixed
+        # distance would skip the text between the break and the raw end.
+        # `pos + 1` guarantees progress even for a tiny window.
+        pos = max(cut - overlap, pos + 1)
 
     return results
 
@@ -164,16 +176,13 @@ def _split_text(
 # Public API
 # ---------------------------------------------------------------------------
 
-def chunk_filing(clean_text: str, html: str) -> list[Chunk]:
+def chunk_filing(clean_text: str) -> list[Chunk]:
     """Split a cleaned filing into section-tagged Chunk objects.
 
     Parameters
     ----------
     clean_text : str
         Plain text produced by edgar._clean_html().
-    html : str
-        Raw HTML of the filing. Accepted for API compatibility with the plan;
-        not used in this implementation — clean_text is sufficient.
 
     Returns
     -------
@@ -256,9 +265,11 @@ if __name__ == "__main__":
     print(f"Fetching filing for {ticker_arg}...")
     filing = fetch_latest_filing(ticker_arg)
 
-    print(f"Clean text length: {len(filing['clean_text'])} chars")
+    if filing is None:
+        sys.exit(f"{ticker_arg} has no recent 10-Q or 10-K to chunk.")
+    print(f"Clean text length: {len(filing.clean_text)} chars")
     print("Chunking...")
-    chunks = chunk_filing(filing["clean_text"], filing["raw_html"])
+    chunks = chunk_filing(filing.clean_text)
 
     # Print section distribution.
     counts = Counter(c.section for c in chunks)

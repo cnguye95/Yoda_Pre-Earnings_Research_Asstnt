@@ -8,6 +8,11 @@ JudgeScores is also passed to OpenAI structured outputs
 (client.chat.completions.parse(response_format=JudgeScores)) so the judge
 call returns a validated object directly without manual JSON parsing.
 Strict mode needs every field required, so none of them has a default.
+
+The classes are described with `#` comments rather than docstrings on
+purpose: Pydantic copies a class docstring into the JSON schema the judge is
+shown, so a docstring would silently change the judge's instructions. The
+1-5 score range is checked in code by judge.check_scores().
 """
 
 from pydantic import BaseModel

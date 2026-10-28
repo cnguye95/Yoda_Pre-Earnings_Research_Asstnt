@@ -16,8 +16,8 @@ Smoke test: python -m yoda.eval.judge
 
 import datetime
 import hashlib
-import pathlib
 
+import pydantic
 from openai import OpenAI
 
 from yoda import config
@@ -30,10 +30,13 @@ from yoda.schema import EarningsReport
 # ---------------------------------------------------------------------------
 
 # Cross-family judge: OpenAI's mid-tier model, the counterpart of Sonnet 5.5.
-_JUDGE_MODEL = "gpt-6.1-sol"
+JUDGE_MODEL = "gpt-6.1-sol"
 
 # Where to persist cached judge results. Created on first use.
-_CACHE_DIR = pathlib.Path("data/eval/judge_cache")
+_CACHE_DIR = config.DATA_DIR / "eval" / "judge_cache"
+
+# The five scored dimensions, as named in JudgeScores.
+_DIMENSIONS = ("extraction_completeness", "accuracy", "source_traceability", "relevance", "usefulness")
 
 # System prompt that instructs the judge how to grade.
 _SYSTEM_PROMPT = (
@@ -80,32 +83,43 @@ _client = OpenAI(api_key=config.OPENAI_API_KEY, max_retries=3)
 # Public API
 # ---------------------------------------------------------------------------
 
-def judge_report(report: EarningsReport, filing_text: str) -> JudgeScores:
-    """Score a report using OpenAI gpt-6.1-sol as the judge.
+def check_scores(scores: JudgeScores) -> None:
+    """Raise RuntimeError if any rubric score is outside 1-5.
 
-    Caches results to data/eval/judge_cache/{hash}.json keyed by the judge
-    model + the report's JSON content so re-running the same report doesn't
-    re-spend.
-
-    Args:
-        report: the EarningsReport to evaluate.
-        filing_text: the source 10-Q/10-K text the report was generated from.
-                     Truncate to ~30K chars before passing.
-
-    Returns:
-        JudgeScores with five dimension scores and an overall comment.
+    The range is checked here in code rather than in the schema sent to
+    OpenAI, so an out-of-range answer can never be averaged into the results.
     """
-    # Compute a stable cache key from the judge model + report JSON.
+    bad = {name: getattr(scores, name).score for name in _DIMENSIONS
+           if not 1 <= getattr(scores, name).score <= 5}
+    if bad:
+        raise RuntimeError(f"Judge returned scores outside 1-5: {bad}")
+
+
+def judge_report(report: EarningsReport, filing_text: str) -> JudgeScores:
+    """Score *report* against *filing_text* using OpenAI gpt-6.1-sol as the judge.
+
+    *filing_text* is the source 10-Q/10-K text the report was generated from;
+    truncate it to ~30K characters before passing. Results are cached in
+    data/eval/judge_cache/ keyed by the judge model + the report's JSON, so
+    re-running the same report doesn't re-spend; a corrupt cache file is
+    simply re-scored. Raises RuntimeError if the judge refuses, answers as a
+    different model, or returns a score outside 1-5.
+    """
     report_json = report.model_dump_json()
     cache_key = cache_key_for(report)
     cache_file = _CACHE_DIR / f"{cache_key}.json"
 
-    # Return cached result if it exists, avoiding redundant API spend.
+    # Return cached result if it exists and is readable, avoiding API spend.
     if cache_file.exists():
-        print(f"  [judge] cache hit: {cache_key}")
-        return JudgeScores.model_validate_json(cache_file.read_text(encoding="utf-8"))
+        try:
+            cached = JudgeScores.model_validate_json(cache_file.read_text(encoding="utf-8"))
+        except pydantic.ValidationError:
+            print(f"  [judge] cache file {cache_file.name} is unreadable; re-scoring")
+        else:
+            print(f"  [judge] cache hit: {cache_key}")
+            return cached
 
-    print(f"  [judge] scoring via {_JUDGE_MODEL} (key={cache_key})...")
+    print(f"  [judge] scoring via {JUDGE_MODEL} (key={cache_key})...")
 
     # Build the user message: rubric + report JSON + truncated filing.
     user_message = (
@@ -117,7 +131,7 @@ def judge_report(report: EarningsReport, filing_text: str) -> JudgeScores:
     # Structured outputs: response_format=JudgeScores makes OpenAI return JSON
     # that matches the schema exactly, parsed into a JudgeScores instance.
     response = _client.chat.completions.parse(
-        model=_JUDGE_MODEL,
+        model=JUDGE_MODEL,
         messages=[
             {"role": "system", "content": _SYSTEM_PROMPT},
             {"role": "user",   "content": user_message},
@@ -127,9 +141,9 @@ def judge_report(report: EarningsReport, filing_text: str) -> JudgeScores:
 
     # OpenAI reports dated snapshot names (e.g. "gpt-6.1-sol-2026-09-29"),
     # so check the prefix to confirm the intended judge actually answered.
-    assert response.model.startswith(_JUDGE_MODEL), (
-        f"Model mismatch: expected {_JUDGE_MODEL}, got {response.model}"
-    )
+    # (An explicit raise, not assert: Python's -O flag strips asserts.)
+    if not response.model.startswith(JUDGE_MODEL):
+        raise RuntimeError(f"Model mismatch: expected {JUDGE_MODEL}, got {response.model}")
 
     # parsed is None only when the model refused or was cut off.
     message = response.choices[0].message
@@ -139,6 +153,7 @@ def judge_report(report: EarningsReport, filing_text: str) -> JudgeScores:
             f"finish_reason={response.choices[0].finish_reason})"
         )
     scores = message.parsed
+    check_scores(scores)
 
     # Persist to cache before returning.
     _CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -153,40 +168,52 @@ def judge_report(report: EarningsReport, filing_text: str) -> JudgeScores:
 # ---------------------------------------------------------------------------
 
 def cache_key_for(report: EarningsReport) -> str:
-    # Return the cache key for a report without calling the judge API.
-    # The judge model is part of the key, so a different judge never gets
-    # a cache hit on another judge's scores.
-    payload = f"{_JUDGE_MODEL}\n{report.model_dump_json()}"
+    """Return the judge-cache key for *report* without calling the judge API.
+
+    The judge model is part of the key, so a different judge never gets a
+    cache hit on another judge's scores.
+    """
+    payload = f"{JUDGE_MODEL}\n{report.model_dump_json()}"
     return hashlib.sha256(payload.encode()).hexdigest()[:16]
 
 
 def write_run_manifest(cache_keys: set[str]) -> None:
-    # Write a manifest file listing every cache key used in this eval run.
-    # Manifest files are named by timestamp so they sort chronologically.
+    """Write a manifest listing every cache key one eval run used.
+
+    Manifests are named by timestamp so they sort chronologically, which is
+    how prune_judge_cache() finds the most recent runs.
+    """
     _CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    manifest = _CACHE_DIR / f"run_{ts}.manifest"
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    manifest = _CACHE_DIR / f"run_{timestamp}.manifest"
     manifest.write_text("\n".join(sorted(cache_keys)), encoding="utf-8")
     print(f"  [judge] wrote manifest {manifest.name} ({len(cache_keys)} entries)")
 
 
 def prune_judge_cache(keep_runs: int = 2) -> None:
-    # Delete .json cache files and old manifests not covered by the most recent runs.
+    """Delete cached scores not used by the *keep_runs* most recent runs.
+
+    Old manifests are deleted too. Raises ValueError if *keep_runs* is below
+    1 (keeping zero runs would delete the scores of the run just finished).
+    """
+    if keep_runs < 1:
+        raise ValueError(f"keep_runs must be at least 1, got {keep_runs}")
     manifests = sorted(_CACHE_DIR.glob("run_*.manifest"))  # oldest first
-    to_keep   = manifests[-keep_runs:]
-    to_delete = manifests[:-keep_runs]
+    to_keep, to_delete = manifests[-keep_runs:], manifests[:-keep_runs]
 
     # Collect all keys still referenced by the manifests we're keeping.
     keep_keys: set[str] = set()
-    for m in to_keep:
-        keep_keys.update(m.read_text(encoding="utf-8").split())
+    for manifest in to_keep:
+        keep_keys.update(manifest.read_text(encoding="utf-8").split())
 
-    # Delete stale .json files. unlink() returns None (falsy) so "not f.unlink()"
-    # is True after deletion, letting us count without a separate counter variable.
-    deleted = sum(1 for f in _CACHE_DIR.glob("*.json")
-                  if f.stem not in keep_keys and not f.unlink())
-    for m in to_delete:
-        m.unlink()
+    # Delete every cached score no kept run refers to, then the old manifests.
+    deleted = 0
+    for cache_file in _CACHE_DIR.glob("*.json"):
+        if cache_file.stem not in keep_keys:
+            cache_file.unlink()
+            deleted += 1
+    for manifest in to_delete:
+        manifest.unlink()
 
     print(f"  [judge] pruned {deleted} stale cache files, kept {len(to_keep)} runs")
 
@@ -196,26 +223,23 @@ def prune_judge_cache(keep_runs: int = 2) -> None:
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    import pathlib
     from yoda.ingest.edgar import fetch_latest_filing
 
     # Load the NFLX Yoda report JSON saved by the last eval run.
-    report_path = pathlib.Path("data/eval/yoda_NFLX.json")
+    report_path = config.DATA_DIR / "eval" / "yoda_NFLX.json"
     report = EarningsReport.model_validate_json(report_path.read_text(encoding="utf-8"))
 
     # Fetch the cached NFLX filing for source text (no network hit if cached).
     print("Loading NFLX filing text...")
     filing = fetch_latest_filing("NFLX")
-    filing_text = filing["clean_text"][:30000]
+    filing_text = filing.clean_text[:30000] if filing else ""
 
     # Call the judge (first run hits API; second run should be instant cache hit).
     print("Calling judge...")
     scores = judge_report(report, filing_text)
 
     # Print all five dimension scores plus the overall comment.
-    print(f"\nExtraction completeness: {scores.extraction_completeness.score}/5 — {scores.extraction_completeness.justification}")
-    print(f"Accuracy:                {scores.accuracy.score}/5 — {scores.accuracy.justification}")
-    print(f"Source traceability:     {scores.source_traceability.score}/5 — {scores.source_traceability.justification}")
-    print(f"Relevance:               {scores.relevance.score}/5 — {scores.relevance.justification}")
-    print(f"Usefulness:              {scores.usefulness.score}/5 — {scores.usefulness.justification}")
+    for name in _DIMENSIONS:
+        dimension = getattr(scores, name)
+        print(f"{name:24s} {dimension.score}/5 — {dimension.justification}")
     print(f"\nOverall: {scores.overall_comment}")

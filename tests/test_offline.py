@@ -21,10 +21,10 @@ from yoda.eval.runner import _RE_COST, _RE_WALL_TIME, SCORE_COLS, _paired_compar
 from yoda.ingest.chunker import Chunk
 from yoda.modes import personality_panel as panel
 from yoda.modes import baseline as baseline_mod
-from yoda.modes.baseline import BASELINE_MODEL, _build_prompt, _strip_invented_links, _validate_citations
+from yoda.modes.baseline import BASELINE_MODEL, _build_prompt, _strip_invented_links, validate_citations
 from yoda.modes.tools import TOOL_DISPATCH, TOOL_SCHEMAS
 from yoda.retrieval import vector_store
-from yoda.schema import EarningsReport, ForwardGuidance, Metric, NewsItem, Risk, Segment, WatchItem
+from yoda.schema import EarningsReport, Filing, ForwardGuidance, Metric, NewsItem, Risk, Segment, WatchItem
 
 
 # ---------------------------------------------------------------------------
@@ -53,7 +53,7 @@ def _chunk(text: str, section: str = "MD&A", index: int = 0) -> Chunk:
 # ---------------------------------------------------------------------------
 
 def test_validate_citations_passes_valid_report():
-    _validate_citations(_report())  # no exception
+    validate_citations(_report())  # no exception
 
 
 @pytest.mark.parametrize("field", ["key_metrics", "revenue_segments", "key_risks", "forward_guidance"])
@@ -67,7 +67,7 @@ def test_validate_citations_rejects_blank_citation(field):
     else:
         getattr(report, field)[0].source_citation = "   "
     with pytest.raises(ValueError, match=field):
-        _validate_citations(report)
+        validate_citations(report)
 
 
 # ---------------------------------------------------------------------------
@@ -96,7 +96,7 @@ def test_every_model_in_use_has_a_price():
 def test_cache_key_changes_with_judge_model(monkeypatch):
     report = _report()
     key_a = judge.cache_key_for(report)
-    monkeypatch.setattr(judge, "_JUDGE_MODEL", "some-other-judge")
+    monkeypatch.setattr(judge, "JUDGE_MODEL", "some-other-judge")
     assert judge.cache_key_for(report) != key_a
 
 
@@ -139,6 +139,7 @@ class _FakeResponse:
     def __init__(self, content):
         self.content = content
         self.usage = _Block(input_tokens=10, output_tokens=10)
+        self.stop_reason = "tool_use" if any(b.type == "tool_use" for b in content) else "end_turn"
 
 
 def test_failing_tool_is_reported_not_crashed(monkeypatch):
@@ -151,7 +152,7 @@ def test_failing_tool_is_reported_not_crashed(monkeypatch):
     def broken_tool(ctx, **args):
         raise TypeError("no filing")
     monkeypatch.setitem(panel.TOOL_DISPATCH, "lookup_peer", broken_tool)
-    monkeypatch.setattr(panel, "_parse", lambda *a, **kw: (panel._PersonalityFinalOutput(hypotheses=[]), 0, 0))
+    monkeypatch.setattr(panel, "_structured_call", lambda *a, **kw: (panel._PersonalityFinalOutput(hypotheses=[]), 0, 0))
 
     result = panel._run_personality("Optimist", "TEST", ctx=None, max_iterations=6,
                                     wall_timeout_seconds=60, log_prefix="[t]")
@@ -166,7 +167,7 @@ def test_time_cap_stops_tool_calls(monkeypatch):
         choices.append(kw["tool_choice"]["type"])
         return _FakeResponse([_Block(type="text", text="done")])
     monkeypatch.setattr(panel._client.messages, "create", fake_create)
-    monkeypatch.setattr(panel, "_parse", lambda *a, **kw: (panel._PersonalityFinalOutput(hypotheses=[]), 0, 0))
+    monkeypatch.setattr(panel, "_structured_call", lambda *a, **kw: (panel._PersonalityFinalOutput(hypotheses=[]), 0, 0))
 
     result = panel._run_personality("Optimist", "TEST", ctx=None, max_iterations=6,
                                     wall_timeout_seconds=0, log_prefix="[t]")
@@ -191,12 +192,18 @@ def test_chunk_heading_falls_back_to_section():
 # Baseline prompt
 # ---------------------------------------------------------------------------
 
-_PRIMARY = {"filing_type": "10-Q", "filing_date": "2026-05-01", "clean_text": "QUARTERLY TEXT"}
+def _filing(filing_type: str, filing_date: str, clean_text: str, **extra) -> Filing:
+    # A minimal Filing with just the fields the prompt builders read.
+    return Filing(ticker="TEST", filing_type=filing_type, filing_date=filing_date,
+                  accession_number=f"acc-{filing_type}", clean_text=clean_text, **extra)
+
+
+_PRIMARY = _filing("10-Q", "2026-05-01", "QUARTERLY TEXT")
 
 
 def test_baseline_prompt_includes_supplemental_filing():
-    filing = {**_PRIMARY, "supplemental": {
-        "filing_type": "10-K", "filing_date": "2026-02-01", "clean_text": "ANNUAL TEXT"}}
+    filing = _filing("10-Q", "2026-05-01", "QUARTERLY TEXT",
+                     supplemental=_filing("10-K", "2026-02-01", "ANNUAL TEXT"))
     prompt, dropped = _build_prompt("TEST", filing, "2026-10-26T00:00:00+00:00")
     assert "QUARTERLY TEXT" in prompt and "ANNUAL TEXT" in prompt and not dropped
     # Each filing gets a header naming its type and date, primary first.
@@ -208,8 +215,8 @@ def test_full_filing_text_drops_supplemental_when_too_large(monkeypatch):
     # When primary + supplemental exceed the size cap, the primary is kept
     # whole and the supplemental is left out (and reported as dropped).
     monkeypatch.setattr(baseline_mod, "MAX_FILING_CHARS", 20)
-    supplemental = {"filing_type": "10-K", "filing_date": "2026-02-01", "clean_text": "ANNUAL TEXT"}
-    text, dropped = baseline_mod.full_filing_text(dict(_PRIMARY), supplemental)
+    supplemental = _filing("10-K", "2026-02-01", "ANNUAL TEXT")
+    text, dropped = baseline_mod.full_filing_text(_PRIMARY, supplemental)
     assert dropped and "QUARTERLY TEXT" in text and "ANNUAL TEXT" not in text
     assert "10-K filed 2026-02-01" in baseline_mod.supplemental_dropped_note(supplemental)
 
@@ -224,7 +231,7 @@ def test_baseline_strips_invented_news_and_urls():
 
 
 def test_baseline_prompt_without_supplemental():
-    prompt, dropped = _build_prompt("TEST", dict(_PRIMARY), "2026-10-26T00:00:00+00:00")
+    prompt, dropped = _build_prompt("TEST", _PRIMARY, "2026-10-26T00:00:00+00:00")
     assert "QUARTERLY TEXT" in prompt and "10-K" not in prompt and not dropped
 
 
@@ -233,21 +240,24 @@ def test_baseline_prompt_without_supplemental():
 # ---------------------------------------------------------------------------
 
 class _FakeCollection:
-    # Stands in for a Chroma collection: just remembers which IDs are stored.
+    # Stands in for a Chroma collection: remembers each stored chunk's metadata.
     def __init__(self):
-        self.ids: dict[str, str] = {}   # chunk id -> accession
+        self.metas: dict[str, dict] = {}   # chunk id -> metadata
 
     def get(self, where, include):
-        return {"ids": [i for i, acc in self.ids.items() if acc == where["accession"]]}
+        matches = {i: m for i, m in self.metas.items() if m["accession"] == where["accession"]}
+        result = {"ids": list(matches)}
+        if "metadatas" in include:
+            result["metadatas"] = list(matches.values())
+        return result
 
     def upsert(self, ids, documents, embeddings, metadatas):
         # Real Chroma rejects parallel lists of different lengths.
         assert len(ids) == len(documents) == len(embeddings) == len(metadatas)
-        for chunk_id, meta in zip(ids, metadatas):
-            self.ids[chunk_id] = meta["accession"]
+        self.metas.update(zip(ids, metadatas))
 
     def delete(self, where):
-        self.ids = {i: acc for i, acc in self.ids.items() if acc != where["accession"]}
+        self.metas = {i: m for i, m in self.metas.items() if m["accession"] != where["accession"]}
 
 
 @pytest.fixture
@@ -288,6 +298,21 @@ def test_shrunk_filing_is_re_embedded_once_then_skipped(fake_store):
     assert store.count("ACC1") == 2
     assert store.index_if_missing("ACC1", shrunk) is False
     assert calls == [3, 2]
+
+
+def test_changed_chunk_text_is_re_embedded(fake_store):
+    # Same number of chunks but different text (e.g. after a chunker fix):
+    # the stored vectors describe old text, so they must be replaced.
+    store, calls = fake_store
+    store.index_if_missing("ACC1", [_chunk("old a", index=0), _chunk("old b", index=1)])
+    assert store.index_if_missing("ACC1", [_chunk("new a", index=0), _chunk("new b", index=1)]) is True
+    assert calls == [2, 2]
+
+
+def test_upsert_rejects_mismatched_embeddings(fake_store):
+    store, _ = fake_store
+    with pytest.raises(ValueError, match="2 chunks but 1 embeddings"):
+        store.upsert("ACC1", [_chunk("a", index=0), _chunk("b", index=1)], [[0.0]])
 
 
 # ---------------------------------------------------------------------------
@@ -336,10 +361,9 @@ def test_paired_comparison_ignores_unpaired_tickers():
 # ---------------------------------------------------------------------------
 
 def test_judge_failure_skips_row_not_run(monkeypatch, tmp_path):
-    # Run in a temp folder so the real data/eval outputs are untouched.
-    monkeypatch.chdir(tmp_path)
-    monkeypatch.setattr(runner, "fetch_latest_filing", lambda t: {"clean_text": "text"})
-    monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: (_report(), 1.0, 0.1, ""))
+    # Write to a temp folder so the real data/eval outputs are untouched.
+    monkeypatch.setattr(runner, "fetch_latest_filing", lambda t: _filing("10-Q", "2026-05-01", "text"))
+    monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: runner.ModeRun(_report(), 1.0, "logged", 0.1, ""))
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
 
@@ -354,7 +378,7 @@ def test_judge_failure_skips_row_not_run(monkeypatch, tmp_path):
     fake_judge.calls = 0
     monkeypatch.setattr(runner, "judge_report", fake_judge)
 
-    df = runner.run_eval(["GOOD", "BAD"])
+    df = runner.run_eval(["GOOD", "BAD"], out_dir=tmp_path / "data/eval")
     assert len(df) == 3                                  # only BAD/baseline missing
     assert (tmp_path / "data/eval/summary.md").exists()  # the run still finished
 
@@ -403,16 +427,15 @@ def test_runner_regexes_read_panel_and_baseline_logs():
 
 def test_duplicate_tickers_run_once(monkeypatch, tmp_path):
     # "NFLX nflx" must not produce duplicate rows (which would break the pivot).
-    monkeypatch.chdir(tmp_path)
-    monkeypatch.setattr(runner, "fetch_latest_filing", lambda t: {"clean_text": "text"})
-    monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: (_report(), 1.0, 0.1, ""))
+    monkeypatch.setattr(runner, "fetch_latest_filing", lambda t: _filing("10-Q", "2026-05-01", "text"))
+    monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: runner.ModeRun(_report(), 1.0, "logged", 0.1, ""))
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
     score = DimensionScore(score=3, justification="ok")
     monkeypatch.setattr(runner, "judge_report",
                         lambda r, f: JudgeScores(**{c: score for c in SCORE_COLS}, overall_comment=""))
 
-    df = runner.run_eval(["NFLX", "nflx"])
+    df = runner.run_eval(["NFLX", "nflx"], out_dir=tmp_path / "data/eval")
     assert len(df) == 2   # one ticker x two modes
 
 

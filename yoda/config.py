@@ -6,12 +6,22 @@ raises RuntimeError so problems surface immediately instead of later.
 """
 
 import os
+import pathlib
+
 from dotenv import load_dotenv
+
+# The repo's top folder, worked out from this file's own location
+# (yoda/config.py → two levels up). Every data path is built from it, so
+# Yoda reads and writes the same data/ folder no matter which folder the
+# program is launched from.
+REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
+DATA_DIR = REPO_ROOT / "data"
 
 # Read the .env file at the repo root and add its key=value pairs to the
 # process environment. python-dotenv silently does nothing if .env is absent;
-# the validation step below catches that case.
-load_dotenv()
+# the validation step below catches that case. Variables that are already set
+# (for example the fake keys the test suite sets) are not overwritten.
+load_dotenv(REPO_ROOT / ".env")
 
 # The list of keys Yoda needs. If any of these is missing or blank in the
 # environment, the import will fail with a clear message naming the offender.
@@ -54,6 +64,10 @@ MODEL_COST_PER_1K = {
 
 
 def model_cost(model: str, input_tokens: int, output_tokens: int) -> float:
-    # Compute one Claude call's cost in USD from its token counts.
+    """Return one Claude call's cost in USD from its token counts.
+
+    Raises KeyError for a model with no price in MODEL_COST_PER_1K, so a new
+    model can't be priced at $0 by accident.
+    """
     in_price, out_price = MODEL_COST_PER_1K[model]
     return (input_tokens / 1000) * in_price + (output_tokens / 1000) * out_price
