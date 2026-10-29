@@ -1,6 +1,7 @@
-"""Offline tests for how recent Yoda's inputs must be: which SEC filings are
-read (the 13-month annual and 18-week quarterly windows, foreign forms, and
-reading both filings when both are in range).
+"""Offline tests for how recent Yoda's inputs must be, and how they fit:
+which SEC filings are read (the 13-month annual and 18-week quarterly
+windows, foreign forms, reading both filings when both are in range), the
+single latest 8-K / 6-K, and the size rule that trims an older 10-K.
 
 Run with: python -m pytest -q
 
@@ -12,7 +13,10 @@ from datetime import date
 
 import pytest
 
+from yoda.eval import evidence
 from yoda.ingest import chunker, edgar
+from yoda.modes import baseline
+from yoda.schema import EarningsReport, Filing, FilingSet, ForwardGuidance
 
 # The "today" every test in this file runs on.
 _TODAY = date(2026, 10, 29)
@@ -147,6 +151,101 @@ def test_the_current_report_must_follow_the_newest_filing():
     # An 8-K filed on or before the 10-Q is already covered by it.
     assert _current(_meta("8-K", "2026-10-01"), after="2026-10-01") == []
     assert _current(_meta("8-K", "2026-10-02"), after="2026-10-01") == ["8-K 2026-10-02"]
+
+
+# ---------------------------------------------------------------------------
+# Size rule: both filings kept; an older 10-K too long to fit is trimmed
+# ---------------------------------------------------------------------------
+
+def _annual_report() -> Filing:
+    # A 10-K whose sections have very different sizes: short Business and
+    # Risk Factors, longer MD&A, and the longest part, Item 8.
+    text = ("Annual Report on Form 10-K\n"
+            + "Item 1. Business\n" + "We sell widgets worldwide. " * 20 + "\n"
+            + "Item 1A. Risk Factors\n" + "Demand for widgets may fall. " * 20 + "\n"
+            + "Item 7. Management's Discussion and Analysis\n" + "Revenue rose on volume. " * 40 + "\n"
+            + "Item 8. Consolidated Statements of Operations\n" + "Net sales 1,000 900 800. " * 200 + "\n")
+    return Filing(ticker="TEST", filing_type="10-K", filing_date="2026-02-01", accession_number="k-1",
+                  clean_text=text)
+
+
+_QUARTERLY = Filing(ticker="TEST", filing_type="10-Q", filing_date="2026-08-01", accession_number="q-1",
+                    clean_text="Item 2. Management's Discussion and Analysis\nQuarterly revenue rose.")
+
+
+def test_both_filings_go_in_whole_when_they_fit():
+    filing_text = baseline.full_filing_text([_QUARTERLY, _annual_report()])
+    assert filing_text.gaps == [] and [f.clean_text for f in filing_text.used] == [
+        _QUARTERLY.clean_text, _annual_report().clean_text]
+
+
+def test_a_10k_too_long_to_fit_is_trimmed_not_dropped(monkeypatch):
+    # Room for the 10-Q and the 10-K without its Item 8, but not the whole 10-K.
+    annual = _annual_report()
+    item_8 = len("Item 8. Consolidated Statements of Operations\n" + "Net sales 1,000 900 800. " * 200 + "\n")
+    monkeypatch.setattr(baseline, "MAX_FILING_CHARS", len(_QUARTERLY.clean_text) + len(annual.clean_text) - item_8 + 200)
+
+    filing_text = baseline.full_filing_text([_QUARTERLY, annual])
+
+    # Both filings are kept, the 10-Q whole.
+    assert [f.filing_type for f in filing_text.used] == ["10-Q", "10-K"]
+    assert filing_text.used[0].clean_text == _QUARTERLY.clean_text
+    trimmed = filing_text.used[1].clean_text
+    # The 10-K loses only its financial statements; Business, Risk Factors
+    # and MD&A stay, headings included, so they can still be cited
+    # ("10-K Item 1A. Risk Factors — ...").
+    assert "Net sales 1,000" not in trimmed and "[Left out for length: Financial Statements" in trimmed
+    for kept in ("Item 1. Business", "We sell widgets", "Item 1A. Risk Factors", "Demand for widgets",
+                 "Item 7. Management's Discussion", "Revenue rose on volume"):
+        assert kept in trimmed
+    assert "=== 10-K filed 2026-02-01 ===" in filing_text.text and "Item 1A. Risk Factors" in filing_text.text
+    # The report's data_gaps say what was trimmed.
+    [gap] = filing_text.gaps
+    assert "10-K filed 2026-02-01 was trimmed" in gap and "Financial Statements" in gap
+    assert "MD&A" not in gap and "Business and Risk Factors sections were kept" in gap
+
+
+def test_trimming_goes_on_to_mdna_but_never_business_or_risk_factors(monkeypatch):
+    # Even less room: Item 8 and then the MD&A go; Business and Risk Factors stay.
+    annual = _annual_report()
+    monkeypatch.setattr(baseline, "MAX_FILING_CHARS", len(_QUARTERLY.clean_text) + 1500)
+
+    filing_text = baseline.full_filing_text([_QUARTERLY, annual])
+
+    trimmed = filing_text.used[1].clean_text
+    assert "Revenue rose on volume" not in trimmed and "Net sales" not in trimmed
+    assert "We sell widgets" in trimmed and "Demand for widgets" in trimmed
+    assert "Financial Statements, MD&A" in filing_text.gaps[0]
+
+
+def test_a_10k_that_cannot_fit_even_trimmed_is_left_out_with_a_gap(monkeypatch):
+    monkeypatch.setattr(baseline, "MAX_FILING_CHARS", len(_QUARTERLY.clean_text) + 50)
+    filing_text = baseline.full_filing_text([_QUARTERLY, _annual_report()])
+    assert [f.filing_type for f in filing_text.used] == ["10-Q"]
+    assert "was not analyzed" in filing_text.gaps[0]
+
+
+def test_the_judge_sees_the_trimmed_10k_the_writer_saw(monkeypatch):
+    # The baseline's evidence bundle holds the same (trimmed) text it read.
+    annual = _annual_report()
+    monkeypatch.setattr(baseline, "MAX_FILING_CHARS", len(_QUARTERLY.clean_text) + 1500)
+    bundle = evidence.filing_bundle("TEST", FilingSet(ticker="TEST", cik=1, filings=[_QUARTERLY, annual]))
+    assert [doc.label for doc in bundle.documents] == ["10-Q filed 2026-08-01", "10-K filed 2026-02-01"]
+    assert "Net sales" not in bundle.documents[1].text and "Demand for widgets" in bundle.documents[1].text
+
+
+def test_trim_notes_go_into_the_report(monkeypatch):
+    annual = _annual_report()
+    monkeypatch.setattr(baseline, "MAX_FILING_CHARS", len(_QUARTERLY.clean_text) + 1500)
+    filing_text = baseline.full_filing_text([_QUARTERLY, annual])
+    report = EarningsReport(
+        ticker="TEST", company_name="Test Co", report_generated_at="2026-10-29T00:00:00+00:00",
+        key_metrics=[], revenue_segments=[], forward_guidance=ForwardGuidance(text="None.", source_citation="10-Q"),
+        key_risks=[], recent_news=[], bull_case=[], bear_case=[], what_to_watch=[], data_gaps=[],
+    )
+    baseline.apply_filings(report, FilingSet(ticker="TEST", cik=1, filings=[_QUARTERLY, annual]), filing_text)
+    assert [f.filing_type for f in report.filings] == ["10-Q", "10-K"]
+    assert any("was trimmed" in gap for gap in report.data_gaps)
 
 
 def test_nothing_in_range_returns_none(monkeypatch, tmp_path):

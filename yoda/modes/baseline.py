@@ -19,6 +19,7 @@ from datetime import datetime, timezone
 from typing import NamedTuple
 
 from yoda import config
+from yoda.ingest.chunker import SectionLabel, section_spans
 from yoda.modes.llm import structured_call
 from yoda.schema import EarningsReport, Filing, FilingSet, ForwardGuidance, Metric, Risk, ReportFiling, Segment
 
@@ -106,45 +107,97 @@ def _strip_invented_links(report: EarningsReport) -> int:
 # per token (dense numbers and tables), so 2.0M characters is ~870K tokens —
 # leaving room under Sonnet 5.5's 1M-token context for instructions and the
 # report. Only a 10-Q + 10-K pair from a very large filer (e.g. JPM, ~2.3M
-# characters together) goes over.
+# characters together) goes over; the older 10-K is then trimmed.
 MAX_FILING_CHARS = 2_000_000
+
+
+# When an annual report has to be shortened to fit, these sections are left
+# out, one whole section at a time, in this order, until it fits. They are
+# the parts a newer 10-Q updates: the annual financial statements (Item 8),
+# the market-risk disclosures (Item 7A), the annual MD&A (Item 7), and the
+# rest of the filing ("Other": cover page, properties, legal proceedings,
+# controls, governance, exhibit index). The Business description (Item 1)
+# and Risk Factors (Item 1A) are never left out.
+_TRIM_ORDER: tuple[SectionLabel, ...] = ("Financial Statements", "Quantitative Disclosures", "MD&A", "Other")
 
 
 class FilingText(NamedTuple):
     """What full_filing_text() returns.
 
-    *text* is the filing text for the prompt, *used* the filings it holds
-    (newest first), and *gaps* the data_gaps entries saying what was left
-    out for size.
+    *text* is the filing text for the prompt. *used* holds the filings it
+    contains (newest first), each with exactly the text that went in — a
+    trimmed annual report carries its trimmed text. *gaps* are the
+    data_gaps entries saying what was trimmed or left out for size.
     """
     text: str
     used: list[Filing]
     gaps: list[str]
 
 
+def _trim_to_fit(text: str, room: int) -> tuple[str, list[str]] | None:
+    """Shorten an annual report's *text* to at most *room* characters by leaving out whole sections.
+
+    Sections go in _TRIM_ORDER, all spans of one section at a time, until
+    the text fits. Each left-out section is replaced by a one-line note, so
+    the model sees that it existed. Returns (trimmed text, names of the
+    sections left out), or None if it can't fit even with all of them out.
+    """
+    spans = section_spans(text)
+    removed: set[str] = set()
+    for label in _TRIM_ORDER:
+        if not any(span_label == label for _, _, span_label in spans):
+            continue
+        removed.add(label)
+        # Rebuild the text from the spans still kept, with a note where
+        # each run of left-out text was.
+        parts = []
+        for start, end, span_label in spans:
+            if span_label not in removed:
+                parts.append(text[start:end])
+            elif not parts or not parts[-1].startswith("[Left out for length:"):
+                parts.append(f"[Left out for length: {span_label} — the newer 10-Q updates this.]\n")
+        trimmed = "".join(parts)
+        if len(trimmed) <= room:
+            return trimmed, [label for label in _TRIM_ORDER if label in removed]
+    return None
+
+
 def full_filing_text(filings: list[Filing], reserved_chars: int = 0) -> FilingText:
-    """Return the full text of *filings* (newest first) for a prompt, within MAX_FILING_CHARS.
+    """Return the text of *filings* (newest first) for a prompt, within MAX_FILING_CHARS.
 
     Each filing sits under a header naming its type and date, so the model
-    can cite the right document. The newest filing is always included; each
-    older one is added only while the total stays under the limit.
-    *reserved_chars* is room the caller needs for other long text in the
-    same prompt (the panel's 8-Ks, call and read articles), counted against
-    the same limit. A filing left out gets a data_gaps entry.
+    can cite the right document. The newest filing always goes in whole. An
+    older filing goes in whole when it fits; an older annual report that
+    doesn't fit is trimmed (see _trim_to_fit) — its Business and Risk
+    Factors sections always stay — and anything that still can't fit is
+    left out. *reserved_chars* is room the caller needs for other long text
+    in the same prompt (the panel's 8-Ks, call and read articles), counted
+    against the same limit. Every trim or omission gets a data_gaps entry.
     """
     parts: list[str] = []
     used: list[Filing] = []
     gaps: list[str] = []
-    total = reserved_chars
+    room = MAX_FILING_CHARS - reserved_chars
     for filing in filings:
-        # The newest filing always goes in; an older one only if it still fits.
-        if used and total + len(filing.clean_text) > MAX_FILING_CHARS:
-            gaps.append(f"The {filing.filing_type} filed {filing.filing_date} was not analyzed: together "
-                        "with the newer filing it exceeds the model's context limit.")
-            continue
-        parts += [f"=== {filing.filing_type} filed {filing.filing_date} ===", filing.clean_text, ""]
-        used.append(filing)
-        total += len(filing.clean_text)
+        name = f"{filing.filing_type} filed {filing.filing_date}"
+        kept = filing
+        if used and len(filing.clean_text) > room:
+            # Too long to go in whole: an annual report is trimmed; anything
+            # else, or an annual report that can't fit even trimmed, is left out.
+            trim = _trim_to_fit(filing.clean_text, room) if filing.filing_type != "10-Q" else None
+            if trim is None:
+                gaps.append(f"The {name} was not analyzed: together with the newer filing it exceeds "
+                            "the model's context limit.")
+                continue
+            trimmed_text, removed = trim
+            kept = filing.model_copy(update={"clean_text": trimmed_text})
+            gaps.append(f"The {name} was trimmed to fit the model's context limit: its "
+                        f"{', '.join(removed)} section(s) were left out ({len(filing.clean_text) - len(trimmed_text):,} "
+                        f"characters), as the newer {used[0].filing_type} updates them. Its Business and "
+                        "Risk Factors sections were kept in full.")
+        parts += [f"=== {name} ===", kept.clean_text, ""]
+        used.append(kept)
+        room -= len(kept.clean_text)
     return FilingText("\n".join(parts).rstrip("\n"), used, gaps)
 
 

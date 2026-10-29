@@ -204,19 +204,13 @@ def _split_text(
 # Public API
 # ---------------------------------------------------------------------------
 
-def chunk_filing(clean_text: str) -> list[Chunk]:
-    """Split a cleaned filing into section-tagged Chunk objects.
+def section_spans(clean_text: str) -> list[tuple[int, int, SectionLabel]]:
+    """Return the filing's sections as (char_start, char_end, label), in order, covering the whole text.
 
-    Parameters
-    ----------
-    clean_text : str
-        Plain text produced by edgar._clean_html().
-
-    Returns
-    -------
-    list[Chunk]
-        All chunks in document order. chunk_index is 0-based and contiguous
-        across the entire filing (not reset per section).
+    Each detected section runs from its heading to the next one (or the end
+    of the text); anything before the first heading is "Other", and a filing
+    with no recognised heading is one "Other" span. Used by chunk_filing()
+    and by the size rule that trims a long 10-K section by section.
     """
     lines = clean_text.splitlines()
 
@@ -255,6 +249,24 @@ def chunk_filing(clean_text: str) -> list[Chunk]:
             else:
                 char_end = text_len
             spans.append((char_start, char_end, label))
+    return spans
+
+
+def chunk_filing(clean_text: str) -> list[Chunk]:
+    """Split a cleaned filing into section-tagged Chunk objects.
+
+    Parameters
+    ----------
+    clean_text : str
+        Plain text produced by edgar._clean_html().
+
+    Returns
+    -------
+    list[Chunk]
+        All chunks in document order. chunk_index is 0-based and contiguous
+        across the entire filing (not reset per section).
+    """
+    spans = section_spans(clean_text)
 
     # Split each span into overlapping chunks and collect Chunk objects.
     chunks: list[Chunk] = []
