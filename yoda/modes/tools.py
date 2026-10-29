@@ -233,7 +233,7 @@ TOOL_SCHEMAS = [
         "name": "retrieve_filing",
         "description": (
             "Semantic search over the primary company's recent 10-Q "
-            "and/or 10-K, the 8-Ks it filed since (earnings releases, new "
+            "and/or 10-K, the latest 8-K it filed since (earnings release, new "
             "debt, executive changes) and its latest earnings call "
             "transcript. Returns chunks relevant to your query, each "
             "labelled with the document it came from; call chunks say "

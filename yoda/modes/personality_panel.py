@@ -442,7 +442,7 @@ def _remember(seen: dict[str, _SeenSource], tool_name: str, raw) -> None:
             source = f"{chunk.text.splitlines()[0].rstrip(':')} ({which_call} call)"
         else:
             kind = ("peer" if chunk.document.startswith("PEER ")
-                    else "8-K" if chunk.document.startswith("8-K") else "filing")
+                    else "8-K" if chunk.document.startswith(("8-K", "6-K")) else "filing")
         date_found = _DATE_RE.search(chunk.document)
         earlier = seen.get(_norm(label))
         shown = chunk.text[:_CHUNK_PREVIEW_CHARS]
@@ -973,8 +973,8 @@ def _apply_filter(
 _SYNTHESIS_SYSTEM = """You are a senior equity analyst synthesizing a panel of
 six junior analysts' hypotheses into a single pre-earnings research report.
 
-You are given the full filing text, the full text of every 8-K filed since
-the filing, the full transcript of the latest earnings call, a CONTEXT
+You are given the full filing text, the full text of the latest 8-K filed
+since the filing (a foreign company's 6-K is read the same way), the full transcript of the latest earnings call, a CONTEXT
 block (the 8-K list, the call, and the market's expectations for the next
 report), the full text of the news articles the analysts read, the
 analysts' hypotheses with their tagged evidence, their peer review, and the
@@ -1145,7 +1145,7 @@ Rules you must follow without exception:
    8-K event or earnings-release figure, what the company said on the
    latest earnings call (its results, outlook and guidance — even when the
    call came before the filing), guidance updates, and credible news
-   claims. Every 8-K in the 8-K TEXT that reports something material
+   claims. If the 8-K in the 8-K TEXT reports something material, it
    should appear. Market data from CONTEXT does NOT go here — it is in
    market_expectations. On the call, only turns marked [company] are the
    company's own words: an analyst's question or opinion ([analyst]) is not
@@ -1236,7 +1236,7 @@ def _render_eight_k_text(eight_ks: list[EightKFiling]) -> str:
     can cite it and link a since_filing item to it.
     """
     if not eight_ks:
-        return "(No 8-Ks were filed since the 10-Q/10-K.)"
+        return "(No 8-K was filed since the 10-Q/10-K within the last 120 days.)"
     return "\n\n".join(
         f"=== {eight_k_label(eight_k, doc)} — {doc.url} ===\n{doc.clean_text}"
         for eight_k in eight_ks
@@ -1333,7 +1333,7 @@ def _synthesize_report(
         f"Report timestamp (use for report_generated_at): {now_utc}\n\n"
         f"--- FILING TEXT (full; authoritative for key_metrics, revenue_segments, "
         f"forward_guidance, key_risks and every source_citation) ---\n{filing_text}\n\n"
-        f"--- 8-K TEXT (full; every 8-K filed since the filing — for since_filing, "
+        f"--- 8-K TEXT (full; the latest 8-K filed since the filing — for since_filing, "
         f"never key_metrics) ---\n{eight_k_text}\n\n"
         f"--- EARNINGS CALL TRANSCRIPT (full; the latest call — for since_filing and the "
         f"analysis, never key_metrics; [analyst] turns are not the company's words) ---\n{call_text}\n\n"
@@ -1371,10 +1371,10 @@ _URL_RE = re.compile(r"https?://|www\.", re.IGNORECASE)
 UNVERIFIED_CITATION = "UNVERIFIED — the cited source was not the filing"
 
 
-# Detects a citation that points to an 8-K ("8-K Item 2.02, Exhibit 99.1 —
-# ...", "Form 8-K/A ..."). Only the start is checked, so a 10-K heading that
+# Detects a citation that points to an 8-K or a foreign company's 6-K ("8-K
+# Item 2.02, Exhibit 99.1 — ...", "Form 8-K/A ...", "6-K, Exhibit 99.1 ..."). Only the start is checked, so a 10-K heading that
 # merely mentions Form 8-K further along is not caught.
-_EIGHT_K_CITATION_RE = re.compile(r"^\W*(form\s+)?8-K", re.IGNORECASE)
+_EIGHT_K_CITATION_RE = re.compile(r"^\W*(form\s+)?[86]-K", re.IGNORECASE)
 
 
 def _scrub_source_citations(report: EarningsReport, log_prefix: str) -> None:
@@ -1606,7 +1606,8 @@ def _ingest_post_filing_8ks(
         if store.index_if_missing(eight_k.accession_number, chunks):
             # Rough token count (~4 characters per token) for the cost line.
             embed_tokens += sum(len(chunk.text) for chunk in chunks) // 4
-    print(f"{log_prefix} 8-Ks since the filing: {len(post_filing.filings)}"
+    print(f"{log_prefix} Latest 8-K since the filing: "
+          f"{', '.join(f'{k.form} {k.filing_date}' for k in post_filing.filings) or 'none'}"
           + (f" ({len(post_filing.errors)} could not be fetched)" if post_filing.errors else ""))
     return post_filing.filings, embed_tokens
 
@@ -1755,7 +1756,7 @@ def _render_context_block(eight_ks: list[EightKFiling], market: MarketSnapshot,
     Personalities search the 8-Ks' and the call's text with retrieve_filing;
     this block tells them what exists without spending a tool call.
     """
-    lines = ["8-Ks filed since the 10-Q/10-K:"]
+    lines = ["Latest 8-K filed since the 10-Q/10-K (only the latest one is read):"]
     if not eight_ks:
         lines.append("- none")
     for eight_k in eight_ks:

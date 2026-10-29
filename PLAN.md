@@ -93,5 +93,5 @@ Given a ticker, Yoda produces a citation-backed pre-earnings research report: ke
 - Multi-filing comparison (10-Q vs prior 10-Q diffing).
 - Real-time price streaming.
 - User accounts or saved dossiers.
-- Companies that don't file with the SEC. Foreign companies that do are read from their 20-F or 40-F annual report (6-Ks are not read as a quarterly report).
+- Companies that don't file with the SEC. Foreign companies that do are read from their 20-F or 40-F annual report (a 6-K is not read as a quarterly report; the latest 6-K from the last 4 weeks is read like an 8-K).
 - Investment recommendations. The report describes; it does not advise.

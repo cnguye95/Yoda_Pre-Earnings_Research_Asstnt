@@ -302,18 +302,19 @@ class EightKDocument(BaseModel):
 
 
 class EightKFiling(BaseModel):
-    """One 8-K filed after the newest 10-Q/10-K, as fetched by
+    """The latest 8-K (or a foreign company's 6-K) filed after the newest 10-Q/10-K, as fetched by
     yoda.ingest.edgar.fetch_post_filing_8ks().
 
     *items* are the 8-K item codes that say what the filing reports, e.g.
     "2.02" (earnings release), "5.02" (executive change), "9.01" (exhibits).
-    "8-K/A" is an amendment to an earlier 8-K. *documents* holds the form
+    "8-K/A" is an amendment to an earlier 8-K; a 6-K has no item codes.
+    *documents* holds the form
     and its Exhibit 99.x documents; other exhibits are not kept.
     """
     model_config = ConfigDict(extra="forbid")
 
     ticker: str
-    form: Literal["8-K", "8-K/A"]
+    form: Literal["8-K", "8-K/A", "6-K"]
     filing_date: str                   # ISO date, e.g. "2026-10-21"
     accession_number: str
     items: list[str]

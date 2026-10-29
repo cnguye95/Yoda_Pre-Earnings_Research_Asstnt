@@ -240,53 +240,67 @@ def test_8k_without_a_main_document_is_an_error():
         edgar._select_main_and_exhibit_99([("2", "EX-99.1", "ex991.htm")])
 
 
-def test_only_8ks_filed_after_the_newest_filing_are_fetched(cache_dir, monkeypatch):
-    # 8-Ks on or before the 10-Q's date, and other forms, are left out; the
-    # rest come back oldest first, amendments included, with parsed items.
-    _fake_8k_sec(monkeypatch, filings=[
-        _8k("late", "2026-10-21"), _8k("same-day", "2026-05-01"), _8k("before", "2026-04-20"),
-        _8k("amend", "2026-06-15", form="8-K/A", items="5.02"),
-        {"form": "4", "filing_date": "2026-07-01", "accession_number": "insider", "items": ""},
+def _recent_set() -> FilingSet:
+    # A filing set whose newest filing (a 10-Q) was filed 60 days ago.
+    return FilingSet(ticker="TEST", cik=123, filings=[
+        Filing(ticker="TEST", filing_type="10-Q", filing_date=_days_ago(60), accession_number="q1", clean_text="Q"),
     ])
-    result = edgar.fetch_post_filing_8ks(_filing_set())
 
-    assert [k.accession_number for k in result.filings] == ["amend", "late"]
+
+def test_only_the_latest_8k_after_the_newest_filing_is_fetched(cache_dir, monkeypatch):
+    # Of the 8-Ks after the 10-Q, only the newest is read (an amendment
+    # counts), with its parsed items and Exhibit 99.x documents; 8-Ks on or
+    # before the 10-Q's date and other forms are never read.
+    _fake_8k_sec(monkeypatch, filings=[
+        _8k("older", _days_ago(30)), _8k("same-day", _days_ago(60)), _8k("before", _days_ago(70)),
+        _8k("amend", _days_ago(10), form="8-K/A", items="5.02"),
+        {"form": "4", "filing_date": _days_ago(5), "accession_number": "insider", "items": ""},
+    ])
+    result = edgar.fetch_post_filing_8ks(_recent_set())
+
+    assert [k.accession_number for k in result.filings] == ["amend"]
     assert result.filings[0].form == "8-K/A" and result.filings[0].items == ["5.02"]
-    assert result.filings[1].items == ["2.02", "9.01"]
-    assert [doc.doc_type for doc in result.filings[1].documents] == ["8-K", "EX-99.1", "EX-99.2"]
-    assert result.filings[1].documents[1].clean_text == "ex991.htm of late"
     assert result.errors == []
 
 
-def test_cached_8k_is_not_downloaded_again_but_new_ones_are(cache_dir, monkeypatch):
-    # The filing list is re-read each call: an 8-K already cached costs no
-    # download, while one filed since the last call is fetched.
-    filings = [_8k("first", "2026-06-01")]
-    downloads = _fake_8k_sec(monkeypatch, filings)
-    first = edgar.fetch_post_filing_8ks(_filing_set())
-    assert len(downloads) == 3
+def test_the_latest_8k_has_its_exhibit_99_documents(cache_dir, monkeypatch):
+    _fake_8k_sec(monkeypatch, filings=[_8k("late", _days_ago(10))])
+    [eight_k] = edgar.fetch_post_filing_8ks(_recent_set()).filings
+    assert eight_k.items == ["2.02", "9.01"]
+    assert [doc.doc_type for doc in eight_k.documents] == ["8-K", "EX-99.1", "EX-99.2"]
+    assert eight_k.documents[1].clean_text == "ex991.htm of late"
 
-    filings.append(_8k("second", "2026-07-01"))
-    second = edgar.fetch_post_filing_8ks(_filing_set())
-    assert [k.accession_number for k in second.filings] == ["first", "second"]
+
+def test_cached_8k_is_not_downloaded_again_but_a_newer_one_is(cache_dir, monkeypatch):
+    # The filing list is re-read each call: the 8-K already cached costs no
+    # download, and one filed since the last call replaces it.
+    filings = [_8k("first", _days_ago(20))]
+    downloads = _fake_8k_sec(monkeypatch, filings)
+    first = edgar.fetch_post_filing_8ks(_recent_set())
+    again = edgar.fetch_post_filing_8ks(_recent_set())
+    assert len(downloads) == 3 and again.filings[0].model_dump() == first.filings[0].model_dump()
+
+    filings.append(_8k("second", _days_ago(5)))
+    second = edgar.fetch_post_filing_8ks(_recent_set())
+    assert [k.accession_number for k in second.filings] == ["second"]
     assert all(d.startswith("second/") for d in downloads[3:]) and len(downloads) == 6
-    assert second.filings[0].model_dump() == first.filings[0].model_dump()
 
 
 def test_corrupt_8k_cache_is_downloaded_again(cache_dir, monkeypatch):
-    downloads = _fake_8k_sec(monkeypatch, [_8k("k1", "2026-06-01")])
-    edgar.fetch_post_filing_8ks(_filing_set())
+    downloads = _fake_8k_sec(monkeypatch, [_8k("k1", _days_ago(20))])
+    edgar.fetch_post_filing_8ks(_recent_set())
     (cache_dir / "TEST" / "8k" / "k1" / "meta.json").write_text("{not json", encoding="utf-8")
 
-    result = edgar.fetch_post_filing_8ks(_filing_set())
+    result = edgar.fetch_post_filing_8ks(_recent_set())
     assert len(downloads) == 6 and result.filings[0].accession_number == "k1"
 
 
-def test_one_failed_8k_is_recorded_and_the_rest_returned(cache_dir, monkeypatch):
-    _fake_8k_sec(monkeypatch, [_8k("ok", "2026-06-01"), _8k("broken", "2026-07-01")],
+def test_a_failed_8k_is_recorded(cache_dir, monkeypatch):
+    _fake_8k_sec(monkeypatch, [_8k("ok", _days_ago(30)), _8k("broken", _days_ago(10))],
                  fail_accessions=("broken",))
-    result = edgar.fetch_post_filing_8ks(_filing_set())
-    assert [k.accession_number for k in result.filings] == ["ok"]
+    result = edgar.fetch_post_filing_8ks(_recent_set())
+    # Only the latest is ever read, so a failed latest 8-K leaves none, with the reason.
+    assert result.filings == []
     assert len(result.errors) == 1 and "broken" in result.errors[0] and "HTTPError" in result.errors[0]
 
 
@@ -297,7 +311,7 @@ def test_8k_list_failure_returns_no_8ks_and_a_reason(cache_dir, monkeypatch):
         raise requests.ConnectionError("SEC down")
     monkeypatch.setattr(edgar, "_get_filings_metadata", unreachable)
 
-    result = edgar.fetch_post_filing_8ks(_filing_set())
+    result = edgar.fetch_post_filing_8ks(_recent_set())
     assert result.filings == []
     assert "could not be listed" in result.errors[0] and "ConnectionError" in result.errors[0]
 

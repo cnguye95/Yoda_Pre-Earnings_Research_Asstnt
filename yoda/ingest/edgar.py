@@ -5,10 +5,11 @@ Two public functions:
       foreign company's 20-F / 40-F) Yoda reads, as a FilingSet
       (see yoda/schema.py): the filings newest first, each holding its
       metadata and cleaned text, or None when nothing recent enough was filed.
-  fetch_post_filing_8ks(filing_set) — every 8-K / 8-K/A filed after the
-      newest of those filings (an 8-K reports news between quarterly
-      filings: an earnings release, new debt, an executive change), with its
-      Exhibit 99.x documents.
+  fetch_post_filing_8ks(filing_set) — the single latest 8-K / 8-K/A (last
+      120 days) or, for a foreign company, 6-K (last 4 weeks) filed after the
+      newest of those filings (it reports news between quarterly filings: an
+      earnings release, new debt, an executive change), with its Exhibit 99.x
+      documents.
 
 Raw HTML and metadata are cached to data/filings/{ticker}/ (8-Ks under
 8k/{accession}/) so that repeated calls skip the network. The 10-Q/10-K
@@ -92,8 +93,15 @@ _FORMS_WITH_EXHIBIT_TEXT = ("40-F",)
 _TEXT_FIELDS = {"raw_html": True, "clean_text": True}
 _CACHE_EXCLUDE = {"filings": {"__all__": _TEXT_FIELDS}}
 
-# The 8-K forms read after the filings: the 8-K and its amendment.
+# The current reports read after the filings — a company's news between
+# quarterly filings: the 8-K and its amendment, and a foreign company's 6-K.
+# Only the single latest one is read, and only if it is recent: an 8-K from
+# the last 120 days, a 6-K from the last 4 weeks (foreign companies file 6-Ks
+# for many routine notices, so an older one is rarely still news).
 _EIGHT_K_FORMS = ("8-K", "8-K/A")
+_SIX_K_FORMS = ("6-K",)
+EIGHT_K_WINDOW_DAYS = 120
+SIX_K_WINDOW_DAYS = 28
 
 # ---------------------------------------------------------------------------
 # Module-level cache for the ticker→CIK mapping so we only fetch it once
@@ -556,8 +564,30 @@ def fetch_filings(ticker: str, force_refresh: bool = False) -> FilingSet | None:
     return filing_set
 
 
+def _pick_current_report(filings: list[dict], after: date) -> list[dict]:
+    """Return the one current report to read, as a list of zero or one filing.
+
+    It is the newest 8-K / 8-K/A filed in the last EIGHT_K_WINDOW_DAYS days
+    or 6-K filed in the last SIX_K_WINDOW_DAYS days, and it must be filed
+    strictly after *after* (the newest 10-Q / annual report's date), since
+    it is read as news from after that filing.
+    """
+    today = market_today()
+    candidates = [
+        meta for meta in filings
+        if date.fromisoformat(meta["filing_date"]) > after and (
+            (meta["form"] in _EIGHT_K_FORMS
+             and date.fromisoformat(meta["filing_date"]) >= today - timedelta(days=EIGHT_K_WINDOW_DAYS))
+            or (meta["form"] in _SIX_K_FORMS
+                and date.fromisoformat(meta["filing_date"]) >= today - timedelta(days=SIX_K_WINDOW_DAYS))
+        )
+    ]
+    newest = max(candidates, key=lambda meta: (meta["filing_date"], meta["accession_number"]), default=None)
+    return [newest] if newest else []
+
+
 class PostFilingEightKs(NamedTuple):
-    """What fetch_post_filing_8ks() returns: the 8-Ks it could read, and why any others are missing."""
+    """What fetch_post_filing_8ks() returns: the current report it could read (zero or one), and why one is missing."""
     filings: list[EightKFiling]
     errors: list[str]
 
@@ -587,36 +617,35 @@ def _download_8k(cik: int, ticker: str, meta: dict) -> EightKFiling:
 
 
 def fetch_post_filing_8ks(filing_set: FilingSet) -> PostFilingEightKs:
-    """Fetch every 8-K (and 8-K/A) filed after the newest filing in *filing_set*, oldest first.
+    """Fetch the company's latest current report filed after the newest filing in *filing_set*.
 
-    The SEC's filing list is read again on every call, so an 8-K filed since
-    the last run is picked up; each 8-K's documents are downloaded only once
+    At most one is returned (see _pick_current_report): the newest 8-K or
+    8-K/A from the last EIGHT_K_WINDOW_DAYS days, or for a foreign company
+    the newest 6-K from the last SIX_K_WINDOW_DAYS days, as long as it was
+    filed after the newest 10-Q / annual report.
+
+    The SEC's filing list is read again on every call, so a report filed
+    since the last run is picked up; its documents are downloaded only once
     and cached under data/filings/{ticker}/8k/{accession}/.
 
-    8-Ks are extra context: one that can't be downloaded is left out and the
-    reason added to `errors`, and if the filing list itself can't be read,
-    `filings` is empty and `errors` says why. Nothing here raises for a
-    network or SEC problem.
+    It is extra context: if it can't be downloaded, `filings` is empty and
+    the reason is in `errors`, and the same if the filing list itself can't
+    be read. Nothing here raises for a network or SEC problem.
     """
     ticker, cik = filing_set.ticker, filing_set.cik
     since = filing_set.newest.filing_date
     errors: list[str] = []
 
-    # Find the company's 8-Ks filed strictly after the newest filing.
+    # Find the company's latest current report filed after the newest filing.
     try:
         all_filings = _get_filings_metadata(cik)
     except (requests.RequestException, RuntimeError) as exc:
         return PostFilingEightKs([], [
             f"8-Ks filed after {since} could not be listed: {type(exc).__name__}: {exc}"
         ])
-    since_date = date.fromisoformat(since)
-    wanted = sorted(
-        (meta for meta in all_filings
-         if meta["form"] in _EIGHT_K_FORMS and date.fromisoformat(meta["filing_date"]) > since_date),
-        key=lambda meta: (meta["filing_date"], meta["accession_number"]),
-    )
+    wanted = _pick_current_report(all_filings, date.fromisoformat(since))
 
-    # Use each 8-K from the cache when it's there; otherwise download and cache it.
+    # Use the report from the cache when it's there; otherwise download and cache it.
     eight_ks = []
     for meta in wanted:
         cached = _read_8k_cache(ticker, meta["accession_number"])

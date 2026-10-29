@@ -301,7 +301,7 @@ def test_context_block_names_the_provider_that_refused():
     failures = [ApiFailure("consensus", "Finnhub", "key rejected"), ApiFailure("signals", "FMP", "HTTP 402")]
     block = panel._render_context_block([], _snapshot(failures, consensus=None, whisper=None, signals=None))
 
-    assert "8-Ks filed since the 10-Q/10-K:\n- none" in block
+    assert "Latest 8-K filed since the 10-Q/10-K (only the latest one is read):\n- none" in block
     assert "Consensus estimates: N/A — Finnhub refused the request" in block
     assert "Whisper EPS: N/A — not looked up (no consensus to match it to)" in block
     assert "Beat/miss record, analyst actions, price target: N/A — FMP refused the request" in block
@@ -631,7 +631,7 @@ def test_synthesis_gets_post_filing_inputs_and_writes_no_code_set_fields(monkeyp
 
 
 def test_synthesis_is_told_when_there_were_no_8ks_or_articles():
-    assert panel._render_eight_k_text([]) == "(No 8-Ks were filed since the 10-Q/10-K.)"
+    assert panel._render_eight_k_text([]) == "(No 8-K was filed since the 10-Q/10-K within the last 120 days.)"
     assert panel._render_read_articles([]) == "(No articles were read in full.)"
 
 

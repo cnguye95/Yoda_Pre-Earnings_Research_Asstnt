@@ -116,6 +116,39 @@ def test_a_20f_operating_review_is_labelled_mdna():
     assert chunker._detect_section_boundaries(lines) == [(0, "MD&A")]
 
 
+# ---------------------------------------------------------------------------
+# Current reports: one 8-K from the last 120 days, or one 6-K from the last 4 weeks
+# ---------------------------------------------------------------------------
+
+def _current(*metas: dict, after: str = "2026-01-01") -> list[str]:
+    # The current report _pick_current_report chooses, as "form date".
+    return [f"{meta['form']} {meta['filing_date']}"
+            for meta in edgar._pick_current_report(list(metas), date.fromisoformat(after))]
+
+
+def test_never_more_than_one_8k_is_read():
+    assert _current(_meta("8-K", "2026-10-01"), _meta("8-K", "2026-10-20"), _meta("8-K/A", "2026-09-01")) == [
+        "8-K 2026-10-20"]
+
+
+def test_an_8k_counts_up_to_120_days_back():
+    # 120 days before 2026-10-29 is 2026-07-01.
+    assert _current(_meta("8-K", "2026-07-01")) == ["8-K 2026-07-01"]
+    assert _current(_meta("8-K", "2026-06-30")) == []
+
+
+def test_a_6k_counts_only_from_the_last_4_weeks():
+    # 28 days before 2026-10-29 is 2026-10-01.
+    assert _current(_meta("6-K", "2026-10-01")) == ["6-K 2026-10-01"]
+    assert _current(_meta("6-K", "2026-09-30")) == []
+
+
+def test_the_current_report_must_follow_the_newest_filing():
+    # An 8-K filed on or before the 10-Q is already covered by it.
+    assert _current(_meta("8-K", "2026-10-01"), after="2026-10-01") == []
+    assert _current(_meta("8-K", "2026-10-02"), after="2026-10-01") == ["8-K 2026-10-02"]
+
+
 def test_nothing_in_range_returns_none(monkeypatch, tmp_path):
     # No filing in either window: fetch_filings says so with None (the panel
     # then carries on with news only; the baseline cannot run).
