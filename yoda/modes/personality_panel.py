@@ -56,7 +56,7 @@ from yoda.evidence_text import CONFLICT_RULES as _CONFLICT_RULES
 from yoda.evidence_text import normalize as _norm
 from yoda.evidence_text import quote_in as _quote_in
 from yoda.ingest.chunker import Chunk, chunk_8k, chunk_filing, chunk_transcript, eight_k_label, transcript_key
-from yoda.ingest.edgar import FILING_FRESHNESS_DAYS, fetch_filings, fetch_post_filing_8ks
+from yoda.ingest.edgar import FILING_WINDOWS_TEXT, fetch_filings, fetch_post_filing_8ks
 from yoda.ingest.transcripts import TranscriptFetch, find_last_call, render_call_text
 from yoda.modes.baseline import apply_filings, full_filing_text, iter_citation_holders, validate_citations
 from yoda.modes.llm import NoStructuredOutput, client as _client, structured_call as _structured_call
@@ -1552,7 +1552,7 @@ def _evidence_bundle(
 # company has no 10-Q or 10-K inside the freshness window.
 _NO_FILING_TEXT = "(No recent SEC filing was found for this company. There is no filing text.)"
 _NO_FILING_GAP = (
-    f"No 10-Q or 10-K was filed in the last {FILING_FRESHNESS_DAYS} days, so no "
+    f"No recent SEC filing ({FILING_WINDOWS_TEXT}), so no "
     "filing was analyzed; findings rest on news and peer filings only."
 )
 

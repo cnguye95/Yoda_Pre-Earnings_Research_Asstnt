@@ -16,7 +16,7 @@ Given a ticker, Yoda produces a citation-backed pre-earnings research report: ke
 |---|---|---|
 | Language | Python 3.11+ (3.10+ required by the Anthropic SDK) | |
 | UI | Streamlit (`app.py`) | Single-ticker tab + Queue (batch) tab |
-| SEC filings | `requests` + BeautifulSoup/`lxml` (`yoda/ingest/edgar.py`) | Latest 10-Q as primary; the latest 10-K is added as a supplemental filing when it falls inside the 92-day freshness window. Falls back to a 10-K when there is no recent 10-Q. Cached to `data/filings/`. |
+| SEC filings | `requests` + BeautifulSoup/`lxml` (`yoda/ingest/edgar.py`) | The latest 10-Q (filed in the last 18 weeks) and the latest annual report — 10-K, or a foreign company's 20-F / 40-F (filed in the last 13 months). One is enough; both are read, as equals, when both are in range, except a 10-Q older than the annual report. A 40-F is read with its Exhibit 99.x documents. Cached to `data/filings/`. |
 | Chunking | Section-aware, ~1500-char windows with 200-char overlap (`yoda/ingest/chunker.py`) | Sections: MD&A, Risk Factors, Financial Statements, Quantitative Disclosures, Other |
 | Embeddings | OpenAI `text-embedding-3-small` (1536-dim) | `yoda/retrieval/embeddings.py` |
 | Vector store | ChromaDB persistent client, `filings_openai` collection | `yoda/retrieval/vector_store.py`. A filing is embedded only if its stored chunk count differs from its current one. |
@@ -35,8 +35,8 @@ Given a ticker, Yoda produces a citation-backed pre-earnings research report: ke
 
 `run_personality_panel(ticker)` in `yoda/modes/personality_panel.py` is what the app, the queue and the eval all call.
 
-1. **Ingest.** Fetch the primary filing (+ supplemental 10-K when present), chunk it, and embed it only if ChromaDB doesn't already hold it.
-2. **Investigate (Haiku 5.5, 6 in parallel).** Six personalities — Optimist, Pessimist, Conservative, Dreamer, Contrarian, Quant — each run a tool-use loop with three tools: `retrieve_filing` (semantic search over the primary + supplemental filing), `search_news` (Tavily; every URL goes into a shared news pool), and `lookup_peer` (fetch, chunk and search a competitor's filing). Each emits 1–2 hypotheses with quoted evidence and a 1–5 confidence.
+1. **Ingest.** Fetch the recent filings (10-Q and/or annual report), chunk each, and embed it only if ChromaDB doesn't already hold it. This date check runs before any paid call.
+2. **Investigate (Haiku 5.5, 6 in parallel).** Six personalities — Optimist, Pessimist, Conservative, Dreamer, Contrarian, Quant — each run a tool-use loop with three tools: `retrieve_filing` (semantic search over each filing read), `search_news` (Tavily; every URL goes into a shared news pool), and `lookup_peer` (fetch, chunk and search a competitor's filing). Each emits 1–2 hypotheses with quoted evidence and a 1–5 confidence.
 3. **Cross-critique (Sonnet 5.5).** Each personality sends SUPPORTS / CHALLENGES / EXTENDS messages about its peers' hypotheses.
 4. **Filter (deterministic).** Hypotheses are included, contested (≥2 challenges → surfaced in the watchlist with both sides), or dropped (≥3 challenges from ≥3 personalities), with a floor that keeps at least 6.
 5. **Synthesize (Sonnet 5.5).** One structured call writes the final `EarningsReport` from the filtered hypotheses, critique messages, the news pool, and filing chunks pulled directly for the financial sections.
@@ -58,7 +58,7 @@ Given a ticker, Yoda produces a citation-backed pre-earnings research report: ke
 
 ## Report Schema
 
-`yoda/schema.py` → `EarningsReport`: header fields (ticker, company, filing type/date, optional supplemental filing type/date, generated-at timestamp); `key_metrics`, `revenue_segments`, `forward_guidance`, `key_risks` — each carrying a required `source_citation`; `recent_news`; `bull_case`, `bear_case`, `what_to_watch` (each `WatchItem` has text plus 0–3 news-pool URLs); `data_gaps`; and `hypotheses_explored` (the panel's final hypotheses; empty for the baseline).
+`yoda/schema.py` → `EarningsReport`: header fields (ticker, company, the list of filings read — type, date and URL of each — and a generated-at timestamp); `key_metrics`, `revenue_segments`, `forward_guidance`, `key_risks` — each carrying a required `source_citation`; `recent_news`; `bull_case`, `bear_case`, `what_to_watch` (each `WatchItem` has text plus 0–3 news-pool URLs); `data_gaps`; and `hypotheses_explored` (the panel's final hypotheses; empty for the baseline).
 
 ---
 
@@ -93,5 +93,5 @@ Given a ticker, Yoda produces a citation-backed pre-earnings research report: ke
 - Multi-filing comparison (10-Q vs prior 10-Q diffing).
 - Real-time price streaming.
 - User accounts or saved dossiers.
-- Anything beyond US SEC filers.
+- Companies that don't file with the SEC. Foreign companies that do are read from their 20-F or 40-F annual report (6-Ks are not read as a quarterly report).
 - Investment recommendations. The report describes; it does not advise.

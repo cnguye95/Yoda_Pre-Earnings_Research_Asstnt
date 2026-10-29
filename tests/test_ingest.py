@@ -116,21 +116,8 @@ def test_missing_html_is_a_miss(cache_dir):
 # Choosing and fetching filings
 # ---------------------------------------------------------------------------
 
-def test_newest_recent_10q_and_10k_are_picked_newest_first():
-    filings = [
-        {"form": "10-K", "filing_date": _days_ago(5),  "accession_number": "k-new"},
-        {"form": "10-Q", "filing_date": _days_ago(60), "accession_number": "q-old"},
-        {"form": "10-Q", "filing_date": _days_ago(20), "accession_number": "q-new"},
-    ]
-    assert [meta["accession_number"] for meta in edgar._pick_filings(filings)] == ["k-new", "q-new"]
-
-
-def test_stale_filings_are_ignored():
-    # Anything older than the freshness window doesn't count.
-    filings = [{"form": "10-Q", "filing_date": _days_ago(edgar.FILING_FRESHNESS_DAYS + 1),
-                "accession_number": "q-stale"}]
-    assert edgar._pick_filings(filings) == []
-
+# Which filings count (the windows, rule for an older 10-Q, foreign forms)
+# is tested in tests/test_recency.py.
 
 def test_no_recent_filing_returns_none(cache_dir, monkeypatch):
     _fake_sec(monkeypatch, filings=[])
@@ -243,14 +230,14 @@ def test_index_documents_reads_type_and_file_name(monkeypatch):
 def test_8k_keeps_the_form_and_every_exhibit_99():
     # The main form and all Exhibit 99.x are read; contracts, graphics and
     # XBRL files are not.
-    assert edgar._select_8k_documents(_EARNINGS_8K_INDEX) == [
+    assert edgar._select_main_and_exhibit_99(_EARNINGS_8K_INDEX) == [
         ("8-K", "form8k.htm"), ("EX-99.1", "ex991.htm"), ("EX-99.2", "ex992.htm"),
     ]
 
 
 def test_8k_without_a_main_document_is_an_error():
     with pytest.raises(RuntimeError, match="main document"):
-        edgar._select_8k_documents([("2", "EX-99.1", "ex991.htm")])
+        edgar._select_main_and_exhibit_99([("2", "EX-99.1", "ex991.htm")])
 
 
 def test_only_8ks_filed_after_the_newest_filing_are_fetched(cache_dir, monkeypatch):

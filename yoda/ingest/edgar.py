@@ -1,7 +1,8 @@
 """Fetches a ticker's SEC filings: its recent 10-Q/10-K and the 8-Ks filed since.
 
 Two public functions:
-  fetch_filings(ticker) — every recent 10-Q/10-K Yoda reads, as a FilingSet
+  fetch_filings(ticker) — the recent 10-Q and/or annual report (10-K, or a
+      foreign company's 20-F / 40-F) Yoda reads, as a FilingSet
       (see yoda/schema.py): the filings newest first, each holding its
       metadata and cleaned text, or None when nothing recent enough was filed.
   fetch_post_filing_8ks(filing_set) — every 8-K / 8-K/A filed after the
@@ -29,6 +30,7 @@ from typing import NamedTuple
 import pydantic
 import requests
 from bs4 import BeautifulSoup, XMLParsedAsHTMLWarning
+from dateutil.relativedelta import relativedelta
 
 from yoda import config
 from yoda.dates import market_today
@@ -54,15 +56,35 @@ _TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
 _SUBMISSIONS_URL = "https://data.sec.gov/submissions/CIK{cik:010d}.json"
 
 # Filing index HTML — lists every document in a specific accession.
-# The main document (the 10-Q or 10-K itself) is always Seq 1.
+# The main document (the 10-Q, 10-K, 20-F or 40-F itself) is always Seq 1.
 _INDEX_URL = "https://www.sec.gov/Archives/edgar/data/{cik}/{acc_nodashes}/{acc}-index.htm"
 
 # Base URL for downloading actual filing documents from the EDGAR archive.
 _ARCHIVES_URL = "https://www.sec.gov/Archives/edgar/data/{cik}/{acc_nodashes}/{doc}"
 
-# Window in which a filing must have been filed to be considered "recent".
-# Applies to both the 10-Q and the 10-K.
-FILING_FRESHNESS_DAYS = 92
+# The forms Yoda reads as a company's annual report: the US 10-K, and the
+# foreign-company equivalents — the 20-F (most foreign companies) and the
+# 40-F (Canadian companies filing under the US-Canada disclosure system).
+ANNUAL_FORMS = ("10-K", "20-F", "40-F")
+
+# The quarterly report: only US companies file one (the 10-Q).
+QUARTERLY_FORMS = ("10-Q",)
+
+# How recently each kind of report must have been filed to be read. An annual
+# report covers a year, so one filed in the last 13 months is still the
+# latest; a 10-Q is replaced every quarter, so 18 weeks allows one quarter
+# plus filing delays.
+ANNUAL_WINDOW_MONTHS = 13
+QUARTERLY_WINDOW_WEEKS = 18
+
+# The windows in words, for messages and the report's caveats.
+FILING_WINDOWS_TEXT = (f"a 10-Q in the last {QUARTERLY_WINDOW_WEEKS} weeks or a 10-K, 20-F or 40-F "
+                       f"in the last {ANNUAL_WINDOW_MONTHS} months")
+
+# A 40-F's own document is often just a cover: its annual information form,
+# financial statements and MD&A are attached as Exhibit 99.x documents, so
+# those are read with it.
+_FORMS_WITH_EXHIBIT_TEXT = ("40-F",)
 
 # The parts of the cached record that are stored in separate .html files
 # rather than in latest.json (they are large, and the text is rebuilt from
@@ -172,27 +194,32 @@ def _get_filings_metadata(cik: int) -> list[dict]:
     ]
 
 
-def _newest_recent(filings: list[dict], form: str) -> dict | None:
-    """Return the newest filing of type *form* inside the freshness window.
-
-    Returns None when no filing of that type was filed in the last
-    FILING_FRESHNESS_DAYS days.
-    """
-    cutoff = market_today() - timedelta(days=FILING_FRESHNESS_DAYS)
+def _newest_since(filings: list[dict], forms: tuple[str, ...], cutoff: date) -> dict | None:
+    """Return the newest filing whose form is one of *forms*, filed on or after *cutoff*, or None."""
     candidates = [
         filing for filing in filings
-        if filing["form"] == form and date.fromisoformat(filing["filing_date"]) >= cutoff
+        if filing["form"] in forms and date.fromisoformat(filing["filing_date"]) >= cutoff
     ]
     return max(candidates, key=lambda filing: date.fromisoformat(filing["filing_date"]), default=None)
 
 
 def _pick_filings(filings: list[dict]) -> list[dict]:
-    """Choose the filings to read, newest first: the recent 10-Q and the recent 10-K.
+    """Choose the filings to read, newest first: the latest annual report and the latest 10-Q.
 
-    Each is the newest of its form inside the freshness window; either may
-    be missing, and an empty list means nothing recent enough was filed.
+    The annual report (10-K, 20-F or 40-F) counts if filed in the last
+    ANNUAL_WINDOW_MONTHS months, the 10-Q if filed in the last
+    QUARTERLY_WINDOW_WEEKS weeks; each is the newest of its kind in its
+    window. Only one is needed, and both are read when both are in range —
+    except that a 10-Q older than the annual report is not read: the annual
+    report already covers that quarter with newer, audited figures. An empty
+    list means nothing recent enough was filed.
     """
-    chosen = [meta for meta in (_newest_recent(filings, "10-Q"), _newest_recent(filings, "10-K")) if meta]
+    today = market_today()
+    annual = _newest_since(filings, ANNUAL_FORMS, today - relativedelta(months=ANNUAL_WINDOW_MONTHS))
+    quarterly = _newest_since(filings, QUARTERLY_FORMS, today - timedelta(weeks=QUARTERLY_WINDOW_WEEKS))
+    if annual and quarterly and annual["filing_date"] > quarterly["filing_date"]:
+        quarterly = None
+    chosen = [meta for meta in (quarterly, annual) if meta]
     return sorted(chosen, key=lambda meta: meta["filing_date"], reverse=True)
 
 
@@ -257,11 +284,13 @@ def _index_documents(cik: int, accession_number: str) -> list[tuple[str, str, st
     return documents
 
 
-def _select_8k_documents(documents: list[tuple[str, str, str]]) -> list[tuple[str, str]]:
-    """Pick the documents of an 8-K worth reading, as (doc_type, file_name).
+def _select_main_and_exhibit_99(documents: list[tuple[str, str, str]]) -> list[tuple[str, str]]:
+    """Pick the documents of an 8-K (or 40-F) worth reading, as (doc_type, file_name).
 
-    Keeps the form itself (Seq 1) and every Exhibit 99.x — the press release
-    (99.1) and supplements such as a bank's financial supplement (99.2).
+    Keeps the form itself (Seq 1) and every Exhibit 99.x — for an 8-K the
+    press release (99.1) and supplements such as a bank's financial
+    supplement (99.2); for a 40-F its annual information form, financial
+    statements and MD&A.
     Other exhibits (EX-10 contracts, graphics, XBRL data files) are skipped.
     Raises RuntimeError if the index has no readable main document.
     """
@@ -269,10 +298,32 @@ def _select_8k_documents(documents: list[tuple[str, str, str]]) -> list[tuple[st
     main = [(doc_type, name) for seq, doc_type, name in documents
             if seq == "1" and name.lower().endswith(readable)]
     if not main:
-        raise RuntimeError("8-K index page lists no readable main document (Seq 1).")
+        raise RuntimeError("Filing index page lists no readable main document (Seq 1).")
     exhibits = [(doc_type, name) for seq, doc_type, name in documents
                 if seq != "1" and doc_type.upper().startswith("EX-99") and name.lower().endswith(readable)]
     return main[:1] + exhibits
+
+
+def _download_report(cik: int, meta: dict) -> tuple[str, str]:
+    """Download the text of the 10-Q / annual report described by *meta*, as (raw_html, url).
+
+    Usually that is the filing's main document. A 40-F's main document is
+    often only a cover, so its Exhibit 99.x documents are downloaded too and
+    joined after it, each under a heading naming the exhibit; the URL is
+    the main document's. Raises requests.RequestException or RuntimeError
+    when a page can't be fetched.
+    """
+    accession = meta["accession_number"]
+    if meta["form"] not in _FORMS_WITH_EXHIBIT_TEXT:
+        return _download_filing_html(cik, accession, _get_main_document(cik, accession))
+
+    parts: list[str] = []
+    urls: list[str] = []
+    for doc_type, file_name in _select_main_and_exhibit_99(_index_documents(cik, accession)):
+        html, url = _download_filing_html(cik, accession, file_name)
+        parts.append(f"<h1>{doc_type}</h1>\n{html}")
+        urls.append(url)
+    return "\n".join(parts), urls[0]
 
 
 def _download_filing_html(cik: int, accession_number: str, main_doc: str) -> tuple[str, str]:
@@ -434,8 +485,10 @@ def _write_8k_cache(eight_k: EightKFiling) -> None:
 def fetch_filings(ticker: str, force_refresh: bool = False) -> FilingSet | None:
     """Fetch every recent 10-Q/10-K Yoda reads for *ticker*, newest first.
 
-    Returns a FilingSet, or None when the company has no 10-Q or 10-K filed
-    in the last FILING_FRESHNESS_DAYS days. A filing that exists but cannot
+    Which filings count is decided by _pick_filings(): the latest annual
+    report (10-K, 20-F or 40-F) from the last 13 months and the latest 10-Q
+    from the last 18 weeks. Returns a FilingSet, or None when neither was
+    filed recently enough. A filing that exists but cannot
     be downloaded is left out and the reason added to `errors`; if none of
     them can be downloaded, RuntimeError names every reason.
 
@@ -477,8 +530,7 @@ def fetch_filings(ticker: str, force_refresh: bool = False) -> FilingSet | None:
     errors: list[str] = []
     for meta in chosen:
         try:
-            main_doc = _get_main_document(cik, meta["accession_number"])
-            raw_html, url = _download_filing_html(cik, meta["accession_number"], main_doc)
+            raw_html, url = _download_report(cik, meta)
         except (requests.RequestException, RuntimeError) as exc:
             errors.append(f"could not fetch the {meta['form']} filed {meta['filing_date']}: "
                           f"{type(exc).__name__}: {exc}")
@@ -519,7 +571,7 @@ def _download_8k(cik: int, ticker: str, meta: dict) -> EightKFiling:
     """
     accession = meta["accession_number"]
     documents = []
-    for doc_type, file_name in _select_8k_documents(_index_documents(cik, accession)):
+    for doc_type, file_name in _select_main_and_exhibit_99(_index_documents(cik, accession)):
         raw_html, url = _download_filing_html(cik, accession, file_name)
         documents.append(EightKDocument(doc_type=doc_type, file_name=file_name, url=url,
                                         raw_html=raw_html, clean_text=_clean_html(raw_html)))
@@ -595,7 +647,7 @@ if __name__ == "__main__":
     print(f"Fetching filings for {ticker_arg}...")
     result = fetch_filings(ticker_arg)
     if result is None:
-        sys.exit(f"No 10-Q or 10-K filed in the last {FILING_FRESHNESS_DAYS} days.")
+        sys.exit(f"Nothing recent enough: no {FILING_WINDOWS_TEXT}.")
 
     # Show the metadata the rest of Yoda relies on, one block per filing.
     print(f"\nTicker: {result.ticker}   CIK: {result.cik}")

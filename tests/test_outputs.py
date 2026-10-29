@@ -122,9 +122,9 @@ def test_generated_time_is_labelled_utc():
 
 
 @pytest.mark.parametrize("overrides, expected", [
-    (dict(filings=[]), "No SEC filing found"),
-    (dict(filings=[_ANNUAL]), "No recent 10-Q"),
-    (dict(filings=[_QUARTERLY]), "No annual 10-K"),
+    (dict(filings=[]), "No recent SEC filing found"),
+    (dict(filings=[_ANNUAL]), "Only the annual 10-K (filed 2026-02-01)"),
+    (dict(filings=[_QUARTERLY]), "No annual report"),
 ])
 def test_filing_caveats(overrides, expected):
     caveats = pdf.filing_caveats(_report(**overrides))

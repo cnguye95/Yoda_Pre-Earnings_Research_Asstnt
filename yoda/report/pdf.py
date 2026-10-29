@@ -30,7 +30,7 @@ from reportlab.lib.styles import ParagraphStyle, StyleSheet1, getSampleStyleShee
 from reportlab.lib.units import inch
 from reportlab.platypus import Flowable, HRFlowable, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
-from yoda.ingest.edgar import FILING_FRESHNESS_DAYS
+from yoda.ingest.edgar import ANNUAL_WINDOW_MONTHS, FILING_WINDOWS_TEXT, QUARTERLY_WINDOW_WEEKS
 from yoda.schema import EarningsReport
 
 # Shown in place of a metric value the report left blank.
@@ -84,20 +84,22 @@ def _markdown_bold(text: str) -> str:
 def filing_caveats(report: EarningsReport) -> list[str]:
     """Warnings a reader needs about which filings the report could use.
 
-    Returns an empty list when both a 10-Q and a 10-K were analyzed. The app
-    and the PDF show the same sentences.
+    Returns an empty list when both a 10-Q and an annual report were
+    analyzed. The app and the PDF show the same sentences.
     """
     if not report.filings:
-        return [f"No SEC filing found within the last {FILING_FRESHNESS_DAYS} days for {report.ticker}. "
+        return [f"No recent SEC filing found for {report.ticker} ({FILING_WINDOWS_TEXT}). "
                 "This report is based on recent news and peer filings only — "
                 "no fundamental filing data was available."]
-    types = {filing.filing_type for filing in report.filings}
-    if "10-Q" not in types:
-        return [f"No recent 10-Q available for {report.ticker}. Using the annual 10-K — "
-                "report may not reflect the latest quarterly trends."]
-    if "10-K" not in types:
-        return [f"No annual 10-K available within the last {FILING_FRESHNESS_DAYS} days for "
-                f"{report.ticker}. Report is based on the quarterly filing only."]
+    annual = [filing for filing in report.filings if filing.filing_type != "10-Q"]
+    if len(annual) == len(report.filings):
+        # Only the annual report: either no 10-Q in the window, or the annual
+        # report is newer than the latest 10-Q (and so already covers it).
+        return [f"Only the annual {annual[0].filing_type} (filed {annual[0].filing_date}) was read for "
+                f"{report.ticker}: no 10-Q was filed after it in the last {QUARTERLY_WINDOW_WEEKS} weeks."]
+    if not annual:
+        return [f"No annual report (10-K, 20-F or 40-F) filed within the last {ANNUAL_WINDOW_MONTHS} months "
+                f"for {report.ticker}. Report is based on the quarterly filing only."]
     return []
 
 

@@ -72,7 +72,8 @@ class Chunk(BaseModel):
 # line decides its label, so the order of this list matters.
 _SECTION_PATTERNS: list[tuple[re.Pattern, SectionLabel]] = [
     (re.compile(r"risk\s+factor", re.IGNORECASE), "Risk Factors"),
-    (re.compile(r"management.{0,3}s?\s+discussion", re.IGNORECASE), "MD&A"),
+    # A 20-F calls its MD&A "Item 5. Operating and Financial Review and Prospects".
+    (re.compile(r"management.{0,3}s?\s+discussion|operating\s+and\s+financial\s+review", re.IGNORECASE), "MD&A"),
     (
         re.compile(
             r"quantitative\s+and\s+qualitative\s+disclosures",

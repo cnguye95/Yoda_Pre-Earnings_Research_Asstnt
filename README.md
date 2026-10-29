@@ -29,13 +29,13 @@ Example: `/research local embedding models to replace text-embedding-3-small`
 
 ## 2. Solution and Design
 
-Yoda fetches the most recent 10-Q (and, when available within the same 92-day window, the supplemental 10-K) from SEC EDGAR for a given ticker, chunks each filing by section, embeds and indexes them in a local ChromaDB vector store using OpenAI `text-embedding-3-small` (1536-dim, ~$0.004/filing), enriches with analyst consensus and news, and generates a structured `EarningsReport` via a multi-agent personality panel. The report downloads as a PDF; a Queue tab batches multiple tickers and bundles the PDFs into a ZIP.
+Yoda fetches the company's recent SEC filings — a 10-Q filed in the last 18 weeks and/or an annual report (10-K, or a foreign company's 20-F or 40-F) filed in the last 13 months; both are read when both are in range, except a 10-Q older than the annual report — from SEC EDGAR for a given ticker, chunks each filing by section, embeds and indexes them in a local ChromaDB vector store using OpenAI `text-embedding-3-small` (1536-dim, ~$0.004/filing), enriches with analyst consensus and news, and generates a structured `EarningsReport` via a multi-agent personality panel. The report downloads as a PDF; a Queue tab batches multiple tickers and bundles the PDFs into a ZIP.
 
 ### How Yoda Works
 
 Yoda runs a six-personality panel via `yoda/modes/personality_panel.py`. Six personalities (Optimist, Pessimist, Conservative, Dreamer, Contrarian, Quant) each run parallel tool-use loops on Claude Haiku 5.5 (up to 6 tool calls; after 45s a personality stops calling tools and writes up what it has), followed by a cross-critique phase where each personality emits SUPPORTS / CHALLENGES / EXTENDS messages on its peers' hypotheses. A deterministic filter retains/contests/drops hypotheses, then Claude Sonnet 5.5 synthesizes a final report that surfaces contested items inside the watchlist. Typical latency: ~3 minutes per ticker — about two-thirds of it is the Sonnet synthesis call, which thinks at high effort before writing the report.
 
-Each personality uses four tools: `retrieve_filing` (semantic search across the 10-Q, the supplemental 10-K when present, and the 8-Ks filed since), `search_news` (Tavily web search from the filing date on — all URLs accumulate into a shared news pool), `read_article` (the full text of a news-pool article), and `lookup_peer` (fetch + chunk + search a competitor's filing on demand). The synthesizer then reads the full filing, the full 8-K text, the market data and the articles the personalities read, and writes a structured `EarningsReport` whose watchlist items each carry 0–3 starting-point URLs drawn from that shared pool, validated against it so synthesis cannot invent links. Post-filing developments go in a separate `since_filing` section, each claim checked to link to a real 8-K or news-pool article; `market_expectations` is filled in code straight from the market data.
+Each personality uses four tools: `retrieve_filing` (semantic search across the 10-Q and the annual report, whichever were read, and the 8-Ks filed since), `search_news` (Tavily web search from the filing date on — all URLs accumulate into a shared news pool), `read_article` (the full text of a news-pool article), and `lookup_peer` (fetch + chunk + search a competitor's filing on demand). The synthesizer then reads the full filing, the full 8-K text, the market data and the articles the personalities read, and writes a structured `EarningsReport` whose watchlist items each carry 0–3 starting-point URLs drawn from that shared pool, validated against it so synthesis cannot invent links. Post-filing developments go in a separate `since_filing` section, each claim checked to link to a real 8-K or news-pool article; `market_expectations` is filled in code straight from the market data.
 
 ### Key Design Choices
 
@@ -43,7 +43,7 @@ Each personality uses four tools: `retrieve_filing` (semantic search across the 
 |---|---|
 | Claude Sonnet 5.5 for synthesis + critique, Claude Haiku 5.5 for personality loops | Accuracy where it counts; cost control in the 6× parallel loops. Chosen by a spot check (AAPL/JPM/XOM): a Sonnet critique scored slightly above all-Haiku for ~$0.13/report more, while all-Sonnet cost 3.4× as much for no gain |
 | Six-personality panel + typed cross-critique | Forces the report to consider divergent lenses (optimism, skepticism, balance-sheet, long-horizon, contrarian, quant) before synthesizing one analyst voice; cross-critique flags contested claims for the watchlist |
-| 10-Q primary + 10-K supplemental ingest | The 10-Q has the freshest quarterly data for pre-earnings; the 10-K supplies annual narrative when both are within the 92-day window |
+| 10-Q + annual report ingest, read as equals | The 10-Q has the freshest quarterly data; the 10-K (or 20-F / 40-F) is often the more complete document. Each counts within its own window (18 weeks / 13 months); a 10-Q older than the annual report is not read |
 | Finnhub consensus with FMP backup | Finnhub free tier is sparse; `yoda/tools/consensus.py` falls back to FMP when Finnhub returns nothing |
 | ChromaDB persistent client (`filings_openai` collection) | No native deps on Windows; cosine-distance index over 1536-dim OpenAI vectors |
 | `reportlab` for PDF (not weasyprint) | weasyprint requires GTK3/Pango/Cairo native libs on Windows; reportlab is pure Python |
@@ -112,7 +112,7 @@ Each personality uses four tools: `retrieve_filing` (semantic search across the 
 
 ```
 app.py (Streamlit — Single ticker + Queue tabs)
-    ├── yoda/ingest/edgar.py             # SEC EDGAR fetch + disk cache (10-Q primary + 10-K supplemental)
+    ├── yoda/ingest/edgar.py             # SEC EDGAR fetch + disk cache (recent 10-Q and annual report)
     ├── yoda/ingest/chunker.py           # section-aware HTML → text chunks
     ├── yoda/retrieval/                  # text-embedding-3-small + ChromaDB
     ├── yoda/tools/consensus.py          # Finnhub + FMP backup
@@ -157,7 +157,7 @@ python -m yoda.eval.runner NFLX            # Single ticker (quick test)
 
 ### Modes Compared
 
-- **`baseline`** — Single-pass (`yoda/modes/baseline.py`): "here are the SEC filings; write a pre-earnings research brief." One Claude Sonnet 5.5 call receives the **full text** of the latest 10-Q (plus the supplemental 10-K when one falls in the 92-day window) and returns the report in one response. No retrieval, no news, no agent loop, no second pass. Its only instruction beyond the report format is the citation rule; since it gets no news, any news items or URLs it returns are stripped in code. It reads the same filings Yoda reads, so the comparison measures what Yoda's extra steps add — not how much filing text each side saw.
+- **`baseline`** — Single-pass (`yoda/modes/baseline.py`): "here are the SEC filings; write a pre-earnings research brief." One Claude Sonnet 5.5 call receives the **full text** of the same filings Yoda reads (the recent 10-Q and/or annual report) and returns the report in one response. No retrieval, no news, no agent loop, no second pass. Its only instruction beyond the report format is the citation rule; since it gets no news, any news items or URLs it returns are stripped in code. It reads the same filings Yoda reads, so the comparison measures what Yoda's extra steps add — not how much filing text each side saw.
 - **`yoda`** — Full personality panel (Haiku 5.5 loops, Sonnet 5.5 critique and synthesis) with OpenAI `text-embedding-3-small` for retrieval. Vectors stored in the `filings_openai` Chroma collection.
 
 ### Rubric
@@ -249,10 +249,10 @@ The app has two tabs: **Single ticker** (interactive, one report at a time) and 
 {
   "ticker": "NFLX",
   "company_name": "Netflix, Inc.",
-  "filing_type": "10-Q",
-  "filing_date": "2026-04-18",
-  "supplemental_filing_type": "10-K",
-  "supplemental_filing_date": "2026-01-29",
+  "filings": [
+    {"filing_type": "10-Q", "filing_date": "2026-04-18", "url": "https://www.sec.gov/Archives/..."},
+    {"filing_type": "10-K", "filing_date": "2026-01-29", "url": "https://www.sec.gov/Archives/..."}
+  ],
   "key_metrics": [
     {
       "name": "Total Revenue",
@@ -282,7 +282,7 @@ The app has two tabs: **Single ticker** (interactive, one report at a time) and 
 
 ### PDF Output Structure
 
-The downloaded PDF contains: cover page (ticker, company name, primary filing date — and the supplemental 10-K date when both filings are within the 92-day window — and which earnings call was read, e.g. "Earnings call: Q3 FY2026 (2026-10-27)"), the Pre-Earnings Watchlist (each entry followed by clickable "Sources:" URLs when the synthesizer found relevant news in the pool), market expectations (consensus, whisper, implied and historical move, beat/miss record, analyst actions, price target — each with its quarter, source and date, and N/A with the reason when missing), information beyond the filing (8-K events, what the company said on its latest earnings call, news — each claim with its evidence type, period, date and a link to its source; an analyst's words on the call are never presented as the company's), key metrics table (each figure with the period it covers), revenue segments table, forward guidance blockquote, key risks (new risks flagged in red), recent news with hyperlinks, bull/bear bullets, and data gaps in amber. The app shows market expectations and developments since the filing in two expanders under the watchlist.
+The downloaded PDF contains: cover page (ticker, company name, each filing read with its date, and which earnings call was read, e.g. "Earnings call: Q3 FY2026 (2026-10-27)"), the Pre-Earnings Watchlist (each entry followed by clickable "Sources:" URLs when the synthesizer found relevant news in the pool), market expectations (consensus, whisper, implied and historical move, beat/miss record, analyst actions, price target — each with its quarter, source and date, and N/A with the reason when missing), information beyond the filing (8-K events, what the company said on its latest earnings call, news — each claim with its evidence type, period, date and a link to its source; an analyst's words on the call are never presented as the company's), key metrics table (each figure with the period it covers), revenue segments table, forward guidance blockquote, key risks (new risks flagged in red), recent news with hyperlinks, bull/bear bullets, and data gaps in amber. The app shows market expectations and developments since the filing in two expanders under the watchlist.
 
 **Advanced search settings.** Before searching, the app checks the ticker's next earnings date (a free call). The paid whisper-number lookup (about $0.12–0.15) is ticked only when that report is 3 days away or less, because whisper numbers are published only a day or two before. An unknown date leaves it unticked. You can tick or untick it yourself. In the queue, each ticker follows the same rule from its own date, or you can skip whisper lookups for the whole batch. The eval runner and the command-line smoke tests apply the same rule.
 
@@ -333,7 +333,7 @@ streamlit run app.py
 
 Open [http://localhost:8501](http://localhost:8501), enter a ticker (e.g. `NFLX`) and click **Generate Report**. For batch runs, switch to the **Queue (batch)** tab, paste multiple tickers (one per line or comma-separated), and run them sequentially — PDFs save to `data/reports/` as they complete and bundle into a downloadable ZIP at the end.
 
-The first run for a ticker fetches and indexes the SEC filings — both the 10-Q (primary) and the 10-K (supplemental) when both are within the 92-day freshness window. Subsequent runs for the same ticker are fast because the filings and ChromaDB index are cached to disk.
+The first run for a ticker fetches and indexes the SEC filings — a 10-Q filed in the last 18 weeks and/or an annual report (10-K, or a foreign company's 20-F or 40-F) filed in the last 13 months. Subsequent runs for the same ticker are fast because the filings and ChromaDB index are cached to disk.
 
 ### Run the Evaluation Harness
 
@@ -436,7 +436,7 @@ yoda/
 ├── yoda/
 │   ├── config.py                       # env vars + Claude price table (MODEL_COST_PER_1K)
 │   ├── ingest/
-│   │   ├── edgar.py                    # ticker -> SEC EDGAR fetch (10-Q primary + 10-K supplemental)
+│   │   ├── edgar.py                    # ticker -> SEC EDGAR fetch (recent 10-Q and annual report)
 │   │   └── chunker.py                  # section-aware chunking
 │   ├── retrieval/
 │   │   ├── embeddings.py               # OpenAI text-embedding-3-small
@@ -458,7 +458,7 @@ yoda/
 │       ├── judge.py                    # gpt-6.1-sol model-as-judge
 │       └── runner.py                   # batch eval over test tickers
 ├── data/
-│   ├── filings/{TICKER}/               # cached primary + supplemental HTML + latest.json (gitignored)
+│   ├── filings/{TICKER}/               # cached filing HTML (one file per filing) + latest.json (gitignored)
 │   ├── chroma/                         # ChromaDB persistence — filings_openai collection (gitignored)
 │   ├── reports/                        # PDFs written by the Queue processor, 1 per ticker (gitignored)
 │   ├── queue_zips/                     # ZIP bundles from queue runs, max 2 most recent (gitignored)

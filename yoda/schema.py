@@ -35,8 +35,9 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 # quietly creating a seventh "personality".
 PersonalityName = Literal["Optimist", "Pessimist", "Conservative", "Dreamer", "Contrarian", "Quant"]
 
-# The SEC filing types Yoda reads as its main documents.
-FilingType = Literal["10-Q", "10-K"]
+# The SEC filing types Yoda reads as its main documents: the quarterly 10-Q
+# and the annual report — the 10-K, or a foreign company's 20-F or 40-F.
+FilingType = Literal["10-Q", "10-K", "20-F", "40-F"]
 
 # What kind of evidence backs a claim, most reliable first. When two sources
 # give different values for the same fact and period, the more reliable tag
@@ -245,7 +246,7 @@ class PersonalityResult(BaseModel):
 # ---------------------------------------------------------------------------
 
 class Filing(BaseModel):
-    """One SEC filing (a 10-Q or 10-K) as fetched by yoda.ingest.edgar.fetch_filings().
+    """One SEC filing (a 10-Q, or an annual 10-K / 20-F / 40-F) as fetched by yoda.ingest.edgar.fetch_filings().
 
     *clean_text* is the readable text the analysis works from; *raw_html* is
     kept so the text can be rebuilt from the disk cache.
