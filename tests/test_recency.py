@@ -1,7 +1,8 @@
 """Offline tests for how recent Yoda's inputs must be, and how they fit:
 which SEC filings are read (the 13-month annual and 18-week quarterly
 windows, foreign forms, reading both filings when both are in range), the
-single latest 8-K / 6-K, and the size rule that trims an older 10-K.
+single latest 8-K / 6-K, the size rule that trims an older 10-K, the dates
+every model call is given, and the 14-day rule for citing news.
 
 Run with: python -m pytest -q
 
@@ -20,8 +21,11 @@ from yoda.eval import evidence, judge
 from yoda.ingest import chunker, edgar
 from yoda.modes import baseline
 from yoda.modes import personality_panel as panel
-from yoda.tools import consensus
-from yoda.schema import EarningsReport, Filing, FilingSet, ForwardGuidance
+from yoda.schema import (
+    ArticleText, EarningsReport, Filing, FilingSet, ForwardGuidance, NewsItem, NewsSearchResult, SinceFilingItem,
+    WatchItem,
+)
+from yoda.tools import consensus, news
 
 # The "today" every test in this file runs on.
 _TODAY = date(2026, 10, 29)
@@ -341,6 +345,106 @@ def test_a_newer_contradicting_item_is_flagged_without_changing_the_tier_rules()
     assert "never overwrites a filing figure" in evidence_text.NEWER_CONTRADICTION_RULE
     assert "Newer information is preferred only within the same tier" in evidence_text.CONFLICT_RULES
     assert evidence_text.NEWER_CONTRADICTION_RULE not in evidence_text.CONFLICT_RULES
+
+
+# ---------------------------------------------------------------------------
+# News: only articles from the last 14 days may be cited
+# ---------------------------------------------------------------------------
+
+_RECENT_URL, _OLD_URL, _UNDATED_URL = "https://news.example/recent", "https://news.example/old", "https://news.example/x"
+
+
+@pytest.fixture
+def news_pool(monkeypatch) -> list[NewsSearchResult]:
+    # A pool with an article from 5 days ago, one from 30 days ago, and one undated.
+    monkeypatch.setattr(news, "market_today", lambda: _TODAY)
+    return [NewsSearchResult(title="Recent", url=_RECENT_URL, published_date="2026-10-24", snippet="LSEG expects EPS of $2."),
+            NewsSearchResult(title="Old", url=_OLD_URL, published_date="2026-09-29", snippet="LSEG expects EPS of $3."),
+            NewsSearchResult(title="Undated", url=_UNDATED_URL, snippet="no date")]
+
+
+def test_news_is_citable_for_14_days_only(news_pool):
+    assert news.is_citable("2026-10-15")            # 14 days before 2026-10-29
+    assert not news.is_citable("2026-10-14")        # 15 days
+    assert not news.is_citable(None)                # an undated article's age can't be checked
+
+
+def test_old_articles_are_shown_to_personalities_as_background_only(news_pool):
+    text = panel._render_news(news_pool)
+    lines = {line.split(" (")[0]: line for line in text.splitlines() if line.startswith("- ")}
+    assert "background only" not in lines["- Recent"]
+    assert "background only, not citable" in lines["- Old"] and "background only" in lines["- Undated"]
+
+
+def test_evidence_from_an_old_article_is_unverifiable(news_pool):
+    seen = {}
+    panel._remember(seen, "search_news", news_pool)
+
+    def check(url: str, quote: str):
+        draft = panel._EvidenceDraft(quote=quote, citation=url, source="LSEG", evidence_type="estimate",
+                                     relevance="direct", relevance_reason="r")
+        return panel._check_evidence(draft, seen)
+
+    recent = check(_RECENT_URL, "LSEG expects EPS of $2.")
+    assert recent.evidence_type == "estimate" and recent.check_note is None
+    old = check(_OLD_URL, "LSEG expects EPS of $3.")
+    assert old.evidence_type == "unverifiable" and "older than 14 days" in old.check_note
+
+
+def test_synthesis_sees_old_news_only_as_background(news_pool, monkeypatch):
+    sent = []
+
+    def capture(model, max_tokens, output_format, messages, **kwargs):
+        sent.append(messages[0]["content"])
+        raise panel.NoStructuredOutput(model, "stop here", 0, 0)
+    monkeypatch.setattr(panel, "_structured_call", capture)
+    with pytest.raises(panel.NoStructuredOutput):
+        panel._synthesize_report(ticker="TEST", filings=[], final_hypotheses=[], contested=[], critique_messages=[],
+                                 news_pool=news_pool, filing_text="F", eight_k_text="", context_block="",
+                                 articles_text="", call_text="")
+    citable, older = sent[0].split("--- NEWS POOL")[1].split("--- OLDER NEWS")
+    assert _RECENT_URL in citable and _OLD_URL not in citable and _UNDATED_URL not in citable
+    assert _OLD_URL in older and _UNDATED_URL in older
+    assert "Only articles published in the last 14 days may be cited" in panel._SYNTHESIS_SYSTEM
+
+    # An old article read in full is marked too.
+    articles = [ArticleText(url=url, text="body", full_chars=4, truncated=False) for url in (_RECENT_URL, _OLD_URL)]
+    rendered = panel._render_read_articles(articles, news_pool)
+    assert rendered.count("BACKGROUND ONLY") == 1 and rendered.index("BACKGROUND ONLY") > rendered.index(_RECENT_URL)
+
+
+def test_citations_of_old_news_are_removed_with_a_gap(news_pool):
+    report = EarningsReport(
+        ticker="TEST", company_name="Test Co", report_generated_at="2026-10-29T00:00:00+00:00",
+        key_metrics=[], revenue_segments=[], forward_guidance=ForwardGuidance(text="None.", source_citation="10-Q"),
+        key_risks=[], bull_case=[], bear_case=[], data_gaps=[],
+        recent_news=[NewsItem(headline="Recent", date="2026-10-24", url=_RECENT_URL, relevance_note="n"),
+                     NewsItem(headline="Old", date="2026-09-29", url=_OLD_URL, relevance_note="n")],
+        since_filing=[SinceFilingItem(claim="EPS seen at $3.", evidence_type="estimate", period="Q3 FY2026",
+                                      as_of_date="2026-09-29", source="LSEG", url=_OLD_URL)],
+        what_to_watch=[WatchItem(text="t", relevant_urls=[_RECENT_URL, _UNDATED_URL])],
+    )
+
+    panel._drop_old_news(report, news_pool, "[t]")
+
+    assert [item.url for item in report.recent_news] == [_RECENT_URL]
+    assert report.since_filing == []
+    assert report.what_to_watch[0].relevant_urls == [_RECENT_URL]
+    assert len(report.data_gaps) == 3 and all("older than 14 days or undated" in gap for gap in report.data_gaps)
+
+
+def test_8ks_and_the_call_are_not_news_and_keep_their_dates_rule():
+    # The 14-day rule is about news articles: a since_filing item linked to
+    # the 8-K or the call is checked by _check_since_filing, not removed here.
+    report = EarningsReport(
+        ticker="TEST", company_name="Test Co", report_generated_at="2026-10-29T00:00:00+00:00",
+        key_metrics=[], revenue_segments=[], forward_guidance=ForwardGuidance(text="None.", source_citation="10-Q"),
+        key_risks=[], recent_news=[], bull_case=[], bear_case=[], what_to_watch=[], data_gaps=[],
+        since_filing=[SinceFilingItem(claim="Q3 revenue rose.", evidence_type="reported", period="Q3 FY2026",
+                                      as_of_date="2026-07-20", source="8-K Item 2.02", url="https://www.sec.gov/8k")],
+    )
+    panel._drop_old_news(report, [], "[t]")
+    assert len(report.since_filing) == 1 and report.data_gaps == []
 
 
 def test_nothing_in_range_returns_none(monkeypatch, tmp_path):

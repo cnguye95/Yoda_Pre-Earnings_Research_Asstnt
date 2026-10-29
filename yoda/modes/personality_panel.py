@@ -91,6 +91,7 @@ from yoda.schema import (
     SinceFilingItem,
 )
 from yoda.tools.consensus import MarketSnapshot, get_market_snapshot
+from yoda.tools.news import NEWS_CITABLE_DAYS, is_citable
 
 
 # ---------------------------------------------------------------------------
@@ -163,6 +164,10 @@ Rules:
   - Use lookup_peer sparingly — only when comparing the primary company to a
     named competitor would change your conclusion.
   - If a tool returns "no new evidence", switch tools or FINISH.
+  - News counts as evidence only if it was published in the last 14 days.
+    Older or undated articles are marked "background only": use them to
+    understand a story and to search for its recent follow-ups, but never
+    quote them as evidence.
   - When you have enough evidence to answer your hypothesis question, FINISH.
     Calling more tools without a specific new question wastes the analyst's
     time and the user's budget.
@@ -368,16 +373,23 @@ def _render_article(article: ArticleText) -> str:
     return f"ARTICLE {article.url}{cut_note}\n\n{article.text}"
 
 
+# The note on an article too old (or undated) to be cited.
+_BACKGROUND_ONLY = f"; older than {NEWS_CITABLE_DAYS} days or undated — background only, not citable"
+
+
 def _render_news(items: list[NewsSearchResult]) -> str:
     """Format news search results as text for a personality to read.
 
     URLs are preserved verbatim so the agent can include them in
-    evidence_quotes; an article with no known date says "no-date".
+    evidence_quotes; an article with no known date says "no-date". An
+    article older than NEWS_CITABLE_DAYS days (or undated) is marked as
+    background only: it may lead to recent follow-ups but is never evidence.
     """
     if not items:
         return "No news results."
     return "\n".join(
-        f"- {item.title} ({item.published_date or 'no-date'})\n"
+        f"- {item.title} ({item.published_date or 'no-date'}"
+        f"{'' if is_citable(item.published_date) else _BACKGROUND_ONLY})\n"
         f"  URL: {item.url}\n"
         f"  {item.snippet[:300]}"
         for item in items
@@ -504,6 +516,10 @@ def _check_evidence(draft: "_EvidenceDraft", seen: dict[str, _SeenSource]) -> Ev
     elif entry.kind == "market" and tag != "estimate":
         notes.append("set to estimate: CONTEXT holds third-party expectations")
         tag = "estimate"
+    elif entry.kind == "news" and not is_citable(entry.as_of):
+        notes.append(f"the article ({entry.as_of or 'no date'}) is older than {NEWS_CITABLE_DAYS} days: "
+                     "background only, not evidence")
+        tag = "unverifiable"
     elif entry.kind == "news" and tag != "unverifiable":
         source = draft.source
         if _norm(source) in ("", "none", "none stated") or _norm(source) not in _norm(entry.text):
@@ -1083,6 +1099,12 @@ Rules you must follow without exception:
 2. recent_news items MUST carry the exact url field from the news pool you
    are given. Do NOT synthesize URLs. Do NOT shorten URLs. Do NOT omit URLs.
 
+   Only articles published in the last 14 days may be cited — in
+   recent_news, since_filing and what_to_watch — or support an argument.
+   Those are the NEWS POOL. The OLDER NEWS list (and any article read in
+   full that is marked background only) is background: use it to follow a
+   story to its recent developments, never as a citation or as support.
+
    forward_guidance.text MUST be a VERBATIM quote from the FILING
    TEXT — wrap it in double quotes to make this explicit. Pull from
    the MD&A outlook, "subsequent events," or any management commentary
@@ -1259,11 +1281,21 @@ def _render_eight_k_text(eight_ks: list[EightKFiling]) -> str:
     )
 
 
-def _render_read_articles(articles: list[ArticleText]) -> str:
-    """Return the full text of every article a personality read, for synthesis."""
+def _render_read_articles(articles: list[ArticleText], news_pool: list[NewsSearchResult] | None = None) -> str:
+    """Return the full text of every article a personality read, for synthesis.
+
+    An article whose news-pool entry is older than NEWS_CITABLE_DAYS days
+    (or undated) is marked as background only.
+    """
     if not articles:
         return "(No articles were read in full.)"
-    return "\n\n".join(_render_article(article) for article in articles)
+    citable = {item.url for item in news_pool or [] if is_citable(item.published_date)}
+    return "\n\n".join(
+        _render_article(article) if article.url in citable or news_pool is None
+        else f"[BACKGROUND ONLY — older than {NEWS_CITABLE_DAYS} days or undated; never cite]\n"
+             f"{_render_article(article)}"
+        for article in articles
+    )
 
 
 def _render_call_for_synthesis(call: TranscriptFetch) -> str:
@@ -1358,7 +1390,10 @@ def _synthesize_report(
         f"--- HYPOTHESES (final, from panel investigation) ---\n{hyp_text}\n\n"
         f"--- {contested_block} ---\n\n"
         f"--- CRITIQUE MESSAGES (peer review) ---\n{msg_text}\n\n"
-        f"--- NEWS POOL (JSON, URLs preserved) ---\n{json.dumps([item.model_dump() for item in news_pool])}\n\n"
+        f"--- NEWS POOL (JSON, URLs preserved; published in the last {NEWS_CITABLE_DAYS} days — citable) ---\n"
+        f"{json.dumps([item.model_dump() for item in news_pool if is_citable(item.published_date)])}\n\n"
+        f"--- OLDER NEWS (JSON; older than {NEWS_CITABLE_DAYS} days or undated — background only, never cite) ---\n"
+        f"{json.dumps([item.model_dump() for item in news_pool if not is_citable(item.published_date)])}\n\n"
         f"Produce the EarningsReport."
     )
 
@@ -1462,6 +1497,34 @@ def _check_since_filing(
             item.evidence_type = "unverifiable"
         kept.append(item)
     report.since_filing = kept
+
+
+def _drop_old_news(report: EarningsReport, news_pool: list[NewsSearchResult], log_prefix: str) -> None:
+    """Remove every citation of a news article older than NEWS_CITABLE_DAYS days (or undated).
+
+    Such an article is background only. A recent_news item or since_filing
+    item that cites one is dropped, and it is stripped from what_to_watch
+    links; each removal gets a data_gaps entry naming the article's date.
+    URLs outside the news pool are left for the checks that follow.
+    """
+    old = {item.url: item.published_date or "no date" for item in news_pool if not is_citable(item.published_date)}
+    removed: list[str] = []
+
+    for news_item in [item for item in report.recent_news if item.url in old]:
+        report.recent_news.remove(news_item)
+        removed.append(f"recent_news \"{news_item.headline[:100]}\" ({old[news_item.url]})")
+    for item in [item for item in report.since_filing if item.url in old]:
+        report.since_filing.remove(item)
+        removed.append(f"since_filing \"{item.claim[:100]}\" ({old[item.url]})")
+    for watch_item in report.what_to_watch:
+        stale = [url for url in watch_item.relevant_urls if url in old]
+        watch_item.relevant_urls = [url for url in watch_item.relevant_urls if url not in old]
+        removed += [f"what_to_watch link {url} ({old[url]})" for url in stale]
+
+    report.data_gaps += [f"Removed {what}: the article is older than {NEWS_CITABLE_DAYS} days or undated, "
+                         "so it may not be cited." for what in removed]
+    if removed:
+        print(f"{log_prefix} WARNING: removed {len(removed)} citation(s) of news older than {NEWS_CITABLE_DAYS} days")
 
 
 def _completeness_gaps(report: EarningsReport, eight_k_count: int, news_count: int) -> list[str]:
@@ -2235,7 +2298,7 @@ def run_personality_panel(
     # since_filing claims rest on.
     eight_k_text = _render_eight_k_text(eight_ks)
     call_text = _render_call_for_synthesis(call)
-    articles_text = _render_read_articles(list(ctx.read_articles.values()))
+    articles_text = _render_read_articles(list(ctx.read_articles.values()), ctx.news_pool)
 
     # Give the synthesizer the FULL filing text — the same text the baseline
     # reads — so it can extract every figure and cite the filing's own
@@ -2278,6 +2341,10 @@ def run_personality_panel(
     # Marking (with a data gap) keeps the report usable without pretending
     # the fact came from a particular filing section.
     _scrub_source_citations(report, log_prefix)
+
+    # Citations of articles too old (or undated) to be cited are removed,
+    # each with a data gap, before the checks below.
+    _drop_old_news(report, ctx.news_pool, log_prefix)
 
     # Every news item in the final report must be a real article from the
     # collected pool — a missing or unknown URL means synthesis invented it.
@@ -2325,7 +2392,8 @@ def run_personality_panel(
     # Parts of the new sections synthesis left unfilled (a metric with no
     # period, an empty since_filing, an unexplained N/A) are named for the
     # reader rather than failing the run.
-    report.data_gaps.extend(_completeness_gaps(report, len(eight_ks), len(ctx.news_pool)))
+    citable_news = sum(is_citable(item.published_date) for item in ctx.news_pool)
+    report.data_gaps.extend(_completeness_gaps(report, len(eight_ks), citable_news))
 
     # Problems from the input-gathering phase, so the reader sees them too.
     report.data_gaps.extend(gap for gap in run_gaps if gap not in report.data_gaps)

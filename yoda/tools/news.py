@@ -1,11 +1,13 @@
 """News search and article reading using the Tavily API.
 
-Two public functions:
-  search_news(query, since) — citation-ready NewsSearchResult records (see
+Public functions:
+  search_news(query, since) — NewsSearchResult records (see
       yoda/schema.py): title, URL, publication date, a short snippet and the
       domain name, for news published since *since* (the filing date).
   read_article(url) — the full text of one article as an ArticleText, cut
       to a fixed length so one long page can't flood a prompt.
+  is_citable(published_date) — whether an article is recent enough (the
+      last 14 days) to be cited; older ones are background only.
 """
 
 from datetime import date, timedelta
@@ -48,6 +50,22 @@ _NO_FILING_WINDOW_DAYS = 30
 # tokens at the rough 4-characters-per-token rate. A typical article is
 # 2,000-3,000 tokens and fits whole; only very long pages are cut.
 _ARTICLE_MAX_CHARS = 20_000
+
+
+# Only articles published in the last 14 days may be cited or support a
+# claim. Older ones are still searched (from the filing date on) and shown,
+# marked as background: they help find a story's recent follow-ups.
+NEWS_CITABLE_DAYS = 14
+
+
+def is_citable(published_date: str | None) -> bool:
+    """True if an article published on *published_date* (ISO) may be cited: within the last NEWS_CITABLE_DAYS days.
+
+    An article with no known date is not citable, since its age can't be checked.
+    """
+    if not published_date:
+        return False
+    return (market_today() - date.fromisoformat(published_date[:10])).days <= NEWS_CITABLE_DAYS
 
 
 def _iso_date(raw: str | None) -> str | None:

@@ -5,10 +5,13 @@ Run with: python -m pytest -q
 Claude is never called: the panel's model calls are replaced with fakes.
 """
 
+from datetime import timedelta
+
 import pydantic
 import pytest
 
 from yoda import evidence_text
+from yoda.dates import market_today
 from yoda.ingest.chunker import Chunk, chunk_transcript
 from yoda.ingest.edgar import PostFilingEightKs
 from yoda.ingest.transcripts import TranscriptFetch, render_call_text
@@ -424,6 +427,11 @@ _Q_LABEL = "10-Q filed 2026-08-06 · MD&A — Revenue"
 _NEWS_URL = "https://www.reuters.com/markets/nflx-preview"
 
 
+# The news snippet's date: a week ago, so it stays inside the 14 days in
+# which news may be cited whenever the tests run.
+_NEWS_DATE = (market_today() - timedelta(days=7)).isoformat()
+
+
 def _seen() -> dict:
     # What one personality was shown: a 10-Q passage, a competitor's passage,
     # a news snippet, and the shared CONTEXT block.
@@ -434,7 +442,7 @@ def _seen() -> dict:
             "PEER DIS 10-Q filed 2026-08-04 · MD&A — Revenue", "peer", "Streaming revenue rose 12%.",
             "2026-08-04", "PEER DIS 10-Q filed 2026-08-04"),
         panel._norm(_NEWS_URL): panel._SeenSource(
-            _NEWS_URL, "news", "Analysts polled by LSEG expect EPS of $5.12 for the quarter.", "2026-10-20", ""),
+            _NEWS_URL, "news", "Analysts polled by LSEG expect EPS of $5.12 for the quarter.", _NEWS_DATE, ""),
         panel._CONTEXT_KEY: panel._SeenSource("CONTEXT", "market", "- Consensus EPS: $5.12", "2026-10-28",
                                               "market data (CONTEXT)"),
     }
@@ -473,7 +481,7 @@ def test_news_tag_needs_the_source_the_article_names():
     unnamed = panel._check_evidence(_draft("expect EPS of $5.12", _NEWS_URL, "estimate", source="FactSet"),
                                     _seen())
 
-    assert (named.evidence_type, named.source, named.as_of_date) == ("estimate", "LSEG", "2026-10-20")
+    assert (named.evidence_type, named.source, named.as_of_date) == ("estimate", "LSEG", _NEWS_DATE)
     assert unnamed.evidence_type == "unverifiable" and unnamed.check_note == "the article doesn't name FactSet"
 
 
