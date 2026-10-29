@@ -18,6 +18,8 @@ from collections.abc import Iterator
 from datetime import datetime, timezone
 from typing import NamedTuple
 
+import pydantic
+
 from yoda import config
 from yoda.dates import dates_line
 from yoda.ingest.chunker import SectionLabel, section_spans
@@ -43,6 +45,22 @@ _SYSTEM_PROMPT = (
     "Write a pre-earnings research brief from these SEC filings. Every metric, "
     "segment, risk and guidance item needs a source_citation naming the filing "
     "section it came from; put anything you can't cite in data_gaps."
+)
+
+# Report fields the baseline's model is not asked to write: which filings
+# were read (set in code), and the panel-only sections it has nothing to
+# fill them from (its own hypotheses, the market data, the earnings call).
+# Leaving them out of the schema Claude is given also keeps that schema
+# under the size structured outputs accept.
+_NOT_WRITTEN_BY_MODEL = {"filings", "hypotheses_explored", "market_expectations", "earnings_call"}
+
+# What the baseline's model writes: the EarningsReport minus those fields.
+# It keeps the name "EarningsReport", so the schema Claude is shown differs
+# from the full report only by the fields left out.
+_BaselineDraft = pydantic.create_model(
+    "EarningsReport",
+    **{name: (field.annotation, field) for name, field in EarningsReport.model_fields.items()
+       if name not in _NOT_WRITTEN_BY_MODEL},
 )
 
 
@@ -251,12 +269,14 @@ def run_baseline(ticker: str, filing_set: FilingSet | None) -> EarningsReport:
     for gap in filing_text.gaps:
         print(f"[baseline] WARNING: {gap}")
 
-    # One prompt, one response, validated as an EarningsReport.
-    report, in_tok, out_tok = structured_call(
-        BASELINE_MODEL, _MAX_TOKENS, EarningsReport,
+    # One prompt, one response, then turned into a full EarningsReport (the
+    # fields the model doesn't write start empty).
+    draft, in_tok, out_tok = structured_call(
+        BASELINE_MODEL, _MAX_TOKENS, _BaselineDraft,
         system=_SYSTEM_PROMPT,
         messages=[{"role": "user", "content": _build_prompt(ticker, filing_text, now_utc)}],
     )
+    report = EarningsReport.model_validate(draft.model_dump())
 
     # Stamp on which filings were read (known exactly, so set in code), and
     # record any that are missing and why.

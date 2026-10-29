@@ -396,6 +396,27 @@ def test_baseline_strips_invented_news_and_urls():
     assert report.recent_news == [] and report.what_to_watch[0].relevant_urls == []
 
 
+def test_baseline_model_is_not_asked_for_fields_set_in_code(monkeypatch):
+    # The full report schema was too large for structured outputs once the
+    # filings list was added ("compiled grammar is too large"). The model is
+    # asked only for what it writes; the filings are stamped on in code and
+    # the panel-only sections stay empty.
+    asked = []
+
+    def fake_call(model, max_tokens, output_format, system, messages):
+        asked.append(output_format)
+        return output_format(**_report().model_dump(exclude=baseline_mod._NOT_WRITTEN_BY_MODEL)), 10, 5
+    monkeypatch.setattr(baseline_mod, "structured_call", fake_call)
+
+    report = baseline_mod.run_baseline("TEST", _filing_set(_QUARTERLY, _ANNUAL))
+
+    [output_format] = asked
+    assert not set(output_format.model_fields) & {"filings", "hypotheses_explored", "market_expectations",
+                                                  "earnings_call"}
+    assert [(f.filing_type, f.filing_date) for f in report.filings] == [("10-Q", "2026-05-01"), ("10-K", "2026-02-01")]
+    assert report.hypotheses_explored == [] and report.market_expectations is None
+
+
 def test_baseline_prompt_with_one_filing():
     prompt = _build_prompt("TEST", baseline_mod.full_filing_text([_QUARTERLY]), "2026-10-26T00:00:00+00:00")
     assert "QUARTERLY TEXT" in prompt and "10-K" not in prompt
