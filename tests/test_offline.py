@@ -27,8 +27,8 @@ from yoda.modes import tools
 from yoda.modes.tools import TOOL_DISPATCH, TOOL_SCHEMAS
 from yoda.retrieval import vector_store
 from yoda.schema import (
-    ArticleText, EarningsReport, Filing, ForwardGuidance, Metric, NewsItem, NewsSearchResult, Risk, Segment,
-    WatchItem,
+    ArticleText, EarningsReport, Filing, FilingSet, ForwardGuidance, Metric, NewsItem, NewsSearchResult, Risk,
+    Segment, WatchItem,
 )
 
 
@@ -39,8 +39,8 @@ from yoda.schema import (
 def _report(citation: str = "MD&A") -> EarningsReport:
     # Smallest valid EarningsReport; every citable field uses *citation*.
     return EarningsReport(
-        ticker="TEST", company_name="Test Co", filing_type="10-Q",
-        filing_date="2026-01-01", report_generated_at="2026-01-01T00:00:00+00:00",
+        ticker="TEST", company_name="Test Co",
+        report_generated_at="2026-01-01T00:00:00+00:00",
         key_metrics=[Metric(name="Revenue", value="1", unit="USD", source_citation=citation)],
         revenue_segments=[],
         forward_guidance=ForwardGuidance(text="None issued.", source_citation="MD&A"),
@@ -140,7 +140,7 @@ _POOL_URL = "https://www.reuters.com/markets/test-article"
 def _news_ctx() -> tools.ToolContext:
     # A tool context whose news pool holds one article. The store is never
     # touched by the news tools, so a placeholder is enough.
-    ctx = tools.ToolContext(primary_ticker="TEST", primary_accession=None, store=None,
+    ctx = tools.ToolContext(primary_ticker="TEST", store=None,
                             news_since=datetime.date(2026, 8, 6))
     ctx.news_pool.append(NewsSearchResult(title="t", url=_POOL_URL))
     return ctx
@@ -209,7 +209,7 @@ def test_retrieve_filing_also_searches_the_8ks_together():
         def query_any(self, accessions, query, k):
             calls.append(("query_any", tuple(accessions), k))
             return []
-    ctx = tools.ToolContext(primary_ticker="TEST", primary_accession="q", supplemental_accession="k",
+    ctx = tools.ToolContext(primary_ticker="TEST", filing_labels={"q": "", "k": ""},
                             store=_Store(), eight_k_accessions=["8k-a", "8k-b"])
 
     tools.retrieve_filing(ctx, "revenue", k=4)
@@ -237,9 +237,8 @@ def test_filing_chunks_are_labelled_with_their_filing():
 
         def query_any(self, accessions, query, k):
             return [_fake_chunk("8-K Item 2.02 (filed 2026-10-13)")]
-    ctx = tools.ToolContext(primary_ticker="TEST", primary_accession="q", supplemental_accession="k",
-                            store=_Store(), primary_label="10-Q filed 2026-08-06",
-                            supplemental_label="10-K filed 2026-02-01", eight_k_accessions=["8k"])
+    ctx = tools.ToolContext(primary_ticker="TEST", store=_Store(), eight_k_accessions=["8k"],
+                            filing_labels={"q": "10-Q filed 2026-08-06", "k": "10-K filed 2026-02-01"})
 
     labels = [chunk.document for chunk in tools.retrieve_filing(ctx, "revenue")]
 
@@ -257,8 +256,8 @@ def test_peer_chunks_are_labelled_as_a_competitors(monkeypatch):
             return [_fake_chunk()]
     peer_filing = Filing(ticker="DIS", filing_type="10-Q", filing_date="2026-08-04", accession_number="dis-q",
                          clean_text="Revenue rose.")
-    monkeypatch.setattr(tools, "fetch_latest_filing", lambda ticker: peer_filing)
-    ctx = tools.ToolContext(primary_ticker="NFLX", primary_accession="q", store=_Store())
+    monkeypatch.setattr(tools, "fetch_filings", lambda ticker: FilingSet(ticker="DIS", cik=1, filings=[peer_filing]))
+    ctx = tools.ToolContext(primary_ticker="NFLX", store=_Store())
 
     [chunk] = tools.lookup_peer(ctx, "dis", "revenue")
 
@@ -335,43 +334,57 @@ def test_chunk_heading_falls_back_to_section():
 # Baseline prompt
 # ---------------------------------------------------------------------------
 
-def _filing(filing_type: str, filing_date: str, clean_text: str, **extra) -> Filing:
+def _filing(filing_type: str, filing_date: str, clean_text: str) -> Filing:
     # A minimal Filing with just the fields the prompt builders read.
     return Filing(ticker="TEST", filing_type=filing_type, filing_date=filing_date,
-                  accession_number=f"acc-{filing_type}", clean_text=clean_text, **extra)
+                  accession_number=f"acc-{filing_type}", clean_text=clean_text)
 
 
-_PRIMARY = _filing("10-Q", "2026-05-01", "QUARTERLY TEXT")
+def _filing_set(*filings: Filing) -> FilingSet:
+    # A FilingSet holding *filings* (newest first), as fetch_filings returns it.
+    return FilingSet(ticker="TEST", cik=1, filings=list(filings))
 
 
-def test_baseline_prompt_includes_supplemental_filing():
-    filing = _filing("10-Q", "2026-05-01", "QUARTERLY TEXT",
-                     supplemental=_filing("10-K", "2026-02-01", "ANNUAL TEXT"))
-    prompt, dropped = _build_prompt("TEST", filing, "2026-10-26T00:00:00+00:00")
-    assert "QUARTERLY TEXT" in prompt and "ANNUAL TEXT" in prompt and not dropped
-    # Each filing gets a header naming its type and date, primary first.
+_QUARTERLY = _filing("10-Q", "2026-05-01", "QUARTERLY TEXT")
+_ANNUAL = _filing("10-K", "2026-02-01", "ANNUAL TEXT")
+
+
+def test_baseline_prompt_includes_every_filing():
+    filing_text = baseline_mod.full_filing_text([_QUARTERLY, _ANNUAL])
+    prompt = _build_prompt("TEST", filing_text, "2026-10-26T00:00:00+00:00")
+    assert "QUARTERLY TEXT" in prompt and "ANNUAL TEXT" in prompt and filing_text.gaps == []
+    # Each filing gets a header naming its type and date, newest first.
     assert "=== 10-Q filed 2026-05-01 ===" in prompt and "=== 10-K filed 2026-02-01 ===" in prompt
     assert prompt.index("QUARTERLY TEXT") < prompt.index("ANNUAL TEXT")
 
 
-def test_full_filing_text_drops_supplemental_when_too_large(monkeypatch):
-    # When primary + supplemental exceed the size cap, the primary is kept
-    # whole and the supplemental is left out (and reported as dropped).
+def test_full_filing_text_leaves_out_an_older_filing_when_too_large(monkeypatch):
+    # When the filings exceed the size cap, the newest is kept whole and the
+    # older one is left out, with a data gap naming it.
     monkeypatch.setattr(baseline_mod, "MAX_FILING_CHARS", 20)
-    supplemental = _filing("10-K", "2026-02-01", "ANNUAL TEXT")
-    text, dropped = baseline_mod.full_filing_text(_PRIMARY, supplemental)
-    assert dropped and "QUARTERLY TEXT" in text and "ANNUAL TEXT" not in text
-    assert "10-K filed 2026-02-01" in baseline_mod.supplemental_dropped_note(supplemental)
+    filing_text = baseline_mod.full_filing_text([_QUARTERLY, _ANNUAL])
+    assert "QUARTERLY TEXT" in filing_text.text and "ANNUAL TEXT" not in filing_text.text
+    assert filing_text.used == [_QUARTERLY]
+    assert len(filing_text.gaps) == 1 and "10-K filed 2026-02-01" in filing_text.gaps[0]
 
 
 def test_reserved_room_counts_against_the_size_cap(monkeypatch):
     # The panel reserves room for its 8-Ks and read articles: the pair fits
     # on its own (25 chars) but not with 10 more reserved, so the 10-K goes.
     monkeypatch.setattr(baseline_mod, "MAX_FILING_CHARS", 30)
-    supplemental = _filing("10-K", "2026-02-01", "ANNUAL TEXT")
-    assert baseline_mod.full_filing_text(_PRIMARY, supplemental)[1] is False
-    text, dropped = baseline_mod.full_filing_text(_PRIMARY, supplemental, reserved_chars=10)
-    assert dropped and "ANNUAL TEXT" not in text
+    assert baseline_mod.full_filing_text([_QUARTERLY, _ANNUAL]).gaps == []
+    filing_text = baseline_mod.full_filing_text([_QUARTERLY, _ANNUAL], reserved_chars=10)
+    assert filing_text.gaps and "ANNUAL TEXT" not in filing_text.text
+
+
+def test_report_lists_the_filings_it_was_written_from():
+    # apply_filings stamps every filing read, and a gap for each left out
+    # for size or not downloaded.
+    report = _report()
+    filing_set = FilingSet(ticker="TEST", cik=1, filings=[_QUARTERLY], errors=["could not fetch the 10-K"])
+    baseline_mod.apply_filings(report, filing_set, baseline_mod.full_filing_text([_QUARTERLY]))
+    assert [(f.filing_type, f.filing_date) for f in report.filings] == [("10-Q", "2026-05-01")]
+    assert report.data_gaps == ["Filing not analyzed: could not fetch the 10-K."]
 
 
 def test_baseline_strips_invented_news_and_urls():
@@ -383,9 +396,9 @@ def test_baseline_strips_invented_news_and_urls():
     assert report.recent_news == [] and report.what_to_watch[0].relevant_urls == []
 
 
-def test_baseline_prompt_without_supplemental():
-    prompt, dropped = _build_prompt("TEST", _PRIMARY, "2026-10-26T00:00:00+00:00")
-    assert "QUARTERLY TEXT" in prompt and "10-K" not in prompt and not dropped
+def test_baseline_prompt_with_one_filing():
+    prompt = _build_prompt("TEST", baseline_mod.full_filing_text([_QUARTERLY]), "2026-10-26T00:00:00+00:00")
+    assert "QUARTERLY TEXT" in prompt and "10-K" not in prompt
 
 
 # ---------------------------------------------------------------------------
@@ -537,7 +550,7 @@ def _judge_result(value: int) -> judge.JudgeResult:
 
 def test_judge_failure_skips_row_not_run(monkeypatch, tmp_path):
     # Write to a temp folder so the real data/eval outputs are untouched.
-    monkeypatch.setattr(runner, "fetch_latest_filing", lambda t: _filing("10-Q", "2026-05-01", "text"))
+    monkeypatch.setattr(runner, "fetch_filings", lambda t: _filing_set(_filing("10-Q", "2026-05-01", "text")))
     monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: runner.ModeRun(_report(), 1.0, "logged", 0.1, ""))
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
@@ -601,7 +614,7 @@ def test_runner_regexes_read_panel_and_baseline_logs():
 
 def test_duplicate_tickers_run_once(monkeypatch, tmp_path):
     # "NFLX nflx" must not produce duplicate rows (which would break the pivot).
-    monkeypatch.setattr(runner, "fetch_latest_filing", lambda t: _filing("10-Q", "2026-05-01", "text"))
+    monkeypatch.setattr(runner, "fetch_filings", lambda t: _filing_set(_filing("10-Q", "2026-05-01", "text")))
     monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: runner.ModeRun(_report(), 1.0, "logged", 0.1, ""))
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)

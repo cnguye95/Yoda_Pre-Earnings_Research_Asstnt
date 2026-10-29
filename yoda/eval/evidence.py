@@ -20,7 +20,7 @@ from typing import NamedTuple
 
 from yoda.ingest.transcripts import render_call_text
 from yoda.modes.baseline import full_filing_text
-from yoda.schema import EarningsReport, EvidenceBundle, EvidenceDocument, Filing
+from yoda.schema import EarningsReport, EvidenceBundle, EvidenceDocument, FilingSet
 
 # Prompts above this many tokens cost the judge 2x input / 1.5x output for
 # the whole call (gpt-6.1-sol pricing, next_steps 3.7).
@@ -40,23 +40,20 @@ UNCITED_8K_CHARS = 2_000
 # The baseline's evidence and the report as the judge sees it
 # ---------------------------------------------------------------------------
 
-def filing_bundle(ticker: str, filing: Filing | None) -> EvidenceBundle:
-    """Return the evidence the single-call baseline had: the filing(s) it read, nothing else.
+def filing_bundle(ticker: str, filing_set: FilingSet | None) -> EvidenceBundle:
+    """Return the evidence the single-call baseline had: the filings it read, nothing else.
 
-    The 10-Q/10-K is included in full, and the supplemental 10-K only when
-    baseline.full_filing_text() kept it (it drops it when the pair is too
-    large). The labels match the panel's filing documents ("10-Q filed
-    2026-08-06"), so both modes' judge prompts start with the same text.
-    No filing gives a bundle with no documents.
+    Holds exactly the filings baseline.full_filing_text() kept. The labels
+    match the panel's filing documents ("10-Q filed 2026-08-06"), so both
+    modes' judge prompts start with the same text. No filing gives a bundle
+    with no documents.
     """
     documents = []
-    if filing is not None:
-        _, supplemental_dropped = full_filing_text(filing, filing.supplemental)
-        used = [filing] + ([filing.supplemental] if filing.supplemental and not supplemental_dropped else [])
+    if filing_set is not None:
         documents = [
             EvidenceDocument(label=f"{doc.filing_type} filed {doc.filing_date}", accession_number=doc.accession_number,
                              filing_date=doc.filing_date, url=doc.url, text=doc.clean_text)
-            for doc in used
+            for doc in full_filing_text(filing_set.filings).used
         ]
     return EvidenceBundle(ticker=ticker, documents=documents, market_context="", news_results=[],
                           read_urls=[], articles=[], peer_passages=[])

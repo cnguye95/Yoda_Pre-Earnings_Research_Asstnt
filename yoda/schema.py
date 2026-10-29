@@ -35,9 +35,8 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 # quietly creating a seventh "personality".
 PersonalityName = Literal["Optimist", "Pessimist", "Conservative", "Dreamer", "Contrarian", "Quant"]
 
-# The SEC filing types Yoda reads. "N/A" marks a report written when no
-# filing was found inside the freshness window.
-FilingType = Literal["10-Q", "10-K", "N/A"]
+# The SEC filing types Yoda reads as its main documents.
+FilingType = Literal["10-Q", "10-K"]
 
 # What kind of evidence backs a claim, most reliable first. When two sources
 # give different values for the same fact and period, the more reliable tag
@@ -151,6 +150,14 @@ class MarketExpectations(BaseModel):
     price_target: ExpectationValue       # consensus analyst price target
 
 
+class ReportFiling(BaseModel):
+    # One SEC filing the report was written from. Set in code, never by the
+    # model. url is None when the archive URL is unknown.
+    filing_type: str
+    filing_date: str       # ISO date, e.g. "2026-08-06"
+    url: str | None = None
+
+
 class WatchItem(BaseModel):
     # One pre-earnings watchlist entry. text holds the existing two-part
     # format: "**Heading:** analysis paragraph\n\n-> Monitor ...".
@@ -238,28 +245,43 @@ class PersonalityResult(BaseModel):
 # ---------------------------------------------------------------------------
 
 class Filing(BaseModel):
-    """One SEC filing as fetched by yoda.ingest.edgar.fetch_latest_filing().
+    """One SEC filing (a 10-Q or 10-K) as fetched by yoda.ingest.edgar.fetch_filings().
 
     *clean_text* is the readable text the analysis works from; *raw_html* is
-    kept for chunking. *supplemental* is the most recent 10-K attached to a
-    10-Q, when one exists. *supplemental_error* records why a supplemental
-    10-K that should exist could not be downloaded, so the gap is visible.
+    kept so the text can be rebuilt from the disk cache.
     """
-    # Reject unknown fields, so a disk cache written by an older version of
-    # Yoda (which stored the supplemental filing as flat extra keys) fails to
-    # load and is re-downloaded instead of silently losing its 10-K.
     model_config = ConfigDict(extra="forbid")
 
     ticker: str
-    cik: int | None = None             # SEC company number; not stored for supplementals
-    filing_type: Literal["10-Q", "10-K"]
+    filing_type: FilingType
     filing_date: str                   # ISO date, e.g. "2026-04-18"
     accession_number: str              # SEC's unique filing ID, e.g. "0000320193-26-000123"
     url: str | None = None             # None when the archive URL is unknown
     raw_html: str = ""
     clean_text: str = ""
-    supplemental: "Filing | None" = None
-    supplemental_error: str | None = None
+
+
+class FilingSet(BaseModel):
+    """Every filing Yoda reads for one company, as returned by yoda.ingest.edgar.fetch_filings().
+
+    *filings* is newest first; no filing ranks above another, each is read
+    in full. *errors* says why a filing that should be here could not be
+    downloaded, so the gap stays visible in the report.
+    """
+    # Reject unknown fields, so a disk cache written by an older version of
+    # Yoda (which stored one "primary" filing with a nested "supplemental")
+    # fails to load and is re-downloaded rather than half-read.
+    model_config = ConfigDict(extra="forbid")
+
+    ticker: str
+    cik: int                           # SEC company number
+    filings: list[Filing] = Field(min_length=1)   # a set with no filing is None instead
+    errors: list[str] = []
+
+    @property
+    def newest(self) -> Filing:
+        """The most recently filed document: the date 8-Ks and news are counted from."""
+        return self.filings[0]
 
 
 class EightKDocument(BaseModel):
@@ -279,7 +301,7 @@ class EightKDocument(BaseModel):
 
 
 class EightKFiling(BaseModel):
-    """One 8-K filed after the primary 10-Q/10-K, as fetched by
+    """One 8-K filed after the newest 10-Q/10-K, as fetched by
     yoda.ingest.edgar.fetch_post_filing_8ks().
 
     *items* are the 8-K item codes that say what the filing reports, e.g.
@@ -416,10 +438,10 @@ class EarningsReport(BaseModel):
     # Header fields — who, what, when
     ticker: str
     company_name: str
-    filing_type: FilingType
-    filing_date: str           # ISO date of the most recent filing
-    supplemental_filing_type: str | None = None  # e.g. "10-K" when primary is a 10-Q
-    supplemental_filing_date: str | None = None  # ISO date of the supplemental filing
+    # The SEC filings the report was read from, newest first, set in code.
+    # Empty when no filing was in range (or in reports written before this
+    # field existed, which stored one filing_type/filing_date pair instead).
+    filings: list[ReportFiling] = []
     report_generated_at: str   # ISO-8601 UTC timestamp
 
     # Core analysis — all source_citation fields are required (not optional)
@@ -474,8 +496,7 @@ if __name__ == "__main__":
     sample = EarningsReport(
         ticker="NFLX",
         company_name="Netflix, Inc.",
-        filing_type="10-Q",
-        filing_date="2026-04-18",
+        filings=[ReportFiling(filing_type="10-Q", filing_date="2026-04-18")],
         report_generated_at="2026-05-11T00:00:00+00:00",
         key_metrics=[
             Metric(name="Revenue", value="$12.2B", unit="", source_citation="MD&A — Revenue Recognition",

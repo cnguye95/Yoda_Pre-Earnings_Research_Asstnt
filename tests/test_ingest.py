@@ -16,7 +16,7 @@ import requests
 
 from yoda import dates, http_session
 from yoda.ingest import chunker, edgar, transcripts
-from yoda.schema import Filing
+from yoda.schema import Filing, FilingSet
 
 
 # ---------------------------------------------------------------------------
@@ -28,18 +28,16 @@ def _days_ago(days: int) -> str:
     return (dates.market_today() - timedelta(days=days)).isoformat()
 
 
-def _filing(**overrides) -> Filing:
-    # A complete 10-Q Filing with a supplemental 10-K, for cache round trips.
-    values = dict(
-        ticker="TEST", cik=123, filing_type="10-Q", filing_date="2026-05-01",
-        accession_number="0001-26-000001", url="https://sec.example/q.htm",
-        raw_html="<p>Quarter</p>", clean_text="Quarter",
-        supplemental=Filing(ticker="TEST", filing_type="10-K", filing_date="2026-02-01",
-                            accession_number="0001-26-000000", url=None,
-                            raw_html="<p>Annual</p>", clean_text="Annual"),
-    )
-    values.update(overrides)
-    return Filing(**values)
+def _filing_set() -> FilingSet:
+    # A complete set: a 10-Q and an older 10-K, newest first, for cache round trips.
+    return FilingSet(ticker="TEST", cik=123, filings=[
+        Filing(ticker="TEST", filing_type="10-Q", filing_date="2026-05-01",
+               accession_number="0001-26-000001", url="https://sec.example/q.htm",
+               raw_html="<p>Quarter</p>", clean_text="Quarter"),
+        Filing(ticker="TEST", filing_type="10-K", filing_date="2026-02-01",
+               accession_number="0001-26-000000", url=None,
+               raw_html="<p>Annual</p>", clean_text="Annual"),
+    ])
 
 
 @pytest.fixture
@@ -54,7 +52,7 @@ def _fake_sec(monkeypatch, filings: list[dict], fail_accessions: tuple[str, ...]
     # accession numbers in *fail_accessions* raise an HTTP error.
     monkeypatch.setattr(edgar, "_load_ticker_cik_map", lambda: {"TEST": 123})
     monkeypatch.setattr(edgar, "_get_filings_metadata", lambda cik: filings)
-    monkeypatch.setattr(edgar, "_get_primary_document", lambda cik, acc: f"{acc}.htm")
+    monkeypatch.setattr(edgar, "_get_main_document", lambda cik, acc: f"{acc}.htm")
 
     def download(cik, accession, doc):
         if accession in fail_accessions:
@@ -67,33 +65,36 @@ def _fake_sec(monkeypatch, filings: list[dict], fail_accessions: tuple[str, ...]
 # Disk cache
 # ---------------------------------------------------------------------------
 
-def test_cache_round_trip_keeps_supplemental(cache_dir):
-    # A filing written to the cache comes back identical, 10-K included.
-    original = _filing()
+def test_cache_round_trip_keeps_every_filing(cache_dir):
+    # A filing set written to the cache comes back identical, both filings included.
+    original = _filing_set()
     edgar._write_disk_cache(original)
     loaded = edgar._read_disk_cache("TEST")
     assert loaded is not None
-    assert loaded.supplemental is not None
-    assert loaded.supplemental.filing_type == "10-K"
-    assert loaded.supplemental.url is None          # a missing URL stays missing, not ""
-    assert loaded.clean_text == "Quarter"
+    assert [filing.filing_type for filing in loaded.filings] == ["10-Q", "10-K"]
+    assert loaded.filings[1].url is None            # a missing URL stays missing, not ""
+    assert loaded.newest.clean_text == "Quarter"
     assert loaded.model_dump() == original.model_dump()
 
 
-def test_old_format_cache_is_a_miss(cache_dir):
-    # Caches from older Yoda versions stored the 10-K as flat extra keys. They
-    # must be re-downloaded, not loaded with the 10-K silently missing.
+@pytest.mark.parametrize("old_meta", [
+    # The flat format: the 10-K stored as extra keys beside the 10-Q.
+    {"ticker": "TEST", "cik": 123, "filing_type": "10-Q", "filing_date": "2026-05-01",
+     "accession_number": "0001-26-000001", "url": "https://sec.example/q.htm",
+     "supplemental_accession_number": "0001-26-000000", "supplemental_filing_type": "10-K",
+     "supplemental_filing_date": "2026-02-01", "supplemental_url": ""},
+    # The "primary" format: one filing with the 10-K nested as "supplemental".
+    {"ticker": "TEST", "cik": 123, "filing_type": "10-Q", "filing_date": "2026-05-01",
+     "accession_number": "0001-26-000001", "url": "https://sec.example/q.htm",
+     "supplemental": {"ticker": "TEST", "filing_type": "10-K", "filing_date": "2026-02-01",
+                      "accession_number": "0001-26-000000"}, "supplemental_error": None},
+])
+def test_old_format_cache_is_a_miss(cache_dir, old_meta):
+    # Caches from older Yoda versions must be re-downloaded, not half-read.
     (cache_dir / "TEST").mkdir()
-    old_meta = {
-        "ticker": "TEST", "cik": 123, "filing_type": "10-Q", "filing_date": "2026-05-01",
-        "accession_number": "0001-26-000001", "url": "https://sec.example/q.htm",
-        "supplemental_accession_number": "0001-26-000000",
-        "supplemental_filing_type": "10-K",
-        "supplemental_filing_date": "2026-02-01",
-        "supplemental_url": "",
-    }
     (cache_dir / "TEST" / "latest.json").write_text(json.dumps(old_meta), encoding="utf-8")
     (cache_dir / "TEST" / "0001-26-000001.html").write_text("<p>Q</p>", encoding="utf-8")
+    (cache_dir / "TEST" / "0001-26-000000.html").write_text("<p>K</p>", encoding="utf-8")
     assert edgar._read_disk_cache("TEST") is None
 
 
@@ -105,8 +106,8 @@ def test_corrupt_cache_is_a_miss(cache_dir):
 
 
 def test_missing_html_is_a_miss(cache_dir):
-    # If the supplemental's HTML file was deleted, the whole cache is refetched.
-    edgar._write_disk_cache(_filing())
+    # If one filing's HTML file was deleted, the whole cache is refetched.
+    edgar._write_disk_cache(_filing_set())
     (cache_dir / "TEST" / "0001-26-000000.html").unlink()
     assert edgar._read_disk_cache("TEST") is None
 
@@ -115,51 +116,60 @@ def test_missing_html_is_a_miss(cache_dir):
 # Choosing and fetching filings
 # ---------------------------------------------------------------------------
 
-def test_newest_recent_10q_wins_over_10k():
+def test_newest_recent_10q_and_10k_are_picked_newest_first():
     filings = [
         {"form": "10-K", "filing_date": _days_ago(5),  "accession_number": "k-new"},
         {"form": "10-Q", "filing_date": _days_ago(60), "accession_number": "q-old"},
         {"form": "10-Q", "filing_date": _days_ago(20), "accession_number": "q-new"},
     ]
-    assert edgar._pick_latest_filing(filings)["accession_number"] == "q-new"
-    assert edgar._pick_supplemental_filing(filings, {"form": "10-Q"})["accession_number"] == "k-new"
+    assert [meta["accession_number"] for meta in edgar._pick_filings(filings)] == ["k-new", "q-new"]
 
 
 def test_stale_filings_are_ignored():
     # Anything older than the freshness window doesn't count.
     filings = [{"form": "10-Q", "filing_date": _days_ago(edgar.FILING_FRESHNESS_DAYS + 1),
                 "accession_number": "q-stale"}]
-    assert edgar._pick_latest_filing(filings) is None
+    assert edgar._pick_filings(filings) == []
 
 
 def test_no_recent_filing_returns_none(cache_dir, monkeypatch):
     _fake_sec(monkeypatch, filings=[])
-    assert edgar.fetch_latest_filing("test") is None
+    assert edgar.fetch_filings("test") is None
 
 
-def test_fetch_attaches_supplemental_and_caches(cache_dir, monkeypatch):
+def test_fetch_returns_both_filings_and_caches(cache_dir, monkeypatch):
     _fake_sec(monkeypatch, filings=[
         {"form": "10-Q", "filing_date": _days_ago(10), "accession_number": "q1"},
         {"form": "10-K", "filing_date": _days_ago(50), "accession_number": "k1"},
     ])
-    filing = edgar.fetch_latest_filing("test")
-    assert filing.filing_type == "10-Q" and filing.clean_text == "Text of q1"
-    assert filing.supplemental.accession_number == "k1"
-    assert filing.supplemental_error is None
+    filing_set = edgar.fetch_filings("test")
+    assert [filing.accession_number for filing in filing_set.filings] == ["q1", "k1"]
+    assert filing_set.newest.clean_text == "Text of q1"
+    assert filing_set.errors == []
     # The second call is served from the cache it just wrote.
-    assert edgar._read_disk_cache("TEST").model_dump() == filing.model_dump()
+    assert edgar._read_disk_cache("TEST").model_dump() == filing_set.model_dump()
 
 
-def test_supplemental_failure_is_recorded_not_swallowed(cache_dir, monkeypatch):
-    # The 10-K download fails: the 10-Q is still returned, and the reason the
-    # 10-K is missing is on the filing for the report's data_gaps.
+def test_failed_download_is_recorded_not_swallowed_or_cached(cache_dir, monkeypatch):
+    # The 10-K download fails: the 10-Q is still returned, the reason the
+    # 10-K is missing is in errors for the report's data_gaps, and nothing
+    # is cached, so the next call tries the 10-K again.
     _fake_sec(monkeypatch, filings=[
         {"form": "10-Q", "filing_date": _days_ago(10), "accession_number": "q1"},
         {"form": "10-K", "filing_date": _days_ago(50), "accession_number": "k1"},
     ], fail_accessions=("k1",))
-    filing = edgar.fetch_latest_filing("TEST")
-    assert filing.supplemental is None
-    assert "HTTPError" in filing.supplemental_error and "10-K" in filing.supplemental_error
+    filing_set = edgar.fetch_filings("TEST")
+    assert [filing.accession_number for filing in filing_set.filings] == ["q1"]
+    assert len(filing_set.errors) == 1
+    assert "HTTPError" in filing_set.errors[0] and "10-K" in filing_set.errors[0]
+    assert edgar._read_disk_cache("TEST") is None
+
+
+def test_every_download_failing_raises(cache_dir, monkeypatch):
+    _fake_sec(monkeypatch, filings=[{"form": "10-Q", "filing_date": _days_ago(10), "accession_number": "q1"}],
+              fail_accessions=("q1",))
+    with pytest.raises(RuntimeError, match="could be downloaded"):
+        edgar.fetch_filings("TEST")
 
 
 def test_unexpected_sec_json_raises_clear_error(monkeypatch):
@@ -171,7 +181,7 @@ def test_unexpected_sec_json_raises_clear_error(monkeypatch):
 
 
 # ---------------------------------------------------------------------------
-# 8-Ks filed after the primary filing
+# 8-Ks filed after the newest filing
 # ---------------------------------------------------------------------------
 
 # A typical earnings 8-K index: the form, the press release, a financial
@@ -243,7 +253,7 @@ def test_8k_without_a_main_document_is_an_error():
         edgar._select_8k_documents([("2", "EX-99.1", "ex991.htm")])
 
 
-def test_only_8ks_filed_after_the_primary_are_fetched(cache_dir, monkeypatch):
+def test_only_8ks_filed_after_the_newest_filing_are_fetched(cache_dir, monkeypatch):
     # 8-Ks on or before the 10-Q's date, and other forms, are left out; the
     # rest come back oldest first, amendments included, with parsed items.
     _fake_8k_sec(monkeypatch, filings=[
@@ -251,7 +261,7 @@ def test_only_8ks_filed_after_the_primary_are_fetched(cache_dir, monkeypatch):
         _8k("amend", "2026-06-15", form="8-K/A", items="5.02"),
         {"form": "4", "filing_date": "2026-07-01", "accession_number": "insider", "items": ""},
     ])
-    result = edgar.fetch_post_filing_8ks(_filing())
+    result = edgar.fetch_post_filing_8ks(_filing_set())
 
     assert [k.accession_number for k in result.filings] == ["amend", "late"]
     assert result.filings[0].form == "8-K/A" and result.filings[0].items == ["5.02"]
@@ -266,11 +276,11 @@ def test_cached_8k_is_not_downloaded_again_but_new_ones_are(cache_dir, monkeypat
     # download, while one filed since the last call is fetched.
     filings = [_8k("first", "2026-06-01")]
     downloads = _fake_8k_sec(monkeypatch, filings)
-    first = edgar.fetch_post_filing_8ks(_filing())
+    first = edgar.fetch_post_filing_8ks(_filing_set())
     assert len(downloads) == 3
 
     filings.append(_8k("second", "2026-07-01"))
-    second = edgar.fetch_post_filing_8ks(_filing())
+    second = edgar.fetch_post_filing_8ks(_filing_set())
     assert [k.accession_number for k in second.filings] == ["first", "second"]
     assert all(d.startswith("second/") for d in downloads[3:]) and len(downloads) == 6
     assert second.filings[0].model_dump() == first.filings[0].model_dump()
@@ -278,17 +288,17 @@ def test_cached_8k_is_not_downloaded_again_but_new_ones_are(cache_dir, monkeypat
 
 def test_corrupt_8k_cache_is_downloaded_again(cache_dir, monkeypatch):
     downloads = _fake_8k_sec(monkeypatch, [_8k("k1", "2026-06-01")])
-    edgar.fetch_post_filing_8ks(_filing())
+    edgar.fetch_post_filing_8ks(_filing_set())
     (cache_dir / "TEST" / "8k" / "k1" / "meta.json").write_text("{not json", encoding="utf-8")
 
-    result = edgar.fetch_post_filing_8ks(_filing())
+    result = edgar.fetch_post_filing_8ks(_filing_set())
     assert len(downloads) == 6 and result.filings[0].accession_number == "k1"
 
 
 def test_one_failed_8k_is_recorded_and_the_rest_returned(cache_dir, monkeypatch):
     _fake_8k_sec(monkeypatch, [_8k("ok", "2026-06-01"), _8k("broken", "2026-07-01")],
                  fail_accessions=("broken",))
-    result = edgar.fetch_post_filing_8ks(_filing())
+    result = edgar.fetch_post_filing_8ks(_filing_set())
     assert [k.accession_number for k in result.filings] == ["ok"]
     assert len(result.errors) == 1 and "broken" in result.errors[0] and "HTTPError" in result.errors[0]
 
@@ -300,7 +310,7 @@ def test_8k_list_failure_returns_no_8ks_and_a_reason(cache_dir, monkeypatch):
         raise requests.ConnectionError("SEC down")
     monkeypatch.setattr(edgar, "_get_filings_metadata", unreachable)
 
-    result = edgar.fetch_post_filing_8ks(_filing())
+    result = edgar.fetch_post_filing_8ks(_filing_set())
     assert result.filings == []
     assert "could not be listed" in result.errors[0] and "ConnectionError" in result.errors[0]
 

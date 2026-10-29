@@ -60,9 +60,16 @@ def _link(url: str, label: str) -> str:
     return f"<a href={quoteattr(url)}>{_esc(label)}</a>"
 
 
-def _cite(citation: str, filing_url: str | None) -> str:
-    """Return a citation as markup: a link to the filing when its URL is known."""
-    return _link(filing_url, citation) if filing_url else _esc(citation)
+def _cite(citation: str, report: EarningsReport) -> str:
+    """Return a citation as markup: a link to the filing it names, when that filing's URL is known.
+
+    A citation starts with the filing type ("10-K Item 1A. Risk Factors —
+    ..."), so it links to the report's filing of that type; one that names
+    no filing type links to the newest filing.
+    """
+    named = [filing for filing in report.filings if citation.startswith(filing.filing_type)]
+    filing = (named or report.filings or [None])[0]
+    return _link(filing.url, citation) if filing and filing.url else _esc(citation)
 
 
 def _markdown_bold(text: str) -> str:
@@ -77,20 +84,26 @@ def _markdown_bold(text: str) -> str:
 def filing_caveats(report: EarningsReport) -> list[str]:
     """Warnings a reader needs about which filings the report could use.
 
-    Returns an empty list when the ideal pair (a 10-Q plus a supplemental
-    10-K) was analyzed. The app and the PDF show the same sentences.
+    Returns an empty list when both a 10-Q and a 10-K were analyzed. The app
+    and the PDF show the same sentences.
     """
-    if report.filing_type == "N/A":
+    if not report.filings:
         return [f"No SEC filing found within the last {FILING_FRESHNESS_DAYS} days for {report.ticker}. "
                 "This report is based on recent news and peer filings only — "
                 "no fundamental filing data was available."]
-    if report.filing_type == "10-K":
+    types = {filing.filing_type for filing in report.filings}
+    if "10-Q" not in types:
         return [f"No recent 10-Q available for {report.ticker}. Using the annual 10-K — "
                 "report may not reflect the latest quarterly trends."]
-    if not report.supplemental_filing_type:
+    if "10-K" not in types:
         return [f"No annual 10-K available within the last {FILING_FRESHNESS_DAYS} days for "
                 f"{report.ticker}. Report is based on the quarterly filing only."]
     return []
+
+
+def filings_caption(report: EarningsReport) -> str:
+    """Return the filings line shown under the title, e.g. "10-Q filed 2026-08-06 · 10-K filed 2026-02-01"."""
+    return " · ".join(f"{filing.filing_type} filed {filing.filing_date}" for filing in report.filings)
 
 
 # ============================================================================
@@ -289,13 +302,9 @@ def _cover_elements(report: EarningsReport, styles: StyleSheet1) -> list[Flowabl
     ]
 
     # Which filings were analyzed — or that none was.
-    if report.filing_type == "N/A":
-        filing_line = "<b>No recent SEC filing</b>"
-    else:
-        filing_line = f"<b>{_esc(report.filing_type)}</b> filed {_esc(report.filing_date)}"
-        if report.supplemental_filing_type:
-            filing_line += (f" &middot; <b>{_esc(report.supplemental_filing_type)}</b> "
-                            f"filed {_esc(report.supplemental_filing_date or '')}")
+    filing_line = " &middot; ".join(
+        f"<b>{_esc(filing.filing_type)}</b> filed {_esc(filing.filing_date)}" for filing in report.filings
+    ) or "<b>No recent SEC filing</b>"
     # And which earnings call was read (reports from before calls show nothing).
     if call_caption(report):
         filing_line += f" &middot; {_esc(call_caption(report))}"
@@ -315,7 +324,7 @@ def _cover_elements(report: EarningsReport, styles: StyleSheet1) -> list[Flowabl
     return elements
 
 
-def _metrics_table(report: EarningsReport, styles: StyleSheet1, filing_url: str | None = None) -> list[Flowable]:
+def _metrics_table(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
     """Build the Key Metrics table; a blank value shows as "not reported", never as just a unit.
 
     The period each figure covers sits under its value on a small grey line,
@@ -329,7 +338,7 @@ def _metrics_table(report: EarningsReport, styles: StyleSheet1, filing_url: str 
         rows.append([
             Paragraph(_esc(metric.name), styles['Normal']),
             Paragraph(f'{_esc(value)}<br/><font size="7" color="{_GREY}">{_esc(period)}</font>', styles['Cell']),
-            Paragraph(_cite(metric.source_citation, filing_url), styles['Citation']),
+            Paragraph(_cite(metric.source_citation, report), styles['Citation']),
         ])
     if len(rows) == 1:
         rows.append(['(None)', '—', '—'])
@@ -340,7 +349,7 @@ def _metrics_table(report: EarningsReport, styles: StyleSheet1, filing_url: str 
     return [Paragraph("Key Metrics", styles['SectionHeader']), table, Spacer(1, 0.3*inch)]
 
 
-def _segments_table(report: EarningsReport, styles: StyleSheet1, filing_url: str | None = None) -> list[Flowable]:
+def _segments_table(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
     """Build the Revenue Segments table, with every cell word-wrapped to its column."""
     rows = [['Segment', 'Revenue', 'YoY Change', 'Commentary', 'Source']]
     for segment in report.revenue_segments:
@@ -349,7 +358,7 @@ def _segments_table(report: EarningsReport, styles: StyleSheet1, filing_url: str
             Paragraph(_esc(segment.revenue or _NOT_REPORTED), styles['Cell']),
             Paragraph(_esc(segment.yoy_change or _NOT_REPORTED), styles['Cell']),
             Paragraph(_esc(segment.commentary), styles['Cell']),
-            Paragraph(_cite(segment.source_citation, filing_url), styles['Citation']),
+            Paragraph(_cite(segment.source_citation, report), styles['Citation']),
         ])
     if len(rows) == 1:
         rows.append(['(None)', '—', '—', '—', '—'])
@@ -421,7 +430,7 @@ def _since_filing_section(report: EarningsReport, styles: StyleSheet1) -> list[F
     return elements + [table, Spacer(1, 0.3*inch)]
 
 
-def _guidance_section(report: EarningsReport, styles: StyleSheet1, filing_url: str | None = None) -> list[Flowable]:
+def _guidance_section(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
     """Build the Forward Guidance block.
 
     The text is shown exactly as written: the synthesis prompt already puts
@@ -431,18 +440,18 @@ def _guidance_section(report: EarningsReport, styles: StyleSheet1, filing_url: s
     return [
         Paragraph("Forward Guidance", styles['SectionHeader']),
         Paragraph(_esc(report.forward_guidance.text), styles['BlockQuote']),
-        Paragraph(_cite(report.forward_guidance.source_citation, filing_url), styles['Citation']),
+        Paragraph(_cite(report.forward_guidance.source_citation, report), styles['Citation']),
         Spacer(1, 0.3*inch),
     ]
 
 
-def _risks_section(report: EarningsReport, styles: StyleSheet1, filing_url: str | None = None) -> list[Flowable]:
+def _risks_section(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
     """Build the Key Risks list; risks new since the prior filing get a red [NEW] tag."""
     elements: list[Flowable] = [Paragraph("Key Risks", styles['SectionHeader'])]
     for risk in report.key_risks:
         new_tag = '<font color="red"><b>[NEW]</b></font> ' if risk.is_new else ''
         elements.append(Paragraph(
-            f"{new_tag}{_esc(risk.description)} ({_cite(risk.source_citation, filing_url)})",
+            f"{new_tag}{_esc(risk.description)} ({_cite(risk.source_citation, report)})",
             styles['Normal'],
         ))
     if not report.key_risks:
@@ -523,7 +532,7 @@ def _data_gaps_section(report: EarningsReport, styles: StyleSheet1) -> list[Flow
 # Main Public API
 # ============================================================================
 
-def _story(report: EarningsReport, styles: StyleSheet1, filing_url: str | None) -> list[Flowable]:
+def _story(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
     """Return every section of the PDF in reading order.
 
     The watchlist leads because it is the report's main output. What the
@@ -536,21 +545,21 @@ def _story(report: EarningsReport, styles: StyleSheet1, filing_url: str | None) 
         *_what_to_watch_section(report, styles),
         *_market_expectations_section(report, styles),
         *_since_filing_section(report, styles),
-        *_metrics_table(report, styles, filing_url),
-        *_segments_table(report, styles, filing_url),
-        *_guidance_section(report, styles, filing_url),
-        *_risks_section(report, styles, filing_url),
+        *_metrics_table(report, styles),
+        *_segments_table(report, styles),
+        *_guidance_section(report, styles),
+        *_risks_section(report, styles),
         *_news_section(report, styles),
         *_bull_bear_section(report, styles),
         *_data_gaps_section(report, styles),
     ]
 
 
-def report_to_pdf(report: EarningsReport, output_path: str | os.PathLike, filing_url: str | None = None) -> str:
+def report_to_pdf(report: EarningsReport, output_path: str | os.PathLike) -> str:
     """Render *report* to a PDF file at *output_path* and return that path as a string.
 
-    *filing_url*, when given, turns every source_citation into a hyperlink
-    to the SEC filing.
+    Every source_citation links to the SEC filing it names, when the
+    report knows that filing's URL.
     """
     output_path = str(output_path)
     doc = SimpleDocTemplate(
@@ -561,7 +570,7 @@ def report_to_pdf(report: EarningsReport, output_path: str | os.PathLike, filing
         leftMargin=0.75*inch,
         rightMargin=0.75*inch,
     )
-    doc.build(_story(report, _get_styles(), filing_url))
+    doc.build(_story(report, _get_styles()))
     return output_path
 
 
@@ -573,15 +582,13 @@ if __name__ == "__main__":
     import sys
 
     from yoda import config
-    from yoda.ingest.edgar import fetch_latest_filing
 
     ticker = (sys.argv[1] if len(sys.argv) > 1 else "NFLX").upper()
     mode   = sys.argv[2] if len(sys.argv) > 2 else "yoda"
 
-    # Load a report saved by the eval runner, and the cached filing for its URL.
+    # Load a report saved by the eval runner (it carries its filings' URLs).
     eval_dir = config.DATA_DIR / "eval"
     report = EarningsReport.model_validate_json((eval_dir / f"{mode}_{ticker}.json").read_text(encoding="utf-8"))
-    filing = fetch_latest_filing(ticker)
 
-    result = report_to_pdf(report, eval_dir / f"report_{ticker}.pdf", filing_url=filing.url if filing else None)
+    result = report_to_pdf(report, eval_dir / f"report_{ticker}.pdf")
     print(f"PDF saved to {result}")

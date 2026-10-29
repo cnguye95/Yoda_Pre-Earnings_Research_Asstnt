@@ -30,8 +30,8 @@ from yoda.tools.consensus import ApiFailure, MarketSnapshot
 def _report(citation: str = "10-Q Item 2. MD&A — Results") -> EarningsReport:
     # A small valid report whose citable items all use *citation*.
     return EarningsReport(
-        ticker="TEST", company_name="Test Co", filing_type="10-Q",
-        filing_date="2026-01-01", report_generated_at="2026-01-01T00:00:00+00:00",
+        ticker="TEST", company_name="Test Co",
+        report_generated_at="2026-01-01T00:00:00+00:00",
         key_metrics=[Metric(name="Revenue", value="1", unit="USD", source_citation=citation)],
         revenue_segments=[Segment(name="A", revenue="1", yoy_change="+1%", commentary="c",
                                   source_citation="10-Q Item 2 — Segments")],
@@ -101,8 +101,8 @@ def test_failing_tool_reports_its_error_type(monkeypatch):
 
 
 def test_peer_without_filing_raises_clear_error(monkeypatch):
-    monkeypatch.setattr(tools, "fetch_latest_filing", lambda ticker: None)
-    ctx = tools.ToolContext(primary_ticker="TEST", primary_accession="acc", store=None)
+    monkeypatch.setattr(tools, "fetch_filings", lambda ticker: None)
+    ctx = tools.ToolContext(primary_ticker="TEST", store=None)
     with pytest.raises(ValueError, match="XYZ has no 10-Q or 10-K"):
         tools.lookup_peer(ctx, "xyz", "revenue")
 
@@ -221,8 +221,8 @@ def test_citation_walker_covers_every_citable_field():
     assert paths == ["key_metrics[0]", "revenue_segments[0]", "key_risks[0]", "forward_guidance"]
 
 
-def test_describe_filing_handles_no_filing():
-    assert "none found" in panel._describe_filing(None)
+def test_describe_filings_handles_no_filing():
+    assert "none found" in panel._describe_filings([])
 
 
 def test_baseline_without_filing_raises_clear_error():
@@ -331,7 +331,7 @@ def _no_filing_run(monkeypatch, snapshot_fn) -> list:
     # Fake every paid or networked step of a no-filing run. Returns a list
     # that records each personality run, so a test can check none started.
     started = []
-    monkeypatch.setattr(panel, "fetch_latest_filing", lambda ticker: None)
+    monkeypatch.setattr(panel, "fetch_filings", lambda ticker: None)
     monkeypatch.setattr(panel, "get_market_snapshot", snapshot_fn)
     monkeypatch.setattr(panel, "ChromaStore", lambda: None)
     monkeypatch.setattr(panel, "find_last_call", lambda ticker, consensus: TranscriptFetch(None, "no transcript (test)"))
@@ -396,7 +396,7 @@ def test_8ks_are_stored_and_fetch_errors_become_gaps(monkeypatch):
         [_earnings_8k()], ["8-K filed 2026-10-20 could not be fetched"]))
     gaps = []
 
-    eight_ks, tokens = panel._ingest_post_filing_8ks(filing=None, store=_Store(), run_gaps=gaps, log_prefix="[t]")
+    eight_ks, tokens = panel._ingest_post_filing_8ks(filing_set=None, store=_Store(), run_gaps=gaps, log_prefix="[t]")
 
     assert [k.accession_number for k in eight_ks] == ["0001-26-000042"]
     assert stored["0001-26-000042"][-1].document.startswith("8-K Items 2.02, 9.01, Exhibit 99.1")
@@ -580,7 +580,7 @@ def test_wrap_up_asks_for_tagged_evidence_and_checks_it(monkeypatch):
 
 def test_read_article_reaches_the_personality_and_cut_articles_say_so(monkeypatch):
     url = "https://www.reuters.com/markets/test"
-    ctx = tools.ToolContext(primary_ticker="TEST", primary_accession=None, store=None)
+    ctx = tools.ToolContext(primary_ticker="TEST", store=None)
     ctx.news_pool.append(NewsSearchResult(title="t", url=url))
     monkeypatch.setattr(tools, "_tavily_read",
                         lambda u: ArticleText(url=u, text="x" * 20_000, full_chars=25_000, truncated=True))
@@ -609,7 +609,7 @@ def test_synthesis_gets_post_filing_inputs_and_writes_no_code_set_fields(monkeyp
     article = ArticleText(url="https://a.example/story", text="ARTICLE BODY", full_chars=12, truncated=False)
 
     report, input_tokens, output_tokens = panel._synthesize_report(
-        ticker="TEST", primary_filing=None, final_hypotheses=[], contested=[], critique_messages=[],
+        ticker="TEST", filings=[], final_hypotheses=[], contested=[], critique_messages=[],
         news_pool=[], filing_text="FILING BODY", eight_k_text=panel._render_eight_k_text([_earnings_8k()]),
         context_block="- Consensus EPS: $1.23", articles_text=panel._render_read_articles([article]),
         call_text="CALL TEXT BODY",
@@ -794,7 +794,7 @@ def test_evidence_bundle_holds_external_sources_with_full_text_only_where_cited(
     annual = Filing(ticker="TEST", filing_type="10-K", filing_date="2026-02-01", accession_number="k-1",
                     clean_text="ANNUAL TEXT")
     cited_url, uncited_url = "https://news.example/cited", "https://news.example/uncited"
-    ctx = tools.ToolContext(primary_ticker="TEST", primary_accession="q-1", store=None)
+    ctx = tools.ToolContext(primary_ticker="TEST", store=None, filing_labels={"q-1": "10-Q filed 2026-08-06"})
     ctx.news_pool += [NewsSearchResult(title="a", url=cited_url, snippet="the full Tavily snippet"),
                       NewsSearchResult(title="b", url=uncited_url)]
     for url in (cited_url, uncited_url):
@@ -806,7 +806,7 @@ def test_evidence_bundle_holds_external_sources_with_full_text_only_where_cited(
     report = _report()
     report.recent_news = [NewsItem(headline="h", date="2026-10-01", url=cited_url, relevance_note="n")]
 
-    bundle = panel._evidence_bundle("TEST", filing, annual, [_earnings_8k()], "CONTEXT TEXT", ctx, report)
+    bundle = panel._evidence_bundle("TEST", [filing, annual], [_earnings_8k()], "CONTEXT TEXT", ctx, report)
 
     assert [doc.label for doc in bundle.documents] == [
         "10-Q filed 2026-08-06", "10-K filed 2026-02-01",
@@ -822,8 +822,8 @@ def test_evidence_bundle_holds_external_sources_with_full_text_only_where_cited(
     assert passage.label == "PEER DIS 10-Q filed 2026-08-04 · MD&A — Parks revenue"
     assert len(passage.text) == panel._CHUNK_PREVIEW_CHARS   # what the personality was shown
 
-    # A 10-K left out of synthesis for size is not in the bundle either.
-    without_annual = panel._evidence_bundle("TEST", filing, None, [], "", ctx, report)
+    # A filing left out of synthesis for size is not in the bundle either.
+    without_annual = panel._evidence_bundle("TEST", [filing], [], "", ctx, report)
     assert [doc.label for doc in without_annual.documents] == ["10-Q filed 2026-08-06"]
 
 

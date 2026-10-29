@@ -1,8 +1,8 @@
 """Single-pass baseline mode for Yoda.
 
 run_baseline() is the "just hand the LLM the filings" approach: it puts the
-full text of the latest SEC filing (plus the supplemental 10-K when there is
-one) into ONE prompt and asks Claude Sonnet 5.5 for the brief in ONE response.
+full text of the company's recent SEC filings (its 10-Q and/or 10-K) into ONE
+prompt and asks Claude Sonnet 5.5 for the brief in ONE response.
 
 No retrieval, no news, no agent loop, no second pass. It exists as the
 lower bound that the Yoda personality panel is evaluated against. It reads
@@ -10,17 +10,17 @@ the same filings Yoda reads, so the comparison isolates what Yoda's extra
 steps add — not how much filing text each side was allowed to see.
 
 Helpers both modes share also live here: validate_citations(),
-iter_citation_holders(), full_filing_text(), supplemental_dropped_note()
-and apply_supplemental().
+iter_citation_holders(), full_filing_text() and apply_filings().
 """
 
 import time
 from collections.abc import Iterator
 from datetime import datetime, timezone
+from typing import NamedTuple
 
 from yoda import config
 from yoda.modes.llm import structured_call
-from yoda.schema import EarningsReport, Filing, ForwardGuidance, Metric, Risk, Segment
+from yoda.schema import EarningsReport, Filing, FilingSet, ForwardGuidance, Metric, Risk, ReportFiling, Segment
 
 
 # ---------------------------------------------------------------------------
@@ -110,70 +110,76 @@ def _strip_invented_links(report: EarningsReport) -> int:
 MAX_FILING_CHARS = 2_000_000
 
 
-def full_filing_text(
-    primary: Filing, supplemental: Filing | None, reserved_chars: int = 0,
-) -> tuple[str, bool]:
-    """Return the text of the filing(s) to put in a prompt, and whether the 10-K was dropped.
+class FilingText(NamedTuple):
+    """What full_filing_text() returns.
 
-    The full primary filing is always included; the full supplemental 10-K is
-    added when there is one and both fit under MAX_FILING_CHARS. Each filing
-    sits under a header naming its type and date so the model can cite the
-    right document. *reserved_chars* is room the caller needs for other long
-    text in the same prompt (the panel's 8-Ks and read articles), counted
-    against the same limit so the supplemental is the first thing left out.
-    The second value is True when the supplemental was left out for size, so
-    the caller can log it and record a data gap.
+    *text* is the filing text for the prompt, *used* the filings it holds
+    (newest first), and *gaps* the data_gaps entries saying what was left
+    out for size.
     """
-    parts = [f"=== {primary.filing_type} filed {primary.filing_date} ===", primary.clean_text]
-    if not supplemental:
-        return "\n".join(parts), False
-    if len(primary.clean_text) + len(supplemental.clean_text) + reserved_chars > MAX_FILING_CHARS:
-        return "\n".join(parts), True
-    parts += ["", f"=== {supplemental.filing_type} filed {supplemental.filing_date} ===",
-              supplemental.clean_text]
-    return "\n".join(parts), False
+    text: str
+    used: list[Filing]
+    gaps: list[str]
 
 
-def supplemental_dropped_note(supplemental: Filing) -> str:
-    """Return the data_gaps entry recorded when the supplemental filing didn't fit."""
-    return (f"The supplemental {supplemental.filing_type} filed {supplemental.filing_date} "
-            f"was not analyzed: together with the primary filing it exceeds the model's context limit.")
+def full_filing_text(filings: list[Filing], reserved_chars: int = 0) -> FilingText:
+    """Return the full text of *filings* (newest first) for a prompt, within MAX_FILING_CHARS.
 
-
-def apply_supplemental(report: EarningsReport, supplemental: Filing | None, dropped: bool) -> None:
-    """Record the supplemental 10-K on *report*: its type and date, or why it is missing.
-
-    The metadata is stamped on in code, not by the model, so it is always
-    accurate. When the 10-K was left out for size, a data gap says so.
+    Each filing sits under a header naming its type and date, so the model
+    can cite the right document. The newest filing is always included; each
+    older one is added only while the total stays under the limit.
+    *reserved_chars* is room the caller needs for other long text in the
+    same prompt (the panel's 8-Ks, call and read articles), counted against
+    the same limit. A filing left out gets a data_gaps entry.
     """
-    if supplemental and dropped:
-        report.data_gaps.append(supplemental_dropped_note(supplemental))
-    elif supplemental:
-        report.supplemental_filing_type = supplemental.filing_type
-        report.supplemental_filing_date = supplemental.filing_date
+    parts: list[str] = []
+    used: list[Filing] = []
+    gaps: list[str] = []
+    total = reserved_chars
+    for filing in filings:
+        # The newest filing always goes in; an older one only if it still fits.
+        if used and total + len(filing.clean_text) > MAX_FILING_CHARS:
+            gaps.append(f"The {filing.filing_type} filed {filing.filing_date} was not analyzed: together "
+                        "with the newer filing it exceeds the model's context limit.")
+            continue
+        parts += [f"=== {filing.filing_type} filed {filing.filing_date} ===", filing.clean_text, ""]
+        used.append(filing)
+        total += len(filing.clean_text)
+    return FilingText("\n".join(parts).rstrip("\n"), used, gaps)
+
+
+def apply_filings(report: EarningsReport, filing_set: FilingSet, filing_text: FilingText) -> None:
+    """Record on *report* which filings it was written from, and which are missing and why.
+
+    Stamped on in code, not by the model, so it is always accurate. A filing
+    left out for size, or one that could not be downloaded, gets a data gap.
+    """
+    report.filings = [ReportFiling(filing_type=filing.filing_type, filing_date=filing.filing_date, url=filing.url)
+                      for filing in filing_text.used]
+    report.data_gaps.extend(filing_text.gaps)
+    report.data_gaps.extend(f"Filing not analyzed: {error}." for error in filing_set.errors)
 
 
 # ---------------------------------------------------------------------------
 # Prompt builder
 # ---------------------------------------------------------------------------
 
-def _build_prompt(ticker: str, filing: Filing, now_utc: str) -> tuple[str, bool]:
-    """Return (prompt, supplemental_dropped): the ticker and timestamp, then the full filing text."""
-    filings, dropped = full_filing_text(filing, filing.supplemental)
+def _build_prompt(ticker: str, filing_text: FilingText, now_utc: str) -> str:
+    """Return the prompt: the ticker and timestamp, then the full filing text."""
     header = f"Ticker: {ticker}\nReport timestamp (use for report_generated_at): {now_utc}\n\n"
-    return header + filings, dropped
+    return header + filing_text.text
 
 
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
-def run_baseline(ticker: str, filing: Filing | None) -> EarningsReport:
+def run_baseline(ticker: str, filing_set: FilingSet | None) -> EarningsReport:
     """Produce an EarningsReport from the full filings in a single LLM call.
 
-    *filing* is the Filing returned by fetch_latest_filing(); its optional
-    `supplemental` carries the 10-K that accompanies a 10-Q. The baseline has
-    nothing to read without a filing, so a None filing raises ValueError.
+    *filing_set* is what fetch_filings() returned: the company's recent
+    10-Q and/or 10-K, all read in full when they fit. The baseline has
+    nothing to read without filings, so None raises ValueError.
 
     Prints "Wall time:" and "Total cost:" lines that the eval runner parses.
     Raises ValueError if the model returns any empty source_citation fields,
@@ -182,27 +188,24 @@ def run_baseline(ticker: str, filing: Filing | None) -> EarningsReport:
     no news.
     """
     ticker = ticker.upper().strip()
-    if filing is None:
+    if filing_set is None:
         raise ValueError(f"No recent 10-Q or 10-K for {ticker}: the baseline has nothing to read.")
     started = time.perf_counter()
     now_utc = datetime.now(timezone.utc).isoformat()
-    prompt, dropped = _build_prompt(ticker, filing, now_utc)
-    if dropped:
-        print(f"[baseline] WARNING: supplemental {filing.supplemental.filing_type} dropped — filings too large")
+    filing_text = full_filing_text(filing_set.filings)
+    for gap in filing_text.gaps:
+        print(f"[baseline] WARNING: {gap}")
 
     # One prompt, one response, validated as an EarningsReport.
     report, in_tok, out_tok = structured_call(
         BASELINE_MODEL, _MAX_TOKENS, EarningsReport,
         system=_SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": prompt}],
+        messages=[{"role": "user", "content": _build_prompt(ticker, filing_text, now_utc)}],
     )
 
-    # Stamp the filing metadata on in code (it's known exactly), and record
-    # the supplemental 10-K or why it's missing.
-    report.filing_type, report.filing_date = filing.filing_type, filing.filing_date
-    apply_supplemental(report, filing.supplemental, dropped)
-    if filing.supplemental_error:
-        report.data_gaps.append(f"Supplemental 10-K not analyzed: {filing.supplemental_error}.")
+    # Stamp on which filings were read (known exactly, so set in code), and
+    # record any that are missing and why.
+    apply_filings(report, filing_set, filing_text)
 
     # A report with a blank citation is rejected outright.
     validate_citations(report)
@@ -228,16 +231,16 @@ def run_baseline(ticker: str, filing: Filing | None) -> EarningsReport:
 
 if __name__ == "__main__":
     import sys
-    from yoda.ingest.edgar import fetch_latest_filing
+    from yoda.ingest.edgar import fetch_filings
 
     ticker = (sys.argv[1] if len(sys.argv) > 1 else "NFLX").upper()
 
-    # Load the filing (from the disk cache when available).
-    print(f"Loading filing for {ticker}...")
-    filing = fetch_latest_filing(ticker)
+    # Load the filings (from the disk cache when available).
+    print(f"Loading filings for {ticker}...")
+    filing_set = fetch_filings(ticker)
 
     print(f"Running baseline for {ticker} via {BASELINE_MODEL}...")
-    report = run_baseline(ticker, filing)
+    report = run_baseline(ticker, filing_set)
 
     # Save to data/eval/ alongside the eval runner's outputs.
     out_dir = config.DATA_DIR / "eval"
@@ -248,7 +251,7 @@ if __name__ == "__main__":
     # Print a summary so the output is scannable without opening the JSON.
     print(f"\nSaved to {out_file}")
     print(f"Company:          {report.company_name}")
-    print(f"Filing:           {report.filing_type} — {report.filing_date}")
+    print(f"Filings:          {', '.join(f'{f.filing_type} {f.filing_date}' for f in report.filings) or 'none'}")
     print(f"Key metrics:      {len(report.key_metrics)}")
     print(f"Revenue segments: {len(report.revenue_segments)}")
     print(f"Key risks:        {len(report.key_risks)}")

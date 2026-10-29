@@ -24,8 +24,8 @@ from yoda.modes.personality_panel import MarketDataUnavailable, PanelRun
 from yoda.queue import processor
 from yoda.report import pdf
 from yoda.schema import (
-    EarningsReport, EvidenceBundle, ExpectationValue, ForwardGuidance, MarketExpectations, Metric, NewsItem, Risk,
-    Segment, SinceFilingItem, WatchItem,
+    EarningsReport, EvidenceBundle, ExpectationValue, ForwardGuidance, MarketExpectations, Metric, NewsItem,
+    ReportFiling, Risk, Segment, SinceFilingItem, WatchItem,
 )
 from yoda.dates import market_today
 from yoda.tickers import normalize_tickers
@@ -37,12 +37,16 @@ from yoda.tools.consensus import ApiFailure, MarketSnapshot
 # Helpers
 # ---------------------------------------------------------------------------
 
+# The two filings a complete report was read from, newest first.
+_QUARTERLY = ReportFiling(filing_type="10-Q", filing_date="2026-05-01", url="https://sec.gov/q?a=1&b=2")
+_ANNUAL = ReportFiling(filing_type="10-K", filing_date="2026-02-01", url="https://sec.gov/k")
+
+
 def _report(**overrides) -> EarningsReport:
     # A complete report with deliberately awkward text: markup characters,
     # a stray bold marker, a blank metric value and a placeholder guidance.
     values = dict(
-        ticker="TEST", company_name="Test & Sons <Holdings>", filing_type="10-Q",
-        filing_date="2026-05-01", supplemental_filing_type="10-K", supplemental_filing_date="2026-02-01",
+        ticker="TEST", company_name="Test & Sons <Holdings>", filings=[_QUARTERLY, _ANNUAL],
         report_generated_at="2026-05-02T14:30:00-04:00",
         key_metrics=[
             Metric(name="Revenue < prior year", value="$1.2B", unit="", source_citation="10-Q Item 2 — R&D"),
@@ -82,13 +86,12 @@ def _texts(flowables) -> list[str]:
 
 def test_pdf_builds_with_markup_characters_and_stray_bold(tmp_path):
     # Before the fix, "<", "&" or an unpaired "**" made ReportLab fail.
-    out = pdf.report_to_pdf(_report(), tmp_path / "r.pdf", filing_url="https://sec.gov/x?a=1&b=2")
+    out = pdf.report_to_pdf(_report(), tmp_path / "r.pdf")
     assert (tmp_path / "r.pdf").stat().st_size > 1000 and out.endswith("r.pdf")
 
 
 def test_pdf_builds_for_a_report_with_no_filing(tmp_path):
-    report = _report(filing_type="N/A", filing_date="N/A",
-                     supplemental_filing_type=None, supplemental_filing_date=None)
+    report = _report(filings=[])
     pdf.report_to_pdf(report, tmp_path / "r.pdf")
     cover = " ".join(_texts(pdf._cover_elements(report, pdf._get_styles())))
     assert "No recent SEC filing" in cover and "filed N/A" not in cover
@@ -119,9 +122,9 @@ def test_generated_time_is_labelled_utc():
 
 
 @pytest.mark.parametrize("overrides, expected", [
-    (dict(filing_type="N/A"), "No SEC filing found"),
-    (dict(filing_type="10-K", supplemental_filing_type=None), "No recent 10-Q"),
-    (dict(supplemental_filing_type=None), "No annual 10-K"),
+    (dict(filings=[]), "No SEC filing found"),
+    (dict(filings=[_ANNUAL]), "No recent 10-Q"),
+    (dict(filings=[_QUARTERLY]), "No annual 10-K"),
 ])
 def test_filing_caveats(overrides, expected):
     caveats = pdf.filing_caveats(_report(**overrides))
@@ -130,6 +133,21 @@ def test_filing_caveats(overrides, expected):
 
 def test_no_caveat_when_both_filings_were_used():
     assert pdf.filing_caveats(_report()) == []
+
+
+def test_each_citation_links_to_the_filing_it_names():
+    # "10-K ..." links to the 10-K, "10-Q ..." to the 10-Q; a citation naming
+    # no filing links to the newest; a report without URLs shows plain text.
+    report = _report()
+    assert pdf._cite("10-K Item 1A. Risk Factors", report).startswith('<a href="https://sec.gov/k">')
+    assert pdf._cite("10-Q Item 2", report).startswith('<a href="https://sec.gov/q?a=1&amp;b=2">')
+    assert pdf._cite("MD&A", report).startswith('<a href="https://sec.gov/q?a=1&amp;b=2">')
+    assert pdf._cite("10-Q Item 2", _report(filings=[])) == "10-Q Item 2"
+
+
+def test_cover_lists_every_filing():
+    cover = " ".join(_texts(pdf._cover_elements(_report(), pdf._get_styles())))
+    assert "<b>10-Q</b> filed 2026-05-01" in cover and "<b>10-K</b> filed 2026-02-01" in cover
 
 
 # ---------------------------------------------------------------------------
@@ -208,7 +226,7 @@ def test_since_filing_section_labels_each_claim_and_links_its_source():
 
 
 def test_pdf_sections_come_newest_first():
-    story = pdf._story(_report(), pdf._get_styles(), filing_url=None)
+    story = pdf._story(_report(), pdf._get_styles())
     headers = [item.text for item in story if isinstance(item, Paragraph) and item.style.name == "SectionHeader"]
     assert headers == ["Pre-Earnings Watchlist", "Market Expectations", "Since the Filing", "Key Metrics",
                        "Revenue Segments", "Forward Guidance", "Key Risks", "Recent News", "Bull Case",
@@ -217,7 +235,7 @@ def test_pdf_sections_come_newest_first():
 
 def test_pdf_builds_with_the_new_sections(tmp_path):
     report = _report(market_expectations=_expectations(), since_filing=_since_items())
-    pdf.report_to_pdf(report, tmp_path / "r.pdf", filing_url="https://sec.gov/x")
+    pdf.report_to_pdf(report, tmp_path / "r.pdf")
     assert (tmp_path / "r.pdf").stat().st_size > 1000
 
 
@@ -348,7 +366,7 @@ def _judge_result() -> judge.JudgeResult:
 
 def _stub_runner(monkeypatch, run_mode=None):
     # Replace every outside step of run_eval with a fast fake.
-    monkeypatch.setattr(runner, "fetch_latest_filing", lambda ticker: None)
+    monkeypatch.setattr(runner, "fetch_filings", lambda ticker: None)
     monkeypatch.setattr(runner, "_run_mode", run_mode or (
         lambda mode, ticker, filing: runner.ModeRun(_report(), 1.0, "logged", 0.1, "")))
     monkeypatch.setattr(runner, "judge_report",

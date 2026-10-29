@@ -39,6 +39,7 @@ CLI (every judge call not already cached is paid):
 import argparse
 import contextlib
 import io
+import json
 import pathlib
 import re
 import time
@@ -60,10 +61,10 @@ from yoda.eval.judge import (
     write_run_manifest,
 )
 from yoda.eval.rubric import DIMENSIONS, RUBRIC_TEXT, JudgeScores
-from yoda.ingest.edgar import fetch_latest_filing
+from yoda.ingest.edgar import fetch_filings
 from yoda.modes.baseline import BASELINE_MODEL, run_baseline
 from yoda.modes.personality_panel import CRITIQUE_MODEL, LOOP_MODEL, SYNTH_MODEL, run_personality_panel
-from yoda.schema import EarningsReport, EvidenceBundle, Filing
+from yoda.schema import EarningsReport, EvidenceBundle, FilingSet
 from yoda.tickers import normalize_tickers
 
 
@@ -156,13 +157,13 @@ def _yoda_run(ticker: str) -> tuple[EarningsReport, EvidenceBundle]:
     return run.report, run.evidence
 
 
-def _run_mode(mode: str, ticker: str, filing: Filing | None) -> ModeRun:
+def _run_mode(mode: str, ticker: str, filing_set: FilingSet | None) -> ModeRun:
     """Run one mode for one ticker and return its ModeRun."""
     if mode == "baseline":
-        # The baseline's evidence is the filing(s) it read; it builds no
+        # The baseline's evidence is the filings it read; it builds no
         # bundle of its own until next_steps section 4.
-        return _capture(lambda symbol, primary: (run_baseline(symbol, primary), filing_bundle(symbol, primary)),
-                        ticker, filing)
+        return _capture(lambda symbol, filings: (run_baseline(symbol, filings), filing_bundle(symbol, filings)),
+                        ticker, filing_set)
     if mode == "yoda":
         return _capture(_yoda_run, ticker)
     raise ValueError(f"Unknown mode: {mode}")
@@ -290,12 +291,12 @@ def run_eval(
     for ticker in tickers:
         print(f"\n=== {ticker} ===")
 
-        # Fetch the filing once per ticker; the baseline reads it directly,
-        # and it is the evidence for a mode that returns no bundle of its
+        # Fetch the filings once per ticker; the baseline reads them directly,
+        # and they are the evidence for a mode that returns no bundle of its
         # own. A fetch failure skips this ticker only.
-        print(f"  fetching filing for {ticker}...")
+        print(f"  fetching filings for {ticker}...")
         try:
-            filing = fetch_latest_filing(ticker)
+            filing = fetch_filings(ticker)
         except (requests.RequestException, RuntimeError) as exc:
             failures.append((ticker, "fetch filing", f"{type(exc).__name__}: {exc}"))
             print(f"  ERROR fetching filing: {exc}")
@@ -388,6 +389,23 @@ def _saved_tickers(report_dir: pathlib.Path, modes: Sequence[str]) -> list[str]:
     return sorted(tickers)
 
 
+def _newest_filing_label(report_json: str) -> str:
+    """Return "<type> filed <date>" for the newest filing a saved report was written from, or "no filing".
+
+    Reports written before the `filings` list stored one filing_type /
+    filing_date pair (the newest filing, or "N/A" for none) instead. That
+    pair is read here, so archived reports can still be checked against
+    the filings on disk and re-scored.
+    """
+    data = json.loads(report_json)
+    if data.get("filings"):
+        newest = data["filings"][0]
+        return f"{newest['filing_type']} filed {newest['filing_date']}"
+    if data.get("filing_type") not in (None, "N/A"):
+        return f"{data['filing_type']} filed {data['filing_date']}"
+    return "no filing"
+
+
 def rescore(
     report_dir: pathlib.Path,
     tickers: Sequence[str] | None = None,
@@ -428,7 +446,7 @@ def rescore(
     failures: list[tuple[str, str, str]] = []
     run_cache_keys: set[str] = set()
     judged_results: list[tuple[str, str, JudgeResult]] = []
-    filings: dict[str, Filing | None] = {}
+    filings: dict[str, FilingSet | None] = {}
 
     for ticker in tickers:
         print(f"\n=== {ticker} ===")
@@ -439,8 +457,9 @@ def rescore(
                 continue
 
             # The report, without Yoda's hypotheses (archived ones may break today's schema).
+            report_json = report_path.read_text(encoding="utf-8")
             try:
-                report = load_report_for_judge(report_path.read_text(encoding="utf-8"))
+                report = load_report_for_judge(report_json)
             except (ValueError, pydantic.ValidationError) as exc:
                 failures.append((ticker, mode, f"saved report unreadable: {type(exc).__name__}: {exc}"))
                 continue
@@ -451,11 +470,10 @@ def rescore(
                 evidence = EvidenceBundle.model_validate_json(evidence_path.read_text(encoding="utf-8"))
             else:
                 if ticker not in filings:
-                    filings[ticker] = fetch_latest_filing(ticker)
+                    filings[ticker] = fetch_filings(ticker)
                 filing = filings[ticker]
-                on_disk = f"{filing.filing_type} filed {filing.filing_date}" if filing else "no filing"
-                written_from = (f"{report.filing_type} filed {report.filing_date}"
-                                if report.filing_type != "N/A" else "no filing")
+                on_disk = f"{filing.newest.filing_type} filed {filing.newest.filing_date}" if filing else "no filing"
+                written_from = _newest_filing_label(report_json)
                 if on_disk != written_from:
                     failures.append((ticker, mode, f"filing changed since the report: report used "
                                                    f"{written_from}, the filing on disk is {on_disk}"))

@@ -266,7 +266,7 @@ if __name__ == "__main__":
     import sys
 
     from yoda.eval.evidence import filing_bundle, load_report_for_judge, na_dimensions, render_evidence
-    from yoda.ingest.edgar import fetch_latest_filing
+    from yoda.ingest.edgar import fetch_filings
     from yoda.schema import EvidenceBundle
 
     # Which saved report to judge: python -m yoda.eval.judge [TICKER] [MODE].
@@ -281,7 +281,7 @@ if __name__ == "__main__":
         bundle = EvidenceBundle.model_validate_json(evidence_path.read_text(encoding="utf-8"))
     else:
         print(f"No saved evidence for {mode}_{ticker}; using the filing only.")
-        bundle = filing_bundle(ticker, fetch_latest_filing(ticker))
+        bundle = filing_bundle(ticker, fetch_filings(ticker))
 
     # Render it, decide N/A, and call the judge (a second run is a cache hit).
     na = na_dimensions(bundle, report)

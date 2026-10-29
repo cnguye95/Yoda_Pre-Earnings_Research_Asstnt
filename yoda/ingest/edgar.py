@@ -1,12 +1,13 @@
-"""Fetches a ticker's SEC filings: the latest 10-Q/10-K and the 8-Ks filed since.
+"""Fetches a ticker's SEC filings: its recent 10-Q/10-K and the 8-Ks filed since.
 
 Two public functions:
-  fetch_latest_filing(ticker) — the most recent 10-Q (or 10-K fallback) as a
-      Filing (see yoda/schema.py) holding the metadata and the cleaned text
-      ready for chunking, or None when nothing recent enough was filed.
-  fetch_post_filing_8ks(filing) — every 8-K / 8-K/A filed after that filing
-      (an 8-K reports news between quarterly filings: an earnings release,
-      new debt, an executive change), with its Exhibit 99.x documents.
+  fetch_filings(ticker) — every recent 10-Q/10-K Yoda reads, as a FilingSet
+      (see yoda/schema.py): the filings newest first, each holding its
+      metadata and cleaned text, or None when nothing recent enough was filed.
+  fetch_post_filing_8ks(filing_set) — every 8-K / 8-K/A filed after the
+      newest of those filings (an 8-K reports news between quarterly
+      filings: an earnings release, new debt, an executive change), with its
+      Exhibit 99.x documents.
 
 Raw HTML and metadata are cached to data/filings/{ticker}/ (8-Ks under
 8k/{accession}/) so that repeated calls skip the network. The 10-Q/10-K
@@ -32,7 +33,7 @@ from bs4 import BeautifulSoup, XMLParsedAsHTMLWarning
 from yoda import config
 from yoda.dates import market_today
 from yoda.http_session import session
-from yoda.schema import EightKDocument, EightKFiling, Filing
+from yoda.schema import EightKDocument, EightKFiling, Filing, FilingSet
 
 # SEC filings are XHTML/XML but lxml's HTML parser handles them correctly.
 # Suppress the warning so it doesn't surface in the Streamlit log.
@@ -53,23 +54,23 @@ _TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
 _SUBMISSIONS_URL = "https://data.sec.gov/submissions/CIK{cik:010d}.json"
 
 # Filing index HTML — lists every document in a specific accession.
-# The primary document (the 10-Q or 10-K itself) is always Seq 1.
+# The main document (the 10-Q or 10-K itself) is always Seq 1.
 _INDEX_URL = "https://www.sec.gov/Archives/edgar/data/{cik}/{acc_nodashes}/{acc}-index.htm"
 
 # Base URL for downloading actual filing documents from the EDGAR archive.
 _ARCHIVES_URL = "https://www.sec.gov/Archives/edgar/data/{cik}/{acc_nodashes}/{doc}"
 
 # Window in which a filing must have been filed to be considered "recent".
-# Applies to both 10-Q (preferred) and 10-K (fallback/supplemental).
+# Applies to both the 10-Q and the 10-K.
 FILING_FRESHNESS_DAYS = 92
 
 # The parts of the cached record that are stored in separate .html files
 # rather than in latest.json (they are large, and the text is rebuilt from
 # the HTML on every load).
 _TEXT_FIELDS = {"raw_html": True, "clean_text": True}
-_CACHE_EXCLUDE = {**_TEXT_FIELDS, "supplemental": _TEXT_FIELDS}
+_CACHE_EXCLUDE = {"filings": {"__all__": _TEXT_FIELDS}}
 
-# The 8-K forms read after the primary filing: the 8-K and its amendment.
+# The 8-K forms read after the filings: the 8-K and its amendment.
 _EIGHT_K_FORMS = ("8-K", "8-K/A")
 
 # ---------------------------------------------------------------------------
@@ -185,28 +186,17 @@ def _newest_recent(filings: list[dict], form: str) -> dict | None:
     return max(candidates, key=lambda filing: date.fromisoformat(filing["filing_date"]), default=None)
 
 
-def _pick_latest_filing(filings: list[dict]) -> dict | None:
-    """Choose the filing to analyse: the newest recent 10-Q, else the newest recent 10-K.
+def _pick_filings(filings: list[dict]) -> list[dict]:
+    """Choose the filings to read, newest first: the recent 10-Q and the recent 10-K.
 
-    A 10-Q has the freshest quarterly data — critical for pre-earnings
-    analysis. Returns None if neither qualifies; callers handle that case.
+    Each is the newest of its form inside the freshness window; either may
+    be missing, and an empty list means nothing recent enough was filed.
     """
-    return _newest_recent(filings, "10-Q") or _newest_recent(filings, "10-K")
+    chosen = [meta for meta in (_newest_recent(filings, "10-Q"), _newest_recent(filings, "10-K")) if meta]
+    return sorted(chosen, key=lambda meta: meta["filing_date"], reverse=True)
 
 
-def _pick_supplemental_filing(filings: list[dict], primary: dict) -> dict | None:
-    """Return the recent 10-K to read alongside a 10-Q primary, or None.
-
-    The 10-K adds annual narrative and risk context to the 10-Q's fresh
-    quarterly numbers. When the primary is already a 10-K there is no useful
-    supplemental — the preferred 10-Q was absent, so an older one adds little.
-    """
-    if primary["form"] != "10-Q":
-        return None
-    return _newest_recent(filings, "10-K")
-
-
-def _get_primary_document(cik: int, accession_number: str) -> str:
+def _get_main_document(cik: int, accession_number: str) -> str:
     """Return the file name of a filing's main document (the 10-Q/10-K itself).
 
     Reads the filing's index page, where the main document is always listed
@@ -219,7 +209,7 @@ def _get_primary_document(cik: int, accession_number: str) -> str:
 
     soup = BeautifulSoup(resp.text, "lxml")
     # The index table has rows: Seq | Description | Document | Type | Size.
-    # Seq 1 is always the primary document (the filing itself, not exhibits).
+    # Seq 1 is always the main document (the filing itself, not exhibits).
     # The Document cell has an <a> tag; use its href to get the clean filename
     # because iXBRL labels like "iXBRL" can be appended to the visible text.
     for row in soup.find_all("tr"):
@@ -235,7 +225,7 @@ def _get_primary_document(cik: int, accession_number: str) -> str:
                     return doc_name
 
     raise RuntimeError(
-        f"Could not find primary .htm document for accession {accession_number}. "
+        f"Could not find the main .htm document for accession {accession_number}. "
         "The filing index page may have an unexpected structure."
     )
 
@@ -244,7 +234,7 @@ def _index_documents(cik: int, accession_number: str) -> list[tuple[str, str, st
     """Return every document listed on a filing's index page.
 
     Each entry is (seq, doc_type, file_name), read from the same table
-    _get_primary_document uses (Seq | Description | Document | Type | Size),
+    _get_main_document uses (Seq | Description | Document | Type | Size),
     e.g. ("1", "8-K", "nflx-20261021.htm") or ("2", "EX-99.1", "ex991.htm").
     Rows without a document link are skipped.
     """
@@ -260,7 +250,7 @@ def _index_documents(cik: int, accession_number: str) -> list[tuple[str, str, st
         link = cells[2].find("a")
         if not (link and link.get("href")):
             continue
-        # As in _get_primary_document, the href may be an iXBRL viewer path,
+        # As in _get_main_document, the href may be an iXBRL viewer path,
         # so only the part after the last "/" is the file name.
         file_name = link["href"].rsplit("/", 1)[-1]
         documents.append((cells[0].get_text(strip=True), cells[3].get_text(strip=True), file_name))
@@ -285,13 +275,13 @@ def _select_8k_documents(documents: list[tuple[str, str, str]]) -> list[tuple[st
     return main[:1] + exhibits
 
 
-def _download_filing_html(cik: int, accession_number: str, primary_doc: str) -> tuple[str, str]:
+def _download_filing_html(cik: int, accession_number: str, main_doc: str) -> tuple[str, str]:
     """Download a filing's main document from the EDGAR archive.
 
     Returns (raw_html_text, url_it_was_downloaded_from).
     """
     acc_nodashes = accession_number.replace("-", "")
-    url = _ARCHIVES_URL.format(cik=cik, acc_nodashes=acc_nodashes, doc=primary_doc)
+    url = _ARCHIVES_URL.format(cik=cik, acc_nodashes=acc_nodashes, doc=main_doc)
     resp = _sec_get(url)
     return resp.text, url
 
@@ -346,55 +336,52 @@ def _clean_html(raw_html: str) -> str:
 # Disk cache helpers
 # ---------------------------------------------------------------------------
 
-def _read_disk_cache(ticker: str) -> Filing | None:
-    """Load a previously cached filing for *ticker*, or return None on a cache miss.
+def _read_disk_cache(ticker: str) -> FilingSet | None:
+    """Load the previously cached filings for *ticker*, or return None on a cache miss.
 
     A cache miss covers: nothing cached, an HTML file missing, or a
     latest.json that is corrupt or written by an older version of Yoda (its
-    fields no longer match Filing). Each of those simply triggers a fresh
+    fields no longer match FilingSet). Each of those simply triggers a fresh
     download, so a bad cache can never block a ticker.
     """
     meta_path = _CACHE_DIR / ticker / "latest.json"
     if not meta_path.exists():
         return None
 
-    # Parse the metadata into a Filing. Filing forbids unknown fields, so a
+    # Parse the metadata into a FilingSet. It forbids unknown fields, so a
     # cache written by an older Yoda version fails here and is re-fetched.
     try:
-        filing = Filing.model_validate_json(meta_path.read_text(encoding="utf-8"))
+        filing_set = FilingSet.model_validate_json(meta_path.read_text(encoding="utf-8"))
     except pydantic.ValidationError:
         return None
 
-    # Re-attach the HTML for the primary filing and for the supplemental 10-K
-    # (if there is one). If any HTML file has gone missing, re-fetch everything.
-    for part in (filing, filing.supplemental):
-        if part is None:
-            continue
-        html_path = _CACHE_DIR / ticker / f"{part.accession_number}.html"
+    # Re-attach each filing's HTML. If any HTML file has gone missing,
+    # re-fetch everything.
+    for filing in filing_set.filings:
+        html_path = _CACHE_DIR / ticker / f"{filing.accession_number}.html"
         if not html_path.exists():
             return None
-        part.raw_html = html_path.read_text(encoding="utf-8")
-        part.clean_text = _clean_html(part.raw_html)
-    return filing
+        filing.raw_html = html_path.read_text(encoding="utf-8")
+        filing.clean_text = _clean_html(filing.raw_html)
+    return filing_set
 
 
-def _write_disk_cache(filing: Filing) -> None:
-    """Save *filing* to data/filings/{ticker}/ so later calls skip the network.
+def _write_disk_cache(filing_set: FilingSet) -> None:
+    """Save *filing_set* to data/filings/{ticker}/ so later calls skip the network.
 
-    The HTML of the primary and supplemental filings is written to one .html
-    file each; everything else goes into latest.json.
+    Each filing's HTML is written to its own .html file; everything else
+    goes into latest.json.
     """
-    cache_dir = _CACHE_DIR / filing.ticker
+    cache_dir = _CACHE_DIR / filing_set.ticker
     cache_dir.mkdir(parents=True, exist_ok=True)
 
     # One HTML file per filing, named by its accession number.
-    for part in (filing, filing.supplemental):
-        if part is not None:
-            (cache_dir / f"{part.accession_number}.html").write_text(part.raw_html, encoding="utf-8")
+    for filing in filing_set.filings:
+        (cache_dir / f"{filing.accession_number}.html").write_text(filing.raw_html, encoding="utf-8")
 
     # The metadata, without the large text fields stored above.
     (cache_dir / "latest.json").write_text(
-        filing.model_dump_json(exclude=_CACHE_EXCLUDE), encoding="utf-8",
+        filing_set.model_dump_json(exclude=_CACHE_EXCLUDE), encoding="utf-8",
     )
 
 
@@ -444,18 +431,19 @@ def _write_8k_cache(eight_k: EightKFiling) -> None:
 # Public API
 # ---------------------------------------------------------------------------
 
-def fetch_latest_filing(ticker: str, force_refresh: bool = False) -> Filing | None:
-    """Fetch the most recent 10-Q (or 10-K fallback) for *ticker*.
+def fetch_filings(ticker: str, force_refresh: bool = False) -> FilingSet | None:
+    """Fetch every recent 10-Q/10-K Yoda reads for *ticker*, newest first.
 
-    Returns a Filing, or None when the company has no 10-Q or 10-K filed in
-    the last FILING_FRESHNESS_DAYS days. When the primary is a 10-Q, the
-    newest recent 10-K is attached as `supplemental`; if that 10-K exists but
-    cannot be downloaded, `supplemental_error` says why.
+    Returns a FilingSet, or None when the company has no 10-Q or 10-K filed
+    in the last FILING_FRESHNESS_DAYS days. A filing that exists but cannot
+    be downloaded is left out and the reason added to `errors`; if none of
+    them can be downloaded, RuntimeError names every reason.
 
     Both the raw HTML and filing metadata are cached to disk so a second call
     for the same ticker skips all HTTP calls and returns from disk. Pass
     *force_refresh*=True to bypass the cache when a new filing may have been
-    published; the new filing then overwrites the cached one.
+    published; the new filings then overwrite the cached ones. A set with a
+    failed download is not cached, so the next call tries again.
 
     Raises RuntimeError for an unknown ticker or unexpected SEC data, and
     requests.RequestException when the SEC cannot be reached.
@@ -477,56 +465,43 @@ def fetch_latest_filing(ticker: str, force_refresh: bool = False) -> Filing | No
         )
     cik = cik_map[ticker]
 
-    # Step 2: get the company's filing history and pick the right filing.
-    filings = _get_filings_metadata(cik)
-    chosen = _pick_latest_filing(filings)
-    if chosen is None:
+    # Step 2: get the company's filing history and pick the filings to read.
+    chosen = _pick_filings(_get_filings_metadata(cik))
+    if not chosen:
         return None
 
-    # Step 3: download the primary filing's main document and clean it.
-    primary_doc = _get_primary_document(cik, chosen["accession_number"])
-    raw_html, url = _download_filing_html(cik, chosen["accession_number"], primary_doc)
-    filing = Filing(
-        ticker=ticker,
-        cik=cik,
-        filing_type=chosen["form"],
-        filing_date=chosen["filing_date"],
-        accession_number=chosen["accession_number"],
-        url=url,
-        raw_html=raw_html,
-        clean_text=_clean_html(raw_html),
-    )
-
-    # Step 4: when the primary is a 10-Q, also fetch the recent 10-K. It is
-    # optional context, so a download failure doesn't fail the whole request —
-    # but the reason is recorded on the filing so the gap stays visible.
-    supplemental_choice = _pick_supplemental_filing(filings, chosen)
-    if supplemental_choice is not None:
+    # Step 3: download each chosen filing's main document and clean it. One
+    # that can't be downloaded is left out with the reason recorded, so the
+    # gap stays visible instead of failing the whole request.
+    downloaded: list[Filing] = []
+    errors: list[str] = []
+    for meta in chosen:
         try:
-            supplemental_doc = _get_primary_document(cik, supplemental_choice["accession_number"])
-            supplemental_html, supplemental_url = _download_filing_html(
-                cik, supplemental_choice["accession_number"], supplemental_doc,
-            )
+            main_doc = _get_main_document(cik, meta["accession_number"])
+            raw_html, url = _download_filing_html(cik, meta["accession_number"], main_doc)
         except (requests.RequestException, RuntimeError) as exc:
-            filing.supplemental_error = (
-                f"could not fetch supplemental {supplemental_choice['form']} "
-                f"({supplemental_choice['filing_date']}): {type(exc).__name__}: {exc}"
-            )
-            print(f"[edgar] WARNING: {filing.supplemental_error}")
-        else:
-            filing.supplemental = Filing(
-                ticker=ticker,
-                filing_type=supplemental_choice["form"],
-                filing_date=supplemental_choice["filing_date"],
-                accession_number=supplemental_choice["accession_number"],
-                url=supplemental_url,
-                raw_html=supplemental_html,
-                clean_text=_clean_html(supplemental_html),
-            )
+            errors.append(f"could not fetch the {meta['form']} filed {meta['filing_date']}: "
+                          f"{type(exc).__name__}: {exc}")
+            print(f"[edgar] WARNING: {errors[-1]}")
+            continue
+        downloaded.append(Filing(
+            ticker=ticker,
+            filing_type=meta["form"],
+            filing_date=meta["filing_date"],
+            accession_number=meta["accession_number"],
+            url=url,
+            raw_html=raw_html,
+            clean_text=_clean_html(raw_html),
+        ))
+    if not downloaded:
+        raise RuntimeError(f"None of {ticker}'s recent filings could be downloaded: {'; '.join(errors)}")
+    filing_set = FilingSet(ticker=ticker, cik=cik, filings=downloaded, errors=errors)
 
-    # Step 5: save to disk so the next call is instant.
-    _write_disk_cache(filing)
-    return filing
+    # Step 4: save to disk so the next call is instant — unless a download
+    # failed, so that the next call tries the missing filing again.
+    if not errors:
+        _write_disk_cache(filing_set)
+    return filing_set
 
 
 class PostFilingEightKs(NamedTuple):
@@ -559,38 +534,33 @@ def _download_8k(cik: int, ticker: str, meta: dict) -> EightKFiling:
     )
 
 
-def fetch_post_filing_8ks(filing: Filing) -> PostFilingEightKs:
-    """Fetch every 8-K (and 8-K/A) filed after *filing*, oldest first.
+def fetch_post_filing_8ks(filing_set: FilingSet) -> PostFilingEightKs:
+    """Fetch every 8-K (and 8-K/A) filed after the newest filing in *filing_set*, oldest first.
 
     The SEC's filing list is read again on every call, so an 8-K filed since
     the last run is picked up; each 8-K's documents are downloaded only once
     and cached under data/filings/{ticker}/8k/{accession}/.
 
-    8-Ks are extra context, like the supplemental 10-K: one that can't be
-    downloaded is left out and the reason added to `errors`, and if the
-    filing list itself can't be read, `filings` is empty and `errors` says
-    why. Nothing here raises for a network or SEC problem.
+    8-Ks are extra context: one that can't be downloaded is left out and the
+    reason added to `errors`, and if the filing list itself can't be read,
+    `filings` is empty and `errors` says why. Nothing here raises for a
+    network or SEC problem.
     """
-    ticker = filing.ticker
+    ticker, cik = filing_set.ticker, filing_set.cik
+    since = filing_set.newest.filing_date
     errors: list[str] = []
 
-    # Find the company's 8-Ks filed strictly after the primary filing.
+    # Find the company's 8-Ks filed strictly after the newest filing.
     try:
-        cik = filing.cik
-        if cik is None:
-            cik_map = _load_ticker_cik_map()
-            if ticker not in cik_map:
-                raise RuntimeError(f"Ticker '{ticker}' not found in SEC EDGAR.")
-            cik = cik_map[ticker]
         all_filings = _get_filings_metadata(cik)
     except (requests.RequestException, RuntimeError) as exc:
         return PostFilingEightKs([], [
-            f"8-Ks filed after {filing.filing_date} could not be listed: {type(exc).__name__}: {exc}"
+            f"8-Ks filed after {since} could not be listed: {type(exc).__name__}: {exc}"
         ])
-    primary_date = date.fromisoformat(filing.filing_date)
+    since_date = date.fromisoformat(since)
     wanted = sorted(
         (meta for meta in all_filings
-         if meta["form"] in _EIGHT_K_FORMS and date.fromisoformat(meta["filing_date"]) > primary_date),
+         if meta["form"] in _EIGHT_K_FORMS and date.fromisoformat(meta["filing_date"]) > since_date),
         key=lambda meta: (meta["filing_date"], meta["accession_number"]),
     )
 
@@ -622,27 +592,25 @@ def fetch_post_filing_8ks(filing: Filing) -> PostFilingEightKs:
 if __name__ == "__main__":
     import sys
     ticker_arg = sys.argv[1] if len(sys.argv) > 1 else "AAPL"
-    print(f"Fetching latest filing for {ticker_arg}...")
-    result = fetch_latest_filing(ticker_arg)
+    print(f"Fetching filings for {ticker_arg}...")
+    result = fetch_filings(ticker_arg)
     if result is None:
         sys.exit(f"No 10-Q or 10-K filed in the last {FILING_FRESHNESS_DAYS} days.")
 
-    # Show the metadata the rest of Yoda relies on.
-    print(f"\nTicker:           {result.ticker}")
-    print(f"CIK:              {result.cik}")
-    print(f"Filing type:      {result.filing_type}")
-    print(f"Filing date:      {result.filing_date}")
-    print(f"Accession number: {result.accession_number}")
-    print(f"URL:              {result.url}")
-    print(f"Clean text length:{len(result.clean_text)} chars")
-
-    # A preview of the cleaned text, to eyeball that the HTML was stripped well.
-    print("\n--- First 500 chars of clean text ---")
-    print(result.clean_text[:500])
+    # Show the metadata the rest of Yoda relies on, one block per filing.
+    print(f"\nTicker: {result.ticker}   CIK: {result.cik}")
+    for filing in result.filings:
+        print(f"\n{filing.filing_type} filed {filing.filing_date} ({filing.accession_number})")
+        print(f"  URL:         {filing.url}")
+        print(f"  Clean text:  {len(filing.clean_text):,} chars")
+        # A preview of the cleaned text, to eyeball that the HTML was stripped well.
+        print(f"  Starts with: {filing.clean_text[:200]!r}")
+    for error in result.errors:
+        print(f"ERROR: {error}")
 
     # The 8-Ks filed since, with their item codes and documents.
     post_filing = fetch_post_filing_8ks(result)
-    print(f"\n--- 8-Ks filed after {result.filing_date}: {len(post_filing.filings)} ---")
+    print(f"\n--- 8-Ks filed after {result.newest.filing_date}: {len(post_filing.filings)} ---")
     for eight_k in post_filing.filings:
         docs = ", ".join(f"{doc.doc_type} ({len(doc.clean_text)} chars)" for doc in eight_k.documents)
         print(f"  {eight_k.filing_date} {eight_k.form} items {','.join(eight_k.items) or '-'}: {docs}")

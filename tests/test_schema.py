@@ -17,7 +17,7 @@ import pytest
 from yoda import config
 from yoda.schema import (
     EarningsReport, EvidenceQuote, ExpectationValue, ForwardGuidance, Hypothesis, MarketExpectations, Metric,
-    SinceFilingItem,
+    ReportFiling, SinceFilingItem,
 )
 
 # The 40 reports from the 2026-10-26 eval run, written before these fields existed.
@@ -53,7 +53,7 @@ def _since_filing_item(evidence_type: str = "reported") -> SinceFilingItem:
 def _report_with_new_sections() -> EarningsReport:
     # A minimal report that fills every new field.
     return EarningsReport(
-        ticker="TEST", company_name="Test Co", filing_type="10-Q", filing_date="2026-08-01",
+        ticker="TEST", company_name="Test Co", filings=[ReportFiling(filing_type="10-Q", filing_date="2026-08-01")],
         report_generated_at="2026-10-27T12:00:00+00:00",
         key_metrics=[Metric(name="Revenue", value="$11.0B", unit="", source_citation="10-Q Item 2",
                             period="Q2 FY2026")],

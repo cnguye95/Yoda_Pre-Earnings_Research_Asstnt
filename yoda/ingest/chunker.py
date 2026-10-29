@@ -347,31 +347,34 @@ if __name__ == "__main__":
     import sys
     from collections import Counter
 
-    from yoda.ingest.edgar import fetch_latest_filing
+    from yoda.ingest.edgar import fetch_filings
 
     ticker_arg = sys.argv[1] if len(sys.argv) > 1 else "AAPL"
-    print(f"Fetching filing for {ticker_arg}...")
-    filing = fetch_latest_filing(ticker_arg)
-
-    if filing is None:
+    print(f"Fetching filings for {ticker_arg}...")
+    filing_set = fetch_filings(ticker_arg)
+    if filing_set is None:
         sys.exit(f"{ticker_arg} has no recent 10-Q or 10-K to chunk.")
-    print(f"Clean text length: {len(filing.clean_text)} chars")
-    print("Chunking...")
-    chunks = chunk_filing(filing.clean_text)
 
-    # Print section distribution.
-    counts = Counter(c.section for c in chunks)
-    print(f"\nSection distribution ({len(chunks)} total chunks):")
-    for section, count in sorted(counts.items()):
-        print(f"  {section}: {count} chunks")
+    # Chunk each filing and show how its text was split into sections.
+    for filing in filing_set.filings:
+        print(f"\n=== {filing.filing_type} filed {filing.filing_date} ===")
+        print(f"Clean text length: {len(filing.clean_text)} chars")
+        print("Chunking...")
+        chunks = chunk_filing(filing.clean_text)
 
-    # Print one sample chunk (first 200 chars) per section.
-    seen: set[str] = set()
-    print("\nSample chunk per section:")
-    for chunk in chunks:
-        if chunk.section not in seen:
-            seen.add(chunk.section)
-            preview = chunk.text[:200].replace("\n", " ")
-            print(f"\n  [{chunk.section}] (chunk #{chunk.chunk_index}, "
-                  f"chars {chunk.char_start}–{chunk.char_end})")
-            print(f"  {preview}")
+        # Print section distribution.
+        counts = Counter(c.section for c in chunks)
+        print(f"\nSection distribution ({len(chunks)} total chunks):")
+        for section, count in sorted(counts.items()):
+            print(f"  {section}: {count} chunks")
+
+        # Print one sample chunk (first 200 chars) per section.
+        seen: set[str] = set()
+        print("\nSample chunk per section:")
+        for chunk in chunks:
+            if chunk.section not in seen:
+                seen.add(chunk.section)
+                preview = chunk.text[:200].replace("\n", " ")
+                print(f"\n  [{chunk.section}] (chunk #{chunk.chunk_index}, "
+                      f"chars {chunk.char_start}–{chunk.char_end})")
+                print(f"  {preview}")

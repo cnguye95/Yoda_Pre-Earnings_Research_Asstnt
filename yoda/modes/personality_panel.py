@@ -56,9 +56,9 @@ from yoda.evidence_text import CONFLICT_RULES as _CONFLICT_RULES
 from yoda.evidence_text import normalize as _norm
 from yoda.evidence_text import quote_in as _quote_in
 from yoda.ingest.chunker import Chunk, chunk_8k, chunk_filing, chunk_transcript, eight_k_label, transcript_key
-from yoda.ingest.edgar import FILING_FRESHNESS_DAYS, fetch_latest_filing, fetch_post_filing_8ks
+from yoda.ingest.edgar import FILING_FRESHNESS_DAYS, fetch_filings, fetch_post_filing_8ks
 from yoda.ingest.transcripts import TranscriptFetch, find_last_call, render_call_text
-from yoda.modes.baseline import apply_supplemental, full_filing_text, iter_citation_holders, validate_citations
+from yoda.modes.baseline import apply_filings, full_filing_text, iter_citation_holders, validate_citations
 from yoda.modes.llm import NoStructuredOutput, client as _client, structured_call as _structured_call
 from yoda.modes.tools import (
     TOOL_ARGS,
@@ -83,6 +83,7 @@ from yoda.schema import (
     Hypothesis,
     CritiqueMessage,
     Filing,
+    FilingSet,
     MarketExpectations,
     NewsSearchResult,
     PersonalityResult,
@@ -1210,10 +1211,10 @@ Rules you must follow without exception:
 
 
 # Report fields code fills after synthesis: the panel's own hypotheses, the
-# market data copied straight from the snapshot, and which earnings call
-# was read. Leaving them out of what synthesis writes saves output tokens
-# and rules out copying mistakes.
-_SET_IN_CODE = {"hypotheses_explored", "market_expectations", "earnings_call"}
+# market data copied straight from the snapshot, which earnings call was
+# read, and which filings. Leaving them out of what synthesis writes saves
+# output tokens and rules out copying mistakes.
+_SET_IN_CODE = {"hypotheses_explored", "market_expectations", "earnings_call", "filings"}
 
 # What synthesis writes: the EarningsReport minus the fields above, with
 # since_filing required (in the full report it defaults to empty only so
@@ -1268,7 +1269,7 @@ def _call_name(call: TranscriptFetch) -> str:
 
 def _synthesize_report(
     ticker: str,
-    primary_filing: Filing | None,
+    filings: list[Filing],
     final_hypotheses: list[Hypothesis],
     contested: list[Hypothesis],
     critique_messages: list[CritiqueMessage],
@@ -1281,7 +1282,8 @@ def _synthesize_report(
 ) -> tuple[EarningsReport, int, int]:
     """One SYNTH_MODEL call producing the final EarningsReport.
 
-    *filing_text* is the FULL filing text (from baseline.full_filing_text),
+    *filings* are the 10-Q/10-K filings in *filing_text* (empty when none
+    was in range). *filing_text* is the FULL filing text (from baseline.full_filing_text),
     so the synthesizer extracts figures and cites locations from the whole
     filing — the same text the single-pass baseline reads — rather than from
     a handful of retrieved chunks. *eight_k_text* is the full text of the
@@ -1291,8 +1293,8 @@ def _synthesize_report(
     *articles_text* the articles personalities read in full
     (_render_read_articles).
 
-    The report comes back without hypotheses_explored, market_expectations
-    and earnings_call, which the caller fills in code.
+    The report comes back without hypotheses_explored, market_expectations,
+    earnings_call and filings, which the caller fills in code.
 
     Returns (report, input_tokens, output_tokens).
     """
@@ -1327,7 +1329,7 @@ def _synthesize_report(
     # and the analysis.
     user_prompt = (
         f"Ticker: {ticker}\n"
-        f"Filing: {_describe_filing(primary_filing)}\n"
+        f"Filings: {_describe_filings(filings)}\n"
         f"Report timestamp (use for report_generated_at): {now_utc}\n\n"
         f"--- FILING TEXT (full; authoritative for key_metrics, revenue_segments, "
         f"forward_guidance, key_risks and every source_citation) ---\n{filing_text}\n\n"
@@ -1497,8 +1499,7 @@ def _cited_urls(report: EarningsReport) -> set[str]:
 
 def _evidence_bundle(
     ticker: str,
-    filing: Filing | None,
-    supplemental_used: Filing | None,
+    filings_used: list[Filing],
     eight_ks: list[EightKFiling],
     context_block: str,
     ctx: ToolContext,
@@ -1507,8 +1508,8 @@ def _evidence_bundle(
 ) -> EvidenceBundle:
     """Collect the external sources *report* was written from, each with its own citation.
 
-    Holds the filing(s) synthesis read in full (*supplemental_used* is None
-    when the 10-K was left out for size), every 8-K document, the earnings
+    Holds the filings synthesis read (*filings_used*, from
+    baseline.full_filing_text), every 8-K document, the earnings
     call transcript synthesis read (*transcript*, None when none), the CONTEXT
     block, the news pool, which articles were read (full text only for those
     the report cites), and the competitor passages personalities were shown.
@@ -1519,7 +1520,7 @@ def _evidence_bundle(
     documents = [
         EvidenceDocument(label=_describe_filing(doc), accession_number=doc.accession_number,
                          filing_date=doc.filing_date, url=doc.url, text=doc.clean_text)
-        for doc in (filing, supplemental_used) if doc is not None
+        for doc in filings_used
     ]
     documents += [
         EvidenceDocument(label=eight_k_label(eight_k, doc), accession_number=eight_k.accession_number,
@@ -1556,11 +1557,14 @@ _NO_FILING_GAP = (
 )
 
 
-def _describe_filing(filing: Filing | None) -> str:
+def _describe_filing(filing: Filing) -> str:
     """Return a short label such as "10-Q filed 2026-04-18" for logs and prompts."""
-    if filing is None:
-        return "none found (no recent 10-Q or 10-K)"
     return f"{filing.filing_type} filed {filing.filing_date}"
+
+
+def _describe_filings(filings: list[Filing]) -> str:
+    """Return "10-Q filed 2026-08-06; 10-K filed 2026-02-01", or say there is none."""
+    return "; ".join(_describe_filing(filing) for filing in filings) or "none found (no recent 10-Q or 10-K)"
 
 
 # ---------------------------------------------------------------------------
@@ -1585,14 +1589,14 @@ class MarketDataUnavailable(RuntimeError):
 
 
 def _ingest_post_filing_8ks(
-    filing: Filing, store: ChromaStore, run_gaps: list[str], log_prefix: str,
+    filing_set: FilingSet, store: ChromaStore, run_gaps: list[str], log_prefix: str,
 ) -> tuple[list[EightKFiling], int]:
-    """Fetch the 8-Ks filed after *filing*, store their chunks, and return them.
+    """Fetch the 8-Ks filed after the newest filing in *filing_set*, store their chunks, and return them.
 
     Returns (the 8-Ks, estimated embedding tokens spent). An 8-K that couldn't
     be fetched is listed in *run_gaps*, so the report says it is missing.
     """
-    post_filing = fetch_post_filing_8ks(filing)
+    post_filing = fetch_post_filing_8ks(filing_set)
     run_gaps.extend(f"8-K not analyzed: {error}" for error in post_filing.errors)
 
     # Embed each 8-K only if the vector store doesn't already hold it.
@@ -1996,10 +2000,11 @@ def run_personality_panel(
     synth_in = synth_out = 0
 
     # ------------------------------------------------------------------
-    # Phase 1 — Ingest the primary filing and prepare the shared context.
+    # Phase 1 — Ingest the filings and prepare the shared context.
     # ------------------------------------------------------------------
-    print(f"{log_prefix} Fetching filing for {ticker}...")
-    filing = fetch_latest_filing(ticker)
+    print(f"{log_prefix} Fetching filings for {ticker}...")
+    filing_set = fetch_filings(ticker)
+    filings = filing_set.filings if filing_set else []
 
     # Problems found while gathering inputs. They are added to the report's
     # data_gaps at the end, so the reader sees them instead of only the console.
@@ -2008,20 +2013,12 @@ def run_personality_panel(
     # Handle the case where no 10-K or 10-Q was filed within the freshness
     # window: the panel carries on with news and peer filings only, and the
     # report says so.
-    if filing is None:
+    if filing_set is None:
         print(f"{log_prefix} [WARNING] No recent SEC filing found for {ticker}. "
               "Panel will investigate using news and peer filings only.")
         run_gaps.append(_NO_FILING_GAP)
     else:
-        print(f"{log_prefix} Filing: {_describe_filing(filing)}")
-
-    # The supplemental (if any) is a 10-K providing annual context alongside
-    # the primary 10-Q's fresh quarterly data.
-    supplemental = filing.supplemental if filing else None
-    if supplemental:
-        print(f"{log_prefix} Supplemental: {_describe_filing(supplemental)}")
-    if filing and filing.supplemental_error:
-        run_gaps.append(f"Supplemental 10-K not analyzed: {filing.supplemental_error}.")
+        print(f"{log_prefix} Filings: {_describe_filings(filings)}")
 
     # Market data for the next report, fetched once for the whole run (this
     # includes the one paid whisper lookup). A provider that refused the
@@ -2037,34 +2034,25 @@ def run_personality_panel(
         for failure in market.failures
     )
 
-    # Chunk the filing and embed it only if ChromaDB doesn't already hold it.
+    # Chunk each filing and embed it only if ChromaDB doesn't already hold it.
     # For news-only runs the ChromaStore stays empty; retrieve_filing returns [].
     store = ChromaStore()
-    if filing is not None:
+    for filing in filings:
         chunks = chunk_filing(filing.clean_text)
         t0 = time.perf_counter()
         if store.index_if_missing(filing.accession_number, chunks):
             # Rough token count (~4 characters per token) for the cost line.
             embed_tokens += sum(len(chunk.text) for chunk in chunks) // 4
-            print(f"{log_prefix} Embedded {len(chunks)} chunks in {time.perf_counter()-t0:.2f}s")
+            print(f"{log_prefix} {_describe_filing(filing)}: embedded {len(chunks)} chunks "
+                  f"in {time.perf_counter()-t0:.2f}s")
         else:
-            print(f"{log_prefix} {len(chunks)} chunks already indexed; skipped embedding")
+            print(f"{log_prefix} {_describe_filing(filing)}: {len(chunks)} chunks already indexed; skipped embedding")
 
-    # Same for the supplemental 10-K, if present.
-    if supplemental:
-        sup_chunks = chunk_filing(supplemental.clean_text)
-        t0 = time.perf_counter()
-        if store.index_if_missing(supplemental.accession_number, sup_chunks):
-            embed_tokens += sum(len(chunk.text) for chunk in sup_chunks) // 4
-            print(f"{log_prefix} Supplemental: embedded {len(sup_chunks)} chunks in {time.perf_counter()-t0:.2f}s")
-        else:
-            print(f"{log_prefix} Supplemental: {len(sup_chunks)} chunks already indexed; skipped embedding")
-
-    # The 8-Ks filed since the 10-Q/10-K: fetched, stored for
+    # The 8-Ks filed since the newest 10-Q/10-K: fetched, stored for
     # retrieve_filing, and listed in the shared context below.
     eight_ks: list[EightKFiling] = []
-    if filing is not None:
-        eight_ks, eight_k_tokens = _ingest_post_filing_8ks(filing, store, run_gaps, log_prefix)
+    if filing_set is not None:
+        eight_ks, eight_k_tokens = _ingest_post_filing_8ks(filing_set, store, run_gaps, log_prefix)
         embed_tokens += eight_k_tokens
 
     # The latest earnings call transcript: fetched (free, cached), stored
@@ -2072,19 +2060,16 @@ def run_personality_panel(
     call, call_key, call_tokens = _ingest_transcript(ticker, market, eight_ks, store, run_gaps, log_prefix)
     embed_tokens += call_tokens
 
-    # News searches cover what was published from the filing date on (the
-    # last 30 days when there is no filing).
+    # News searches cover what was published from the newest filing's date
+    # on (the last 30 days when there is no filing).
     ctx = ToolContext(
         primary_ticker=ticker,
-        primary_accession=filing.accession_number if filing else None,
-        supplemental_accession=supplemental.accession_number if supplemental else None,
         store=store,
         # "10-Q filed 2026-08-06": every chunk names its filing and date.
-        primary_label=_describe_filing(filing) if filing else "",
-        supplemental_label=_describe_filing(supplemental) if supplemental else "",
+        filing_labels={filing.accession_number: _describe_filing(filing) for filing in filings},
         eight_k_accessions=[eight_k.accession_number for eight_k in eight_ks],
         transcript_key=call_key,
-        news_since=date.fromisoformat(filing.filing_date) if filing else None,
+        news_since=date.fromisoformat(filing_set.newest.filing_date) if filing_set else None,
     )
 
     # The context every personality starts from: which 8-Ks and which call
@@ -2234,28 +2219,25 @@ def run_personality_panel(
     # Give the synthesizer the FULL filing text — the same text the baseline
     # reads — so it can extract every figure and cite the filing's own
     # headings. The 8-Ks, the call and the articles share the same size
-    # limit; the supplemental 10-K is the first thing left out if everything
-    # together is too large for the model's context window.
-    if filing is not None:
-        reserved = len(eight_k_text) + len(call_text) + len(articles_text)
-        filing_text, sup_dropped = full_filing_text(filing, supplemental, reserved_chars=reserved)
-    else:
-        filing_text, sup_dropped = _NO_FILING_TEXT, False
-    print(f"{log_prefix} Full filing for synthesis: {len(filing_text):,} chars; "
+    # limit; full_filing_text() fits the filings into what is left, and says
+    # in its gaps what it had to leave out.
+    reserved = len(eight_k_text) + len(call_text) + len(articles_text)
+    filing_text = full_filing_text(filings, reserved_chars=reserved)
+    print(f"{log_prefix} Full filings for synthesis: {len(filing_text.text):,} chars; "
           f"8-Ks: {len(eight_k_text):,} chars; call: {len(call_text):,} chars; "
           f"articles read: {len(ctx.read_articles)} ({len(articles_text):,} chars)")
-    if sup_dropped:
-        print(f"{log_prefix} WARNING: supplemental {supplemental.filing_type} dropped — filings too large")
+    for gap in filing_text.gaps:
+        print(f"{log_prefix} WARNING: {gap}")
 
     t0 = time.perf_counter()
     report, synth_in, synth_out = _synthesize_report(
         ticker=ticker,
-        primary_filing=filing,
+        filings=filing_text.used,
         final_hypotheses=final_hypotheses,
         contested=contested,
         critique_messages=critique_messages,
         news_pool=ctx.news_pool,
-        filing_text=filing_text,
+        filing_text=filing_text.text or _NO_FILING_TEXT,
         eight_k_text=eight_k_text,
         context_block=context_block,
         articles_text=articles_text,
@@ -2313,14 +2295,11 @@ def run_personality_panel(
     report.market_expectations = _market_expectations(market)
     report.earnings_call = _call_name(call)
 
-    # Attach supplemental filing metadata directly — not via LLM — or record
-    # that it was left out of synthesis for size.
-    apply_supplemental(report, supplemental, sup_dropped)
-
-    # Which filing the report describes is known in code, so it is stamped
-    # on rather than trusted to the model ("N/A" when there was none).
-    report.filing_type = filing.filing_type if filing else "N/A"
-    report.filing_date = filing.filing_date if filing else "N/A"
+    # Which filings the report was written from is known in code, so it is
+    # stamped on rather than trusted to the model, with a data gap for any
+    # filing left out for size or not downloaded. No filing leaves the list empty.
+    if filing_set is not None:
+        apply_filings(report, filing_set, filing_text)
 
     # Parts of the new sections synthesis left unfilled (a metric with no
     # period, an empty since_filing, an unexplained N/A) are named for the
@@ -2332,8 +2311,7 @@ def run_personality_panel(
 
     # The external sources the finished report was written from, for the
     # eval judge. Built last, so "cited" means cited by the final report.
-    evidence = _evidence_bundle(ticker, filing, None if sup_dropped else supplemental,
-                                eight_ks, context_block, ctx, report, call.transcript)
+    evidence = _evidence_bundle(ticker, filing_text.used, eight_ks, context_block, ctx, report, call.transcript)
 
     # ------------------------------------------------------------------
     # Cost + wall-time totals (regex-parseable by the eval runner)
@@ -2406,7 +2384,7 @@ if __name__ == "__main__":
 
     # Print summary so the eyeball check is fast.
     print(f"\nCompany:           {report.company_name}")
-    print(f"Filing:            {report.filing_type} — {report.filing_date}")
+    print(f"Filings:           {', '.join(f'{f.filing_type} {f.filing_date}' for f in report.filings) or 'none'}")
     print(f"Key metrics:       {len(report.key_metrics)}")
     print(f"Revenue segments:  {len(report.revenue_segments)}")
     print(f"Key risks:         {len(report.key_risks)}")

@@ -23,7 +23,6 @@ from datetime import datetime
 from typing import Literal, NamedTuple
 
 from yoda import config
-from yoda.ingest.edgar import fetch_latest_filing
 from yoda.modes.personality_panel import MarketDataUnavailable, run_personality_panel
 from yoda.report.pdf import report_to_pdf
 from yoda.tickers import normalize_tickers
@@ -120,13 +119,9 @@ def _build_pdf(ticker: str, market: MarketSnapshot | None = None,
         whisper_lookup=whisper_lookup,
     ).report
 
-    # Fetch the filing again only for its URL, used to hyperlink citations.
-    # fetch_latest_filing is cached on disk, so this is fast after the panel.
-    filing = fetch_latest_filing(ticker)
-
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     pdf_path = _REPORTS_DIR / f"{ticker}_{timestamp}.pdf"
-    report_to_pdf(report, pdf_path, filing_url=filing.url if filing else None)
+    report_to_pdf(report, pdf_path)
     return pdf_path
 
 

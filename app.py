@@ -11,11 +11,10 @@ import tempfile
 import streamlit as st
 import streamlit.components.v1 as components
 
-from yoda.ingest.edgar import fetch_latest_filing
 from yoda.modes.personality_panel import MarketDataUnavailable, run_personality_panel
 from yoda.queue.processor import process_queue
 from yoda.report.pdf import (
-    NO_MARKET_DATA, call_caption, expectation_rows, filing_caveats, is_url, report_to_pdf, site_label,
+    NO_MARKET_DATA, call_caption, expectation_rows, filing_caveats, filings_caption, is_url, report_to_pdf, site_label,
 )
 from yoda.retrieval.embeddings import EMBEDDING_MODEL
 from yoda.tools.consensus import (
@@ -69,9 +68,7 @@ def _ensure_pdf(report: EarningsReport) -> bytes:
     with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as f:
         pdf_path = f.name
     try:
-        # fetch_latest_filing is cached on disk so this is fast.
-        filing = fetch_latest_filing(report.ticker)
-        report_to_pdf(report, pdf_path, filing_url=filing.url if filing else None)
+        report_to_pdf(report, pdf_path)
         pdf_bytes = pathlib.Path(pdf_path).read_bytes()
     finally:
         pathlib.Path(pdf_path).unlink(missing_ok=True)
@@ -296,11 +293,9 @@ if view == _SINGLE_VIEW:
         st.divider()
         st.subheader(f"{report.ticker} — {report.company_name}")
 
-        # Build the filing caption — show supplemental date when both are
-        # present, and which earnings call was read (the same text as the PDF cover).
-        filing_caption = f"{report.filing_type} filed {report.filing_date}"
-        if report.supplemental_filing_type:
-            filing_caption += f" · {report.supplemental_filing_type} filed {report.supplemental_filing_date}"
+        # Build the caption: every filing read, with its date, and which
+        # earnings call was read (the same text as the PDF cover).
+        filing_caption = filings_caption(report) or "No recent SEC filing"
         if call_caption(report):
             filing_caption += f" · {call_caption(report)}"
         st.caption(filing_caption)

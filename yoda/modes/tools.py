@@ -31,7 +31,7 @@ from datetime import date
 from pydantic import BaseModel, ConfigDict, Field
 
 from yoda.ingest.chunker import Chunk, chunk_filing
-from yoda.ingest.edgar import fetch_latest_filing
+from yoda.ingest.edgar import fetch_filings
 from yoda.retrieval.vector_store import ChromaStore
 from yoda.schema import ArticleText, NewsSearchResult
 from yoda.tools.news import read_article as _tavily_read
@@ -46,21 +46,19 @@ from yoda.tools.news import search_news as _tavily_search
 class ToolContext:
     """The state every tool needs, shared by all personality threads in one run.
 
-    *primary_accession* is None when the company has no recent filing, in
-    which case retrieve_filing searches only the supplemental (if any).
+    *primary_ticker* is the company being analysed (as opposed to a peer).
     """
     primary_ticker: str
-    primary_accession: str | None
     store: ChromaStore
-    supplemental_accession: str | None = None   # 10-K when the primary is a 10-Q
 
-    # Labels naming each filing, e.g. "10-Q filed 2026-08-06". retrieve_filing
-    # puts them on every chunk it returns, so a personality (and the checks on
+    # The company's 10-Q/10-K filings already in the vector store, as
+    # accession number -> label (e.g. "10-Q filed 2026-08-06"), newest first;
+    # empty when the company has no recent filing. retrieve_filing puts the
+    # label on every chunk it returns, so a personality (and the checks on
     # its evidence) can tell which filing, and which date, a passage is from.
-    primary_label: str = ""
-    supplemental_label: str = ""
+    filing_labels: dict[str, str] = field(default_factory=dict)
 
-    # The 8-Ks filed after the primary filing, already stored in the vector
+    # The 8-Ks filed after the newest filing, already stored in the vector
     # store, so retrieve_filing can search them too.
     eight_k_accessions: list[str] = field(default_factory=list)
 
@@ -69,7 +67,7 @@ class ToolContext:
     # when no transcript was found.
     transcript_key: str | None = None
 
-    # The primary filing's date: news searches cover what was published from
+    # The newest filing's date: news searches cover what was published from
     # then on. None (no filing) means the last 30 days.
     news_since: date | None = None
 
@@ -104,24 +102,22 @@ class ToolContext:
 def retrieve_filing(ctx: ToolContext, query: str, k: int = 5) -> list[Chunk]:
     """Semantic search over the ticker's SEC filings.
 
-    Queries the primary filing (10-Q) and the supplemental filing (10-K)
-    when both are available, plus the k best matches across all 8-Ks filed
-    since, plus the k best passages of the latest earnings call transcript
-    — up to 4k chunks, so personalities see the freshest quarterly data,
-    annual context, what was announced after the filing, and what
-    management said on the call. Every chunk's `document` names where it
-    came from, e.g. "10-Q filed 2026-08-06", "8-K Items 2.02, 9.01, Exhibit
-    99.1 (filed 2026-10-13)" or "CALL Q3 FY2026 (2026-10-27) · company".
+    Queries each of the company's 10-Q/10-K filings (k chunks from each),
+    plus the k best matches across all 8-Ks filed since, plus the k best
+    passages of the latest earnings call transcript — so personalities see
+    the quarterly data, the annual context, what was announced after the
+    filings, and what management said on the call. Every chunk's `document`
+    names where it came from, e.g. "10-Q filed 2026-08-06", "8-K Items 2.02,
+    9.01, Exhibit 99.1 (filed 2026-10-13)" or "CALL Q3 FY2026 (2026-10-27) ·
+    company".
     """
     # ChromaStore queries are safe to call concurrently from multiple
     # personality threads since reads don't mutate the on-disk index. Each
     # 10-Q/10-K chunk is labelled with its filing here, at retrieval time,
     # so nothing stored changes; 8-K chunks are stored with their labels.
     chunks = []
-    if ctx.primary_accession:
-        chunks += _labelled(ctx.store.query(ctx.primary_accession, query, k=k), ctx.primary_label)
-    if ctx.supplemental_accession:
-        chunks += _labelled(ctx.store.query(ctx.supplemental_accession, query, k=k), ctx.supplemental_label)
+    for accession, label in ctx.filing_labels.items():
+        chunks += _labelled(ctx.store.query(accession, query, k=k), label)
     chunks += ctx.store.query_any(ctx.eight_k_accessions, query, k=k)
     if ctx.transcript_key:
         chunks += ctx.store.query(ctx.transcript_key, query, k=k)
@@ -188,9 +184,9 @@ def read_article(ctx: ToolContext, url: str) -> ArticleText:
 # ---------------------------------------------------------------------------
 
 def lookup_peer(ctx: ToolContext, peer_ticker: str, query: str, k: int = 3) -> list[Chunk]:
-    """Return the *k* chunks of a peer company's filing most relevant to *query*.
+    """Return the *k* chunks of a peer company's newest filing most relevant to *query*.
 
-    The peer's filing is fetched, chunked and embedded on the first call
+    The peer's newest 10-Q/10-K is fetched, chunked and embedded on the first call
     (and cached on disk, so later runs skip the SEC download). An internal
     lock ensures two personalities asking for the same peer at once don't
     both trigger the download. Raises ValueError if the peer has no recent
@@ -201,9 +197,12 @@ def lookup_peer(ctx: ToolContext, peer_ticker: str, query: str, k: int = 3) -> l
     # Check-and-ingest happens under the lock so it is one atomic step.
     with ctx._peer_lock:
         if peer_ticker not in ctx._ingested_peers:
-            peer_filing = fetch_latest_filing(peer_ticker)
-            if peer_filing is None:
+            peer_set = fetch_filings(peer_ticker)
+            if peer_set is None:
                 raise ValueError(f"{peer_ticker} has no 10-Q or 10-K filed recently enough to search.")
+            # Only the peer's newest filing is searched: a read-through needs
+            # its latest figures, not a second document.
+            peer_filing = peer_set.newest
             peer_chunks = chunk_filing(peer_filing.clean_text)
             # Embeds only if an earlier run hasn't already stored this filing.
             ctx.store.index_if_missing(peer_filing.accession_number, peer_chunks)
@@ -233,8 +232,8 @@ TOOL_SCHEMAS = [
     {
         "name": "retrieve_filing",
         "description": (
-            "Semantic search over the primary company's most recent 10-Q "
-            "or 10-K, the 8-Ks it filed since (earnings releases, new "
+            "Semantic search over the primary company's recent 10-Q "
+            "and/or 10-K, the 8-Ks it filed since (earnings releases, new "
             "debt, executive changes) and its latest earnings call "
             "transcript. Returns chunks relevant to your query, each "
             "labelled with the document it came from; call chunks say "
@@ -419,19 +418,19 @@ if __name__ == "__main__":
 
     ticker = (sys.argv[1] if len(sys.argv) > 1 else "NFLX").upper()
 
-    # Build a real context: fetch + chunk + embed + upsert the primary filing.
+    # Build a real context: fetch + chunk + embed + upsert each filing.
     print(f"[tools-smoke] Ingesting {ticker} so tools have something to query...")
-    filing = fetch_latest_filing(ticker)
-    if filing is None:
+    filing_set = fetch_filings(ticker)
+    if filing_set is None:
         sys.exit(f"{ticker} has no recent 10-Q or 10-K to smoke-test against.")
-    chunks = chunk_filing(filing.clean_text)
-
     store = ChromaStore()
-    store.index_if_missing(filing.accession_number, chunks)
-
-    ctx = ToolContext(primary_ticker=ticker, primary_accession=filing.accession_number, store=store)
-    print(f"[tools-smoke] Indexed {len(chunks)} chunks for {ticker} "
-          f"({filing.filing_type} {filing.filing_date})")
+    ctx = ToolContext(primary_ticker=ticker, store=store)
+    for filing in filing_set.filings:
+        chunks = chunk_filing(filing.clean_text)
+        store.index_if_missing(filing.accession_number, chunks)
+        ctx.filing_labels[filing.accession_number] = f"{filing.filing_type} filed {filing.filing_date}"
+        print(f"[tools-smoke] Indexed {len(chunks)} chunks for {ticker} "
+              f"({filing.filing_type} {filing.filing_date})")
 
     # Exercise each tool once and print a one-line summary.
     print("\n[tools-smoke] retrieve_filing('revenue segment breakdown'):")
