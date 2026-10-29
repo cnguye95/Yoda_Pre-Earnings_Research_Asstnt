@@ -3,7 +3,8 @@
 CONFLICT_RULES is the agreed wording of how sources that disagree are
 weighed (next_steps 3.4). The personalities, synthesis and the judge's
 reasoning_quality dimension all read this one text, so the wording can never
-drift apart between them.
+drift apart between them. NEWER_CONTRADICTION_RULE adds what to do when a
+newer item contradicts the filing (personalities and synthesis only).
 
 normalize() and quote_in() check that a quoted passage really appears in a
 text: the panel uses them on each personality's evidence, and the judge's
@@ -23,6 +24,17 @@ unverifiable. When sources disagree:
     quantities, not conflicting claims. Showing the gap between them is
     good. The tier rule applies only when sources give different values for
     the same fact."""
+
+
+# What to do when something dated after the filing disagrees with it. It
+# adds to CONFLICT_RULES rather than changing them: the reader is told
+# about the contradiction, while which source the report relies on still
+# follows the tier rules. Read by the personalities and synthesis (not the
+# judge, whose rubric quotes CONFLICT_RULES alone).
+NEWER_CONTRADICTION_RULE = """When an item dated after the filing (the 8-K, the earnings call, a news
+article) contradicts the filing, flag the contradiction: show both, each
+with its date, and say which is newer. Which one to rely on still follows
+the rules above, and a newer item never overwrites a filing figure."""
 
 
 def normalize(text: str) -> str:

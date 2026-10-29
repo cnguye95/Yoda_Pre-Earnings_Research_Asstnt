@@ -53,6 +53,7 @@ from yoda import config
 # Shared with the eval judge (yoda/evidence_text.py); kept under their old
 # names here. _norm/_quote_in match quotes, _CONFLICT_RULES weighs sources.
 from yoda.evidence_text import CONFLICT_RULES as _CONFLICT_RULES
+from yoda.evidence_text import NEWER_CONTRADICTION_RULE as _NEWER_CONTRADICTION_RULE
 from yoda.evidence_text import normalize as _norm
 from yoda.evidence_text import quote_in as _quote_in
 from yoda.ingest.chunker import Chunk, chunk_8k, chunk_filing, chunk_transcript, eight_k_label, transcript_key
@@ -68,7 +69,7 @@ from yoda.modes.tools import (
     normalize_call,
 )
 from yoda.retrieval.vector_store import ChromaStore
-from yoda.dates import market_today
+from yoda.dates import dates_line, market_today
 from yoda.schema import (
     ArticleText,
     CallTranscript,
@@ -183,7 +184,7 @@ releases > data vendors (consensus feeds) > major financial press (Reuters,
 Bloomberg, WSJ, FT) > aggregators and blogs. Prefer the most reliable source
 available; trace an aggregator's claim to the source it names.
 
-""" + _CONFLICT_RULES
+""" + _CONFLICT_RULES + "\n" + _NEWER_CONTRADICTION_RULE
 
 # How a personality reports each piece of evidence in its wrap-up. Code then
 # checks every field against what the personality was shown.
@@ -613,12 +614,15 @@ def _run_personality(
     wall_timeout_seconds: float,
     log_prefix: str,
     context_block: str = "",
+    dates: str = "",
 ) -> PersonalityResult:
     """Run one personality's tool-use loop and return its PersonalityResult.
 
     *context_block* is the shared context every personality starts with
-    (the 8-Ks filed since the filing and the market data, from
-    _render_context_block); it is added to the first message.
+    (the latest 8-K since the filing and the market data, from
+    _render_context_block); it is added to the first message. *dates* is
+    the dates_line() (today's date and each filing's date) the first
+    message starts with.
 
     Inputs are immutable from the caller's perspective: we never mutate `ctx`
     state directly, but tools called inside the loop will mutate shared state
@@ -644,6 +648,8 @@ def _run_personality(
         f"Begin by calling whichever tool will surface the most decision-"
         f"relevant evidence first."
     )
+    if dates:
+        user = f"{dates}\n\n{user}"
     if context_block:
         user += f"\n\n--- CONTEXT (shared by every analyst) ---\n{context_block}"
     messages = [{"role": "user", "content": user}]
@@ -852,8 +858,13 @@ def _run_critique(
     own_hypotheses: list[Hypothesis],
     peer_hypotheses: list[Hypothesis],
     log_prefix: str,
+    dates: str = "",
 ) -> tuple[list[CritiqueMessage], int, int]:
     """Have one personality critique its peers' hypotheses.
+
+    *dates* is the dates_line() (today's date and each filing's date) the
+    message starts with, so the reviewer can tell how old each piece of
+    evidence is.
 
     Returns (messages, input_tokens, output_tokens). Raises one of
     _LLM_ERRORS if the call fails; NoStructuredOutput carries the tokens
@@ -879,7 +890,7 @@ def _run_critique(
         f"message to 1-3 sentences. Only emit a message when you have "
         f"something substantive to say — silence is acceptable."
     )
-    user = (
+    user = (f"{dates}\n\n" if dates else "") + (
         f"Your own hypotheses:\n{own_text}\n\n"
         f"Peers' hypotheses to review:\n\n{peers_text}\n\n"
         f"Emit your critique messages now."
@@ -1194,6 +1205,10 @@ Rules you must follow without exception:
 
 8. Conflicts between sources follow these rules:
 """ + _CONFLICT_RULES + """
+""" + _NEWER_CONTRADICTION_RULE + """
+   Flag such a contradiction inside the since_filing item's claim (e.g.
+   "contradicts the 10-Q filed 2026-08-01, which reported ...") and, when
+   it is material, in what_to_watch.
 
 9. Every piece of the analysts' evidence shows its evidence_type. When a
    bull_case, bear_case or what_to_watch point rests ONLY on unverifiable
@@ -1329,7 +1344,7 @@ def _synthesize_report(
     # and the analysis.
     user_prompt = (
         f"Ticker: {ticker}\n"
-        f"Filings: {_describe_filings(filings)}\n"
+        f"{dates_line(filings)}\n"
         f"Report timestamp (use for report_generated_at): {now_utc}\n\n"
         f"--- FILING TEXT (full; authoritative for key_metrics, revenue_segments, "
         f"forward_guidance, key_risks and every source_citation) ---\n{filing_text}\n\n"
@@ -2007,6 +2022,10 @@ def run_personality_panel(
     filing_set = fetch_filings(ticker)
     filings = filing_set.filings if filing_set else []
 
+    # Today's date and each filing's date, given to every model call so it
+    # can tell how old each source is.
+    dates = dates_line(filings)
+
     # Problems found while gathering inputs. They are added to the report's
     # data_gaps at the end, so the reader sees them instead of only the console.
     run_gaps: list[str] = []
@@ -2100,6 +2119,7 @@ def run_personality_panel(
                 WALL_TIMEOUT_SECONDS,
                 log_prefix,
                 context_block,
+                dates,
             ): personality
             for personality in _PERSONALITY_PROMPTS
         }
@@ -2173,7 +2193,7 @@ def run_personality_panel(
             peers = [hypothesis for hypothesis in all_hypotheses
                      if hypothesis.proposing_personality != result.personality]
             futures[pool.submit(_run_critique, result.personality, result.hypotheses,
-                                peers, log_prefix)] = result.personality
+                                peers, log_prefix, dates)] = result.personality
 
         # Wait for every critique (each is one short call) so its tokens are
         # counted — including a failed call's, when the error carries them.

@@ -9,13 +9,18 @@ No test reaches the SEC: the network functions are replaced with fakes, and
 "today" is fixed so every date in a test means the same thing on any day.
 """
 
+import pathlib
+import tempfile
 from datetime import date
 
 import pytest
 
-from yoda.eval import evidence
+from yoda import dates, evidence_text
+from yoda.eval import evidence, judge
 from yoda.ingest import chunker, edgar
 from yoda.modes import baseline
+from yoda.modes import personality_panel as panel
+from yoda.tools import consensus
 from yoda.schema import EarningsReport, Filing, FilingSet, ForwardGuidance
 
 # The "today" every test in this file runs on.
@@ -246,6 +251,96 @@ def test_trim_notes_go_into_the_report(monkeypatch):
     baseline.apply_filings(report, FilingSet(ticker="TEST", cik=1, filings=[_QUARTERLY, annual]), filing_text)
     assert [f.filing_type for f in report.filings] == ["10-Q", "10-K"]
     assert any("was trimmed" in gap for gap in report.data_gaps)
+
+
+# ---------------------------------------------------------------------------
+# Dates: every model call is told today's date and each filing's date
+# ---------------------------------------------------------------------------
+
+_TODAY_LINE = "Today's date: 2026-10-29 (New York)."
+
+
+@pytest.fixture
+def fixed_dates(monkeypatch):
+    # Pin the shared date helper's today as well.
+    monkeypatch.setattr(dates, "market_today", lambda: _TODAY)
+
+
+def test_dates_line_names_today_and_each_filing(fixed_dates):
+    assert dates.dates_line([_QUARTERLY, _annual_report()]) == (
+        f"{_TODAY_LINE} Filings read: 10-Q filed 2026-08-01; 10-K filed 2026-02-01.")
+    assert dates.dates_line([]) == f"{_TODAY_LINE} Filings read: none (no recent 10-Q or annual report)."
+    assert dates.dates_line() == _TODAY_LINE
+
+
+def test_baseline_prompt_has_the_dates(fixed_dates):
+    prompt = baseline._build_prompt("TEST", baseline.full_filing_text([_QUARTERLY]), "2026-10-29T00:00:00+00:00")
+    assert f"{_TODAY_LINE} Filings read: 10-Q filed 2026-08-01." in prompt
+
+
+def test_personality_critique_and_synthesis_calls_have_the_dates(fixed_dates, monkeypatch):
+    # Each panel call's message starts with (or, for synthesis, carries) the dates line.
+    sent = []
+
+    def capture(model, max_tokens, output_format, messages, **kwargs):
+        sent.append(messages[0]["content"])
+        raise panel.NoStructuredOutput(model, "stop here", 0, 0)
+    monkeypatch.setattr(panel, "_structured_call", capture)
+    line = dates.dates_line([_QUARTERLY])
+
+    with pytest.raises(panel.NoStructuredOutput):
+        panel._run_critique("Quant", [], [], "[t]", line)
+    with pytest.raises(panel.NoStructuredOutput):
+        panel._synthesize_report(ticker="TEST", filings=[_QUARTERLY], final_hypotheses=[], contested=[],
+                                 critique_messages=[], news_pool=[], filing_text="F", eight_k_text="",
+                                 context_block="", articles_text="", call_text="")
+    assert sent[0].startswith(line) and line in sent[1]
+
+    # A personality's first message starts with it too.
+    class _Stop(Exception):
+        pass
+
+    def first_call(**kwargs):
+        sent.append(kwargs["messages"][0]["content"])
+        raise _Stop
+    monkeypatch.setattr(panel._client.messages, "create", first_call)
+    with pytest.raises(_Stop):
+        panel._run_personality("Quant", "TEST", None, 1, 45, "[t]", "CONTEXT", line)
+    assert sent[2].startswith(line)
+
+
+def test_whisper_lookup_and_judge_are_told_today(fixed_dates, monkeypatch):
+    prompts = []
+    monkeypatch.setattr(consensus, "_ask_claude_for_whisper", lambda prompt: prompts.append(prompt) or ("", 0.0))
+    consensus._search_whisper("TEST", {"next_earnings_date": "2026-11-05", "fiscal_quarter": 3, "eps_estimate": 1.0})
+    assert prompts[0].startswith(_TODAY_LINE)
+
+    messages = []
+
+    def fake_parse(**kwargs):
+        messages.append(kwargs["messages"][1]["content"])
+        raise RuntimeError("stop here")
+    monkeypatch.setattr(judge, "_CACHE_DIR", pathlib.Path(tempfile.mkdtemp()))
+    monkeypatch.setattr(judge._client.chat.completions, "parse", fake_parse)
+    report = EarningsReport(
+        ticker="TEST", company_name="Test Co", report_generated_at="2026-10-29T00:00:00+00:00",
+        key_metrics=[], revenue_segments=[], forward_guidance=ForwardGuidance(text="None.", source_citation="10-Q"),
+        key_risks=[], recent_news=[], bull_case=[], bear_case=[], what_to_watch=[], data_gaps=[],
+    )
+    with pytest.raises(RuntimeError, match="stop here"):
+        judge.judge_report(report, "EVIDENCE", {})
+    assert messages[0].endswith(_TODAY_LINE)
+
+
+def test_a_newer_contradicting_item_is_flagged_without_changing_the_tier_rules():
+    # The rule is in the personality and synthesis prompts; the shared
+    # conflict rules (also in the judge's rubric) are unchanged.
+    assert evidence_text.NEWER_CONTRADICTION_RULE in panel._SYNTHESIS_SYSTEM
+    assert all(evidence_text.NEWER_CONTRADICTION_RULE in p for p in panel._PERSONALITY_PROMPTS.values())
+    assert "flag the contradiction" in evidence_text.NEWER_CONTRADICTION_RULE
+    assert "never overwrites a filing figure" in evidence_text.NEWER_CONTRADICTION_RULE
+    assert "Newer information is preferred only within the same tier" in evidence_text.CONFLICT_RULES
+    assert evidence_text.NEWER_CONTRADICTION_RULE not in evidence_text.CONFLICT_RULES
 
 
 def test_nothing_in_range_returns_none(monkeypatch, tmp_path):

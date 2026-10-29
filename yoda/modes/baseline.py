@@ -19,6 +19,7 @@ from datetime import datetime, timezone
 from typing import NamedTuple
 
 from yoda import config
+from yoda.dates import dates_line
 from yoda.ingest.chunker import SectionLabel, section_spans
 from yoda.modes.llm import structured_call
 from yoda.schema import EarningsReport, Filing, FilingSet, ForwardGuidance, Metric, Risk, ReportFiling, Segment
@@ -218,8 +219,9 @@ def apply_filings(report: EarningsReport, filing_set: FilingSet, filing_text: Fi
 # ---------------------------------------------------------------------------
 
 def _build_prompt(ticker: str, filing_text: FilingText, now_utc: str) -> str:
-    """Return the prompt: the ticker and timestamp, then the full filing text."""
-    header = f"Ticker: {ticker}\nReport timestamp (use for report_generated_at): {now_utc}\n\n"
+    """Return the prompt: the ticker, today's and each filing's date, the timestamp, then the filing text."""
+    header = (f"Ticker: {ticker}\n{dates_line(filing_text.used)}\n"
+              f"Report timestamp (use for report_generated_at): {now_utc}\n\n")
     return header + filing_text.text
 
 

@@ -24,6 +24,7 @@ import pydantic
 from openai import OpenAI
 
 from yoda import config
+from yoda.dates import dates_line
 from yoda.eval.evidence import PROMPT_TOKEN_LINE
 from yoda.eval.rubric import DIMENSIONS, RUBRIC_TEXT, JudgeScores, check_scores, failed_quotes
 from yoda.schema import EarningsReport
@@ -151,7 +152,10 @@ def judge_report(report: EarningsReport, evidence_text: str, na: dict[str, str],
         f"{RUBRIC_TEXT}\n\n"
         f"--- EVIDENCE ---\n{evidence_text}\n\n"
         f"{_na_text(na)}\n\n"
-        f"--- REPORT JSON ---\n{report_json}"
+        f"--- REPORT JSON ---\n{report_json}\n\n"
+        # Today's date goes last, so the long shared start of the message
+        # (rubric and evidence) stays the same and cacheable.
+        f"{dates_line()}"
     )
 
     # Structured outputs: response_format=JudgeScores makes OpenAI return JSON

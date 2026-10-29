@@ -66,7 +66,7 @@ from bs4 import BeautifulSoup
 from finnhub.exceptions import FinnhubAPIException, FinnhubRequestException
 
 from yoda import config
-from yoda.dates import market_today
+from yoda.dates import dates_line, market_today
 from yoda.http_session import session
 
 
@@ -800,7 +800,9 @@ def _signals_sentence(ticker: str, signals: ExpectationSignals | dict) -> str:
 # Whisper number (Claude web search + fetch, verified in code)
 # ---------------------------------------------------------------------------
 
-_WHISPER_PROMPT = """Find the EPS "whisper number" for {ticker}'s next earnings report, \
+_WHISPER_PROMPT = """{dates}
+
+Find the EPS "whisper number" for {ticker}'s next earnings report, \
 scheduled for {report_date}.
 
 A whisper number is the unofficial EPS expectation traders hold, distinct from the \
@@ -914,6 +916,7 @@ def _search_whisper(ticker: str, consensus: dict) -> _WhisperSearch:
                                          "so a whisper cannot be matched.")
     consensus_eps = consensus.get("eps_estimate")
     prompt = _WHISPER_PROMPT.format(
+        dates=dates_line(),
         ticker=ticker,
         report_date=consensus["next_earnings_date"],
         consensus_eps="unknown" if consensus_eps is None else consensus_eps,
