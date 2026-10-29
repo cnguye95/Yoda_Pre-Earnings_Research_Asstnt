@@ -17,7 +17,7 @@ Given a ticker, Yoda produces a citation-backed pre-earnings research report: ke
 | Language | Python 3.11+ (3.10+ required by the Anthropic SDK) | |
 | UI | Streamlit (`app.py`) | Single-ticker tab + Queue (batch) tab |
 | SEC filings | `requests` + BeautifulSoup/`lxml` (`yoda/ingest/edgar.py`) | The latest 10-Q (filed in the last 18 weeks) and the latest annual report — 10-K, or a foreign company's 20-F / 40-F (filed in the last 13 months). One is enough; both are read, as equals, when both are in range, except a 10-Q older than the annual report. A 40-F is read with its Exhibit 99.x documents. Cached to `data/filings/`. |
-| Chunking | Section-aware, ~1500-char windows with 200-char overlap (`yoda/ingest/chunker.py`) | Sections: MD&A, Risk Factors, Financial Statements, Quantitative Disclosures, Other |
+| Chunking | Section-aware, ~1500-char windows with 200-char overlap (`yoda/ingest/chunker.py`) | Sections: Business (10-K Item 1 / 20-F Item 4), MD&A, Risk Factors, Financial Statements, Quantitative Disclosures, Other |
 | Embeddings | OpenAI `text-embedding-3-small` (1536-dim) | `yoda/retrieval/embeddings.py` |
 | Vector store | ChromaDB persistent client, `filings_openai` collection | `yoda/retrieval/vector_store.py`. A filing is embedded only if its stored chunk count differs from its current one. |
 | Report generation | Anthropic Claude via `anthropic==1.17.0` | `claude-sonnet-5-5` for synthesis, cross-critique and the baseline; `claude-haiku-5-5` for the personality tool loops |

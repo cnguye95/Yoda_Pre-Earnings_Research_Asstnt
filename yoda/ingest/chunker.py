@@ -37,8 +37,11 @@ from yoda.schema import CallTranscript, EightKDocument, EightKFiling
 # Data model
 # ---------------------------------------------------------------------------
 
-# The five section labels we assign. "Other" catches everything else.
+# The six section labels we assign. "Other" catches everything else.
+# "Business" is a 10-K's Item 1 (a 20-F's Item 4, "Information on the
+# Company"): what the company does, its segments, customers and competition.
 SectionLabel = Literal[
+    "Business",
     "MD&A",
     "Risk Factors",
     "Financial Statements",
@@ -71,6 +74,17 @@ class Chunk(BaseModel):
 # appears anywhere in it (case-insensitive). The first pattern that matches a
 # line decides its label, so the order of this list matters.
 _SECTION_PATTERNS: list[tuple[re.Pattern, SectionLabel]] = [
+    # Only as an Item heading at the start of the line (optionally after
+    # "Part I,"), so the word "business" in ordinary text (or a 10-Q's
+    # "Item 1. Financial Statements") never starts the section.
+    (
+        re.compile(
+            r"^(part\s+i\s*[,.]?\s*)?item\s*1\s*[.:\-–—]?\s*business\b"
+            r"|^item\s*4\s*[.:\-–—]?\s*information\s+on\s+the\s+company",
+            re.IGNORECASE,
+        ),
+        "Business",
+    ),
     (re.compile(r"risk\s+factor", re.IGNORECASE), "Risk Factors"),
     # A 20-F calls its MD&A "Item 5. Operating and Financial Review and Prospects".
     (re.compile(r"management.{0,3}s?\s+discussion|operating\s+and\s+financial\s+review", re.IGNORECASE), "MD&A"),

@@ -63,6 +63,34 @@ def test_chunk_filing_labels_sections_from_last_heading():
     assert [c.chunk_index for c in chunks] == list(range(len(chunks)))
 
 
+@pytest.mark.parametrize("heading", [
+    "Item 1. Business", "ITEM 1.BUSINESS", "Item 1 — Business", "PART I, ITEM 1. BUSINESS",
+    "Item 4. Information on the Company",              # a 20-F's equivalent
+])
+def test_10k_item_1_business_gets_its_own_label(heading):
+    lines = [heading, "We design and sell widgets."]
+    assert chunker._detect_section_boundaries(lines) == [(0, "Business")]
+
+
+@pytest.mark.parametrize("line", [
+    "Item 1. Financial Statements",                    # a 10-Q's Item 1
+    "Our business depends on key suppliers.",          # the word in ordinary text
+    "Item 1A. Risk Factors",
+])
+def test_other_lines_are_not_the_business_section(line):
+    assert [label for _, label in chunker._detect_section_boundaries([line])] != ["Business"]
+
+
+def test_10k_sections_come_out_in_order():
+    # A 10-K body: Business, then Risk Factors, then MD&A, each its own section.
+    text = ("Item 1. Business\n" + "We sell widgets. " * 20 + "\n"
+            + "Item 1A. Risk Factors\n" + "Demand may fall. " * 20 + "\n"
+            + "Item 7. Management's Discussion and Analysis\n" + "Revenue rose. " * 20 + "\n")
+    sections = [chunk.section for chunk in chunker.chunk_filing(text)]
+    assert sections == sorted(set(sections), key=sections.index)      # each section is one run
+    assert set(sections) == {"Business", "Risk Factors", "MD&A"} and sections[0] == "Business"
+
+
 # ---------------------------------------------------------------------------
 # Chunker — 8-K documents carry a label saying which document they came from
 # ---------------------------------------------------------------------------
