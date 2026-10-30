@@ -97,26 +97,6 @@ IDEAS for Improvements/Changes
      evidence cache so the judge sees what it saw.
 
 
-3. Eval validation passes (carried over from the old 3.7; each pass only
-   with explicit consent — no eval or re-score runs without a yes)
-   - Re-score a subset of the archived 2026-10-26 reports
-     (data/eval/archive_2026-10-26_claude-panel_old-rubric/) and show
-     2-3 judge justifications per dimension. The archive predates the
-     retrofit and has no since_filing, market_expectations or evidence
-     bundle, so it only tests the filing-based dimensions.
-   - Then score 2-3 fresh tickers to test the new dimensions.
-   - Repeat scoring: ~6 reports (both modes, 3 tickers) scored a second
-     time with the judge cache skipped (runner --rescore DIR --repeat);
-     ~$1-1.5.
-   - Human hand-scoring, required before the first published result
-     (not before development runs): 6-10 reports from both modes, scored
-     blind (mode and judge scores hidden), at least usefulness and
-     reasoning_quality; check how often you and the judge are within one
-     point. ~2-3 hours.
-   - Re-run baseline vs Yoda once item 2 is built; expect cost/latency
-     increase — measure it.
-
-
 4. Yoda-only process check (LATER, separate from Yoda vs baseline)
    The head-to-head eval grades only the final report, so hypotheses and
    critique are kept out of it. They are still worth grading on
@@ -144,9 +124,9 @@ IDEAS for Improvements/Changes
    - do full inspection of chromaDB pipeline
 
 
-8. Create Master Repo txt File
-   - Contains detailed description and explanation of each file.
-   - Contains all relationships with other files.
+8. Add Repo Overview to README
+    - Contains quick headline descriptions of each code file
+    - more accessible version of file docstrings
 
 
 9. Improve Retrieval Quality
