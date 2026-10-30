@@ -15,7 +15,7 @@ import time
 import pandas as pd
 import pytest
 
-from yoda import config
+from yoda import pricing
 from yoda.eval import judge, runner
 from yoda.eval.rubric import DimensionScore, JudgeScores
 from yoda.eval.runner import _RE_COST, _RE_WALL_TIME, SCORE_COLS, _paired_comparison, _verdict
@@ -79,19 +79,11 @@ def test_validate_citations_rejects_blank_citation(field):
 # Cost math
 # ---------------------------------------------------------------------------
 
-def test_cost_uses_each_models_price():
-    # Input and output priced separately (unequal counts catch swapped prices):
-    # Sonnet $0.002 in / $0.01 out per 1K, Haiku $0.0001 in / $0.0005 out.
-    assert config.model_cost("claude-sonnet-5-5", 1000, 0) == pytest.approx(0.002)
-    assert config.model_cost("claude-sonnet-5-5", 0, 1000) == pytest.approx(0.01)
-    assert config.model_cost("claude-haiku-5-5", 1000, 0) == pytest.approx(0.0001)
-    assert config.model_cost("claude-haiku-5-5", 0, 1000) == pytest.approx(0.0005)
-
-
 def test_every_model_in_use_has_a_price():
     # A model constant without a price entry would crash cost logging mid-run.
+    # (The prices themselves are tested in tests/test_pricing.py.)
     for model in (panel.SYNTH_MODEL, panel.LOOP_MODEL, panel.CRITIQUE_MODEL, BASELINE_MODEL):
-        assert model in config.MODEL_COST_PER_1K
+        assert model in pricing.PRICES
 
 
 # ---------------------------------------------------------------------------

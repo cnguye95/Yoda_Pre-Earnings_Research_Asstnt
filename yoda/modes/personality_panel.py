@@ -50,7 +50,7 @@ import anthropic
 import pydantic
 from pydantic import BaseModel, Field
 
-from yoda import config
+from yoda import config, pricing
 # Shared with the eval judge (yoda/evidence_text.py); kept under their old
 # names here. _norm/_quote_in match quotes, _CONFLICT_RULES weighs sources.
 from yoda.evidence_text import CONFLICT_RULES as _CONFLICT_RULES
@@ -107,7 +107,7 @@ SYNTH_MODEL    = "claude-sonnet-5-5"   # Phase 4 final report
 LOOP_MODEL     = "claude-haiku-5-5"    # Phase 2 personality tool loops
 CRITIQUE_MODEL = "claude-sonnet-5-5"   # Phase 3 cross-critique
 
-# Claude prices live in config.MODEL_COST_PER_1K (shared with the baseline).
+# Claude prices live in yoda/pricing.py (shared with the baseline).
 # OpenAI text-embedding-3-small price, USD per 1K tokens.
 EMBEDDING_COST_PER_1K = 0.00002
 
@@ -674,6 +674,9 @@ def _run_personality(
     # Running counters used in the final PersonalityResult.
     tool_calls_used = 0
     total_in = total_out = 0
+    # Priced call by call: Haiku costs more for a prompt over 100K tokens,
+    # which summed totals would hide.
+    cost = 0.0
     seen_calls: set[str] = set()   # repetition detector store
 
     # Everything this personality is shown, so the evidence it cites can be
@@ -712,6 +715,7 @@ def _run_personality(
         )
         total_in  += response.usage.input_tokens
         total_out += response.usage.output_tokens
+        cost += pricing.call_cost(LOOP_MODEL, response.usage.input_tokens, response.usage.output_tokens)
         tool_uses = [block for block in response.content if block.type == "tool_use"]
 
         # A reply cut off at max_tokens may have lost a tool call or its
@@ -815,11 +819,13 @@ def _run_personality(
             if isinstance(exc, NoStructuredOutput):
                 total_in += exc.input_tokens
                 total_out += exc.output_tokens
+                cost += pricing.call_cost(LOOP_MODEL, exc.input_tokens, exc.output_tokens)
             wrap_errors.append(f"{attempt} failed: {type(exc).__name__}: {exc}")
             print(f"{log_prefix} [{personality}] {wrap_errors[-1]!r}")
             continue
         total_in += in_tok
         total_out += out_tok
+        cost += pricing.call_cost(LOOP_MODEL, in_tok, out_tok)
         drafts = parsed.hypotheses or []
         if drafts:
             break
@@ -849,8 +855,6 @@ def _run_personality(
             print(f"{log_prefix} [{personality}] {hypothesis.question[:60]!r}: {hypothesis.confidence_note}")
 
     elapsed = time.perf_counter() - started
-    cost = config.model_cost(LOOP_MODEL, total_in, total_out)
-
     print(f"{log_prefix} [{personality}] DONE: {len(hypotheses)} hypotheses, "
           f"{tool_calls_used} tools used, {elapsed:.2f}s, ${cost:.4f}, "
           f"clean={finished_cleanly}")
@@ -2441,8 +2445,9 @@ def run_personality_panel(
     # ------------------------------------------------------------------
     wall_elapsed = time.perf_counter() - wall_start
     embed_cost = (embed_tokens / 1000) * EMBEDDING_COST_PER_1K
-    critique_cost = config.model_cost(CRITIQUE_MODEL, critique_in, critique_out)
-    gen_cost = config.model_cost(SYNTH_MODEL, synth_in, synth_out)
+    # Sonnet has one price at every prompt length, so summed totals price exactly.
+    critique_cost = pricing.call_cost(CRITIQUE_MODEL, critique_in, critique_out)
+    gen_cost = pricing.call_cost(SYNTH_MODEL, synth_in, synth_out)
     # The whisper lookup's cost is unknown when it failed part-way; it is
     # then left out of the total and counted like a crashed personality's.
     whisper_cost = market.whisper_cost_usd or 0.0

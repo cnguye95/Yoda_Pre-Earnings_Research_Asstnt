@@ -14,18 +14,23 @@ Cache location: data/eval/judge_cache/{hash}.json
 Cross-family choice: OpenAI judges Claude-generated reports so the grader
 never favours output from its own model family.
 
+Cost: every call is sent on OpenAI's Flex tier (the same model at half
+price, with lower priority); when Flex has no capacity, the call falls back
+to the standard tier. The tier used and the tokens OpenAI served from its
+prompt cache are recorded with each result, so judge_cost() is exact.
+
 Smoke test: python -m yoda.eval.judge
 """
 
 import datetime
 import hashlib
 
+import openai
 import pydantic
 from openai import OpenAI
 
-from yoda import config
+from yoda import config, pricing
 from yoda.dates import dates_line
-from yoda.eval.evidence import PROMPT_TOKEN_LINE
 from yoda.eval.rubric import DIMENSIONS, RUBRIC_TEXT, JudgeScores, check_scores, failed_quotes
 from yoda.schema import EarningsReport
 
@@ -41,6 +46,13 @@ JUDGE_MODEL = "gpt-6.1-sol"
 # default the archived 2026-10-26 run used) so a change of default can't
 # silently change the scores; recorded on every result.
 JUDGE_REASONING_EFFORT = "medium"
+
+# How every judge call is sent first: Flex is half price for the same model
+# and answers, but may be slower or, when OpenAI is busy, unavailable (an
+# uncharged 429 "Resource Unavailable"). OpenAI recommends a 15-minute
+# timeout for Flex (the SDK default is 10).
+JUDGE_SERVICE_TIER = "flex"
+JUDGE_TIMEOUT_SECONDS = 900
 
 # Where to persist cached judge results. Created on first use.
 _CACHE_DIR = config.DATA_DIR / "eval" / "judge_cache"
@@ -67,7 +79,11 @@ class JudgeResult(pydantic.BaseModel):
     (rubric.failed_quotes); an empty dict means every quote was found.
     *judge_snapshot* is the exact model version OpenAI reports (no dated
     snapshot can be pinned, so it is recorded instead), *reasoning_effort*
-    the effort it was asked for, and the token counts are OpenAI's own.
+    the effort it was asked for, and the token counts are OpenAI's own:
+    *prompt_tokens* includes *cached_tokens*, the part OpenAI served from its
+    prompt cache. *service_tier* is the tier OpenAI says answered ("flex",
+    or "default" for standard). Results cached before these two were
+    recorded load with 0 and "default": an upper-bound cost.
     """
     scores: JudgeScores
     failed_quotes: dict[str, list[str]]
@@ -75,6 +91,8 @@ class JudgeResult(pydantic.BaseModel):
     reasoning_effort: str
     prompt_tokens: int
     completion_tokens: int
+    cached_tokens: int = 0
+    service_tier: str = "default"
 
 
 # ---------------------------------------------------------------------------
@@ -96,19 +114,53 @@ def _na_text(na: dict[str, str]) -> str:
     return "N/A dimensions (give score null):\n" + "\n".join(f"- {name}: {reason}" for name, reason in na.items())
 
 
-def judge_cost(prompt_tokens: int, completion_tokens: int) -> float:
-    """Return one judge call's cost in USD from OpenAI's token counts — an upper bound.
+def judge_cost(result: JudgeResult) -> float:
+    """Return one judge call's cost in USD from the token counts and tier recorded on *result*.
 
-    Uses the judge's price in config.MODEL_COST_PER_1K; a prompt over
-    PROMPT_TOKEN_LINE costs 2x for input and 1.5x for output for the whole
-    call. Input OpenAI served from its prompt cache is cheaper, but that
-    discount is not confirmed, so it isn't applied: the figure can only
-    overstate the real cost.
+    Cached input is priced as a cache read, the rest as input; a Flex call
+    is half price; a prompt over 272K tokens (evidence.PROMPT_TOKEN_LINE) is
+    priced at the long-prompt rates for the whole call (see yoda/pricing.py).
     """
-    in_price, out_price = config.MODEL_COST_PER_1K[JUDGE_MODEL]
-    if prompt_tokens > PROMPT_TOKEN_LINE:
-        in_price, out_price = in_price * 2, out_price * 1.5
-    return (prompt_tokens / 1000) * in_price + (completion_tokens / 1000) * out_price
+    return pricing.call_cost(
+        JUDGE_MODEL, result.prompt_tokens - result.cached_tokens, result.completion_tokens,
+        cache_read_tokens=result.cached_tokens, tier="flex" if result.service_tier == "flex" else "standard",
+    )
+
+
+def judge_messages(report_json: str, evidence_text: str, na: dict[str, str]) -> list[dict[str, str]]:
+    """Return the messages sent to the judge for one report.
+
+    The rubric and the evidence come first: for one ticker, every mode's
+    call starts with the same rubric and the same filings, a long identical
+    start OpenAI serves from its prompt cache at a twentieth of the price.
+    Then which dimensions are N/A, the report JSON, and today's date last
+    (it changes daily, so it must not sit inside the shared start).
+    """
+    user_message = (
+        f"{RUBRIC_TEXT}\n\n"
+        f"--- EVIDENCE ---\n{evidence_text}\n\n"
+        f"{_na_text(na)}\n\n"
+        f"--- REPORT JSON ---\n{report_json}\n\n"
+        f"{dates_line()}"
+    )
+    return [{"role": "system", "content": _SYSTEM_PROMPT}, {"role": "user", "content": user_message}]
+
+
+def _ask_judge(messages: list[dict[str, str]]):
+    """Send *messages* to the judge on the Flex tier, falling back to the standard tier; return OpenAI's response.
+
+    The SDK already retries a 429 three times with growing waits. If Flex
+    still has no capacity after that, the same request is sent once on the
+    standard tier (OpenAI's recommended fallback): same model, same answer
+    quality, full price.
+    """
+    request = dict(model=JUDGE_MODEL, messages=messages, response_format=JudgeScores,
+                   reasoning_effort=JUDGE_REASONING_EFFORT, timeout=JUDGE_TIMEOUT_SECONDS)
+    try:
+        return _client.chat.completions.parse(**request, service_tier=JUDGE_SERVICE_TIER)
+    except openai.RateLimitError as exc:
+        print(f"  [judge] Flex tier unavailable ({exc}); retrying on the standard tier at full price")
+        return _client.chat.completions.parse(**request)
 
 
 def judge_report(report: EarningsReport, evidence_text: str, na: dict[str, str],
@@ -145,30 +197,9 @@ def judge_report(report: EarningsReport, evidence_text: str, na: dict[str, str],
 
     print(f"  [judge] scoring via {JUDGE_MODEL} (key={cache_key})...")
 
-    # Build the user message: the rubric and the evidence first (the long
-    # part both modes' calls for a ticker share, which OpenAI caches), then
-    # which dimensions are N/A and the report JSON.
-    user_message = (
-        f"{RUBRIC_TEXT}\n\n"
-        f"--- EVIDENCE ---\n{evidence_text}\n\n"
-        f"{_na_text(na)}\n\n"
-        f"--- REPORT JSON ---\n{report_json}\n\n"
-        # Today's date goes last, so the long shared start of the message
-        # (rubric and evidence) stays the same and cacheable.
-        f"{dates_line()}"
-    )
-
     # Structured outputs: response_format=JudgeScores makes OpenAI return JSON
     # that matches the schema exactly, parsed into a JudgeScores instance.
-    response = _client.chat.completions.parse(
-        model=JUDGE_MODEL,
-        messages=[
-            {"role": "system", "content": _SYSTEM_PROMPT},
-            {"role": "user",   "content": user_message},
-        ],
-        response_format=JudgeScores,
-        reasoning_effort=JUDGE_REASONING_EFFORT,
-    )
+    response = _ask_judge(judge_messages(report_json, evidence_text, na))
 
     # OpenAI reports dated snapshot names (e.g. "gpt-6.1-sol-2026-09-29"),
     # so check the prefix to confirm the intended judge actually answered.
@@ -186,10 +217,17 @@ def judge_report(report: EarningsReport, evidence_text: str, na: dict[str, str],
     # Apply the N/A rules and the 1-5 check, then check every quote against
     # the text it says it comes from.
     scores = check_scores(message.parsed, na)
+
+    # The prompt tokens OpenAI served from its cache, and the tier that
+    # answered; either may be missing from a reply (then: none cached,
+    # standard tier, which can only overstate the cost).
+    details = getattr(response.usage, "prompt_tokens_details", None)
     result = JudgeResult(
         scores=scores, failed_quotes=failed_quotes(scores, report_json, evidence_text),
         judge_snapshot=response.model, reasoning_effort=JUDGE_REASONING_EFFORT,
         prompt_tokens=response.usage.prompt_tokens, completion_tokens=response.usage.completion_tokens,
+        cached_tokens=getattr(details, "cached_tokens", None) or 0,
+        service_tier=getattr(response, "service_tier", None) or "default",
     )
     if result.failed_quotes:
         print(f"  [judge] quotes not found for: {', '.join(result.failed_quotes)}")
@@ -301,6 +339,7 @@ if __name__ == "__main__":
         score = "N/A" if dimension.score is None else f"{dimension.score}/5"
         print(f"{name:22s} {score} — {dimension.justification}")
     print(f"\nFigures checked: {result.scores.figures_checked}; quotes not found: {result.failed_quotes or 'none'}")
-    print(f"Judge: {result.judge_snapshot} (effort {result.reasoning_effort}); "
-          f"{result.prompt_tokens:,} prompt / {result.completion_tokens:,} completion tokens")
+    print(f"Judge: {result.judge_snapshot} (effort {result.reasoning_effort}, {result.service_tier} tier); "
+          f"{result.prompt_tokens:,} prompt ({result.cached_tokens:,} cached) / "
+          f"{result.completion_tokens:,} completion tokens; ${judge_cost(result):.4f}")
     print(f"Overall: {result.scores.overall_comment}")

@@ -20,7 +20,7 @@ from typing import NamedTuple
 
 import pydantic
 
-from yoda import config
+from yoda import config, pricing
 from yoda.dates import dates_line
 from yoda.ingest.chunker import SectionLabel, section_spans
 from yoda.modes.llm import structured_call
@@ -300,7 +300,7 @@ def run_baseline(ticker: str, filing_set: FilingSet | None) -> EarningsReport:
         print(f"[baseline] WARNING: stripped {removed} invented news item(s)/URL(s)")
 
     # Cost + wall-time lines in the format the eval runner's regexes expect.
-    cost = config.model_cost(BASELINE_MODEL, in_tok, out_tok)
+    cost = pricing.call_cost(BASELINE_MODEL, in_tok, out_tok)
     print(f"[baseline] Tokens:     {in_tok} in / {out_tok} out")
     print(f"[baseline] Wall time:  {time.perf_counter() - started:.2f}s")
     print(f"[baseline] Total cost: ${cost:.5f}")

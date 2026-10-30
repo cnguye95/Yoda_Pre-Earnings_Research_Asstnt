@@ -284,21 +284,25 @@ WHEN labels (relative to the architecture comparison, item 4; set
       - The judge records its finish reason and reasoning tokens (1b).
    e. Smoke run: 3 arms x 5 tickers, with the judge (NOT RUN YET; needs an
       explicit yes).
+      - Tickers (decided 2026-10-30, item 12): USB, XOM, DIS (complex),
+        NVDA, HD (simple). Their mean filing size (601K characters) equals
+        the 20-ticker mean, so smoke costs scale ~4x to the full run.
       - REMINDER: before starting, check there is enough API credit on
-        both accounts. Estimates (2026-10-30, list prices, before any
-        cost work): Anthropic ~$24-35; OpenAI judge ~$6-15 at list price,
-        ~$3-8 with prompt-cache hits (the top of each range assumes JPM is
-        one of the 5 tickers).
+        both accounts. Estimates (2026-10-30, verified list prices, item
+        12's offline projection, with its cost methods): Anthropic ~$18.50
+        (baseline ~$1.60 batched, Rec 1 ~$6.40, Rec 2 ~$10.50-11.10);
+        OpenAI judge ~$2.20 (cache hits + Flex). Without the cost methods:
+        ~$24 and ~$8.
       - Measures the real cost per arm and the judge's cache-hit rate;
         those numbers replace the estimates for the full run.
    f. Full run: 3 arms x 20 tickers, with the judge (NOT RUN YET; needs an
       explicit yes).
       - REMINDER: before starting, check there is enough API credit on
         both accounts, using the smoke run's measured costs. Estimates
-        (2026-10-30, list prices, before any cost work): Anthropic
-        ~$100-125 (baseline ~$15-17, Rec 1 ~$32-36, Rec 2 ~$54-72);
-        OpenAI judge ~$31-41, ~$16-24 with cache hits, ~$16-20 with the
-        OpenAI Batch API.
+        (2026-10-30, verified list prices, item 12's offline projection,
+        with its cost methods): Anthropic ~$74-76 (baseline ~$6.40
+        batched, Rec 1 ~$25.50, Rec 2 ~$42-44); OpenAI judge ~$8 (cache
+        hits + Flex). Without the cost methods: ~$95 and ~$30.
 
    Order of the BEFORE SMOKE work (one item at a time):
     1. Item 9 R3: read USB's annual report (EX-13). DONE 2026-10-30.
@@ -306,13 +310,16 @@ WHEN labels (relative to the architecture comparison, item 4; set
     3. Item 9 R2: fix section detection. DONE 2026-10-30.
     4. Item 4c: complexity labels. DONE 2026-10-30.
     5. Item 12, before part: choose the cost-saving methods the builds
-       will use.
+       will use. DONE 2026-10-30.
     6. Shared foundation: evidence store with passage IDs, XBRL fact
        sheet (4a), new report schema (4b).
     7. Item 2: baseline option B on the new foundation.
     8. Rec 1.
     9. Rec 2 design; item 9 R5 if its workers search passages, then R4/R6
-       if R5 shows weak recall; then build Rec 2.
+       if R5 shows weak recall; then build Rec 2. Cost no longer decides
+       whether workers read the full source: with caching it costs about
+       the same as passage search (item 12), so choose on quality; full
+       text makes R5/R4/R6 unnecessary for Rec 2.
    10. Item 4d: run harness, including the judge logging for 1b.
    11. Credit check (4e), then the smoke run.
 
@@ -596,6 +603,46 @@ WHEN labels (relative to the architecture comparison, item 4; set
       fits the non-tool-loop calls and the judge), effort per stage,
       Haiku where a stage allows it, judge prompt-cache hits (item 4d),
       and which tickers the smoke run uses.
+      DONE (2026-10-30). Prices verified on the vendors' pages
+      (yoda/pricing.py): Sonnet 5.5 cache reads $0.10/M (5% of input);
+      Haiku 5.5 is 5x for the WHOLE request over 100K prompt tokens
+      (cache included; the old price table missed this); Batch halves
+      everything incl. cache; judge gpt-6.1-sol $2/$0.10 cached/$10,
+      $4/$0.20/$15 over 272K, Flex half price.
+      Adopted (none changes what any model reads or writes, so quality is
+      unchanged):
+      * Prompt caching of the shared source within each arm. Rules for
+        steps 6-10: the source is the first system block, marked as a
+        cache breakpoint, role instructions after it; all of an arm's
+        source-reading calls share model, pinned effort and a sorted tool
+        list; nothing variable (dates, IDs) before the breakpoint; warm
+        the cache with one call before fanning out parallel calls; 5-min
+        cache, switching an arm to 1-hour only if the smoke run shows
+        misses. No cross-arm sharing (it would force one layout on all
+        arms). Tests prove it with yoda/prompt_cache.cache_misses().
+      * Judge on OpenAI Flex, falling back to standard when Flex has no
+        capacity; cached tokens and tier recorded, judge cost exact
+        (built: yoda/eval/judge.py).
+      * Baseline through the Anthropic Batch API: step 7 builds its
+        request with a pure function; step 10's harness batches all
+        tickers (standard calls if the batch fails); arm costs also
+        reported at standard prices.
+      * Effort pinned explicitly on every call at the defaults (Sonnet 5.5
+        high, Haiku 5.5 medium).
+      * Usage logged per call (input, cache writes/reads, output, tier),
+        priced with yoda/pricing.call_cost.
+      Not adopted (trade quality or unmeasurable without spend; revisit in
+      the AFTER part with judge scores): lower effort, more Haiku, less
+      filing text for writers, splitting Haiku prompts under 100K tokens
+      (~$0.09/ticker), batching the Rec arms (tool loops).
+      Offline projection (assumed call plans and source sizes; measured
+      filing sizes; 2.7 chars/token): full run $126 -> $82 (-35%) with
+      Rec 2 workers searching passages; smoke run $32 -> $21. If Rec 2's
+      workers read the full source, uncached it would cost $256 (full
+      run) vs $44 cached. Savings per method (full run): caching Rec 1
+      $7.53, Rec 2 $7.53 (or $212 for full-text workers); judge cache hits
+      $14.07; judge Flex $8.07; baseline batch $6.44. The smoke run
+      measures the real figures.
     - AFTER: on the winning architecture, measured against the full
       run's per-stage costs and scores.
     The notes below were written for the personality panel; keep what

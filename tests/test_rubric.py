@@ -12,7 +12,7 @@ from types import SimpleNamespace
 import pandas as pd
 import pytest
 
-from yoda import config
+
 from yoda.eval import evidence, judge, rubric, runner
 from yoda.eval.rubric import DIMENSIONS, NO_QUOTE, DimensionScore, JudgeQuote, JudgeScores
 from yoda.evidence_text import CONFLICT_RULES
@@ -333,15 +333,92 @@ def test_runner_judges_each_mode_on_its_own_evidence(monkeypatch, tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# Judge cost — an upper bound from OpenAI's token counts
+# Judge cost and tier — Flex first, cached input priced as cache reads
 # ---------------------------------------------------------------------------
 
-def test_judge_cost_uses_the_price_and_the_long_prompt_rate():
-    assert judge.JUDGE_MODEL in config.MODEL_COST_PER_1K
-    # 100K in, 5K out at $2 / $10 per million.
-    assert judge.judge_cost(100_000, 5_000) == pytest.approx(0.25)
-    # Over the 272K line the whole call costs 2x input, 1.5x output.
-    assert judge.judge_cost(300_000, 10_000) == pytest.approx(300 * 0.004 + 10 * 0.015)
+def _priced(prompt_tokens: int, completion_tokens: int, cached_tokens: int = 0,
+            service_tier: str = "default") -> judge.JudgeResult:
+    # A judge result carrying only what judge_cost reads.
+    return judge.JudgeResult(scores=_answer(3), failed_quotes={}, judge_snapshot="gpt-6.1-sol-test",
+                             reasoning_effort="medium", prompt_tokens=prompt_tokens,
+                             completion_tokens=completion_tokens, cached_tokens=cached_tokens,
+                             service_tier=service_tier)
+
+
+def test_judge_cost_prices_cache_reads_flex_and_long_prompts():
+    # 100K in, 5K out at $2 / $10 per million: $0.25.
+    assert judge.judge_cost(_priced(100_000, 5_000)) == pytest.approx(0.25)
+    # 60K of the 100K served from OpenAI's cache ($0.10), on Flex (half):
+    # (40,000*2 + 60,000*0.10 + 5,000*10) / 1M / 2 = $0.068.
+    assert judge.judge_cost(_priced(100_000, 5_000, 60_000, "flex")) == pytest.approx(0.068)
+    # Over the 272K line the whole call costs $4 in / $15 out.
+    assert judge.judge_cost(_priced(300_000, 10_000)) == pytest.approx(300 * 0.004 + 10 * 0.015)
+    # A result cached before tier and cache were recorded counts at full price.
+    old = judge.JudgeResult.model_validate_json(
+        _priced(100_000, 5_000).model_dump_json(exclude={"cached_tokens", "service_tier"}))
+    assert (old.cached_tokens, old.service_tier, judge.judge_cost(old)) == (0, "default", pytest.approx(0.25))
+
+
+def _judge_reply(service_tier: str = "flex", cached_tokens: int = 70_000) -> SimpleNamespace:
+    # An OpenAI reply with scores, cache details and the tier that answered.
+    usage = SimpleNamespace(prompt_tokens=180_000, completion_tokens=4_000,
+                            prompt_tokens_details=SimpleNamespace(cached_tokens=cached_tokens))
+    return SimpleNamespace(model="gpt-6.1-sol-2026-09-29", service_tier=service_tier, usage=usage,
+                           choices=[SimpleNamespace(message=SimpleNamespace(parsed=_answer(4), refusal=None),
+                                                    finish_reason="stop")])
+
+
+def _fake_openai(monkeypatch, parse) -> None:
+    # Replace the judge's OpenAI client with one whose parse() is *parse*.
+    monkeypatch.setattr(judge, "_client", SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(parse=parse))))
+
+
+def test_judge_asks_for_flex_and_records_the_cache_and_tier(monkeypatch):
+    sent = []
+    _fake_openai(monkeypatch, lambda **kwargs: sent.append(kwargs) or _judge_reply())
+
+    result = judge.judge_report(_report(), "EVIDENCE TEXT", {})
+
+    assert sent[0]["service_tier"] == "flex" and sent[0]["timeout"] == judge.JUDGE_TIMEOUT_SECONDS
+    assert (result.cached_tokens, result.service_tier) == (70_000, "flex")
+
+
+def test_judge_falls_back_to_the_standard_tier_when_flex_is_unavailable(monkeypatch):
+    import httpx
+    import openai
+    sent = []
+
+    def parse(**kwargs):
+        sent.append(kwargs)
+        if kwargs.get("service_tier") == "flex":
+            response = httpx.Response(429, request=httpx.Request("POST", "https://api.openai.com/v1/chat/completions"))
+            raise openai.RateLimitError("Resource Unavailable", response=response, body=None)
+        return _judge_reply(service_tier="default", cached_tokens=0)
+    _fake_openai(monkeypatch, parse)
+
+    result = judge.judge_report(_report(), "EVIDENCE TEXT", {})
+
+    # Same request on the standard tier: same model and effort, no service_tier.
+    assert [call.get("service_tier") for call in sent] == ["flex", None]
+    assert sent[1]["model"] == sent[0]["model"] and sent[1]["reasoning_effort"] == sent[0]["reasoning_effort"]
+    assert result.service_tier == "default" and result.scores.figure_accuracy.score == 4
+
+
+def test_a_tickers_judge_prompts_share_their_start_through_the_filings():
+    # Two modes' reports for one ticker, each with its own news, are judged
+    # back to back: their prompts must share a start that includes the whole
+    # filing text, so OpenAI serves it from its cache for the second call.
+    import os
+    other = _yoda_bundle().model_copy(update={
+        "news_results": [NewsSearchResult(title="Different", url="https://news.example/x", snippet="other")],
+        "articles": [], "read_urls": [], "market_context": "",
+    })
+    texts = []
+    for bundle, report in ((_yoda_bundle(), _cited_report()), (other, _report())):
+        rendered = evidence.render_evidence(bundle, report, extra_chars=0)
+        texts.append(judge.judge_messages(report.model_dump_json(), rendered.text, {})[1]["content"])
+    shared = os.path.commonprefix(texts)
+    assert "QUARTERLY TEXT" in shared and shared.startswith(rubric.RUBRIC_TEXT)
 
 
 # ---------------------------------------------------------------------------
@@ -378,7 +455,8 @@ def test_rows_carry_the_judge_details_and_keep_na_empty(monkeypatch, tmp_path):
     assert pd.isna(baseline_row["market_expectations"]) and baseline_row["relevance"] == 3
     assert baseline_row["failed_quote_dims"] == "relevance"
     assert baseline_row["judge_snapshot"] == "gpt-6.1-sol-2026-09-29" and baseline_row["figures_checked"] == 2
-    assert baseline_row["judge_cost_usd"] == pytest.approx(judge.judge_cost(50_000, 5_000))
+    assert baseline_row["judge_cost_usd"] == pytest.approx(judge.judge_cost(_priced(50_000, 5_000)))
+    assert (baseline_row["cached_tokens"], baseline_row["service_tier"]) == (0, "default")
     assert not baseline_row["over_272k"] and yoda_row["over_272k"]
     assert baseline_row["report_chars"] == len(_report().model_dump_json())
     assert (tmp_path / "justifications.md").exists()
@@ -407,7 +485,7 @@ def test_summary_reports_the_judge_reliability_checks(tmp_path):
     runner._write_summary(df, path, "Run: test", previous_snapshots={"v0"})
     text = path.read_text(encoding="utf-8")
 
-    assert "Judge cost (upper bound" in text and "$0.80 in total" in text
+    assert "Judge cost: $" in text and "$0.80 in total" in text
     assert "WARNING: this run mixes judge versions" in text
     assert "WARNING: the previous run was scored by v0" in text
     assert "over 272,000 tokens (charged at the higher rate): 1 of 4" in text

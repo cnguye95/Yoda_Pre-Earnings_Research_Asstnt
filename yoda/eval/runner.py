@@ -201,7 +201,8 @@ def _judge_row(ticker: str, mode: str, report: EarningsReport, evidence: Evidenc
     Columns: ticker, mode, the nine scores (empty when N/A), figures_checked,
     failed_quote_dims (the dimensions whose quotes didn't check out,
     ";"-joined), judge_snapshot, prompt/completion tokens, over_272k (from
-    OpenAI's real count), judge_cost_usd (an upper bound) and report_chars
+    OpenAI's real count), cached_tokens and service_tier (how the call was
+    served), judge_cost_usd and report_chars
     (the judged report's length, for the length-vs-score check).
     """
     judged = report_for_judge(report)
@@ -222,8 +223,10 @@ def _judge_row(ticker: str, mode: str, report: EarningsReport, evidence: Evidenc
         "judge_snapshot": result.judge_snapshot,
         "prompt_tokens": result.prompt_tokens,
         "completion_tokens": result.completion_tokens,
+        "cached_tokens": result.cached_tokens,
+        "service_tier": result.service_tier,
         "over_272k": result.prompt_tokens > PROMPT_TOKEN_LINE,
-        "judge_cost_usd": round(judge_cost(result.prompt_tokens, result.completion_tokens), 5),
+        "judge_cost_usd": round(judge_cost(result), 5),
         "report_chars": len(judged.model_dump_json()),
     }
     return JudgedRow(row, cache_key_for(judged, rendered.text, na, repeat), result)
@@ -684,9 +687,10 @@ def _reliability_lines(df: pd.DataFrame, previous_snapshots: set[str],
     """
     lines: list[str] = []
 
-    # Judge cost: from OpenAI's token counts, without any cache discount.
+    # Judge cost: from OpenAI's token counts, cached input and tier (results
+    # scored before those were recorded count at full price).
     if "judge_cost_usd" in df:
-        lines += [f"Judge cost (upper bound: cached input not discounted): ${df['judge_cost_usd'].mean():.4f} "
+        lines += [f"Judge cost: ${df['judge_cost_usd'].mean():.4f} "
                   f"per report, ${df['judge_cost_usd'].sum():.2f} in total — including results served from "
                   "the judge cache, which were paid for when first scored.", ""]
 

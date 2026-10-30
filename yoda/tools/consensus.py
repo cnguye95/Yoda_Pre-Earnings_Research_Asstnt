@@ -65,7 +65,7 @@ from anthropic import Anthropic
 from bs4 import BeautifulSoup
 from finnhub.exceptions import FinnhubAPIException, FinnhubRequestException
 
-from yoda import config
+from yoda import config, pricing
 from yoda.dates import dates_line, market_today
 from yoda.http_session import session
 
@@ -919,7 +919,7 @@ def _ask_claude_for_whisper(prompt: str) -> tuple[str, float]:
             messages=messages,
         )
         # Add token cost plus the per-search fee.
-        cost += config.model_cost(WHISPER_MODEL, resp.usage.input_tokens, resp.usage.output_tokens)
+        cost += pricing.call_cost(WHISPER_MODEL, resp.usage.input_tokens, resp.usage.output_tokens)
         searches = getattr(getattr(resp.usage, "server_tool_use", None), "web_search_requests", 0) or 0
         cost += searches * _WEB_SEARCH_COST
 

@@ -10,7 +10,7 @@ from datetime import timedelta
 import pydantic
 import pytest
 
-from yoda import evidence_text
+from yoda import evidence_text, pricing
 from yoda.dates import market_today
 from yoda.ingest.chunker import Chunk, chunk_transcript
 from yoda.ingest.edgar import PostFilingEightKs
@@ -139,8 +139,10 @@ def test_wrap_up_failure_counts_tokens_and_records_error(monkeypatch):
 
     assert result.finished_cleanly is False
     assert "NoStructuredOutput" in result.error and "wrap-up retry failed" in result.error
-    # 10+10 for the loop call, then 1000+500 for each of the two failed wrap-ups.
-    expected = panel.config.model_cost(panel.LOOP_MODEL, 10 + 2000, 10 + 1000)
+    # 10+10 for the loop call, then 1000+500 for each of the two failed wrap-ups,
+    # each call priced on its own.
+    expected = (pricing.call_cost(panel.LOOP_MODEL, 10, 10)
+                + 2 * pricing.call_cost(panel.LOOP_MODEL, 1000, 500))
     assert result.cost_usd == pytest.approx(expected)
 
 
