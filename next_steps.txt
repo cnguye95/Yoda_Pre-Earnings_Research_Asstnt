@@ -149,6 +149,113 @@ IDEAS for Improvements/Changes
    - Better chunking — recursive/semantic chunking instead of fixed splits?
    - Fine-tune the embedding model on SEC filings + stock/financial news?
 
+   FINDINGS (2026-10-30, offline check of the 26 cached tickers' filings)
+   - The bigger problem is section LABELS, not chunk splitting. The
+     chunker's section detector mislabels most filings, not just JPM:
+     * In most 10-Ks "Quantitative Disclosures" (Item 7A, usually about a
+       page) covers 30-50% of the text (AMZN 50%, CAT 49%, JNJ 54%), while
+       MD&A gets 2-3% (CAT, KO, MSFT, JPM). In 10-Qs, "Risk Factors" often
+       takes 30-60% (AMD 63%, FTNT 59%) and "Other" up to 81% (JPM).
+     * Cause 1: a heading is ANY short line that contains a section
+       phrase, so a footnote ("(c) ... on the Consolidated balance
+       sheets"), a bullet ("• ... Item 1A: Risk Factors in ..."), a
+       running page header ("Management's discussion and analysis") or a
+       glossary entry counts as a heading.
+     * Cause 2: "keep the last occurrence of each label" assumes the table
+       of contents comes first and the body heading last. Cross-references,
+       footnotes and glossaries after the body break that, so the chosen
+       "heading" is often near the end of the filing.
+     * Cause 3: only five sections are detected, so a section runs until
+       the next detected heading: Item 7A swallows Item 8 and the notes,
+       because "Item 8. Financial Statements" is not one of the patterns.
+     * Cause 4: some 10-Ks are a short wrapper around an annual report
+       (JPM's cross-reference index; USB incorporates its Annual Report,
+       Exhibit 13, which Yoda does not read at all: its "10-K" is 138K
+       characters with no MD&A or financial statements).
+   - Where it matters today:
+     * Every filing citation carries the label ("10-K · Risk Factors —
+       ..."), so readers (and the judge) see the wrong Item named.
+     * The size rule trims an older 10-K by label (Financial Statements,
+       then Quantitative Disclosures, then MD&A), so it can cut MD&A text
+       labelled as 7A. This only affects JPM-size filings (see below).
+     * Retrieval itself ignores labels: chunks are found by embedding
+       similarity alone (text-embedding-3-small, top 3 per filing).
+
+   RECOMMENDATIONS (in order; each needs its own approval)
+   R1. Build a small section test set first (offline, free): for ~8
+       cached filings (one each of a normal 10-K, normal 10-Q, JPM 10-K,
+       USB 10-K, 20-F, 40-F) record where Items 1, 1A, 7, 7A and 8 really
+       start. Assert each approach against it.
+       + Turns "looks wrong" into a number; every later change is checked.
+       - An hour of manual reading; covers only the filings chosen.
+   R2. Fix section detection. Options, simplest first:
+       a. Stricter in-house rules: only a line that STARTS with
+          "Item N." (optionally "Part I,") is a heading; every Item
+          heading is a boundary (Items Yoda doesn't name become "Other");
+          skip the table of contents by ignoring an Item heading that is
+          followed by another Item heading within a few hundred
+          characters.
+          + Small change, no new dependency, easy to test.
+          - Still hand-rolled parsing (CLAUDE.md prefers a tested
+            library); does nothing for wrapper filings (JPM, USB) or
+            20-F/40-F, which use different Item numbers or none.
+       b. A maintained library: edgartools (pip "edgartools") parses
+          10-K / 10-Q / 20-F filings into Items. RECOMMENDED to try first.
+          + Follows CLAUDE.md's order (library before hand-rolled); it is
+            tested on far more filings than Yoda will ever see.
+          - New dependency to pin; its Item text must be mapped back to
+            Yoda's character offsets (or the chunker split per Item);
+            wrapper filings are likely still a problem. Check first that
+            it can parse Yoda's cached HTML offline, and its licence.
+       c. Use the filing's own table-of-contents links (most modern
+          filings link each TOC entry to an anchor in the body).
+          + Exact positions, chosen by the filer, including JPM's
+            cross-reference index.
+          - Most code: must work on the HTML before cleaning and map
+            anchors to clean-text offsets; some filings have no links, so
+            a or b is still needed as a fallback.
+       In all three: when no reliable heading is found, label the text
+       "Other". A missing label is shown as missing; a wrong one misleads.
+   R3. Read the annual report a 10-K incorporates by reference
+       (Exhibit 13, as for USB), the way a 40-F's Exhibit 99 documents are
+       read now.
+       + Restores MD&A, Risk Factors and financial statements for these
+         filers. - Larger filings; some cite page numbers into it.
+   R4. Only then, if R5 shows weak recall: improve chunks, not by semantic
+       chunking. Today's chunker already splits at paragraph breaks
+       (1,500 characters, 200 overlap), which is what recursive splitting
+       does. Instead:
+       a. Prefix each chunk's embedded text with where it came from
+          ("JPM 10-K 2025 · MD&A · Net interest income").
+          + Cheap; helps queries that name a topic the chunk text doesn't
+            repeat. - Needs correct labels (R2); all chunks re-embedded
+            once (a few cents per ticker).
+       b. Keep financial tables in one chunk with their header row.
+          + A number is retrieved with its column and period.
+          - Long tables need their own split rule.
+       Semantic chunking is not recommended: an extra embedding pass at
+       ingest, uneven chunk sizes, and no evidence it beats paragraph
+       splits on filings.
+   R5. Measure retrieval before changing it: ~40 question -> expected
+       passage pairs over 4-5 filings, scored by whether the passage is in
+       the top 3 (embeddings only, cents per run).
+       + The only way to know whether R4 or R6 helps. - Writing the pairs
+       takes time; a small set can mislead.
+   R6. Embedding model: do NOT fine-tune now. As far as known, OpenAI does
+       not offer fine-tuning for embedding models, so this would mean
+       hosting an open model and building thousands of training pairs.
+       If R5 shows weak recall, try in this order: hybrid search (keyword
+       BM25 + vectors; exact terms like "CET1" or a line-item name match
+       better), a reranker over the top ~20, a larger or finance-tuned
+       hosted embedding model (check current options and prices first).
+       + Each is a smaller step than fine-tuning and measurable with R5.
+       - Each adds an API cost or a dependency.
+
+   FILING SIZES (for reference, same check): JPM 1.79M characters (10-Q
+   621K + 10-K 1,172K); every other cached ticker is under 0.92M (CRWD
+   0.91M, FTNT 0.86M, KO 0.82M). Only megabank-size filers come near the
+   2M limit.
+
 
 10. Fine-tune the model on financial and earnings-specific language
    - Is this realistic?
