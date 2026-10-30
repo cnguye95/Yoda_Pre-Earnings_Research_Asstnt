@@ -18,17 +18,25 @@ never missed; each filing is downloaded only once, since a filing never
 changes after it is filed. A cached 10-Q/10-K that is no longer read (a
 newer one replaced it) is deleted.
 
+When a company has no recent annual report under its own SEC number but
+says it took over from another company (a reorganisation), the old
+company's filings are searched too; see "Predecessor companies" below.
+Each link found is saved in data/filings/predecessors.json.
+
 SEC rules:
   - Every request must include a User-Agent header identifying the caller.
     The value comes from SEC_USER_AGENT in .env (format: "Name email").
   - Stay under 10 requests per second — we sleep 0.15s between calls.
 """
 
+import json
 import pathlib
+import re
 import time
 import warnings
 from datetime import date, timedelta
 from typing import NamedTuple
+from urllib.parse import urlencode
 
 import pydantic
 import requests
@@ -65,6 +73,15 @@ _INDEX_URL = "https://www.sec.gov/Archives/edgar/data/{cik}/{acc_nodashes}/{acc}
 # Base URL for downloading actual filing documents from the EDGAR archive.
 _ARCHIVES_URL = "https://www.sec.gov/Archives/edgar/data/{cik}/{acc_nodashes}/{doc}"
 
+# A filing's header page: among other things, it lists every company that
+# filed the document (two when a new and an old company file it jointly).
+_HEADERS_URL = "https://www.sec.gov/Archives/edgar/data/{cik}/{acc_nodashes}/{acc}-index-headers.html"
+
+# EDGAR's search service. With keysTyped=<name> it looks up companies by
+# name (what the EDGAR website's search box uses); with q="<text>" it
+# searches the full text of filings.
+_EDGAR_SEARCH_URL = "https://efts.sec.gov/LATEST/search-index"
+
 # The forms Yoda reads as a company's annual report: the US 10-K, and the
 # foreign-company equivalents — the 20-F (most foreign companies) and the
 # 40-F (Canadian companies filing under the US-Canada disclosure system).
@@ -88,21 +105,6 @@ FILING_WINDOWS_TEXT = (f"a 10-Q in the last {QUARTERLY_WINDOW_WEEKS} weeks or a 
 # financial statements and MD&A are attached as Exhibit 99.x documents, so
 # those are read with it.
 _FORMS_WITH_EXHIBIT_TEXT = ("40-F",)
-
-# Companies whose recent filings are split across two SEC company numbers
-# (CIKs). After a reorganisation, a new company can take over the ticker
-# while its last annual report stays filed under the old company's number.
-# The SEC's ticker list points only to the new number, and its records do
-# not link the two, so the link is written down here by hand. For a ticker
-# listed here, the old company's filings are searched too, and the newest
-# 10-Q / annual report of either is read.
-#   XOM: ExxonMobil Holdings Corp (CIK 2115436) took over the ticker in a
-#   July 2026 holding-company reorganisation; the 10-K filed 2026-02-18 is
-#   only under Exxon Mobil Corp (CIK 34088). Remove this entry once XOM
-#   files a 10-K under the new number (expected around February 2027).
-_PREDECESSOR_CIKS: dict[str, tuple[int, ...]] = {
-    "XOM": (34088,),
-}
 
 # The parts of the cached record that are stored in separate .html files
 # rather than in latest.json (they are large, and the text is rebuilt from
@@ -186,18 +188,29 @@ def _load_ticker_cik_map() -> dict[str, int]:
     return _ticker_cik_cache
 
 
+def _submissions(cik: int) -> dict:
+    """Return the SEC's record of one company: its name, tickers, phone, addresses, industry (SIC) code and filings."""
+    return _sec_json(_SUBMISSIONS_URL.format(cik=cik))
+
+
 def _get_filings_metadata(cik: int) -> list[dict]:
-    """Return a company's recent filings as a list of small dicts.
+    """Return a company's recent filings as a list of small dicts (see _filings_from)."""
+    return _filings_from(_submissions(cik))
+
+
+def _filings_from(data: dict) -> list[dict]:
+    """Return the recent filings in a company's SEC record (from _submissions) as a list of small dicts.
 
     Each dict has: form (e.g. "10-Q"), filing_date ("YYYY-MM-DD"),
     accession_number, and items — an 8-K's item codes as the SEC writes them
     ("2.02,9.01"), "" for other forms. The SEC nests these under
     data["filings"]["recent"] as parallel lists, zipped back together here.
+    Raises RuntimeError if the record has an unexpected shape.
     """
-    data = _sec_json(_SUBMISSIONS_URL.format(cik=cik))
     try:
         recent = data["filings"]["recent"]
     except (KeyError, TypeError) as exc:
+        cik = data.get("cik") if isinstance(data, dict) else None
         raise RuntimeError(f"SEC filing history for CIK {cik} has an unexpected format") from exc
 
     forms = recent.get("form", [])
@@ -513,6 +526,219 @@ def _write_8k_cache(eight_k: EightKFiling) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Predecessor companies
+# ---------------------------------------------------------------------------
+# After a reorganisation, a new company can take over a ticker under a new
+# SEC company number (CIK) while its latest annual report stays filed under
+# the old company's number (XOM in 2026: ExxonMobil Holdings Corp, CIK
+# 2115436, took over from Exxon Mobil Corp, CIK 34088). The SEC's records do
+# not link the two numbers, so Yoda finds the old company itself:
+#   1. Gather candidates from three places: companies that filed the new
+#      company's 10-Qs jointly with it, companies with a similar name, and
+#      companies whose recent annual report shows the same street address.
+#   2. Keep a candidate only if it passes every check in _is_predecessor().
+#   3. Accept it only if exactly one passes. None, or several, means no
+#      guess: the report shows that no annual report was read, as before.
+# A link found is saved in data/filings/predecessors.json, so the search
+# runs once per company. It only runs for a company with no recent annual
+# report that filed a successor notice (an 8-K12B or 8-K12G3), so other
+# companies cost no extra request.
+
+# Legal endings left out of a company name before searching by name, so
+# "Digimarc Corp" also finds "Old Digimarc CORP". "/MD/" style endings are
+# the state the SEC adds to tell same-named companies apart.
+_LEGAL_SUFFIXES = re.compile(
+    r"\b(corp(oration)?|inc|ltd|limited|holdings?|parent|plc|n\.?v|s\.?a|co|group|company)\b\.?|/\w+/",
+    re.IGNORECASE,
+)
+
+
+def _predecessors_path() -> pathlib.Path:
+    """Return where the saved list of predecessor companies lives (inside the filing cache folder)."""
+    return _CACHE_DIR / "predecessors.json"
+
+
+def _read_predecessors() -> dict:
+    """Return the saved list of predecessor companies, or {} if there is none or it is unreadable.
+
+    An unreadable file is treated as empty, like a bad filing cache: the
+    search simply runs again and rewrites it.
+    """
+    path = _predecessors_path()
+    if not path.exists():
+        return {}
+    try:
+        saved = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    return saved if isinstance(saved, dict) else {}
+
+
+def _saved_predecessor(ticker: str, cik: int) -> tuple[int, str] | None:
+    """Return (old CIK, old name) saved for *ticker*, or None.
+
+    A saved link counts only while the ticker still belongs to the same new
+    company (*cik*): a ticker can later pass to a different company, and
+    then the old link no longer applies.
+    """
+    entry = _read_predecessors().get(ticker)
+    if not isinstance(entry, dict) or entry.get("new_cik") != cik:
+        return None
+    if not isinstance(entry.get("old_cik"), int) or not isinstance(entry.get("old_name"), str):
+        return None
+    return entry["old_cik"], entry["old_name"]
+
+
+def _save_predecessor(ticker: str, cik: int, old_cik: int, old_name: str) -> None:
+    """Add (or replace) *ticker*'s entry in the saved list of predecessor companies."""
+    saved = _read_predecessors()
+    saved[ticker] = {"new_cik": cik, "old_cik": old_cik, "old_name": old_name,
+                     "found": market_today().isoformat()}
+    path = _predecessors_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(saved, indent=2), encoding="utf-8")
+
+
+def _predecessor_for(ticker: str, cik: int, own_filings: list[dict], notes: list[str]) -> tuple[int, str] | None:
+    """Return (old CIK, old name) of the company *ticker*'s company took over from, or None.
+
+    Uses the saved list first; otherwise runs the search and saves what it
+    finds. A failed search request is not fatal: it is added to *notes* (so
+    the report says the search could not run) and None is returned, which
+    leaves the report as it would have been without the search.
+    """
+    saved = _saved_predecessor(ticker, cik)
+    if saved is not None:
+        return saved
+    try:
+        found = _find_predecessor(cik, own_filings, notes)
+    except (requests.RequestException, RuntimeError) as exc:
+        notes.append(f"Predecessor search failed: {type(exc).__name__}: {exc}")
+        print(f"[edgar] WARNING: {notes[-1]}")
+        return None
+    if found is not None:
+        print(f"[edgar] {ticker}: found predecessor {found[1]} (CIK {found[0]}); saved")
+        _save_predecessor(ticker, cik, *found)
+    return found
+
+
+def _find_predecessor(cik: int, own_filings: list[dict], notes: list[str]) -> tuple[int, str] | None:
+    """Search the SEC for the old company that the company with *cik* took over from.
+
+    Candidates come from co-filers on its two newest 10-Qs, a company-name
+    search and a search of recent annual reports for its street address.
+    Returns (CIK, name) when exactly one candidate passes _is_predecessor();
+    with several, their names go into *notes* and None is returned (no
+    guessing). Raises requests.RequestException or RuntimeError when a
+    search request fails or the SEC replies in an unexpected shape.
+    """
+    new = _submissions(cik)
+    cutoff = market_today() - relativedelta(months=ANNUAL_WINDOW_MONTHS)
+
+    # Gather candidates from the three sources.
+    joint: set[int] = set()
+    for meta in [meta for meta in own_filings if meta["form"] == "10-Q"][:2]:
+        joint |= _co_filers(cik, meta["accession_number"])
+    candidates = (joint | _name_matches(new.get("name") or "") | _address_matches(_business_street(new), cutoff)) - {cik}
+
+    # Check each candidate against the new company's own record.
+    passed = []
+    for other in sorted(candidates):
+        record = _submissions(other)
+        if _is_predecessor(record, new, other in joint, cutoff):
+            passed.append((other, record.get("name") or f"CIK {other}"))
+
+    # Exactly one must pass; several are named so the reader knows why none was used.
+    if len(passed) == 1:
+        return passed[0]
+    if passed:
+        notes.append("No predecessor company was used: several companies matched equally ("
+                     + ", ".join(f"{name}, CIK {other}" for other, name in passed) + ").")
+    return None
+
+
+def _is_predecessor(candidate: dict, new: dict, co_filer: bool, cutoff: date) -> bool:
+    """True if *candidate* (an SEC company record) passes every check for being *new*'s old company.
+
+    All must hold:
+      - it has no ticker today (the ticker moved to the new company);
+      - it filed an annual report (10-K, 20-F or 40-F) on or after *cutoff*;
+      - it has the same industry (SIC) code as the new company, which rules
+        out related companies in other lines of business (e.g. a company's
+        student-loan trusts, which file their own 10-Ks);
+      - it is linked to the new company: it filed a 10-Q jointly with it
+        (*co_filer*), or has the same business phone number or street.
+    """
+    phone = _phone_digits(candidate.get("phone"))
+    street = _business_street(candidate)
+    linked = (co_filer or (phone != "" and phone == _phone_digits(new.get("phone")))
+              or (street != "" and street == _business_street(new)))
+    return (not candidate.get("tickers")
+            and _newest_since(_filings_from(candidate), ANNUAL_FORMS, cutoff) is not None
+            and bool(candidate.get("sic")) and candidate.get("sic") == new.get("sic")
+            and linked)
+
+
+def _phone_digits(phone: str | None) -> str:
+    """Return a phone number's last 10 digits, so "(972) 940-6000" matches "972-940-6000"; "" if missing."""
+    return re.sub(r"\D", "", phone or "")[-10:]
+
+
+def _business_street(record: dict) -> str:
+    """Return a company's business street line, lower-cased with single spaces; "" if missing.
+
+    A first line starting with "C/O" names a registered agent (many
+    companies share it), so the second line is used instead.
+    """
+    business = (record.get("addresses") or {}).get("business") or {}
+    street = business.get("street1") or ""
+    if street.upper().startswith("C/O"):
+        street = business.get("street2") or ""
+    return " ".join(street.split()).lower()
+
+
+def _co_filers(cik: int, accession_number: str) -> set[int]:
+    """Return the CIKs of every company besides *cik* that filed this document jointly with it.
+
+    Read from the filing's header page, which has one "CENTRAL INDEX KEY:"
+    line per filing company.
+    """
+    url = _HEADERS_URL.format(cik=cik, acc_nodashes=accession_number.replace("-", ""), acc=accession_number)
+    found = re.findall(r"CENTRAL INDEX KEY:\s*(\d+)", _sec_get(url).text)
+    return {int(number) for number in found} - {cik}
+
+
+def _search_hits(params: dict) -> list[dict]:
+    """Return the hits of one EDGAR search request. Raises RuntimeError on an unexpected reply shape."""
+    reply = _sec_json(f"{_EDGAR_SEARCH_URL}?{urlencode(params)}")
+    try:
+        hits = reply["hits"]["hits"]
+    except (KeyError, TypeError) as exc:
+        raise RuntimeError("EDGAR search returned an unexpected format") from exc
+    if not isinstance(hits, list):
+        raise RuntimeError("EDGAR search returned an unexpected format")
+    return hits
+
+
+def _name_matches(name: str) -> set[int]:
+    """Return the CIKs of companies whose name EDGAR matches to *name* without its legal ending."""
+    base = " ".join(_LEGAL_SUFFIXES.sub(" ", name).split()).strip(" ,.-")
+    if not base:
+        return set()
+    return {int(hit["_id"]) for hit in _search_hits({"keysTyped": base}) if str(hit.get("_id", "")).isdigit()}
+
+
+def _address_matches(street: str, since: date) -> set[int]:
+    """Return the CIKs of companies whose annual report filed since *since* contains *street*."""
+    if not street:
+        return set()
+    hits = _search_hits({"q": f'"{street}"', "forms": "10-K,20-F,40-F", "dateRange": "custom",
+                         "startdt": since.isoformat(), "enddt": market_today().isoformat()})
+    return {int(number) for hit in hits for number in (hit.get("_source") or {}).get("ciks") or []
+            if str(number).isdigit()}
+
+
+# ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
@@ -546,16 +772,31 @@ def fetch_filings(ticker: str) -> FilingSet | None:
         )
     cik = cik_map[ticker]
 
-    # Step 2: get the company's filing history — and any predecessor
-    # company's (see _PREDECESSOR_CIKS) — and pick the filings to read. Each
-    # filing remembers which CIK it was found under, since its documents are
-    # downloaded from that company's folder. A filing listed under both
-    # (filed jointly) is kept once.
-    history: dict[str, dict] = {}
-    for owner_cik in (cik, *_PREDECESSOR_CIKS.get(ticker, ())):
-        for meta in _get_filings_metadata(owner_cik):
-            history.setdefault(meta["accession_number"], {**meta, "cik": owner_cik})
+    # Step 2: get the company's filing history and pick the filings to read.
+    # Each filing remembers which CIK it was found under, since its documents
+    # are downloaded from that company's folder.
+    own_filings = _get_filings_metadata(cik)
+    history = {meta["accession_number"]: {**meta, "cik": cik} for meta in own_filings}
     chosen = _pick_filings(list(history.values()))
+
+    # Step 2b: no recent annual report under the company's own number, but
+    # it filed a successor notice (it took over from another company in a
+    # reorganisation)? Then look for that old company, and if one is found,
+    # add its filings and pick again. A filing listed under both companies
+    # (filed jointly) is kept once. Notes for the report say what happened.
+    notes: list[str] = []
+    no_annual = not any(meta["form"] in ANNUAL_FORMS for meta in chosen)
+    if no_annual and any(meta["form"].startswith("8-K12") for meta in own_filings):
+        predecessor = _predecessor_for(ticker, cik, own_filings, notes)
+        if predecessor is not None:
+            old_cik, old_name = predecessor
+            for meta in _get_filings_metadata(old_cik):
+                history.setdefault(meta["accession_number"], {**meta, "cik": old_cik})
+            chosen = _pick_filings(list(history.values()))
+            notes += [f"The {meta['form']} filed {meta['filing_date']} was read from {old_name} (SEC CIK "
+                      f"{old_cik}): the company that now holds the {ticker} ticker took over from it in a "
+                      "reorganisation and has not filed its own annual report yet."
+                      for meta in chosen if meta["cik"] == old_cik]
     if not chosen:
         return None
 
@@ -589,7 +830,7 @@ def fetch_filings(ticker: str) -> FilingSet | None:
         ))
     if not downloaded:
         raise RuntimeError(f"None of {ticker}'s recent filings could be downloaded: {'; '.join(errors)}")
-    filing_set = FilingSet(ticker=ticker, cik=cik, filings=downloaded, errors=errors)
+    filing_set = FilingSet(ticker=ticker, cik=cik, filings=downloaded, errors=errors, notes=notes)
 
     # Step 4: save to disk so the next call skips these downloads — unless
     # a download failed, so that the next call tries the missing filing again.

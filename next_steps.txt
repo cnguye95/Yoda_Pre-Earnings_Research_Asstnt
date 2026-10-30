@@ -256,16 +256,24 @@ IDEAS for Improvements/Changes
        + Restores MD&A, Risk Factors and financial statements for these
          filers. - Larger filings; page references don't resolve.
 
-   XOM (found in the same check; FIXED separately in edgar.py): ticker XOM
-   now maps to CIK 2115436 (ExxonMobil Holdings Corp, holding-company
+   XOM (found in the same check; FIXED in edgar.py, automatically): ticker
+   XOM now maps to CIK 2115436 (ExxonMobil Holdings Corp, holding-company
    reorganisation, July 2026). Its last 10-K (2026-02-18) is filed only
    under the predecessor CIK 34088 (Exxon Mobil Corp, no ticker now), so
-   Yoda found only the 10-Q. SEC submissions JSON has no predecessor
-   field, and accession prefixes are often filing agents, so automatic
-   detection is unreliable; edgar.py keeps a small hand-maintained
-   ticker -> predecessor CIK table whose filing lists are merged before
-   choosing. Remove the XOM entry once XOM files a 10-K under the new CIK
-   (expected ~Feb 2027).
+   Yoda found only the 10-Q. SEC submissions JSON has no predecessor field.
+   edgar.py section "Predecessor companies" now finds the old company
+   itself, only when a ticker has no annual report in 13 months AND filed
+   an 8-K12B/8-K12G3: candidates from 10-Q co-filers (index-headers),
+   EDGAR name lookup (efts keysTyped) and full-text address search of
+   recent 10-K/20-F/40-F; accepted only if exactly one has no ticker, an
+   annual report in 13 months, the same SIC code, and a joint filing /
+   same phone / same street. Links are saved in
+   data/filings/predecessors.json (keyed by ticker, valid only while the
+   ticker's CIK matches new_cik). Live-checked on XOM, CLBK, XPRO, DMRC.
+   Note: the efts keysTyped endpoint is what EDGAR's search box uses, not
+   a documented API; if it changes, the whole search fails visibly (data
+   gap "Predecessor search failed: ...") and the report is as it was
+   before this feature (no annual report read).
    R4. Only then, if R5 shows weak recall: improve chunks, not by semantic
        chunking. Today's chunker already splits at paragraph breaks
        (1,500 characters, 200 overlap), which is what recursive splitting

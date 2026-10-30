@@ -267,7 +267,9 @@ class FilingSet(BaseModel):
 
     *filings* is newest first; no filing ranks above another, each is read
     in full. *errors* says why a filing that should be here could not be
-    downloaded, so the gap stays visible in the report.
+    downloaded, so the gap stays visible in the report. *notes* are other
+    things the reader should know about where the filings came from, e.g.
+    that the 10-K was read from the company's predecessor.
     """
     # Reject unknown fields, so a disk cache written by an older version of
     # Yoda (which stored one "primary" filing with a nested "supplemental")
@@ -278,6 +280,7 @@ class FilingSet(BaseModel):
     cik: int                           # SEC company number
     filings: list[Filing] = Field(min_length=1)   # a set with no filing is None instead
     errors: list[str] = []
+    notes: list[str] = []
 
     @property
     def newest(self) -> Filing:

@@ -16,7 +16,8 @@ import requests
 
 from yoda import dates, http_session
 from yoda.ingest import chunker, edgar, transcripts
-from yoda.schema import Filing, FilingSet
+from yoda.modes import baseline
+from yoda.schema import EarningsReport, Filing, FilingSet
 
 
 # ---------------------------------------------------------------------------
@@ -170,29 +171,185 @@ def test_new_filing_replaces_the_cached_one_and_unchanged_ones_are_reused(cache_
     assert sorted(path.name for path in (cache_dir / "TEST").glob("*.html")) == ["k1.html", "q2.html"]
 
 
-def test_annual_report_under_a_predecessor_cik_is_found(cache_dir, monkeypatch):
-    # XOM's case: the ticker now belongs to a new company (CIK 2), whose own
-    # list has only the 10-Q; the 10-K is under the old company (CIK 1).
-    # Both lists are searched, the joint 10-Q is kept once, and each filing
-    # is downloaded from the company it was found under.
-    joint_10q = {"form": "10-Q", "filing_date": _days_ago(30), "accession_number": "q1"}
-    lists = {2: [joint_10q], 1: [joint_10q, {"form": "10-K", "filing_date": _days_ago(200), "accession_number": "k1"}]}
-    _fake_sec(monkeypatch, filings=[])
-    monkeypatch.setattr(edgar, "_load_ticker_cik_map", lambda: {"TEST": 2})
-    monkeypatch.setattr(edgar, "_get_filings_metadata", lambda cik: lists[cik])
-    monkeypatch.setattr(edgar, "_PREDECESSOR_CIKS", {"TEST": (1,)})
-    downloaded_from = []
+# ---------------------------------------------------------------------------
+# Predecessor companies (a ticker that moved to a new SEC company number)
+# ---------------------------------------------------------------------------
 
-    def record(cik, accession, doc):
-        downloaded_from.append((accession, cik))
+NEW_CIK, OLD_CIK = 2, 1
+
+
+def _record(cik: int, name: str, filings: list[tuple[str, int, str]], tickers: tuple[str, ...] = (),
+            sic: str = "2911", phone: str = "(972) 940-6000", street: str = "1 Main St") -> dict:
+    # An SEC company record (what _submissions returns). *filings* holds
+    # (form, days ago, accession number) in the SEC's newest-first order.
+    return {"cik": str(cik), "name": name, "tickers": list(tickers), "sic": sic, "phone": phone,
+            "addresses": {"business": {"street1": street}},
+            "filings": {"recent": {"form": [form for form, _, _ in filings],
+                                   "filingDate": [_days_ago(days) for _, days, _ in filings],
+                                   "accessionNumber": [acc for _, _, acc in filings]}}}
+
+
+def _new_company(**overrides) -> dict:
+    # XOM's situation: a recent 10-Q (filed jointly with the old company) and
+    # a successor notice, but no annual report under the new number.
+    values = dict(name="Test Holdings Corp", filings=[("10-Q", 30, "q1"), ("8-K12B", 120, "s1")],
+                  tickers=("TEST",))
+    values.update(overrides)
+    return _record(NEW_CIK, **values)
+
+
+def _old_company(**overrides) -> dict:
+    # The company it took over from: the joint 10-Q and its own 10-K.
+    values = dict(name="TEST CORP", filings=[("10-Q", 30, "q1"), ("10-K", 200, "k1")])
+    values.update(overrides)
+    return _record(OLD_CIK, **values)
+
+
+def _fake_predecessor_sec(monkeypatch, records: dict[int, dict], name_hits=(), address_hits=(),
+                          co_filers=(OLD_CIK,), search_error: Exception | None = None) -> list[str]:
+    # Fake every SEC request the lookup makes. Returns a log of the requests
+    # ("search: ...", "header: ...", "download: <acc> from <cik>").
+    log: list[str] = []
+    monkeypatch.setattr(edgar, "_load_ticker_cik_map", lambda: {"TEST": NEW_CIK})
+    monkeypatch.setattr(edgar, "_submissions", lambda cik: records[cik])
+    monkeypatch.setattr(edgar, "_get_main_document", lambda cik, acc: f"{acc}.htm")
+
+    def sec_get(url):
+        # Only filing header pages are read with _sec_get here.
+        log.append(f"header: {url}")
+        keys = "".join(f"CENTRAL INDEX KEY: {cik:010d}\n" for cik in (NEW_CIK, *co_filers))
+        return SimpleNamespace(text=keys)
+    monkeypatch.setattr(edgar, "_sec_get", sec_get)
+
+    def sec_json(url):
+        # The two EDGAR searches: by company name, and full text by address.
+        log.append(f"search: {url}")
+        if search_error is not None:
+            raise search_error
+        if "keysTyped=" in url:
+            return {"hits": {"hits": [{"_id": str(cik)} for cik in name_hits]}}
+        return {"hits": {"hits": [{"_source": {"ciks": [f"{cik:010d}"]}} for cik in address_hits]}}
+    monkeypatch.setattr(edgar, "_sec_json", sec_json)
+
+    def download(cik, accession, doc):
+        log.append(f"download: {accession} from {cik}")
         return f"<p>Text of {accession}</p>", f"https://sec.example/{cik}/{doc}"
-    monkeypatch.setattr(edgar, "_download_filing_html", record)
+    monkeypatch.setattr(edgar, "_download_filing_html", download)
+    return log
+
+
+def _searched(log: list[str]) -> bool:
+    # True if the lookup made any search or header request.
+    return any(entry.startswith(("search:", "header:")) for entry in log)
+
+
+def test_predecessor_is_found_read_and_saved(cache_dir, monkeypatch):
+    # XOM's case: the joint 10-Q names the old company as a co-filer; it
+    # passes every check, so its 10-K is read (downloaded from the old
+    # company's number), the report gets a note, and the link is saved.
+    unrelated = _record(7, "TESTER INDUSTRIES", [("10-K", 100, "x1")], tickers=("TSTR",))
+    log = _fake_predecessor_sec(monkeypatch, {NEW_CIK: _new_company(), OLD_CIK: _old_company(), 7: unrelated},
+                                name_hits=(OLD_CIK, 7))
 
     filing_set = edgar.fetch_filings("TEST")
 
     assert [filing.accession_number for filing in filing_set.filings] == ["q1", "k1"]
-    assert downloaded_from == [("q1", 2), ("k1", 1)]
-    assert filing_set.cik == 2 and filing_set.filings[1].url == "https://sec.example/1/k1.htm"
+    assert "download: q1 from 2" in log and "download: k1 from 1" in log
+    assert filing_set.notes == [
+        f"The 10-K filed {_days_ago(200)} was read from TEST CORP (SEC CIK 1): the company that now holds "
+        "the TEST ticker took over from it in a reorganisation and has not filed its own annual report yet."]
+    saved = json.loads((cache_dir / "predecessors.json").read_text(encoding="utf-8"))
+    assert saved["TEST"] | {"found": None} == {"new_cik": 2, "old_cik": 1, "old_name": "TEST CORP", "found": None}
+
+    # The next run uses the saved link: no search at all, same filings.
+    log.clear()
+    again = edgar.fetch_filings("TEST")
+    assert not _searched(log)
+    assert [filing.accession_number for filing in again.filings] == ["q1", "k1"] and again.notes == filing_set.notes
+
+
+def test_saved_link_for_a_different_company_is_ignored(cache_dir, monkeypatch):
+    # The ticker now belongs to a different new company than the saved
+    # entry says: the entry does not apply, so the search runs again.
+    (cache_dir / "predecessors.json").write_text(json.dumps(
+        {"TEST": {"new_cik": 99, "old_cik": 5, "old_name": "SOMEONE ELSE", "found": "2026-01-01"}}), encoding="utf-8")
+    log = _fake_predecessor_sec(monkeypatch, {NEW_CIK: _new_company(), OLD_CIK: _old_company()})
+
+    filing_set = edgar.fetch_filings("TEST")
+
+    assert _searched(log)
+    assert [filing.accession_number for filing in filing_set.filings] == ["q1", "k1"]
+
+
+@pytest.mark.parametrize("new_company", [
+    _new_company(filings=[("10-Q", 30, "q1"), ("10-K", 150, "k2"), ("8-K12B", 160, "s1")]),  # has its own 10-K
+    _new_company(filings=[("10-Q", 30, "q1")]),                                             # no successor notice
+], ids=["own annual report", "no successor notice"])
+def test_no_search_unless_needed(cache_dir, monkeypatch, new_company):
+    log = _fake_predecessor_sec(monkeypatch, {NEW_CIK: new_company, OLD_CIK: _old_company()})
+    filing_set = edgar.fetch_filings("TEST")
+    assert not _searched(log) and filing_set.notes == []
+
+
+@pytest.mark.parametrize("old_company, co_filers", [
+    (_old_company(tickers=("OLD",)), (OLD_CIK,)),                                # still has a ticker
+    (_old_company(filings=[("10-Q", 30, "q1"), ("10-K", 500, "k1")]), (OLD_CIK,)),  # annual report too old
+    (_old_company(sic="6189"), (OLD_CIK,)),                                      # different industry
+    (_old_company(phone="111-111-1111", street="9 Other Rd"), ()),               # not linked
+], ids=["has ticker", "no recent annual report", "different industry", "not linked"])
+def test_each_check_can_reject_a_candidate(cache_dir, monkeypatch, old_company, co_filers):
+    # The candidate is found by name, but fails one check: no predecessor,
+    # only the 10-Q is read, and nothing is saved.
+    _fake_predecessor_sec(monkeypatch, {NEW_CIK: _new_company(), OLD_CIK: old_company},
+                          name_hits=(OLD_CIK,), co_filers=co_filers)
+
+    filing_set = edgar.fetch_filings("TEST")
+
+    assert [filing.accession_number for filing in filing_set.filings] == ["q1"]
+    assert filing_set.notes == [] and not (cache_dir / "predecessors.json").exists()
+
+
+def test_several_matches_means_no_guess(cache_dir, monkeypatch):
+    # Two companies pass every check (like Navient's look-alike trusts would
+    # without the industry check): neither is used, the note names both.
+    twin = _record(3, "TEST CORP II", [("10-K", 100, "k3")])
+    _fake_predecessor_sec(monkeypatch, {NEW_CIK: _new_company(), OLD_CIK: _old_company(), 3: twin},
+                          address_hits=(OLD_CIK, 3))
+
+    filing_set = edgar.fetch_filings("TEST")
+
+    assert [filing.accession_number for filing in filing_set.filings] == ["q1"]
+    assert filing_set.notes == ["No predecessor company was used: several companies matched equally "
+                                "(TEST CORP, CIK 1, TEST CORP II, CIK 3)."]
+    assert not (cache_dir / "predecessors.json").exists()
+
+
+def test_failed_search_is_noted_and_the_run_continues(cache_dir, monkeypatch):
+    # The SEC search is down: the report says so, and the 10-Q is still read.
+    _fake_predecessor_sec(monkeypatch, {NEW_CIK: _new_company(), OLD_CIK: _old_company()},
+                          co_filers=(), search_error=requests.HTTPError("503 Server Error"))
+
+    filing_set = edgar.fetch_filings("TEST")
+
+    assert [filing.accession_number for filing in filing_set.filings] == ["q1"]
+    assert filing_set.notes == ["Predecessor search failed: HTTPError: 503 Server Error"]
+
+
+def test_name_search_leaves_out_legal_endings(monkeypatch):
+    # "Columbia Financial, Inc./MD/" is searched as "Columbia Financial", so
+    # the old "Columbia Financial, Inc." (a different legal ending) is found.
+    urls = []
+    monkeypatch.setattr(edgar, "_sec_json", lambda url: urls.append(url) or {"hits": {"hits": [{"_id": "1723596"}]}})
+    assert edgar._name_matches("Columbia Financial, Inc./MD/") == {1723596}
+    assert urls[-1].endswith("keysTyped=Columbia+Financial")
+
+
+def test_notes_reach_the_report_data_gaps():
+    # A note about where a filing came from is shown to the reader.
+    filing_set = _filing_set().model_copy(update={"notes": ["The 10-K was read from TEST CORP (SEC CIK 1)."]})
+    report = EarningsReport.model_construct(data_gaps=[])
+    baseline.apply_filings(report, filing_set, baseline.FilingText("", filing_set.filings, []))
+    assert report.data_gaps == ["The 10-K was read from TEST CORP (SEC CIK 1)."]
 
 
 def test_failed_download_is_recorded_not_swallowed_or_cached(cache_dir, monkeypatch):

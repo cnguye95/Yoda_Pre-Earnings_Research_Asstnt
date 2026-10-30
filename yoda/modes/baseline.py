@@ -225,12 +225,15 @@ def apply_filings(report: EarningsReport, filing_set: FilingSet, filing_text: Fi
     """Record on *report* which filings it was written from, and which are missing and why.
 
     Stamped on in code, not by the model, so it is always accurate. A filing
-    left out for size, or one that could not be downloaded, gets a data gap.
+    left out for size, or one that could not be downloaded, gets a data gap,
+    and so does each note about where a filing came from (e.g. a 10-K read
+    from the company's predecessor).
     """
     report.filings = [ReportFiling(filing_type=filing.filing_type, filing_date=filing.filing_date, url=filing.url)
                       for filing in filing_text.used]
     report.data_gaps.extend(filing_text.gaps)
     report.data_gaps.extend(f"Filing not analyzed: {error}." for error in filing_set.errors)
+    report.data_gaps.extend(filing_set.notes)
 
 
 # ---------------------------------------------------------------------------
