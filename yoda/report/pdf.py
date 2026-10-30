@@ -85,7 +85,8 @@ def filing_caveats(report: EarningsReport) -> list[str]:
     """Warnings a reader needs about which filings the report could use.
 
     Returns an empty list when both a 10-Q and an annual report were
-    analyzed. The app and the PDF show the same sentences.
+    analyzed, or when a foreign company's 20-F or 40-F was. The app and the
+    PDF show the same sentences.
     """
     if not report.filings:
         return [f"No recent SEC filing found for {report.ticker} ({FILING_WINDOWS_TEXT}). "
@@ -93,8 +94,12 @@ def filing_caveats(report: EarningsReport) -> list[str]:
                 "no fundamental filing data was available."]
     annual = [filing for filing in report.filings if filing.filing_type != "10-Q"]
     if len(annual) == len(report.filings):
-        # Only the annual report: either no 10-Q in the window, or the annual
-        # report is newer than the latest 10-Q (and so already covers it).
+        # A foreign company (20-F or 40-F) never files 10-Qs, so reading only
+        # its annual report is normal and needs no warning.
+        if annual[0].filing_type != "10-K":
+            return []
+        # Only the 10-K: either no 10-Q in the window, or the 10-K is newer
+        # than the latest 10-Q (and so already covers it).
         return [f"Only the annual {annual[0].filing_type} (filed {annual[0].filing_date}) was read for "
                 f"{report.ticker}: no 10-Q was filed after it in the last {QUARTERLY_WINDOW_WEEKS} weeks."]
     if not annual:

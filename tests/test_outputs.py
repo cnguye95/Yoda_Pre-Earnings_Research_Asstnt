@@ -135,6 +135,13 @@ def test_no_caveat_when_both_filings_were_used():
     assert pdf.filing_caveats(_report()) == []
 
 
+@pytest.mark.parametrize("form", ["20-F", "40-F"])
+def test_no_caveat_for_a_foreign_filer_annual_report(form):
+    # A foreign company files no 10-Qs, so its annual report alone is normal.
+    foreign = _ANNUAL.model_copy(update={"filing_type": form})
+    assert pdf.filing_caveats(_report(filings=[foreign])) == []
+
+
 def test_each_citation_links_to_the_filing_it_names():
     # "10-K ..." links to the 10-K, "10-Q ..." to the 10-Q; a citation naming
     # no filing links to the newest; a report without URLs shows plain text.
