@@ -281,16 +281,18 @@ _WHERE = re.compile(r"(?P<field>\w+)\[(?P<index>\d+)\](?:\.(?P<part>\w+))?")
 _CLAIM_LISTS = {"setup_summary", "since_filing"}
 
 # Claims a section's item can do without: a failing one is set to None.
-_OPTIONAL_PARTS = {"last_reported", "consensus"}
+# (A debate keeps its other side; with both sides gone, it is removed.)
+_OPTIONAL_PARTS = {"last_reported", "consensus", "bull", "bear"}
 
 
 def remove_claims(report: EarningsReport, reasons: dict[str, str]) -> None:
     """Remove each claim at a location in *reasons* (location -> why) from *report*, in place.
 
-    An optional claim (a metric's last_reported or consensus) becomes None;
+    An optional claim (a metric's last_reported or consensus, one side of a
+    debate) becomes None, and a debate left with neither side is removed;
     a claim in a plain list (setup summary, since the filing) is dropped; any
-    other claim is required by its item (a debate's bull case, a risk), so
-    the whole item goes. Each removal is noted in check_notes and data_gaps
+    other claim is required by its item (a scenario, a risk), so the whole
+    item goes. Each removal is noted in check_notes and data_gaps
     with the claim's text, so it can be found even after positions shift.
     Raises ValueError for a location that isn't a claim in this report.
     """
@@ -312,6 +314,12 @@ def remove_claims(report: EarningsReport, reasons: dict[str, str]) -> None:
         report.check_notes.append(f"{where}: {removed} — its sources don't support it ({why}).")
         report.data_gaps.append(f"A claim was removed because its sources don't support it: "
                                 f"{claims[where].text!r} ({why}).")
+
+    # A debate with neither side left has nothing to argue: it goes too.
+    for index, debate in enumerate(report.key_debates):
+        if debate.bull is None and debate.bear is None:
+            dropped.setdefault("key_debates", set()).add(index)
+            report.check_notes.append(f"key_debates[{index}]: removed — neither side is supported by its sources.")
 
     # Drop items from the end of each section first, so earlier positions
     # still point at the right item.

@@ -80,10 +80,12 @@ class GuidanceItem(BaseModel):
 
 
 class Debate(BaseModel):
-    # One open question investors disagree on going into the report.
+    # One open question investors disagree on going into the report. A side
+    # is None only when the claim check removed it (its sources didn't
+    # support it); the reader then sees that side as not in the sources.
     question: str
-    bull: Claim
-    bear: Claim
+    bull: Claim | None
+    bear: Claim | None
     what_settles_it: str               # what in the report or call would answer it
 
 

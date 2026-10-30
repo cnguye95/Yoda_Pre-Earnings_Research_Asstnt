@@ -133,6 +133,24 @@ def test_every_sonnet_call_reads_the_one_cache_entry_the_warm_up_wrote(monkeypat
     assert "Today's date" not in breakpoint_block["text"]   # nothing that changes daily before the breakpoint
 
 
+def test_a_refused_warm_up_stops_the_run_before_any_paid_call(monkeypatch):
+    # Bug: the researchers started before the warm-up, so when the API
+    # refused the warm-up request (400) they still ran and were paid for.
+    fakes = _Fakes(monkeypatch)
+
+    def refused(**request):
+        raise RuntimeError("400: the compiled grammar is too large")
+    monkeypatch.setattr(rec1, "warm_cache", refused)
+    with pytest.raises(RuntimeError, match="grammar"):
+        rec1.run_rec1("TEST", _sources())
+    assert fakes.haiku == [] and fakes.sonnet == []
+
+
+def test_the_submit_tools_are_not_strict():
+    # The API refuses the three submit tools as strict tools (grammar too large).
+    assert not any(tool.get("strict") for tool in rec1.SOURCE_TOOLS)
+
+
 def test_the_writer_gets_the_fact_rules_the_notes_and_the_researchers_passages(monkeypatch):
     fakes = _Fakes(monkeypatch)
     run = rec1.run_rec1("TEST", _sources())

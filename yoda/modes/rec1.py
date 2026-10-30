@@ -131,7 +131,10 @@ class Notes(BaseModel):
 
 # The tools a Sonnet call answers with, by name. Every source-reading call
 # is offered all of them (sorted, so the list is identical every time) and
-# told which one to call.
+# told which one to call. They are not "strict" (schema-enforced by the
+# API): the API refused the three together as too large a grammar
+# (2026-10-30), so llm.submit_call validates each answer with Pydantic
+# instead, and a broken answer fails loudly.
 _SUBMIT_MODELS: dict[str, type[BaseModel]] = {"submit_notes": Notes, "submit_repairs": Repairs,
                                                "submit_report": ReportDraft}
 _SUBMIT_DESCRIPTIONS = {
@@ -140,7 +143,7 @@ _SUBMIT_DESCRIPTIONS = {
     "submit_report": "Submit the finished report. Call it once, when your instructions ask for the report.",
 }
 SOURCE_TOOLS = [{"name": name, "description": _SUBMIT_DESCRIPTIONS[name],
-                 "input_schema": transform_schema(model), "strict": True}
+                 "input_schema": transform_schema(model)}
                 for name, model in sorted(_SUBMIT_MODELS.items())]
 
 # The researchers' tools: the news and competitor tools from
@@ -447,15 +450,16 @@ def run_rec1(ticker: str, sources: SharedSources, on_notice: Callable[[str], Non
     research_message = _research_message(sources, dates)
     has_post_filing = bool(sources.eight_ks) or sources.call.transcript is not None
 
-    # Stages 1 and 2. The researchers start at once (they don't read the
-    # sources); the extractors wait for the warm-up so they read one cache
-    # entry rather than each writing its own.
+    # The warm-up comes first, before anything paid starts: the extractors
+    # then read one cache entry rather than each writing its own, and a
+    # request the API refuses stops the run before any other call is made.
+    cost = _source_cost(*warm_cache(**source_request(rendered.text, None, "Ready.", 1)))
+
+    # Stages 1 and 2 run in parallel.
     with ThreadPoolExecutor(max_workers=4) as pool:
         research = {name: pool.submit(_research, brief.format(company=company, ticker=ticker), research_message,
                                       ctx, store, lock)
                     for name, brief in _RESEARCH_BRIEFS.items()}
-        warm = warm_cache(**source_request(rendered.text, None, "Ready.", 1))
-        cost = _source_cost(*warm)
         extractors = {"Filing extractor": pool.submit(_extract, _FILING_EXTRACTOR, rendered.text, dates)}
         if has_post_filing:
             extractors["Post-filing extractor"] = pool.submit(_extract, _POST_FILING_EXTRACTOR, rendered.text, dates)

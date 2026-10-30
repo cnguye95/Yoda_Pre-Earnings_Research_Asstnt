@@ -42,8 +42,9 @@ def iter_claims(report: EarningsReport) -> Iterator[tuple[str, Claim]]:
     for n, claim in enumerate(report.since_filing):
         yield f"since_filing[{n}]", claim
     for n, debate in enumerate(report.key_debates):
-        yield f"key_debates[{n}].bull", debate.bull
-        yield f"key_debates[{n}].bear", debate.bear
+        for side in ("bull", "bear"):
+            if getattr(debate, side) is not None:
+                yield f"key_debates[{n}].{side}", getattr(debate, side)
     for n, scenario in enumerate(report.scenarios):
         yield f"scenarios[{n}]", scenario.description
     for n, risk in enumerate(report.key_risks):

@@ -140,17 +140,36 @@ def test_removal_drops_list_claims_empties_optional_slots_and_removes_items():
     remove_claims(report, {
         "setup_summary[0]": "wrong period",
         "metrics_to_model[0].consensus": "not in the row",
-        "key_debates[0].bull": "no such guidance",
-        "key_debates[0].bear": "overstated",
+        "key_risks[0]": "overstated",
     })
     assert [c.text for c in report.setup_summary] == ["Second."]
     assert report.metrics_to_model[0].consensus is None
     assert report.metrics_to_model[0].view is not None
-    assert report.key_debates == []   # one removal of the debate, though both sides failed
-    assert "key_debates[0].bull: its whole key_debates[0] item was removed — its sources don't support it " \
-           "(no such guidance)." in report.check_notes
+    assert report.key_risks == []   # a risk needs its claim, so the whole item goes
+    assert "key_risks[0]: its whole key_risks[0] item was removed — its sources don't support it " \
+           "(overstated)." in report.check_notes
     assert "A claim was removed because its sources don't support it: 'First.' (wrong period)." in report.data_gaps
-    assert len(report.check_notes) == 4
+    assert len(report.check_notes) == 3
+
+
+def test_a_debate_keeps_its_supported_side():
+    # A failed side used to take its whole debate with it (NVDA run,
+    # 2026-10-30): now only that side goes, shown as not in the sources.
+    report = sample_report()
+    remove_claims(report, {"key_debates[0].bull": "no such guidance"})
+    assert report.key_debates[0].bull is None
+    assert report.key_debates[0].bear.text == "Competition for time is intense."
+    assert ("key_debates[0].bull: the claim was removed — its sources don't support it (no such guidance)."
+            in report.check_notes)
+    # The empty side is no longer a claim to check.
+    assert "key_debates[0].bull" not in dict(iter_claims(report))
+
+
+def test_a_debate_with_neither_side_left_is_removed():
+    report = sample_report()
+    remove_claims(report, {"key_debates[0].bull": "a", "key_debates[0].bear": "b"})
+    assert report.key_debates == []
+    assert report.check_notes[-1] == "key_debates[0]: removed — neither side is supported by its sources."
 
 
 def test_removing_two_items_of_one_section_removes_the_right_ones():
