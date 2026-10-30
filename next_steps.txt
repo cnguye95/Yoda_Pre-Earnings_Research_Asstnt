@@ -221,7 +221,8 @@ IDEAS for Improvements/Changes
      market snapshot (consensus, whisper, implied move, rating actions,
      price target), the read_article tool, the 14-day news rule, the
      baseline mode, and the judge's evidence bundle.
-   - Replace it with a current diagram (and update it with item 8).
+   - New architecture should preferably be stored as its own file in the repo, 
+   with mention in the README pointing to the system architecure file
 
 
 7. Investigate Chroma usage reporting
