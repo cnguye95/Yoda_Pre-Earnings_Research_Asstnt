@@ -1,8 +1,7 @@
 """Evaluation runner.
 
-run_eval() runs the modes (today the baseline; the architecture comparison
-adds its arms in steps 8-10) against a list of tickers,
-judges each report against the evidence it was written from with
+run_eval() runs the modes (the baseline and Rec 1; Rec 2 is added next)
+against a list of tickers, judges each report against the evidence it was written from with
 judge_report() (see yoda/eval/evidence.py), and returns a long-format
 DataFrame with per-row scores, latency, and cost. rescore() judges reports
 already saved on disk instead (the archive check and the repeat check),
@@ -60,6 +59,7 @@ from yoda.eval.judge import (
 from yoda.eval.rubric import DIMENSIONS, RUBRIC_TEXT, JudgeScores
 from yoda.ingest.edgar import fetch_filings
 from yoda.modes.baseline import BASELINE_MODEL, run_baseline
+from yoda.modes.rec1 import run_rec1
 from yoda.schema import EarningsReport, EvidenceStore
 from yoda.sources import SharedSources, fetch_shared_sources
 from yoda.tickers import normalize_tickers
@@ -87,10 +87,12 @@ SCORE_COLS = list(DIMENSIONS)
 
 # Every mode the runner knows. Report files named after one of these are
 # results; any other *.json in the output folder (e.g. an old panel_* smoke
-# test) is stale and removed at the end of a run. "yoda" stays known, so the
+# test) is stale and removed at the end of a run. "rec1" is Rec 1, the
+# analyst-preview workflow (yoda/modes/rec1.py). "yoda" stays known, so the
 # saved reports of the retired personality panel are never deleted, but it
-# can't run until Rec 1 is built (step 8); DEFAULT_MODES are what runs.
-KNOWN_MODES = ("baseline", "yoda")
+# no longer runs. DEFAULT_MODES are what runs; the summary still compares
+# baseline with "yoda" until the run harness compares all three arms (item 4d).
+KNOWN_MODES = ("baseline", "rec1", "yoda")
 DEFAULT_MODES = ("baseline",)
 
 # Where outputs go unless run_eval() is given another folder.
@@ -152,8 +154,10 @@ def _run_mode(mode: str, ticker: str, sources: SharedSources) -> ModeRun:
     """
     if mode == "baseline":
         return _capture(lambda symbol, shared: tuple(run_baseline(symbol, shared)), ticker, sources)
+    if mode == "rec1":
+        return _capture(lambda symbol, shared: tuple(run_rec1(symbol, shared)), ticker, sources)
     if mode == "yoda":
-        raise ValueError("The yoda mode was the personality panel, now removed; it returns with Rec 1 (step 8).")
+        raise ValueError("The yoda mode was the personality panel, now removed; Rec 1 runs as mode rec1.")
     raise ValueError(f"Unknown mode: {mode}")
 
 

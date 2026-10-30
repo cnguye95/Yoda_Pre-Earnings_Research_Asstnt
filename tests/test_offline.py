@@ -572,7 +572,7 @@ def test_judge_failure_skips_row_not_run(monkeypatch, tmp_path):
     fake_judge.calls = 0
     monkeypatch.setattr(runner, "judge_report", fake_judge)
 
-    df = runner.run_eval(["GOOD", "BAD"], modes=runner.KNOWN_MODES, out_dir=tmp_path / "data/eval")
+    df = runner.run_eval(["GOOD", "BAD"], modes=("baseline", "yoda"), out_dir=tmp_path / "data/eval")
     assert len(df) == 3                                  # only BAD/baseline missing
     assert (tmp_path / "data/eval/summary.md").exists()  # the run still finished
 
@@ -629,7 +629,7 @@ def test_duplicate_tickers_run_once(monkeypatch, tmp_path):
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
     monkeypatch.setattr(runner, "judge_report", lambda report, evidence_text, na, repeat=False: _judge_result(3))
 
-    df = runner.run_eval(["NFLX", "nflx"], modes=runner.KNOWN_MODES, out_dir=tmp_path / "data/eval")
+    df = runner.run_eval(["NFLX", "nflx"], modes=("baseline", "yoda"), out_dir=tmp_path / "data/eval")
     assert len(df) == 2   # one ticker x two modes
 
 

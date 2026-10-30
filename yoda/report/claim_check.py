@@ -111,7 +111,7 @@ class ClaimCheck(NamedTuple):
     cost_usd: float
 
 
-class _Item(NamedTuple):
+class ClaimItem(NamedTuple):
     """One claim to check: its location, the claim, and the known passages it cites."""
     where: str
     claim: Claim
@@ -122,7 +122,7 @@ class _Item(NamedTuple):
 # Building the batches
 # ---------------------------------------------------------------------------
 
-def _items(report: EarningsReport, store: EvidenceStore, only: set[str] | None) -> list[_Item]:
+def claim_items(report: EarningsReport, store: EvidenceStore, only: set[str] | None) -> list[ClaimItem]:
     """Return every claim (or only those at the locations in *only*) that cites at least one known passage.
 
     A claim citing no known passage is left to check_report, which marks it
@@ -136,27 +136,27 @@ def _items(report: EarningsReport, store: EvidenceStore, only: set[str] | None) 
         ids = dict.fromkeys(normalize_id(raw) for raw in claim.evidence_ids)
         passages = [by_id[passage_id] for passage_id in ids if passage_id in by_id]
         if passages:
-            items.append(_Item(where, claim, passages))
+            items.append(ClaimItem(where, claim, passages))
     return items
 
 
-def _render(item: _Item) -> str:
+def render_claim(item: ClaimItem) -> str:
     """Write one claim for a checker: its location, tag and text, then each cited passage with its citation."""
     passages = "\n\n".join(f"[{p.id}] {citation(p)}\n{p.text}" for p in item.passages)
     return (f"=== Claim at {item.where} (tagged {item.claim.evidence_type}) ===\n{item.claim.text}\n"
             f"--- Cited passages ---\n{passages}")
 
 
-def _batches(items: list[_Item]) -> list[list[_Item]]:
+def _batches(items: list[ClaimItem]) -> list[list[ClaimItem]]:
     """Split *items* into batches whose rendered text fits _BATCH_CHARS, keeping their order.
 
     A claim too long to fit any batch goes alone (and that one call pays
     Haiku's long-prompt price); it is still checked.
     """
-    batches: list[list[_Item]] = []
+    batches: list[list[ClaimItem]] = []
     size = 0
     for item in items:
-        length = len(_render(item))
+        length = len(render_claim(item))
         if batches and size + length <= _BATCH_CHARS:
             batches[-1].append(item)
             size += length
@@ -183,7 +183,7 @@ class _Asked(NamedTuple):
     cost_usd: float
 
 
-def _ask(model: str, effort: str, items: list[_Item]) -> _Asked:
+def _ask(model: str, effort: str, items: list[ClaimItem]) -> _Asked:
     """Ask *model* for a verdict on every claim in *items*, one call per batch.
 
     A failed call leaves its claims unanswered (with the error), and a
@@ -198,7 +198,7 @@ def _ask(model: str, effort: str, items: list[_Item]) -> _Asked:
             reply = structured_call(
                 model=model, max_tokens=_MAX_TOKENS, output_format=Verdicts,
                 output_config={"effort": effort}, system=_INSTRUCTIONS,
-                messages=[{"role": "user", "content": "\n\n".join(_render(item) for item in batch)}],
+                messages=[{"role": "user", "content": "\n\n".join(render_claim(item) for item in batch)}],
             )
         except _CALL_ERRORS as exc:
             if isinstance(exc, NoStructuredOutput):
@@ -229,7 +229,7 @@ def check_claims(report: EarningsReport, store: EvidenceStore, only: set[str] | 
     checked (and why) is added to report.check_notes. Prints one log line
     with the counts and cost.
     """
-    items = _items(report, store, only)
+    items = claim_items(report, store, only)
     first = _ask(CHECK_MODEL, CHECK_EFFORT, items)
     failed = [item for item in items if item.where in first.verdicts and not first.verdicts[item.where].supported]
     second = _ask(SECOND_MODEL, SECOND_EFFORT, failed)

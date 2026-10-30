@@ -380,7 +380,7 @@ def test_failures_are_listed_in_the_summary(monkeypatch, tmp_path):
         return runner.ModeRun(_report(), 1.0, "logged", 0.1, "", sample_store())
     _stub_runner(monkeypatch, run_mode)
 
-    runner.run_eval(["AAA"], modes=runner.KNOWN_MODES, out_dir=tmp_path)
+    runner.run_eval(["AAA"], modes=("baseline", "yoda"), out_dir=tmp_path)
 
     summary = (tmp_path / "summary.md").read_text(encoding="utf-8")
     assert "## Failures" in summary
@@ -419,7 +419,7 @@ def test_evidence_is_saved_next_to_each_report(monkeypatch, tmp_path):
         return runner.ModeRun(_report(), 1.0, "logged", 0.1, "", store)
     _stub_runner(monkeypatch, run_mode)
 
-    runner.run_eval(["AAA"], modes=runner.KNOWN_MODES, out_dir=tmp_path)
+    runner.run_eval(["AAA"], modes=("baseline", "yoda"), out_dir=tmp_path)
 
     saved = (tmp_path / "yoda_AAA_evidence.json").read_text(encoding="utf-8")
     assert EvidenceStore.model_validate_json(saved) == sample_store()
@@ -444,7 +444,7 @@ def test_shared_sources_are_fetched_once_and_reach_every_mode(monkeypatch, tmp_p
         return runner.ModeRun(_report(), 1.0, "logged", 0.1, "", sample_store())
     _stub_runner(monkeypatch, run_mode)
 
-    runner.run_eval(["AAA"], modes=runner.KNOWN_MODES, out_dir=tmp_path)
+    runner.run_eval(["AAA"], modes=("baseline", "yoda"), out_dir=tmp_path)
 
     assert fetched == [_FILINGS] and seen == ["SOURCES", "SOURCES"]
 

@@ -1,8 +1,10 @@
 """Tool registry for the agent loops.
 
 Built for the multi-agent personality panel, which was removed with the new
-report format (2026-10-30); the architecture comparison's arms reuse it from
-step 8 (Rec 1). The rest of this docstring describes the panel's use.
+report format (2026-10-30). Rec 1's researchers (yoda/modes/rec1.py) use
+search_news, read_article and lookup_peer, with their own dispatcher that
+adds every result to the evidence store. The rest of this docstring
+describes the panel's use.
 
 Four tools, each a plain Python function, registered with a Claude tool
 schema so personality agents can choose to call them inside
@@ -374,7 +376,7 @@ class LookupPeerArgs(_ToolArgs):
 
 # Maps the tool name (as returned in the model's tool_use block) to the Python
 # function that implements it and to the model that checks its arguments.
-# A dispatcher (the panel's, until 2026-10-30; Rec 1's from step 8) validates
+# A dispatcher (the panel's, until 2026-10-30; now rec1._run_tool) validates
 # with TOOL_ARGS, then calls TOOL_DISPATCH with (ctx, **validated_args).
 TOOL_DISPATCH = {
     "retrieve_filing": retrieve_filing,

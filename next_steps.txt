@@ -111,7 +111,9 @@ WHEN labels (relative to the architecture comparison, item 4; set
      instructions after it; all of an arm's source-reading calls share
      model, pinned effort and a sorted tool list; nothing variable (dates,
      IDs) before the breakpoint; warm the cache with one call before
-     fanning out parallel calls; 5-minute cache; no cross-arm sharing;
+     fanning out parallel calls; 5-minute cache (Rec 1 uses 1-hour,
+     decided 2026-10-30: its repair pass starts over 5 minutes after the
+     writer's read); no cross-arm sharing;
      prove it with yoda/prompt_cache.cache_misses(). The baseline has no
      breakpoint: it makes one call, so nothing would read the cache.
    d. Run harness (BEFORE SMOKE).

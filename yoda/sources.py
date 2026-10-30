@@ -18,8 +18,8 @@ it; each arm adds its own news search to its own copy of the store.
 
 Nothing here pauses or raises for a missing source: each problem becomes a
 sentence in `gaps`, which goes into the report's data gaps, so the reader
-sees what is missing. (The app's pause on refused market data returns with
-Rec 1, next_steps step 8.)
+sees what is missing. (The app's pause on refused market data is in
+rec1.generate_report, before this is called.)
 """
 
 from typing import NamedTuple
@@ -64,9 +64,8 @@ def fetch_shared_sources(filing_set: FilingSet, snapshot: MarketSnapshot | None 
     whisper lookup isn't repeated); otherwise it is fetched here, with
     *whisper_lookup* as the search setting (None: the default rule, only
     when the next report is a few days away). Every problem is a sentence in
-    the result's gaps. Raises only what get_market_snapshot raises for a
-    problem that never fixes itself (e.g. RuntimeError for a rejected
-    Finnhub key).
+    the result's gaps (a refused market-data provider included:
+    get_market_snapshot records refusals rather than raising them).
     """
     ticker = filing_set.ticker
     gaps: list[str] = []

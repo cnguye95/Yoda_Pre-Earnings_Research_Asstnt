@@ -43,6 +43,12 @@ def test_a_different_effort_or_model_misses_with_the_reason():
     assert "model differs" in cache_misses([_request("Lead."), _request("Writer.", model="claude-haiku-5-5")])[1]
 
 
+def test_a_different_structured_output_format_misses():
+    # A format is part of what the cache matches on, so arms answer through shared tools instead.
+    with_format = {**_request("Writer."), "output_config": {"effort": "high", "format": {"type": "json_schema"}}}
+    assert cache_misses([_request("Lead."), with_format])[1].startswith("format differs (None before")
+
+
 def test_tool_order_is_part_of_the_cached_prompt():
     search, read = {"name": "search", "input_schema": {}}, {"name": "read", "input_schema": {}}
     calls = [_request("Lead.", tools=[read, search]), _request("Worker.", tools=[search, read])]

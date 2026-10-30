@@ -99,7 +99,7 @@ def test_a_claim_the_model_skips_is_noted_never_passed(monkeypatch):
 
 def test_batches_stay_under_the_haiku_price_line():
     long_passage_items = [
-        claim_check._Item(f"setup_summary[{n}]", claim("x", "Q.001"),
+        claim_check.ClaimItem(f"setup_summary[{n}]", claim("x", "Q.001"),
                           [sample_store().passages[0].model_copy(update={"text": "y" * 60_000})])
         for n in range(12)
     ]
@@ -107,7 +107,7 @@ def test_batches_stay_under_the_haiku_price_line():
     assert len(batches) > 1
     assert sum(len(batch) for batch in batches) == 12
     for batch in batches:
-        chars = sum(len(claim_check._render(item)) for item in batch) + len(claim_check._INSTRUCTIONS)
+        chars = sum(len(claim_check.render_claim(item)) for item in batch) + len(claim_check._INSTRUCTIONS)
         assert chars / claim_check._CHARS_PER_TOKEN < claim_check._HAIKU_PRICE_LINE
 
 

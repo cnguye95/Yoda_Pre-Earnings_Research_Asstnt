@@ -58,6 +58,47 @@ class NoStructuredOutput(RuntimeError):
         self.cache_read_tokens = cache_read_tokens
 
 
+def usage_counts(usage) -> tuple[int, int, int, int]:
+    """Return (input, output, cache write, cache read) tokens from an API usage record, in pricing.call_cost's order."""
+    return (usage.input_tokens, usage.output_tokens, *_cache_tokens(usage))
+
+
+def submit_call(model: str, max_tokens: int, submit_tool: str, output_format: type[_Model],
+                **kwargs) -> StructuredReply:
+    """Make one call whose answer is a call to the tool *submit_tool*, and return it validated against *output_format*.
+
+    Used instead of structured_call() where several calls must share one
+    prompt cache: a structured-output format is part of what the cache
+    matches on, so calls with different formats can't share it, while
+    calls offering the same tools can (each is told which tool to call).
+    *kwargs* (system, messages, tools, output_config, ...) go straight to
+    the API. Streams like structured_call(). Raises NoStructuredOutput if
+    Claude stopped without calling *submit_tool*, and
+    pydantic.ValidationError if the tool's input breaks the model's rules.
+    """
+    with client.messages.stream(model=model, max_tokens=max_tokens, **kwargs) as stream:
+        resp = stream.get_final_message()
+    calls = [block for block in resp.content if block.type == "tool_use" and block.name == submit_tool]
+    if not calls:
+        raise NoStructuredOutput(model, resp.stop_reason, resp.usage.input_tokens, resp.usage.output_tokens,
+                                 *_cache_tokens(resp.usage))
+    return StructuredReply(output_format.model_validate(calls[0].input), resp.usage.input_tokens,
+                           resp.usage.output_tokens, *_cache_tokens(resp.usage))
+
+
+def warm_cache(**request) -> tuple[int, int, int, int]:
+    """Write a request's prompt into the prompt cache without generating anything, and return its usage_counts().
+
+    Sends *request* (Anthropic request parameters; any max_tokens is
+    replaced) with max_tokens=0: the API reads the prompt, stores it at its
+    cache breakpoint and returns at once, billing only the cache write. Run
+    before parallel calls that share the prompt, so they read one cache
+    entry instead of each writing their own.
+    """
+    resp = client.messages.create(**{**request, "max_tokens": 0})
+    return usage_counts(resp.usage)
+
+
 def structured_call(model: str, max_tokens: int, output_format: type[_Model], **kwargs) -> StructuredReply:
     """Make one structured-output call and return its answer and token counts (StructuredReply).
 

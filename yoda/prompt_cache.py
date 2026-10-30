@@ -4,8 +4,9 @@ Anthropic caches a request's prompt up to each cache breakpoint (a block
 marked "cache_control"); a cache read costs a twentieth of normal input on
 Sonnet 5.5. A later request reads that cache only if everything up to the
 breakpoint is identical, in the order the API reads a request: the
-settings (model, thinking, effort: changing either of the last two also
-empties the cache), then the tools, the system prompt and the messages. A
+settings (model, thinking, effort and the structured-output format:
+changing any of the last three also empties the cache), then the tools,
+the system prompt and the messages. A
 cached part shorter than the model's minimum (512 tokens on Sonnet 5.5 and
 Haiku 5.5) is never stored.
 
@@ -40,8 +41,9 @@ def _elements(request: dict) -> list[tuple[str, str, bool]]:
     so two elements match exactly when their content does. A request-level
     cache_control (automatic caching) marks the last element.
     """
+    output_config = request.get("output_config") or {}
     settings = {"model": request["model"], "thinking": request.get("thinking"),
-                "effort": (request.get("output_config") or {}).get("effort")}
+                "effort": output_config.get("effort"), "format": output_config.get("format")}
     parts: list[tuple[str, dict]] = [("settings", settings)]
     parts += [(f"tool {n} ({tool.get('name')})", tool) for n, tool in enumerate(request.get("tools", []), 1)]
     parts += [(f"system block {n}", block) for n, block in enumerate(_blocks(request.get("system", [])), 1)]
