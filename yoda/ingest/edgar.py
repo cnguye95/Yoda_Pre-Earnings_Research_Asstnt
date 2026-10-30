@@ -5,6 +5,8 @@ Two public functions:
       foreign company's 20-F / 40-F) Yoda reads, as a FilingSet
       (see yoda/schema.py): the filings newest first, each holding its
       metadata and cleaned text, or None when nothing recent enough was filed.
+      A 10-K that incorporates its annual report as Exhibit 13 is read
+      with that exhibit, and a 40-F with its Exhibit 99.x documents.
   fetch_post_filing_8ks(filing_set) — the single latest 8-K / 8-K/A (last
       120 days) or, for a foreign company, 6-K (last 4 weeks) filed after the
       newest of those filings (it reports news between quarterly filings: an
@@ -101,10 +103,18 @@ QUARTERLY_WINDOW_WEEKS = 18
 FILING_WINDOWS_TEXT = (f"a 10-Q in the last {QUARTERLY_WINDOW_WEEKS} weeks or a 10-K, 20-F or 40-F "
                        f"in the last {ANNUAL_WINDOW_MONTHS} months")
 
-# A 40-F's own document is often just a cover: its annual information form,
-# financial statements and MD&A are attached as Exhibit 99.x documents, so
-# those are read with it.
-_FORMS_WITH_EXHIBIT_TEXT = ("40-F",)
+# For some forms the main document (Seq 1) is not the whole story, and
+# exhibits whose type starts with the prefix below are read with it:
+#   - a 40-F's own document is often just a cover: its annual information
+#     form, financial statements and MD&A are Exhibit 99.x documents;
+#   - some 10-Ks (mostly banks, e.g. USB) are a short wrapper that
+#     "incorporates by reference" the company's annual report, filed as
+#     Exhibit 13 (EX-13): that is where the MD&A, risk factors and financial
+#     statements are. Most 10-Ks have no EX-13 and are read as before;
+#   - an 8-K's or 6-K's news is in its Exhibit 99.x press release and
+#     supplements.
+# Forms not listed here (10-Q, 20-F) are read from their main document only.
+_EXHIBITS_READ_WITH = {"10-K": "EX-13", "40-F": "EX-99", "8-K": "EX-99", "8-K/A": "EX-99", "6-K": "EX-99"}
 
 # The parts of the cached record that are stored in separate .html files
 # rather than in latest.json (they are large, and the text is rebuilt from
@@ -261,46 +271,13 @@ def _pick_filings(filings: list[dict]) -> list[dict]:
     return sorted(chosen, key=lambda meta: meta["filing_date"], reverse=True)
 
 
-def _get_main_document(cik: int, accession_number: str) -> str:
-    """Return the file name of a filing's main document (the 10-Q/10-K itself).
-
-    Reads the filing's index page, where the main document is always listed
-    as Seq 1. One extra HTTP call, but it avoids guessing file names. Raises
-    RuntimeError if the index page has an unexpected layout.
-    """
-    acc_nodashes = accession_number.replace("-", "")
-    idx_url = _INDEX_URL.format(cik=cik, acc_nodashes=acc_nodashes, acc=accession_number)
-    resp = _sec_get(idx_url)
-
-    soup = BeautifulSoup(resp.text, "lxml")
-    # The index table has rows: Seq | Description | Document | Type | Size.
-    # Seq 1 is always the main document (the filing itself, not exhibits).
-    # The Document cell has an <a> tag; use its href to get the clean filename
-    # because iXBRL labels like "iXBRL" can be appended to the visible text.
-    for row in soup.find_all("tr"):
-        cells = row.find_all("td")
-        if len(cells) >= 3 and cells[0].get_text(strip=True) == "1":
-            link = cells[2].find("a")
-            if link and link.get("href"):
-                # href may be an iXBRL viewer path like
-                # "/ix?doc=/Archives/edgar/data/.../aapl-20260328.htm"
-                # rsplit("/", 1)[-1] extracts just the filename.
-                doc_name = link["href"].rsplit("/", 1)[-1]
-                if doc_name.lower().endswith((".htm", ".html")):
-                    return doc_name
-
-    raise RuntimeError(
-        f"Could not find the main .htm document for accession {accession_number}. "
-        "The filing index page may have an unexpected structure."
-    )
-
-
 def _index_documents(cik: int, accession_number: str) -> list[tuple[str, str, str]]:
     """Return every document listed on a filing's index page.
 
-    Each entry is (seq, doc_type, file_name), read from the same table
-    _get_main_document uses (Seq | Description | Document | Type | Size),
-    e.g. ("1", "8-K", "nflx-20261021.htm") or ("2", "EX-99.1", "ex991.htm").
+    Each entry is (seq, doc_type, file_name), read from the index table
+    (Seq | Description | Document | Type | Size), e.g.
+    ("1", "8-K", "nflx-20261021.htm") or ("2", "EX-99.1", "ex991.htm").
+    Seq 1 is always the main document (the form itself, not an exhibit).
     Rows without a document link are skipped.
     """
     acc_nodashes = accession_number.replace("-", "")
@@ -315,21 +292,27 @@ def _index_documents(cik: int, accession_number: str) -> list[tuple[str, str, st
         link = cells[2].find("a")
         if not (link and link.get("href")):
             continue
-        # As in _get_main_document, the href may be an iXBRL viewer path,
+        # The file name comes from the link, not the visible text (which can
+        # have a label such as "iXBRL" appended). The href may be an iXBRL
+        # viewer path ("/ix?doc=/Archives/edgar/data/.../aapl-20260328.htm"),
         # so only the part after the last "/" is the file name.
         file_name = link["href"].rsplit("/", 1)[-1]
         documents.append((cells[0].get_text(strip=True), cells[3].get_text(strip=True), file_name))
     return documents
 
 
-def _select_main_and_exhibit_99(documents: list[tuple[str, str, str]]) -> list[tuple[str, str]]:
-    """Pick the documents of an 8-K (or 40-F) worth reading, as (doc_type, file_name).
+def _select_main_and_exhibits(documents: list[tuple[str, str, str]],
+                              exhibit_prefix: str | None) -> list[tuple[str, str]]:
+    """Pick the documents of a filing worth reading, as (doc_type, file_name).
 
-    Keeps the form itself (Seq 1) and every Exhibit 99.x — for an 8-K the
-    press release (99.1) and supplements such as a bank's financial
-    supplement (99.2); for a 40-F its annual information form, financial
-    statements and MD&A.
-    Other exhibits (EX-10 contracts, graphics, XBRL data files) are skipped.
+    *documents* is the list from _index_documents(). Keeps the form itself
+    (Seq 1) and every exhibit whose type starts with *exhibit_prefix* (see
+    _EXHIBITS_READ_WITH): "EX-99" keeps an 8-K's press release (99.1) and
+    supplements such as a bank's financial supplement (99.2), or a 40-F's
+    annual information form, financial statements and MD&A; "EX-13" keeps
+    the annual report a 10-K incorporates (also "EX-13.1" and so on). With
+    no prefix, only the main document is kept. Other exhibits (EX-10
+    contracts, graphics, XBRL data files) are skipped.
     Raises RuntimeError if the index has no readable main document.
     """
     readable = (".htm", ".html", ".txt")
@@ -337,27 +320,35 @@ def _select_main_and_exhibit_99(documents: list[tuple[str, str, str]]) -> list[t
             if seq == "1" and name.lower().endswith(readable)]
     if not main:
         raise RuntimeError("Filing index page lists no readable main document (Seq 1).")
+    if exhibit_prefix is None:
+        return main[:1]
     exhibits = [(doc_type, name) for seq, doc_type, name in documents
-                if seq != "1" and doc_type.upper().startswith("EX-99") and name.lower().endswith(readable)]
+                if seq != "1" and doc_type.upper().startswith(exhibit_prefix) and name.lower().endswith(readable)]
     return main[:1] + exhibits
 
 
 def _download_report(cik: int, meta: dict) -> tuple[str, str]:
     """Download the text of the 10-Q / annual report described by *meta*, as (raw_html, url).
 
-    Usually that is the filing's main document. A 40-F's main document is
-    often only a cover, so its Exhibit 99.x documents are downloaded too and
-    joined after it, each under a heading naming the exhibit; the URL is
-    the main document's. Raises requests.RequestException or RuntimeError
-    when a page can't be fetched.
+    Usually that is the filing's main document alone, returned unchanged.
+    For a 40-F (often only a cover) its Exhibit 99.x documents are read
+    too, and for a 10-K that incorporates its annual report as Exhibit 13
+    that exhibit is; they are joined after the main document, each under a
+    heading naming the document. The URL is always the main document's.
+    Raises requests.RequestException or RuntimeError when a page can't be
+    fetched.
     """
     accession = meta["accession_number"]
-    if meta["form"] not in _FORMS_WITH_EXHIBIT_TEXT:
-        return _download_filing_html(cik, accession, _get_main_document(cik, accession))
+    chosen = _select_main_and_exhibits(_index_documents(cik, accession), _EXHIBITS_READ_WITH.get(meta["form"]))
+
+    # A single document is returned as it is, so filings without extra
+    # exhibits read exactly as they always have.
+    if len(chosen) == 1:
+        return _download_filing_html(cik, accession, chosen[0][1])
 
     parts: list[str] = []
     urls: list[str] = []
-    for doc_type, file_name in _select_main_and_exhibit_99(_index_documents(cik, accession)):
+    for doc_type, file_name in chosen:
         html, url = _download_filing_html(cik, accession, file_name)
         parts.append(f"<h1>{doc_type}</h1>\n{html}")
         urls.append(url)
@@ -747,7 +738,9 @@ def fetch_filings(ticker: str) -> FilingSet | None:
 
     Which filings count is decided by _pick_filings(): the latest annual
     report (10-K, 20-F or 40-F) from the last 13 months and the latest 10-Q
-    from the last 18 weeks. Returns a FilingSet, or None when neither was
+    from the last 18 weeks. Each is downloaded by _download_report(), which
+    also reads the exhibits some forms rely on (a 10-K's Exhibit 13, a
+    40-F's Exhibit 99.x). Returns a FilingSet, or None when neither was
     filed recently enough. A filing that exists but cannot
     be downloaded is left out and the reason added to `errors`; if none of
     them can be downloaded, RuntimeError names every reason.
@@ -876,7 +869,8 @@ def _download_8k(cik: int, ticker: str, meta: dict) -> EightKFiling:
     """
     accession = meta["accession_number"]
     documents = []
-    for doc_type, file_name in _select_main_and_exhibit_99(_index_documents(cik, accession)):
+    for doc_type, file_name in _select_main_and_exhibits(_index_documents(cik, accession),
+                                                         _EXHIBITS_READ_WITH[meta["form"]]):
         raw_html, url = _download_filing_html(cik, accession, file_name)
         documents.append(EightKDocument(doc_type=doc_type, file_name=file_name, url=url,
                                         raw_html=raw_html, clean_text=_clean_html(raw_html)))

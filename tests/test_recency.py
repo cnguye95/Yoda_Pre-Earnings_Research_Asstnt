@@ -124,6 +124,51 @@ def test_a_40f_is_read_with_its_exhibit_99_documents(monkeypatch):
     assert "EX-99.2" in text and "consent" not in text
 
 
+def _fake_report_download(monkeypatch, index: list[tuple[str, str, str]]) -> list[str]:
+    # Every filing's index is *index*; each document downloads as "Text of <file>".
+    # Returns the list of file names downloaded, in order.
+    downloads: list[str] = []
+    monkeypatch.setattr(edgar, "_index_documents", lambda cik, accession: index)
+
+    def download(cik, accession, doc):
+        downloads.append(doc)
+        return f"<p>Text of {doc}</p>", f"https://sec.example/{doc}"
+    monkeypatch.setattr(edgar, "_download_filing_html", download)
+    return downloads
+
+
+def test_a_10k_is_read_with_the_annual_report_it_incorporates(monkeypatch):
+    # USB-style 10-K: the form is a wrapper and the annual report (MD&A,
+    # financial statements) is Exhibit 13. Other exhibits are not read.
+    downloads = _fake_report_download(monkeypatch, [
+        ("1", "10-K", "wrapper.htm"), ("2", "EX-21", "subsidiaries.htm"),
+        ("6", "EX-13", "annual_report.htm"), ("7", "EX-99.1", "other.htm"),
+    ])
+
+    raw_html, url = edgar._download_report(1, _meta("10-K", "2026-02-23"))
+    text = edgar._clean_html(raw_html)
+
+    assert downloads == ["wrapper.htm", "annual_report.htm"]
+    assert url == "https://sec.example/wrapper.htm"
+    assert "Text of wrapper.htm" in text and "Text of annual_report.htm" in text
+    assert "EX-13" in text.splitlines()
+
+
+def test_a_10k_without_exhibit_13_is_read_as_before(monkeypatch):
+    # One download, and the HTML exactly as the SEC sent it (no added heading).
+    downloads = _fake_report_download(monkeypatch, [("1", "10-K", "main.htm"), ("2", "EX-21", "subsidiaries.htm")])
+    assert edgar._download_report(1, _meta("10-K", "2026-02-23")) == (
+        "<p>Text of main.htm</p>", "https://sec.example/main.htm")
+    assert downloads == ["main.htm"]
+
+
+def test_a_10q_reads_only_its_main_document(monkeypatch):
+    # Exhibits are read only for the forms that need them; a 10-Q is not one.
+    downloads = _fake_report_download(monkeypatch, [("1", "10-Q", "main.htm"), ("2", "EX-13", "extra.htm")])
+    edgar._download_report(1, _meta("10-Q", "2026-08-06"))
+    assert downloads == ["main.htm"]
+
+
 def test_a_20f_operating_review_is_labelled_mdna():
     lines = ["Item 5. Operating and Financial Review and Prospects", "Revenue grew."]
     assert chunker._detect_section_boundaries(lines) == [(0, "MD&A")]

@@ -53,7 +53,8 @@ def _fake_sec(monkeypatch, filings: list[dict], fail_accessions: tuple[str, ...]
     # accession numbers in *fail_accessions* raise an HTTP error.
     monkeypatch.setattr(edgar, "_load_ticker_cik_map", lambda: {"TEST": 123})
     monkeypatch.setattr(edgar, "_get_filings_metadata", lambda cik: filings)
-    monkeypatch.setattr(edgar, "_get_main_document", lambda cik, acc: f"{acc}.htm")
+    # Every filing's index lists just its main document, named after the accession.
+    monkeypatch.setattr(edgar, "_index_documents", lambda cik, acc: [("1", "FORM", f"{acc}.htm")])
 
     def download(cik, accession, doc):
         if accession in fail_accessions:
@@ -212,7 +213,8 @@ def _fake_predecessor_sec(monkeypatch, records: dict[int, dict], name_hits=(), a
     log: list[str] = []
     monkeypatch.setattr(edgar, "_load_ticker_cik_map", lambda: {"TEST": NEW_CIK})
     monkeypatch.setattr(edgar, "_submissions", lambda cik: records[cik])
-    monkeypatch.setattr(edgar, "_get_main_document", lambda cik, acc: f"{acc}.htm")
+    # Every filing's index lists just its main document, named after the accession.
+    monkeypatch.setattr(edgar, "_index_documents", lambda cik, acc: [("1", "FORM", f"{acc}.htm")])
 
     def sec_get(url):
         # Only filing header pages are read with _sec_get here.
@@ -445,14 +447,14 @@ def test_index_documents_reads_type_and_file_name(monkeypatch):
 def test_8k_keeps_the_form_and_every_exhibit_99():
     # The main form and all Exhibit 99.x are read; contracts, graphics and
     # XBRL files are not.
-    assert edgar._select_main_and_exhibit_99(_EARNINGS_8K_INDEX) == [
+    assert edgar._select_main_and_exhibits(_EARNINGS_8K_INDEX, "EX-99") == [
         ("8-K", "form8k.htm"), ("EX-99.1", "ex991.htm"), ("EX-99.2", "ex992.htm"),
     ]
 
 
 def test_8k_without_a_main_document_is_an_error():
     with pytest.raises(RuntimeError, match="main document"):
-        edgar._select_main_and_exhibit_99([("2", "EX-99.1", "ex991.htm")])
+        edgar._select_main_and_exhibits([("2", "EX-99.1", "ex991.htm")], "EX-99")
 
 
 def _recent_set() -> FilingSet:

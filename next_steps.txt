@@ -285,7 +285,7 @@ WHEN labels (relative to the architecture comparison, item 4; set
         OpenAI Batch API.
 
    Order of the BEFORE SMOKE work (one item at a time):
-    1. Item 9 R3: read USB's annual report (EX-13).
+    1. Item 9 R3: read USB's annual report (EX-13). DONE 2026-10-30.
     2. Item 9 R1: section test set.
     3. Item 9 R2: fix section detection.
     4. Item 4c: complexity labels.
@@ -432,6 +432,14 @@ WHEN labels (relative to the architecture comparison, item 4; set
        "Other". A missing label is shown as missing; a wrong one misleads.
    R3. Read the annual report a 10-K incorporates by reference (EX-13),
        ONLY for 10-Ks that have one. (Context for the implementer.)
+       DONE (2026-10-30): edgar._EXHIBITS_READ_WITH says which exhibits each
+       form is read with (10-K -> EX-13; 40-F, 8-K, 6-K -> EX-99); every
+       filing now goes through _index_documents and _get_main_document is
+       gone. Verified live: USB's 10-K is now 680K chars (138K wrapper +
+       542K EX-13); USB total 993K, under the 2M limit. Of the 20 eval
+       tickers only USB has an EX-13 (XOM's predecessor 10-K has none).
+       All old filing caches were in the pre-FilingSet format, so no cache
+       cleanup was needed.
        - Evidence: USB 10-K acc 0000036104-26-000011 (filed 2026-02-23).
          Index lists Seq 1 "10-K" usb-20251231.htm (wrapper, ~138K clean
          chars: Items cite "pages X of the 2025 Annual Report ...
