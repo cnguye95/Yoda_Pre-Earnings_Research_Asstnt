@@ -170,6 +170,31 @@ def test_new_filing_replaces_the_cached_one_and_unchanged_ones_are_reused(cache_
     assert sorted(path.name for path in (cache_dir / "TEST").glob("*.html")) == ["k1.html", "q2.html"]
 
 
+def test_annual_report_under_a_predecessor_cik_is_found(cache_dir, monkeypatch):
+    # XOM's case: the ticker now belongs to a new company (CIK 2), whose own
+    # list has only the 10-Q; the 10-K is under the old company (CIK 1).
+    # Both lists are searched, the joint 10-Q is kept once, and each filing
+    # is downloaded from the company it was found under.
+    joint_10q = {"form": "10-Q", "filing_date": _days_ago(30), "accession_number": "q1"}
+    lists = {2: [joint_10q], 1: [joint_10q, {"form": "10-K", "filing_date": _days_ago(200), "accession_number": "k1"}]}
+    _fake_sec(monkeypatch, filings=[])
+    monkeypatch.setattr(edgar, "_load_ticker_cik_map", lambda: {"TEST": 2})
+    monkeypatch.setattr(edgar, "_get_filings_metadata", lambda cik: lists[cik])
+    monkeypatch.setattr(edgar, "_PREDECESSOR_CIKS", {"TEST": (1,)})
+    downloaded_from = []
+
+    def record(cik, accession, doc):
+        downloaded_from.append((accession, cik))
+        return f"<p>Text of {accession}</p>", f"https://sec.example/{cik}/{doc}"
+    monkeypatch.setattr(edgar, "_download_filing_html", record)
+
+    filing_set = edgar.fetch_filings("TEST")
+
+    assert [filing.accession_number for filing in filing_set.filings] == ["q1", "k1"]
+    assert downloaded_from == [("q1", 2), ("k1", 1)]
+    assert filing_set.cik == 2 and filing_set.filings[1].url == "https://sec.example/1/k1.htm"
+
+
 def test_failed_download_is_recorded_not_swallowed_or_cached(cache_dir, monkeypatch):
     # The 10-K download fails: the 10-Q is still returned, the reason the
     # 10-K is missing is in errors for the report's data_gaps, and nothing

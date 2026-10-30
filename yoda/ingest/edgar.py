@@ -89,6 +89,21 @@ FILING_WINDOWS_TEXT = (f"a 10-Q in the last {QUARTERLY_WINDOW_WEEKS} weeks or a 
 # those are read with it.
 _FORMS_WITH_EXHIBIT_TEXT = ("40-F",)
 
+# Companies whose recent filings are split across two SEC company numbers
+# (CIKs). After a reorganisation, a new company can take over the ticker
+# while its last annual report stays filed under the old company's number.
+# The SEC's ticker list points only to the new number, and its records do
+# not link the two, so the link is written down here by hand. For a ticker
+# listed here, the old company's filings are searched too, and the newest
+# 10-Q / annual report of either is read.
+#   XOM: ExxonMobil Holdings Corp (CIK 2115436) took over the ticker in a
+#   July 2026 holding-company reorganisation; the 10-K filed 2026-02-18 is
+#   only under Exxon Mobil Corp (CIK 34088). Remove this entry once XOM
+#   files a 10-K under the new number (expected around February 2027).
+_PREDECESSOR_CIKS: dict[str, tuple[int, ...]] = {
+    "XOM": (34088,),
+}
+
 # The parts of the cached record that are stored in separate .html files
 # rather than in latest.json (they are large, and the text is rebuilt from
 # the HTML on every load).
@@ -531,8 +546,16 @@ def fetch_filings(ticker: str) -> FilingSet | None:
         )
     cik = cik_map[ticker]
 
-    # Step 2: get the company's filing history and pick the filings to read.
-    chosen = _pick_filings(_get_filings_metadata(cik))
+    # Step 2: get the company's filing history — and any predecessor
+    # company's (see _PREDECESSOR_CIKS) — and pick the filings to read. Each
+    # filing remembers which CIK it was found under, since its documents are
+    # downloaded from that company's folder. A filing listed under both
+    # (filed jointly) is kept once.
+    history: dict[str, dict] = {}
+    for owner_cik in (cik, *_PREDECESSOR_CIKS.get(ticker, ())):
+        for meta in _get_filings_metadata(owner_cik):
+            history.setdefault(meta["accession_number"], {**meta, "cik": owner_cik})
+    chosen = _pick_filings(list(history.values()))
     if not chosen:
         return None
 
@@ -549,7 +572,7 @@ def fetch_filings(ticker: str) -> FilingSet | None:
             downloaded.append(cached_by_accession[meta["accession_number"]])
             continue
         try:
-            raw_html, url = _download_report(cik, meta)
+            raw_html, url = _download_report(meta["cik"], meta)
         except (requests.RequestException, RuntimeError) as exc:
             errors.append(f"could not fetch the {meta['form']} filed {meta['filing_date']}: "
                           f"{type(exc).__name__}: {exc}")
