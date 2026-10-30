@@ -58,6 +58,10 @@ IDEAS for Improvements/Changes
    - Market data from consensus.py (consensus EPS/revenue, whisper,
      implied move). Ideally fetched once per ticker and shared with Yoda,
      so both modes see identical numbers.
+   - Analyst rating actions from the last 30 days, LISTED ONE BY ONE
+     (firm, previous rating -> new rating, date; from FMP grades, the same
+     list Yoda's market_expectations.analyst_actions shows). Counts alone
+     are not enough: the baseline must see which firm changed what.
    - ONE fixed, generic news search (e.g. "<TICKER> earnings", same Tavily
      settings as Yoda) — not the queries Yoda's personalities choose.
    - Question it answers: "Does Yoda's multi-agent panel write a better
@@ -216,11 +220,52 @@ IDEAS for Improvements/Changes
             a or b is still needed as a fallback.
        In all three: when no reliable heading is found, label the text
        "Other". A missing label is shown as missing; a wrong one misleads.
-   R3. Read the annual report a 10-K incorporates by reference
-       (Exhibit 13, as for USB), the way a 40-F's Exhibit 99 documents are
-       read now.
+   R3. Read the annual report a 10-K incorporates by reference (EX-13),
+       ONLY for 10-Ks that have one. (Context for the implementer.)
+       - Evidence: USB 10-K acc 0000036104-26-000011 (filed 2026-02-23).
+         Index lists Seq 1 "10-K" usb-20251231.htm (wrapper, ~138K clean
+         chars: Items cite "pages X of the 2025 Annual Report ...
+         incorporated herein by reference") and Seq 6 "EX-13"
+         usb-20251231_d2.htm (the annual report: MD&A, Risk Factors,
+         financial statements). Yoda reads only Seq 1 today.
+       - Scope: mostly banks (USB; likely WFC and others). Most 10-Ks have
+         no EX-13, so the rule is conditional, not "read both always".
+       - Process: in yoda/ingest/edgar.py _download_report(), a 10-K
+         currently goes through _get_main_document() (which already fetches
+         the index page). Instead read the index once with
+         _index_documents(); if any row has doc_type "EX-13" (also accept
+         "EX-13.1" etc.: startswith("EX-13")) and a readable .htm/.html/.txt
+         name, download Seq 1 + the EX-13 doc(s) and join them exactly as
+         the 40-F path does (f"<h1>{doc_type}</h1>\n{html}", URL = main
+         doc's). No EX-13 -> Seq 1 only, same as now. No extra HTTP request
+         for 10-Ks without EX-13 (the index fetch already happens).
+         Generalise _select_main_and_exhibit_99 to take the exhibit prefix
+         per form (40-F -> "EX-99", 10-K -> "EX-13"); 10-Q unchanged.
+       - Tests (offline, tests/test_recency.py style): a fake index with
+         EX-13 -> both docs read, joined, URL = main; without EX-13 -> one
+         download only.
+       - Size: USB 10-K + EX-13 + 10-Q estimated ~1.3M chars, under the 2M
+         limit; the size rule (baseline.full_filing_text) still applies.
+       - Known limits: EX-13 is annual-report format without "Item N"
+         headings, so section labels will be poor until R2; wrapper Items
+         cite page numbers that won't match the clean text.
+       - Old caches: a cached USB 10-K (wrapper only) has the same
+         accession, so fetch_filings would reuse it. Delete
+         data/filings/<ticker>/ for affected tickers once after shipping,
+         or include a version marker in latest.json.
        + Restores MD&A, Risk Factors and financial statements for these
-         filers. - Larger filings; some cite page numbers into it.
+         filers. - Larger filings; page references don't resolve.
+
+   XOM (found in the same check; FIXED separately in edgar.py): ticker XOM
+   now maps to CIK 2115436 (ExxonMobil Holdings Corp, holding-company
+   reorganisation, July 2026). Its last 10-K (2026-02-18) is filed only
+   under the predecessor CIK 34088 (Exxon Mobil Corp, no ticker now), so
+   Yoda found only the 10-Q. SEC submissions JSON has no predecessor
+   field, and accession prefixes are often filing agents, so automatic
+   detection is unreliable; edgar.py keeps a small hand-maintained
+   ticker -> predecessor CIK table whose filing lists are merged before
+   choosing. Remove the XOM entry once XOM files a 10-K under the new CIK
+   (expected ~Feb 2027).
    R4. Only then, if R5 shows weak recall: improve chunks, not by semantic
        chunking. Today's chunker already splits at paragraph breaks
        (1,500 characters, 200 overlap), which is what recursive splitting
