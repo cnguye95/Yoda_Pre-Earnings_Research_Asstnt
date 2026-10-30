@@ -12,9 +12,11 @@ Two public functions:
       documents.
 
 Raw HTML and metadata are cached to data/filings/{ticker}/ (8-Ks under
-8k/{accession}/) so that repeated calls skip the network. The 10-Q/10-K
-cache is used until a forced refresh; the 8-K list is re-read every call
-because new 8-Ks keep arriving, but each 8-K is downloaded only once.
+8k/{accession}/) so that repeated calls skip most downloads. The company's
+filing list is re-read on every call, so a newly filed 10-Q, 10-K or 8-K is
+never missed; each filing is downloaded only once, since a filing never
+changes after it is filed. A cached 10-Q/10-K that is no longer read (a
+newer one replaced it) is deleted.
 
 SEC rules:
   - Every request must include a User-Agent header identifying the caller.
@@ -426,10 +428,13 @@ def _read_disk_cache(ticker: str) -> FilingSet | None:
 
 
 def _write_disk_cache(filing_set: FilingSet) -> None:
-    """Save *filing_set* to data/filings/{ticker}/ so later calls skip the network.
+    """Save *filing_set* to data/filings/{ticker}/ so later calls skip the downloads.
 
     Each filing's HTML is written to its own .html file; everything else
-    goes into latest.json.
+    goes into latest.json. HTML files of filings that are no longer in the
+    set (an older 10-Q a newer one replaced) are deleted, so the folder
+    holds only the filings Yoda reads. 8-Ks live in the 8k/ subfolder and
+    are not touched.
     """
     cache_dir = _CACHE_DIR / filing_set.ticker
     cache_dir.mkdir(parents=True, exist_ok=True)
@@ -442,6 +447,12 @@ def _write_disk_cache(filing_set: FilingSet) -> None:
     (cache_dir / "latest.json").write_text(
         filing_set.model_dump_json(exclude=_CACHE_EXCLUDE), encoding="utf-8",
     )
+
+    # Delete the HTML of any filing that is no longer read.
+    kept = {filing.accession_number for filing in filing_set.filings}
+    for html_path in cache_dir.glob("*.html"):
+        if html_path.stem not in kept:
+            html_path.unlink()
 
 
 def _eight_k_cache_dir(ticker: str, accession_number: str) -> pathlib.Path:
@@ -490,7 +501,7 @@ def _write_8k_cache(eight_k: EightKFiling) -> None:
 # Public API
 # ---------------------------------------------------------------------------
 
-def fetch_filings(ticker: str, force_refresh: bool = False) -> FilingSet | None:
+def fetch_filings(ticker: str) -> FilingSet | None:
     """Fetch every recent 10-Q/10-K Yoda reads for *ticker*, newest first.
 
     Which filings count is decided by _pick_filings(): the latest annual
@@ -500,22 +511,16 @@ def fetch_filings(ticker: str, force_refresh: bool = False) -> FilingSet | None:
     be downloaded is left out and the reason added to `errors`; if none of
     them can be downloaded, RuntimeError names every reason.
 
-    Both the raw HTML and filing metadata are cached to disk so a second call
-    for the same ticker skips all HTTP calls and returns from disk. Pass
-    *force_refresh*=True to bypass the cache when a new filing may have been
-    published; the new filings then overwrite the cached ones. A set with a
-    failed download is not cached, so the next call tries again.
+    The company's filing list is read from the SEC on every call (one small
+    request), so a newly filed 10-Q or 10-K is picked up at once. A chosen
+    filing already in the disk cache (same accession number) is reused
+    instead of downloaded again: a filing never changes after it is filed.
+    A set with a failed download is not cached, so the next call tries again.
 
     Raises RuntimeError for an unknown ticker or unexpected SEC data, and
     requests.RequestException when the SEC cannot be reached.
     """
     ticker = ticker.upper().strip()
-
-    # Check disk cache first — if we have everything on disk, skip all HTTP.
-    if not force_refresh:
-        cached = _read_disk_cache(ticker)
-        if cached is not None:
-            return cached
 
     # Step 1: resolve ticker to CIK using the SEC's public mapping file.
     cik_map = _load_ticker_cik_map()
@@ -531,12 +536,18 @@ def fetch_filings(ticker: str, force_refresh: bool = False) -> FilingSet | None:
     if not chosen:
         return None
 
-    # Step 3: download each chosen filing's main document and clean it. One
-    # that can't be downloaded is left out with the reason recorded, so the
-    # gap stays visible instead of failing the whole request.
+    # Step 3: reuse each chosen filing that is already cached; download and
+    # clean the others. One that can't be downloaded is left out with the
+    # reason recorded, so the gap stays visible instead of failing the
+    # whole request.
+    cached = _read_disk_cache(ticker)
+    cached_by_accession = {filing.accession_number: filing for filing in cached.filings} if cached else {}
     downloaded: list[Filing] = []
     errors: list[str] = []
     for meta in chosen:
+        if meta["accession_number"] in cached_by_accession:
+            downloaded.append(cached_by_accession[meta["accession_number"]])
+            continue
         try:
             raw_html, url = _download_report(cik, meta)
         except (requests.RequestException, RuntimeError) as exc:
@@ -557,8 +568,8 @@ def fetch_filings(ticker: str, force_refresh: bool = False) -> FilingSet | None:
         raise RuntimeError(f"None of {ticker}'s recent filings could be downloaded: {'; '.join(errors)}")
     filing_set = FilingSet(ticker=ticker, cik=cik, filings=downloaded, errors=errors)
 
-    # Step 4: save to disk so the next call is instant — unless a download
-    # failed, so that the next call tries the missing filing again.
+    # Step 4: save to disk so the next call skips these downloads — unless
+    # a download failed, so that the next call tries the missing filing again.
     if not errors:
         _write_disk_cache(filing_set)
     return filing_set

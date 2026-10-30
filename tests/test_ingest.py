@@ -137,6 +137,39 @@ def test_fetch_returns_both_filings_and_caches(cache_dir, monkeypatch):
     assert edgar._read_disk_cache("TEST").model_dump() == filing_set.model_dump()
 
 
+def test_new_filing_replaces_the_cached_one_and_unchanged_ones_are_reused(cache_dir, monkeypatch):
+    # The cache once hid a newly filed 10-Q forever (nothing forced a
+    # refresh). Now the SEC's list is checked on every call: the new 10-Q
+    # is downloaded, the 10-K already on disk is reused rather than
+    # downloaded again, and the replaced 10-Q's file is deleted.
+    downloads = []
+
+    def record(cik, accession, doc):
+        downloads.append(accession)
+        return f"<p>Text of {accession}</p>", f"https://sec.example/{doc}"
+
+    _fake_sec(monkeypatch, filings=[
+        {"form": "10-Q", "filing_date": _days_ago(100), "accession_number": "q1"},
+        {"form": "10-K", "filing_date": _days_ago(150), "accession_number": "k1"},
+    ])
+    monkeypatch.setattr(edgar, "_download_filing_html", record)
+    edgar.fetch_filings("TEST")
+    assert downloads == ["q1", "k1"]
+
+    # A month later the next 10-Q is filed.
+    monkeypatch.setattr(edgar, "_get_filings_metadata", lambda cik: [
+        {"form": "10-Q", "filing_date": _days_ago(5), "accession_number": "q2"},
+        {"form": "10-Q", "filing_date": _days_ago(100), "accession_number": "q1"},
+        {"form": "10-K", "filing_date": _days_ago(150), "accession_number": "k1"},
+    ])
+    filing_set = edgar.fetch_filings("TEST")
+
+    assert [filing.accession_number for filing in filing_set.filings] == ["q2", "k1"]
+    assert filing_set.filings[1].clean_text == "Text of k1"
+    assert downloads == ["q1", "k1", "q2"]
+    assert sorted(path.name for path in (cache_dir / "TEST").glob("*.html")) == ["k1.html", "q2.html"]
+
+
 def test_failed_download_is_recorded_not_swallowed_or_cached(cache_dir, monkeypatch):
     # The 10-K download fails: the 10-Q is still returned, the reason the
     # 10-K is missing is in errors for the report's data_gaps, and nothing

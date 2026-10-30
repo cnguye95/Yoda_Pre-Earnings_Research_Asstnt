@@ -333,7 +333,7 @@ streamlit run app.py
 
 Open [http://localhost:8501](http://localhost:8501), enter a ticker (e.g. `NFLX`) and click **Generate Report**. For batch runs, switch to the **Queue (batch)** tab, paste multiple tickers (one per line or comma-separated), and run them sequentially — PDFs save to `data/reports/` as they complete and bundle into a downloadable ZIP at the end.
 
-The first run for a ticker fetches and indexes the SEC filings — a 10-Q filed in the last 18 weeks and/or an annual report (10-K, or a foreign company's 20-F or 40-F) filed in the last 13 months. Subsequent runs for the same ticker are fast because the filings and ChromaDB index are cached to disk.
+The first run for a ticker fetches and indexes the SEC filings — a 10-Q filed in the last 18 weeks and/or an annual report (10-K, or a foreign company's 20-F or 40-F) filed in the last 13 months. Subsequent runs for the same ticker are fast because the filings and ChromaDB index are cached to disk. Every run still checks the SEC's filing list, so a newly filed 10-Q or 10-K replaces the cached one (its old file is deleted).
 
 ### Run the Evaluation Harness
 
