@@ -1,6 +1,17 @@
 
 IDEAS for Improvements/Changes
 
+WHEN labels (relative to the architecture comparison, item 4; set
+2026-10-30):
+  BEFORE SMOKE  must be done before the 3-arm smoke run: it changes what
+                an arm reads or how reports are rendered or judged, and it
+                ships whichever arm wins, so the full run's scores stay
+                valid for README (item 5) without a second full run.
+  BEFORE FULL   settled with the smoke run's data, before the full run.
+  CONDITIONAL   depends on a result named in the item.
+  AFTER         after the comparison: docs, UI, or work on the winner only.
+  Recommended order of the BEFORE SMOKE work: see item 4, "Order".
+
 
 1. Open items found while building steps 6-8 (added 2026-10-28)
    b. Judge output cap: the step-8 judge call used exactly 4,096
@@ -9,6 +20,9 @@ IDEAS for Improvements/Changes
       justifications or reasoning short. Still open (2026-10-30): judge.py
       sets reasoning_effort but no output limit; check on the first paid
       judge run.
+      WHEN: BEFORE FULL. Before the smoke run, make the judge record why it
+      stopped (finish reason) and its reasoning tokens; the smoke run's
+      judge calls then settle the question.
    c. Judge token estimate near the 272K line (NOT CHECKED YET): the
       judge's prompt size is estimated as characters / 4
       (eval/evidence.py CHARS_PER_TOKEN, from JPM's 10-Q measured with the
@@ -28,6 +42,8 @@ IDEAS for Improvements/Changes
       - Check on the first paid judge run: compare the estimate with the
         prompt_tokens OpenAI reports for 2-3 reports of different sizes;
         adjust CHARS_PER_TOKEN if it is off by more than ~5%.
+      WHEN: BEFORE FULL. Calibrate on the smoke run's real token counts;
+      the full run's judge cost estimate depends on it.
    d. Whisper lookup may rarely verify even inside the 3-day window:
       upcoming whispers were seen only in earningswhispers.com homepage
       previews, not on the company pages the lookup checks the number
@@ -37,39 +53,21 @@ IDEAS for Improvements/Changes
       only when the next report is a few days away
       (consensus.whisper_by_default); the person can switch it on or off
       per ticker in the app.
+      WHEN: AFTER. All arms share one market snapshot per ticker, so every
+      arm sees the same whisper result, and the lookup only runs for
+      reports 3 days away or less.
    e. UI bug (queue run jumping back to the Single ticker view) is
       fixed and tested offline, but never seen working in the browser:
       that needs a live queue run. The queue's live status table now also
       shows mid-run notices (e.g. "running — The 10-K ... was trimmed"),
       also never seen in the browser.
-   f. Personalities often don't cite evidence labels exactly, and code has
-      to correct the citation (_check_evidence in personality_panel.py:
-      when the quote isn't in the cited source but is found in another,
-      the citation is replaced and check_note says "citation corrected to
-      <label>"). The checked evidence is right; the cost is noise in the
-      report and a wrong source whenever a quote appears in two places.
-      - Still frequent after the filing changes (2026-10-29 smoke runs):
-        JPM 26 of 64 evidence quotes corrected (14 CALL, 10 CONTEXT, 1 8-K,
-        1 10-Q); TSM 36 of 76 (23 CALL, 11 CONTEXT, 1 20-F, 1 URL). In
-        2026-10-28's BA run all 22 call citations were corrected.
-      - The labels the personalities must copy now include more forms:
-        "10-Q filed D", "10-K filed D · <section> — <heading>", "20-F/40-F
-        filed D ...", the new "Business" section, "8-K Items ... (filed D)"
-        and "6-K, Exhibit 99.1 (filed D)", "CALL Q3 FY2026 (date) ·
-        company — <speaker>", "CONTEXT", and "PEER <ticker> ...".
-      - The saved report keeps only the corrected citation, so the
-        personality's original wording is lost. First step: log the
-        original citation beside the corrected one (console or check_note)
-        on one run, to see what goes wrong (missing heading, paraphrased
-        speaker title, extra words after CONTEXT ...).
-      - Then make exact citation easier, e.g. give each chunk a short id
-        ("[E12]") to cite instead of the long label, and map ids back to
-        labels in code. Related: wrong section labels (item 9) make even an
-        exact citation name the wrong Item.
+      WHEN: AFTER. App only; doesn't affect reports.
 
 
 2. Eval baseline: replace the filing-only baseline (AGREED: option B now,
-   option C later; build B after the other items, before the full re-run)
+   option C later)
+   WHEN: option B BEFORE SMOKE (it is the comparison's third arm, with
+   items 4a and 4b); option C AFTER.
    The baseline is the simplest credible alternative to Yoda; what it is
    given decides what a Yoda win proves.
 
@@ -182,7 +180,129 @@ IDEAS for Improvements/Changes
      evidence cache so the judge sees what it saw.
 
 
+4. Architecture comparison: Recommendation 1 vs Recommendation 2 vs
+   baseline option B (added 2026-10-30; NOT RUN YET: the full 20-ticker
+   run with the judge needs an explicit yes and enough judge credit)
+   The personality panel is being replaced. Two candidate architectures
+   will be built and run with the baseline on the full 20-ticker set; the
+   better one becomes Yoda.
+   - Rec 1, analyst-preview workflow: code builds the facts; fixed stages
+     (a filing extractor, a post-filing extractor for the 8-K and the
+     call, two news/peer researchers, expectations computed in code) feed
+     one writer; every claim is checked against the passages it cites,
+     then one repair pass.
+   - Rec 2, lead analyst with question workers: a lead picks 4-6
+     company-specific questions and briefs one worker per question; the
+     lead reviews the findings, fills gaps once and writes; the same claim
+     check follows.
+   - Shared by both: an evidence store (every source passage gets an ID
+     that claims cite; code renders the readable citation), the XBRL fact
+     sheet (a), the new report schema (b) and the claim check.
+   - Models (decided 2026-10-30): writer Sonnet 5.5 (Rec 2's lead too);
+     Rec 1 researchers Haiku 5.5; Rec 2 workers Sonnet 5.5; claim check
+     Haiku 5.5, with a Sonnet 5.5 second opinion on the claims Haiku
+     fails (a claim is removed only when both agree).
+   MUST be done before running Rec 1 and Rec 2:
+   a. Give baseline option B the same XBRL fact sheet as Yoda.
+      - What it is: companies tag every figure in their 10-Q/10-K (and
+        most 20-F/40-F) financial statements with a standard name, the
+        period it covers and its unit (XBRL). The SEC publishes all of a
+        company's tagged figures as free JSON (data.sec.gov company
+        facts, with the filing number of each figure). Code turns that
+        into a table of headline figures for the filings in scope
+        (revenue, net income, EPS, operating income, cash, debt,
+        operating cash flow, capex), plus figures code derives from them
+        and the market data (year-on-year change, margins, free cash flow
+        labelled derived, consensus-implied growth). Each row has an ID a
+        report can cite.
+      - Why the baseline gets it: item 2 says a Yoda win must come from
+        method, not extra data. The fact sheet is the filings in
+        structured form, so every mode gets the same one, from the same
+        function.
+      - Limits: segment figures need the filing's own XBRL, not the
+        company-facts JSON; 8-K press releases aren't tagged;
+        company-specific tags vary. A figure not found is shown as
+        missing.
+   b. Give baseline option B the new report schema.
+      - The schema change (setup summary, key debates, scenarios with
+        triggers, metrics to model vs consensus, questions for
+        management, guidance as a list, a citation per claim by evidence
+        ID; hypotheses_explored removed) applies to every mode, so the
+        judge compares the same sections.
+      - The baseline sees its sources with the same passage IDs and cites
+        them; code renders its citations the same way. It does not get
+        Yoda's method: no extraction stages, researchers or claim check.
+      - Its code checks from item 2 stay (news URLs from its own search,
+        the 14-day news rule, since_filing tags).
+   c. Label each ticker complex or not complex BEFORE the smoke run
+      (decided 2026-10-30).
+      - Why: the comparison tests whether Rec 2 does better on complex
+        companies while Rec 1 is enough for simpler ones. Fixing the
+        labels before any report is generated keeps the split from being
+        chosen after seeing the scores.
+      - Write the rule down first, then apply it to all 20 eval tickers
+        and the 5 smoke tickers, with the reason next to each label. No
+        label changes once reports exist.
+      - Possible criteria (to decide): several reportable segments with
+        different economics; bank or insurer accounting (JPM, USB); large
+        one-off items, restructuring, litigation or M&A in recent
+        quarters; a 10-K that relies on another document (USB's EX-13) or
+        a predecessor company's annual report (XOM); very long filings.
+      - Analysis: report the Rec 1 vs Rec 2 score gap within each group
+        next to the overall gap. With about 6-10 tickers per group, read
+        group differences as a direction, not proof (reasoning_quality
+        moved from 2 to 4 between two BA runs on 2026-10-28).
+   d. Run harness (BEFORE SMOKE).
+      - Reports first, judge second: generate every arm's reports, then
+        estimate the judge cost from the saved evidence (the runner
+        already estimates each prompt's tokens) and judge only after
+        checking the estimate against the OpenAI credit left. Stop
+        cleanly before a call that would go over a set budget.
+      - Judge a ticker's three reports back to back so OpenAI's prompt
+        cache can serve the shared filing text ($0.10 instead of $2 per
+        million input tokens).
+      - One fixed filing reserve for every arm, so all three read (and the
+        judge sees) identical filing text.
+      - One market snapshot per ticker, passed to all three arms (one paid
+        whisper lookup at most).
+      - The judge records its finish reason and reasoning tokens (1b).
+   e. Smoke run: 3 arms x 5 tickers, with the judge (NOT RUN YET; needs an
+      explicit yes).
+      - REMINDER: before starting, check there is enough API credit on
+        both accounts. Estimates (2026-10-30, list prices, before any
+        cost work): Anthropic ~$24-35; OpenAI judge ~$6-15 at list price,
+        ~$3-8 with prompt-cache hits (the top of each range assumes JPM is
+        one of the 5 tickers).
+      - Measures the real cost per arm and the judge's cache-hit rate;
+        those numbers replace the estimates for the full run.
+   f. Full run: 3 arms x 20 tickers, with the judge (NOT RUN YET; needs an
+      explicit yes).
+      - REMINDER: before starting, check there is enough API credit on
+        both accounts, using the smoke run's measured costs. Estimates
+        (2026-10-30, list prices, before any cost work): Anthropic
+        ~$100-125 (baseline ~$15-17, Rec 1 ~$32-36, Rec 2 ~$54-72);
+        OpenAI judge ~$31-41, ~$16-24 with cache hits, ~$16-20 with the
+        OpenAI Batch API.
+
+   Order of the BEFORE SMOKE work (one item at a time):
+    1. Item 9 R3: read USB's annual report (EX-13).
+    2. Item 9 R1: section test set.
+    3. Item 9 R2: fix section detection.
+    4. Item 4c: complexity labels.
+    5. Item 12, before part: choose the cost-saving methods the builds
+       will use.
+    6. Shared foundation: evidence store with passage IDs, XBRL fact
+       sheet (4a), new report schema (4b).
+    7. Item 2: baseline option B on the new foundation.
+    8. Rec 1.
+    9. Rec 2 design; item 9 R5 if its workers search passages, then R4/R6
+       if R5 shows weak recall; then build Rec 2.
+   10. Item 4d: run harness, including the judge logging for 1b.
+   11. Credit check (4e), then the smoke run.
+
+
 5. Restructure README
+   WHEN: AFTER (needs the full run's result).
    - Put evaluation result at top.
    - Acceptance: a reader who stops after the first screen knows (a) what
      problem Yoda solves, (b) that it was evaluated against a baseline, and
@@ -198,6 +318,7 @@ IDEAS for Improvements/Changes
 
 
 6. Add diagram of system architecture
+   WHEN: AFTER (draw the architecture that wins).
    - README section 2 has an ASCII "Architecture" diagram, but it is out of
      date: it shows "10-Q + 10-K" only and names "Phase 10". Missing:
      annual reports as 10-K/20-F/40-F with filing windows, the predecessor
@@ -210,6 +331,8 @@ IDEAS for Improvements/Changes
 
 
 7. Investigate Chroma usage reporting
+   WHEN: AFTER. Doesn't affect report quality; may become unnecessary if
+   the winning architecture doesn't use ChromaDB.
    - do full inspection of chromaDB pipeline
    - Known facts to start from (2026-10-30): one persistent collection
      ("filings_openai", yoda/retrieval/vector_store.py), chunks keyed by
@@ -224,15 +347,19 @@ IDEAS for Improvements/Changes
 
 
 8. Add Repo Overview to README
+    WHEN: AFTER (the code changes a lot before then).
     - Contains quick headline descriptions of each code file
     - more accessible version of file docstrings
 
 
 9. Improve Retrieval Quality
-   - Better chunking — recursive/semantic chunking instead of fixed splits?
-   - Fine-tune the embedding model on SEC filings + stock/financial news?
-
-   FINDINGS (2026-10-30, offline check of the 26 cached tickers' filings)
+   WHEN: R1, R2, R3 BEFORE SMOKE (shared inputs and citation labels for
+   every arm). R5 CONDITIONAL: BEFORE SMOKE if Rec 2's workers search
+   passages (decided when Rec 2 is designed); otherwise it covers only
+   peer lookups. R4/R6 CONDITIONAL: BEFORE SMOKE only if R5 shows weak
+   recall (they change what Rec 2 reads, so doing them after the
+   comparison would be unfair to Rec 2); otherwise not needed.
+     FINDINGS (2026-10-30, offline check of the 26 cached tickers' filings)
    - The bigger problem is section LABELS, not chunk splitting. The
      chunker's section detector mislabels most filings, not just JPM:
      * In most 10-Ks "Quantitative Disclosures" (Item 7A, usually about a
@@ -395,18 +522,22 @@ IDEAS for Improvements/Changes
    before this feature (no annual report read).
 
 
-10. Fine-tune the model on financial and earnings-specific language
-   - Is this realistic?
-    - needs a large dataset
-  - would this actually improve Yoda?
-    - fine-tuning could improve interpretation of articles and SEC filing
-    - outputting reports in domain-specific language could hurt readibility of reports
-
-
-
 12. Investigate ways to cut report costs while keeping quality
-    (LAST: only after every other item is addressed and a full re-run has
-    measured cost and quality; any paid test run needs an explicit yes)
+    WHEN: in two parts (changed 2026-10-30; any paid test run still needs
+    an explicit yes).
+    - BEFORE SMOKE: explore cost-saving methods that keep quality and
+      build them into the shared foundation, baseline B, Rec 1 and Rec 2,
+      to cut the smoke and full runs' cost (estimates in item 4e/4f).
+      Candidates: prompt caching of the shared source text (one cached
+      block read by several calls; same model and effort for every call
+      that shares it), the Anthropic and OpenAI Batch APIs (half price;
+      fits the non-tool-loop calls and the judge), effort per stage,
+      Haiku where a stage allows it, judge prompt-cache hits (item 4d),
+      and which tickers the smoke run uses.
+    - AFTER: on the winning architecture, measured against the full
+      run's per-stage costs and scores.
+    The notes below were written for the personality panel; keep what
+    still applies once the panel is replaced.
     - Where cost stands: REPORT_BUDGET_USD = $0.65 in personality_panel.py
       only prints a warning; MAX_TOOL_CALLS = 6 per personality. Measured
       reports cost more: BA $0.80-0.98 (2026-10-28), JPM panel $1.46 and
