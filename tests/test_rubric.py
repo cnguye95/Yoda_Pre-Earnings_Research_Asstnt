@@ -5,7 +5,6 @@ Run with: python -m pytest -q
 Nothing here calls the judge: its answers are built by hand.
 """
 
-import json
 import pathlib
 from types import SimpleNamespace
 
@@ -13,16 +12,11 @@ import pandas as pd
 import pytest
 
 
+from samples import RECENT, claim, sample_report, sample_store
 from yoda.eval import evidence, judge, rubric, runner
 from yoda.eval.rubric import DIMENSIONS, NO_QUOTE, DimensionScore, JudgeQuote, JudgeScores
 from yoda.evidence_text import CONFLICT_RULES
-from yoda.modes import baseline, tools
-from yoda.modes import personality_panel as panel
-from yoda.schema import (
-    ArticleText, CallTranscript, EarningsReport, EvidenceBundle, EvidenceDocument, Filing, FilingSet, ForwardGuidance,
-    Hypothesis, NewsItem,
-    NewsSearchResult, SinceFilingItem, TranscriptTurn,
-)
+from yoda.schema import EvidenceStore, Filing, FilingSet, Passage
 
 
 # ---------------------------------------------------------------------------
@@ -60,13 +54,21 @@ def test_rubric_text_has_every_dimension_and_its_anchors():
         "A figure whose source is not in the evidence is unverifiable: list it, and do not count it as an error.",
         "the guidance/consensus/whisper gap is treated as a gap, not a conflict",
         'Plain wording ("the Street expects", "per the 8-K", "according to Reuters") scores the same',
-        "counts as a missing citation, which is better than a made-up location.",
+        "A claim with no valid citation counts as missing.",
         "Comparing guidance against consensus is credited here.",
         "Length is not quality: do not reward a longer report for length alone.",
     ):
         assert anchor in flat
     # reasoning_quality carries the shared conflict rules, word for word.
     assert CONFLICT_RULES in rubric.RUBRIC_TEXT
+
+
+def test_rubric_names_the_report_sections_and_evidence_ids():
+    # The two dimensions reworded for the 2026-10-30 report format.
+    flat = " ".join(rubric.RUBRIC_TEXT.split())
+    assert "(metrics_to_model, guidance, key_risks)" in flat
+    assert "every claim cites evidence IDs (such as [K.042], [F.03], [M.01])" in flat
+    assert "UNVERIFIED" not in rubric.RUBRIC_TEXT
 
 
 # ---------------------------------------------------------------------------
@@ -130,14 +132,10 @@ def test_na_dimensions_are_not_quote_checked():
 # The judge cache key — a changed rubric is never served old scores
 # ---------------------------------------------------------------------------
 
-def _report() -> EarningsReport:
-    # The smallest valid report.
-    return EarningsReport(
-        ticker="TEST", company_name="Test Co",
-        report_generated_at="2026-01-01T00:00:00+00:00", key_metrics=[], revenue_segments=[],
-        forward_guidance=ForwardGuidance(text="None.", source_citation="10-Q Item 2"), key_risks=[],
-        recent_news=[], bull_case=[], bear_case=[], what_to_watch=[], data_gaps=[],
-    )
+def _report():
+    # The smallest valid report: nothing cited, nothing after the filing.
+    return sample_report(setup_summary=[], metrics_to_model=[], guidance=[], since_filing=[], key_debates=[],
+                         scenarios=[], key_risks=[], questions_for_management=[], data_gaps=[], sources={})
 
 
 def test_cache_key_changes_with_rubric_evidence_and_na(monkeypatch):
@@ -154,121 +152,90 @@ def test_cache_key_changes_with_rubric_evidence_and_na(monkeypatch):
 
 _Q = Filing(ticker="TEST", filing_type="10-Q", filing_date="2026-08-06", accession_number="q-1",
             url="https://www.sec.gov/q", clean_text="QUARTERLY TEXT")
-_K = Filing(ticker="TEST", filing_type="10-K", filing_date="2026-02-01", accession_number="k-1", clean_text="ANNUAL TEXT")
+_Q_ONLY = FilingSet(ticker="TEST", cik=1, filings=[_Q])
 
 
-def _set(*filings: Filing) -> FilingSet:
-    # The FilingSet fetch_filings would return for *filings* (newest first).
-    return FilingSet(ticker="TEST", cik=1, filings=list(filings))
+def _judged_store() -> EvidenceStore:
+    # The sample store plus what makes the cuts visible: a long uncited 8-K
+    # (a credit agreement, three passages), an uncited recent news result and
+    # an article. The 10-K passage was trimmed from the writer's view.
+    store = sample_store()
+    store.passages += [
+        Passage(id=f"E.00{n}", kind="8-K", document="8-K Items 1.01, 2.03 (filed 2026-08-28)",
+                text=f"CREDIT AGREEMENT part {n}", url="https://www.sec.gov/ex10.htm", as_of="2026-08-28")
+        for n in (2, 3, 4)]
+    store.passages += [
+        Passage(id="N.03", kind="news", document="example.com", heading="Other story", text="Other story\nuncited snippet",
+                url="https://example.com/other", as_of=RECENT),
+        Passage(id="A.001", kind="article", document="Article (reuters.com)", text="FULL ARTICLE",
+                url="https://www.reuters.com/test", as_of=RECENT),
+    ]
+    store.shown_ids = [i for i in store.shown_ids if i != "K.001"] + ["E.002", "E.003", "E.004"]
+    return store
 
 
-_Q_ONLY = _set(_Q)
-_RELEASE_URL, _UNCITED_8K_URL = "https://www.sec.gov/ex99.htm", "https://www.sec.gov/ex10.htm"
-_CITED_NEWS, _UNCITED_NEWS = "https://news.example/cited", "https://news.example/uncited"
+def _filing_only_store() -> EvidenceStore:
+    # What the baseline reads today: the filing alone.
+    store = EvidenceStore(ticker="TEST", passages=[p for p in sample_store().passages if p.id.startswith("Q.")])
+    store.shown_ids = [p.id for p in store.passages]
+    return store
 
 
-def _yoda_bundle() -> EvidenceBundle:
-    # A Yoda-style bundle: 10-Q, two 8-K documents (one long), market data,
-    # one article and two news results.
-    return EvidenceBundle(
-        ticker="TEST",
-        documents=[
-            EvidenceDocument(label="10-Q filed 2026-08-06", accession_number="q-1", filing_date="2026-08-06",
-                             url="https://www.sec.gov/q", text="QUARTERLY TEXT"),
-            EvidenceDocument(label="8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-27)", accession_number="8k-1",
-                             filing_date="2026-10-27", url=_RELEASE_URL, text="RELEASE " * 1000),
-            EvidenceDocument(label="8-K Items 1.01, 2.03 (filed 2026-08-28)", accession_number="8k-2",
-                             filing_date="2026-08-28", url=_UNCITED_8K_URL, text="CREDIT AGREEMENT " * 1000),
-        ],
-        market_context="- Consensus EPS: $0.03 — Finnhub earnings calendar",
-        news_results=[NewsSearchResult(title="Cited story", url=_CITED_NEWS, snippet="cited snippet"),
-                      NewsSearchResult(title="Other story", url=_UNCITED_NEWS, snippet="uncited snippet")],
-        read_urls=[_CITED_NEWS],
-        articles=[ArticleText(url=_CITED_NEWS, text="FULL ARTICLE", full_chars=12, truncated=False)],
-        peer_passages=[],
-    )
-
-
-def _cited_report() -> EarningsReport:
-    # A report citing the release 8-K and one news story.
-    report = _report()
-    report.since_filing = [SinceFilingItem(claim="Q3 revenue was $24,188 million.", evidence_type="reported",
-                                           period="Q3 FY2026", as_of_date="2026-10-27",
-                                           source="8-K Item 2.02, Exhibit 99.1 — Results", url=_RELEASE_URL)]
-    report.recent_news = [NewsItem(headline="h", date="2026-10-27", url=_CITED_NEWS, relevance_note="n")]
-    return report
-
-
-def test_baseline_bundle_holds_the_filings_it_read(monkeypatch):
-    filing = _set(_Q, _K)
-    bundle = evidence.filing_bundle("TEST", filing)
-    assert [doc.label for doc in bundle.documents] == ["10-Q filed 2026-08-06", "10-K filed 2026-02-01"]
-    assert bundle.documents[0].text == "QUARTERLY TEXT" and bundle.market_context == "" and not bundle.news_results
-
-    # A 10-K the baseline couldn't fit isn't in its evidence either.
-    monkeypatch.setattr(baseline, "MAX_FILING_CHARS", 20)
-    assert [doc.label for doc in evidence.filing_bundle("TEST", filing).documents] == ["10-Q filed 2026-08-06"]
-    assert evidence.filing_bundle("TEST", None).documents == []
-
-
-def test_baseline_and_panel_filing_documents_match():
-    # Same label and text as the panel's own filing document, so both modes'
-    # judge prompts start with identical (cacheable) text.
-    panel_doc = panel._evidence_bundle("TEST", [_Q], [], "", tools.ToolContext("TEST", None),
-                                       _report()).documents[0]
-    assert evidence.filing_bundle("TEST", _Q_ONLY).documents[0] == panel_doc
-
-
-def test_hypotheses_are_removed_before_judging():
-    report = _report()
-    report.hypotheses_explored = [Hypothesis(id="h1", proposing_personality="Quant", question="q", summary="s",
-                                             evidence_quotes=[], confidence=3)]
-    assert evidence.report_for_judge(report).hypotheses_explored == []
-    assert report.hypotheses_explored                      # the original is untouched
-
-    # An archived report whose hypotheses today's schema rejects still loads.
-    archived = json.loads(_report().model_dump_json())
-    archived["hypotheses_explored"] = [{"id": "h1", "proposing_personality": "Growth analyst", "confidence": 80}]
-    assert evidence.load_report_for_judge(json.dumps(archived)).hypotheses_explored == []
+def _cited_report():
+    # A report citing the 10-K passage the writer's view had trimmed, the
+    # release 8-K and a news result.
+    return _report().model_copy(update={
+        "setup_summary": [claim("Competition is intense.", "K.001")],
+        "since_filing": [claim("Q3 revenue rose 9%.", "E.001"), claim("Analysts expect $1.25.", "N.01", tag="estimate")],
+    })
 
 
 def test_na_follows_what_the_mode_had():
-    filing_only = evidence.filing_bundle("TEST", _Q_ONLY)
+    filing_only = _filing_only_store()
     assert set(evidence.na_dimensions(filing_only, _report())) == {"market_expectations", "evidence_labelling"}
     # Post-filing claims with no post-filing evidence are still scored (and score 1).
     assert set(evidence.na_dimensions(filing_only, _cited_report())) == {"market_expectations"}
-    # Market data counts as post-filing evidence (AGREED).
-    assert evidence.na_dimensions(_yoda_bundle(), _report()) == {}
+    # Market data counts as post-filing evidence (AGREED); so does a call alone.
+    assert evidence.na_dimensions(sample_store(), _report()) == {}
+    call_only = EvidenceStore(ticker="TEST", passages=[p for p in sample_store().passages if p.kind in ("filing", "call")])
+    assert set(evidence.na_dimensions(call_only, _report())) == {"market_expectations"}
 
 
-def test_evidence_starts_with_the_filing_and_cuts_uncited_8ks():
-    rendered = evidence.render_evidence(_yoda_bundle(), _cited_report(), extra_chars=0)
+def test_evidence_shows_what_the_writer_saw_plus_every_cited_passage():
+    rendered = evidence.render_evidence(_judged_store(), _cited_report(), extra_chars=0)
+    text = rendered.text
 
-    assert rendered.text.startswith("=== 10-Q filed 2026-08-06 — accession q-1, https://www.sec.gov/q ===\nQUARTERLY TEXT")
-    assert "RELEASE " * 1000 in rendered.text                               # cited: in full
-    assert ("CREDIT AGREEMENT " * 1000) not in rendered.text                 # uncited: shortened
-    assert f"first {evidence.UNCITED_8K_CHARS:,} of 17,000 characters shown" in rendered.text
-    assert rendered.left_out == ["8-K Items 1.01, 2.03 (filed 2026-08-28): all but the first 2,000 characters (not cited)"]
-    assert "LEFT OUT FOR LENGTH" in rendered.text
-    assert "uncited snippet" in rendered.text and not rendered.over_line   # under the line: all news kept
-    assert rendered.text.index("Consensus EPS") < rendered.text.index("FULL ARTICLE") < rendered.text.index("NEWS RESULTS")
+    # The same IDs, in the store's order, in the writer's format.
+    assert text.startswith("=== 10-Q filed 2026-08-06 — https://www.sec.gov/Archives/test/q.htm ===")
+    assert "[Q.001] Revenue was $11.5 billion" in text
+    # Cited but trimmed from the writer's view: still shown, so the citation can be checked.
+    assert "[K.001] We face intense competition" in text
+    # The mode's own news and articles are shown whether cited or not (under the line).
+    assert "[N.01]" in text and "uncited snippet" in text and "[A.001] FULL ARTICLE" in text
+    assert not rendered.over_line
+    # An 8-K document nothing cites shows only its first passage, and says so.
+    assert "CREDIT AGREEMENT part 2" in text and "part 3" not in text and "part 4" not in text
+    assert rendered.left_out == ["8-K Items 1.01, 2.03 (filed 2026-08-28): all but its first passage (not cited)"]
+    assert "LEFT OUT FOR LENGTH" in text
+    # The cited release 8-K is shown whole; an analyst on the call is labelled.
+    assert "[E.001] Third-quarter revenue rose 9%" in text and "[C.002] (analyst)" in text
 
 
-def test_nothing_given_is_said_plainly():
-    rendered = evidence.render_evidence(evidence.filing_bundle("TEST", _Q_ONLY), _report(), extra_chars=0)
-    assert "8-Ks filed since the filing: none given" in rendered.text
-    assert "MARKET DATA: none given" in rendered.text
-    assert rendered.left_out == []
+def test_nothing_left_out_says_nothing():
+    rendered = evidence.render_evidence(_filing_only_store(), _report(), extra_chars=0)
+    assert rendered.left_out == [] and "LEFT OUT" not in rendered.text
 
 
 def test_over_the_line_drops_uncited_news_then_flags(monkeypatch):
-    # With the line set low, the uncited snippet goes first (and is listed);
-    # the cited one stays. Still over: flagged, sent anyway.
+    # With the line set low, the uncited news results (N.02, N.03) go and
+    # are listed; the cited one stays, and the call is never cut. Still
+    # over: flagged, sent anyway.
     monkeypatch.setattr(evidence, "PROMPT_TOKEN_LINE", 100)
-    rendered = evidence.render_evidence(_yoda_bundle(), _cited_report(), extra_chars=0)
+    rendered = evidence.render_evidence(_judged_store(), _cited_report(), extra_chars=0)
 
-    assert "uncited snippet" not in rendered.text and "cited snippet" in rendered.text
-    assert "1 news result(s) the report doesn't cite" in rendered.left_out
+    assert "[N.02]" not in rendered.text and "[N.03]" not in rendered.text and "[N.01]" in rendered.text
+    assert "2 news result(s) the report doesn't cite" in rendered.left_out
+    assert "[C.001]" in rendered.text and "[C.002]" in rendered.text
     assert rendered.over_line and rendered.estimated_tokens > 100
 
 
@@ -299,37 +266,42 @@ def test_judge_reads_evidence_before_the_report_and_records_the_call(monkeypatch
 
 
 # ---------------------------------------------------------------------------
-# The runner — each mode judged on its own evidence, without hypotheses
+# The runner — each mode judged on its own evidence store
 # ---------------------------------------------------------------------------
 
-def test_runner_judges_each_mode_on_its_own_evidence(monkeypatch, tmp_path):
-    report = _report()
-    report.hypotheses_explored = [Hypothesis(id="h1", proposing_personality="Quant", question="q", summary="SECRET",
-                                             evidence_quotes=[], confidence=3)]
+def _run_mode(mode, ticker, filing):
+    # A fake mode run: the baseline had the filing alone, the other mode everything.
+    store = _filing_only_store() if mode == "baseline" else _judged_store()
+    return runner.ModeRun(_report(), 1.0, "logged", 0.1, "", store)
 
-    def run_mode(mode, ticker, filing):
-        bundle = _yoda_bundle() if mode == "yoda" else evidence.filing_bundle(ticker, filing)
-        return runner.ModeRun(report, 1.0, "logged", 0.1, "", bundle)
+
+def test_runner_judges_each_mode_on_its_own_evidence(monkeypatch, tmp_path):
     calls = []
 
     def fake_judge(judged, evidence_text, na, repeat=False):
-        calls.append((judged, evidence_text, na))
+        calls.append((evidence_text, na))
         return judge.JudgeResult(scores=_answer(3), failed_quotes={}, judge_snapshot="gpt-6.1-sol-test",
                                  reasoning_effort="medium", prompt_tokens=1, completion_tokens=1)
     monkeypatch.setattr(runner, "fetch_filings", lambda ticker: _Q_ONLY)
-    monkeypatch.setattr(runner, "_run_mode", run_mode)
+    monkeypatch.setattr(runner, "_run_mode", _run_mode)
     monkeypatch.setattr(runner, "judge_report", fake_judge)
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
 
-    runner.run_eval(["TEST"], out_dir=tmp_path)
+    runner.run_eval(["TEST"], modes=runner.KNOWN_MODES, out_dir=tmp_path)
 
-    (base_report, base_text, base_na), (yoda_report, yoda_text, yoda_na) = calls
-    assert base_report.hypotheses_explored == [] and yoda_report.hypotheses_explored == []
-    assert "SECRET" not in base_text + yoda_text
-    assert set(base_na) == {"market_expectations", "evidence_labelling"} and yoda_na == {}
-    assert "MARKET DATA: none given" in base_text and "Consensus EPS: $0.03" in yoda_text
-    assert (tmp_path / "baseline_TEST_evidence.json").exists() and (tmp_path / "yoda_TEST_evidence.json").exists()
+    (base_text, base_na), (other_text, other_na) = calls
+    assert set(base_na) == {"market_expectations", "evidence_labelling"} and other_na == {}
+    assert "[M.01]" not in base_text and "[M.01] Consensus EPS: $1.23" in other_text
+    # Each store is saved next to its report, and reads back as it was.
+    saved = EvidenceStore.model_validate_json((tmp_path / "baseline_TEST_evidence.json").read_text(encoding="utf-8"))
+    assert saved == _filing_only_store() and (tmp_path / "yoda_TEST_evidence.json").exists()
+
+
+def test_runner_defaults_to_the_baseline_and_yoda_waits_for_rec_1(monkeypatch, tmp_path):
+    assert runner.DEFAULT_MODES == ("baseline",) and runner._parse_args([]).modes == ["baseline"]
+    with pytest.raises(ValueError, match="Rec 1"):
+        runner._run_mode("yoda", "TEST", _Q_ONLY)
 
 
 # ---------------------------------------------------------------------------
@@ -409,16 +381,14 @@ def test_a_tickers_judge_prompts_share_their_start_through_the_filings():
     # back to back: their prompts must share a start that includes the whole
     # filing text, so OpenAI serves it from its cache for the second call.
     import os
-    other = _yoda_bundle().model_copy(update={
-        "news_results": [NewsSearchResult(title="Different", url="https://news.example/x", snippet="other")],
-        "articles": [], "read_urls": [], "market_context": "",
-    })
+    other = _judged_store()
+    other.passages = [p for p in other.passages if p.kind not in ("news", "article")]
     texts = []
-    for bundle, report in ((_yoda_bundle(), _cited_report()), (other, _report())):
-        rendered = evidence.render_evidence(bundle, report, extra_chars=0)
+    for store, report in ((_judged_store(), _cited_report()), (other, _report())):
+        rendered = evidence.render_evidence(store, report, extra_chars=0)
         texts.append(judge.judge_messages(report.model_dump_json(), rendered.text, {})[1]["content"])
     shared = os.path.commonprefix(texts)
-    assert "QUARTERLY TEXT" in shared and shared.startswith(rubric.RUBRIC_TEXT)
+    assert "[Q.002] We expect third-quarter revenue" in shared and shared.startswith(rubric.RUBRIC_TEXT)
 
 
 # ---------------------------------------------------------------------------
@@ -436,8 +406,7 @@ def _judge_result(score: int | None = 3, snapshot: str = "gpt-6.1-sol-2026-09-29
 def _stub_eval(monkeypatch, results: list[judge.JudgeResult]) -> None:
     # run_eval with every outside step faked; the judge returns *results* in turn.
     monkeypatch.setattr(runner, "fetch_filings", lambda ticker: _Q_ONLY)
-    monkeypatch.setattr(runner, "_run_mode", lambda mode, ticker, filing: runner.ModeRun(
-        _report(), 1.0, "logged", 0.1, "", _yoda_bundle() if mode == "yoda" else evidence.filing_bundle(ticker, filing)))
+    monkeypatch.setattr(runner, "_run_mode", _run_mode)
     answers = iter(results)
     monkeypatch.setattr(runner, "judge_report", lambda *args, **kwargs: next(answers))
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
@@ -449,7 +418,7 @@ def test_rows_carry_the_judge_details_and_keep_na_empty(monkeypatch, tmp_path):
     _stub_eval(monkeypatch, [_judge_result(3, market_expectations=na_answer, failed={"relevance": [NO_QUOTE]}),
                              _judge_result(4, prompt_tokens=300_000)])
 
-    df = runner.run_eval(["TEST"], out_dir=tmp_path)
+    df = runner.run_eval(["TEST"], modes=runner.KNOWN_MODES, out_dir=tmp_path)
 
     baseline_row, yoda_row = df.iloc[0], df.iloc[1]
     assert pd.isna(baseline_row["market_expectations"]) and baseline_row["relevance"] == 3
@@ -519,23 +488,18 @@ def test_chart_means_leave_out_na_pairs():
 # rescore() — judging saved reports (archive and repeat checks)
 # ---------------------------------------------------------------------------
 
-def _archive(tmp_path, filing_date: str = "2026-08-06") -> pathlib.Path:
-    # An archive-style folder: one saved Yoda report with invented
-    # hypotheses today's schema rejects, and no evidence file.
-    folder = tmp_path / "archive"
+def _saved(tmp_path, with_evidence: bool = True) -> pathlib.Path:
+    # A folder holding one saved baseline report and, by default, its evidence store.
+    folder = tmp_path / "saved"
     folder.mkdir()
-    # Archived reports predate the `filings` list: they name one filing_type / filing_date pair.
-    saved = json.loads(_report().model_dump_json())
-    saved.pop("filings")
-    saved.update(filing_type="10-Q", filing_date=filing_date)
-    saved["hypotheses_explored"] = [{"id": "h1", "proposing_personality": "Growth analyst"}]
-    (folder / "yoda_TEST.json").write_text(json.dumps(saved), encoding="utf-8")
+    (folder / "baseline_TEST.json").write_text(_cited_report().model_dump_json(), encoding="utf-8")
+    if with_evidence:
+        (folder / "baseline_TEST_evidence.json").write_text(_judged_store().model_dump_json(), encoding="utf-8")
     return folder
 
 
 def _stub_rescore(monkeypatch, calls: list) -> None:
-    # rescore() with the filing on disk faked and the judge recorded.
-    monkeypatch.setattr(runner, "fetch_filings", lambda ticker: _Q_ONLY)
+    # rescore() with the judge recorded.
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
 
@@ -545,36 +509,43 @@ def _stub_rescore(monkeypatch, calls: list) -> None:
     monkeypatch.setattr(runner, "judge_report", fake_judge)
 
 
-def test_rescore_judges_archived_reports_on_their_filing(monkeypatch, tmp_path):
+def test_rescore_judges_saved_reports_on_their_saved_store(monkeypatch, tmp_path):
     calls = []
     _stub_rescore(monkeypatch, calls)
 
-    df = runner.rescore(_archive(tmp_path), modes=["yoda"], out_dir=tmp_path / "out")
+    df = runner.rescore(_saved(tmp_path), out_dir=tmp_path / "out")
 
     assert list(df["ticker"]) == ["TEST"] and df["filing_extraction"].iloc[0] == 3
     [(evidence_text, repeat)] = calls
-    assert evidence_text.startswith("=== 10-Q filed 2026-08-06") and not repeat
+    assert "[K.001] We face intense competition" in evidence_text and not repeat
     assert pd.isna(df["cost_usd"].iloc[0])                       # no mode was run: unknown, not 0
     justifications = (tmp_path / "out" / "justifications.md").read_text(encoding="utf-8")
-    assert "## filing_extraction" in justifications and "TEST / yoda — 3/5" in justifications
+    assert "## filing_extraction" in justifications and "TEST / baseline — 3/5" in justifications
 
 
-def test_rescore_skips_a_report_whose_filing_changed(monkeypatch, tmp_path):
+def test_rescore_skips_a_report_without_its_store_or_in_the_old_format(monkeypatch, tmp_path):
     calls = []
     _stub_rescore(monkeypatch, calls)
 
-    df = runner.rescore(_archive(tmp_path, filing_date="2026-05-01"), modes=["yoda"], out_dir=tmp_path / "out")
-
+    df = runner.rescore(_saved(tmp_path, with_evidence=False), out_dir=tmp_path / "out")
     assert df.empty and calls == []
-    summary = (tmp_path / "out" / "summary.md").read_text(encoding="utf-8")
-    assert "filing changed since the report: report used 10-Q filed 2026-05-01" in summary
+    assert "no saved evidence store" in (tmp_path / "out" / "summary.md").read_text(encoding="utf-8")
+
+    # An archived report from before 2026-10-30, saved with a store.
+    old = tmp_path / "old"
+    old.mkdir()
+    (old / "baseline_TEST.json").write_text('{"ticker": "TEST", "what_to_watch": []}', encoding="utf-8")
+    (old / "baseline_TEST_evidence.json").write_text(_judged_store().model_dump_json(), encoding="utf-8")
+    df = runner.rescore(old, out_dir=tmp_path / "out_old")
+    assert df.empty and calls == []
+    assert "unreadable (old format?)" in (tmp_path / "out_old" / "summary.md").read_text(encoding="utf-8")
 
 
 def test_repeat_scoring_records_how_often_scores_agree(monkeypatch, tmp_path):
     calls = []
     _stub_rescore(monkeypatch, calls)
 
-    runner.rescore(_archive(tmp_path), modes=["yoda"], out_dir=tmp_path / "out", repeat=True)
+    runner.rescore(_saved(tmp_path), out_dir=tmp_path / "out", repeat=True)
 
     assert [repeat for _, repeat in calls] == [False, True]
     repeat_df = pd.read_csv(tmp_path / "out" / "repeat.csv")
@@ -606,46 +577,3 @@ def test_command_line_forms():
     assert again.rescore == pathlib.Path("data/eval") and again.repeat and again.tickers == ["NFLX"]
     with pytest.raises(SystemExit):
         runner._parse_args(["--repeat"])                          # repeat only makes sense with --rescore
-
-
-# ---------------------------------------------------------------------------
-# The earnings call in the judge's evidence (step 8b)
-# ---------------------------------------------------------------------------
-
-def _transcript() -> CallTranscript:
-    # A one-turn call, long enough to notice if it were ever cut.
-    return CallTranscript(ticker="TEST", fiscal_quarter=3, fiscal_year=2026, call_date="2026-10-27",
-                          turns=[TranscriptTurn(speaker="Brian West", title="Chief Financial Officer",
-                                                content="We expect free cash flow of about $2 billion. " * 200,
-                                                is_company=True)],
-                          source_url="https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT"
-                                     "&symbol=TEST&quarter=2026Q3")
-
-
-def test_judge_reads_the_call_in_full_after_the_8ks():
-    bundle = _yoda_bundle().model_copy(update={"transcript": _transcript()})
-    rendered = evidence.render_evidence(bundle, _cited_report(), extra_chars=0)
-    call_at = rendered.text.index("=== EARNINGS CALL TRANSCRIPT — Q3 FY2026 (2026-10-27)")
-    assert rendered.text.index("RELEASE") < call_at < rendered.text.index("Consensus EPS")
-    assert ("We expect free cash flow of about $2 billion. " * 200).strip() in rendered.text
-
-
-def test_the_call_is_never_cut_even_over_the_line(monkeypatch):
-    monkeypatch.setattr(evidence, "PROMPT_TOKEN_LINE", 100)
-    bundle = _yoda_bundle().model_copy(update={"transcript": _transcript()})
-    rendered = evidence.render_evidence(bundle, _cited_report(), extra_chars=0)
-    assert ("We expect free cash flow of about $2 billion. " * 200).strip() in rendered.text
-    assert rendered.over_line and not any("CALL" in item.upper() for item in rendered.left_out)
-
-
-def test_no_call_is_said_plainly_and_a_call_alone_counts_as_post_filing_evidence():
-    assert "EARNINGS CALL TRANSCRIPT: none given" in evidence.render_evidence(
-        evidence.filing_bundle("TEST", _Q_ONLY), _report(), extra_chars=0).text
-    call_only = evidence.filing_bundle("TEST", _Q_ONLY).model_copy(update={"transcript": _transcript()})
-    assert "evidence_labelling" not in evidence.na_dimensions(call_only, _report())
-
-
-def test_bundles_saved_before_calls_still_load():
-    old = json.loads(_yoda_bundle().model_dump_json())
-    del old["transcript"]
-    assert EvidenceBundle.model_validate(old).transcript is None

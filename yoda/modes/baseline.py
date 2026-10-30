@@ -1,315 +1,149 @@
 """Single-pass baseline mode for Yoda.
 
-run_baseline() is the "just hand the LLM the filings" approach: it puts the
-full text of the company's recent SEC filings (its 10-Q and/or 10-K) into ONE
-prompt and asks Claude Sonnet 5.5 for the brief in ONE response.
+run_baseline() is the "just hand the LLM the sources" approach: it puts the
+evidence passages of the company's recent SEC filings (its 10-Q and/or
+annual report) and its XBRL fact sheet into ONE prompt, each passage after
+its ID, and asks Claude Sonnet 5.5 for the report in ONE response.
 
-No retrieval, no news, no agent loop, no second pass. It exists as the
-lower bound that the Yoda personality panel is evaluated against. It reads
-the same filings Yoda reads, so the comparison isolates what Yoda's extra
-steps add — not how much filing text each side was allowed to see.
+No retrieval, no agent loop, no second pass: the lower bound the
+architectures are compared against. It reads the same evidence store the
+other modes share (yoda/evidence_store.py), so a difference in scores comes
+from method, not from what each side was allowed to see. (Step 7 of the
+architecture comparison widens its sources to option B: the 8-K, the
+earnings call, market data and one news search.)
 
-Helpers both modes share also live here: validate_citations(),
-iter_citation_holders(), full_filing_text() and apply_filings().
+The request is built by build_request(), separately from sending it, so a
+run of many tickers can send them together through the Batch API. Its
+first system block is the rendered sources, marked as a prompt-cache
+breakpoint (next_steps item 12); the date and the ticker come after it.
 """
 
 import time
-from collections.abc import Iterator
-from datetime import datetime, timezone
 from typing import NamedTuple
-
-import pydantic
 
 from yoda import config, pricing
 from yoda.dates import dates_line
-from yoda.ingest.chunker import SectionLabel, section_spans
+from yoda.evidence_store import build_base_store, render_sources
+from yoda.ingest.xbrl import fetch_fact_sheet
 from yoda.modes.llm import structured_call
-from yoda.schema import EarningsReport, Filing, FilingSet, ForwardGuidance, Metric, Risk, ReportFiling, Segment
+from yoda.report.checks import check_report
+from yoda.report.header import assemble_report, filings_read
+from yoda.schema import EarningsReport, EvidenceStore, FilingSet, ReportDraft
 
 
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
 
-# Same model the panel uses for its final report, so the baseline isn't
-# handicapped by a weaker writer.
+# The writer model: the same one the architectures write with, so the
+# baseline isn't handicapped by a weaker writer.
 BASELINE_MODEL = "claude-sonnet-5-5"
+
+# How hard it thinks, pinned (Sonnet 5.5's default) so a change of default
+# can't silently change reports, and so every call shares one prompt cache.
+BASELINE_EFFORT = "high"
 
 # Output ceiling: the report plus the model's thinking must fit in this.
 # Large enough that the call must stream (see llm.structured_call).
 _MAX_TOKENS = 64000
 
-# Minimal instruction — "here are the filings, write the brief" — plus the
-# one rule the report format enforces: every fact needs a citation.
-_SYSTEM_PROMPT = (
-    "Write a pre-earnings research brief from these SEC filings. Every metric, "
-    "segment, risk and guidance item needs a source_citation naming the filing "
-    "section it came from; put anything you can't cite in data_gaps."
-)
-
-# Report fields the baseline's model is not asked to write: which filings
-# were read (set in code), and the panel-only sections it has nothing to
-# fill them from (its own hypotheses, the market data, the earnings call).
-# Leaving them out of the schema Claude is given also keeps that schema
-# under the size structured outputs accept.
-_NOT_WRITTEN_BY_MODEL = {"filings", "hypotheses_explored", "market_expectations", "earnings_call",
-                         "current_report"}
-
-# What the baseline's model writes: the EarningsReport minus those fields.
-# It keeps the name "EarningsReport", so the schema Claude is shown differs
-# from the full report only by the fields left out.
-_BaselineDraft = pydantic.create_model(
-    "EarningsReport",
-    **{name: (field.annotation, field) for name, field in EarningsReport.model_fields.items()
-       if name not in _NOT_WRITTEN_BY_MODEL},
-)
-
-
-# ---------------------------------------------------------------------------
-# Citation checks
-# ---------------------------------------------------------------------------
-
-def iter_citation_holders(report: EarningsReport) -> Iterator[tuple[str, Metric | Segment | Risk | ForwardGuidance]]:
-    """Yield (field_path, item) for every report item that must cite the filing.
-
-    field_path names the item for messages, e.g. "key_metrics[2]". The items
-    are the metrics, segments, risks and the forward-guidance block — every
-    place a financial fact appears with a `source_citation`.
-    """
-    for index, metric in enumerate(report.key_metrics):
-        yield f"key_metrics[{index}]", metric
-    for index, segment in enumerate(report.revenue_segments):
-        yield f"revenue_segments[{index}]", segment
-    for index, risk in enumerate(report.key_risks):
-        yield f"key_risks[{index}]", risk
-    yield "forward_guidance", report.forward_guidance
-
-
-def validate_citations(report: EarningsReport) -> None:
-    """Raise ValueError if any item that must cite the filing has a blank citation.
-
-    The prompts tell the model to put uncitable facts in data_gaps rather
-    than leave a citation empty, so a blank one is a model compliance
-    failure — the report is rejected rather than accepted with a gap hidden.
-    """
-    blank = [f"{path}.source_citation" for path, item in iter_citation_holders(report)
-             if not item.source_citation.strip()]
-    if blank:
-        raise ValueError(
-            f"Empty source_citation in: {', '.join(blank)}. "
-            "The LLM must put uncitable facts in data_gaps, not leave citations blank."
-        )
-
-
-# ---------------------------------------------------------------------------
-# Invented-link guard
-# ---------------------------------------------------------------------------
-
-def _strip_invented_links(report: EarningsReport) -> int:
-    """Remove every news item and watchlist URL from a baseline report.
-
-    The baseline is given no news, so any news item or URL in its report was
-    made up (the panel likewise strips URLs outside its news pool). Returns
-    how many were removed so the caller can log it.
-    """
-    removed = len(report.recent_news) + sum(len(item.relevant_urls) for item in report.what_to_watch)
-    report.recent_news = []
-    for item in report.what_to_watch:
-        item.relevant_urls = []
-    return removed
-
-
-# ---------------------------------------------------------------------------
-# Full filing text (shared with the panel's synthesis step)
-# ---------------------------------------------------------------------------
-
-# Most filing text one prompt may carry. Filings tokenize at ~2.3 characters
-# per token (dense numbers and tables), so 2.0M characters is ~870K tokens —
-# leaving room under Sonnet 5.5's 1M-token context for instructions and the
-# report. Only a 10-Q + 10-K pair from a very large filer (e.g. JPM, ~2.3M
-# characters together) goes over; the older 10-K is then trimmed.
+# Most source text one prompt may carry. Filings tokenize at ~2.3-2.7
+# characters per token (dense numbers and tables), so 2.0M characters is
+# ~870K tokens, leaving room under Sonnet 5.5's 1M-token context for the
+# instructions and the report. Only a 10-Q + 10-K pair from a very large
+# filer (e.g. JPM) goes over; the older annual report is then shortened.
 MAX_FILING_CHARS = 2_000_000
 
+# The task, after the sources. Kept short: the report's schema (shown to the
+# model as the output format) carries each section's meaning.
+_INSTRUCTIONS = """Write a pre-earnings research report on this company's upcoming quarterly report, from the sources above.
 
-# When an annual report has to be shortened to fit, these sections are left
-# out, one whole section at a time, in this order, until it fits. They are
-# the parts a newer 10-Q updates: the annual financial statements (Item 8),
-# the market-risk disclosures (Item 7A), the annual MD&A (Item 7), and the
-# rest of the filing ("Other": cover page, properties, legal proceedings,
-# controls, governance, exhibit index). The Business description (Item 1)
-# and Risk Factors (Item 1A) are never left out.
-_TRIM_ORDER: tuple[SectionLabel, ...] = ("Financial Statements", "Quantitative Disclosures", "MD&A", "Other")
+Citations — the rule every claim follows:
+- Every statement is a claim with evidence_ids: the IDs of the source passages that support it, copied exactly as shown in square brackets ("K.042", "F.03"). Cite only passages that contain the fact.
+- Tag each claim's evidence_type: reported (a company's actual results), guided (management's own outlook), estimate (third-party expectations such as consensus), proxy (an indirect signal), unverifiable (no source backs it).
+- Rows starting with F are the XBRL fact sheet: figures the company tagged in these filings, and figures derived from them (labelled derived). Prefer them for headline numbers.
+- Anything you cannot cite goes in data_gaps, not into a claim. If the sources have no market data, leave consensus empty and say so in data_gaps.
 
-
-class FilingText(NamedTuple):
-    """What full_filing_text() returns.
-
-    *text* is the filing text for the prompt. *used* holds the filings it
-    contains (newest first), each with exactly the text that went in — a
-    trimmed annual report carries its trimmed text. *gaps* are the
-    data_gaps entries saying what was trimmed or left out for size.
-    """
-    text: str
-    used: list[Filing]
-    gaps: list[str]
-
-
-def _trim_to_fit(text: str, link_targets: list[tuple[int, str]], room: int) -> tuple[str, list[str]] | None:
-    """Shorten an annual report's *text* to at most *room* characters by leaving out whole sections.
-
-    *link_targets* are the report's internal links (Filing.link_targets),
-    which help find its sections (chunker.section_spans).
-
-    Sections go in _TRIM_ORDER, all spans of one section at a time, until
-    the text fits. Each left-out section is replaced by a one-line note, so
-    the model sees that it existed. Returns (trimmed text, names of the
-    sections left out), or None if it can't fit even with all of them out.
-    """
-    spans = section_spans(text, link_targets)
-    removed: set[str] = set()
-    for label in _TRIM_ORDER:
-        if not any(span_label == label for _, _, span_label in spans):
-            continue
-        removed.add(label)
-        # Rebuild the text from the spans still kept, with a note where
-        # each run of left-out text was.
-        parts = []
-        for start, end, span_label in spans:
-            if span_label not in removed:
-                parts.append(text[start:end])
-            elif not parts or not parts[-1].startswith("[Left out for length:"):
-                parts.append(f"[Left out for length: {span_label} — the newer 10-Q updates this.]\n")
-        trimmed = "".join(parts)
-        if len(trimmed) <= room:
-            return trimmed, [label for label in _TRIM_ORDER if label in removed]
-    return None
-
-
-def full_filing_text(filings: list[Filing], reserved_chars: int = 0) -> FilingText:
-    """Return the text of *filings* (newest first) for a prompt, within MAX_FILING_CHARS.
-
-    Each filing sits under a header naming its type and date, so the model
-    can cite the right document. The newest filing always goes in whole. An
-    older filing goes in whole when it fits; an older annual report that
-    doesn't fit is trimmed (see _trim_to_fit) — its Business and Risk
-    Factors sections always stay — and anything that still can't fit is
-    left out. *reserved_chars* is room the caller needs for other long text
-    in the same prompt (the panel's 8-Ks, call and read articles), counted
-    against the same limit. Every trim or omission gets a data_gaps entry.
-    """
-    parts: list[str] = []
-    used: list[Filing] = []
-    gaps: list[str] = []
-    room = MAX_FILING_CHARS - reserved_chars
-    for filing in filings:
-        name = f"{filing.filing_type} filed {filing.filing_date}"
-        kept = filing
-        if used and len(filing.clean_text) > room:
-            # Too long to go in whole: an annual report is trimmed; anything
-            # else, or an annual report that can't fit even trimmed, is left out.
-            trim = _trim_to_fit(filing.clean_text, filing.link_targets, room) if filing.filing_type != "10-Q" else None
-            if trim is None:
-                gaps.append(f"The {name} was not analyzed: together with the newer filing it exceeds "
-                            "the model's context limit.")
-                continue
-            trimmed_text, removed = trim
-            # The trimmed text no longer matches the link offsets, so they go.
-            kept = filing.model_copy(update={"clean_text": trimmed_text, "link_targets": []})
-            gaps.append(f"The {name} was trimmed to fit the model's context limit: its "
-                        f"{', '.join(removed)} section(s) were left out ({len(filing.clean_text) - len(trimmed_text):,} "
-                        f"characters), as the newer {used[0].filing_type} updates them. Its Business and "
-                        "Risk Factors sections were kept in full.")
-        parts += [f"=== {name} ===", kept.clean_text, ""]
-        used.append(kept)
-        room -= len(kept.clean_text)
-    return FilingText("\n".join(parts).rstrip("\n"), used, gaps)
-
-
-def apply_filings(report: EarningsReport, filing_set: FilingSet, filing_text: FilingText) -> None:
-    """Record on *report* which filings it was written from, and which are missing and why.
-
-    Stamped on in code, not by the model, so it is always accurate. A filing
-    left out for size, or one that could not be downloaded, gets a data gap,
-    and so does each note about where a filing came from (e.g. a 10-K read
-    from the company's predecessor).
-    """
-    report.filings = [ReportFiling(filing_type=filing.filing_type, filing_date=filing.filing_date, url=filing.url)
-                      for filing in filing_text.used]
-    report.data_gaps.extend(filing_text.gaps)
-    report.data_gaps.extend(f"Filing not analyzed: {error}." for error in filing_set.errors)
-    report.data_gaps.extend(filing_set.notes)
+Focus on what matters for the upcoming report: the setup, the metrics to model and where the risk to expectations lies, guidance, the open debates, how the quarter could go, the key risks and what to ask management."""
 
 
 # ---------------------------------------------------------------------------
-# Prompt builder
+# The request
 # ---------------------------------------------------------------------------
 
-def _build_prompt(ticker: str, filing_text: FilingText, now_utc: str) -> str:
-    """Return the prompt: the ticker, today's and each filing's date, the timestamp, then the filing text."""
-    header = (f"Ticker: {ticker}\n{dates_line(filing_text.used)}\n"
-              f"Report timestamp (use for report_generated_at): {now_utc}\n\n")
-    return header + filing_text.text
+def build_request(filing_set: FilingSet, sources_text: str, store: EvidenceStore) -> dict:
+    """Return the keyword arguments of the baseline's one model call (for llm.structured_call).
+
+    The rendered sources are the first system block, marked as a cache
+    breakpoint; the instructions follow; the user message carries the
+    ticker and today's date (which changes daily, so it must come after the
+    cached part). Effort is pinned. *store* (with shown_ids set) says which
+    filings the date line names.
+    """
+    shown = filings_read(filing_set, store)
+    return {
+        "model": BASELINE_MODEL,
+        "max_tokens": _MAX_TOKENS,
+        "output_config": {"effort": BASELINE_EFFORT},
+        "system": [{"type": "text", "text": sources_text, "cache_control": {"type": "ephemeral"}},
+                   {"type": "text", "text": _INSTRUCTIONS}],
+        "messages": [{"role": "user", "content": f"Ticker: {filing_set.ticker}\n{dates_line(shown)}\n"
+                                                 "Write the report."}],
+    }
 
 
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
-def run_baseline(ticker: str, filing_set: FilingSet | None) -> EarningsReport:
-    """Produce an EarningsReport from the full filings in a single LLM call.
+class BaselineRun(NamedTuple):
+    """What run_baseline() returns: the checked report and the evidence its writer had (saved for the judge)."""
+    report: EarningsReport
+    store: EvidenceStore
 
-    *filing_set* is what fetch_filings() returned: the company's recent
-    10-Q and/or 10-K, all read in full when they fit. The baseline has
-    nothing to read without filings, so None raises ValueError.
+
+def run_baseline(ticker: str, filing_set: FilingSet | None) -> BaselineRun:
+    """Produce the baseline report for *ticker* from its filings and fact sheet in a single model call.
+
+    *filing_set* is what fetch_filings() returned. The baseline has nothing
+    to read without filings, so None raises ValueError. The fact sheet is
+    fetched here; if it can't be, the report says so in data_gaps.
 
     Prints "Wall time:" and "Total cost:" lines that the eval runner parses.
-    Raises ValueError if the model returns any empty source_citation fields,
-    RuntimeError (llm.NoStructuredOutput) if it returns no report at all. Any
-    news items or URLs in the report are cleared, since the baseline is given
-    no news.
+    Raises RuntimeError (llm.NoStructuredOutput) if the model returns no
+    report at all.
     """
     ticker = ticker.upper().strip()
     if filing_set is None:
         raise ValueError(f"No recent 10-Q or 10-K for {ticker}: the baseline has nothing to read.")
     started = time.perf_counter()
-    now_utc = datetime.now(timezone.utc).isoformat()
-    filing_text = full_filing_text(filing_set.filings)
-    for gap in filing_text.gaps:
-        print(f"[baseline] WARNING: {gap}")
 
-    # One prompt, one response, then turned into a full EarningsReport (the
-    # fields the model doesn't write start empty).
-    draft, in_tok, out_tok = structured_call(
-        BASELINE_MODEL, _MAX_TOKENS, _BaselineDraft,
-        system=_SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": _build_prompt(ticker, filing_text, now_utc)}],
-    )
-    report = EarningsReport.model_validate(draft.model_dump())
+    # The sources: the filings and the fact sheet, as one rendered block
+    # within the length limit (an older annual report may be shortened).
+    facts, fact_problems = fetch_fact_sheet(filing_set, None)
+    store = build_base_store(filing_set, [], None, None, facts)
+    rendered = render_sources(store, max_chars=MAX_FILING_CHARS)
+    store.shown_ids = rendered.shown_ids
+    for problem in [*fact_problems, *rendered.left_out]:
+        print(f"[baseline] WARNING: {problem}")
 
-    # Stamp on which filings were read (known exactly, so set in code), and
-    # record any that are missing and why.
-    apply_filings(report, filing_set, filing_text)
-
-    # A report with a blank citation is rejected outright.
-    validate_citations(report)
-
-    # No news went in, so no news or URLs may come out (README: links are
-    # never fabricated). Enforced in code to keep the prompt minimal.
-    removed = _strip_invented_links(report)
-    if removed:
-        print(f"[baseline] WARNING: stripped {removed} invented news item(s)/URL(s)")
+    # One prompt, one response, then the code-filled fields and the checks.
+    reply = structured_call(output_format=ReportDraft, **build_request(filing_set, rendered.text, store))
+    report = assemble_report(reply.parsed, filing_set, store, gaps=[*fact_problems, *rendered.left_out])
+    check_report(report, store)
 
     # Cost + wall-time lines in the format the eval runner's regexes expect.
-    cost = pricing.call_cost(BASELINE_MODEL, in_tok, out_tok)
-    print(f"[baseline] Tokens:     {in_tok} in / {out_tok} out")
+    cost = pricing.call_cost(BASELINE_MODEL, reply.input_tokens, reply.output_tokens,
+                             cache_write_tokens=reply.cache_write_tokens, cache_read_tokens=reply.cache_read_tokens)
+    print(f"[baseline] Tokens:     {reply.input_tokens} in / {reply.output_tokens} out / "
+          f"{reply.cache_write_tokens} cache write / {reply.cache_read_tokens} cache read")
     print(f"[baseline] Wall time:  {time.perf_counter() - started:.2f}s")
     print(f"[baseline] Total cost: ${cost:.5f}")
-
-    return report
+    return BaselineRun(report, store)
 
 
 # ---------------------------------------------------------------------------
-# Smoke test — run with: python -m yoda.modes.baseline [TICKER]
+# Smoke test — run with: python -m yoda.modes.baseline [TICKER]  (a paid call)
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
@@ -317,28 +151,25 @@ if __name__ == "__main__":
     from yoda.ingest.edgar import fetch_filings
 
     ticker = (sys.argv[1] if len(sys.argv) > 1 else "NFLX").upper()
-
-    # Load the filings (from the disk cache when available).
     print(f"Loading filings for {ticker}...")
     filing_set = fetch_filings(ticker)
 
     print(f"Running baseline for {ticker} via {BASELINE_MODEL}...")
-    report = run_baseline(ticker, filing_set)
+    run = run_baseline(ticker, filing_set)
 
     # Save to data/eval/ alongside the eval runner's outputs.
     out_dir = config.DATA_DIR / "eval"
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_file = out_dir / f"baseline_{ticker}.json"
-    out_file.write_text(report.model_dump_json(indent=2), encoding="utf-8")
+    (out_dir / f"baseline_{ticker}.json").write_text(run.report.model_dump_json(indent=2), encoding="utf-8")
+    (out_dir / f"baseline_{ticker}_evidence.json").write_text(run.store.model_dump_json(), encoding="utf-8")
 
-    # Print a summary so the output is scannable without opening the JSON.
-    print(f"\nSaved to {out_file}")
-    print(f"Company:          {report.company_name}")
-    print(f"Filings:          {', '.join(f'{f.filing_type} {f.filing_date}' for f in report.filings) or 'none'}")
-    print(f"Key metrics:      {len(report.key_metrics)}")
-    print(f"Revenue segments: {len(report.revenue_segments)}")
-    print(f"Key risks:        {len(report.key_risks)}")
-    print(f"Recent news:      {len(report.recent_news)}")
-    print(f"Data gaps:        {len(report.data_gaps)}")
+    # A summary so the output is scannable without opening the JSON.
+    report = run.report
+    print(f"\nSaved to {out_dir / f'baseline_{ticker}.json'}")
+    print(f"Company:   {report.company_name}")
+    print(f"Filings:   {', '.join(f'{f.filing_type} {f.filing_date}' for f in report.filings) or 'none'}")
+    print(f"Sections:  setup {len(report.setup_summary)}, metrics {len(report.metrics_to_model)}, "
+          f"guidance {len(report.guidance)}, debates {len(report.key_debates)}, risks {len(report.key_risks)}")
+    print(f"Sources:   {len(report.sources)} cited; check notes: {len(report.check_notes)}")
     for gap in report.data_gaps:
-        print(f"  - {gap}")
+        print(f"  gap: {gap}")

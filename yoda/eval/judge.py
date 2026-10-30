@@ -307,27 +307,21 @@ def prune_judge_cache(keep_runs: int = 2) -> None:
 if __name__ == "__main__":
     import sys
 
-    from yoda.eval.evidence import filing_bundle, load_report_for_judge, na_dimensions, render_evidence
-    from yoda.ingest.edgar import fetch_filings
-    from yoda.schema import EvidenceBundle
+    from yoda.eval.evidence import na_dimensions, render_evidence
+    from yoda.schema import EvidenceStore
 
-    # Which saved report to judge: python -m yoda.eval.judge [TICKER] [MODE].
+    # Which saved report to judge: python -m yoda.eval.judge [TICKER] [MODE],
+    # with the evidence store saved next to it.
     ticker = (sys.argv[1] if len(sys.argv) > 1 else "NFLX").upper()
-    mode = sys.argv[2] if len(sys.argv) > 2 else "yoda"
+    mode = sys.argv[2] if len(sys.argv) > 2 else "baseline"
     eval_dir = config.DATA_DIR / "eval"
-    report = load_report_for_judge((eval_dir / f"{mode}_{ticker}.json").read_text(encoding="utf-8"))
-
-    # Its saved evidence bundle; without one, the filing it was written from.
-    evidence_path = eval_dir / f"{mode}_{ticker}_evidence.json"
-    if evidence_path.exists():
-        bundle = EvidenceBundle.model_validate_json(evidence_path.read_text(encoding="utf-8"))
-    else:
-        print(f"No saved evidence for {mode}_{ticker}; using the filing only.")
-        bundle = filing_bundle(ticker, fetch_filings(ticker))
+    report = EarningsReport.model_validate_json((eval_dir / f"{mode}_{ticker}.json").read_text(encoding="utf-8"))
+    store = EvidenceStore.model_validate_json(
+        (eval_dir / f"{mode}_{ticker}_evidence.json").read_text(encoding="utf-8"))
 
     # Render it, decide N/A, and call the judge (a second run is a cache hit).
-    na = na_dimensions(bundle, report)
-    rendered = render_evidence(bundle, report, extra_chars=len(RUBRIC_TEXT) + len(report.model_dump_json()))
+    na = na_dimensions(store, report)
+    rendered = render_evidence(store, report, extra_chars=len(RUBRIC_TEXT) + len(report.model_dump_json()))
     print(f"Evidence: ~{rendered.estimated_tokens:,} tokens (estimate); left out: {rendered.left_out or 'nothing'}; "
           f"N/A: {list(na) or 'none'}")
     print("Calling judge...")

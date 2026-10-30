@@ -393,6 +393,11 @@ def _render(passages: list[Passage], dropped: set[tuple[str, str]], omitted: set
     return "\n".join(blocks), shown
 
 
+def render_passages(passages: list[Passage]) -> str:
+    """Render exactly *passages*, in the given order, in render_sources' format (for the judge's evidence)."""
+    return _render(passages, set(), set())[0]
+
+
 def render_sources(store: EvidenceStore, max_chars: int | None = None,
                    kinds: tuple[PassageKind, ...] = BASE_KINDS) -> RenderedSources:
     """Return the store's passages of *kinds* as text for a model, within *max_chars* when given.

@@ -1,16 +1,20 @@
 """Sequential ticker-queue processor (Phase 10).
 
-process_queue() runs the personality panel against a list of tickers, saves
+Report generation is off until Rec 1 is built (step 8): the personality
+panel that wrote reports was removed with the new report format, so
+_build_pdf() raises GENERATION_UNAVAILABLE and every ticker fails with that
+message. The queue's bookkeeping below is kept for step 8 to reconnect.
+
+process_queue() runs report generation against a list of tickers, saves
 each PDF to disk as it completes, and bundles everything into a ZIP at the
 end. Failures don't abort the queue — they're recorded with the reason and
 the run continues. The one exception is a market-data provider refusing a
 request (a rejected key or a paid-only endpoint): that pauses the queue so
 the person running it can choose to continue without that data or stop.
 
-The personality panel is already parallel internally (6 personalities in
-parallel inside one ticker), so running tickers in parallel here would
-mostly fight over Anthropic rate limits. Sequential per-ticker keeps the API
-spend even and the progress easy to display in the Streamlit UI.
+Running tickers in parallel here would mostly fight over Anthropic rate
+limits. Sequential per-ticker keeps the API spend even and the progress easy
+to display in the Streamlit UI.
 """
 
 import pathlib
@@ -23,10 +27,13 @@ from datetime import datetime
 from typing import Literal, NamedTuple
 
 from yoda import config
-from yoda.modes.personality_panel import MarketDataUnavailable, run_personality_panel
-from yoda.report.pdf import report_to_pdf
+from yoda.report.header import MarketDataUnavailable
 from yoda.tickers import normalize_tickers
 from yoda.tools.consensus import MarketSnapshot
+
+
+# Shown wherever a report would be generated, until Rec 1 (step 8) restores it.
+GENERATION_UNAVAILABLE = "Report generation returns with Rec 1 (step 8)."
 
 
 # ---------------------------------------------------------------------------
@@ -107,23 +114,16 @@ def _prune_zips(keep: int = 2) -> None:
 def _build_pdf(ticker: str, market: MarketSnapshot | None = None,
                allow_missing_market_data: bool = False, whisper_lookup: bool | None = None,
                on_notice: Callable[[str], None] | None = None) -> pathlib.Path:
-    """Run the panel for *ticker*, save its PDF in data/reports/, and return the path.
+    """Generate *ticker*'s report, save its PDF in data/reports/, and return the path.
 
-    The PDF filename carries a timestamp so re-runs of the same ticker don't
-    overwrite earlier outputs. *market*, *allow_missing_market_data*,
-    *whisper_lookup* and *on_notice* are passed to the panel (see
-    run_personality_panel); without the first two a refused market-data
-    request raises MarketDataUnavailable.
+    Off until Rec 1 (step 8): always raises RuntimeError(GENERATION_UNAVAILABLE).
+    The parameters are the ones step 8 will pass on: *market* and
+    *allow_missing_market_data* let a paused queue continue without the
+    refused market data (otherwise a refused request raises
+    MarketDataUnavailable), *whisper_lookup* sets the paid whisper lookup,
+    and *on_notice* reports something to know about mid-run.
     """
-    report = run_personality_panel(
-        ticker, market=market, allow_missing_market_data=allow_missing_market_data,
-        whisper_lookup=whisper_lookup, on_notice=on_notice,
-    ).report
-
-    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    pdf_path = _REPORTS_DIR / f"{ticker}_{timestamp}.pdf"
-    report_to_pdf(report, pdf_path)
-    return pdf_path
+    raise RuntimeError(GENERATION_UNAVAILABLE)
 
 
 # ---------------------------------------------------------------------------
@@ -138,7 +138,7 @@ def process_queue(
     prior_results: list[TickerResult] | None = None,
     whisper_lookup: bool | None = None,
 ) -> QueueRun:
-    """Run the personality panel sequentially for each ticker.
+    """Generate each ticker's report and PDF in turn (off until step 8: each ticker fails).
 
     Each PDF is saved to data/reports/{ticker}_{timestamp}.pdf as it's
     generated. When the queue ends (or pauses), the PDFs are bundled into a
@@ -151,11 +151,11 @@ def process_queue(
         spaces, commas and repeats don't matter).
     on_progress : optional callback
         Called with (ticker, status) where status is one of:
-          "running"       — about to invoke the panel
+          "running"       — about to generate the report
           "running — <notice>" — still running; something to know about,
                             e.g. the 10-K was trimmed to fit
           "complete"      — succeeded; PDF available
-          "failed: <msg>" — the panel or PDF step failed for this ticker
+          "failed: <msg>" — the report or PDF step failed for this ticker
           "paused: <msg>" — a market-data provider refused a request
     allow_missing_market_data : bool
         False: the first refused market-data request pauses the queue.
@@ -201,7 +201,7 @@ def process_queue(
         # finished ticker as failed. A refused market-data request is caught
         # first: it isn't a failure of this ticker but a choice for the person
         # running the queue, so the queue pauses before paying for anything.
-        # A notice from the panel mid-run (the 10-K was trimmed to fit) is
+        # A notice mid-run (the 10-K was trimmed to fit) is
         # shown in this ticker's status while it keeps running.
         def notice(message: str, ticker: str = ticker) -> None:
             if on_progress is not None:

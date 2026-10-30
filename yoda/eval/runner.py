@@ -1,6 +1,7 @@
 """Evaluation runner.
 
-run_eval() runs both modes (baseline, yoda) against a list of tickers,
+run_eval() runs the modes (today the baseline; the architecture comparison
+adds its arms in steps 8-10) against a list of tickers,
 judges each report against the evidence it was written from with
 judge_report() (see yoda/eval/evidence.py), and returns a long-format
 DataFrame with per-row scores, latency, and cost. rescore() judges reports
@@ -9,9 +10,8 @@ without running the modes again.
 
 Outputs written to disk (data/eval/ unless another folder is passed):
   {mode}_{ticker}.json          — each report
-  {mode}_{ticker}_evidence.json — the external sources a report was written
-                    from (filings, 8-Ks, market data, news, articles read),
-                    which the judge reads; for the baseline, its filing(s)
+  {mode}_{ticker}_evidence.json — the evidence store the report's writer
+                    had (yoda/evidence_store.py), which the judge reads
   results.csv     — one row per report: the nine scores (empty when N/A),
                     latency and cost, and the judge's details (version,
                     tokens, cost upper bound, failed quotes, report length)
@@ -31,7 +31,7 @@ refactoring the mode APIs. When a line is missing, cost is left empty
 latency_source column says which.
 
 CLI (every judge call not already cached is paid):
-  python -m yoda.eval.runner [TICKER ...] [--modes yoda baseline]
+  python -m yoda.eval.runner [TICKER ...] [--modes baseline]
       default tickers: CURATED_TICKERS (20 US-listed stocks, two per sector)
   python -m yoda.eval.runner --rescore DIR [TICKER ...] [--repeat] [--out DIR]
 """
@@ -39,7 +39,6 @@ CLI (every judge call not already cached is paid):
 import argparse
 import contextlib
 import io
-import json
 import pathlib
 import re
 import time
@@ -53,9 +52,7 @@ import pydantic
 import requests
 
 from yoda import config
-from yoda.eval.evidence import (
-    PROMPT_TOKEN_LINE, filing_bundle, load_report_for_judge, na_dimensions, render_evidence, report_for_judge,
-)
+from yoda.eval.evidence import PROMPT_TOKEN_LINE, na_dimensions, render_evidence
 from yoda.eval.judge import (
     JUDGE_MODEL, JUDGE_REASONING_EFFORT, JudgeResult, cache_key_for, judge_cost, judge_report, prune_judge_cache,
     write_run_manifest,
@@ -63,8 +60,7 @@ from yoda.eval.judge import (
 from yoda.eval.rubric import DIMENSIONS, RUBRIC_TEXT, JudgeScores
 from yoda.ingest.edgar import fetch_filings
 from yoda.modes.baseline import BASELINE_MODEL, run_baseline
-from yoda.modes.personality_panel import CRITIQUE_MODEL, LOOP_MODEL, SYNTH_MODEL, run_personality_panel
-from yoda.schema import EarningsReport, EvidenceBundle, FilingSet
+from yoda.schema import EarningsReport, EvidenceStore, FilingSet
 from yoda.tickers import normalize_tickers
 
 
@@ -90,8 +86,11 @@ SCORE_COLS = list(DIMENSIONS)
 
 # Every mode the runner knows. Report files named after one of these are
 # results; any other *.json in the output folder (e.g. an old panel_* smoke
-# test) is stale and removed at the end of a run.
+# test) is stale and removed at the end of a run. "yoda" stays known, so the
+# saved reports of the retired personality panel are never deleted, but it
+# can't run until Rec 1 is built (step 8); DEFAULT_MODES are what runs.
 KNOWN_MODES = ("baseline", "yoda")
+DEFAULT_MODES = ("baseline",)
 
 # Where outputs go unless run_eval() is given another folder.
 DEFAULT_OUT_DIR = config.DATA_DIR / "eval"
@@ -116,15 +115,14 @@ class ModeRun(NamedTuple):
     latency_source: str            # "logged" (from the mode's own log) or "measured" (timed here)
     cost_usd: float | None         # None when the log had no "Total cost:" line
     log: str
-    # The external sources the report was written from, saved for the judge.
-    # None means the run judges it on the filing alone.
-    evidence: EvidenceBundle | None = None
+    # The evidence store the report's writer had, saved for the judge.
+    evidence: EvidenceStore
 
 
-def _capture(fn: Callable[..., tuple[EarningsReport, EvidenceBundle | None]], *args) -> ModeRun:
+def _capture(fn: Callable[..., tuple[EarningsReport, EvidenceStore]], *args) -> ModeRun:
     """Run fn(*args) with its printed output captured, and read cost and time from that log.
 
-    *fn* returns (report, evidence bundle or None).
+    *fn* returns (report, evidence store).
     """
     buf = io.StringIO()
     started = time.perf_counter()
@@ -146,26 +144,12 @@ def _capture(fn: Callable[..., tuple[EarningsReport, EvidenceBundle | None]], *a
     )
 
 
-def _yoda_run(ticker: str) -> tuple[EarningsReport, EvidenceBundle]:
-    """Run the panel for *ticker* and return its report and evidence bundle.
-
-    The panel's own working (personality results, critique messages) is
-    dropped: only the report is scored, and the judge must never see Yoda's
-    reasoning as if it were a source.
-    """
-    run = run_personality_panel(ticker)
-    return run.report, run.evidence
-
-
 def _run_mode(mode: str, ticker: str, filing_set: FilingSet | None) -> ModeRun:
-    """Run one mode for one ticker and return its ModeRun."""
+    """Run one mode for one ticker and return its ModeRun. Raises ValueError for a mode that can't run."""
     if mode == "baseline":
-        # The baseline's evidence is the filings it read; it builds no
-        # bundle of its own until next_steps section 4.
-        return _capture(lambda symbol, filings: (run_baseline(symbol, filings), filing_bundle(symbol, filings)),
-                        ticker, filing_set)
+        return _capture(lambda symbol, filings: tuple(run_baseline(symbol, filings)), ticker, filing_set)
     if mode == "yoda":
-        return _capture(_yoda_run, ticker)
+        raise ValueError("The yoda mode was the personality panel, now removed; it returns with Rec 1 (step 8).")
     raise ValueError(f"Unknown mode: {mode}")
 
 
@@ -189,13 +173,12 @@ class JudgedRow(NamedTuple):
     result: JudgeResult
 
 
-def _judge_row(ticker: str, mode: str, report: EarningsReport, evidence: EvidenceBundle,
+def _judge_row(ticker: str, mode: str, report: EarningsReport, evidence: EvidenceStore,
                repeat: bool = False) -> JudgedRow:
-    """Judge *report* against *evidence* and return its results.csv columns.
+    """Judge *report* against *evidence* (its writer's evidence store) and return its results.csv columns.
 
-    The judge sees the report without Yoda's own hypotheses, the evidence
-    (cut where needed to stay under the price line) and which dimensions
-    code marks N/A for this mode. *repeat* asks for a second, independent
+    The judge sees the report, the evidence (cut where needed to stay under
+    the price line) and which dimensions code marks N/A for this mode. *repeat* asks for a second, independent
     score (the repeat check). Raises whatever judge_report raises.
 
     Columns: ticker, mode, the nine scores (empty when N/A), figures_checked,
@@ -205,7 +188,7 @@ def _judge_row(ticker: str, mode: str, report: EarningsReport, evidence: Evidenc
     served), judge_cost_usd and report_chars
     (the judged report's length, for the length-vs-score check).
     """
-    judged = report_for_judge(report)
+    judged = report
     na = na_dimensions(evidence, judged)
     rendered = render_evidence(evidence, judged, extra_chars=len(RUBRIC_TEXT) + len(judged.model_dump_json()))
     print(f"  judge prompt ~{rendered.estimated_tokens:,} tokens (estimate); "
@@ -246,7 +229,7 @@ def _previous_snapshots(results_path: pathlib.Path) -> set[str]:
 
 def run_eval(
     tickers: Sequence[str],
-    modes: Sequence[str] = KNOWN_MODES,
+    modes: Sequence[str] = DEFAULT_MODES,
     out_dir: pathlib.Path | None = None,
 ) -> pd.DataFrame:
     """Run each (ticker, mode) pair, judge it, and return a long-format DataFrame.
@@ -274,7 +257,6 @@ def run_eval(
     run_line = (
         f"Run: {started} · {len(tickers)} tickers · "
         f"Baseline: {BASELINE_MODEL} · "
-        f"Yoda: {SYNTH_MODEL} synthesis, {LOOP_MODEL} loops, {CRITIQUE_MODEL} critique · "
         f"Judge: {JUDGE_MODEL} (reasoning effort {JUDGE_REASONING_EFFORT})"
     )
 
@@ -294,9 +276,8 @@ def run_eval(
     for ticker in tickers:
         print(f"\n=== {ticker} ===")
 
-        # Fetch the filings once per ticker; the baseline reads them directly,
-        # and they are the evidence for a mode that returns no bundle of its
-        # own. A fetch failure skips this ticker only.
+        # Fetch the filings once per ticker, shared by every mode. A fetch
+        # failure skips this ticker only.
         print(f"  fetching filings for {ticker}...")
         try:
             filing = fetch_filings(ticker)
@@ -322,14 +303,10 @@ def run_eval(
                 run.report.model_dump_json(indent=2), encoding="utf-8"
             )
 
-            # Save the sources the report was written from next to it, so the
-            # judge can check the report against what it saw. A mode that
-            # returns no bundle is judged on the filing alone. Only the eval
-            # runner writes these files.
-            evidence = run.evidence or filing_bundle(ticker, filing)
-            (out_dir / f"{mode}_{ticker}_evidence.json").write_text(
-                evidence.model_dump_json(indent=2), encoding="utf-8"
-            )
+            # Save the evidence store the report was written from next to it,
+            # so the judge can check the report against what it saw.
+            evidence = run.evidence
+            (out_dir / f"{mode}_{ticker}_evidence.json").write_text(evidence.model_dump_json(), encoding="utf-8")
 
             # Judge it. A judge failure (refusal, cut-off, API error after
             # retries) skips this row like a mode failure does, instead of
@@ -392,40 +369,20 @@ def _saved_tickers(report_dir: pathlib.Path, modes: Sequence[str]) -> list[str]:
     return sorted(tickers)
 
 
-def _newest_filing_label(report_json: str) -> str:
-    """Return "<type> filed <date>" for the newest filing a saved report was written from, or "no filing".
-
-    Reports written before the `filings` list stored one filing_type /
-    filing_date pair (the newest filing, or "N/A" for none) instead. That
-    pair is read here, so archived reports can still be checked against
-    the filings on disk and re-scored.
-    """
-    data = json.loads(report_json)
-    if data.get("filings"):
-        newest = data["filings"][0]
-        return f"{newest['filing_type']} filed {newest['filing_date']}"
-    if data.get("filing_type") not in (None, "N/A"):
-        return f"{data['filing_type']} filed {data['filing_date']}"
-    return "no filing"
-
-
 def rescore(
     report_dir: pathlib.Path,
     tickers: Sequence[str] | None = None,
-    modes: Sequence[str] = KNOWN_MODES,
+    modes: Sequence[str] = DEFAULT_MODES,
     out_dir: pathlib.Path | None = None,
     repeat: bool = False,
 ) -> pd.DataFrame:
-    """Judge reports already saved in *report_dir*, without running Yoda or the baseline again.
+    """Judge reports already saved in *report_dir*, without running the modes again.
 
-    Used for the archive check (re-score the 2026-10-26 reports with the new
-    rubric) and the repeat check (*repeat*=True). Each saved
-    {mode}_{ticker}.json is judged against its saved
-    {mode}_{ticker}_evidence.json, or, when there is none (archived
-    reports), against the filing on disk — but only if that is the filing
-    the report was written from; otherwise the report is skipped and listed
-    under Failures, so it is never graded against the wrong filing.
-    *tickers* None means every saved report.
+    Used for the repeat check (*repeat*=True). Each saved {mode}_{ticker}.json
+    is judged against its saved {mode}_{ticker}_evidence.json (the evidence
+    store its writer had); a report without one, or in the old report format
+    (before 2026-10-30), is skipped and listed under Failures. *tickers*
+    None means every saved report.
 
     With *repeat*, each report is judged twice: the normal score (free when
     it is already in the judge cache) and a second, independent score. The
@@ -449,7 +406,6 @@ def rescore(
     failures: list[tuple[str, str, str]] = []
     run_cache_keys: set[str] = set()
     judged_results: list[tuple[str, str, JudgeResult]] = []
-    filings: dict[str, FilingSet | None] = {}
 
     for ticker in tickers:
         print(f"\n=== {ticker} ===")
@@ -459,29 +415,19 @@ def rescore(
                 failures.append((ticker, mode, "no saved report"))
                 continue
 
-            # The report, without Yoda's hypotheses (archived ones may break today's schema).
-            report_json = report_path.read_text(encoding="utf-8")
-            try:
-                report = load_report_for_judge(report_json)
-            except (ValueError, pydantic.ValidationError) as exc:
-                failures.append((ticker, mode, f"saved report unreadable: {type(exc).__name__}: {exc}"))
-                continue
-
-            # Its saved evidence; otherwise the filing it was written from.
+            # The report and the evidence store saved with it (an old-format
+            # report, or one saved without evidence, can't be judged).
             evidence_path = report_dir / f"{mode}_{ticker}_evidence.json"
-            if evidence_path.exists():
-                evidence = EvidenceBundle.model_validate_json(evidence_path.read_text(encoding="utf-8"))
-            else:
-                if ticker not in filings:
-                    filings[ticker] = fetch_filings(ticker)
-                filing = filings[ticker]
-                on_disk = f"{filing.newest.filing_type} filed {filing.newest.filing_date}" if filing else "no filing"
-                written_from = _newest_filing_label(report_json)
-                if on_disk != written_from:
-                    failures.append((ticker, mode, f"filing changed since the report: report used "
-                                                   f"{written_from}, the filing on disk is {on_disk}"))
-                    continue
-                evidence = filing_bundle(ticker, filing)
+            if not evidence_path.exists():
+                failures.append((ticker, mode, "no saved evidence store"))
+                continue
+            try:
+                report = EarningsReport.model_validate_json(report_path.read_text(encoding="utf-8"))
+                evidence = EvidenceStore.model_validate_json(evidence_path.read_text(encoding="utf-8"))
+            except (ValueError, pydantic.ValidationError) as exc:
+                failures.append((ticker, mode, f"saved report or evidence unreadable (old format?): "
+                                               f"{type(exc).__name__}: {exc}"))
+                continue
 
             # Judge it (and, for the repeat check, judge it again).
             try:
@@ -891,14 +837,14 @@ def _write_chart(df: pd.DataFrame, path: pathlib.Path, run_line: str) -> None:
 def _parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     """Read the command line.
 
-      python -m yoda.eval.runner [TICKER ...] [--modes yoda baseline]
+      python -m yoda.eval.runner [TICKER ...] [--modes baseline]
           run the modes and judge them (default: the curated 20 tickers)
       python -m yoda.eval.runner --rescore DIR [TICKER ...] [--repeat] [--out DIR]
           judge reports already saved in DIR, without running the modes again
     """
     parser = argparse.ArgumentParser(description="Run or re-score the Yoda evaluation (paid API calls).")
     parser.add_argument("tickers", nargs="*", help="tickers (default: all — the curated set, or every saved report)")
-    parser.add_argument("--modes", nargs="+", choices=KNOWN_MODES, default=list(KNOWN_MODES))
+    parser.add_argument("--modes", nargs="+", choices=KNOWN_MODES, default=list(DEFAULT_MODES))
     parser.add_argument("--rescore", type=pathlib.Path, metavar="DIR", help="judge the reports saved in DIR")
     parser.add_argument("--repeat", action="store_true", help="with --rescore: score each report a second time")
     parser.add_argument("--out", type=pathlib.Path, metavar="DIR", help="where to write the outputs")

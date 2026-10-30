@@ -3,9 +3,8 @@
 Run with: python -m pytest -q
 
 They cover the pieces that can silently break without any API call failing:
-citation checking, cost math, the judge cache key, the tool schemas, chunk
-heading extraction, the baseline prompt, the embedding skip, and the paired
-Yoda-vs-baseline comparison. Importing the modules needs a .env with the API
+cost math, the judge cache key, the tool schemas, the baseline's request and
+report, the embedding skip, and the paired Yoda-vs-baseline comparison. Importing the modules needs a .env with the API
 keys present (yoda.config checks them), but nothing here calls an API.
 """
 
@@ -19,60 +18,23 @@ from yoda import pricing
 from yoda.eval import judge, runner
 from yoda.eval.rubric import DimensionScore, JudgeScores
 from yoda.eval.runner import _RE_COST, _RE_WALL_TIME, SCORE_COLS, _paired_comparison, _verdict
+from samples import sample_report, sample_store
 from yoda.ingest.chunker import Chunk
-from yoda.modes import personality_panel as panel
 from yoda.modes import baseline as baseline_mod
-from yoda.modes.baseline import BASELINE_MODEL, _build_prompt, _strip_invented_links, validate_citations
-from yoda.modes import tools
+from yoda.modes.baseline import BASELINE_EFFORT, BASELINE_MODEL
+from yoda.modes import llm, tools
 from yoda.modes.tools import TOOL_DISPATCH, TOOL_SCHEMAS
+from yoda.prompt_cache import cache_misses
 from yoda.retrieval import vector_store
-from yoda.schema import (
-    ArticleText, EarningsReport, Filing, FilingSet, ForwardGuidance, Metric, NewsItem, NewsSearchResult, Risk,
-    Segment, WatchItem,
-)
+from yoda.schema import ArticleText, Filing, FilingSet, NewsSearchResult, ReportDraft
 
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _report(citation: str = "MD&A") -> EarningsReport:
-    # Smallest valid EarningsReport; every citable field uses *citation*.
-    return EarningsReport(
-        ticker="TEST", company_name="Test Co",
-        report_generated_at="2026-01-01T00:00:00+00:00",
-        key_metrics=[Metric(name="Revenue", value="1", unit="USD", source_citation=citation)],
-        revenue_segments=[],
-        forward_guidance=ForwardGuidance(text="None issued.", source_citation="MD&A"),
-        key_risks=[Risk(description="FX", is_new=False, source_citation="Risk Factors")],
-        recent_news=[], bull_case=[], bear_case=[], what_to_watch=[], data_gaps=[],
-    )
-
-
 def _chunk(text: str, section: str = "MD&A", index: int = 0) -> Chunk:
     return Chunk(text=text, section=section, chunk_index=index, char_start=0, char_end=len(text))
-
-
-# ---------------------------------------------------------------------------
-# Citation check
-# ---------------------------------------------------------------------------
-
-def test_validate_citations_passes_valid_report():
-    validate_citations(_report())  # no exception
-
-
-@pytest.mark.parametrize("field", ["key_metrics", "revenue_segments", "key_risks", "forward_guidance"])
-def test_validate_citations_rejects_blank_citation(field):
-    # Blank the citation in one field at a time; each of the four checks must fire.
-    report = _report()
-    report.revenue_segments = [Segment(name="A", revenue="1", yoy_change="flat",
-                                       commentary="c", source_citation="MD&A")]
-    if field == "forward_guidance":
-        report.forward_guidance.source_citation = "   "
-    else:
-        getattr(report, field)[0].source_citation = "   "
-    with pytest.raises(ValueError, match=field):
-        validate_citations(report)
 
 
 # ---------------------------------------------------------------------------
@@ -82,8 +44,7 @@ def test_validate_citations_rejects_blank_citation(field):
 def test_every_model_in_use_has_a_price():
     # A model constant without a price entry would crash cost logging mid-run.
     # (The prices themselves are tested in tests/test_pricing.py.)
-    for model in (panel.SYNTH_MODEL, panel.LOOP_MODEL, panel.CRITIQUE_MODEL, BASELINE_MODEL):
-        assert model in pricing.PRICES
+    assert BASELINE_MODEL in pricing.PRICES
 
 
 # ---------------------------------------------------------------------------
@@ -91,7 +52,7 @@ def test_every_model_in_use_has_a_price():
 # ---------------------------------------------------------------------------
 
 def test_cache_key_changes_with_judge_model(monkeypatch):
-    report = _report()
+    report = sample_report()
     key_a = judge.cache_key_for(report, "evidence", {})
     monkeypatch.setattr(judge, "JUDGE_MODEL", "some-other-judge")
     assert judge.cache_key_for(report, "evidence", {}) != key_a
@@ -102,11 +63,11 @@ def test_cache_key_is_stable_and_report_specific():
     # keys (one report's scores are never handed to another).
     # The pause makes a key that depends on the clock differ between the two
     # calls (Windows' clock can return the same value for back-to-back calls).
-    first = judge.cache_key_for(_report(), "evidence", {})
+    first = judge.cache_key_for(sample_report(), "evidence", {})
     time.sleep(0.05)
-    assert judge.cache_key_for(_report(), "evidence", {}) == first
-    assert (judge.cache_key_for(_report("MD&A"), "evidence", {})
-            != judge.cache_key_for(_report("Risk Factors"), "evidence", {}))
+    assert judge.cache_key_for(sample_report(), "evidence", {}) == first
+    assert (judge.cache_key_for(sample_report(company_name="A"), "evidence", {})
+            != judge.cache_key_for(sample_report(company_name="B"), "evidence", {}))
 
 
 # ---------------------------------------------------------------------------
@@ -259,71 +220,7 @@ def test_peer_chunks_are_labelled_as_a_competitors(monkeypatch):
 
 
 # ---------------------------------------------------------------------------
-# Tool loop — a failing tool must not crash the personality
-# ---------------------------------------------------------------------------
-
-class _Block:
-    # Minimal stand-in for an Anthropic content block (tool_use or text).
-    def __init__(self, **fields):
-        self.__dict__.update(fields)
-
-
-class _FakeResponse:
-    # Minimal stand-in for a Messages API response.
-    def __init__(self, content):
-        self.content = content
-        self.usage = _Block(input_tokens=10, output_tokens=10)
-        self.stop_reason = "tool_use" if any(b.type == "tool_use" for b in content) else "end_turn"
-
-
-def test_failing_tool_is_reported_not_crashed(monkeypatch):
-    # First call asks for one tool; every later call finishes with plain text.
-    replies = iter([[_Block(type="tool_use", id="t1", name="lookup_peer",
-                            input={"peer_ticker": "XYZ", "query": "q"})]])
-    monkeypatch.setattr(panel._client.messages, "create",
-                        lambda **kw: _FakeResponse(next(replies, [_Block(type="text", text="done")])))
-    # The tool itself raises, and the wrap-up returns no hypotheses.
-    def broken_tool(ctx, **args):
-        raise TypeError("no filing")
-    monkeypatch.setitem(panel.TOOL_DISPATCH, "lookup_peer", broken_tool)
-    monkeypatch.setattr(panel, "_structured_call", lambda *a, **kw: (panel._PersonalityFinalOutput(hypotheses=[]), 0, 0))
-
-    result = panel._run_personality("Optimist", "TEST", ctx=None, max_iterations=6,
-                                    wall_timeout_seconds=60, log_prefix="[t]")
-    assert result.tool_calls_used == 1   # the personality survived the failed tool
-
-
-def test_time_cap_stops_tool_calls(monkeypatch):
-    # With no time left, the very first call must forbid tools (tool_choice
-    # "none") so the personality goes straight to its wrap-up.
-    choices = []
-    def fake_create(**kw):
-        choices.append(kw["tool_choice"]["type"])
-        return _FakeResponse([_Block(type="text", text="done")])
-    monkeypatch.setattr(panel._client.messages, "create", fake_create)
-    monkeypatch.setattr(panel, "_structured_call", lambda *a, **kw: (panel._PersonalityFinalOutput(hypotheses=[]), 0, 0))
-
-    result = panel._run_personality("Optimist", "TEST", ctx=None, max_iterations=6,
-                                    wall_timeout_seconds=0, log_prefix="[t]")
-    assert choices == ["none"] and result.tool_calls_used == 0
-
-
-# ---------------------------------------------------------------------------
-# Chunk heading extraction
-# ---------------------------------------------------------------------------
-
-def test_chunk_heading_skips_mid_word_fragment():
-    chunk = _chunk("inancial instruments are measured\nLiquidity and Capital Resources\nmore text")
-    assert panel._chunk_heading(chunk) == "Liquidity and Capital Resources"
-
-
-def test_chunk_heading_falls_back_to_section():
-    chunk = _chunk("r working capital balances changed during the quarter", section="Risk Factors")
-    assert panel._chunk_heading(chunk) == "Risk Factors"
-
-
-# ---------------------------------------------------------------------------
-# Baseline prompt
+# Baseline — its one request and the report it makes
 # ---------------------------------------------------------------------------
 
 def _filing(filing_type: str, filing_date: str, clean_text: str) -> Filing:
@@ -341,77 +238,84 @@ _QUARTERLY = _filing("10-Q", "2026-05-01", "QUARTERLY TEXT")
 _ANNUAL = _filing("10-K", "2026-02-01", "ANNUAL TEXT")
 
 
-def test_baseline_prompt_includes_every_filing():
-    filing_text = baseline_mod.full_filing_text([_QUARTERLY, _ANNUAL])
-    prompt = _build_prompt("TEST", filing_text, "2026-10-26T00:00:00+00:00")
-    assert "QUARTERLY TEXT" in prompt and "ANNUAL TEXT" in prompt and filing_text.gaps == []
-    # Each filing gets a header naming its type and date, newest first.
-    assert "=== 10-Q filed 2026-05-01 ===" in prompt and "=== 10-K filed 2026-02-01 ===" in prompt
-    assert prompt.index("QUARTERLY TEXT") < prompt.index("ANNUAL TEXT")
+def _no_fact_sheet(monkeypatch) -> None:
+    # The fact sheet is fetched from the SEC; these tests read none.
+    monkeypatch.setattr(baseline_mod, "fetch_fact_sheet", lambda filing_set, snapshot: ([], []))
 
 
-def test_full_filing_text_leaves_out_an_older_filing_when_too_large(monkeypatch):
-    # When the filings exceed the size cap, the newest is kept whole and the
-    # older one is left out, with a data gap naming it.
-    monkeypatch.setattr(baseline_mod, "MAX_FILING_CHARS", 20)
-    filing_text = baseline_mod.full_filing_text([_QUARTERLY, _ANNUAL])
-    assert "QUARTERLY TEXT" in filing_text.text and "ANNUAL TEXT" not in filing_text.text
-    assert filing_text.used == [_QUARTERLY]
-    assert len(filing_text.gaps) == 1 and "10-K filed 2026-02-01" in filing_text.gaps[0]
+def _request(filing_set: FilingSet) -> dict:
+    # The baseline's request for *filing_set*, built the way run_baseline builds it.
+    store = baseline_mod.build_base_store(filing_set, [], None, None, [])
+    rendered = baseline_mod.render_sources(store, max_chars=baseline_mod.MAX_FILING_CHARS)
+    store.shown_ids = rendered.shown_ids
+    return baseline_mod.build_request(filing_set, rendered.text, store)
 
 
-def test_reserved_room_counts_against_the_size_cap(monkeypatch):
-    # The panel reserves room for its 8-Ks and read articles: the pair fits
-    # on its own (25 chars) but not with 10 more reserved, so the 10-K goes.
-    monkeypatch.setattr(baseline_mod, "MAX_FILING_CHARS", 30)
-    assert baseline_mod.full_filing_text([_QUARTERLY, _ANNUAL]).gaps == []
-    filing_text = baseline_mod.full_filing_text([_QUARTERLY, _ANNUAL], reserved_chars=10)
-    assert filing_text.gaps and "ANNUAL TEXT" not in filing_text.text
+def test_baseline_request_caches_the_sources_and_puts_the_date_after_them():
+    request = _request(_filing_set(_QUARTERLY, _ANNUAL))
+    sources, instructions = request["system"]
+    # The rendered sources come first and are the cache breakpoint; every
+    # filing is in them, each passage after its ID.
+    assert sources["cache_control"] == {"type": "ephemeral"}
+    assert "QUARTERLY TEXT" in sources["text"] and "ANNUAL TEXT" in sources["text"] and "[Q.001]" in sources["text"]
+    assert "evidence_ids" in instructions["text"] and "cache_control" not in instructions
+    # The date changes daily, so it comes after the cached part.
+    assert "Ticker: TEST" in request["messages"][0]["content"]
+    assert "10-Q filed 2026-05-01" in request["messages"][0]["content"]
+    assert request["output_config"] == {"effort": BASELINE_EFFORT} and request["model"] == BASELINE_MODEL
 
 
-def test_report_lists_the_filings_it_was_written_from():
-    # apply_filings stamps every filing read, and a gap for each left out
-    # for size or not downloaded.
-    report = _report()
-    filing_set = FilingSet(ticker="TEST", cik=1, filings=[_QUARTERLY], errors=["could not fetch the 10-K"])
-    baseline_mod.apply_filings(report, filing_set, baseline_mod.full_filing_text([_QUARTERLY]))
-    assert [(f.filing_type, f.filing_date) for f in report.filings] == [("10-Q", "2026-05-01")]
-    assert report.data_gaps == ["Filing not analyzed: could not fetch the 10-K."]
+def test_two_baseline_requests_for_one_ticker_share_the_cache():
+    # A long enough filing to be stored (over the 512-token minimum).
+    filing_set = _filing_set(_filing("10-Q", "2026-05-01", "Revenue grew on pricing and members. " * 100))
+    assert cache_misses([_request(filing_set), _request(filing_set)]) == ["no earlier request", None]
 
 
-def test_baseline_strips_invented_news_and_urls():
-    # The baseline gets no news, so any news item or watchlist URL is invented.
-    report = _report()
-    report.recent_news = [NewsItem(headline="h", date="2026-01-01", url="https://x.example", relevance_note="n")]
-    report.what_to_watch = [WatchItem(text="t", relevant_urls=["https://y.example"])]
-    assert _strip_invented_links(report) == 2
-    assert report.recent_news == [] and report.what_to_watch[0].relevant_urls == []
-
-
-def test_baseline_model_is_not_asked_for_fields_set_in_code(monkeypatch):
-    # The full report schema was too large for structured outputs once the
-    # filings list was added ("compiled grammar is too large"). The model is
-    # asked only for what it writes; the filings are stamped on in code and
-    # the panel-only sections stay empty.
+def test_baseline_writes_a_checked_report_from_one_call(monkeypatch, capsys):
+    _no_fact_sheet(monkeypatch)
     asked = []
 
-    def fake_call(model, max_tokens, output_format, system, messages):
+    def fake_call(output_format, **request):
+        # The model's draft: one good citation, one made up, and a tag too strong for its source.
         asked.append(output_format)
-        return output_format(**_report().model_dump(exclude=baseline_mod._NOT_WRITTEN_BY_MODEL)), 10, 5
+        draft = sample_report().model_dump(include=set(ReportDraft.model_fields))
+        draft["setup_summary"] = [{"text": "Revenue grew.", "evidence_ids": ["[q.001]", "Q.999"],
+                                   "evidence_type": "reported"}]
+        return llm.StructuredReply(output_format(**draft), 1000, 200, 900, 0)
     monkeypatch.setattr(baseline_mod, "structured_call", fake_call)
 
-    report = baseline_mod.run_baseline("TEST", _filing_set(_QUARTERLY, _ANNUAL))
+    report, store = baseline_mod.run_baseline("test", _filing_set(_QUARTERLY, _ANNUAL))
 
-    [output_format] = asked
-    assert not set(output_format.model_fields) & {"filings", "hypotheses_explored", "market_expectations",
-                                                  "earnings_call"}
+    assert asked == [ReportDraft]
     assert [(f.filing_type, f.filing_date) for f in report.filings] == [("10-Q", "2026-05-01"), ("10-K", "2026-02-01")]
-    assert report.hypotheses_explored == [] and report.market_expectations is None
+    assert report.setup_summary[0].evidence_ids == ["Q.001"]
+    assert any("'Q.999', which is not in the evidence" in gap for gap in report.data_gaps)
+    assert "Q.001" in report.sources and report.market_expectations is None
+    # The judge reads the same store the writer had.
+    assert store.shown_ids and store.passages[0].id == "Q.001"
+    # The cost line counts the cache write (900 tokens) the runner parses.
+    log = capsys.readouterr().out
+    assert "900 cache write" in log and "Total cost: $" in log
 
 
-def test_baseline_prompt_with_one_filing():
-    prompt = _build_prompt("TEST", baseline_mod.full_filing_text([_QUARTERLY]), "2026-10-26T00:00:00+00:00")
-    assert "QUARTERLY TEXT" in prompt and "10-K" not in prompt
+def test_baseline_report_lists_what_it_could_not_read(monkeypatch):
+    # A fact sheet that couldn't be fetched and a filing that couldn't be
+    # downloaded reach the reader through data_gaps, not only the log.
+    monkeypatch.setattr(baseline_mod, "fetch_fact_sheet",
+                        lambda filing_set, snapshot: ([], ["Fact sheet: SEC companyfacts unreachable."]))
+    monkeypatch.setattr(baseline_mod, "structured_call", lambda output_format, **request: llm.StructuredReply(
+        output_format(**sample_report().model_dump(include=set(ReportDraft.model_fields))), 1, 1))
+    filing_set = FilingSet(ticker="TEST", cik=1, filings=[_QUARTERLY], errors=["could not fetch the 10-K"])
+
+    report, _ = baseline_mod.run_baseline("TEST", filing_set)
+
+    assert "Fact sheet: SEC companyfacts unreachable." in report.data_gaps
+    assert "Filing not analyzed: could not fetch the 10-K." in report.data_gaps
+
+
+def test_baseline_without_filing_raises_clear_error():
+    with pytest.raises(ValueError, match="nothing to read"):
+        baseline_mod.run_baseline("TEST", None)
 
 
 # ---------------------------------------------------------------------------
@@ -564,7 +468,8 @@ def _judge_result(value: int) -> judge.JudgeResult:
 def test_judge_failure_skips_row_not_run(monkeypatch, tmp_path):
     # Write to a temp folder so the real data/eval outputs are untouched.
     monkeypatch.setattr(runner, "fetch_filings", lambda t: _filing_set(_filing("10-Q", "2026-05-01", "text")))
-    monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: runner.ModeRun(_report(), 1.0, "logged", 0.1, ""))
+    monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: runner.ModeRun(sample_report(), 1.0, "logged", 0.1, "",
+                                                                         sample_store()))
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
 
@@ -578,7 +483,7 @@ def test_judge_failure_skips_row_not_run(monkeypatch, tmp_path):
     fake_judge.calls = 0
     monkeypatch.setattr(runner, "judge_report", fake_judge)
 
-    df = runner.run_eval(["GOOD", "BAD"], out_dir=tmp_path / "data/eval")
+    df = runner.run_eval(["GOOD", "BAD"], modes=runner.KNOWN_MODES, out_dir=tmp_path / "data/eval")
     assert len(df) == 3                                  # only BAD/baseline missing
     assert (tmp_path / "data/eval/summary.md").exists()  # the run still finished
 
@@ -608,13 +513,14 @@ def test_verdict_range_touching_zero_is_inconclusive():
 # Runner regexes — they read cost and latency from each mode's log
 # ---------------------------------------------------------------------------
 
-def test_runner_regexes_read_panel_and_baseline_logs():
-    # These are the exact line formats the panel and baseline print. The
-    # panel's earlier "Embed cost: ~$..." line must not be mistaken for the total.
+def test_runner_regexes_read_mode_logs():
+    # The line formats the old panel and the baseline print. An earlier
+    # "Embed cost: ~$..." line must not be mistaken for the total.
     panel_log = ("[panel] Wall time:           144.47s\n"
                  "[panel] Embed cost:          ~$0.00012 (500 tokens)\n"
                  "[panel] Total cost:          $0.26883\n")
-    baseline_log = "[baseline] Wall time:  53.20s\n[baseline] Total cost: $0.17088\n"
+    baseline_log = ("[baseline] Tokens:     1000 in / 200 out / 900 cache write / 0 cache read\n"
+                    "[baseline] Wall time:  53.20s\n[baseline] Total cost: $0.17088\n")
     assert _RE_WALL_TIME.search(panel_log).group(1) == "144.47"
     assert _RE_COST.search(panel_log).group(1) == "0.26883"
     assert _RE_WALL_TIME.search(baseline_log).group(1) == "53.20"
@@ -628,12 +534,13 @@ def test_runner_regexes_read_panel_and_baseline_logs():
 def test_duplicate_tickers_run_once(monkeypatch, tmp_path):
     # "NFLX nflx" must not produce duplicate rows (which would break the pivot).
     monkeypatch.setattr(runner, "fetch_filings", lambda t: _filing_set(_filing("10-Q", "2026-05-01", "text")))
-    monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: runner.ModeRun(_report(), 1.0, "logged", 0.1, ""))
+    monkeypatch.setattr(runner, "_run_mode", lambda mode, t, f: runner.ModeRun(sample_report(), 1.0, "logged", 0.1, "",
+                                                                         sample_store()))
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
     monkeypatch.setattr(runner, "judge_report", lambda report, evidence_text, na, repeat=False: _judge_result(3))
 
-    df = runner.run_eval(["NFLX", "nflx"], out_dir=tmp_path / "data/eval")
+    df = runner.run_eval(["NFLX", "nflx"], modes=runner.KNOWN_MODES, out_dir=tmp_path / "data/eval")
     assert len(df) == 2   # one ticker x two modes
 
 

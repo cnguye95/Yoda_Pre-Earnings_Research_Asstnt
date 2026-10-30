@@ -1,26 +1,25 @@
 """What the eval judge reads: each report's evidence, prepared for one prompt.
 
-Every report is judged against the external sources it was written from (its
-EvidenceBundle, yoda/schema.py), never against Yoda's own reasoning:
+Every report is judged against the evidence store its writer had (saved next
+to the report, yoda/evidence_store.py), never against a mode's own
+reasoning. The judge sees the same passages with the same IDs the writer
+saw, so it can check every citation:
 
-  filing_bundle()         — the baseline's evidence: the filing(s) it read.
-  report_for_judge()      — the report without hypotheses_explored.
-  load_report_for_judge() — the same, for a saved report JSON (archived
-                            reports whose hypotheses today's schema rejects
-                            still load).
-  na_dimensions()         — which rubric dimensions code marks N/A, and why.
-  render_evidence()       — the bundle as prompt text, kept under the
-                            judge's 272K-token price line where possible.
+  na_dimensions()   — which rubric dimensions code marks N/A, and why.
+  render_evidence() — the store as prompt text: what the writer was shown,
+                      every passage the report cites (even one cut from the
+                      writer's view for length), and the mode's own news,
+                      articles and competitor passages; kept under the
+                      judge's 272K-token price line where possible.
 
 Nothing here calls an API.
 """
 
-import json
 from typing import NamedTuple
 
-from yoda.ingest.transcripts import render_call_text
-from yoda.modes.baseline import full_filing_text
-from yoda.schema import EarningsReport, EvidenceBundle, EvidenceDocument, FilingSet
+from yoda.evidence_store import MODE_KINDS, render_passages
+from yoda.report.checks import iter_claims, normalize_id
+from yoda.schema import EarningsReport, EvidenceStore, Passage
 
 # Prompts above this many tokens cost the judge 2x input / 1.5x output for
 # the whole call (gpt-6.1-sol pricing, next_steps 3.7).
@@ -31,81 +30,36 @@ PROMPT_TOKEN_LINE = 272_000
 # the real count OpenAI reports.
 CHARS_PER_TOKEN = 4
 
-# How much of an 8-K document the report doesn't cite the judge is shown:
-# enough to see what the 8-K is, without filling the prompt.
-UNCITED_8K_CHARS = 2_000
+# The kinds of source that come after the filing: what evidence_labelling
+# is about.
+_POST_FILING_KINDS = ("8-K", "call", "market", "news", "article")
 
 
-# ---------------------------------------------------------------------------
-# The baseline's evidence and the report as the judge sees it
-# ---------------------------------------------------------------------------
-
-def filing_bundle(ticker: str, filing_set: FilingSet | None) -> EvidenceBundle:
-    """Return the evidence the single-call baseline had: the filings it read, nothing else.
-
-    Holds exactly the filings baseline.full_filing_text() kept. The labels
-    match the panel's filing documents ("10-Q filed 2026-08-06"), so both
-    modes' judge prompts start with the same text. No filing gives a bundle
-    with no documents.
-    """
-    documents = []
-    if filing_set is not None:
-        documents = [
-            EvidenceDocument(label=f"{doc.filing_type} filed {doc.filing_date}", accession_number=doc.accession_number,
-                             filing_date=doc.filing_date, url=doc.url, text=doc.clean_text)
-            for doc in full_filing_text(filing_set.filings).used
-        ]
-    return EvidenceBundle(ticker=ticker, documents=documents, market_context="", news_results=[],
-                          read_urls=[], articles=[], peer_passages=[])
-
-
-def report_for_judge(report: EarningsReport) -> EarningsReport:
-    """Return a copy of *report* without hypotheses_explored, Yoda's own reasoning.
-
-    The judge scores the report a reader gets; the hypotheses would let a
-    claim be "verified" by Yoda quoting itself (next_steps 3.7).
-    """
-    return report.model_copy(update={"hypotheses_explored": []})
-
-
-def load_report_for_judge(json_text: str) -> EarningsReport:
-    """Load a saved report JSON for judging, dropping hypotheses_explored before validation.
-
-    Dropping it first lets archived reports load whose hypotheses today's
-    stricter schema rejects (8 of the 2026-10-26 baseline reports).
-    """
-    data = json.loads(json_text)
-    data.pop("hypotheses_explored", None)
-    return EarningsReport.model_validate(data)
+def cited_ids(report: EarningsReport) -> set[str]:
+    """Return every evidence ID the report's claims cite."""
+    return {normalize_id(raw) for _, claim in iter_claims(report) for raw in claim.evidence_ids}
 
 
 # ---------------------------------------------------------------------------
 # N/A dimensions — set by code from what the mode had
 # ---------------------------------------------------------------------------
 
-def _is_eight_k(document: EvidenceDocument) -> bool:
-    """True if *document* is an 8-K document (labels such as "8-K Item 2.02 ..." or "8-K/A ...")."""
-    return document.label.startswith("8-K")
-
-
-def na_dimensions(bundle: EvidenceBundle, report: EarningsReport) -> dict[str, str]:
+def na_dimensions(store: EvidenceStore, report: EarningsReport) -> dict[str, str]:
     """Return the rubric dimensions that are N/A for *report*, each with the reason.
 
     market_expectations is N/A when the mode had no market data.
     evidence_labelling is N/A only when the mode had no post-filing evidence
-    (8-Ks, the earnings call, news, articles read, or market data) AND the report makes no
-    post-filing claims; post-filing claims without evidence are still scored.
-    (figure_accuracy's N/A is decided after the call, from the number of
-    figures the judge could check.)
+    (the 8-K, the earnings call, market data, news or articles) AND the
+    report makes no post-filing claims; post-filing claims without evidence
+    are still scored. (figure_accuracy's N/A is decided after the call, from
+    the number of figures the judge could check.)
     """
+    kinds = {passage.kind for passage in store.passages}
     na = {}
-    if not bundle.market_context:
+    if "market" not in kinds:
         na["market_expectations"] = "the report's writer had no market data"
-
-    post_filing_evidence = (any(_is_eight_k(doc) for doc in bundle.documents) or bundle.news_results
-                            or bundle.articles or bundle.market_context or bundle.transcript)
     post_filing_claims = report.since_filing or report.market_expectations is not None
-    if not post_filing_evidence and not post_filing_claims:
+    if not kinds & set(_POST_FILING_KINDS) and not post_filing_claims:
         na["evidence_labelling"] = "no post-filing evidence and the report makes no post-filing claims"
     return na
 
@@ -129,88 +83,51 @@ class RenderedEvidence(NamedTuple):
     over_line: bool
 
 
-def _cited_urls(report: EarningsReport) -> set[str]:
-    """Return every link the report cites: news items, watchlist links and since_filing links."""
-    return ({item.url for item in report.recent_news}
-            | {url for item in report.what_to_watch for url in item.relevant_urls}
-            | {item.url for item in report.since_filing})
+def render_evidence(store: EvidenceStore, report: EarningsReport, extra_chars: int) -> RenderedEvidence:
+    """Return the evidence for judging *report*, cut where needed to stay under the price line.
 
-
-def _document_text(document: EvidenceDocument, cut: bool) -> str:
-    """Return one filing document under a header naming it; *cut* keeps only its start."""
-    where = f"accession {document.accession_number}" + (f", {document.url}" if document.url else "")
-    if not cut:
-        return f"=== {document.label} — {where} ===\n{document.text}"
-    return (f"=== {document.label} — {where} (not cited by the report: first {UNCITED_8K_CHARS:,} of "
-            f"{len(document.text):,} characters shown) ===\n{document.text[:UNCITED_8K_CHARS]}")
-
-
-def render_evidence(bundle: EvidenceBundle, report: EarningsReport, extra_chars: int) -> RenderedEvidence:
-    """Return *bundle* as the judge's evidence text, cut where needed to stay under the price line.
-
-    The 10-Q/10-K come first, in full, so both modes' prompts for a ticker
-    share a long identical start that OpenAI can cache. Then the 8-Ks (in
-    full when the report cites them, otherwise only their start), the
-    earnings call (always in full), the market data, the articles read, the
-    news results and the competitor passages. If the whole prompt (*extra_chars* counts the rubric and the
-    report) is estimated above PROMPT_TOKEN_LINE, the news snippets the
-    report doesn't cite are dropped. Everything shortened or dropped is
-    listed at the end for the judge.
+    Shown, in the store's order: the passages the writer was shown
+    (store.shown_ids), every passage the report cites, and the mode's own
+    news, articles and competitor passages. An 8-K document the report
+    doesn't cite shows only its first passage. If the whole prompt
+    (*extra_chars* counts the rubric and the report) is estimated above
+    PROMPT_TOKEN_LINE, the news results the report doesn't cite are dropped.
+    Everything shortened or dropped is listed at the end for the judge.
     """
-    cited = _cited_urls(report)
+    cited = cited_ids(report)
+    shown = set(store.shown_ids)
+    passages = [p for p in store.passages if p.id in shown or p.id in cited or p.kind in MODE_KINDS]
     left_out: list[str] = []
 
-    # The filing(s), then the 8-Ks: uncited 8-K documents always shortened.
-    filings = [doc for doc in bundle.documents if not _is_eight_k(doc)]
-    eight_ks = [doc for doc in bundle.documents if _is_eight_k(doc)]
-    parts = [_document_text(doc, cut=False) for doc in filings]
-    if not eight_ks:
-        parts.append("=== 8-Ks filed since the filing: none given to the report's writer ===")
-    for doc in eight_ks:
-        cut = doc.url not in cited and len(doc.text) > UNCITED_8K_CHARS
-        parts.append(_document_text(doc, cut=cut))
-        if cut:
-            left_out.append(f"{doc.label}: all but the first {UNCITED_8K_CHARS:,} characters (not cited)")
+    # An 8-K document nothing cites: only its first passage, to show what it is.
+    cited_documents = {p.document for p in passages if p.id in cited}
+    first_of: dict[str, str] = {}
+    for passage in passages:
+        if passage.kind == "8-K":
+            first_of.setdefault(passage.document, passage.id)
+    uncited_8k = {doc for doc in first_of if doc not in cited_documents}
+    passages = [p for p in passages if not (p.kind == "8-K" and p.document in uncited_8k and first_of[p.document] != p.id)]
+    left_out += [f"{doc}: all but its first passage (not cited)" for doc in sorted(uncited_8k)]
 
-    # The earnings call, always in full: first-hand company evidence the
-    # report may rely on (AGREED: never cut for length).
-    parts.append(render_call_text(bundle.transcript) if bundle.transcript
-                 else "=== EARNINGS CALL TRANSCRIPT: none given to the report's writer ===")
-
-    # The market data exactly as the report's writer saw it, and the
-    # articles read in full (only those the report cites are kept).
-    parts.append(f"=== MARKET DATA (as the report's writer saw it) ===\n{bundle.market_context}"
-                 if bundle.market_context else "=== MARKET DATA: none given to the report's writer ===")
-    parts += [f"=== ARTICLE READ IN FULL — {article.url} ===\n{article.text}" for article in bundle.articles]
-
-    # News results last among the main sources, because the uncited ones are
-    # the first thing dropped for length.
-    def news_lines(keep_uncited: bool) -> list[str]:
-        """Return one block per news result, optionally without those the report doesn't cite."""
-        return [f"- {item.title} ({item.published_date or 'no-date'}) {item.url}\n  {item.snippet}"
-                for item in bundle.news_results if keep_uncited or item.url in cited]
-
-    peers = [f"=== {passage.label} ===\n{passage.text}" for passage in bundle.peer_passages]
-
-    def assemble(keep_uncited_news: bool) -> str:
-        """Join every part into the evidence text, with the left-out list at the end."""
-        news = news_lines(keep_uncited_news)
-        blocks = parts + ["=== NEWS RESULTS ===\n" + ("\n".join(news) if news else "(none)")] + peers
+    def assemble(kept: list[Passage]) -> str:
+        """Join the passages into the evidence text, with the left-out list at the end."""
+        text = render_passages(kept)
         if left_out:
-            blocks.append("=== LEFT OUT FOR LENGTH (claims resting only on these are unverifiable, "
-                          "not wrong) ===\n" + "\n".join(f"- {item}" for item in left_out))
-        return "\n\n".join(blocks)
+            text += ("\n\n=== LEFT OUT FOR LENGTH (claims resting only on these are unverifiable, not wrong) ===\n"
+                     + "\n".join(f"- {item}" for item in left_out))
+        return text
 
     def estimate(text: str) -> int:
         """Estimate the whole prompt's tokens: this evidence plus the rubric and report."""
         return (len(text) + extra_chars) // CHARS_PER_TOKEN
 
-    # Over the line: drop the news snippets the report doesn't cite.
-    text = assemble(keep_uncited_news=True)
+    # Over the line: drop the news results the report doesn't cite.
+    text = assemble(passages)
     if estimate(text) > PROMPT_TOKEN_LINE:
-        uncited = sum(item.url not in cited for item in bundle.news_results)
-        if uncited:
-            left_out.append(f"{uncited} news result(s) the report doesn't cite")
-            text = assemble(keep_uncited_news=False)
+        uncited_news = [p for p in passages if p.kind == "news" and p.id not in cited]
+        if uncited_news:
+            left_out.append(f"{len(uncited_news)} news result(s) the report doesn't cite")
+            passages = [p for p in passages if p not in uncited_news]
+            text = assemble(passages)
     tokens = estimate(text)
     return RenderedEvidence(text, left_out, tokens, tokens > PROMPT_TOKEN_LINE)

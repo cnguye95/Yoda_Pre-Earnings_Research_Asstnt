@@ -3,6 +3,11 @@
 Two views, chosen with a toggle at the top: Single ticker (generate one
 report) and Queue (batch multiple tickers overnight, download all PDFs as a
 ZIP).
+
+Report generation is off until Rec 1 is built (step 8): the personality
+panel was removed with the new report format, so Generate and Run Queue say
+so instead. The results view below is kept for step 8; it shows whatever
+report is in session state.
 """
 
 import pathlib
@@ -11,16 +16,13 @@ import tempfile
 import streamlit as st
 import streamlit.components.v1 as components
 
-from yoda.modes.personality_panel import MarketDataUnavailable, run_personality_panel
-from yoda.queue.processor import process_queue
+from yoda.queue.processor import GENERATION_UNAVAILABLE
 from yoda.report.pdf import (
-    NO_MARKET_DATA, call_caption, expectation_rows, filing_caveats, filings_caption, is_url, report_to_pdf, site_label,
+    NO_MARKET_DATA, call_caption, claim_sources, expectation_rows, filing_caveats, filings_caption, is_url,
+    report_to_pdf, site_label,
 )
 from yoda.retrieval.embeddings import EMBEDDING_MODEL
-from yoda.tools.consensus import (
-    WHISPER_COST_NOTE, WHISPER_WINDOW_DAYS, days_to_report, next_report_date, whisper_by_default,
-)
-from yoda.schema import EarningsReport
+from yoda.schema import Claim, EarningsReport
 from yoda.tickers import normalize_tickers
 
 
@@ -40,11 +42,33 @@ def _md(text: str) -> str:
     return text.replace("$", r"\$")
 
 
-def _show_failure(what: str, exc: Exception) -> None:
-    """Show a failure once: "<what>: Type: message", with the traceback in a closed "Details" box."""
-    st.error(f"{what}: {type(exc).__name__}: {exc}")
-    with st.expander("Details"):
-        st.exception(exc)
+def _link_md(label: str, url: str | None) -> str:
+    """Return a markdown link to *url* showing *label*, or the label alone when there is no URL.
+
+    Square brackets in the label are escaped, so a citation can't break
+    the link.
+    """
+    label = _md(label).replace("[", r"\[").replace("]", r"\]")
+    return f"[{label}]({url})" if url else label
+
+
+def _claim_md(claim: Claim, report: EarningsReport) -> str:
+    """Return a claim as markdown: its text, then its evidence type and linked sources in small grey text.
+
+    An unverifiable claim has its type in orange, so weak claims stand out
+    (the same layout as the PDF).
+    """
+    tag = f":orange[{claim.evidence_type}]" if claim.evidence_type == "unverifiable" else claim.evidence_type
+    sources = "; ".join(_link_md(source.citation, source.url)
+                        for source in claim_sources(report, claim)) or "no source"
+    return f"{_md(claim.text)}  \n:gray[<small>{tag} · {sources}</small>]"
+
+
+def _labelled_md(label: str, claim: Claim | None, report: EarningsReport) -> str:
+    """Return "**label:** claim" markdown, or the label with an orange "not in the sources" for no claim."""
+    if claim is None:
+        return f"**{label}:** :orange[not in the sources]"
+    return f"**{label}:** {_claim_md(claim, report)}"
 
 
 # ---------------------------------------------------------------------------
@@ -79,86 +103,6 @@ def _ensure_pdf(report: EarningsReport) -> bytes:
 
 
 # ---------------------------------------------------------------------------
-# Report generation helper (single ticker)
-# ---------------------------------------------------------------------------
-
-def _whisper_setting(ticker: str) -> bool:
-    """Draw the "Advanced search settings" box for *ticker* and return the whisper choice.
-
-    The next report date is checked once per ticker (a free call, kept in
-    session state so reruns don't repeat it). The whisper lookup is ticked
-    by default only when that report is at most WHISPER_WINDOW_DAYS days
-    away; an unknown date leaves it unticked. The person can change it.
-    """
-    # Find the next report date once per ticker.
-    dates = st.session_state.setdefault("next_report", {})
-    if ticker not in dates:
-        with st.spinner(f"Checking {ticker}'s next report date..."):
-            dates[ticker] = next_report_date(ticker)
-    report_date, problem = dates[ticker]
-    days = days_to_report(report_date)
-
-    with st.expander("Advanced search settings", expanded=True):
-        if report_date is None:
-            st.caption(f"Next report date not found — {problem}. The whisper lookup is off by default.")
-        else:
-            st.caption(f"Next report: {report_date} ({days} days away). The whisper lookup runs by default "
-                       f"only when the report is {WHISPER_WINDOW_DAYS} days away or less.")
-
-        # The checkbox key carries the ticker, so each ticker starts from its own default.
-        lookup = st.checkbox("Look up the whisper number (paid)", value=whisper_by_default(days),
-                             key=f"whisper_{ticker}")
-        st.caption(_md(WHISPER_COST_NOTE))
-        if lookup and not whisper_by_default(days):
-            when = f"The report is {days} days away" if days is not None else "The report date is unknown"
-            st.warning(_md(f"{when}; a whisper number is usually published only 1–2 days before the "
-                           "report, so this lookup will likely cost about $0.12–0.15 and find nothing."))
-    return lookup
-
-
-def _generate_report(ticker: str, pause: MarketDataUnavailable | None = None,
-                     whisper_lookup: bool | None = None) -> None:
-    """Run the panel for *ticker* and keep the report in session state.
-
-    *whisper_lookup* is the search setting for the paid whisper lookup.
-    *pause* is the earlier MarketDataUnavailable when the person chose to
-    continue without that data: its market data is reused (no second paid
-    lookup, and the whisper decision it holds is kept) and the missing
-    figures go into the report's data gaps. A new refusal is kept in session
-    state as "market_pause", so the page can ask whether to continue or stop.
-    """
-    # Clear the previous report (and its cached PDF) first, so a failure or
-    # pause for this ticker never leaves another ticker's report on screen.
-    for key in ("report", "ticker", "pdf_bytes", "pdf_ticker"):
-        st.session_state.pop(key, None)
-
-    try:
-        with st.spinner(f"Generating report for {ticker}..."):
-            # A notice mid-run (the 10-K was trimmed to fit) pops up as a
-            # notification while the report keeps generating.
-            def notify(message: str) -> None:
-                st.toast(f"{ticker}: {message}", icon="ℹ️")
-
-            if pause is None:
-                report = run_personality_panel(ticker, whisper_lookup=whisper_lookup, on_notice=notify).report
-            else:
-                report = run_personality_panel(ticker, market=pause.snapshot,
-                                               allow_missing_market_data=True, on_notice=notify).report
-    except MarketDataUnavailable as exc:
-        st.session_state["market_pause"] = (ticker, exc)
-        return
-    except Exception as exc:
-        # The UI boundary: any failure is shown to the user instead of a
-        # blank page — once, with the full traceback folded away.
-        _show_failure(f"Could not generate report for {ticker}", exc)
-        return
-
-    # Persist report in session state so it survives reruns.
-    st.session_state["report"] = report
-    st.session_state["ticker"] = ticker
-
-
-# ---------------------------------------------------------------------------
 # Session-state defaults — populate keys we use so we don't need .get() guards
 # everywhere downstream.
 # ---------------------------------------------------------------------------
@@ -167,9 +111,7 @@ st.session_state.setdefault("queue", [])
 st.session_state.setdefault("queue_results", None)
 st.session_state.setdefault("queue_zip_bytes", None)
 st.session_state.setdefault("queue_zip_name",  None)
-st.session_state.setdefault("queue_status", "idle")      # idle / running / paused / complete
-st.session_state.setdefault("queue_pause", None)         # a QueuePause while paused
-st.session_state.setdefault("queue_stopped_at", None)    # ticker where the user chose Stop
+st.session_state.setdefault("queue_status", "idle")      # idle / complete
 
 
 # ---------------------------------------------------------------------------
@@ -194,13 +136,7 @@ if st.session_state["queue_status"] == "complete":
     results = st.session_state.get("queue_results") or []
     n_ok   = sum(result.status == "complete" for result in results)
     n_fail = sum(result.status == "failed" for result in results)
-    stopped_at = st.session_state.get("queue_stopped_at")
-    if stopped_at:
-        st.warning(
-            f"Queue stopped at {stopped_at} (market data unavailable) — {n_ok} reports generated, "
-            f"{n_fail} failed. Download ZIP below."
-        )
-    elif n_fail:
+    if n_fail:
         st.success(
             f"Queue complete — {n_ok} reports generated, {n_fail} failed. "
             f"Download ZIP below."
@@ -259,39 +195,18 @@ if view == _SINGLE_VIEW:
     )
     ticker = ticker_raw.strip().upper()
 
-    # Search settings for this ticker, set before searching (only once a
-    # ticker is entered, since the defaults depend on its next report date).
-    whisper_lookup = _whisper_setting(ticker) if ticker else False
-
-    # Generate button is disabled until the user enters a ticker.
+    # Generate button is disabled until the user enters a ticker. Generation
+    # is off until Rec 1 (step 8), so a click only says so.
     generate_clicked = st.button(
         "Generate Report",
         disabled=not ticker,
         type="primary",
         key="single_generate",
     )
-
-    # Generation handler — runs when the button is clicked.
     if generate_clicked:
-        st.session_state.pop("market_pause", None)
-        _generate_report(ticker, whisper_lookup=whisper_lookup)
+        st.info(GENERATION_UNAVAILABLE)
 
-    # A market-data provider refused a request: the report is paused before
-    # anything else was paid for. Say which provider failed and let the user
-    # continue without that data or stop.
-    if "market_pause" in st.session_state:
-        paused_ticker, pause = st.session_state["market_pause"]
-        st.warning(f"Report for {paused_ticker} paused: market data unavailable from "
-                   f"{', '.join(pause.apis)}.\n\n{pause}")
-        col_continue, col_stop = st.columns(2)
-        if col_continue.button("Continue without this data", key="market_continue"):
-            st.session_state.pop("market_pause")
-            _generate_report(paused_ticker, pause=pause)
-        if col_stop.button("Stop", key="market_stop"):
-            st.session_state.pop("market_pause")
-            st.rerun()
-
-    # Results section — shown only after a successful generation.
+    # Results section — shown when a report is in session state.
     if "report" in st.session_state:
         report = st.session_state["report"]
 
@@ -312,8 +227,8 @@ if view == _SINGLE_VIEW:
         for caveat in filing_caveats(report):
             st.warning(caveat)
 
-        # PDF download button — generated once and cached. A failure here
-        # (e.g. the SEC unreachable) is shown, and the rest of the page stays.
+        # PDF download button — generated once and cached. A failure here is
+        # shown, and the rest of the page stays.
         try:
             pdf_bytes = _ensure_pdf(report)
         except Exception as exc:
@@ -326,18 +241,21 @@ if view == _SINGLE_VIEW:
                 mime="application/pdf",
             )
 
-        # Pre-Earnings Watchlist — primary section, always visible.
-        # Each entry is a WatchItem with two-paragraph text (analysis +
-        # "-> Monitor ..." recommendation) plus 0-3 relevant URLs.
-        # st.markdown handles "\n\n" as a paragraph break and **bold** natively;
-        # URLs render as a compact bullet sub-list so they read as starting
-        # points for further research, not part of the recommendation itself.
-        st.subheader("Pre-Earnings Watchlist")
-        for item in report.what_to_watch:
-            st.markdown(_md(item.text))
-            for url in item.relevant_urls:
-                st.markdown(f"- [{url}]({url})")
-            st.markdown("")
+        # Every claim below is followed by its evidence type and its sources
+        # (in small grey text, each linked to where it can be checked), in
+        # the same order as the PDF. The setup leads, always visible.
+        st.subheader("Setup Summary")
+        for claim in report.setup_summary:
+            st.markdown(_claim_md(claim, report))
+
+        # Metrics to model: each metric's last reported figure, the
+        # consensus and the view on where the risk to expectations lies.
+        with st.expander(f"Metrics to Model ({len(report.metrics_to_model)})", expanded=True):
+            for metric in report.metrics_to_model:
+                st.markdown(f"**{_md(metric.metric)}** — {_md(metric.period)}")
+                for label, claim in (("Last reported", metric.last_reported), ("Consensus", metric.consensus),
+                                     ("View", metric.view)):
+                    st.markdown(f"- {_labelled_md(label, claim, report)}")
 
         # Market expectations: each figure with its quarter, source and date
         # (the same rows the PDF shows). A missing figure says N/A and why; a
@@ -356,39 +274,52 @@ if view == _SINGLE_VIEW:
                 as_of = f", as of {row.as_of}" if row.as_of else ""
                 st.markdown(f"- **{row.label}:** {_md(row.value_text)}{quarter} — {source}{as_of}")
 
-        # Developments since the filing, each with its evidence type, period,
-        # date and a link to its source.
+        # Guidance: each item's range and whether it was raised, kept, lowered...
+        with st.expander(f"Guidance ({len(report.guidance)})"):
+            for item in report.guidance:
+                st.markdown(f"**{_md(item.metric)}** ({_md(item.period)}): {_md(item.guidance)} — *{item.status}*  \n"
+                            f"{_claim_md(item.claim, report)}")
+
+        # What the 8-K, the call and news add beyond the filing.
         with st.expander(f"Since the Filing ({len(report.since_filing)})"):
-            if not report.since_filing:
-                st.markdown("(None recorded)")
-            for item in report.since_filing:
-                period = item.period or "no fiscal period"
-                st.markdown(f"- {item.evidence_type} · {period} · {item.as_of_date} — "
-                            f"{_md(item.claim)} — [{_md(item.source)}]({item.url})")
+            for claim in report.since_filing:
+                st.markdown(f"- {_claim_md(claim, report)}")
 
-        # Bull / Bear — secondary, in an expander.
-        with st.expander("Bull Case / Bear Case"):
-            st.markdown("**Bull case**")
-            for point in report.bull_case:
-                st.markdown(f"- {_md(point)}")
-            st.markdown("**Bear case**")
-            for point in report.bear_case:
-                st.markdown(f"- {_md(point)}")
+        # The open questions, each argued both ways.
+        with st.expander(f"Key Debates ({len(report.key_debates)})"):
+            for debate in report.key_debates:
+                st.markdown(f"**{_md(debate.question)}**")
+                st.markdown(f"- {_labelled_md('Bull', debate.bull, report)}\n"
+                            f"- {_labelled_md('Bear', debate.bear, report)}\n"
+                            f"- **What settles it:** {_md(debate.what_settles_it)}")
 
-        # Recent news with clickable URLs.
-        if report.recent_news:
-            with st.expander(f"Recent News ({len(report.recent_news)})"):
-                for item in report.recent_news:
-                    st.markdown(f"**{_md(item.headline)}** — {item.date}")
-                    st.markdown(f"[Read more]({item.url})")
-                    st.markdown(f"*{_md(item.relevance_note)}*")
-                    st.markdown("---")
+        # How the quarter could go, each with the signs that would show it.
+        with st.expander(f"Scenarios ({len(report.scenarios)})"):
+            for scenario in report.scenarios:
+                st.markdown(_labelled_md(scenario.name.capitalize(), scenario.description, report))
+                for trigger in scenario.triggers:
+                    st.markdown(f"- {_md(trigger)}")
 
-        # Data gaps — visible only when there are gaps to show.
+        # Risks; one new since the prior filing is tagged.
+        with st.expander(f"Key Risks ({len(report.key_risks)})"):
+            for risk in report.key_risks:
+                new_tag = ":red[**[NEW]**] " if risk.is_new else ""
+                st.markdown(f"- {new_tag}{_claim_md(risk.claim, report)}")
+
+        # What to ask on the call, and why.
+        with st.expander(f"Questions for Management ({len(report.questions_for_management)})"):
+            for number, item in enumerate(report.questions_for_management, start=1):
+                st.markdown(f"{number}. **{_md(item.question)}**  \n{_labelled_md('Why', item.why, report)}")
+
+        # Data gaps, and what the citation checks changed — visible only when there are some.
         if report.data_gaps:
             with st.expander(f"Data Gaps ({len(report.data_gaps)})"):
                 for gap in report.data_gaps:
                     st.markdown(f"- {_md(gap)}")
+        if report.check_notes:
+            with st.expander(f"Citation Checks ({len(report.check_notes)})"):
+                for note in report.check_notes:
+                    st.markdown(f"- {_md(note)}")
 
 
 # ---------------------------------------------------------------------------
@@ -438,113 +369,13 @@ if view == _QUEUE_VIEW:
             st.session_state["queue"] = []
             st.session_state["queue_results"] = None
             st.session_state["queue_status"] = "idle"
-            st.session_state["queue_pause"] = None
-            st.session_state["queue_stopped_at"] = None
             st.rerun()
     else:
         st.info("Queue is empty. Add tickers above.")
 
-    # Search settings for the batch: each ticker's paid whisper lookup follows
-    # the default rule from its own next report date, unless switched off for
-    # the whole batch (None = the rule, False = off).
-    with st.expander("Advanced search settings", expanded=True):
-        st.caption(f"Each ticker's whisper number is looked up automatically only when its next report "
-                   f"is {WHISPER_WINDOW_DAYS} days away or less.")
-        skip_whispers = st.checkbox("Skip whisper lookups for this batch", key="queue_skip_whispers")
-        st.caption(_md(WHISPER_COST_NOTE))
-    queue_whisper_lookup = False if skip_whispers else None
-
-    # Disabled while the queue is empty, already running, or paused waiting
-    # for the user to choose continue or stop.
-    run_clicked = st.button(
-        "Run Queue",
-        disabled=not st.session_state["queue"]
-                  or st.session_state["queue_status"] in ("running", "paused"),
-        type="primary",
-        key="queue_run",
-    )
-
-    def _run_queue(tickers: list[str], **queue_options) -> None:
-        """Run *tickers* through process_queue with a live status table, then store the outcome.
-
-        *queue_options* go straight to process_queue (they carry a paused
-        queue's choices when it is continued). A paused queue is kept in
-        session state as "queue_pause", so the page can ask whether to
-        continue or stop.
-        """
-        st.session_state["queue_status"] = "running"
-
-        # Per-ticker live status table updated via the on_progress callback.
-        status_placeholder = st.empty()
-        live_status: dict[str, str] = {queued: "pending" for queued in tickers}
-
-        def _render_status_table() -> None:
-            """Redraw the live status table from live_status."""
-            rows = ["| Ticker | Status |", "|---|---|"]
-            for symbol, status in live_status.items():
-                emoji = (
-                    "⏳" if status.startswith("running")
-                    else "✅" if status == "complete"
-                    else "❌" if status.startswith("failed")
-                    else "⏸️" if status.startswith("paused")
-                    else "·"
-                )
-                rows.append(f"| {symbol} | {emoji} {status} |")
-            status_placeholder.markdown("\n".join(rows))
-
-        _render_status_table()
-
-        def on_progress(ticker: str, status: str) -> None:
-            """Record a ticker's new status and redraw (between ticker runs, and on a notice mid-run)."""
-            live_status[ticker] = status
-            _render_status_table()
-
-        # The UI boundary for the whole batch: individual tickers already
-        # fail softly inside process_queue, so anything caught here (e.g. the
-        # disk is full) is shown in full rather than leaving a frozen page.
-        try:
-            run = process_queue(tickers, on_progress=on_progress, **queue_options)
-            zip_bytes = pathlib.Path(run.zip_path).read_bytes()
-        except Exception as exc:
-            st.session_state["queue_status"] = "idle"
-            _show_failure("Queue run failed", exc)
-            return
-
-        # Keep the results (and the ZIP in memory, for the download button),
-        # then rerun so the completion or pause notice shows. st.rerun() stays
-        # outside the try: it works by raising a special signal that must not
-        # be caught as an error.
-        st.session_state["queue_results"]   = run.results
-        st.session_state["queue_zip_bytes"] = zip_bytes
-        st.session_state["queue_zip_name"]  = run.zip_path.name
-        st.session_state["queue_pause"]     = run.pause
-        st.session_state["queue_status"]    = "paused" if run.pause else "complete"
-        st.session_state["show_queue_view"] = True   # stay on the Queue view after the rerun
-        st.rerun()
-
-    if run_clicked:
-        st.session_state["queue_stopped_at"] = None
-        _run_queue(st.session_state["queue"], whisper_lookup=queue_whisper_lookup)
-
-    # A market-data provider refused a request: the queue stopped before
-    # paying for that ticker. Say which provider failed and let the user
-    # continue (that ticker and the rest go on without the data, without
-    # pausing again) or stop (the finished PDFs are already in the ZIP).
-    pause = st.session_state.get("queue_pause")
-    if st.session_state["queue_status"] == "paused" and pause is not None:
-        st.warning(f"Queue paused at {pause.ticker}: market data unavailable from "
-                   f"{', '.join(pause.apis)}.\n\n{pause.message}")
-        col_continue, col_stop = st.columns(2)
-        if col_continue.button("Continue without this data", key="queue_continue"):
-            _run_queue(pause.remaining, allow_missing_market_data=True,
-                       known_market={pause.ticker: pause.snapshot},
-                       prior_results=st.session_state["queue_results"] or [],
-                       whisper_lookup=queue_whisper_lookup)
-        if col_stop.button("Stop", key="queue_stop"):
-            st.session_state["queue_stopped_at"] = pause.ticker
-            st.session_state["queue_pause"] = None
-            st.session_state["queue_status"] = "complete"
-            st.rerun()
+    # Generation is off until Rec 1 (step 8), so the queue can't run yet.
+    st.button("Run Queue", disabled=True, type="primary", key="queue_run")
+    st.info(GENERATION_UNAVAILABLE)
 
     # If a queue has completed, show per-ticker download buttons.
     if st.session_state.get("queue_results"):

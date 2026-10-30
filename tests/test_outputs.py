@@ -9,7 +9,6 @@ here calls Claude, OpenAI or the SEC.
 
 import pathlib
 import zipfile
-from datetime import timedelta
 from types import SimpleNamespace
 
 import pandas as pd
@@ -17,19 +16,15 @@ import pytest
 from reportlab.platypus import Paragraph
 from streamlit.testing.v1 import AppTest
 
+from samples import claim, sample_report, sample_store
 from yoda.eval import judge, rubric, runner
 from yoda.eval.rubric import DimensionScore, JudgeScores
-from yoda.modes import personality_panel
-from yoda.modes.personality_panel import MarketDataUnavailable, PanelRun
+from yoda.modes.baseline import BaselineRun
 from yoda.queue import processor
 from yoda.report import pdf
-from yoda.schema import (
-    EarningsReport, EvidenceBundle, ExpectationValue, ForwardGuidance, MarketExpectations, Metric, NewsItem,
-    ReportFiling, Risk, Segment, SinceFilingItem, WatchItem,
-)
-from yoda.dates import market_today
+from yoda.report.header import MarketDataUnavailable
+from yoda.schema import EvidenceStore, ExpectationValue, MarketExpectations, ReportFiling
 from yoda.tickers import normalize_tickers
-from yoda.tools import consensus
 from yoda.tools.consensus import ApiFailure, MarketSnapshot
 
 
@@ -42,30 +37,19 @@ _QUARTERLY = ReportFiling(filing_type="10-Q", filing_date="2026-05-01", url="htt
 _ANNUAL = ReportFiling(filing_type="10-K", filing_date="2026-02-01", url="https://sec.gov/k")
 
 
-def _report(**overrides) -> EarningsReport:
-    # A complete report with deliberately awkward text: markup characters,
-    # a stray bold marker, a blank metric value and a placeholder guidance.
+def _report(**overrides):
+    # The sample report (every section filled, sources looked up) with
+    # deliberately awkward text: markup characters in the name, a claim and
+    # a data gap, and a check note.
     values = dict(
-        ticker="TEST", company_name="Test & Sons <Holdings>", filings=[_QUARTERLY, _ANNUAL],
+        company_name="Test & Sons <Holdings>", filings=[_QUARTERLY, _ANNUAL],
         report_generated_at="2026-05-02T14:30:00-04:00",
-        key_metrics=[
-            Metric(name="Revenue < prior year", value="$1.2B", unit="", source_citation="10-Q Item 2 — R&D"),
-            Metric(name="Backlog", value="", unit="USD", source_citation="10-Q Item 2 — Backlog"),
-        ],
-        revenue_segments=[Segment(name="Cloud", revenue="$500M", yoy_change="+12%",
-                                  commentary="A long commentary sentence " * 8, source_citation="10-Q Note 3")],
-        forward_guidance=ForwardGuidance(text="No forward guidance issued in this filing.",
-                                         source_citation="10-Q Item 2"),
-        key_risks=[Risk(description="FX <volatility>", is_new=True, source_citation="10-K Item 1A")],
-        recent_news=[NewsItem(headline="Beat & raise", date="2026-04-30",
-                              url="https://example.com/a?x=1&y=2", relevance_note="why")],
-        bull_case=["**Margins** expanding"], bear_case=["Costs ** rising"],
-        what_to_watch=[WatchItem(text="**Topic:** analysis with a stray ** marker\n\n-> Monitor x",
-                                 relevant_urls=["https://example.com/a?x=1&y=2"])],
+        setup_summary=[claim("Revenue < prior year & more", "Q.001")],
         data_gaps=["Something <missing>"],
+        check_notes=["key_risks[0]: tag 'reported' → 'proxy' (it cites only peer)."],
     )
     values.update(overrides)
-    return EarningsReport(**values)
+    return sample_report(**values)
 
 
 def _texts(flowables) -> list[str]:
@@ -84,8 +68,8 @@ def _texts(flowables) -> list[str]:
 # PDF
 # ---------------------------------------------------------------------------
 
-def test_pdf_builds_with_markup_characters_and_stray_bold(tmp_path):
-    # Before the fix, "<", "&" or an unpaired "**" made ReportLab fail.
+def test_pdf_builds_with_markup_characters(tmp_path):
+    # Before the fix, "<" or "&" made ReportLab fail.
     out = pdf.report_to_pdf(_report(), tmp_path / "r.pdf")
     assert (tmp_path / "r.pdf").stat().st_size > 1000 and out.endswith("r.pdf")
 
@@ -96,24 +80,6 @@ def test_pdf_builds_for_a_report_with_no_filing(tmp_path):
     cover = " ".join(_texts(pdf._cover_elements(report, pdf._get_styles())))
     assert "No recent SEC filing" in cover and "filed N/A" not in cover
     assert "news and peer filings only" in cover
-
-
-def test_blank_metric_value_is_shown_as_not_reported():
-    cells = _texts(pdf._metrics_table(_report(), pdf._get_styles()))
-    # The cell starts with the placeholder (the period follows on its own line).
-    assert any(cell.startswith(f"{pdf._NOT_REPORTED}<br/>") for cell in cells)
-    assert not any(cell.startswith("USD") for cell in cells)   # a lone unit is not a value
-
-
-def test_guidance_placeholder_is_not_put_in_quote_marks():
-    texts = _texts(pdf._guidance_section(_report(), pdf._get_styles()))
-    assert "No forward guidance issued in this filing." in texts
-    assert not any(text.startswith('"') for text in texts)
-
-
-def test_stray_bold_marker_stays_plain_text():
-    assert pdf._markdown_bold("**Topic:** a ** b") == "<b>Topic:</b> a ** b"
-    assert pdf._markdown_bold("a < b & c") == "a &lt; b &amp; c"
 
 
 def test_generated_time_is_labelled_utc():
@@ -142,14 +108,35 @@ def test_no_caveat_for_a_foreign_filer_annual_report(form):
     assert pdf.filing_caveats(_report(filings=[foreign])) == []
 
 
-def test_each_citation_links_to_the_filing_it_names():
-    # "10-K ..." links to the 10-K, "10-Q ..." to the 10-Q; a citation naming
-    # no filing links to the newest; a report without URLs shows plain text.
+def test_each_claim_is_followed_by_its_tag_and_linked_sources():
     report = _report()
-    assert pdf._cite("10-K Item 1A. Risk Factors", report).startswith('<a href="https://sec.gov/k">')
-    assert pdf._cite("10-Q Item 2", report).startswith('<a href="https://sec.gov/q?a=1&amp;b=2">')
-    assert pdf._cite("MD&A", report).startswith('<a href="https://sec.gov/q?a=1&amp;b=2">')
-    assert pdf._cite("10-Q Item 2", _report(filings=[])) == "10-Q Item 2"
+    markup = pdf._claim_markup(report.setup_summary[0], report)
+    assert markup.startswith("Revenue &lt; prior year &amp; more<br/>")
+    assert ('reported · <a href="https://www.sec.gov/Archives/test/q.htm">'
+            "10-Q filed 2026-08-06 · MD&amp;A — Revenue</a>") in markup
+    # Two sources, a source without a URL, and an unverifiable tag in amber.
+    two = pdf._claim_markup(claim("Growth.", "Q.001", "F.02", tag="unverifiable"), report)
+    assert '<font color="#ff8800">unverifiable</font>' in two
+    assert "</a>; XBRL fact sheet — Revenue growth implied by consensus" in two
+    # An ID missing from report.sources (an unchecked report) shows by its ID, never vanishes.
+    assert "Z.999" in pdf._claim_markup(claim("x", "Z.999"), report)
+    assert "no source" in pdf._claim_markup(claim("x"), report)
+
+
+def test_claim_sources_are_shared_with_the_app():
+    report = _report()
+    assert pdf.claim_sources(report, claim("x", "F.01", "Z.9")) == [
+        pdf.ClaimSource("F.01", "XBRL fact sheet — Revenue — quarter ended 2026-06-30", None),
+        pdf.ClaimSource("Z.9", "Z.9", None),
+    ]
+
+
+def test_a_metric_without_a_consensus_says_so():
+    report = _report()
+    report.metrics_to_model[0].consensus = None
+    texts = _texts(pdf._metrics_section(report, pdf._get_styles()))
+    assert '<b>Consensus:</b> <font color="#ff8800">not in the sources</font>' in texts
+    assert any(text.startswith("<b>Last reported:</b> $11.5B in Q2.") for text in texts)
 
 
 def test_cover_lists_every_filing():
@@ -177,26 +164,6 @@ def _expectations() -> MarketExpectations:
                               price_target=filled)
 
 
-def _since_items() -> list[SinceFilingItem]:
-    # One checked 8-K figure (with markup characters) and one unverifiable event.
-    return [
-        SinceFilingItem(claim="Revenue rose 9% <ex-FX> & more", evidence_type="reported", period="Q3 FY2026",
-                        as_of_date="2026-10-13", source="8-K Item 2.02, Exhibit 99.1 — Results",
-                        url="https://www.sec.gov/ex99.htm?a=1&b=2"),
-        SinceFilingItem(claim="CFO resigned", evidence_type="unverifiable", period=None, as_of_date="2026-10-20",
-                        source="none stated", url="https://news.example/cfo"),
-    ]
-
-
-def test_metric_period_sits_under_its_value():
-    metrics = [Metric(name="Revenue", value="$1.2B", unit="", source_citation="10-Q Item 2", period="Q3 FY2026"),
-               Metric(name="Backlog", value="$3B", unit="", source_citation="10-Q Item 2")]
-    cells = _texts(pdf._metrics_table(_report(key_metrics=metrics), pdf._get_styles()))
-    assert any(cell.startswith("$1.2B<br/>") and "Q3 FY2026" in cell for cell in cells)
-    # A report written before periods were recorded says so.
-    assert any(cell.startswith("$3B<br/>") and "period not stated" in cell for cell in cells)
-
-
 def test_expectation_rows_show_each_figure_or_why_it_is_missing():
     rows = pdf.expectation_rows(_report(market_expectations=_expectations()))
 
@@ -221,27 +188,22 @@ def test_market_expectations_section_marks_missing_figures_and_links_the_whisper
     assert pdf.NO_MARKET_DATA in _texts(pdf._market_expectations_section(_report(), styles))
 
 
-def test_since_filing_section_labels_each_claim_and_links_its_source():
-    styles = pdf._get_styles()
-    texts = _texts(pdf._since_filing_section(_report(since_filing=_since_items()), styles))
-    assert "Revenue rose 9% &lt;ex-FX&gt; &amp; more" in texts
-    assert "reported" in texts and "—" in texts            # an event with no fiscal period
-    assert '<font color="#ff8800">unverifiable</font>' in texts
-    assert any(text.startswith('<a href="https://www.sec.gov/ex99.htm?a=1&amp;b=2">') for text in texts)
-
-    assert "(None)" in _texts(pdf._since_filing_section(_report(), styles))
-
-
-def test_pdf_sections_come_newest_first():
+def test_pdf_sections_follow_the_report_order():
     story = pdf._story(_report(), pdf._get_styles())
     headers = [item.text for item in story if isinstance(item, Paragraph) and item.style.name == "SectionHeader"]
-    assert headers == ["Pre-Earnings Watchlist", "Market Expectations", "Since the Filing", "Key Metrics",
-                       "Revenue Segments", "Forward Guidance", "Key Risks", "Recent News", "Bull Case",
-                       "Bear Case", "Data Gaps"]
+    assert headers == ["Setup Summary", "Metrics to Model", "Market Expectations", "Guidance", "Since the Filing",
+                       "Key Debates", "Scenarios", "Key Risks", "Questions for Management", "Data Gaps",
+                       "Citation Checks"]
 
 
-def test_pdf_builds_with_the_new_sections(tmp_path):
-    report = _report(market_expectations=_expectations(), since_filing=_since_items())
+def test_an_empty_section_says_none():
+    texts = _texts(pdf._story(_report(key_debates=[], data_gaps=[], check_notes=[]), pdf._get_styles()))
+    assert texts[texts.index("Key Debates") + 1] == "(None)"
+    assert "Data Gaps" not in texts and "Citation Checks" not in texts
+
+
+def test_pdf_builds_with_every_section(tmp_path):
+    report = _report(market_expectations=_expectations())
     pdf.report_to_pdf(report, tmp_path / "r.pdf")
     assert (tmp_path / "r.pdf").stat().st_size > 1000
 
@@ -250,8 +212,17 @@ def test_pdf_builds_with_the_new_sections(tmp_path):
 # Queue processor
 # ---------------------------------------------------------------------------
 
+def test_queue_says_generation_is_off_until_rec_1():
+    # With no report writer until step 8, every ticker fails with that message.
+    _, results, pause = processor.process_queue(["aaa", "bbb"])
+    assert pause is None
+    assert [(r.ticker, r.error) for r in results] == [
+        ("AAA", f"RuntimeError: {processor.GENERATION_UNAVAILABLE}"),
+        ("BBB", f"RuntimeError: {processor.GENERATION_UNAVAILABLE}")]
+
+
 def test_queue_shows_a_mid_run_notice_in_the_ticker_status(monkeypatch):
-    # The panel says the 10-K was trimmed: the ticker's live status shows it
+    # The writer says the 10-K was trimmed: the ticker's live status shows it
     # while the ticker is still running, before it completes.
     def fake_build(ticker, market=None, allow_missing_market_data=False, whisper_lookup=None, on_notice=None):
         on_notice("The 10-K was trimmed to fit.")
@@ -391,7 +362,7 @@ def _stub_runner(monkeypatch, run_mode=None):
     # Replace every outside step of run_eval with a fast fake.
     monkeypatch.setattr(runner, "fetch_filings", lambda ticker: None)
     monkeypatch.setattr(runner, "_run_mode", run_mode or (
-        lambda mode, ticker, filing: runner.ModeRun(_report(), 1.0, "logged", 0.1, "")))
+        lambda mode, ticker, filing: runner.ModeRun(_report(), 1.0, "logged", 0.1, "", sample_store())))
     monkeypatch.setattr(runner, "judge_report",
                         lambda report, text, na, repeat=False: _judge_result())
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
@@ -402,10 +373,10 @@ def test_failures_are_listed_in_the_summary(monkeypatch, tmp_path):
     def run_mode(mode, ticker, filing):
         if mode == "yoda":
             raise ValueError("synthesis fabricated a URL")
-        return runner.ModeRun(_report(), 1.0, "logged", 0.1, "")
+        return runner.ModeRun(_report(), 1.0, "logged", 0.1, "", sample_store())
     _stub_runner(monkeypatch, run_mode)
 
-    runner.run_eval(["AAA"], out_dir=tmp_path)
+    runner.run_eval(["AAA"], modes=runner.KNOWN_MODES, out_dir=tmp_path)
 
     summary = (tmp_path / "summary.md").read_text(encoding="utf-8")
     assert "## Failures" in summary
@@ -424,58 +395,47 @@ def test_no_results_gives_a_summary_not_a_crash(monkeypatch, tmp_path):
 
 
 def test_single_mode_run_keeps_other_modes_reports(monkeypatch, tmp_path):
-    # A baseline-only run used to delete every yoda_*.json result.
+    # A baseline-only run (today's default) used to delete every yoda_*.json result.
     _stub_runner(monkeypatch)
     (tmp_path / "yoda_AAA.json").write_text("{}", encoding="utf-8")
     (tmp_path / "panel_AAA.json").write_text("{}", encoding="utf-8")   # stale smoke-test file
 
-    runner.run_eval(["AAA"], modes=("baseline",), out_dir=tmp_path)
+    runner.run_eval(["AAA"], out_dir=tmp_path)
 
     assert (tmp_path / "yoda_AAA.json").exists()
     assert (tmp_path / "baseline_AAA.json").exists()
     assert not (tmp_path / "panel_AAA.json").exists()
 
 
-def _bundle() -> EvidenceBundle:
-    # A small evidence bundle; its contents don't matter to the runner.
-    return EvidenceBundle(ticker="AAA", documents=[], market_context="- Consensus EPS: $1.23", news_results=[],
-                          read_urls=["https://news.example/a"], articles=[], peer_passages=[])
-
-
 def test_evidence_is_saved_next_to_each_report(monkeypatch, tmp_path):
-    # Yoda's bundle is written beside its report and survives the stale-file
-    # cleanup; a mode with no bundle of its own (here the baseline) gets the
-    # filing-only bundle it is judged on.
+    # Each mode's evidence store is written beside its report, survives the
+    # stale-file cleanup, and reads back as it was.
     def run_mode(mode, ticker, filing):
-        return runner.ModeRun(_report(), 1.0, "logged", 0.1, "", _bundle() if mode == "yoda" else None)
+        store = sample_store() if mode == "yoda" else EvidenceStore(ticker=ticker)
+        return runner.ModeRun(_report(), 1.0, "logged", 0.1, "", store)
     _stub_runner(monkeypatch, run_mode)
 
-    runner.run_eval(["AAA"], out_dir=tmp_path)
+    runner.run_eval(["AAA"], modes=runner.KNOWN_MODES, out_dir=tmp_path)
 
     saved = (tmp_path / "yoda_AAA_evidence.json").read_text(encoding="utf-8")
-    assert EvidenceBundle.model_validate_json(saved) == _bundle()
+    assert EvidenceStore.model_validate_json(saved) == sample_store()
     assert (tmp_path / "yoda_AAA.json").exists()
-    baseline = EvidenceBundle.model_validate_json((tmp_path / "baseline_AAA_evidence.json").read_text(encoding="utf-8"))
-    assert baseline.documents == [] and baseline.market_context == ""   # no filing was fetched in this stub
+    baseline = EvidenceStore.model_validate_json((tmp_path / "baseline_AAA_evidence.json").read_text(encoding="utf-8"))
+    assert baseline.passages == []
 
 
-def test_run_mode_passes_on_the_panel_evidence(monkeypatch):
-    # The panel's bundle reaches the runner; its hypotheses and critique don't.
-    monkeypatch.setattr(runner, "run_personality_panel",
-                        lambda ticker: PanelRun(_report(), ["working"], ["critique"], _bundle()))
-    monkeypatch.setattr(runner, "run_baseline", lambda ticker, filing: _report())
-
-    assert runner._run_mode("yoda", "AAA", None).evidence == _bundle()
-    # The baseline's evidence is the filing it read (none here).
-    assert runner._run_mode("baseline", "AAA", None).evidence.documents == []
+def test_run_mode_passes_on_the_baselines_store(monkeypatch):
+    monkeypatch.setattr(runner, "run_baseline", lambda ticker, filing: BaselineRun(_report(), sample_store()))
+    run = runner._run_mode("baseline", "AAA", None)
+    assert run.report == _report() and run.evidence == sample_store()
 
 
 def test_unparsed_cost_is_unknown_not_zero():
     # A mode whose log has no "Total cost:" line has an unknown cost.
-    run = runner._capture(lambda: print("Wall time: 2.00s") or (_report(), None))
+    run = runner._capture(lambda: print("Wall time: 2.00s") or (_report(), sample_store()))
     assert run.cost_usd is None
     assert (run.latency_seconds, run.latency_source) == (2.0, "logged")
-    timed = runner._capture(lambda: (_report(), None))
+    timed = runner._capture(lambda: (_report(), sample_store()))
     assert timed.latency_source == "measured"
 
 
@@ -534,7 +494,8 @@ def test_normalize_tickers_splits_cleans_and_dedupes():
 
 # ---------------------------------------------------------------------------
 # Streamlit app — the UI bugs in next_steps item 1, run with Streamlit's own
-# test harness (no browser, nothing live: the panel and queue are faked)
+# test harness (no browser, nothing live). Generation is off until Rec 1
+# (step 8), so a report is put into session state to show the results view.
 # ---------------------------------------------------------------------------
 
 _APP = pathlib.Path(__file__).resolve().parents[1] / "app.py"
@@ -550,40 +511,27 @@ def _app(**session) -> AppTest:
     return app.run()
 
 
-def test_failed_generation_shows_one_error_and_no_stale_report(monkeypatch):
-    # Bugs 1c and 1e: after a failed generation the previous ticker's report
-    # stayed on the page, and the error was printed twice.
-    def fail(ticker, **kwargs):
-        raise RuntimeError("ZZZZ has no filing")
-    monkeypatch.setattr(personality_panel, "run_personality_panel", fail)
-    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: (None, "no source had a date"))
-    # A report for TEST is on screen (its PDF already cached, so no SEC fetch).
-    app = _app(report=_report(), pdf_bytes=b"%PDF", pdf_ticker="TEST")
-    assert any(header.value.startswith("TEST —") for header in app.subheader)
-
-    app.text_input(key="single_ticker_input").input("ZZZZ").run()
-    app.button(key="single_generate").click().run()
-
-    assert [error.value for error in app.error] == ["Could not generate report for ZZZZ: RuntimeError: ZZZZ has no filing"]
-    details = [expander for expander in app.expander if expander.label == "Details"]
-    assert details and details[0].exception             # the traceback, folded away
-    assert not any(header.value.startswith("TEST —") for header in app.subheader)
-
-
-def test_trimmed_10k_pops_up_a_notification_during_generation(monkeypatch):
-    # The panel says mid-run that the 10-K was trimmed: the page shows it
-    # as a notification straight away, before the report is finished.
-    def panel_run(ticker, **kwargs):
-        kwargs["on_notice"]("The 10-K was trimmed to fit.")
-        raise RuntimeError("stop here")
-    monkeypatch.setattr(personality_panel, "run_personality_panel", panel_run)
-    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: (None, "no source had a date"))
+def test_generate_says_generation_returns_with_rec_1():
     app = _app()
-
-    app.text_input(key="single_ticker_input").input("JPM").run()
+    assert app.button(key="single_generate").disabled          # no ticker yet
+    app.text_input(key="single_ticker_input").input("NFLX").run()
     app.button(key="single_generate").click().run()
+    assert [info.value for info in app.info] == [processor.GENERATION_UNAVAILABLE]
+    assert not app.error and not app.checkbox                    # no whisper setting until step 8
 
-    assert [toast.value for toast in app.toast] == ["JPM: The 10-K was trimmed to fit."]
+
+def test_results_view_shows_every_section_with_its_sources():
+    app = _app(report=_report(), pdf_bytes=b"%PDF", pdf_ticker="TEST")
+    assert not app.exception
+    assert [expander.label for expander in app.expander] == [
+        "Metrics to Model (1)", "Market Expectations", "Guidance (1)", "Since the Filing (1)", "Key Debates (1)",
+        "Scenarios (1)", "Key Risks (1)", "Questions for Management (1)", "Data Gaps (1)", "Citation Checks (1)"]
+    page = " ".join(markdown.value for markdown in app.markdown)
+    # Each claim, then its tag and linked sources in small grey text.
+    assert ("Revenue < prior year & more  \n:gray[<small>reported · "
+            "[10-Q filed 2026-08-06 · MD&A — Revenue](https://www.sec.gov/Archives/test/q.htm)</small>]") in page
+    assert ":orange[unverifiable]" in page and ":red[**[NEW]**]" in page
+    assert "**Consensus:** Consensus implies 8.4% growth." in page
 
 
 def test_add_to_queue_counts_only_new_tickers():
@@ -593,62 +541,10 @@ def test_add_to_queue_counts_only_new_tickers():
     assert app.button(key="queue_add").label == "Add to Queue (1 new ticker)"
 
 
-def test_finished_queue_stays_on_the_queue_view(monkeypatch, tmp_path):
-    # Bug 1f: after a queue run the page went back to the Single ticker view.
-    zip_path = tmp_path / "yoda_queue_x.zip"
-    zipfile.ZipFile(zip_path, "w").close()
-    monkeypatch.setattr(processor, "process_queue",
-                        lambda tickers, **kwargs: processor.QueueRun(zip_path, [], None))
+def test_queue_cannot_run_until_rec_1():
     app = _app(queue=["AAA"], view=_QUEUE_VIEW)
-
-    app.button(key="queue_run").click().run()
-
-    assert app.radio(key="view").value == _QUEUE_VIEW
-    assert app.success[0].value.startswith("Queue complete")
-
-
-def _days_from_now(days: int) -> str:
-    # A YYYY-MM-DD date *days* after today's market (New York) date.
-    return (market_today() + timedelta(days=days)).isoformat()
-
-
-@pytest.mark.parametrize("found, ticked", [
-    ((_days_from_now(2), None), True),             # inside the 3-day window
-    ((_days_from_now(82), None), False),           # far off: opted out
-    ((None, "Finnhub refused the request"), False),  # date not found: opted out
-])
-def test_whisper_setting_is_preset_from_the_next_report_date(monkeypatch, found, ticked):
-    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: found)
-    app = _app()
-
-    app.text_input(key="single_ticker_input").input("NFLX").run()
-
-    assert app.checkbox(key="whisper_NFLX").value is ticked
-    captions = " ".join(caption.value for caption in app.caption)
-    assert "about \\$0.12–0.15" in captions                       # the cost note, always shown
-    if found[0] is None:
-        assert "Next report date not found — Finnhub refused the request" in captions
-
-
-def test_ticking_whisper_outside_the_window_warns_and_is_passed_on(monkeypatch):
-    # The person may still ask for a lookup when the report is far off; the
-    # page warns it will likely find nothing, and the choice reaches the panel.
-    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: (_days_from_now(82), None))
-    choices = []
-
-    def panel_run(ticker, **kwargs):
-        choices.append(kwargs.get("whisper_lookup"))
-        raise RuntimeError("stop here")
-    monkeypatch.setattr(personality_panel, "run_personality_panel", panel_run)
-    app = _app()
-    app.text_input(key="single_ticker_input").input("NFLX").run()
-    assert not app.warning
-
-    app.checkbox(key="whisper_NFLX").check().run()
-    assert "The report is 82 days away" in app.warning[0].value
-
-    app.button(key="single_generate").click().run()
-    assert choices == [True]
+    assert app.button(key="queue_run").disabled
+    assert processor.GENERATION_UNAVAILABLE in [info.value for info in app.info]
 
 
 def test_queue_whisper_setting_reaches_each_ticker(monkeypatch):
@@ -694,8 +590,8 @@ def test_cover_names_the_earnings_call(earnings_call, caption):
 
 @pytest.mark.parametrize("current_report", ["8-K filed 2026-10-20: Item 8.01 other events", None])
 def test_cover_and_app_name_the_8k_read(current_report):
-    # A panel report names its 8-K (or 6-K) beside the filings; a baseline
-    # report, which reads none by design, shows nothing.
+    # A report that read an 8-K (or 6-K) names it beside the filings; a
+    # baseline report, which reads none today, shows nothing.
     report = _report(current_report=current_report)
     cover = " ".join(_texts(pdf._cover_elements(report, pdf._get_styles())))
     app = _app(report=report, pdf_bytes=b"%PDF", pdf_ticker="TEST")

@@ -137,6 +137,8 @@ SIX_K_WINDOW_DAYS = 28
 # per Python process (the file is ~1 MB of JSON).
 # ---------------------------------------------------------------------------
 _ticker_cik_cache: dict[str, int] | None = None
+# Each ticker's company name, from the same file (filled with the map above).
+_ticker_names: dict[str, str] = {}
 
 
 def _sec_headers() -> dict[str, str]:
@@ -193,7 +195,8 @@ def _load_ticker_cik_map() -> dict[str, int]:
             entry["ticker"].upper(): int(entry["cik_str"])
             for entry in raw.values()
         }
-    except (KeyError, TypeError, ValueError) as exc:
+        _ticker_names.update({entry["ticker"].upper(): str(entry.get("title") or "") for entry in raw.values()})
+    except (KeyError, TypeError, ValueError, AttributeError) as exc:
         raise RuntimeError("SEC ticker list has an unexpected format") from exc
     return _ticker_cik_cache
 
@@ -887,7 +890,8 @@ def fetch_filings(ticker: str) -> FilingSet | None:
         ))
     if not downloaded:
         raise RuntimeError(f"None of {ticker}'s recent filings could be downloaded: {'; '.join(errors)}")
-    filing_set = FilingSet(ticker=ticker, cik=cik, filings=downloaded, errors=errors, notes=notes)
+    filing_set = FilingSet(ticker=ticker, cik=cik, company_name=_ticker_names.get(ticker) or None,
+                           filings=downloaded, errors=errors, notes=notes)
 
     # Step 4: save to disk so the next call skips these downloads — unless
     # a download failed, so that the next call tries the missing filing again.

@@ -16,8 +16,9 @@ import requests
 
 from yoda import dates, http_session
 from yoda.ingest import chunker, edgar, transcripts
-from yoda.modes import baseline
-from yoda.schema import EarningsReport, Filing, FilingSet
+from samples import sample_report
+from yoda.report.header import assemble_report
+from yoda.schema import EvidenceStore, Filing, FilingSet, ReportDraft
 
 
 # ---------------------------------------------------------------------------
@@ -349,8 +350,8 @@ def test_name_search_leaves_out_legal_endings(monkeypatch):
 def test_notes_reach_the_report_data_gaps():
     # A note about where a filing came from is shown to the reader.
     filing_set = _filing_set().model_copy(update={"notes": ["The 10-K was read from TEST CORP (SEC CIK 1)."]})
-    report = EarningsReport.model_construct(data_gaps=[])
-    baseline.apply_filings(report, filing_set, baseline.FilingText("", filing_set.filings, []))
+    draft = ReportDraft(**sample_report(data_gaps=[]).model_dump(include=set(ReportDraft.model_fields)))
+    report = assemble_report(draft, filing_set, EvidenceStore(ticker="TEST"))
     assert report.data_gaps == ["The 10-K was read from TEST CORP (SEC CIK 1)."]
 
 

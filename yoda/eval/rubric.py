@@ -2,8 +2,9 @@
 
 The judge scores nine dimensions 1-5, each against written 1, 3 and 5
 anchors agreed in next_steps 3.7 and copied here word for word (only
-bookkeeping notes such as "(AGREED)" are left out). RUBRIC_TEXT is the text
-the judge is shown.
+bookkeeping notes such as "(AGREED)" are left out), except dimensions 1 and
+6, reworded on 2026-10-30 for the new report sections and evidence-ID
+citations (next_steps 4b). RUBRIC_TEXT is the text the judge is shown.
 
 JudgeScores is also the structured-output format of the judge call
 (client.chat.completions.parse(response_format=JudgeScores)), so the judge
@@ -96,8 +97,8 @@ Rules for every dimension:
 - No double counting: numeric correctness is scored only in figure_accuracy;
   source/date labelling only in evidence_labelling and source_traceability.
 
-1. filing_extraction — material facts in the 10-Q/10-K (key_metrics,
-   segments, risks, forward_guidance) and in post-filing 8-Ks (since_filing:
+1. filing_extraction — material facts in the 10-Q/10-K (metrics_to_model,
+   guidance, key_risks) and in post-filing 8-Ks (since_filing:
    earnings-release results, guidance updates, material events). Company
    guidance, from filing or 8-K, is scored here. Judge materiality, not
    volume.
@@ -174,17 +175,15 @@ Rules for every dimension:
    N/A only when the mode had no post-filing evidence AND the report makes
    no post-filing claims (post-filing claims with no evidence still score 1).
 
-6. source_traceability — every citation resolves to a real location: a
-   filing section, "8-K Item 2.02, Exhibit 99.1 — <heading>", a news URL, or
-   a consensus.py source + timestamp.
-   1 = most citations missing, vague ("Other", "MD&A") or pointing to places
-       not in the evidence.
-   3 = most citations resolve, but some are missing or too broad to find the
+6. source_traceability — every claim cites evidence IDs (such as [K.042],
+   [F.03], [M.01]) that exist in the evidence and contain the fact; the
+   report's "sources" lists each cited ID's location. A claim with no valid
+   citation counts as missing.
+   1 = most claims have no citation, or cite passages that don't contain the
        fact.
-   5 = every citation resolves to a real place in the evidence that contains
-       the fact.
-   An explicit "UNVERIFIED — the cited source was not the filing" label
-   counts as a missing citation, which is better than a made-up location.
+   3 = most citations hold the fact, but some are missing or cite a passage
+       that is only loosely related.
+   5 = every claim cites passages in the evidence that contain the fact.
 
 7. relevance — focus on what matters for the upcoming report.
    1 = mostly generic company description or boilerplate not tied to the

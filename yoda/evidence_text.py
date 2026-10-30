@@ -4,7 +4,9 @@ CONFLICT_RULES is the agreed wording of how sources that disagree are
 weighed (next_steps 3.4). The personalities, synthesis and the judge's
 reasoning_quality dimension all read this one text, so the wording can never
 drift apart between them. NEWER_CONTRADICTION_RULE adds what to do when a
-newer item contradicts the filing (personalities and synthesis only).
+newer item contradicts the filing (for the writers only). The personality
+panel that read them was removed on 2026-10-30; Rec 1's prompts (step 8)
+take its place.
 
 normalize() and quote_in() check that a quoted passage really appears in a
 text: the panel uses them on each personality's evidence, and the judge's

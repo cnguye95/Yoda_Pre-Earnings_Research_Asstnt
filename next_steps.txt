@@ -247,6 +247,21 @@ WHEN labels (relative to the architecture comparison, item 4; set
         Yoda's method: no extraction stages, researchers or claim check.
       - Its code checks from item 2 stay (news URLs from its own search,
         the 14-day news rule, since_filing tags).
+      - DONE (2026-10-30), the schema part: yoda/schema.py (every claim
+        a Claim: text, evidence IDs, evidence type; the model writes
+        ReportDraft, code fills the header, sources and check_notes),
+        yoda/report/header.py (code-filled fields, market expectations),
+        yoda/report/checks.py (one check for every claim, every mode:
+        unknown IDs to data_gaps, the 14-day news rule, no ID ->
+        unverifiable, a tag too strong for its sources lowered with a
+        note, sources filled). The baseline uses it, reading the filings
+        and the fact sheet only until step 7 (option B). Judge evidence
+        is the writer's own store (what it was shown plus everything it
+        cites); rubric dimensions 1 and 6 reworded. App, PDF and queue
+        show the new sections, each claim followed by its sources.
+        The personality panel was removed; old-format reports (the
+        archive, data/eval/yoda_*.json) stay as raw JSON but can no
+        longer be loaded or re-scored.
    c. Label each ticker complex or not complex BEFORE the smoke run
       (decided 2026-10-30).
       - Why: the comparison tests whether Rec 2 does better on complex
@@ -328,10 +343,19 @@ WHEN labels (relative to the architecture comparison, item 4; set
        sheet (4a), new report schema (4b).
        6a evidence store DONE 2026-10-30 (yoda/evidence_store.py, market
        text moved to yoda/market_text.py). 6b fact sheet DONE 2026-10-30
-       (yoda/ingest/xbrl.py). 6c schema still to do. Note for steps 8/9: tools.retrieve_filing and the
+       (yoda/ingest/xbrl.py). 6c new report schema DONE 2026-10-30
+       (see 4b). Step 8 must bring back, with Rec 1, what the app lost
+       when the panel went: report generation (Generate, Run Queue,
+       queue processor._build_pdf), the market-data pause (continue
+       without the data / stop, single and queue), the whisper lookup
+       setting, and live notices (the 10-K trimmed). The runner's yoda
+       mode raises until then (DEFAULT_MODES is the baseline only).
+       evidence_text.NEWER_CONTRADICTION_RULE is unused until Rec 1's
+       prompts. Note for steps 8/9: tools.retrieve_filing and the
        vector store still return chunker windows without passage IDs; an
        arm that retrieves must return store passages (step 9 embeds store
-       passages if Rec 2's workers search).
+       passages, the unit every citation is checked against, if Rec 2's
+       workers search).
     7. Item 2: baseline option B on the new foundation.
     8. Rec 1.
     9. Rec 2 design; item 9 R5 if its workers search passages, then R4/R6

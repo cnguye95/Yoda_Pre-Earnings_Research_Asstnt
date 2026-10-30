@@ -1,24 +1,27 @@
 """PDF report generation for EarningsReport.
 
 report_to_pdf() renders a structured EarningsReport to a downloadable PDF,
-in this order: cover (with any filing caveats), pre-earnings watchlist,
-market expectations, developments since the filing, key metrics table (each
-figure with the period it covers), revenue segments table, forward guidance,
-key risks, recent news, bull/bear case, and data gaps.
+in this order: cover (with any filing caveats), setup summary, metrics to
+model, market expectations, guidance, since the filing, key debates,
+scenarios, key risks, questions for management, and data gaps (with what the
+citation checks changed).
 
-expectation_rows() and filing_caveats() are shared with the Streamlit app,
-so both show the same wording.
+Every claim is followed by its evidence type and its sources in small grey
+text, each source linked to its URL when it has one (report.sources, filled
+by the citation checks in yoda/report/checks.py).
+
+expectation_rows(), filing_caveats() and claim_sources() are shared with the
+Streamlit app, so both show the same wording.
 
 Uses reportlab (pure Python, no native deps on Windows). ReportLab reads
 paragraph text as a small HTML-like markup, so every piece of text from the
 report is escaped first (a stray "<" or "&" would otherwise break the
-build). Every source_citation optionally hyperlinks to the filing URL.
+build).
 
 Smoke test: python -m yoda.report.pdf [TICKER] [MODE]
 """
 
 import os
-import re
 from datetime import datetime, timezone
 from typing import NamedTuple
 from urllib.parse import urlparse
@@ -31,19 +34,12 @@ from reportlab.lib.units import inch
 from reportlab.platypus import Flowable, HRFlowable, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 from yoda.ingest.edgar import ANNUAL_WINDOW_MONTHS, FILING_WINDOWS_TEXT, QUARTERLY_WINDOW_WEEKS
-from yoda.schema import EarningsReport
+from yoda.schema import Claim, EarningsReport
 
-# Shown in place of a metric value the report left blank.
-_NOT_REPORTED = "— (not reported)"
-
-# Text colours: grey for secondary detail (a metric's period), amber for
+# Text colours: grey for secondary detail (a claim's sources), amber for
 # anything missing or weak (data gaps, N/A figures, unverifiable claims).
 _GREY = "#666666"
 _AMBER = "#ff8800"
-
-# Finds **bold** markdown pairs; the shortest match, so two bold phrases on
-# one line stay separate. A lone "**" with no partner is left as plain text.
-_BOLD_RE = re.compile(r"\*\*(.+?)\*\*")
 
 
 # ============================================================================
@@ -58,23 +54,6 @@ def _esc(text: str) -> str:
 def _link(url: str, label: str) -> str:
     """Return a clickable link to *url* showing *label* (both escaped)."""
     return f"<a href={quoteattr(url)}>{_esc(label)}</a>"
-
-
-def _cite(citation: str, report: EarningsReport) -> str:
-    """Return a citation as markup: a link to the filing it names, when that filing's URL is known.
-
-    A citation starts with the filing type ("10-K Item 1A. Risk Factors —
-    ..."), so it links to the report's filing of that type; one that names
-    no filing type links to the newest filing.
-    """
-    named = [filing for filing in report.filings if citation.startswith(filing.filing_type)]
-    filing = (named or report.filings or [None])[0]
-    return _link(filing.url, citation) if filing and filing.url else _esc(citation)
-
-
-def _markdown_bold(text: str) -> str:
-    """Escape *text*, then turn each **bold** pair into ReportLab <b> tags."""
-    return _BOLD_RE.sub(r"<b>\1</b>", _esc(text))
 
 
 # ============================================================================
@@ -111,6 +90,32 @@ def filing_caveats(report: EarningsReport) -> list[str]:
 def filings_caption(report: EarningsReport) -> str:
     """Return the filings line shown under the title, e.g. "10-Q filed 2026-08-06 · 10-K filed 2026-02-01"."""
     return " · ".join(f"{filing.filing_type} filed {filing.filing_date}" for filing in report.filings)
+
+
+# ============================================================================
+# Claim sources — shared with the Streamlit app
+# ============================================================================
+
+class ClaimSource(NamedTuple):
+    """One source of a claim, ready to display: its evidence ID, readable citation and URL (or None)."""
+    evidence_id: str
+    citation: str
+    url: str | None
+
+
+def claim_sources(report: EarningsReport, claim: Claim) -> list[ClaimSource]:
+    """Return the sources *claim* cites, looked up in report.sources.
+
+    The citation checks leave only IDs that exist in the evidence, and fill
+    report.sources with each one. An ID missing from report.sources (a
+    report that was never checked) is shown by its ID alone, never dropped.
+    """
+    sources = []
+    for evidence_id in claim.evidence_ids:
+        source = report.sources.get(evidence_id)
+        sources.append(ClaimSource(evidence_id, source.citation if source else evidence_id,
+                                   source.url if source else None))
+    return sources
 
 
 # ============================================================================
@@ -225,7 +230,7 @@ def _get_styles() -> StyleSheet1:
         keepWithNext=1,
     ))
 
-    # Citation text: small, gray, for table cells
+    # Citation text: small, gray, for a claim's sources and table cells
     styles.add(ParagraphStyle(
         name='Citation',
         parent=styles['Normal'],
@@ -265,23 +270,27 @@ def _get_styles() -> StyleSheet1:
         fontName='Helvetica-Bold',
     ))
 
-    # Indented block for the guidance quote
+    # A claim under an item's own heading (a metric, a debate, a scenario)
     styles.add(ParagraphStyle(
-        name='BlockQuote',
+        name='Indented',
         parent=styles['Normal'],
-        leftIndent=18,
-        rightIndent=18,
-        fontSize=10,
-        textColor=colors.HexColor('#333333'),
-        spaceAfter=8,
+        leftIndent=14,
+        spaceAfter=4,
+    ))
+
+    # One claim in a list section (setup summary, since the filing, risks)
+    styles.add(ParagraphStyle(
+        name='ClaimItem',
+        parent=styles['Normal'],
+        spaceAfter=6,
     ))
 
     return styles
 
 
-# Shared look for the metrics and segments tables (body font size varies).
+# The look of the market expectations table.
 def _table_style(body_font_size: int) -> TableStyle:
-    """Return the dark-header, striped-row style used by both data tables."""
+    """Return the dark-header, striped-row style used by the data table."""
     return TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#003366')),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
@@ -333,48 +342,48 @@ def _cover_elements(report: EarningsReport, styles: StyleSheet1) -> list[Flowabl
     return elements
 
 
-def _metrics_table(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
-    """Build the Key Metrics table; a blank value shows as "not reported", never as just a unit.
+def _claim_markup(claim: Claim, report: EarningsReport) -> str:
+    """Return a claim as markup: its text, then a small grey line with its evidence type and linked sources.
 
-    The period each figure covers sits under its value on a small grey line,
-    so a stale figure is visible; reports written before periods were
-    recorded say "period not stated".
+    An unverifiable claim has its type in amber, so weak claims stand out.
     """
-    rows = [['Metric', 'Value', 'Source Citation']]
-    for metric in report.key_metrics:
-        value = f"{metric.value} {metric.unit}".strip() if metric.value.strip() else _NOT_REPORTED
-        period = (metric.period or "").strip() or "period not stated"
-        rows.append([
-            Paragraph(_esc(metric.name), styles['Normal']),
-            Paragraph(f'{_esc(value)}<br/><font size="7" color="{_GREY}">{_esc(period)}</font>', styles['Cell']),
-            Paragraph(_cite(metric.source_citation, report), styles['Citation']),
-        ])
-    if len(rows) == 1:
-        rows.append(['(None)', '—', '—'])
-
-    # The Metric column gets 3.0" to fit long line-item names.
-    table = Table(rows, colWidths=[3.0*inch, 1.5*inch, 2.5*inch])
-    table.setStyle(_table_style(body_font_size=9))
-    return [Paragraph("Key Metrics", styles['SectionHeader']), table, Spacer(1, 0.3*inch)]
+    tag = (_esc(claim.evidence_type) if claim.evidence_type != "unverifiable"
+           else f'<font color="{_AMBER}">{_esc(claim.evidence_type)}</font>')
+    sources = "; ".join(_link(source.url, source.citation) if source.url else _esc(source.citation)
+                        for source in claim_sources(report, claim)) or "no source"
+    return f'{_esc(claim.text)}<br/><font size="7" color="{_GREY}">{tag} · {sources}</font>'
 
 
-def _segments_table(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
-    """Build the Revenue Segments table, with every cell word-wrapped to its column."""
-    rows = [['Segment', 'Revenue', 'YoY Change', 'Commentary', 'Source']]
-    for segment in report.revenue_segments:
-        rows.append([
-            Paragraph(_esc(segment.name), styles['Cell']),
-            Paragraph(_esc(segment.revenue or _NOT_REPORTED), styles['Cell']),
-            Paragraph(_esc(segment.yoy_change or _NOT_REPORTED), styles['Cell']),
-            Paragraph(_esc(segment.commentary), styles['Cell']),
-            Paragraph(_cite(segment.source_citation, report), styles['Citation']),
-        ])
-    if len(rows) == 1:
-        rows.append(['(None)', '—', '—', '—', '—'])
+def _labelled(label: str, claim: Claim | None, report: EarningsReport) -> str:
+    """Return "<b>label:</b> claim" markup, or the label with an amber "not in the sources" for no claim."""
+    if claim is None:
+        return f'<b>{_esc(label)}:</b> <font color="{_AMBER}">not in the sources</font>'
+    return f"<b>{_esc(label)}:</b> {_claim_markup(claim, report)}"
 
-    table = Table(rows, colWidths=[1.3*inch, 1.0*inch, 0.9*inch, 1.8*inch, 1.5*inch])
-    table.setStyle(_table_style(body_font_size=8))
-    return [Paragraph("Revenue Segments", styles['SectionHeader']), table, Spacer(1, 0.3*inch)]
+
+def _section(title: str, body: list[Flowable], styles: StyleSheet1) -> list[Flowable]:
+    """Return a section: its header, then *body*, or "(None)" when the body is empty."""
+    return ([Paragraph(title, styles['SectionHeader'])]
+            + (body or [Paragraph('(None)', styles['Normal'])])
+            + [Spacer(1, 0.2*inch)])
+
+
+def _claims_list(title: str, claims: list[Claim], report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
+    """Build a section that is a plain list of claims (setup summary, since the filing)."""
+    return _section(title, [Paragraph(_claim_markup(claim, report), styles['ClaimItem']) for claim in claims],
+                    styles)
+
+
+def _metrics_section(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
+    """Build Metrics to Model: each metric and period, its last reported figure, the consensus and the view."""
+    body: list[Flowable] = []
+    for metric in report.metrics_to_model:
+        body.append(Paragraph(f"<b>{_esc(metric.metric)}</b> — {_esc(metric.period)}", styles['Normal']))
+        for label, claim in (("Last reported", metric.last_reported), ("Consensus", metric.consensus),
+                             ("View", metric.view)):
+            body.append(Paragraph(_labelled(label, claim, report), styles['Indented']))
+        body.append(Spacer(1, 0.08*inch))
+    return _section("Metrics to Model", body, styles)
 
 
 def _source_markup(source: str | None) -> str:
@@ -412,129 +421,70 @@ def _market_expectations_section(report: EarningsReport, styles: StyleSheet1) ->
     return elements + [table, Spacer(1, 0.3*inch)]
 
 
-def _since_filing_section(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
-    """Build the Since the Filing table: each development with its evidence type, period, date and source.
-
-    The source links to where the claim can be checked. A claim tagged
-    unverifiable has its type in amber, so weak claims stand out.
-    """
-    elements: list[Flowable] = [Paragraph("Since the Filing", styles['SectionHeader'])]
-    if not report.since_filing:
-        return elements + [Paragraph('(None)', styles['Normal']), Spacer(1, 0.3*inch)]
-
-    rows = [['Claim', 'Type', 'Period', 'As of', 'Source']]
-    for item in report.since_filing:
-        kind = (_esc(item.evidence_type) if item.evidence_type != "unverifiable"
-                else f'<font color="{_AMBER}">{_esc(item.evidence_type)}</font>')
-        rows.append([
-            Paragraph(_esc(item.claim), styles['Cell']),
-            Paragraph(kind, styles['Cell']),
-            # No period for an event that has none, such as an executive change.
-            Paragraph(_esc(item.period or "—"), styles['Cell']),
-            Paragraph(_esc(item.as_of_date), styles['Cell']),
-            Paragraph(_link(item.url, item.source), styles['Citation']),
-        ])
-    table = Table(rows, colWidths=[3.0*inch, 0.8*inch, 0.8*inch, 0.8*inch, 1.6*inch])
-    table.setStyle(_table_style(body_font_size=8))
-    return elements + [table, Spacer(1, 0.3*inch)]
-
-
 def _guidance_section(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
-    """Build the Forward Guidance block.
+    """Build Guidance: each item's metric, period, range and status (raised, lowered, ...), then its claim."""
+    body: list[Flowable] = []
+    for item in report.guidance:
+        body.append(Paragraph(f"<b>{_esc(item.metric)}</b> ({_esc(item.period)}): {_esc(item.guidance)} "
+                              f"— <i>{_esc(item.status)}</i>", styles['Normal']))
+        body.append(Paragraph(_claim_markup(item.claim, report), styles['Indented']))
+    return _section("Guidance", body, styles)
 
-    The text is shown exactly as written: the synthesis prompt already puts
-    verbatim filing quotes in quote marks, and a placeholder such as
-    "No forward guidance issued" must not be dressed up as a quote.
-    """
-    return [
-        Paragraph("Forward Guidance", styles['SectionHeader']),
-        Paragraph(_esc(report.forward_guidance.text), styles['BlockQuote']),
-        Paragraph(_cite(report.forward_guidance.source_citation, report), styles['Citation']),
-        Spacer(1, 0.3*inch),
-    ]
+
+def _debates_section(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
+    """Build Key Debates: each open question with its bull and bear claims and what would settle it."""
+    body: list[Flowable] = []
+    for debate in report.key_debates:
+        body.append(Paragraph(f"<b>{_esc(debate.question)}</b>", styles['Normal']))
+        body.append(Paragraph(_labelled("Bull", debate.bull, report), styles['Indented']))
+        body.append(Paragraph(_labelled("Bear", debate.bear, report), styles['Indented']))
+        body.append(Paragraph(f"<b>What settles it:</b> {_esc(debate.what_settles_it)}", styles['Indented']))
+        body.append(Spacer(1, 0.08*inch))
+    return _section("Key Debates", body, styles)
+
+
+def _scenarios_section(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
+    """Build Scenarios: the bull, base and bear outcomes, each with the signs that would show it."""
+    body: list[Flowable] = []
+    for scenario in report.scenarios:
+        body.append(Paragraph(_labelled(scenario.name.capitalize(), scenario.description, report),
+                              styles['Normal']))
+        if scenario.triggers:
+            triggers = "<br/>".join(f"• {_esc(trigger)}" for trigger in scenario.triggers)
+            body.append(Paragraph(f"<i>Signs:</i><br/>{triggers}", styles['Indented']))
+        body.append(Spacer(1, 0.08*inch))
+    return _section("Scenarios", body, styles)
 
 
 def _risks_section(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
     """Build the Key Risks list; risks new since the prior filing get a red [NEW] tag."""
-    elements: list[Flowable] = [Paragraph("Key Risks", styles['SectionHeader'])]
-    for risk in report.key_risks:
-        new_tag = '<font color="red"><b>[NEW]</b></font> ' if risk.is_new else ''
-        elements.append(Paragraph(
-            f"{new_tag}{_esc(risk.description)} ({_cite(risk.source_citation, report)})",
-            styles['Normal'],
-        ))
-    if not report.key_risks:
-        elements.append(Paragraph('(None)', styles['Normal']))
-    elements.append(Spacer(1, 0.3*inch))
-    return elements
+    body = [Paragraph(('<font color="red"><b>[NEW]</b></font> ' if risk.is_new else '')
+                      + _claim_markup(risk.claim, report), styles['ClaimItem'])
+            for risk in report.key_risks]
+    return _section("Key Risks", body, styles)
 
 
-def _news_section(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
-    """Build the Recent News list: headline, date, clickable URL and why it matters."""
-    elements: list[Flowable] = [Paragraph("Recent News", styles['SectionHeader'])]
-    for news in report.recent_news:
-        date_part = f" ({_esc(news.date)})" if news.date else ""
-        elements.append(Paragraph(
-            f"<b>{_esc(news.headline)}</b>{date_part}<br/>{_link(news.url, news.url)}"
-            f"<br/><i>{_esc(news.relevance_note)}</i>",
-            styles['Normal'],
-        ))
-        elements.append(Spacer(1, 0.15*inch))
-    if not report.recent_news:
-        elements.append(Paragraph('(None)', styles['Normal']))
-    elements.append(Spacer(1, 0.2*inch))
-    return elements
-
-
-def _what_to_watch_section(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
-    """Build the Pre-Earnings Watchlist — the primary output, first after the cover.
-
-    Each WatchItem's text has an analysis paragraph and a "-> Monitor ..."
-    line separated by a blank line; each part becomes its own paragraph,
-    with markdown **bold** shown in bold. Any relevant URLs follow as a
-    "Sources:" list of clickable links.
-    """
-    elements: list[Flowable] = [
-        Paragraph("Pre-Earnings Watchlist", styles['SectionHeader']),
-        HRFlowable(width="100%", thickness=1, color=colors.HexColor('#003366')),
-        Spacer(1, 0.1*inch),
-    ]
-    for item in report.what_to_watch:
-        parts = [part.strip() for part in item.text.split("\n\n") if part.strip()]
-        for position, part in enumerate(parts):
-            elements.append(Paragraph(_markdown_bold(part), styles['BodyText']))
-            if position < len(parts) - 1:
-                elements.append(Spacer(1, 0.06*inch))   # gap inside an entry
-        if item.relevant_urls:
-            links = "<br/>".join(_link(url, url) for url in item.relevant_urls)
-            elements.append(Spacer(1, 0.04*inch))
-            elements.append(Paragraph(f"<i>Sources:</i><br/>{links}", styles['Citation']))
-        elements.append(Spacer(1, 0.18*inch))           # gap between entries
-    if not report.what_to_watch:
-        elements.append(Paragraph('(None)', styles['Normal']))
-    elements.append(Spacer(1, 0.3*inch))
-    return elements
-
-
-def _bull_bear_section(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
-    """Build the Bull Case and Bear Case lists."""
-    elements: list[Flowable] = []
-    for title, points in (("Bull Case", report.bull_case), ("Bear Case", report.bear_case)):
-        elements.append(Paragraph(title, styles['SectionHeader']))
-        elements.extend(Paragraph(_markdown_bold(point), styles['Normal']) for point in points)
-        if not points:
-            elements.append(Paragraph('(None)', styles['Normal']))
-        elements.append(Spacer(1, 0.2*inch))
-    return elements
+def _questions_section(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
+    """Build Questions for Management: each question, then the claim saying why it matters."""
+    body: list[Flowable] = []
+    for number, item in enumerate(report.questions_for_management, start=1):
+        body.append(Paragraph(f"<b>{number}. {_esc(item.question)}</b>", styles['Normal']))
+        body.append(Paragraph(_labelled("Why", item.why, report), styles['Indented']))
+    return _section("Questions for Management", body, styles)
 
 
 def _data_gaps_section(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
-    """Build the Data Gaps section, or nothing when there are no gaps."""
-    if not report.data_gaps:
-        return []
-    return ([Paragraph("Data Gaps", styles['SectionHeader'])]
-            + [Paragraph(_esc(gap), styles['DataGap']) for gap in report.data_gaps]
-            + [Spacer(1, 0.2*inch)])
+    """Build Data Gaps, then what the citation checks changed; nothing when there is neither."""
+    elements: list[Flowable] = []
+    if report.data_gaps:
+        elements += ([Paragraph("Data Gaps", styles['SectionHeader'])]
+                     + [Paragraph(_esc(gap), styles['DataGap']) for gap in report.data_gaps]
+                     + [Spacer(1, 0.2*inch)])
+    if report.check_notes:
+        elements += ([Paragraph("Citation Checks", styles['SectionHeader'])]
+                     + [Paragraph(_esc(note), styles['Citation']) for note in report.check_notes]
+                     + [Spacer(1, 0.2*inch)])
+    return elements
 
 
 # ============================================================================
@@ -544,22 +494,21 @@ def _data_gaps_section(report: EarningsReport, styles: StyleSheet1) -> list[Flow
 def _story(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
     """Return every section of the PDF in reading order.
 
-    The watchlist leads because it is the report's main output. What the
-    market expects and what changed since the filing come next (newest
-    first), then the filing's own figures.
+    The setup leads because it frames the rest; the metrics to model and
+    what the market expects come next, then guidance and what changed
+    since the filing, then the debates, scenarios, risks and questions.
     """
     return [
         *_cover_elements(report, styles),
-        Spacer(1, 0.4*inch),
-        *_what_to_watch_section(report, styles),
+        *_claims_list("Setup Summary", report.setup_summary, report, styles),
+        *_metrics_section(report, styles),
         *_market_expectations_section(report, styles),
-        *_since_filing_section(report, styles),
-        *_metrics_table(report, styles),
-        *_segments_table(report, styles),
         *_guidance_section(report, styles),
+        *_claims_list("Since the Filing", report.since_filing, report, styles),
+        *_debates_section(report, styles),
+        *_scenarios_section(report, styles),
         *_risks_section(report, styles),
-        *_news_section(report, styles),
-        *_bull_bear_section(report, styles),
+        *_questions_section(report, styles),
         *_data_gaps_section(report, styles),
     ]
 
@@ -567,8 +516,7 @@ def _story(report: EarningsReport, styles: StyleSheet1) -> list[Flowable]:
 def report_to_pdf(report: EarningsReport, output_path: str | os.PathLike) -> str:
     """Render *report* to a PDF file at *output_path* and return that path as a string.
 
-    Every source_citation links to the SEC filing it names, when the
-    report knows that filing's URL.
+    Every claim's sources link to their URLs, when the report knows them.
     """
     output_path = str(output_path)
     doc = SimpleDocTemplate(
@@ -593,7 +541,7 @@ if __name__ == "__main__":
     from yoda import config
 
     ticker = (sys.argv[1] if len(sys.argv) > 1 else "NFLX").upper()
-    mode   = sys.argv[2] if len(sys.argv) > 2 else "yoda"
+    mode   = sys.argv[2] if len(sys.argv) > 2 else "baseline"
 
     # Load a report saved by the eval runner (it carries its filings' URLs).
     eval_dir = config.DATA_DIR / "eval"
