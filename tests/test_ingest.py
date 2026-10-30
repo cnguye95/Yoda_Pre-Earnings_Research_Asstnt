@@ -261,7 +261,7 @@ def test_predecessor_is_found_read_and_saved(cache_dir, monkeypatch):
     assert filing_set.notes == [
         f"The 10-K filed {_days_ago(200)} was read from TEST CORP (SEC CIK 1): the company that now holds "
         "the TEST ticker took over from it in a reorganisation and has not filed its own annual report yet."]
-    saved = json.loads((cache_dir / "predecessors.json").read_text(encoding="utf-8"))
+    saved = json.loads(edgar._PREDECESSORS_PATH.read_text(encoding="utf-8"))
     assert saved["TEST"] | {"found": None} == {"new_cik": 2, "old_cik": 1, "old_name": "TEST CORP", "found": None}
 
     # The next run uses the saved link: no search at all, same filings.
@@ -274,7 +274,8 @@ def test_predecessor_is_found_read_and_saved(cache_dir, monkeypatch):
 def test_saved_link_for_a_different_company_is_ignored(cache_dir, monkeypatch):
     # The ticker now belongs to a different new company than the saved
     # entry says: the entry does not apply, so the search runs again.
-    (cache_dir / "predecessors.json").write_text(json.dumps(
+    edgar._PREDECESSORS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    edgar._PREDECESSORS_PATH.write_text(json.dumps(
         {"TEST": {"new_cik": 99, "old_cik": 5, "old_name": "SOMEONE ELSE", "found": "2026-01-01"}}), encoding="utf-8")
     log = _fake_predecessor_sec(monkeypatch, {NEW_CIK: _new_company(), OLD_CIK: _old_company()})
 
@@ -309,7 +310,7 @@ def test_each_check_can_reject_a_candidate(cache_dir, monkeypatch, old_company, 
     filing_set = edgar.fetch_filings("TEST")
 
     assert [filing.accession_number for filing in filing_set.filings] == ["q1"]
-    assert filing_set.notes == [] and not (cache_dir / "predecessors.json").exists()
+    assert filing_set.notes == [] and not edgar._PREDECESSORS_PATH.exists()
 
 
 def test_several_matches_means_no_guess(cache_dir, monkeypatch):
@@ -324,7 +325,7 @@ def test_several_matches_means_no_guess(cache_dir, monkeypatch):
     assert [filing.accession_number for filing in filing_set.filings] == ["q1"]
     assert filing_set.notes == ["No predecessor company was used: several companies matched equally "
                                 "(TEST CORP, CIK 1, TEST CORP II, CIK 3)."]
-    assert not (cache_dir / "predecessors.json").exists()
+    assert not edgar._PREDECESSORS_PATH.exists()
 
 
 def test_failed_search_is_noted_and_the_run_continues(cache_dir, monkeypatch):

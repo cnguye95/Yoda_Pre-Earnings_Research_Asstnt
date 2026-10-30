@@ -23,7 +23,8 @@ newer one replaced it) is deleted.
 When a company has no recent annual report under its own SEC number but
 says it took over from another company (a reorganisation), the old
 company's filings are searched too; see "Predecessor companies" below.
-Each link found is saved in data/filings/predecessors.json.
+Each link found is saved in yoda/ingest/predecessors.json, which is tracked
+in git (see _PREDECESSORS_PATH).
 
 SEC rules:
   - Every request must include a User-Agent header identifying the caller.
@@ -594,7 +595,7 @@ def _write_8k_cache(eight_k: EightKFiling) -> None:
 #   2. Keep a candidate only if it passes every check in _is_predecessor().
 #   3. Accept it only if exactly one passes. None, or several, means no
 #      guess: the report shows that no annual report was read, as before.
-# A link found is saved in data/filings/predecessors.json, so the search
+# A link found is saved in yoda/ingest/predecessors.json, so the search
 # runs once per company. It only runs for a company with no recent annual
 # report that filed a successor notice (an 8-K12B or 8-K12G3), so other
 # companies cost no extra request.
@@ -608,9 +609,17 @@ _LEGAL_SUFFIXES = re.compile(
 )
 
 
+# Where the links found are saved. Tracked in git, not in the gitignored
+# filing cache: a link is a lasting fact about a company, and a lost link
+# makes the company depend on EDGAR's search being up. While it was in the
+# cache, an EDGAR search outage (2026-10-30) after the file was lost left
+# XOM without its 10-K, and the cache rewrite then deleted the 10-K's copy.
+_PREDECESSORS_PATH = pathlib.Path(__file__).with_name("predecessors.json")
+
+
 def _predecessors_path() -> pathlib.Path:
-    """Return where the saved list of predecessor companies lives (inside the filing cache folder)."""
-    return _CACHE_DIR / "predecessors.json"
+    """Return where the saved list of predecessor companies lives (_PREDECESSORS_PATH, tracked in git)."""
+    return _PREDECESSORS_PATH
 
 
 def _read_predecessors() -> dict:

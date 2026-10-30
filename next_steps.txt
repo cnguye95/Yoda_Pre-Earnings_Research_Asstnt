@@ -78,7 +78,7 @@ WHEN labels (relative to the architecture comparison, item 4; set
      latest annual report (10-K, 20-F or 40-F) from the last 13 months; a
      10-Q older than the annual report is not read; a 40-F is read with its
      Exhibit 99.x documents; after a reorganisation, the predecessor
-     company's annual report (data/filings/predecessors.json).
+     company's annual report (yoda/ingest/predecessors.json).
    - full_filing_text() fits the filings into MAX_FILING_CHARS (2M): the
      newest is kept whole, an older annual report is trimmed section by
      section (Financial Statements, Quantitative Disclosures, MD&A, Other;
@@ -655,7 +655,9 @@ WHEN labels (relative to the architecture comparison, item 4; set
    recent 10-K/20-F/40-F; accepted only if exactly one has no ticker, an
    annual report in 13 months, the same SIC code, and a joint filing /
    same phone / same street. Links are saved in
-   data/filings/predecessors.json (keyed by ticker, valid only while the
+   yoda/ingest/predecessors.json, tracked in git since 2026-10-30, when
+   the cache copy had been lost and an EDGAR search outage dropped XOM's
+   10-K (keyed by ticker, valid only while the
    ticker's CIK matches new_cik). Live-checked on XOM, CLBK, XPRO, DMRC.
    Note: the efts keysTyped endpoint is what EDGAR's search box uses, not
    a documented API; if it changes, the whole search fails visibly (data

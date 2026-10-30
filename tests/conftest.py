@@ -41,6 +41,7 @@ def _keep_real_data_safe(monkeypatch, tmp_path):
     monkeypatch.setattr(runner, "DEFAULT_OUT_DIR", data / "eval")
     monkeypatch.setattr(judge, "_CACHE_DIR", data / "eval" / "judge_cache")
     monkeypatch.setattr(edgar, "_CACHE_DIR", data / "filings")
+    monkeypatch.setattr(edgar, "_PREDECESSORS_PATH", data / "predecessors.json")
     monkeypatch.setattr(transcripts, "_CACHE_DIR", data / "transcripts")
     monkeypatch.setattr(processor, "_REPORTS_DIR", data / "reports")
     monkeypatch.setattr(processor, "_ZIPS_DIR", data / "queue_zips")
