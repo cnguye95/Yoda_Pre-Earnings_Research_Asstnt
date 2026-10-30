@@ -3,89 +3,174 @@ IDEAS for Improvements/Changes
 
 
 1. Open items found while building steps 6-8 (added 2026-10-28)
-   a. Cost vs budget: a Yoda report costs ~$0.80-1.00 (BA runs: $0.98,
-      $0.89, $0.80) against REPORT_BUDGET_USD = $0.65, which only warns.
-      It was agreed to revisit the budget and MAX_TOOL_CALLS (6) after the
-      first measured runs; not done yet. Synthesis (~$0.3-0.6) is the
-      largest cost.
    b. Judge output cap: the step-8 judge call used exactly 4,096
       completion tokens. Check whether that is a hidden output limit
       (judge.py sets no max_completion_tokens) that could cut long
-      justifications or reasoning short.
-   c. Token estimate near the 272K line: chars / 4 ran ~7% low on BA in
-      step 7 and was close after the HTML fix (85.8K est. vs 84.6K real),
-      but a JPM-size report near the line is untested. Check the estimate
-      on JPM before a full eval (it decides whether uncited news is cut).
+      justifications or reasoning short. Still open (2026-10-30): judge.py
+      sets reasoning_effort but no output limit; check on the first paid
+      judge run.
+   c. Judge token estimate near the 272K line (NOT CHECKED YET): the
+      judge's prompt size is estimated as characters / 4
+      (eval/evidence.py CHARS_PER_TOKEN, from JPM's 10-Q measured with the
+      judge's OpenAI tokenizer). Above PROMPT_TOKEN_LINE (272K tokens) the
+      whole judge call costs 2x input / 1.5x output, and render_evidence()
+      leaves out news snippets the report doesn't cite. No judge call was
+      made since the filing changes, so the estimate is unverified.
+      - Measured on the Claude side only: the 2026-10-29 JPM baseline ran
+        at ~2.7 characters per token (658K tokens for 1.79M characters).
+        That is Claude's tokenizer, not the judge's; it does not show the
+        judge estimate is wrong, but filings tokenise denser than prose.
+      - Context changed: the judge now sees both filings (the trimmed
+        text, via full_filing_text), so a JPM-size evidence bundle
+        (~1.2M+ characters) is far above the line either way. The open
+        question is only for reports near the line (~1.1M characters at
+        4 chars/token).
+      - Check on the first paid judge run: compare the estimate with the
+        prompt_tokens OpenAI reports for 2-3 reports of different sizes;
+        adjust CHARS_PER_TOKEN if it is off by more than ~5%.
    d. Whisper lookup may rarely verify even inside the 3-day window:
       upcoming whispers were seen only in earningswhispers.com homepage
       previews, not on the company pages the lookup checks the number
       against (e.g. AMZN, 1 day out). Each failed lookup still costs
       ~$0.12-0.15. Consider accepting the homepage preview as a source, or
-      another check.
+      another check. Still open (2026-10-30): by default the lookup runs
+      only when the next report is a few days away
+      (consensus.whisper_by_default); the person can switch it on or off
+      per ticker in the app.
    e. UI bug (queue run jumping back to the Single ticker view) is
       fixed and tested offline, but never seen working in the browser:
-      that needs a live queue run.
-   f. Personalities rarely copy evidence labels exactly: in the step-8 run
-      all 22 call citations needed code correction ("citation corrected
-      to ..."). The checked evidence is right, but the prompt or the label
-      format should make exact citation easier.
+      that needs a live queue run. The queue's live status table now also
+      shows mid-run notices (e.g. "running — The 10-K ... was trimmed"),
+      also never seen in the browser.
+   f. Personalities often don't cite evidence labels exactly, and code has
+      to correct the citation (_check_evidence in personality_panel.py:
+      when the quote isn't in the cited source but is found in another,
+      the citation is replaced and check_note says "citation corrected to
+      <label>"). The checked evidence is right; the cost is noise in the
+      report and a wrong source whenever a quote appears in two places.
+      - Still frequent after the filing changes (2026-10-29 smoke runs):
+        JPM 26 of 64 evidence quotes corrected (14 CALL, 10 CONTEXT, 1 8-K,
+        1 10-Q); TSM 36 of 76 (23 CALL, 11 CONTEXT, 1 20-F, 1 URL). In
+        2026-10-28's BA run all 22 call citations were corrected.
+      - The labels the personalities must copy now include more forms:
+        "10-Q filed D", "10-K filed D · <section> — <heading>", "20-F/40-F
+        filed D ...", the new "Business" section, "8-K Items ... (filed D)"
+        and "6-K, Exhibit 99.1 (filed D)", "CALL Q3 FY2026 (date) ·
+        company — <speaker>", "CONTEXT", and "PEER <ticker> ...".
+      - The saved report keeps only the corrected citation, so the
+        personality's original wording is lost. First step: log the
+        original citation beside the corrected one (console or check_note)
+        on one run, to see what goes wrong (missing heading, paraphrased
+        speaker title, extra words after CONTEXT ...).
+      - Then make exact citation easier, e.g. give each chunk a short id
+        ("[E12]") to cite instead of the long label, and map ids back to
+        labels in code. Related: wrong section labels (item 9) make even an
+        exact citation name the wrong Item.
 
 
 2. Eval baseline: replace the filing-only baseline (AGREED: option B now,
-   option C later)
+   option C later; build B after the other items, before the full re-run)
    The baseline is the simplest credible alternative to Yoda; what it is
    given decides what a Yoda win proves.
-   - Until this is built, several new dimensions are unfair to the
-     filing-only baseline (8-K part of filing_extraction,
-     market_expectations, evidence_labelling, both usefulness scores).
-     They are addressed together with this baseline; no eval runs before
-     then (AGREED).
-   - Update the baseline prompt (yoda/modes/baseline.py) for the new report
-     sections, or the comparison is no longer fair.
-   - FOUND (schema step): the baseline fills panel-only fields it was never
-     meant to. 8 of the 20 archived baseline reports (AMD, AMZN, CRM, DIS,
-     JPM, PANW, PG, UNH) contain hypotheses_explored with invented analysts
-     ("Growth analyst", confidence 65-80); baseline.py strips recent_news
-     but not this. Today's stricter Hypothesis rules would reject such a
-     reply and fail the run. When this baseline is built, strip
-     hypotheses_explored, and decide how it fills since_filing and
-     market_expectations (it shares the report schema).
 
-   Option B — NEW BASELINE: one Claude call, given what an analyst would
-   have on hand:
-   - SEC filings: the 10-Q/10-K (+ supplemental 10-K) and every 8-K filed
-     after it, incl. the Exhibit 99.1 press release.
-   - Market data from consensus.py (consensus EPS/revenue, whisper,
-     implied move). Ideally fetched once per ticker and shared with Yoda,
-     so both modes see identical numbers.
-   - Analyst rating actions from the last 30 days, LISTED ONE BY ONE
-     (firm, previous rating -> new rating, date; from FMP grades, the same
-     list Yoda's market_expectations.analyst_actions shows). Counts alone
-     are not enough: the baseline must see which firm changed what.
-   - ONE fixed, generic news search (e.g. "<TICKER> earnings", same Tavily
-     settings as Yoda) — not the queries Yoda's personalities choose.
+   THE BASELINE TODAY (yoda/modes/baseline.py, run_baseline):
+   - One Claude Sonnet 5.5 call (BASELINE_MODEL, same model as the panel's
+     synthesis) over the full text of the same filings Yoda reads, from
+     edgar.fetch_filings: the latest 10-Q from the last 18 weeks and/or the
+     latest annual report (10-K, 20-F or 40-F) from the last 13 months; a
+     10-Q older than the annual report is not read; a 40-F is read with its
+     Exhibit 99.x documents; after a reorganisation, the predecessor
+     company's annual report (data/filings/predecessors.json).
+   - full_filing_text() fits the filings into MAX_FILING_CHARS (2M): the
+     newest is kept whole, an older annual report is trimmed section by
+     section (Financial Statements, Quantitative Disclosures, MD&A, Other;
+     Business and Risk Factors never), or left out; each cut is a data gap.
+   - The prompt starts with dates_line() (today's date and each filing's
+     date). The model writes only the _BaselineDraft fields; filings,
+     hypotheses_explored, market_expectations, earnings_call and
+     current_report are not asked for (this fixed the old finding that the
+     baseline invented hypotheses_explored). apply_filings() stamps the
+     filing list and data gaps (trims, failed downloads, predecessor notes).
+   - Its eval evidence is eval.evidence.filing_bundle(): the same trimmed
+     filing text.
+   - It reads no 8-K/6-K, earnings call, market data or news. So these
+     rubric dimensions are unfair to it: market_expectations (code marks it
+     N/A for the baseline today, via na_dimensions), the 8-K part of
+     filing_extraction, evidence_labelling, sell_side_usefulness and
+     buy_side_usefulness. No eval runs before option B is built (AGREED).
+
+   Option B — NEW BASELINE: one Claude call, given the same kinds of
+   information Yoda's panel is given (what an analyst has on hand):
+   - SEC filings: exactly what fetch_filings returns for Yoda (same
+     FilingSet), fitted with full_filing_text(filings, reserved_chars=...)
+     where the reserve is the baseline's own 8-K + call + news text, as the
+     panel does. The panel also reserves room for the articles its
+     personalities read, so for megabank-size filers its 10-K can be
+     trimmed further than the baseline's; consider one fixed reserve for
+     both modes so their filing text is identical.
+   - The one current report Yoda reads: fetch_post_filing_8ks(filing_set),
+     i.e. the newest 8-K/8-K/A from the last 120 days or 6-K from the last
+     28 days, filed after the newest 10-Q/annual report, with its Exhibit
+     99.x documents (rendered like the panel's _render_eight_k_text).
+   - The latest earnings call transcript, the same one Yoda reads
+     (transcripts.find_last_call + render_call_text; Alpha Vantage, cached
+     in data/transcripts/).
+   - Market data: ONE MarketSnapshot from consensus.get_market_snapshot:
+     consensus EPS/revenue, whisper, implied move, historical move,
+     beat/miss record, price target, and analyst rating actions from the
+     last 30 days LISTED ONE BY ONE (firm, previous -> new rating, date;
+     consensus.rating_action_text, the same list Yoda's
+     market_expectations.analyst_actions shows). Counts alone are not
+     enough: the baseline must see which firm changed what. Fetch the
+     snapshot once per ticker and pass it to both modes
+     (run_personality_panel already accepts market=...), so both see
+     identical numbers and the paid whisper lookup runs once.
+   - ONE fixed, generic news search (e.g. "<TICKER> earnings",
+     tools.news.search_news with since = the newest filing's date, same
+     Tavily settings as Yoda), not the queries Yoda's personalities choose.
+     Same 14-day rule as Yoda: only articles from the last
+     NEWS_CITABLE_DAYS days may be cited (news.is_citable); older ones are
+     background only.
+   - Prompt rules about facts, shared with Yoda: dates_line(),
+     evidence_text.NEWER_CONTRADICTION_RULE (a newer source that disagrees
+     with the filing is flagged, never written over the filing's figure)
+     and the source-trust rules (CONFLICT_RULES: the filing is trusted).
+     NOT Yoda's evidence-tagging procedure (an analyst wouldn't run an
+     equivalent tagging system): it sees the tag names in the shared report
+     schema and fills them by judgement; the judge scores labelling
+     tag-agnostic.
+   - Set in code after the call, as the panel does: filings and data gaps
+     (apply_filings), earnings_call (_call_name), current_report
+     (_current_report_name), market_expectations (_market_expectations,
+     from the snapshot). The panel's post-synthesis checks apply too:
+     since_filing URLs must come from its own sources, 8-K/call tags are
+     checked (_check_since_filing), and citations of news older than 14
+     days are removed (_drop_old_news).
    - Question it answers: "Does Yoda's multi-agent panel write a better
      pre-earnings brief than a single model call given the same kinds of
-     information an analyst has on hand (SEC filings, market data, a
-     generic news search)?" A Yoda win then points to Yoda's method (its
-     research choices and multiple perspectives), not to extra data.
+     information an analyst has on hand (SEC filings, the latest 8-K, the
+     earnings call, market data, a generic news search)?" A Yoda win then
+     points to Yoda's method (its research choices and multiple
+     perspectives), not to extra data.
    - HARD GUARDRAIL — Yoda's research must never leak into the baseline:
      * The baseline's inputs come from one builder function that can only
-       read SEC filings, the market data and its own generic search. It
-       never takes Yoda's news_pool, hypotheses, critique messages, report
-       JSON or evidence bundle.
+       read SEC filings, the call, the market snapshot and its own generic
+       search. It never takes Yoda's news_pool, read articles, hypotheses,
+       critique messages, report JSON or evidence bundle.
      * Running the baseline first (the runner already does, per ticker) is
        not enough on its own: Yoda's files from an earlier ticker or run
        are still on disk, and a baseline-only run can happen after Yoda.
      * Offline test: plant a marker string in a fake Yoda report, news pool
        and evidence bundle on disk, build the baseline prompt, and assert
        the marker never appears in it.
-   - The baseline's evidence goes into the same eval evidence cache as
-     Yoda's, so the judge sees what the baseline saw.
-   - Prompt asks for the since_filing section but NOT Yoda's tagging rules
-     (an analyst wouldn't run an equivalent tagging system). It still sees
-     the tag names in the shared report schema and fills them by judgement;
-     the judge scores labelling tag-agnostic.
+   - The baseline's evidence bundle holds everything it read (trimmed
+     filings, the 8-K, the call, the market context, its news results), in
+     the same EvidenceBundle format and eval evidence cache as Yoda's, so
+     the judge sees what the baseline saw and na_dimensions treats both
+     modes alike.
+   - Cost: today's JPM baseline cost $1.41 (658K input tokens); option B
+     adds the 8-K, call, market data and news. Measure it on the smoke
+     tickers before the full eval.
 
    Option C — ADD LATER as a second baseline: the SEC filings above plus
    Claude's web search tool.
@@ -108,6 +193,9 @@ IDEAS for Improvements/Changes
    - Never mixed into the Yoda-vs-baseline scores: the baseline has no
      process to grade, and showing the judge Yoda's working would tilt
      the comparison toward Yoda.
+   - The material exists already: each run's PanelRun holds the
+     personality results and critique messages, and the report keeps the
+     final hypotheses (hypotheses_explored) with their checked evidence.
 
 
 5. Restructure README
@@ -115,13 +203,39 @@ IDEAS for Improvements/Changes
    - Acceptance: a reader who stops after the first screen knows (a) what
      problem Yoda solves, (b) that it was evaluated against a baseline, and
      (c) that it won, with numbers.
+   - Wait for the full re-run with the new baseline (item 2): the results
+     in README section 3 come from the 2026-10-26 run of the old pipeline
+     (old filing rules, old baseline), so they no longer describe Yoda.
+     In that run the baseline scored higher than Yoda, so acceptance point
+     (c) depends on the re-run: put whatever result it gives at the top.
+     The same README section also still says the judge sees only the
+     filing's first 30,000 characters; it now sees the full (size-trimmed)
+     filings.
 
 
 6. Add diagram of system architecture
+   - README section 2 has an ASCII "Architecture" diagram, but it is out of
+     date: it shows "10-Q + 10-K" only and names "Phase 10". Missing:
+     annual reports as 10-K/20-F/40-F with filing windows, the predecessor
+     lookup, the one 8-K/6-K, the earnings call (Alpha Vantage), the
+     market snapshot (consensus, whisper, implied move, rating actions,
+     price target), the read_article tool, the 14-day news rule, the
+     baseline mode, and the judge's evidence bundle.
+   - Replace it with a current diagram (and update it with item 8).
 
 
 7. Investigate Chroma usage reporting
    - do full inspection of chromaDB pipeline
+   - Known facts to start from (2026-10-30): one persistent collection
+     ("filings_openai", yoda/retrieval/vector_store.py), chunks keyed by
+     accession number (filings, 8-Ks/6-Ks) or the call's key; a document
+     is embedded only once (index_if_missing).
+   - Embeddings are never deleted: when a newer 10-Q replaces a cached one,
+     edgar.py deletes the old HTML file but its chunks stay in ChromaDB,
+     and so do old 8-Ks and calls. The collection only grows.
+   - Embedding cost in the run summary is an estimate (characters / 4,
+     labelled "estimated"); the real token count from OpenAI's embedding
+     response is not used.
 
 
 8. Add Repo Overview to README
@@ -163,7 +277,11 @@ IDEAS for Improvements/Changes
        then Quantitative Disclosures, then MD&A), so it can cut MD&A text
        labelled as 7A. This only affects JPM-size filings (see below).
      * Retrieval itself ignores labels: chunks are found by embedding
-       similarity alone (text-embedding-3-small, top 3 per filing).
+       similarity alone (text-embedding-3-small via ChromaDB). The
+       personalities' retrieve_filing returns the top 5 chunks from each
+       filing by default (they may ask for up to 10), plus matches from the
+       8-K/6-K and the call; lookup_peer returns the top 3 (max 5) from a
+       peer's newest filing.
 
    RECOMMENDATIONS (in order; each needs its own approval)
    R1. Build a small section test set first (offline, free): for ~8
@@ -236,24 +354,6 @@ IDEAS for Improvements/Changes
        + Restores MD&A, Risk Factors and financial statements for these
          filers. - Larger filings; page references don't resolve.
 
-   XOM (found in the same check; FIXED in edgar.py, automatically): ticker
-   XOM now maps to CIK 2115436 (ExxonMobil Holdings Corp, holding-company
-   reorganisation, July 2026). Its last 10-K (2026-02-18) is filed only
-   under the predecessor CIK 34088 (Exxon Mobil Corp, no ticker now), so
-   Yoda found only the 10-Q. SEC submissions JSON has no predecessor field.
-   edgar.py section "Predecessor companies" now finds the old company
-   itself, only when a ticker has no annual report in 13 months AND filed
-   an 8-K12B/8-K12G3: candidates from 10-Q co-filers (index-headers),
-   EDGAR name lookup (efts keysTyped) and full-text address search of
-   recent 10-K/20-F/40-F; accepted only if exactly one has no ticker, an
-   annual report in 13 months, the same SIC code, and a joint filing /
-   same phone / same street. Links are saved in
-   data/filings/predecessors.json (keyed by ticker, valid only while the
-   ticker's CIK matches new_cik). Live-checked on XOM, CLBK, XPRO, DMRC.
-   Note: the efts keysTyped endpoint is what EDGAR's search box uses, not
-   a documented API; if it changes, the whole search fails visibly (data
-   gap "Predecessor search failed: ...") and the report is as it was
-   before this feature (no annual report read).
    R4. Only then, if R5 shows weak recall: improve chunks, not by semantic
        chunking. Today's chunker already splits at paragraph breaks
        (1,500 characters, 200 overlap), which is what recursive splitting
@@ -289,6 +389,26 @@ IDEAS for Improvements/Changes
    0.91M, FTNT 0.86M, KO 0.82M). Only megabank-size filers come near the
    2M limit.
 
+   RELATED FIX (done, not a recommendation):
+   XOM (found in the same check; FIXED in edgar.py, automatically): ticker
+   XOM now maps to CIK 2115436 (ExxonMobil Holdings Corp, holding-company
+   reorganisation, July 2026). Its last 10-K (2026-02-18) is filed only
+   under the predecessor CIK 34088 (Exxon Mobil Corp, no ticker now), so
+   Yoda found only the 10-Q. SEC submissions JSON has no predecessor field.
+   edgar.py section "Predecessor companies" now finds the old company
+   itself, only when a ticker has no annual report in 13 months AND filed
+   an 8-K12B/8-K12G3: candidates from 10-Q co-filers (index-headers),
+   EDGAR name lookup (efts keysTyped) and full-text address search of
+   recent 10-K/20-F/40-F; accepted only if exactly one has no ticker, an
+   annual report in 13 months, the same SIC code, and a joint filing /
+   same phone / same street. Links are saved in
+   data/filings/predecessors.json (keyed by ticker, valid only while the
+   ticker's CIK matches new_cik). Live-checked on XOM, CLBK, XPRO, DMRC.
+   Note: the efts keysTyped endpoint is what EDGAR's search box uses, not
+   a documented API; if it changes, the whole search fails visibly (data
+   gap "Predecessor search failed: ...") and the report is as it was
+   before this feature (no annual report read).
+
 
 10. Fine-tune the model on financial and earnings-specific language
    - Is this realistic?
@@ -296,3 +416,29 @@ IDEAS for Improvements/Changes
   - would this actually improve Yoda?
     - fine-tuning could improve interpretation of articles and SEC filing
     - outputting reports in domain-specific language could hurt readibility of reports
+
+
+11. Investigate ways to cut report costs while keeping quality
+    (LAST: only after every other item is addressed and a full re-run has
+    measured cost and quality; any paid test run needs an explicit yes)
+    - Where cost stands: REPORT_BUDGET_USD = $0.65 in personality_panel.py
+      only prints a warning; MAX_TOOL_CALLS = 6 per personality. Measured
+      reports cost more: BA $0.80-0.98 (2026-10-28), JPM panel $1.46 and
+      TSM panel $1.03 (2026-10-29, both filings read, JPM's 10-K trimmed at
+      a 1.3M test limit, so JPM at the real 2M limit costs more), JPM
+      baseline $1.41. Synthesis (Sonnet 5.5 reading the full filings, the
+      8-K, the call and the articles read) is the largest part.
+    - Use the full re-run's per-phase costs (the panel prints embed,
+      personality, critique and synthesis costs) to find where money goes,
+      then compare candidate changes on a few tickers against the re-run's
+      quality scores. Candidates to weigh, not yet agreed:
+      * Prompt caching of the long shared text (filings, CONTEXT) across
+        the personality and critique calls.
+      * Giving synthesis less filing text (e.g. retrieved sections instead
+        of the full filings) — but the full text is also what makes the
+        baseline comparison fair (item 2), so both modes would change.
+      * Fewer personalities or tool calls, or a cheaper model for more
+        phases (personality loops already use Haiku 5.5).
+      * Revisiting REPORT_BUDGET_USD so it reflects measured costs.
+    - Done when: a change lowers the average report cost with no drop in
+      the judge's scores beyond run-to-run noise.
