@@ -41,6 +41,7 @@ import json
 import re
 import time
 import traceback
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timezone
 from typing import Literal, NamedTuple
@@ -1249,9 +1250,9 @@ Rules you must follow without exception:
 
 # Report fields code fills after synthesis: the panel's own hypotheses, the
 # market data copied straight from the snapshot, which earnings call was
-# read, and which filings. Leaving them out of what synthesis writes saves
-# output tokens and rules out copying mistakes.
-_SET_IN_CODE = {"hypotheses_explored", "market_expectations", "earnings_call", "filings"}
+# read, which 8-K or 6-K, and which filings. Leaving them out of what
+# synthesis writes saves output tokens and rules out copying mistakes.
+_SET_IN_CODE = {"hypotheses_explored", "market_expectations", "earnings_call", "filings", "current_report"}
 
 # What synthesis writes: the EarningsReport minus the fields above, with
 # since_filing required (in the full report it defaults to empty only so
@@ -1312,6 +1313,26 @@ def _call_name(call: TranscriptFetch) -> str:
     transcript = call.transcript
     return (f"Q{transcript.fiscal_quarter} FY{transcript.fiscal_year} earnings call "
             f"({transcript.call_date or 'date unknown'})")
+
+
+# The report's current_report value when no 8-K or 6-K was read.
+_NO_CURRENT_REPORT = "No 8-K or 6-K recent enough to read"
+
+
+def _current_report_name(eight_ks: list[EightKFiling]) -> str:
+    """Return the report's current_report value: which 8-K or 6-K was read, and what it reports.
+
+    E.g. "8-K filed 2026-10-20: Item 8.01 other events; Item 9.01 financial
+    statements and exhibits", or "6-K filed 2026-10-09 (no item codes)" (a
+    6-K has none), or _NO_CURRENT_REPORT. At most one is ever read. Item
+    codes missing from _EIGHT_K_ITEM_NAMES are shown by number alone.
+    """
+    if not eight_ks:
+        return _NO_CURRENT_REPORT
+    eight_k = eight_ks[0]
+    items = "; ".join(f"Item {code} {_EIGHT_K_ITEM_NAMES[code]}" if code in _EIGHT_K_ITEM_NAMES else f"Item {code}"
+                      for code in eight_k.items)
+    return f"{eight_k.form} filed {eight_k.filing_date}" + (f": {items}" if items else " (no item codes)")
 
 
 def _synthesize_report(
@@ -2046,6 +2067,7 @@ def run_personality_panel(
     market: MarketSnapshot | None = None,
     allow_missing_market_data: bool = False,
     whisper_lookup: bool | None = None,
+    on_notice: Callable[[str], None] | None = None,
 ) -> PanelRun:
     """Run the multi-agent personality panel against *ticker*.
 
@@ -2068,6 +2090,12 @@ def run_personality_panel(
     up only when the next report is a few days away; see
     consensus.whisper_by_default). It is ignored when *market* is given,
     since that snapshot already holds the whisper decision.
+
+    *on_notice* is called with a short message while the run is still going
+    when something the person should know about happens: today, when the
+    10-K is too long to read in full and is trimmed (or left out) to fit.
+    The app shows it as a notification; the same text also goes into the
+    report's data_gaps.
     """
     ticker = ticker.upper().strip()
     log_prefix = "[panel]"
@@ -2310,8 +2338,12 @@ def run_personality_panel(
     print(f"{log_prefix} Full filings for synthesis: {len(filing_text.text):,} chars; "
           f"8-Ks: {len(eight_k_text):,} chars; call: {len(call_text):,} chars; "
           f"articles read: {len(ctx.read_articles)} ({len(articles_text):,} chars)")
+    # Tell the person, during the run, when a filing had to be trimmed or
+    # left out (the same text goes into the report's data_gaps).
     for gap in filing_text.gaps:
         print(f"{log_prefix} WARNING: {gap}")
+        if on_notice is not None:
+            on_notice(gap)
 
     t0 = time.perf_counter()
     report, synth_in, synth_out = _synthesize_report(
@@ -2376,12 +2408,13 @@ def run_personality_panel(
     _check_since_filing(report, pool_urls, eight_k_urls, log_prefix, call_url)
 
     # hypotheses_explored is always the panel's own final list,
-    # market_expectations the snapshot's own figures, and earnings_call the
-    # call that was read — all set in code, so none can be dropped, altered
-    # or miscopied by the model.
+    # market_expectations the snapshot's own figures, earnings_call the call
+    # that was read and current_report the 8-K or 6-K that was read — all
+    # set in code, so none can be dropped, altered or miscopied by the model.
     report.hypotheses_explored = final_hypotheses
     report.market_expectations = _market_expectations(market)
     report.earnings_call = _call_name(call)
+    report.current_report = _current_report_name(eight_ks)
 
     # Which filings the report was written from is known in code, so it is
     # stamped on rather than trusted to the model, with a data gap for any

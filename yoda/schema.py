@@ -464,6 +464,11 @@ class EarningsReport(BaseModel):
     # earnings call (2026-10-27)", or "not available" (the reason is in
     # data_gaps). None in reports written before calls were added.
     earnings_call: str | None = None
+    # Which 8-K (or a foreign company's 6-K) the report read, set in code,
+    # e.g. "8-K filed 2026-10-20: Item 8.01 other events; Item 9.01
+    # financial statements and exhibits", or that none was recent enough.
+    # None in baseline reports, which read no 8-K.
+    current_report: str | None = None
 
     # Synthesis — LLM-generated, no citation required for these lists
     bull_case:    list[str]

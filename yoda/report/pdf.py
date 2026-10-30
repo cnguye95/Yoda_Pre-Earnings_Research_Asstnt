@@ -312,9 +312,11 @@ def _cover_elements(report: EarningsReport, styles: StyleSheet1) -> list[Flowabl
     filing_line = " &middot; ".join(
         f"<b>{_esc(filing.filing_type)}</b> filed {_esc(filing.filing_date)}" for filing in report.filings
     ) or "<b>No recent SEC filing</b>"
-    # And which earnings call was read (reports from before calls show nothing).
-    if call_caption(report):
-        filing_line += f" &middot; {_esc(call_caption(report))}"
+    # And which earnings call and which 8-K or 6-K were read (a baseline
+    # report reads neither by design, and shows nothing).
+    for caption in (call_caption(report), report.current_report):
+        if caption:
+            filing_line += f" &middot; {_esc(caption)}"
     elements.append(Paragraph(filing_line, styles['Normal']))
 
     # The same caveats the app shows, so a printed report carries them too.

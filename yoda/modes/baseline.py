@@ -52,7 +52,8 @@ _SYSTEM_PROMPT = (
 # fill them from (its own hypotheses, the market data, the earnings call).
 # Leaving them out of the schema Claude is given also keeps that schema
 # under the size structured outputs accept.
-_NOT_WRITTEN_BY_MODEL = {"filings", "hypotheses_explored", "market_expectations", "earnings_call"}
+_NOT_WRITTEN_BY_MODEL = {"filings", "hypotheses_explored", "market_expectations", "earnings_call",
+                         "current_report"}
 
 # What the baseline's model writes: the EarningsReport minus those fields.
 # It keeps the name "EarningsReport", so the schema Claude is shown differs

@@ -349,6 +349,20 @@ def _no_filing_run(monkeypatch, snapshot_fn) -> list:
     return started
 
 
+def test_person_is_notified_during_the_run_when_the_10k_is_trimmed(monkeypatch):
+    # The size rule trims the 10-K: the caller's on_notice hears about it
+    # while the run is still going (the app shows it as a notification).
+    _no_filing_run(monkeypatch, lambda ticker, **kwargs: _snapshot())
+    trimmed = "The 10-K filed 2026-02-13 was trimmed to fit the model's context limit."
+    monkeypatch.setattr(panel, "full_filing_text",
+                        lambda filings, reserved_chars=0: baseline.FilingText("", [], [trimmed]))
+    notices = []
+
+    panel.run_personality_panel("TEST", on_notice=notices.append)
+
+    assert notices == [trimmed]
+
+
 def test_refused_market_data_pauses_before_any_personality(monkeypatch):
     refused = _snapshot([ApiFailure("signals", "FMP", "HTTP 402: premium endpoint")], signals=None)
     started = _no_filing_run(monkeypatch, lambda ticker, **kwargs: refused)
@@ -405,6 +419,25 @@ def test_8ks_are_stored_and_fetch_errors_become_gaps(monkeypatch):
     assert stored["0001-26-000042"][-1].document.startswith("8-K Items 2.02, 9.01, Exhibit 99.1")
     assert tokens > 0
     assert gaps == ["8-K not analyzed: 8-K filed 2026-10-20 could not be fetched"]
+
+
+def test_report_names_the_8k_it_read():
+    # The cover shows which 8-K or 6-K was read and what it reports, so a
+    # reader can see whether it was the earnings release.
+    assert panel._current_report_name([_earnings_8k()]) == (
+        "8-K filed 2026-10-13: Item 2.02 results of operations (earnings release); "
+        "Item 9.01 financial statements and exhibits")
+    other = _earnings_8k().model_copy(update={"items": ["8.01", "1.05"]})
+    assert panel._current_report_name([other]) == "8-K filed 2026-10-13: Item 8.01 other events; Item 1.05"
+    six_k = _earnings_8k().model_copy(update={"form": "6-K", "items": []})
+    assert panel._current_report_name([six_k]) == "6-K filed 2026-10-13 (no item codes)"
+    assert panel._current_report_name([]) == "No 8-K or 6-K recent enough to read"
+
+
+def test_end_to_end_report_carries_the_8k_line(monkeypatch):
+    # Set in code after synthesis, like earnings_call.
+    _no_filing_run(monkeypatch, lambda ticker, **kwargs: _snapshot())
+    assert panel.run_personality_panel("TEST").report.current_report == "No 8-K or 6-K recent enough to read"
 
 
 def test_8k_chunks_are_labelled_with_their_8k():

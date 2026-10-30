@@ -250,9 +250,25 @@ def test_pdf_builds_with_the_new_sections(tmp_path):
 # Queue processor
 # ---------------------------------------------------------------------------
 
+def test_queue_shows_a_mid_run_notice_in_the_ticker_status(monkeypatch):
+    # The panel says the 10-K was trimmed: the ticker's live status shows it
+    # while the ticker is still running, before it completes.
+    def fake_build(ticker, market=None, allow_missing_market_data=False, whisper_lookup=None, on_notice=None):
+        on_notice("The 10-K was trimmed to fit.")
+        path = processor._REPORTS_DIR / f"{ticker}_20260101-000000.pdf"
+        path.write_bytes(b"%PDF fake")
+        return path
+    monkeypatch.setattr(processor, "_build_pdf", fake_build)
+    progress = []
+
+    processor.process_queue(["jpm"], on_progress=lambda t, s: progress.append((t, s)))
+
+    assert progress == [("JPM", "running"), ("JPM", "running — The 10-K was trimmed to fit."), ("JPM", "complete")]
+
+
 def test_queue_records_failures_and_keeps_going(monkeypatch):
     # One bad ticker fails with its reason and traceback; the others finish.
-    def fake_build(ticker, market=None, allow_missing_market_data=False, whisper_lookup=None):
+    def fake_build(ticker, market=None, allow_missing_market_data=False, whisper_lookup=None, on_notice=None):
         if ticker == "BAD":
             raise RuntimeError("SEC unreachable")
         path = processor._REPORTS_DIR / f"{ticker}_20260101-000000.pdf"
@@ -280,7 +296,7 @@ def _pausing_build(calls: list):
     snapshot = MarketSnapshot(consensus=None, whisper=None, signals=None, implied_move={}, historical_move={},
                               failures=[ApiFailure("consensus", "Finnhub", "key rejected")], whisper_cost_usd=0.0)
 
-    def build(ticker, market=None, allow_missing_market_data=False, whisper_lookup=None):
+    def build(ticker, market=None, allow_missing_market_data=False, whisper_lookup=None, on_notice=None):
         calls.append((ticker, market is snapshot, allow_missing_market_data))
         if ticker == "PAUSE" and not allow_missing_market_data:
             raise MarketDataUnavailable(snapshot)
@@ -332,7 +348,7 @@ def test_continued_queue_reuses_the_data_and_bundles_everything(monkeypatch):
 def test_finished_pdfs_are_kept_in_memory_so_a_pruned_file_still_downloads(monkeypatch):
     # Bug 1b: download buttons (and a continued queue's ZIP) re-read PDFs
     # from disk, which a later run of the same ticker may have deleted.
-    def fake_build(ticker, market=None, allow_missing_market_data=False, whisper_lookup=None):
+    def fake_build(ticker, market=None, allow_missing_market_data=False, whisper_lookup=None, on_notice=None):
         path = processor._REPORTS_DIR / f"{ticker}_20260101-000000.pdf"
         path.write_bytes(b"%PDF " + ticker.encode())
         return path
@@ -554,6 +570,22 @@ def test_failed_generation_shows_one_error_and_no_stale_report(monkeypatch):
     assert not any(header.value.startswith("TEST —") for header in app.subheader)
 
 
+def test_trimmed_10k_pops_up_a_notification_during_generation(monkeypatch):
+    # The panel says mid-run that the 10-K was trimmed: the page shows it
+    # as a notification straight away, before the report is finished.
+    def panel_run(ticker, **kwargs):
+        kwargs["on_notice"]("The 10-K was trimmed to fit.")
+        raise RuntimeError("stop here")
+    monkeypatch.setattr(personality_panel, "run_personality_panel", panel_run)
+    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: (None, "no source had a date"))
+    app = _app()
+
+    app.text_input(key="single_ticker_input").input("JPM").run()
+    app.button(key="single_generate").click().run()
+
+    assert [toast.value for toast in app.toast] == ["JPM: The 10-K was trimmed to fit."]
+
+
 def test_add_to_queue_counts_only_new_tickers():
     # Bug 1d: the button counted tickers already in the queue.
     app = _app(queue=["NFLX"], view=_QUEUE_VIEW)
@@ -623,7 +655,7 @@ def test_queue_whisper_setting_reaches_each_ticker(monkeypatch):
     # None lets each ticker follow the rule; False switches lookups off for the batch.
     seen = []
 
-    def fake_build(ticker, market=None, allow_missing_market_data=False, whisper_lookup=None):
+    def fake_build(ticker, market=None, allow_missing_market_data=False, whisper_lookup=None, on_notice=None):
         seen.append(whisper_lookup)
         path = processor._REPORTS_DIR / f"{ticker}_20260101-000000.pdf"
         path.write_bytes(b"%PDF")
@@ -658,6 +690,20 @@ def test_cover_names_the_earnings_call(earnings_call, caption):
     assert pdf.call_caption(report) == caption
     cover = " ".join(_texts(pdf._cover_elements(report, pdf._get_styles())))
     assert (caption in cover) if caption else ("Earnings call" not in cover)
+
+
+@pytest.mark.parametrize("current_report", ["8-K filed 2026-10-20: Item 8.01 other events", None])
+def test_cover_and_app_name_the_8k_read(current_report):
+    # A panel report names its 8-K (or 6-K) beside the filings; a baseline
+    # report, which reads none by design, shows nothing.
+    report = _report(current_report=current_report)
+    cover = " ".join(_texts(pdf._cover_elements(report, pdf._get_styles())))
+    app = _app(report=report, pdf_bytes=b"%PDF", pdf_ticker="TEST")
+    captions = " ".join(caption.value for caption in app.caption)
+    if current_report:
+        assert current_report in cover and current_report in captions
+    else:
+        assert "8-K" not in cover and "8-K" not in captions
 
 
 def test_app_caption_names_the_earnings_call():

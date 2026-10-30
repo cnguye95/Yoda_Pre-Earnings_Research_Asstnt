@@ -134,11 +134,16 @@ def _generate_report(ticker: str, pause: MarketDataUnavailable | None = None,
 
     try:
         with st.spinner(f"Generating report for {ticker}..."):
+            # A notice mid-run (the 10-K was trimmed to fit) pops up as a
+            # notification while the report keeps generating.
+            def notify(message: str) -> None:
+                st.toast(f"{ticker}: {message}", icon="ℹ️")
+
             if pause is None:
-                report = run_personality_panel(ticker, whisper_lookup=whisper_lookup).report
+                report = run_personality_panel(ticker, whisper_lookup=whisper_lookup, on_notice=notify).report
             else:
                 report = run_personality_panel(ticker, market=pause.snapshot,
-                                               allow_missing_market_data=True).report
+                                               allow_missing_market_data=True, on_notice=notify).report
     except MarketDataUnavailable as exc:
         st.session_state["market_pause"] = (ticker, exc)
         return
@@ -294,10 +299,12 @@ if view == _SINGLE_VIEW:
         st.subheader(f"{report.ticker} — {report.company_name}")
 
         # Build the caption: every filing read, with its date, and which
-        # earnings call was read (the same text as the PDF cover).
+        # earnings call and which 8-K or 6-K were read (the same text as the
+        # PDF cover).
         filing_caption = filings_caption(report) or "No recent SEC filing"
-        if call_caption(report):
-            filing_caption += f" · {call_caption(report)}"
+        for caption in (call_caption(report), report.current_report):
+            if caption:
+                filing_caption += f" · {caption}"
         st.caption(filing_caption)
 
         # Warn the user when a less-than-ideal filing source was used (the
@@ -476,7 +483,7 @@ if view == _QUEUE_VIEW:
             rows = ["| Ticker | Status |", "|---|---|"]
             for symbol, status in live_status.items():
                 emoji = (
-                    "⏳" if status == "running"
+                    "⏳" if status.startswith("running")
                     else "✅" if status == "complete"
                     else "❌" if status.startswith("failed")
                     else "⏸️" if status.startswith("paused")
@@ -488,7 +495,7 @@ if view == _QUEUE_VIEW:
         _render_status_table()
 
         def on_progress(ticker: str, status: str) -> None:
-            """Record a ticker's new status and redraw (called between ticker runs)."""
+            """Record a ticker's new status and redraw (between ticker runs, and on a notice mid-run)."""
             live_status[ticker] = status
             _render_status_table()
 

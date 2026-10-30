@@ -105,18 +105,19 @@ def _prune_zips(keep: int = 2) -> None:
 
 
 def _build_pdf(ticker: str, market: MarketSnapshot | None = None,
-               allow_missing_market_data: bool = False, whisper_lookup: bool | None = None) -> pathlib.Path:
+               allow_missing_market_data: bool = False, whisper_lookup: bool | None = None,
+               on_notice: Callable[[str], None] | None = None) -> pathlib.Path:
     """Run the panel for *ticker*, save its PDF in data/reports/, and return the path.
 
     The PDF filename carries a timestamp so re-runs of the same ticker don't
-    overwrite earlier outputs. *market*, *allow_missing_market_data* and
-    *whisper_lookup* are passed to the panel (see run_personality_panel);
-    without the first two a refused market-data request raises
-    MarketDataUnavailable.
+    overwrite earlier outputs. *market*, *allow_missing_market_data*,
+    *whisper_lookup* and *on_notice* are passed to the panel (see
+    run_personality_panel); without the first two a refused market-data
+    request raises MarketDataUnavailable.
     """
     report = run_personality_panel(
         ticker, market=market, allow_missing_market_data=allow_missing_market_data,
-        whisper_lookup=whisper_lookup,
+        whisper_lookup=whisper_lookup, on_notice=on_notice,
     ).report
 
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -151,6 +152,8 @@ def process_queue(
     on_progress : optional callback
         Called with (ticker, status) where status is one of:
           "running"       — about to invoke the panel
+          "running — <notice>" — still running; something to know about,
+                            e.g. the 10-K was trimmed to fit
           "complete"      — succeeded; PDF available
           "failed: <msg>" — the panel or PDF step failed for this ticker
           "paused: <msg>" — a market-data provider refused a request
@@ -198,10 +201,16 @@ def process_queue(
         # finished ticker as failed. A refused market-data request is caught
         # first: it isn't a failure of this ticker but a choice for the person
         # running the queue, so the queue pauses before paying for anything.
+        # A notice from the panel mid-run (the 10-K was trimmed to fit) is
+        # shown in this ticker's status while it keeps running.
+        def notice(message: str, ticker: str = ticker) -> None:
+            if on_progress is not None:
+                on_progress(ticker, f"running — {message}")
+
         try:
             pdf_path = _build_pdf(ticker, market=known_market.get(ticker),
                                   allow_missing_market_data=allow_missing_market_data,
-                                  whisper_lookup=whisper_lookup)
+                                  whisper_lookup=whisper_lookup, on_notice=notice)
         except MarketDataUnavailable as exc:
             pause = QueuePause(ticker=ticker, apis=exc.apis, message=str(exc),
                                snapshot=exc.snapshot, remaining=queued[position:])
