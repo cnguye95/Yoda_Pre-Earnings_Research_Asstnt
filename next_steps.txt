@@ -39,10 +39,10 @@ WHEN labels (relative to the architecture comparison, item 4; set
       another check.
       WHEN: AFTER. Every arm shares one market snapshot per ticker, and the
       lookup runs only for reports 3 days away or less.
-   e. App: the queue-view fix (a queue run jumping back to the Single
-      ticker view) and the queue's live mid-run notices are tested offline
-      but never seen in the browser.
-      WHEN: AFTER, once report generation is back in the app (step 8).
+   e. App: the queue-view fix and the queue's live mid-run notices.
+      DONE (2026-10-30): seen in the browser with Rec 1 stubbed (the queue
+      stays on its view, shows each ticker's mid-run notice, pauses on
+      refused market data and continues).
 
 
 2. Eval baseline
@@ -154,14 +154,14 @@ WHEN labels (relative to the architecture comparison, item 4; set
       - After it: item 13 (remove XOM's saved predecessor link).
 
    Order of the remaining BEFORE SMOKE work (one item at a time; steps
-   1-7 are done):
-    8. Rec 1. It also brings back what the app lost when the panel was
-       removed: report generation (Generate, Run Queue,
-       queue/processor._build_pdf), the market-data pause (continue
-       without the data / stop, single and queue), the whisper lookup
-       setting, and live notices (the 10-K trimmed). The runner's "yoda"
-       mode raises until then (DEFAULT_MODES is the baseline only).
-       evidence_text.NEWER_CONTRADICTION_RULE goes into its writer prompt.
+   1-8 are done):
+    8. Rec 1. DONE (2026-10-30): yoda/report/claim_check.py (Haiku check,
+       Sonnet second opinion, repair helpers), yoda/modes/rec1.py (runner
+       mode "rec1"; generate_report() for the app), and the app's report
+       generation, market-data pause, whisper setting and live notices.
+       Not yet run against the real models: a paid one-ticker check
+       (python -m yoda.modes.rec1 TICKER, ~$1.55) needs an explicit yes.
+       Smoke estimate for Rec 1 is now ~$7.75 (1-hour cache write).
     9. Rec 2 design; item 9 R5 if its workers search passages, then R4/R6
        if R5 shows weak recall; then build Rec 2. Cost doesn't decide
        whether workers read the full source (with caching it costs about

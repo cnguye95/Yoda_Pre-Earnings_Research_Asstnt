@@ -9,6 +9,7 @@ here calls Claude, OpenAI or the SEC.
 
 import pathlib
 import zipfile
+from datetime import timedelta
 from types import SimpleNamespace
 
 import pandas as pd
@@ -16,15 +17,18 @@ import pytest
 from reportlab.platypus import Paragraph
 from streamlit.testing.v1 import AppTest
 
-from samples import claim, sample_report, sample_store
+from samples import claim, sample_report, sample_snapshot, sample_store
+from yoda.dates import market_today
 from yoda.eval import judge, rubric, runner
 from yoda.eval.rubric import DimensionScore, JudgeScores
+from yoda.modes import rec1
 from yoda.modes.baseline import BaselineRun
 from yoda.queue import processor
 from yoda.report import pdf
 from yoda.report.header import MarketDataUnavailable
 from yoda.schema import EvidenceStore, ExpectationValue, Filing, FilingSet, MarketExpectations, ReportFiling
 from yoda.tickers import normalize_tickers
+from yoda.tools import consensus
 from yoda.tools.consensus import ApiFailure, MarketSnapshot
 
 
@@ -212,13 +216,24 @@ def test_pdf_builds_with_every_section(tmp_path):
 # Queue processor
 # ---------------------------------------------------------------------------
 
-def test_queue_says_generation_is_off_until_rec_1():
-    # With no report writer until step 8, every ticker fails with that message.
-    _, results, pause = processor.process_queue(["aaa", "bbb"])
-    assert pause is None
-    assert [(r.ticker, r.error) for r in results] == [
-        ("AAA", f"RuntimeError: {processor.GENERATION_UNAVAILABLE}"),
-        ("BBB", f"RuntimeError: {processor.GENERATION_UNAVAILABLE}")]
+def test_queue_writes_each_report_with_rec_1_and_saves_its_pdf(monkeypatch):
+    # _build_pdf hands every setting to Rec 1 and saves the report as a PDF.
+    seen = []
+
+    def fake_generate(ticker, **settings):
+        seen.append((ticker, settings))
+        return rec1.Rec1Run(_report(), sample_store())
+    monkeypatch.setattr(processor, "generate_report", fake_generate)
+    snapshot = sample_snapshot()
+
+    _, results, pause = processor.process_queue(["aaa"], known_market={"AAA": snapshot},
+                                                allow_missing_market_data=True, whisper_lookup=False)
+
+    assert pause is None and [(r.ticker, r.status) for r in results] == [("AAA", "complete")]
+    assert results[0].pdf_bytes.startswith(b"%PDF")
+    ticker, settings = seen[0]
+    assert ticker == "AAA" and settings["market"] is snapshot
+    assert (settings["allow_missing_market_data"], settings["whisper_lookup"]) == (True, False)
 
 
 def test_queue_shows_a_mid_run_notice_in_the_ticker_status(monkeypatch):
@@ -524,8 +539,7 @@ def test_normalize_tickers_splits_cleans_and_dedupes():
 
 # ---------------------------------------------------------------------------
 # Streamlit app — the UI bugs in next_steps item 1, run with Streamlit's own
-# test harness (no browser, nothing live). Generation is off until Rec 1
-# (step 8), so a report is put into session state to show the results view.
+# test harness (no browser, nothing live: Rec 1 and the queue are faked).
 # ---------------------------------------------------------------------------
 
 _APP = pathlib.Path(__file__).resolve().parents[1] / "app.py"
@@ -541,13 +555,148 @@ def _app(**session) -> AppTest:
     return app.run()
 
 
-def test_generate_says_generation_returns_with_rec_1():
-    app = _app()
+def _no_report_date(monkeypatch) -> None:
+    # The next-report-date check (a free call) finds nothing, without the network.
+    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: (None, "no source had a date"))
+
+
+def test_generate_writes_the_report_and_shows_it(monkeypatch):
+    _no_report_date(monkeypatch)
+    monkeypatch.setattr(rec1, "generate_report",
+                        lambda ticker, **settings: rec1.Rec1Run(_report(), sample_store()))
+    app = _app(pdf_bytes=b"%PDF", pdf_ticker="TEST")
     assert app.button(key="single_generate").disabled          # no ticker yet
-    app.text_input(key="single_ticker_input").input("NFLX").run()
+
+    app.text_input(key="single_ticker_input").input("TEST").run()
     app.button(key="single_generate").click().run()
-    assert [info.value for info in app.info] == [processor.GENERATION_UNAVAILABLE]
-    assert not app.error and not app.checkbox                    # no whisper setting until step 8
+
+    assert not app.error and not app.exception
+    assert any(header.value.startswith("TEST —") for header in app.subheader)
+
+
+def test_failed_generation_shows_one_error_and_no_stale_report(monkeypatch):
+    # Bugs 1c and 1e: after a failed generation the previous ticker's report
+    # stayed on the page, and the error was printed twice.
+    def fail(ticker, **settings):
+        raise ValueError("No recent 10-Q or annual report for ZZZZ")
+    monkeypatch.setattr(rec1, "generate_report", fail)
+    _no_report_date(monkeypatch)
+    # A report for TEST is on screen (its PDF already cached).
+    app = _app(report=_report(), pdf_bytes=b"%PDF", pdf_ticker="TEST")
+    assert any(header.value.startswith("TEST —") for header in app.subheader)
+
+    app.text_input(key="single_ticker_input").input("ZZZZ").run()
+    app.button(key="single_generate").click().run()
+
+    assert [error.value for error in app.error] == [
+        "Could not generate report for ZZZZ: ValueError: No recent 10-Q or annual report for ZZZZ"]
+    details = [expander for expander in app.expander if expander.label == "Details"]
+    assert details and details[0].exception             # the traceback, folded away
+    assert not any(header.value.startswith("TEST —") for header in app.subheader)
+
+
+def test_a_shortened_filing_pops_up_a_notification_during_generation(monkeypatch):
+    # Rec 1 says mid-run that the 10-K was shortened: the page shows it as a
+    # notification straight away, before the report is finished.
+    def generate(ticker, **settings):
+        settings["on_notice"]("The 10-K was shortened to fit.")
+        raise RuntimeError("stop here")
+    monkeypatch.setattr(rec1, "generate_report", generate)
+    _no_report_date(monkeypatch)
+    app = _app()
+
+    app.text_input(key="single_ticker_input").input("JPM").run()
+    app.button(key="single_generate").click().run()
+
+    assert [toast.value for toast in app.toast] == ["JPM: The 10-K was shortened to fit."]
+
+
+def _refused_snapshot() -> MarketSnapshot:
+    # Market data with the consensus refused by Finnhub.
+    return sample_snapshot(failures=[ApiFailure("consensus", "Finnhub", "key rejected")])
+
+
+def test_refused_market_data_pauses_and_continue_reuses_the_data(monkeypatch):
+    snapshot = _refused_snapshot()
+    calls = []
+
+    def generate(ticker, **settings):
+        calls.append(settings)
+        if not settings.get("allow_missing_market_data"):
+            raise MarketDataUnavailable(snapshot)
+        return rec1.Rec1Run(_report(), sample_store())
+    monkeypatch.setattr(rec1, "generate_report", generate)
+    _no_report_date(monkeypatch)
+    app = _app(pdf_bytes=b"%PDF", pdf_ticker="TEST")
+
+    app.text_input(key="single_ticker_input").input("TEST").run()
+    app.button(key="single_generate").click().run()
+    assert app.warning[0].value.startswith("Report for TEST paused: market data unavailable from Finnhub.")
+
+    app.button(key="market_continue").click().run()
+    assert calls[-1]["market"] is snapshot and calls[-1]["allow_missing_market_data"] is True
+    assert [w.value for w in app.warning] == []
+    assert any(header.value.startswith("TEST —") for header in app.subheader)
+
+
+def test_stopping_a_paused_report_clears_the_pause(monkeypatch):
+    def refused(ticker, **settings):
+        raise MarketDataUnavailable(_refused_snapshot())
+    monkeypatch.setattr(rec1, "generate_report", refused)
+    _no_report_date(monkeypatch)
+    app = _app()
+    app.text_input(key="single_ticker_input").input("TEST").run()
+    app.button(key="single_generate").click().run()
+    assert app.warning
+
+    app.button(key="market_stop").click().run()
+    # (The test harness keeps elements drawn before st.rerun(); a browser
+    # redraws without them, so the pause itself is what's checked.)
+    assert "market_pause" not in app.session_state and "report" not in app.session_state
+
+
+def _days_from_now(days: int) -> str:
+    # A YYYY-MM-DD date *days* after today's market (New York) date.
+    return (market_today() + timedelta(days=days)).isoformat()
+
+
+@pytest.mark.parametrize("found, ticked", [
+    ((_days_from_now(2), None), True),             # inside the 3-day window
+    ((_days_from_now(82), None), False),           # far off: opted out
+    ((None, "Finnhub refused the request"), False),  # date not found: opted out
+])
+def test_whisper_setting_is_preset_from_the_next_report_date(monkeypatch, found, ticked):
+    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: found)
+    app = _app()
+
+    app.text_input(key="single_ticker_input").input("NFLX").run()
+
+    assert app.checkbox(key="whisper_NFLX").value is ticked
+    captions = " ".join(caption.value for caption in app.caption)
+    assert "about \\$0.12–0.15" in captions                       # the cost note, always shown
+    if found[0] is None:
+        assert "Next report date not found — Finnhub refused the request" in captions
+
+
+def test_ticking_whisper_outside_the_window_warns_and_is_passed_on(monkeypatch):
+    # The person may still ask for a lookup when the report is far off; the
+    # page warns it will likely find nothing, and the choice reaches Rec 1.
+    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: (_days_from_now(82), None))
+    choices = []
+
+    def generate(ticker, **settings):
+        choices.append(settings.get("whisper_lookup"))
+        raise RuntimeError("stop here")
+    monkeypatch.setattr(rec1, "generate_report", generate)
+    app = _app()
+    app.text_input(key="single_ticker_input").input("NFLX").run()
+    assert not app.warning
+
+    app.checkbox(key="whisper_NFLX").check().run()
+    assert "The report is 82 days away" in app.warning[0].value
+
+    app.button(key="single_generate").click().run()
+    assert choices == [True]
 
 
 def test_results_view_shows_every_section_with_its_sources():
@@ -571,10 +720,61 @@ def test_add_to_queue_counts_only_new_tickers():
     assert app.button(key="queue_add").label == "Add to Queue (1 new ticker)"
 
 
-def test_queue_cannot_run_until_rec_1():
+def test_finished_queue_stays_on_the_queue_view(monkeypatch, tmp_path):
+    # Bug 1f: after a queue run the page went back to the Single ticker view.
+    zip_path = tmp_path / "yoda_queue_x.zip"
+    zipfile.ZipFile(zip_path, "w").close()
+    monkeypatch.setattr(processor, "process_queue",
+                        lambda tickers, **kwargs: processor.QueueRun(zip_path, [], None))
     app = _app(queue=["AAA"], view=_QUEUE_VIEW)
-    assert app.button(key="queue_run").disabled
-    assert processor.GENERATION_UNAVAILABLE in [info.value for info in app.info]
+    assert not app.button(key="queue_run").disabled
+
+    app.button(key="queue_run").click().run()
+
+    assert app.radio(key="view").value == _QUEUE_VIEW
+    assert app.success[0].value.startswith("Queue complete")
+
+
+def test_a_paused_queue_continues_with_the_data_or_stops(monkeypatch, tmp_path):
+    zip_path = tmp_path / "yoda_queue_x.zip"
+    zipfile.ZipFile(zip_path, "w").close()
+    snapshot = _refused_snapshot()
+    pause = processor.QueuePause("BBB", ["Finnhub"], "Finnhub: key rejected", snapshot, ["BBB", "CCC"])
+    runs = []
+
+    def fake_queue(tickers, **options):
+        runs.append((tickers, options))
+        return processor.QueueRun(zip_path, [], pause if len(runs) == 1 else None)
+    monkeypatch.setattr(processor, "process_queue", fake_queue)
+    app = _app(queue=["AAA", "BBB", "CCC"], view=_QUEUE_VIEW)
+
+    app.button(key="queue_run").click().run()
+    assert app.warning[0].value.startswith("Queue paused at BBB: market data unavailable from Finnhub.")
+    assert app.button(key="queue_run").disabled                 # can't start another run while paused
+
+    app.button(key="queue_continue").click().run()
+    tickers, options = runs[-1]
+    assert tickers == ["BBB", "CCC"] and options["known_market"] == {"BBB": snapshot}
+    assert options["allow_missing_market_data"] is True
+    assert app.success[0].value.startswith("Queue complete")
+
+    # A second run that pauses, then Stop: the banner says where it stopped.
+    runs.clear()
+    app.button(key="queue_run").click().run()
+    app.button(key="queue_stop").click().run()
+    assert app.warning[0].value.startswith("Queue stopped at BBB (market data unavailable)")
+
+
+def test_queue_whisper_box_reaches_the_queue(monkeypatch, tmp_path):
+    zip_path = tmp_path / "yoda_queue_x.zip"
+    zipfile.ZipFile(zip_path, "w").close()
+    seen = []
+    monkeypatch.setattr(processor, "process_queue", lambda tickers, **options: seen.append(options["whisper_lookup"])
+                        or processor.QueueRun(zip_path, [], None))
+    app = _app(queue=["AAA"], view=_QUEUE_VIEW)
+    app.checkbox(key="queue_skip_whispers").check().run()
+    app.button(key="queue_run").click().run()
+    assert seen == [False]
 
 
 def test_queue_whisper_setting_reaches_each_ticker(monkeypatch):

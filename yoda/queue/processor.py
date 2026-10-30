@@ -1,11 +1,6 @@
 """Sequential ticker-queue processor (Phase 10).
 
-Report generation is off until Rec 1 is built (step 8): the personality
-panel that wrote reports was removed with the new report format, so
-_build_pdf() raises GENERATION_UNAVAILABLE and every ticker fails with that
-message. The queue's bookkeeping below is kept for step 8 to reconnect.
-
-process_queue() runs report generation against a list of tickers, saves
+process_queue() runs report generation (Rec 1, yoda/modes/rec1.py) against a list of tickers, saves
 each PDF to disk as it completes, and bundles everything into a ZIP at the
 end. Failures don't abort the queue — they're recorded with the reason and
 the run continues. The one exception is a market-data provider refusing a
@@ -27,13 +22,11 @@ from datetime import datetime
 from typing import Literal, NamedTuple
 
 from yoda import config
+from yoda.modes.rec1 import generate_report
 from yoda.report.header import MarketDataUnavailable
+from yoda.report.pdf import report_to_pdf
 from yoda.tickers import normalize_tickers
 from yoda.tools.consensus import MarketSnapshot
-
-
-# Shown wherever a report would be generated, until Rec 1 (step 8) restores it.
-GENERATION_UNAVAILABLE = "Report generation returns with Rec 1 (step 8)."
 
 
 # ---------------------------------------------------------------------------
@@ -116,14 +109,17 @@ def _build_pdf(ticker: str, market: MarketSnapshot | None = None,
                on_notice: Callable[[str], None] | None = None) -> pathlib.Path:
     """Generate *ticker*'s report, save its PDF in data/reports/, and return the path.
 
-    Off until Rec 1 (step 8): always raises RuntimeError(GENERATION_UNAVAILABLE).
-    The parameters are the ones step 8 will pass on: *market* and
-    *allow_missing_market_data* let a paused queue continue without the
-    refused market data (otherwise a refused request raises
-    MarketDataUnavailable), *whisper_lookup* sets the paid whisper lookup,
-    and *on_notice* reports something to know about mid-run.
+    *market* and *allow_missing_market_data* let a paused queue continue
+    without the refused market data (otherwise a refused request raises
+    MarketDataUnavailable before any report model is paid for);
+    *whisper_lookup* sets the paid whisper lookup, and *on_notice* reports
+    something to know about mid-run. Raises whatever generation raises.
     """
-    raise RuntimeError(GENERATION_UNAVAILABLE)
+    report = generate_report(ticker, market=market, allow_missing_market_data=allow_missing_market_data,
+                             whisper_lookup=whisper_lookup, on_notice=on_notice).report
+    pdf_path = _REPORTS_DIR / f"{ticker}_{datetime.now().strftime('%Y%m%d-%H%M%S')}.pdf"
+    report_to_pdf(report, pdf_path)
+    return pdf_path
 
 
 # ---------------------------------------------------------------------------
@@ -138,7 +134,7 @@ def process_queue(
     prior_results: list[TickerResult] | None = None,
     whisper_lookup: bool | None = None,
 ) -> QueueRun:
-    """Generate each ticker's report and PDF in turn (off until step 8: each ticker fails).
+    """Generate each ticker's report and PDF in turn.
 
     Each PDF is saved to data/reports/{ticker}_{timestamp}.pdf as it's
     generated. When the queue ends (or pauses), the PDFs are bundled into a
