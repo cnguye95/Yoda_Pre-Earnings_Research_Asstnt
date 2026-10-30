@@ -286,7 +286,7 @@ WHEN labels (relative to the architecture comparison, item 4; set
 
    Order of the BEFORE SMOKE work (one item at a time):
     1. Item 9 R3: read USB's annual report (EX-13). DONE 2026-10-30.
-    2. Item 9 R1: section test set.
+    2. Item 9 R1: section test set. DONE 2026-10-30.
     3. Item 9 R2: fix section detection.
     4. Item 4c: complexity labels.
     5. Item 12, before part: choose the cost-saving methods the builds
@@ -402,6 +402,18 @@ WHEN labels (relative to the architecture comparison, item 4; set
        start. Assert each approach against it.
        + Turns "looks wrong" into a number; every later change is checked.
        - An hour of manual reading; covers only the filings chosen.
+       DONE (2026-10-30): tests/test_sections.py, 8 filings in
+       tests/fixtures/sections/ (MSFT and CAT 10-K, AMD and JPM 10-Q, JPM
+       10-K, USB 10-K + EX-13, TSM 20-F, SU 40-F + EX-99). Score = share of
+       characters with the right label; each filing has a floor (today's
+       score) that R2 should raise. Today: MSFT 18%, CAT 13%, AMD 78%,
+       JPM 10-Q 11%, JPM 10-K 15%, USB 37%, TSM 14%, SU 41%. Table:
+       python -m tests.test_sections.
+       * Financial Statements is 0% in most 10-Ks/20-Fs (Item 7A swallows
+         Item 8), MD&A 0-13% in MSFT, CAT, JPM and TSM.
+       * AMD's "63% Risk Factors" was mostly real: its 10-Q risk factors
+         are ~61% of the text.
+       * The section tests add ~70s to the suite (cleaning ~13 MB of HTML).
    R2. Fix section detection. Options, simplest first:
        a. Stricter in-house rules: only a line that STARTS with
           "Item N." (optionally "Part I,") is a heading; every Item
