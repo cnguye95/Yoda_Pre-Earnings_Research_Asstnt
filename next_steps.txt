@@ -248,6 +248,22 @@ WHEN labels (relative to the architecture comparison, item 4; set
         one-off items, restructuring, litigation or M&A in recent
         quarters; a 10-K that relies on another document (USB's EX-13) or
         a predecessor company's annual report (XOM); very long filings.
+      - DONE (2026-10-30): yoda/eval/complexity.py holds the rule, each
+        ticker's measured facts and is_complex(); python -m
+        yoda.eval.complexity prints every label with its reasons. Complex if
+        ANY of: (1) bank/insurer SIC 6000-6411; (2) two or more segments,
+        each >= 10% of revenue, in different SIC major groups; (3) the
+        10-K relies on an EX-13 or a predecessor's 10-K; (4) filings read
+        >= 750,000 clean characters. "Recent one-off items" was left out
+        (its 8-K proxy flagged only XOM; judging it by reading is the most
+        subjective call).
+        * Complex (9): JPM, USB, UNH, XOM, KO, AMZN, JNJ, DIS, BA.
+        * Simple (11): AAPL, MSFT, NVDA, AMD, HD, SLB, PG, NFLX, CAT, PANW,
+          CRM.
+        * The 5 smoke tickers are picked from these 20 (decided
+          2026-10-30): step 5 should pick a mix of both groups.
+        * tests/test_complexity.py pins the published labels; they must not
+          change once reports exist.
       - Analysis: report the Rec 1 vs Rec 2 score gap within each group
         next to the overall gap. With about 6-10 tickers per group, read
         group differences as a direction, not proof (reasoning_quality
@@ -288,7 +304,7 @@ WHEN labels (relative to the architecture comparison, item 4; set
     1. Item 9 R3: read USB's annual report (EX-13). DONE 2026-10-30.
     2. Item 9 R1: section test set. DONE 2026-10-30.
     3. Item 9 R2: fix section detection. DONE 2026-10-30.
-    4. Item 4c: complexity labels.
+    4. Item 4c: complexity labels. DONE 2026-10-30.
     5. Item 12, before part: choose the cost-saving methods the builds
        will use.
     6. Shared foundation: evidence store with passage IDs, XBRL fact
