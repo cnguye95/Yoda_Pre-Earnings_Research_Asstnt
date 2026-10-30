@@ -300,6 +300,28 @@ def test_context_block_lists_8ks_and_market_data_with_sources():
     assert "(missing: analyst actions: FMP returned no grades.)" in block
 
 
+def test_each_rating_action_is_listed_for_the_panel_and_in_the_report():
+    # Not just counts: the personalities and the reader see which firm
+    # changed what, newest first.
+    actions = {"days": 30, "source": _src("FMP grades"), "actions": [
+        {"date": "2026-10-20", "firm": "Mizuho", "previous_grade": "Neutral", "new_grade": "Buy",
+         "action": "upgrade"},
+        {"date": "2026-10-14", "firm": "Citigroup", "previous_grade": "Neutral", "new_grade": "Neutral",
+         "action": "maintain"},
+    ]}
+    snapshot = _snapshot(signals=dict(_snapshot().signals, analyst_actions=actions, data_gaps=[]))
+
+    block = panel._render_context_block([], snapshot)
+    assert ("- Analyst rating actions (last 30 days, newest first) — FMP grades:\n"
+            "  - Mizuho upgraded to Buy from Neutral (2026-10-20)\n"
+            "  - Citigroup maintained Neutral (2026-10-14)") in block
+
+    slot = panel._market_expectations(snapshot).analyst_actions
+    assert slot.value == ("Last 30 days, newest first: Mizuho upgraded to Buy from Neutral (2026-10-20); "
+                          "Citigroup maintained Neutral (2026-10-14)")
+    assert slot.source == "FMP grades"
+
+
 def test_context_block_names_the_provider_that_refused():
     failures = [ApiFailure("consensus", "Finnhub", "key rejected"), ApiFailure("signals", "FMP", "HTTP 402")]
     block = panel._render_context_block([], _snapshot(failures, consensus=None, whisper=None, signals=None))

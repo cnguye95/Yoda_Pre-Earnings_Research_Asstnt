@@ -91,7 +91,7 @@ from yoda.schema import (
     PersonalityResult,
     SinceFilingItem,
 )
-from yoda.tools.consensus import MarketSnapshot, get_market_snapshot
+from yoda.tools.consensus import MarketSnapshot, get_market_snapshot, rating_action_text, rating_actions_text
 from yoda.tools.news import NEWS_CITABLE_DAYS, is_citable
 
 
@@ -1814,11 +1814,13 @@ def _market_lines(market: MarketSnapshot) -> list[str]:
                      f"{beats['quarters']} quarters{surprise} — {beats['source']['name']}")
     else:
         lines.append("- Beat/miss record: N/A")
+    # Each analyst rating action on its own line, so a personality can see
+    # which firm changed what (an upgrade, a downgrade, a repeated rating).
     actions = signals["analyst_actions"]
     if actions:
-        lines.append(f"- Analyst rating actions (last {actions['days']} days): {actions['total']} total, "
-                     f"{actions['upgrades']} upgrades, {actions['downgrades']} downgrades — "
-                     f"{actions['source']['name']}")
+        lines.append(f"- Analyst rating actions (last {actions['days']} days, newest first) — "
+                     f"{actions['source']['name']}:")
+        lines += [f"  - {rating_action_text(action)}" for action in actions["actions"]]
     else:
         lines.append("- Analyst rating actions: N/A")
     target = signals["price_target"]
@@ -2012,8 +2014,7 @@ def _signal_slots(market: MarketSnapshot) -> tuple[ExpectationValue, Expectation
 
     actions_slot = _missing(_gap_for(signals["data_gaps"], "analyst_actions"))
     if actions:
-        actions_slot = filled(f"{actions['total']} total, {actions['upgrades']} upgrades, "
-                              f"{actions['downgrades']} downgrades (last {actions['days']} days)", actions)
+        actions_slot = filled(f"Last {actions['days']} days, newest first: {rating_actions_text(actions)}", actions)
 
     target_slot = _missing(_gap_for(signals["data_gaps"], "price_target"))
     if target:

@@ -572,10 +572,15 @@ _EARNINGS = [
     {"period": "2026-09-30", "actual": None, "estimate": 2.00, "surprisePercent": None},
 ]
 _GRADES = [
-    {"date": _day(-5), "action": "upgrade"},
-    {"date": _day(-10), "action": "maintain"},
-    {"date": _day(-20), "action": "downgrade"},
-    {"date": _day(-40), "action": "upgrade"},  # older than 30 days: ignored
+    # FMP grades rows (one out of date order, to check the sort). The last
+    # is older than 30 days and is ignored.
+    {"date": _day(-10), "gradingCompany": "Citigroup", "previousGrade": "Neutral", "newGrade": "Neutral",
+     "action": "maintain"},
+    {"date": _day(-5), "gradingCompany": "Mizuho", "previousGrade": "Neutral", "newGrade": "Buy",
+     "action": "upgrade"},
+    {"date": _day(-20), "gradingCompany": "Barclays", "previousGrade": "Overweight", "newGrade": "Equal Weight",
+     "action": "downgrade"},
+    {"date": _day(-40), "gradingCompany": "UBS", "previousGrade": "Hold", "newGrade": "Buy", "action": "upgrade"},
 ]
 _TARGET = [{"targetConsensus": 330.0, "targetLow": 300.0, "targetHigh": 390.0}]
 
@@ -595,8 +600,13 @@ def test_expectation_signals_are_computed_with_sources(monkeypatch):
 
     assert {k: s["beat_history"][k] for k in ("quarters", "beats", "misses", "avg_surprise_pct", "latest_period")} == \
         {"quarters": 4, "beats": 2, "misses": 1, "avg_surprise_pct": 2.5, "latest_period": "2026-06-30"}
-    assert {k: s["analyst_actions"][k] for k in ("total", "upgrades", "downgrades")} == \
-        {"total": 3, "upgrades": 1, "downgrades": 1}
+    assert s["analyst_actions"]["actions"] == [
+        {"date": _day(-5), "firm": "Mizuho", "previous_grade": "Neutral", "new_grade": "Buy", "action": "upgrade"},
+        {"date": _day(-10), "firm": "Citigroup", "previous_grade": "Neutral", "new_grade": "Neutral",
+         "action": "maintain"},
+        {"date": _day(-20), "firm": "Barclays", "previous_grade": "Overweight", "new_grade": "Equal Weight",
+         "action": "downgrade"},
+    ]
     assert (s["price_target"]["consensus"], s["price_target"]["upside_pct"]) == (330.0, 10.0)
     assert s["beat_history"]["source"]["name"] == "Finnhub earnings surprises"
     assert s["analyst_actions"]["source"]["name"] == "FMP grades"
@@ -653,10 +663,29 @@ def test_no_whisper_note_includes_signals(monkeypatch):
     assert w["signals"]["beat_history"]["beats"] == 2
     assert w["note"] == (
         _NO_WHISPER_NOTE + " Other signals: TEST beat EPS estimates in 2 of the last 4 quarters, "
-        "average surprise +2.5% (Finnhub); analyst rating actions in the last 30 days: 3 "
-        "(upgrades 1, downgrades 1, other 1) (FMP); the consensus price target is $330.00, "
-        "10.0% above the current $300.00 (FMP)."
+        f"average surprise +2.5% (Finnhub); analyst rating actions in the last 30 days: "
+        f"Mizuho upgraded to Buy from Neutral ({_day(-5)}); Citigroup maintained Neutral ({_day(-10)}); "
+        f"Barclays downgraded to Equal Weight from Overweight ({_day(-20)}) (FMP); "
+        "the consensus price target is $330.00, 10.0% above the current $300.00 (FMP)."
     )
+
+
+@pytest.mark.parametrize("row, text", [
+    ({"firm": "Mizuho", "previous_grade": "Neutral", "new_grade": "Buy", "action": "upgrade"},
+     "Mizuho upgraded to Buy from Neutral (2026-10-15)"),
+    ({"firm": "Citigroup", "previous_grade": "Neutral", "new_grade": "Neutral", "action": "maintain"},
+     "Citigroup maintained Neutral (2026-10-15)"),
+    ({"firm": "Baird", "previous_grade": None, "new_grade": "Outperform", "action": "init"},
+     "Baird started coverage at Outperform (2026-10-15)"),
+    # Missing fields are written as missing, never guessed; an action word
+    # Yoda doesn't know is shown as FMP wrote it.
+    ({"firm": None, "previous_grade": None, "new_grade": None, "action": "downgrade"},
+     "An unnamed firm downgraded to (rating not given) from (previous rating not given) (2026-10-15)"),
+    ({"firm": "HSBC", "previous_grade": "Hold", "new_grade": "Hold", "action": "suspended"},
+     "HSBC suspended Hold (2026-10-15)"),
+])
+def test_each_rating_action_reads_as_a_sentence(row, text):
+    assert consensus.rating_action_text({"date": "2026-10-15", **row}) == text
 
 
 def test_signals_sentence_skips_unknown_price(monkeypatch):

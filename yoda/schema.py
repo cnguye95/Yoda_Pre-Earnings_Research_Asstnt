@@ -147,7 +147,7 @@ class MarketExpectations(BaseModel):
     # The average stock move after recent past earnings reports.
     historical_move: ExpectationValue
     beat_miss_record: ExpectationValue   # beats vs misses over recent quarters
-    analyst_actions: ExpectationValue    # rating upgrades/downgrades, last 30 days
+    analyst_actions: ExpectationValue    # each analyst rating action, last 30 days
     price_target: ExpectationValue       # consensus analyst price target
 
 

@@ -205,12 +205,24 @@ class BeatHistory(TypedDict):
     source: Source
 
 
+class RatingAction(TypedDict):
+    """One analyst firm's rating action on the stock, as FMP's grades feed reports it.
+
+    *action* is FMP's word for what happened: "upgrade", "downgrade",
+    "maintain" (the firm repeated its rating), "init" (it started covering
+    the stock), or another word FMP uses. A field FMP left out is None.
+    """
+    date: str                    # ISO date of the action
+    firm: str | None             # the analyst firm, e.g. "Morgan Stanley"
+    previous_grade: str | None   # its rating before, e.g. "Equal Weight"
+    new_grade: str | None        # its rating after
+    action: str | None
+
+
 class AnalystActions(TypedDict):
-    """Analyst rating changes published in the last `days` days."""
+    """Every analyst rating action published in the last `days` days, newest first."""
     days: int
-    total: int
-    upgrades: int
-    downgrades: int
+    actions: list[RatingAction]
     source: Source
 
 
@@ -687,24 +699,61 @@ def _beat_history(client: finnhub.Client, ticker: str, problems: list[str]) -> B
 
 
 def _analyst_actions(ticker: str, problems: list[str]) -> AnalystActions | None:
-    """Count analyst rating actions (upgrade / downgrade / other) from the last 30 days.
+    """List every analyst rating action from the last 30 days, newest first.
 
-    Reads FMP's grades feed; rows with a missing or malformed date are
-    ignored. Returns None if there were no actions in the window.
+    Reads FMP's grades feed (one row per action: date, gradingCompany,
+    previousGrade, newGrade, action); rows with a missing or malformed date
+    are ignored. Returns None if there were no actions in the window.
     """
     rows = _fmp_get(_FMP_GRADES_URL, {"symbol": ticker}, problems) or []
     since = market_today() - timedelta(days=_GRADES_WINDOW_DAYS)
-    recent = [row for row in rows if (_to_date(row.get("date")) or date.min) >= since]
-    if not recent:
+
+    # Keep each dated action in the window as a RatingAction. An empty text
+    # field becomes None, so a missing firm or rating shows as missing.
+    actions: list[RatingAction] = []
+    for row in rows:
+        action_date = _to_date(row.get("date"))
+        if action_date is None or action_date < since:
+            continue
+        actions.append({
+            "date": action_date.isoformat(),
+            "firm": row.get("gradingCompany") or None,
+            "previous_grade": row.get("previousGrade") or None,
+            "new_grade": row.get("newGrade") or None,
+            "action": (row.get("action") or "").lower() or None,
+        })
+    if not actions:
         return None
-    actions = [(row.get("action") or "").lower() for row in recent]
-    return {
-        "days": _GRADES_WINDOW_DAYS,
-        "total": len(recent),
-        "upgrades": actions.count("upgrade"),
-        "downgrades": actions.count("downgrade"),
-        "source": _source("FMP grades", _FMP_GRADES_URL),
-    }
+    actions.sort(key=lambda action: action["date"], reverse=True)
+    return {"days": _GRADES_WINDOW_DAYS, "actions": actions, "source": _source("FMP grades", _FMP_GRADES_URL)}
+
+
+# How each FMP action word reads in a sentence ("Mizuho upgraded ...").
+_ACTION_VERBS = {"upgrade": "upgraded", "downgrade": "downgraded", "maintain": "maintained",
+                 "init": "started coverage at", "reiterated": "reiterated"}
+
+
+def rating_action_text(action: RatingAction) -> str:
+    """Describe one rating action in plain words, with its date.
+
+    E.g. "Mizuho upgraded to Buy from Neutral (2026-10-15)", "Citigroup
+    maintained Neutral (2026-10-14)". A missing firm or rating is written
+    as missing rather than guessed; an action word not in _ACTION_VERBS is
+    shown as FMP wrote it.
+    """
+    firm = action["firm"] or "An unnamed firm"
+    new_grade = action["new_grade"] or "(rating not given)"
+    verb = _ACTION_VERBS.get(action["action"] or "", action["action"] or "acted on")
+    # An upgrade or downgrade also names the rating it moved from.
+    if action["action"] in ("upgrade", "downgrade"):
+        previous = action["previous_grade"] or "(previous rating not given)"
+        return f"{firm} {verb} to {new_grade} from {previous} ({action['date']})"
+    return f"{firm} {verb} {new_grade} ({action['date']})"
+
+
+def rating_actions_text(actions: AnalystActions) -> str:
+    """Return every action in *actions* as one "; "-separated line, newest first."""
+    return "; ".join(rating_action_text(action) for action in actions["actions"])
 
 
 def _price_target(client: finnhub.Client, ticker: str, problems: list[str]) -> PriceTarget | None:
@@ -776,13 +825,11 @@ def _signals_sentence(ticker: str, signals: ExpectationSignals | dict) -> str:
                 text += f" (over {beats['avg_over_quarters']} quarters)"
         parts.append(text + " (Finnhub)")
 
-    # Analyst rating actions in the window.
+    # Each analyst rating action in the window.
     actions = signals.get("analyst_actions")
     if actions:
-        other = actions["total"] - actions["upgrades"] - actions["downgrades"]
-        parts.append(f"analyst rating actions in the last {actions['days']} days: {actions['total']} "
-                     f"(upgrades {actions['upgrades']}, downgrades {actions['downgrades']}, "
-                     f"other {other}) (FMP)")
+        parts.append(f"analyst rating actions in the last {actions['days']} days: "
+                     f"{rating_actions_text(actions)} (FMP)")
 
     # Consensus price target, with upside versus today's price if known.
     target = signals.get("price_target")
