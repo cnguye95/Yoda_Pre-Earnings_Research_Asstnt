@@ -2150,7 +2150,7 @@ def run_personality_panel(
     # For news-only runs the ChromaStore stays empty; retrieve_filing returns [].
     store = ChromaStore()
     for filing in filings:
-        chunks = chunk_filing(filing.clean_text)
+        chunks = chunk_filing(filing.clean_text, filing.link_targets)
         t0 = time.perf_counter()
         if store.index_if_missing(filing.accession_number, chunks):
             # Rough token count (~4 characters per token) for the cost line.

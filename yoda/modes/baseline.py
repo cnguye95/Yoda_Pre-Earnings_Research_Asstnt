@@ -154,15 +154,18 @@ class FilingText(NamedTuple):
     gaps: list[str]
 
 
-def _trim_to_fit(text: str, room: int) -> tuple[str, list[str]] | None:
+def _trim_to_fit(text: str, link_targets: list[tuple[int, str]], room: int) -> tuple[str, list[str]] | None:
     """Shorten an annual report's *text* to at most *room* characters by leaving out whole sections.
+
+    *link_targets* are the report's internal links (Filing.link_targets),
+    which help find its sections (chunker.section_spans).
 
     Sections go in _TRIM_ORDER, all spans of one section at a time, until
     the text fits. Each left-out section is replaced by a one-line note, so
     the model sees that it existed. Returns (trimmed text, names of the
     sections left out), or None if it can't fit even with all of them out.
     """
-    spans = section_spans(text)
+    spans = section_spans(text, link_targets)
     removed: set[str] = set()
     for label in _TRIM_ORDER:
         if not any(span_label == label for _, _, span_label in spans):
@@ -204,13 +207,14 @@ def full_filing_text(filings: list[Filing], reserved_chars: int = 0) -> FilingTe
         if used and len(filing.clean_text) > room:
             # Too long to go in whole: an annual report is trimmed; anything
             # else, or an annual report that can't fit even trimmed, is left out.
-            trim = _trim_to_fit(filing.clean_text, room) if filing.filing_type != "10-Q" else None
+            trim = _trim_to_fit(filing.clean_text, filing.link_targets, room) if filing.filing_type != "10-Q" else None
             if trim is None:
                 gaps.append(f"The {name} was not analyzed: together with the newer filing it exceeds "
                             "the model's context limit.")
                 continue
             trimmed_text, removed = trim
-            kept = filing.model_copy(update={"clean_text": trimmed_text})
+            # The trimmed text no longer matches the link offsets, so they go.
+            kept = filing.model_copy(update={"clean_text": trimmed_text, "link_targets": []})
             gaps.append(f"The {name} was trimmed to fit the model's context limit: its "
                         f"{', '.join(removed)} section(s) were left out ({len(filing.clean_text) - len(trimmed_text):,} "
                         f"characters), as the newer {used[0].filing_type} updates them. Its Business and "

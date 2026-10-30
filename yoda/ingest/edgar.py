@@ -118,9 +118,9 @@ _EXHIBITS_READ_WITH = {"10-K": "EX-13", "40-F": "EX-99", "8-K": "EX-99", "8-K/A"
 
 # The parts of the cached record that are stored in separate .html files
 # rather than in latest.json (they are large, and the text is rebuilt from
-# the HTML on every load).
+# the HTML on every load). A filing's link targets are rebuilt with its text.
 _TEXT_FIELDS = {"raw_html": True, "clean_text": True}
-_CACHE_EXCLUDE = {"filings": {"__all__": _TEXT_FIELDS}}
+_CACHE_EXCLUDE = {"filings": {"__all__": {**_TEXT_FIELDS, "link_targets": True}}}
 
 # The current reports read after the filings — a company's news between
 # quarterly filings: the 8-K and its amendment, and a foreign company's 6-K.
@@ -377,8 +377,19 @@ _BLOCK_TAGS = [
 ]
 
 
+# Marks the place a link points to while the text is built (characters
+# from Unicode's private-use area, which filings don't contain); removed
+# again before the text is returned. Group 1 is the place's number.
+_LINK_MARK = re.compile("(\\d+)")
+
+
 def _clean_html(raw_html: str) -> str:
-    """Turn a filing's HTML into plain readable text.
+    """Turn a filing's HTML into plain readable text (see _clean_html_and_links)."""
+    return _clean_html_and_links(raw_html)[0]
+
+
+def _clean_html_and_links(raw_html: str) -> tuple[str, list[tuple[int, str]]]:
+    """Turn a filing's HTML into plain readable text, and say where its internal links point.
 
     Scripts, styles, navigation, headers and footers are removed, and so is
     the hidden inline-XBRL header (machine-readable tags). A new line
@@ -386,8 +397,13 @@ def _clean_html(raw_html: str) -> str:
     break ...); inline styling elements are joined to the text around them,
     so a word or sentence split across several of them stays whole (SEC
     filings often wrap single letters in their own <font>). Headings such
-    as "Item 1A. Risk Factors" survive as ordinary lines of text, which the
-    chunker later uses to find section boundaries.
+    as "Item 1A. Risk Factors" survive as ordinary lines of text.
+
+    Returns (text, link_targets). link_targets has one (offset, link text)
+    per link to a place inside the document ("#..."), where offset is the
+    start of the line in the text where that place begins. Most filings'
+    tables of contents are such links, so the chunker uses them to find
+    where each section starts.
     """
     soup = BeautifulSoup(raw_html, "lxml")
 
@@ -397,19 +413,64 @@ def _clean_html(raw_html: str) -> str:
     for tag in soup(["script", "style", "nav", "header", "footer", "ix:header"]):
         tag.decompose()
 
+    # Find every internal link and the element it points to (by id, or by
+    # an old-style <a name="...">), in one pass over the elements (each
+    # find_all with an attribute filter would be a slow pass of its own).
+    # Link text is read now, before line breaks are added around block
+    # elements.
+    places: dict[str, object] = {}
+    internal_links = []
+    for tag in soup.find_all(True):
+        if tag.get("id"):
+            places.setdefault(tag["id"], tag)
+        if tag.name == "a":
+            if tag.get("name"):
+                places.setdefault(tag["name"], tag)
+            if str(tag.get("href", "")).startswith("#"):
+                internal_links.append(tag)
+    links = [(link["href"][1:], link.get_text(" ", strip=True)) for link in internal_links
+             if link["href"][1:] in places]
+
     # Mark where each block element starts and ends with a line break, then
     # read the text with no separator, so inline elements run together.
     for tag in soup.find_all(_BLOCK_TAGS):
         tag.insert_before("\n")
         tag.insert_after("\n")
 
-    # Trim spaces (including non-breaking ones) from every line.
-    lines = [line.strip() for line in soup.get_text().splitlines()]
+    # Put a numbered mark right before each linked-to element (after its
+    # line break, so the mark starts the element's line).
+    numbers: dict[str, int] = {}
+    for place, _ in links:
+        if place not in numbers:
+            numbers[place] = len(numbers)
+            places[place].insert_before(f"{numbers[place]}")
 
-    # One line per block of text, with no blank lines: they only came from
+    # Trim spaces (including non-breaking ones) from every line, and keep
+    # one line per block of text, with no blank lines: they only came from
     # whitespace between tags in the HTML, and nothing downstream reads them
-    # (the chunker works line by line).
-    return "\n".join(line for line in lines if line)
+    # (the chunker works line by line). A mark's place is the start of the
+    # first line kept at or after it.
+    kept: list[str] = []
+    offset_of: dict[int, int] = {}
+    pending: list[int] = []
+    pos = 0
+    for raw_line in soup.get_text().splitlines():
+        pending += [int(number) for number in _LINK_MARK.findall(raw_line)]
+        line = _LINK_MARK.sub("", raw_line).strip()
+        if not line:
+            continue
+        for number in pending:
+            offset_of[number] = pos
+        pending = []
+        kept.append(line)
+        pos += len(line) + 1
+    text = "\n".join(kept)
+
+    # A place after the last line of text points at the very end.
+    for number in pending:
+        offset_of[number] = len(text)
+    link_targets = [(offset_of[numbers[place]], link_text) for place, link_text in links]
+    return text, link_targets
 
 
 # ---------------------------------------------------------------------------
@@ -442,7 +503,7 @@ def _read_disk_cache(ticker: str) -> FilingSet | None:
         if not html_path.exists():
             return None
         filing.raw_html = html_path.read_text(encoding="utf-8")
-        filing.clean_text = _clean_html(filing.raw_html)
+        filing.clean_text, filing.link_targets = _clean_html_and_links(filing.raw_html)
     return filing_set
 
 
@@ -812,6 +873,7 @@ def fetch_filings(ticker: str) -> FilingSet | None:
                           f"{type(exc).__name__}: {exc}")
             print(f"[edgar] WARNING: {errors[-1]}")
             continue
+        clean_text, link_targets = _clean_html_and_links(raw_html)
         downloaded.append(Filing(
             ticker=ticker,
             filing_type=meta["form"],
@@ -819,7 +881,8 @@ def fetch_filings(ticker: str) -> FilingSet | None:
             accession_number=meta["accession_number"],
             url=url,
             raw_html=raw_html,
-            clean_text=_clean_html(raw_html),
+            clean_text=clean_text,
+            link_targets=link_targets,
         ))
     if not downloaded:
         raise RuntimeError(f"None of {ticker}'s recent filings could be downloaded: {'; '.join(errors)}")

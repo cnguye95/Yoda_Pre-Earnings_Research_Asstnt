@@ -92,6 +92,110 @@ def test_10k_sections_come_out_in_order():
 
 
 # ---------------------------------------------------------------------------
+# Section detection — titles, Item headings, table-of-contents links
+# (scored on real filings in tests/test_sections.py)
+# ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize("title, label", [
+    ("Item 7. Management’s Discussion and Analysis", "MD&A"),
+    ("ITEM 5.OPERATING AND FINANCIAL REVIEWS AND PROSPECTS", "MD&A"),   # a 20-F, thin space
+    ("Part I, Item 1. Business", "Business"),
+    ("11. Risk Factors", "Risk Factors"),                                  # numbered, in an MD&A
+    ("Item 3. Quantitative and Qualitative Disclosures About Market Risk", "Quantitative Disclosures"),
+    ("Management’s Report on Internal Control Over Financial Reporting", "Financial Statements"),
+    ("Item 9. Changes in and Disagreements With Accountants", "Other"),
+    ("Item 6. [Reserved]", "Other"),                                       # any other Item is a part
+    ("Item 9.", "Other"),                                                  # a bare Item number
+    ("Glossary of Terms and Acronyms", "Other"),
+    ("Business Segment & Corporate Results", None),                        # subsections start nothing
+    ("Financial Risk Factors", None),
+    ("Executive Overview", None),
+    ("Note 14 – Leases", None),
+])
+def test_titles_are_classified(title, label):
+    assert chunker.classify_title(title) == label
+
+
+@pytest.mark.parametrize("lines, expected", [
+    (["ITEM 1.", "BUSINESS"], ("1", "item 1. business")),                 # title on the next line
+    (["Item 1.Business.", "General"], ("1", "item 1. business.")),
+    (["Item 7", "Economic Conditions"], None),                             # a running page header
+    (["Item 2, 3, 4", "ITEM 2. PROPERTIES"], None),
+    (["Item 16G as well as NYSE Section 303A.11 requires that issuers disclose"], None),   # a sentence
+])
+def test_item_headings_are_recognised(lines, expected):
+    assert chunker._item_heading(lines, 0) == expected
+
+
+def _labels(text: str, link_targets: list[tuple[int, str]] = ()) -> list[tuple[str, str]]:
+    # Each detected section as (label, its first line).
+    return [(label, text[start:end].splitlines()[0]) for start, end, label in chunker.section_spans(text, link_targets)]
+
+
+def test_item_7a_ends_at_item_8_and_the_table_of_contents_is_skipped():
+    # The table of contents lists the Items first; the body's headings win.
+    # A short Item 7A must not swallow Item 8.
+    text = ("Table of Contents\nItem 7.\nManagement's Discussion\nItem 7A.\nQuantitative and Qualitative\n"
+            "Item 8.\nFinancial Statements\n"
+            "Item 7. Management's Discussion and Analysis\nRevenue rose.\n"
+            "Item 7A. Quantitative and Qualitative Disclosures\nSee Note 1.\n"
+            "Item 8. Financial Statements\nBalance sheet.\nItem 9. Changes in Accountants\nNone.")
+    assert _labels(text) == [
+        ("Other", "Table of Contents"),
+        ("MD&A", "Item 7. Management's Discussion and Analysis"),
+        ("Quantitative Disclosures", "Item 7A. Quantitative and Qualitative Disclosures"),
+        ("Financial Statements", "Item 8. Financial Statements"),
+        ("Other", "Item 9. Changes in Accountants"),
+    ]
+
+
+def test_a_bare_item_link_does_not_hide_the_heading_it_points_to():
+    # NVDA-style: the table of contents links "Item 1." with no title, to
+    # the same spot as the heading that names the section.
+    text = "Contents\nItem 1. Financial Statements (Unaudited)\nRevenue 100.\nItem 2. Management's Discussion\nUp."
+    heading_1, heading_2 = text.index("Item 1."), text.index("Item 2.")
+    assert _labels(text, [(heading_1, "Item 1."), (heading_2, "Item 2.")]) == [
+        ("Other", "Contents"),
+        ("Financial Statements", "Item 1. Financial Statements (Unaudited)"),
+        ("MD&A", "Item 2. Management's Discussion"),
+    ]
+
+
+def test_table_of_contents_links_find_sections_without_item_headings():
+    # Annual-report form: no Item headings, only the document's own titles,
+    # which the table of contents links to. Links to subsections ("Credit
+    # Portfolio") start nothing; Risk Factors ends at the next entry even
+    # though "Managing Committee" is not a title Yoda knows.
+    text = ("Overview\nThe year in review.\nCredit Portfolio\nLoans grew.\n"
+            "Risk Factors\nRates may rise.\nManaging Committee\nNames.\nGlossary\nTerms.")
+    # The table of contents, in order: MD&A points at "Overview".
+    links = [(0, "Management’s Discussion and Analysis")] + [
+        (text.index(title), title) for title in ("Credit Portfolio", "Risk Factors", "Managing Committee", "Glossary")]
+    assert _labels(text, links) == [
+        ("MD&A", "Overview"), ("Risk Factors", "Risk Factors"), ("Other", "Managing Committee"),
+    ]
+
+
+def test_a_title_line_starts_a_section_only_before_a_paragraph():
+    # A 20-F's "Risk Factors" sub-heading, followed by prose, starts the
+    # section; the same words in a list (the table of contents, followed by
+    # a page number) do not.
+    prose = ("We wish to caution readers that the following important factors, and those described elsewhere, "
+             "could affect our results.")
+    text = f"Contents\nRisk Factors\n12\nItem 3. Key Information\nRisk Factors\n{prose}\nItem 4. Information on the Company\nFabs."
+    spans = chunker.section_spans(text)
+    assert [label for _, _, label in spans] == ["Other", "Risk Factors", "Business"]
+    assert spans[1][0] == text.index(f"Risk Factors\n{prose}")
+
+
+def test_an_exhibit_is_labelled_by_the_title_at_its_top():
+    # edgar puts an "EX-99.3" line above each exhibit it joins to a filing.
+    text = ("Cover page\nEX-99.2\nSUNCOR\nManagement's Report on Internal Control\nStatements.\n"
+            "EX-99.3\nManagement's Discussion\nand Analysis\nResults.\nEX-99.4\nConsent of KPMG LLP\nWe consent.")
+    assert [label for label, _ in _labels(text)] == ["Other", "Financial Statements", "MD&A", "Other"]
+
+
+# ---------------------------------------------------------------------------
 # Chunker — 8-K documents carry a label saying which document they came from
 # ---------------------------------------------------------------------------
 

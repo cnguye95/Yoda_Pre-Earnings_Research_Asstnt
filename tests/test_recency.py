@@ -169,6 +169,30 @@ def test_a_10q_reads_only_its_main_document(monkeypatch):
     assert downloads == ["main.htm"]
 
 
+def test_cleaning_records_where_internal_links_point():
+    # A table of contents linking to a heading by id, and an old-style
+    # <a name> anchor; a link to a place that doesn't exist is dropped. The
+    # text is the same as _clean_html gives.
+    html = ('<p><a href="#mdna">Item 7. <b>MD&amp;A</b></a></p><p><a href="#fs">Item 8.</a></p>'
+            '<p><a href="#missing">Nowhere</a></p>'
+            '<p>Cover text</p><div id="mdna"><p>Item 7. Management’s Discussion</p><p>Sales rose.</p></div>'
+            '<a name="fs"></a><p>Item 8. Financial Statements</p>')
+    text, links = edgar._clean_html_and_links(html)
+    assert text == edgar._clean_html(html)
+    assert [(text[offset:].splitlines()[0], link_text) for offset, link_text in links] == [
+        ("Item 7. Management’s Discussion", "Item 7. MD&A"),
+        ("Item 8. Financial Statements", "Item 8."),
+    ]
+
+
+def test_a_trimmed_10k_drops_its_link_offsets(monkeypatch):
+    # Offsets point into the full text, so the trimmed copy must not keep them.
+    annual = _annual_report().model_copy(update={"link_targets": [(0, "Item 1. Business")]})
+    monkeypatch.setattr(baseline, "MAX_FILING_CHARS", len(_QUARTERLY.clean_text) + 1500)
+    trimmed = baseline.full_filing_text([_QUARTERLY, annual]).used[1]
+    assert trimmed.clean_text != annual.clean_text and trimmed.link_targets == []
+
+
 def test_a_20f_operating_review_is_labelled_mdna():
     lines = ["Item 5. Operating and Financial Review and Prospects", "Revenue grew."]
     assert chunker._detect_section_boundaries(lines) == [(0, "MD&A")]

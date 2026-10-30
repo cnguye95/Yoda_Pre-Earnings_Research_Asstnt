@@ -287,7 +287,7 @@ WHEN labels (relative to the architecture comparison, item 4; set
    Order of the BEFORE SMOKE work (one item at a time):
     1. Item 9 R3: read USB's annual report (EX-13). DONE 2026-10-30.
     2. Item 9 R1: section test set. DONE 2026-10-30.
-    3. Item 9 R2: fix section detection.
+    3. Item 9 R2: fix section detection. DONE 2026-10-30.
     4. Item 4c: complexity labels.
     5. Item 12, before part: choose the cost-saving methods the builds
        will use.
@@ -442,6 +442,32 @@ WHEN labels (relative to the architecture comparison, item 4; set
             a or b is still needed as a fallback.
        In all three: when no reliable heading is found, label the text
        "Other". A missing label is shown as missing; a wrong one misleads.
+       DONE (2026-10-30) with c + a: the filing's own table-of-contents
+       links (all 11 test filings have them), plus strict Item headings,
+       exhibit starts and MD&A/Risk Factors title lines
+       (yoda/ingest/chunker.py section_spans; edgar._clean_html_and_links
+       records where each link points; Filing.link_targets carries them).
+       edgartools (b) was not used: ~40 dependencies, built around fetching
+       from the SEC, and Item-based, so no help for annual-report-form
+       filings. Clean text is unchanged (checked byte for byte).
+       * Target (set before building): accuracy >= 90% for filings with
+         Item headings, >= 80% for annual-report form, <= 5% of any filing
+         under the wrong named section ("Other" is not counted as wrong).
+       * Result: met on all 8 tuning filings (MSFT 98%, CAT 100%, AMD 100%,
+         JPM 10-Q 99%, JPM 10-K 99%, USB 99.5%, TSM 100%, SU 90%) and on
+         hold-outs KO (100%) and NVDA (35% at first: a bare "Item 1." link
+         outranked its heading; fixed, now 100%, so no longer a true
+         hold-out). NOT met on hold-out WFC (23%, 49% mislabelled).
+       * KNOWN GAP: WFC-style annual reports (EX-13 with no linked table
+         of contents, MD&A called "Financial Review"): its "Risk Factors"
+         title runs to the end of the filing. Fixing it means WFC-specific
+         rules; if done, add fresh hold-outs (another EX-13 bank 10-K)
+         to check they generalise.
+       * Minor: SU's MD&A after its risk factors ("12. Other Items") is
+         labelled Other, not MD&A; USB's EX-13 "Company Information"
+         (business description) is not recognised.
+       * Labels change chunk fingerprints, so each ticker's filings are
+         re-embedded once on its next paid run (a few cents per ticker).
    R3. Read the annual report a 10-K incorporates by reference (EX-13),
        ONLY for 10-Ks that have one. (Context for the implementer.)
        DONE (2026-10-30): edgar._EXHIBITS_READ_WITH says which exhibits each

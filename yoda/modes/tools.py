@@ -203,7 +203,7 @@ def lookup_peer(ctx: ToolContext, peer_ticker: str, query: str, k: int = 3) -> l
             # Only the peer's newest filing is searched: a read-through needs
             # its latest figures, not a second document.
             peer_filing = peer_set.newest
-            peer_chunks = chunk_filing(peer_filing.clean_text)
+            peer_chunks = chunk_filing(peer_filing.clean_text, peer_filing.link_targets)
             # Embeds only if an earlier run hasn't already stored this filing.
             ctx.store.index_if_missing(peer_filing.accession_number, peer_chunks)
             peer_label = f"PEER {peer_ticker} {peer_filing.filing_type} filed {peer_filing.filing_date}"
@@ -426,7 +426,7 @@ if __name__ == "__main__":
     store = ChromaStore()
     ctx = ToolContext(primary_ticker=ticker, store=store)
     for filing in filing_set.filings:
-        chunks = chunk_filing(filing.clean_text)
+        chunks = chunk_filing(filing.clean_text, filing.link_targets)
         store.index_if_missing(filing.accession_number, chunks)
         ctx.filing_labels[filing.accession_number] = f"{filing.filing_type} filed {filing.filing_date}"
         print(f"[tools-smoke] Indexed {len(chunks)} chunks for {ticker} "

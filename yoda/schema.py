@@ -249,7 +249,9 @@ class Filing(BaseModel):
     """One SEC filing (a 10-Q, or an annual 10-K / 20-F / 40-F) as fetched by yoda.ingest.edgar.fetch_filings().
 
     *clean_text* is the readable text the analysis works from; *raw_html* is
-    kept so the text can be rebuilt from the disk cache.
+    kept so the text can be rebuilt from the disk cache. *link_targets* are
+    the filing's internal links (mostly its table of contents) as (offset in
+    clean_text, link text); the chunker uses them to find its sections.
     """
     model_config = ConfigDict(extra="forbid")
 
@@ -260,6 +262,7 @@ class Filing(BaseModel):
     url: str | None = None             # None when the archive URL is unknown
     raw_html: str = ""
     clean_text: str = ""
+    link_targets: list[tuple[int, str]] = []
 
 
 class FilingSet(BaseModel):

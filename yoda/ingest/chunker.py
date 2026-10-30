@@ -9,13 +9,20 @@ exhibit and filing date (eight_k_label()). chunk_transcript() splits an
 earnings call transcript by speaker turn, labelling each chunk with the call
 and whether the speaker is the company or an analyst (transcript_label()).
 
-Section detection strategy:
-  - Scan every line for short heading-like lines (3–150 chars) that match a
-    regex pattern tied to a known 10-Q/10-K section.
-  - SEC filings repeat each heading in the table-of-contents AND in the body.
-    We keep the LAST occurrence of each section heading so the body wins over
-    the TOC, avoiding 20-char ghost sections.
-  - Any text before the first matched heading is labelled "Other".
+Section detection (section_spans), from three kinds of evidence:
+  - The filing's own table of contents: most filings link each entry to the
+    place in the body where that part starts. edgar._clean_html_and_links()
+    records where each link points in the clean text; the entry's words
+    ("Item 7. Management's Discussion ...", "Risk Factors") name the section.
+  - Item headings in the text: a line that starts with "Item N." (optionally
+    after "Part I,"), followed by a title on the same or the next line.
+    Every Item ends the one before, so a short Item 7A can't swallow Item 8.
+  - The start of each exhibit read with the filing (an "EX-13" heading line
+    that edgar adds), labelled by the first section title near its top.
+  A section runs until the next boundary. Titles Yoda has no label for
+  ("Item 9", "Glossary", "Controls and Procedures") start an "Other" span,
+  and text before the first boundary is "Other": a missing label is shown
+  as missing, while a wrong one would name the wrong part of the filing.
 
 Within-section splitting:
   - Sections are split into windows of up to 1500 chars. If the cut-point
@@ -67,75 +74,192 @@ class Chunk(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Section heading patterns
+# Section titles
 # ---------------------------------------------------------------------------
 
-# Each tuple is (compiled_regex, section_label). A line matches if the regex
-# appears anywhere in it (case-insensitive). The first pattern that matches a
-# line decides its label, so the order of this list matters.
-_SECTION_PATTERNS: list[tuple[re.Pattern, SectionLabel]] = [
-    # Only as an Item heading at the start of the line (optionally after
-    # "Part I,"), so the word "business" in ordinary text (or a 10-Q's
-    # "Item 1. Financial Statements") never starts the section.
-    (
-        re.compile(
-            r"^(part\s+i\s*[,.]?\s*)?item\s*1\s*[.:\-–—]?\s*business\b"
-            r"|^item\s*4\s*[.:\-–—]?\s*information\s+on\s+the\s+company",
-            re.IGNORECASE,
-        ),
-        "Business",
-    ),
-    (re.compile(r"risk\s+factor", re.IGNORECASE), "Risk Factors"),
-    # A 20-F calls its MD&A "Item 5. Operating and Financial Review and Prospects".
-    (re.compile(r"management.{0,3}s?\s+discussion|operating\s+and\s+financial\s+review", re.IGNORECASE), "MD&A"),
-    (
-        re.compile(
-            r"quantitative\s+and\s+qualitative\s+disclosures",
-            re.IGNORECASE,
-        ),
-        "Quantitative Disclosures",
-    ),
-    (
-        re.compile(
-            r"condensed\s+consolidated\s+balance\s+sheets"
-            r"|condensed\s+consolidated\s+statements"
-            r"|consolidated\s+balance\s+sheets"
-            r"|consolidated\s+statements\s+of\s+operations",
-            re.IGNORECASE,
-        ),
-        "Financial Statements",
-    ),
+# Section titles Yoda labels, matched at the START of a title (after any
+# "Part I," / "Item 7." / "11." numbering is removed, see classify_title), so
+# "Risk Factors" is a title but "Financial Risk Factors" or "Business Segment
+# Results" (subsections) are not. The first match decides the label.
+_TITLE_PATTERNS: list[tuple[re.Pattern, SectionLabel]] = [
+    # A 10-K's Item 1, a 20-F's Item 4, a Canadian annual information form's
+    # "General Development of the Business". "Business" must be the whole
+    # title, so "Business Segment Results" is not one.
+    (re.compile(r"business\W*$|information on the company|general development of the business"), "Business"),
+    (re.compile(r"risk factors"), "Risk Factors"),
+    # A 20-F calls its MD&A "Operating and Financial Review and Prospects".
+    (re.compile(r"management.?s discussion|operating and financial review"), "MD&A"),
+    (re.compile(r"quantitative and qualitative"), "Quantitative Disclosures"),
+    # The statements themselves, and the management and auditor reports
+    # that open them in annual-report form ("Management's Report on Internal
+    # Control", a Canadian "Management's Statement of Responsibility").
+    (re.compile(r"((condensed )?consolidated )?financial statements|consolidated statements? of (income|operations)"
+                r"|index to (the )?(condensed )?consolidated financial statements"
+                r"|management.?s (report|statement of responsibility)|reports? of management"), "Financial Statements"),
 ]
+
+# Titles of parts that are none of the labelled sections. They end the
+# section before them; the text under them is "Other".
+_OTHER_TITLE = re.compile(
+    r"unresolved staff comments|cybersecurity|properties|legal proceedings|mine safety|market for"
+    r"|controls and procedures|other information|exhibits?\b|signatures?\b|glossary|supplementa(l|ry)"
+    r"|(consolidated )?(daily )?average balance|dividends|directors|executive (officers|comp)"
+    r"|defaults upon|unregistered sales|selected financial data|changes in and disagreements"
+)
+
+# "Part I," / "PART II -" at the start of a title.
+_PART_PREFIX = re.compile(r"^part\s+[iv]+\b\W*")
+# "Item 7." / "ITEM 1A:" / "Item 3.D" at the start of a title; group 1 is the
+# Item number. The punctuation after the number is optional ("Item 7 —").
+_ITEM_PREFIX = re.compile(r"^item\s*(\d+[a-d]?)\b(\.[a-d]\b)?\s*[.:\-–—]?\s*")
+# Section numbering such as "11. " in "11. Risk Factors".
+_NUMBER_PREFIX = re.compile(r"^\d+\.\s+")
+
+# Typographic quotes and odd spaces, made plain before titles are matched.
+_PLAIN_QUOTES = str.maketrans({"’": "'", "‘": "'", "“": '"', "”": '"', "​": ""})
+
+
+def _plain(text: str) -> str:
+    """Return *text* lower-cased, with plain quotes and single spaces (non-breaking and thin spaces included)."""
+    return " ".join(text.translate(_PLAIN_QUOTES).split()).lower()
+
+
+def classify_title(title: str) -> SectionLabel | None:
+    """Return the section a heading or table-of-contents entry starts, or None if it starts none.
+
+    "Item 7. Management's Discussion and Analysis" -> "MD&A"; "Item 9.
+    Changes in ..." or "Glossary of Terms" -> "Other" (a part with no label
+    of its own, which ends the section before it); "Note 14 - Leases" or
+    "Business Segment Results" -> None (not the start of a part). A bare
+    Item number ("Item 9.") is "Other".
+    """
+    text = _PART_PREFIX.sub("", _plain(title))
+    item = _ITEM_PREFIX.match(text)
+    if item:
+        text = text[item.end():]
+    text = _NUMBER_PREFIX.sub("", text)
+    for pattern, label in _TITLE_PATTERNS:
+        if pattern.match(text):
+            return label
+    # Any other Item ("Item 2. Properties", "Item 6. [Reserved]", a bare
+    # "Item 9.") is still a part of its own.
+    if _OTHER_TITLE.match(text) or item:
+        return "Other"
+    return None
+
+
+def _item_heading(lines: list[str], i: int) -> tuple[str, str] | None:
+    """If line *i* is an Item heading, return (item number, full title); otherwise None.
+
+    An Item heading is a short line starting "Item N" followed by a period,
+    colon or dash, or by its title on the same line ("Item 1.Business.",
+    "ITEM 7. MANAGEMENT'S ...", "Item 1 — Business"). A line with just
+    "Item N." takes its title from the next line ("ITEM 1." / "BUSINESS").
+    A bare "Item 7" with no punctuation is a running page header, not a
+    heading, and so is "Item 2, 3, 4". Without punctuation the title must be
+    a known one, so a sentence that happens to start "Item 16G as well as
+    ..." is not a heading.
+    """
+    text = _PART_PREFIX.sub("", _plain(lines[i]))
+    if len(text) > 150:
+        return None
+    match = re.match(r"item\s*(\d+[a-d]?)\b(\.[a-d]\b)?(\s*[.:\-–—]\s*|\s+(?=[a-z]))(.*)$", text)
+    if not match:
+        return None
+    title = match.group(4)
+    if not match.group(3).strip() and classify_title(title) is None:
+        return None
+    if not title and i + 1 < len(lines):
+        title = _plain(lines[i + 1])
+    return match.group(1), f"item {match.group(1)}. {title}"
 
 
 def _detect_section_boundaries(lines: list[str]) -> list[tuple[int, SectionLabel]]:
-    """Return a list of (line_index, section_label) for each heading found.
+    """Return (line_index, section_label) for every Item heading and exhibit start found in *lines*.
 
-    We walk every line and record any short line that matches one of our
-    section patterns. Then we deduplicate by keeping only the LAST occurrence
-    of each section label — this removes table-of-contents entries, which
-    always appear before the body heading for the same section.
+    Item headings: see _item_heading. A table of contents lists the same
+    Items as the body, so when the same Item appears more than once with
+    the same label, only the last is kept (the body comes after the table
+    of contents, which may shorten the title). Items labelled "Other" are
+    also told apart by title, since a 10-Q's Part I and Part II both have
+    an Item 4 ("Controls and Procedures", "Mine Safety Disclosures").
+    Running page headers are not headings at all, so they can't pull a
+    section's start to the end of the filing.
+
+    Exhibit starts: a line that is only an exhibit type ("EX-13",
+    "EX-99.2"), the heading edgar puts above each exhibit it joins to a
+    filing. The exhibit is labelled by the first section title in its first
+    15 lines (a 40-F's MD&A exhibit starts "Management's Discussion"), or
+    "Other" if there is none.
+
+    Title lines: a short line that starts with a capital letter or number
+    and is an MD&A or Risk Factors title ("Management's discussion and
+    analysis", "Risk Factors"), with a paragraph of text right after it.
+    That is how annual-report-form documents and a 20-F's "3.D Risk Factors"
+    head those sections. Requiring the paragraph skips table-of-contents
+    lines (followed by a page number or the next entry). Other titles are
+    not trusted on a plain line: "Financial Statements" or "Report of
+    Management" also head parts of other Items (an exhibit list, Item 9A's
+    controls report).
     """
-    # First pass: collect all candidate headings with their line numbers.
-    candidates: list[tuple[int, SectionLabel]] = []
+    last_by_item: dict[tuple[str, SectionLabel, str], int] = {}
+    others: list[tuple[int, SectionLabel]] = []
     for i, line in enumerate(lines):
-        stripped = line.strip()
-        # Only consider short lines — real headings are never 500-char paragraphs.
-        if not (3 < len(stripped) < 150):
-            continue
-        for pattern, label in _SECTION_PATTERNS:
-            if pattern.search(stripped):
-                candidates.append((i, label))
-                break  # A line matches at most one section label.
+        heading = _item_heading(lines, i)
+        if heading is not None:
+            number, title = heading
+            label = classify_title(title) or "Other"
+            last_by_item[(number, label, title[:40] if label == "Other" else "")] = i
+        elif re.fullmatch(r"EX-\d+(\.\d+)?", line.strip()):
+            titles = (classify_title(near) for near in lines[i + 1:i + 16] if len(near) < 150)
+            others.append((i, next((label for label in titles if label not in (None, "Other")), "Other")))
+        elif len(line) <= 80 and (line[:1].isupper() or line[:1].isdigit()):
+            label = classify_title(line)
+            if label in ("MD&A", "Risk Factors") and i + 1 < len(lines) and len(lines[i + 1]) >= 100:
+                others.append((i, label))
+    items = [(i, label) for (_, label, _), i in last_by_item.items()]
+    return sorted(items + others)
 
-    # Second pass: for each section label, keep only the last occurrence.
-    # Build a dict keyed by label; later entries overwrite earlier ones.
-    last_occurrence: dict[SectionLabel, int] = {}
-    for line_idx, label in candidates:
-        last_occurrence[label] = line_idx
 
-    # Sort by line index so boundaries are in document order.
-    boundaries = sorted((line_idx, label) for label, line_idx in last_occurrence.items())
+def _toc_boundaries(link_targets: list[tuple[int, str]]) -> list[tuple[int, SectionLabel]]:
+    """Turn table-of-contents links into (character offset, section_label) boundaries.
+
+    *link_targets* holds (offset in the clean text the link points to, link
+    text) for every link inside the filing (see edgar._clean_html_and_links).
+    Several links can point to one place ("Item 7." and "Management's
+    Discussion ..." as two links on one row, or a cross-reference in the
+    text): a place gets a named label if any of its links names one, else
+    "Other" if any names a part with no label, else it is not a boundary
+    (links to notes, subsections and other places that start no part).
+
+    Risk Factors and Quantitative Disclosures are single topics with no
+    parts of their own, so each also ends where the table of contents' next
+    entry points ("Risk Factors", then "Other Items" in a 40-F's MD&A), even
+    when that entry is not a title Yoda knows.
+    """
+    labels_at: dict[int, set[SectionLabel]] = {}
+    for n, (offset, text) in enumerate(link_targets):
+        label = classify_title(text)
+        first_link_here = offset not in labels_at
+        if label is not None:
+            labels_at.setdefault(offset, set()).add(label)
+        # The next entry of the table of contents is the next link, in the
+        # order they appear, that points further into the document. Only the
+        # first link to a place counts: that is its table-of-contents entry,
+        # while later ones are cross-references from the text ("see Item 1A").
+        if label in ("Risk Factors", "Quantitative Disclosures") and first_link_here:
+            following = (later for later, _ in link_targets[n + 1:] if later > offset)
+            next_entry = next(following, None)
+            if next_entry is not None:
+                labels_at.setdefault(next_entry, set()).add("Other")
+    boundaries = []
+    for offset, labels in sorted(labels_at.items()):
+        named = sorted(labels - {"Other"})
+        # Two different named labels for one place is ambiguous; say nothing.
+        if len(named) == 1:
+            boundaries.append((offset, named[0]))
+        elif not named:
+            boundaries.append((offset, "Other"))
     return boundaries
 
 
@@ -204,13 +328,16 @@ def _split_text(
 # Public API
 # ---------------------------------------------------------------------------
 
-def section_spans(clean_text: str) -> list[tuple[int, int, SectionLabel]]:
+def section_spans(clean_text: str, link_targets: list[tuple[int, str]] = ()) -> list[tuple[int, int, SectionLabel]]:
     """Return the filing's sections as (char_start, char_end, label), in order, covering the whole text.
 
-    Each detected section runs from its heading to the next one (or the end
-    of the text); anything before the first heading is "Other", and a filing
-    with no recognised heading is one "Other" span. Used by chunk_filing()
-    and by the size rule that trims a long 10-K section by section.
+    *link_targets* are the filing's internal links as (offset in
+    clean_text, link text), from edgar._clean_html_and_links(); without them
+    (an 8-K, a transcript, a test) only the text's own Item headings and
+    exhibit starts are used. Each section runs from its start to the next
+    boundary (or the end of the text); anything before the first boundary
+    is "Other", and so is a filing with none. Used by chunk_filing() and by
+    the size rule that trims a long 10-K section by section.
     """
     lines = clean_text.splitlines()
 
@@ -222,43 +349,42 @@ def section_spans(clean_text: str) -> list[tuple[int, int, SectionLabel]]:
         line_char_offsets.append(pos)
         pos += len(line) + 1  # +1 for the newline that splitlines() removed.
 
-    # Detect where each section starts (as line indices).
-    boundaries = _detect_section_boundaries(lines)
+    # Every boundary as a character offset: headings and exhibit starts from
+    # the text, and the places the table of contents links to. Where two
+    # boundaries fall on the same spot, the last one sorted decides its
+    # label, so a named section is sorted after "Other": a bare "Item 1."
+    # link only says a part starts there, while the heading it points to
+    # ("Item 1. Financial Statements") says which.
+    boundaries = sorted(
+        [(line_char_offsets[i], label) for i, label in _detect_section_boundaries(lines)]
+        + _toc_boundaries(link_targets),
+        key=lambda boundary: (boundary[0], boundary[1] != "Other"),
+    )
 
-    # Build (char_start, char_end, label) spans that cover the whole text.
-    # Anything before the first boundary goes to "Other".
+    # Build (char_start, char_end, label) spans that cover the whole text,
+    # merging neighbours with the same label (a table-of-contents link and
+    # the heading it points to usually mark the same start). Anything before
+    # the first boundary is "Other".
     spans: list[tuple[int, int, SectionLabel]] = []
-    text_len = len(clean_text)
-
-    if not boundaries:
-        # No section headings found at all — treat the whole filing as "Other".
-        spans.append((0, text_len, "Other"))
-    else:
-        # Lead section before the first heading.
-        first_line_idx, _ = boundaries[0]
-        first_char = line_char_offsets[first_line_idx]
-        if first_char > 0:
-            spans.append((0, first_char, "Other"))
-
-        # Each detected section runs until the next boundary (or end of text).
-        for i, (line_idx, label) in enumerate(boundaries):
-            char_start = line_char_offsets[line_idx]
-            if i + 1 < len(boundaries):
-                next_line_idx = boundaries[i + 1][0]
-                char_end = line_char_offsets[next_line_idx]
-            else:
-                char_end = text_len
-            spans.append((char_start, char_end, label))
-    return spans
+    for start, label in [(0, "Other")] + boundaries:
+        if spans and spans[-1][2] == label:
+            continue
+        if spans:
+            spans[-1] = (spans[-1][0], start, spans[-1][2])
+        spans.append((start, len(clean_text), label))
+    return [span for span in spans if span[0] < span[1]]
 
 
-def chunk_filing(clean_text: str) -> list[Chunk]:
+def chunk_filing(clean_text: str, link_targets: list[tuple[int, str]] = ()) -> list[Chunk]:
     """Split a cleaned filing into section-tagged Chunk objects.
 
     Parameters
     ----------
     clean_text : str
         Plain text produced by edgar._clean_html().
+    link_targets : list of (int, str)
+        The filing's internal links (Filing.link_targets), used to find its
+        sections; see section_spans().
 
     Returns
     -------
@@ -266,7 +392,7 @@ def chunk_filing(clean_text: str) -> list[Chunk]:
         All chunks in document order. chunk_index is 0-based and contiguous
         across the entire filing (not reset per section).
     """
-    spans = section_spans(clean_text)
+    spans = section_spans(clean_text, link_targets)
 
     # Split each span into overlapping chunks and collect Chunk objects.
     chunks: list[Chunk] = []
