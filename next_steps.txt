@@ -313,6 +313,12 @@ WHEN labels (relative to the architecture comparison, item 4; set
        will use. DONE 2026-10-30.
     6. Shared foundation: evidence store with passage IDs, XBRL fact
        sheet (4a), new report schema (4b).
+       6a evidence store DONE 2026-10-30 (yoda/evidence_store.py, market
+       text moved to yoda/market_text.py). 6b fact sheet and 6c schema
+       still to do. Note for steps 8/9: tools.retrieve_filing and the
+       vector store still return chunker windows without passage IDs; an
+       arm that retrieves must return store passages (step 9 embeds store
+       passages if Rec 2's workers search).
     7. Item 2: baseline option B on the new foundation.
     8. Rec 1.
     9. Rec 2 design; item 9 R5 if its workers search passages, then R4/R6

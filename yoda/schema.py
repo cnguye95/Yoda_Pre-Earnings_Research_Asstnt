@@ -439,6 +439,57 @@ class EvidenceBundle(BaseModel):
 
 
 # ---------------------------------------------------------------------------
+# Evidence store — every source passage a report can cite, each with a short
+# ID (built in yoda/evidence_store.py; not a Claude schema, so docstrings)
+# ---------------------------------------------------------------------------
+
+# What a passage comes from: the 10-Q/annual report, the latest 8-K, the
+# earnings call, one market-data figure, one fact-sheet row, a news search
+# result, an article read in full, or a competitor's filing.
+PassageKind = Literal["filing", "8-K", "call", "market", "fact", "news", "article", "peer"]
+
+
+class Passage(BaseModel):
+    """One citable piece of a source, with the short ID a report cites it by (e.g. "K.042").
+
+    *document* names the source the way a reader sees it ("10-K filed
+    2026-02-23", "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-21)",
+    "Q3 FY2026 earnings call (2026-10-27)"). *section* is the filing section
+    (filings and peers only); *heading* the nearest heading, speaker or
+    figure name. *start*/*end* are the passage's character positions in its
+    document's text (filings and 8-K documents), so it can be found again.
+    *speaker_is_company* is set for call passages only.
+    """
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    kind: PassageKind
+    document: str
+    section: str | None = None
+    heading: str | None = None
+    text: str
+    url: str | None = None
+    as_of: str | None = None           # ISO date the source is from, when known
+    start: int | None = None
+    end: int | None = None
+    speaker_is_company: bool | None = None
+
+
+class EvidenceStore(BaseModel):
+    """Every passage one report could cite, in the order they are shown, for one ticker.
+
+    The shared part (filings, 8-K, call, market data, fact sheet) is built
+    once per ticker and is identical for every mode; each mode then adds
+    its own news results, articles and competitor passages. Saved next to
+    the report, so the judge sees exactly what the writer could cite.
+    """
+    model_config = ConfigDict(extra="forbid")
+
+    ticker: str
+    passages: list[Passage] = []
+
+
+# ---------------------------------------------------------------------------
 # Top-level report model
 # ---------------------------------------------------------------------------
 

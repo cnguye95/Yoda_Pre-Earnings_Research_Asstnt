@@ -91,7 +91,13 @@ from yoda.schema import (
     PersonalityResult,
     SinceFilingItem,
 )
-from yoda.tools.consensus import MarketSnapshot, get_market_snapshot, rating_action_text, rating_actions_text
+# The market data's text, shared with the evidence store (yoda/market_text.py);
+# kept under their old names here.
+from yoda.market_text import EIGHT_K_ITEM_NAMES as _EIGHT_K_ITEM_NAMES
+from yoda.market_text import market_lines as _market_lines
+from yoda.market_text import refusal as _refusal
+from yoda.market_text import usd as _usd
+from yoda.tools.consensus import MarketSnapshot, get_market_snapshot, rating_actions_text
 from yoda.tools.news import NEWS_CITABLE_DAYS, is_citable
 
 
@@ -1713,130 +1719,6 @@ def _ingest_post_filing_8ks(
           f"{', '.join(f'{k.form} {k.filing_date}' for k in post_filing.filings) or 'none'}"
           + (f" ({len(post_filing.errors)} could not be fetched)" if post_filing.errors else ""))
     return post_filing.filings, embed_tokens
-
-
-# What each 8-K item code reports, from the SEC's Form 8-K item titles, so a
-# personality can tell an earnings release from an executive change.
-_EIGHT_K_ITEM_NAMES = {
-    "1.01": "material agreement signed",
-    "1.02": "material agreement ended",
-    "2.01": "acquisition or sale of assets completed",
-    "2.02": "results of operations (earnings release)",
-    "2.03": "new debt or other financial obligation",
-    "2.05": "exit or restructuring costs",
-    "2.06": "material impairment",
-    "3.01": "delisting notice",
-    "5.02": "director or officer change",
-    "5.03": "charter or bylaw amendment",
-    "5.07": "shareholder vote results",
-    "7.01": "Regulation FD disclosure",
-    "8.01": "other events",
-    "9.01": "financial statements and exhibits",
-}
-
-
-def _usd(amount: float) -> str:
-    """Format a dollar amount for the context block: $1.23, $412.5M, $11.52B."""
-    if abs(amount) >= 1e9:
-        return f"${amount / 1e9:,.2f}B"
-    if abs(amount) >= 1e6:
-        return f"${amount / 1e6:,.1f}M"
-    return f"${amount:,.2f}"
-
-
-def _refusal(market: MarketSnapshot, part: str) -> str:
-    """Return "<provider> refused the request" for a snapshot part that failed."""
-    apis = ", ".join(sorted({failure.api for failure in market.failures if failure.part == part}))
-    return f"{apis or 'the provider'} refused the request"
-
-
-def _refused(market: MarketSnapshot, part: str) -> str:
-    """Return "N/A — <provider> refused the request" for a snapshot part that failed."""
-    return f"N/A — {_refusal(market, part)}"
-
-
-def _market_lines(market: MarketSnapshot) -> list[str]:
-    """Return one line per market-data figure, each with its source.
-
-    A figure that isn't available says "N/A" and why — never 0 or a guess.
-    """
-    consensus, whisper, signals = market.consensus, market.whisper, market.signals
-    lines = []
-
-    # Consensus: the next report and the analysts' average estimates for it.
-    if consensus is None:
-        lines.append(f"- Consensus estimates: {_refused(market, 'consensus')}")
-    else:
-        source = ", ".join(sorted({src["name"] for src in consensus["sources"].values()})) or "no source"
-        quarter = (f"fiscal Q{consensus['fiscal_quarter']} {consensus['fiscal_year']}"
-                   if consensus["fiscal_quarter"] else "fiscal quarter unknown")
-        hour = {"bmo": "before the open", "amc": "after the close"}.get(consensus["report_hour"] or "", "time unknown")
-        lines.append(f"- Next report: {consensus['next_earnings_date'] or 'N/A'} ({hour}), {quarter} — {source}")
-        eps, revenue = consensus["eps_estimate"], consensus["revenue_estimate"]
-        lines.append(f"- Consensus EPS: {'N/A' if eps is None else _usd(eps)}")
-        lines.append(f"- Consensus revenue: {'N/A' if revenue is None else _usd(revenue)}")
-        lines.extend(f"  (missing: {gap})" for gap in consensus["data_gaps"])
-
-    # Whisper: the unofficial number traders expect, only when verified. It
-    # is not looked up without a consensus to match it to.
-    if whisper is None and consensus is None:
-        lines.append("- Whisper EPS: N/A — not looked up (no consensus to match it to)")
-    elif whisper is None:
-        lines.append(f"- Whisper EPS: {_refused(market, 'whisper')}")
-    elif whisper["whisper_status"] == "verified":
-        lines.append(f"- Whisper EPS: {_usd(whisper['whisper_eps'])} — {whisper['source_url']}"
-                     + (f" (page dated {whisper['page_date']})" if whisper["page_date"] else ""))
-    else:
-        lines.append(f"- Whisper EPS: N/A — {whisper['reason'] or 'no verified whisper found'}")
-
-    # Implied move (what options prices expect) and historical move (what
-    # the stock actually did after recent reports).
-    implied = market.implied_move
-    if implied["implied_move_pct"] is not None:
-        lines.append(f"- Options-implied move: ±{implied['implied_move_pct']}% "
-                     f"(as of {implied['as_of']}) — {implied['source_name']}")
-    else:
-        lines.append(f"- Options-implied move: N/A — {implied['reason']}")
-    history = market.historical_move
-    if history["avg_close_move_pct"] is not None:
-        lines.append(f"- Historical move: ±{history['avg_close_move_pct']}% average closing move over the "
-                     f"last {history['reports_used']} reports ({history['first_report_date']} to "
-                     f"{history['last_report_date']}) — {history['source_name']}")
-    else:
-        lines.append(f"- Historical move: N/A — {history['reason']}")
-
-    # The free expectation signals: beat/miss record, analyst rating
-    # actions, and the consensus price target.
-    if signals is None:
-        lines.append(f"- Beat/miss record, analyst actions, price target: {_refused(market, 'signals')}")
-        return lines
-    beats = signals["beat_history"]
-    if beats:
-        surprise = (f", average surprise {beats['avg_surprise_pct']:+}%"
-                    if beats["avg_surprise_pct"] is not None else "")
-        lines.append(f"- Beat/miss record: {beats['beats']} beats, {beats['misses']} misses in the last "
-                     f"{beats['quarters']} quarters{surprise} — {beats['source']['name']}")
-    else:
-        lines.append("- Beat/miss record: N/A")
-    # Each analyst rating action on its own line, so a personality can see
-    # which firm changed what (an upgrade, a downgrade, a repeated rating).
-    actions = signals["analyst_actions"]
-    if actions:
-        lines.append(f"- Analyst rating actions (last {actions['days']} days, newest first) — "
-                     f"{actions['source']['name']}:")
-        lines += [f"  - {rating_action_text(action)}" for action in actions["actions"]]
-    else:
-        lines.append("- Analyst rating actions: N/A")
-    target = signals["price_target"]
-    if target:
-        upside = ""
-        if target["upside_pct"] is not None and target["current_price"] is not None:
-            upside = f", {target['upside_pct']:+}% vs current {_usd(target['current_price'])}"
-        lines.append(f"- Consensus price target: {_usd(target['consensus'])}{upside} — {target['source']['name']}")
-    else:
-        lines.append("- Consensus price target: N/A")
-    lines.extend(f"  (missing: {gap})" for gap in signals["data_gaps"])
-    return lines
 
 
 def _call_line(call: TranscriptFetch | None) -> str:
