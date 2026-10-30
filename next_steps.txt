@@ -182,22 +182,6 @@ IDEAS for Improvements/Changes
      evidence cache so the judge sees what it saw.
 
 
-4. Yoda-only process check (LATER, separate from Yoda vs baseline)
-   The head-to-head eval grades only the final report, so hypotheses and
-   critique are kept out of it. They are still worth grading on
-   their own, to find out whether Yoda's extra steps earn their cost:
-   - Does each personality add something the others don't?
-   - Does the critique catch real errors (CHALLENGES that were right)?
-   - Does synthesis carry well-supported findings into the report
-     faithfully — not dropping them, not inventing new ones?
-   - Never mixed into the Yoda-vs-baseline scores: the baseline has no
-     process to grade, and showing the judge Yoda's working would tilt
-     the comparison toward Yoda.
-   - The material exists already: each run's PanelRun holds the
-     personality results and critique messages, and the report keeps the
-     final hypotheses (hypotheses_explored) with their checked evidence.
-
-
 5. Restructure README
    - Put evaluation result at top.
    - Acceptance: a reader who stops after the first screen knows (a) what
@@ -419,7 +403,8 @@ IDEAS for Improvements/Changes
     - outputting reports in domain-specific language could hurt readibility of reports
 
 
-11. Investigate ways to cut report costs while keeping quality
+
+12. Investigate ways to cut report costs while keeping quality
     (LAST: only after every other item is addressed and a full re-run has
     measured cost and quality; any paid test run needs an explicit yes)
     - Where cost stands: REPORT_BUDGET_USD = $0.65 in personality_panel.py
