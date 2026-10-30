@@ -6,7 +6,9 @@ sample_store() holds one passage of every kind a writer can cite (filings,
 fact-sheet rows, the 8-K, the call's company and analyst speakers, market
 data, a recent and an old news result, a competitor's filing). sample_report()
 is a full report whose every section cites them, already checked: its
-sources are filled for exactly the IDs it cites.
+sources are filled for exactly the IDs it cites. sample_snapshot(),
+sample_8k() and sample_call() are the raw sources a fetch would return:
+market data, an earnings 8-K and a short earnings call.
 """
 
 from datetime import timedelta
@@ -16,9 +18,11 @@ from yoda.evidence_store import citation
 from yoda.ingest.xbrl import DERIVED_FROM_CONSENSUS, FACT_SHEET
 from yoda.report.checks import iter_claims
 from yoda.schema import (
-    Claim, Debate, EarningsReport, EvidenceStore, EvidenceType, GuidanceItem, KeyRisk, ManagementQuestion,
-    MetricToModel, Passage, ReportFiling, ReportSource, Scenario,
+    CallTranscript, Claim, Debate, EarningsReport, EightKDocument, EightKFiling, EvidenceStore, EvidenceType,
+    GuidanceItem, KeyRisk, ManagementQuestion, MetricToModel, Passage, ReportFiling, ReportSource, Scenario,
+    TranscriptTurn,
 )
+from yoda.tools.consensus import MarketSnapshot
 
 # News dates: a week ago (inside the 14 days news may be cited, whenever the
 # tests run) and two months ago (outside it).
@@ -112,3 +116,59 @@ def sample_report(**overrides) -> EarningsReport:
                       for p in sample_store().passages if p.id in cited}
     return report
 
+
+# ---------------------------------------------------------------------------
+# Raw sources, as the fetchers return them
+# ---------------------------------------------------------------------------
+
+def market_source(name: str) -> dict:
+    """Return a consensus.py source record for the provider *name*."""
+    return {"name": name, "url": f"https://{name.lower().replace(' ', '')}.example"}
+
+
+def sample_snapshot(failures: list | None = None, **parts) -> MarketSnapshot:
+    """Return a market snapshot with a full set of figures; *parts* replace any of them (None for a refused part)."""
+    values = dict(
+        consensus={"next_earnings_date": "2026-11-01", "report_hour": "amc", "fiscal_quarter": 3,
+                   "fiscal_year": 2026, "eps_estimate": 1.23, "revenue_estimate": 11_520_000_000,
+                   "sources": {"eps_estimate": market_source("Finnhub earnings calendar"),
+                               "revenue_estimate": market_source("Finnhub earnings calendar")},
+                   "data_gaps": [], "fetched_at": "2026-10-28T14:00:00+00:00"},
+        whisper={"whisper_status": "not_found", "whisper_eps": None, "reason": "whisper: none on the page",
+                 "source_url": None, "page_date": None, "fiscal_quarter": None, "fiscal_year": None,
+                 "retrieved_at": "2026-10-28T14:00:05+00:00"},
+        signals={"beat_history": {"beats": 3, "misses": 1, "quarters": 4, "avg_surprise_pct": 2.5,
+                                  "source": market_source("Finnhub earnings surprises")},
+                 "analyst_actions": None,
+                 "price_target": {"consensus": 330.0, "upside_pct": 10.0, "current_price": 300.0,
+                                  "source": market_source("FMP price target consensus")},
+                 "data_gaps": ["analyst actions: FMP returned no grades."],
+                 "fetched_at": "2026-10-28T14:00:10+00:00"},
+        implied_move={"implied_move_pct": None, "report_date": None, "as_of": None,
+                      "source_name": "EarningsWatcher", "reason": "implied move: no live implied move yet."},
+        historical_move={"avg_close_move_pct": 6.1, "reports_used": 8, "first_report_date": "2024-07-18",
+                         "last_report_date": "2026-07-16", "source_name": "EarningsWatcher",
+                         "as_of": "2026-10-27", "reason": None},
+        failures=failures or [], whisper_cost_usd=0.04,
+    )
+    values.update(parts)
+    return MarketSnapshot(**values)
+
+
+def sample_8k() -> EightKFiling:
+    """Return an earnings 8-K (Items 2.02 and 9.01, filed 2026-10-13): its cover document and press release."""
+    return EightKFiling(
+        ticker="TEST", form="8-K", filing_date="2026-10-13", accession_number="0001-26-000042",
+        items=["2.02", "9.01"],
+        documents=[EightKDocument(doc_type="8-K", file_name="f.htm", url="u", clean_text="See Exhibit 99.1."),
+                   EightKDocument(doc_type="EX-99.1", file_name="ex.htm", url="u", clean_text="Revenue rose 9%.")],
+    )
+
+
+def sample_call(call_date: str | None = "2026-10-27") -> CallTranscript:
+    """Return a short Q3 FY2026 earnings call with one company speaker, held on *call_date*."""
+    return CallTranscript(
+        ticker="TEST", fiscal_quarter=3, fiscal_year=2026, call_date=call_date,
+        turns=[TranscriptTurn(speaker="Brian West", title="Chief Financial Officer",
+                              content="We expect free cash flow of about $2 billion.", is_company=True)],
+        source_url="https://www.alphavantage.co/test-call")

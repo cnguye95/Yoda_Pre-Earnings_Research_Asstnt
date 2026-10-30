@@ -23,9 +23,11 @@ from yoda import dates, evidence_text
 from yoda.eval import judge
 from yoda.evidence_store import build_base_store, render_sources
 from yoda.ingest import chunker, edgar
+from yoda.ingest.transcripts import TranscriptFetch
 from yoda.modes import baseline, llm
 from yoda.report.checks import check_report
 from yoda.schema import EvidenceStore, Filing, FilingSet, NewsSearchResult, Passage, ReportDraft
+from yoda.sources import SharedSources
 from yoda.tools import consensus, news
 
 # The "today" every test in this file runs on.
@@ -245,20 +247,25 @@ _QUARTERLY = Filing(ticker="TEST", filing_type="10-Q", filing_date="2026-08-01",
 
 
 def _draft_reply(output_format, **request) -> llm.StructuredReply:
-    # A fake model reply: the sample report's draft, for any request.
+    """A fake model reply: the sample report's draft, for any request."""
     return llm.StructuredReply(output_format(**sample_report().model_dump(include=set(ReportDraft.model_fields))), 1, 1)
+
+
+def _filings_only(filing_set: FilingSet) -> SharedSources:
+    """Return shared sources holding only *filing_set*: no 8-K, call, market data or facts."""
+    return SharedSources(filing_set, [], TranscriptFetch(None, "none in this test"), None, [], [])
 
 
 def test_a_10k_trimmed_to_fit_is_named_in_the_report(monkeypatch):
     # Both filings are read; the older 10-K is shortened, and the report's
     # data gaps say what was left out (render_sources decides what).
-    monkeypatch.setattr(baseline, "fetch_fact_sheet", lambda filing_set, snapshot: ([], []))
     monkeypatch.setattr(baseline, "structured_call", _draft_reply)
+    monkeypatch.setattr(baseline, "search_news", lambda query, max_results, since: [])
     filing_set = FilingSet(ticker="TEST", cik=1, filings=[_QUARTERLY, _annual_report()])
     full = render_sources(build_base_store(filing_set, [], None, None))
-    monkeypatch.setattr(baseline, "MAX_FILING_CHARS", len(full.text) - 2_000)
+    monkeypatch.setattr(baseline, "SOURCE_CHARS_LIMIT", len(full.text) - 2_000)
 
-    report, store = baseline.run_baseline("TEST", filing_set)
+    report, store = baseline.run_baseline("TEST", _filings_only(filing_set))
 
     expected = render_sources(build_base_store(filing_set, [], None, None), max_chars=len(full.text) - 2_000)
     assert expected.left_out and all(note in report.data_gaps for note in expected.left_out)
@@ -286,12 +293,12 @@ def test_dates_line_names_today_and_each_filing(fixed_dates):
     assert dates.dates_line() == _TODAY_LINE
 
 
-def test_baseline_request_has_the_dates_after_the_cached_sources(fixed_dates):
+def test_baseline_request_has_the_dates_after_the_sources(fixed_dates):
     filing_set = FilingSet(ticker="TEST", cik=1, filings=[_QUARTERLY])
     store = build_base_store(filing_set, [], None, None)
     rendered = render_sources(store)
     store.shown_ids = rendered.shown_ids
-    request = baseline.build_request(filing_set, rendered.text, store)
+    request = baseline.build_request(filing_set, rendered.text, "", store)
     assert f"{_TODAY_LINE} Filings read: 10-Q filed 2026-08-01." in request["messages"][0]["content"]
     assert _TODAY_LINE not in request["system"][0]["text"]
 

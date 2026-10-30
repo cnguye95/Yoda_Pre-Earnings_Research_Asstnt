@@ -54,6 +54,20 @@ class _NoNetwork:
 
 
 @pytest.fixture(autouse=True)
+def _no_live_shared_sources(monkeypatch):
+    """Give the eval runner empty shared sources in every test, so a runner test can't reach a live API.
+
+    The real fetch (8-K, call, market data, fact sheet) is tested on its
+    own in tests/test_sources.py with every fetcher faked.
+    """
+    from yoda.eval import runner
+    from yoda.ingest.transcripts import TranscriptFetch
+    from yoda.sources import SharedSources
+    monkeypatch.setattr(runner, "fetch_shared_sources", lambda filing_set: SharedSources(
+        filing_set, [], TranscriptFetch(None, "not fetched in tests"), None, [], []))
+
+
+@pytest.fixture(autouse=True)
 def _no_live_transcripts(monkeypatch):
     """Block the transcript module's web session in every test (tests must not call live APIs)."""
     from yoda.ingest import transcripts

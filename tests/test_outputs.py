@@ -23,7 +23,7 @@ from yoda.modes.baseline import BaselineRun
 from yoda.queue import processor
 from yoda.report import pdf
 from yoda.report.header import MarketDataUnavailable
-from yoda.schema import EvidenceStore, ExpectationValue, MarketExpectations, ReportFiling
+from yoda.schema import EvidenceStore, ExpectationValue, Filing, FilingSet, MarketExpectations, ReportFiling
 from yoda.tickers import normalize_tickers
 from yoda.tools.consensus import ApiFailure, MarketSnapshot
 
@@ -358,9 +358,13 @@ def _judge_result() -> judge.JudgeResult:
                              reasoning_effort="medium", prompt_tokens=1, completion_tokens=1)
 
 
+_FILINGS = FilingSet(ticker="AAA", cik=1, filings=[
+    Filing(ticker="AAA", filing_type="10-Q", filing_date="2026-08-06", accession_number="q")])
+
+
 def _stub_runner(monkeypatch, run_mode=None):
-    # Replace every outside step of run_eval with a fast fake.
-    monkeypatch.setattr(runner, "fetch_filings", lambda ticker: None)
+    """Replace every outside step of run_eval with a fast fake (shared sources are faked in conftest)."""
+    monkeypatch.setattr(runner, "fetch_filings", lambda ticker: _FILINGS)
     monkeypatch.setattr(runner, "_run_mode", run_mode or (
         lambda mode, ticker, filing: runner.ModeRun(_report(), 1.0, "logged", 0.1, "", sample_store())))
     monkeypatch.setattr(runner, "judge_report",
@@ -428,6 +432,32 @@ def test_run_mode_passes_on_the_baselines_store(monkeypatch):
     monkeypatch.setattr(runner, "run_baseline", lambda ticker, filing: BaselineRun(_report(), sample_store()))
     run = runner._run_mode("baseline", "AAA", None)
     assert run.report == _report() and run.evidence == sample_store()
+
+
+def test_shared_sources_are_fetched_once_and_reach_every_mode(monkeypatch, tmp_path):
+    # One fetch per ticker (one paid whisper lookup at most); every mode gets the same object.
+    fetched, seen = [], []
+    monkeypatch.setattr(runner, "fetch_shared_sources", lambda filing_set: fetched.append(filing_set) or "SOURCES")
+
+    def run_mode(mode, ticker, sources):
+        seen.append(sources)
+        return runner.ModeRun(_report(), 1.0, "logged", 0.1, "", sample_store())
+    _stub_runner(monkeypatch, run_mode)
+
+    runner.run_eval(["AAA"], modes=runner.KNOWN_MODES, out_dir=tmp_path)
+
+    assert fetched == [_FILINGS] and seen == ["SOURCES", "SOURCES"]
+
+
+def test_a_ticker_with_no_filing_is_a_failure_not_a_run(monkeypatch, tmp_path):
+    _stub_runner(monkeypatch)
+    monkeypatch.setattr(runner, "fetch_filings", lambda ticker: None)
+
+    df = runner.run_eval(["AAA"], out_dir=tmp_path)
+
+    assert df.empty
+    assert "| AAA | fetch sources | no recent 10-Q or annual report |" in (
+        tmp_path / "summary.md").read_text(encoding="utf-8")
 
 
 def test_unparsed_cost_is_unknown_not_zero():

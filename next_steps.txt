@@ -169,6 +169,34 @@ WHEN labels (relative to the architecture comparison, item 4; set
    - Cost: today's JPM baseline cost $1.41 (658K input tokens); option B
      adds the 8-K, call, market data and news. Measure it on the smoke
      tickers before the full eval.
+   - DONE (2026-10-30), on the step 6 foundation:
+     - yoda/sources.py fetch_shared_sources(): the 8-K, the call (dated
+       from the Item 2.02 release when it is the latest call), the market
+       snapshot and the fact sheet (now with consensus-derived rows),
+       fetched ONCE per ticker by the runner and passed to every arm;
+       SharedSources can hold only these, which is the leak guardrail
+       (offline test: a marker in another arm's files never reaches the
+       baseline's prompt). A refused provider never pauses an eval run:
+       its figures are N/A and the reason is a data gap.
+     - One shared length limit for every arm
+       (evidence_store.SOURCE_CHARS_LIMIT, 2M characters), so all arms
+       read identical filing text; each arm's own news comes after it.
+     - The baseline's one news search: "<company> <ticker> earnings", 10
+       results, from the newest filing's date; news lines show their date
+       so the 14-day rule can be applied; a failed search is a data gap.
+     - Its instructions carry CONFLICT_RULES and NEWER_CONTRADICTION_RULE
+       word for word; not Yoda's tagging procedure.
+     - No cache breakpoint on the baseline: one call per ticker, so a cache
+       write (25% dearer than plain input) would never be read.
+     - Free-tier check on NVDA (Claude faked): 550 passages shown (409
+       filing, 8 8-K, 52 call, 72 fact, 7 market, 2 news), ~559K prompt
+       characters; expected real cost ~$0.42-0.61 standard, ~$0.21-0.31
+       batched. The one news search returned only 2 results, and the one
+       cited was older than 14 days: watch news yield on the smoke run.
+     - Known limits: Alpha Vantage's free tier allows 25 requests a day
+       (a first 20-ticker run may lose some calls, the same for every
+       arm); the shared whisper cost is logged per ticker, not charged to
+       an arm, until step 10's harness totals it.
 
    Option C — ADD LATER as a second baseline: the SEC filings above plus
    Claude's web search tool.
@@ -350,13 +378,14 @@ WHEN labels (relative to the architecture comparison, item 4; set
        without the data / stop, single and queue), the whisper lookup
        setting, and live notices (the 10-K trimmed). The runner's yoda
        mode raises until then (DEFAULT_MODES is the baseline only).
-       evidence_text.NEWER_CONTRADICTION_RULE is unused until Rec 1's
-       prompts. Note for steps 8/9: tools.retrieve_filing and the
+       Note for steps 8/9: tools.retrieve_filing and the
        vector store still return chunker windows without passage IDs; an
        arm that retrieves must return store passages (step 9 embeds store
        passages, the unit every citation is checked against, if Rec 2's
        workers search).
-    7. Item 2: baseline option B on the new foundation.
+    7. Item 2: baseline option B on the new foundation. DONE 2026-10-30
+       (see item 2). Rec 1 takes the same yoda/sources.SharedSources and
+       starts its store with sources.base_store().
     8. Rec 1.
     9. Rec 2 design; item 9 R5 if its workers search passages, then R4/R6
        if R5 shows weak recall; then build Rec 2. Cost no longer decides

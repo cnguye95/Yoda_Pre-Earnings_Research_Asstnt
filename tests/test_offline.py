@@ -9,6 +9,7 @@ keys present (yoda.config checks them), but nothing here calls an API.
 """
 
 import datetime
+import json
 import time
 
 import pandas as pd
@@ -18,15 +19,18 @@ from yoda import pricing
 from yoda.eval import judge, runner
 from yoda.eval.rubric import DimensionScore, JudgeScores
 from yoda.eval.runner import _RE_COST, _RE_WALL_TIME, SCORE_COLS, _paired_comparison, _verdict
-from samples import sample_report, sample_store
+from samples import OLD, RECENT, sample_8k, sample_call, sample_report, sample_snapshot, sample_store
 from yoda.ingest.chunker import Chunk
 from yoda.modes import baseline as baseline_mod
 from yoda.modes.baseline import BASELINE_EFFORT, BASELINE_MODEL
+from yoda.evidence_store import SOURCE_CHARS_LIMIT
+from yoda.evidence_text import CONFLICT_RULES, NEWER_CONTRADICTION_RULE
+from yoda.ingest.transcripts import TranscriptFetch
 from yoda.modes import llm, tools
 from yoda.modes.tools import TOOL_DISPATCH, TOOL_SCHEMAS
-from yoda.prompt_cache import cache_misses
 from yoda.retrieval import vector_store
 from yoda.schema import ArticleText, Filing, FilingSet, NewsSearchResult, ReportDraft
+from yoda.sources import SharedSources, base_store
 
 
 # ---------------------------------------------------------------------------
@@ -238,84 +242,169 @@ _QUARTERLY = _filing("10-Q", "2026-05-01", "QUARTERLY TEXT")
 _ANNUAL = _filing("10-K", "2026-02-01", "ANNUAL TEXT")
 
 
-def _no_fact_sheet(monkeypatch) -> None:
-    # The fact sheet is fetched from the SEC; these tests read none.
-    monkeypatch.setattr(baseline_mod, "fetch_fact_sheet", lambda filing_set, snapshot: ([], []))
+def _sources(filing_set: FilingSet, **fields) -> SharedSources:
+    """Return the shared sources for *filing_set*: the sample market data, earnings 8-K and call, no gaps.
+
+    *fields* replace any of them.
+    """
+    values = dict(filing_set=filing_set, eight_ks=[sample_8k()], call=TranscriptFetch(sample_call(), None),
+                  snapshot=sample_snapshot(), facts=[], gaps=[])
+    values.update(fields)
+    return SharedSources(**values)
 
 
-def _request(filing_set: FilingSet) -> dict:
-    # The baseline's request for *filing_set*, built the way run_baseline builds it.
-    store = baseline_mod.build_base_store(filing_set, [], None, None, [])
-    rendered = baseline_mod.render_sources(store, max_chars=baseline_mod.MAX_FILING_CHARS)
+_RECENT_NEWS = NewsSearchResult(title="TEST preview", url="https://news.example/recent", snippet="EPS seen at $1.25.",
+                                published_date=RECENT, source_domain="news.example")
+_OLD_NEWS = NewsSearchResult(title="Old story", url="https://news.example/old", snippet="Last quarter.",
+                             published_date=OLD, source_domain="news.example")
+
+
+def _fake_news(monkeypatch, results=(_RECENT_NEWS, _OLD_NEWS)) -> list:
+    """Replace the baseline's news search with one returning *results*; return the list of queries it got."""
+    queries = []
+
+    def search(query, max_results, since):
+        queries.append((query, max_results, since))
+        return list(results)
+    monkeypatch.setattr(baseline_mod, "search_news", search)
+    return queries
+
+
+def _fake_model(monkeypatch, sent: list | None = None) -> None:
+    """Replace the model call with one returning the sample report's draft; record each request in *sent*."""
+    def call(output_format, **request):
+        if sent is not None:
+            sent.append(request)
+        return llm.StructuredReply(output_format(**sample_report().model_dump(include=set(ReportDraft.model_fields))),
+                                   1, 1)
+    monkeypatch.setattr(baseline_mod, "structured_call", call)
+
+
+def _request(sources: SharedSources, news_text: str = "") -> dict:
+    """Return the baseline's request for *sources*, built the way run_baseline builds it."""
+    store = base_store(sources)
+    rendered = baseline_mod.render_sources(store, max_chars=SOURCE_CHARS_LIMIT)
     store.shown_ids = rendered.shown_ids
-    return baseline_mod.build_request(filing_set, rendered.text, store)
+    return baseline_mod.build_request(sources.filing_set, rendered.text, news_text, store)
 
 
-def test_baseline_request_caches_the_sources_and_puts_the_date_after_them():
-    request = _request(_filing_set(_QUARTERLY, _ANNUAL))
-    sources, instructions = request["system"]
-    # The rendered sources come first and are the cache breakpoint; every
-    # filing is in them, each passage after its ID.
-    assert sources["cache_control"] == {"type": "ephemeral"}
-    assert "QUARTERLY TEXT" in sources["text"] and "ANNUAL TEXT" in sources["text"] and "[Q.001]" in sources["text"]
-    assert "evidence_ids" in instructions["text"] and "cache_control" not in instructions
-    # The date changes daily, so it comes after the cached part.
+def test_baseline_request_is_sources_then_news_then_instructions_with_no_cache_write():
+    request = _request(_sources(_filing_set(_QUARTERLY, _ANNUAL)), news_text="=== news.example ===\n[N.01] x")
+    shared, news, instructions = request["system"]
+    # Every shared source is in the first block, each passage after its ID.
+    for expected in ("QUARTERLY TEXT", "ANNUAL TEXT", "[Q.001]", "[E.001]", "[C.001] (company)", "[M.01]"):
+        assert expected in shared["text"]
+    assert news["text"].startswith("=== news.example") and "evidence_ids" in instructions["text"]
+    # One call per ticker: nothing would read a cache, so none is written (a write costs 25% more).
+    assert not any("cache_control" in block for block in request["system"])
+    # The date changes daily, so it is in the user message, after everything else.
     assert "Ticker: TEST" in request["messages"][0]["content"]
     assert "10-Q filed 2026-05-01" in request["messages"][0]["content"]
     assert request["output_config"] == {"effort": BASELINE_EFFORT} and request["model"] == BASELINE_MODEL
 
 
-def test_two_baseline_requests_for_one_ticker_share_the_cache():
-    # A long enough filing to be stored (over the 512-token minimum).
-    filing_set = _filing_set(_filing("10-Q", "2026-05-01", "Revenue grew on pricing and members. " * 100))
-    assert cache_misses([_request(filing_set), _request(filing_set)]) == ["no earlier request", None]
+def test_no_news_results_are_said_plainly():
+    assert _request(_sources(_filing_set(_QUARTERLY)))["system"][1]["text"] == "=== News search ===\n(no results)"
+
+
+def test_baseline_gets_the_shared_fact_rules_word_for_word():
+    instructions = _request(_sources(_filing_set(_QUARTERLY)))["system"][2]["text"]
+    assert CONFLICT_RULES in instructions and NEWER_CONTRADICTION_RULE in instructions
+    assert "Only news from the last 14 days may be cited" in instructions
+
+
+def test_every_arm_rendering_the_same_sources_gets_identical_shared_text():
+    # The fixed limit for every arm: identical filing text for all (and for the judge).
+    first, second = (_request(_sources(_filing_set(_QUARTERLY, _ANNUAL))) for _ in range(2))
+    assert first["system"][0]["text"] == second["system"][0]["text"]
+
+
+def test_the_news_search_is_generic_and_from_the_filing_date(monkeypatch):
+    queries = _fake_news(monkeypatch)
+    _fake_model(monkeypatch)
+    named = _filing_set(_QUARTERLY).model_copy(update={"company_name": "Test Co Inc"})
+    baseline_mod.run_baseline("TEST", _sources(named))
+    baseline_mod.run_baseline("TEST", _sources(_filing_set(_QUARTERLY)))
+    assert queries == [("Test Co Inc TEST earnings", 10, datetime.date(2026, 5, 1)),
+                       ("TEST earnings", 10, datetime.date(2026, 5, 1))]
 
 
 def test_baseline_writes_a_checked_report_from_one_call(monkeypatch, capsys):
-    _no_fact_sheet(monkeypatch)
-    asked = []
+    _fake_news(monkeypatch)
+    sent = []
 
     def fake_call(output_format, **request):
-        # The model's draft: one good citation, one made up, and a tag too strong for its source.
-        asked.append(output_format)
+        # The model's draft cites every kind of source, one made-up ID and one old news result.
+        sent.append(request)
         draft = sample_report().model_dump(include=set(ReportDraft.model_fields))
-        draft["setup_summary"] = [{"text": "Revenue grew.", "evidence_ids": ["[q.001]", "Q.999"],
-                                   "evidence_type": "reported"}]
-        return llm.StructuredReply(output_format(**draft), 1000, 200, 900, 0)
+
+        def cite(text, ids, tag="reported"):
+            return {"text": text, "evidence_ids": ids, "evidence_type": tag}
+        draft["setup_summary"] = [cite("Revenue grew.", ["[q.001]", "Q.999"])]
+        draft["since_filing"] = [cite("The release reports results.", ["E.002"]),
+                                 cite("The CFO guided free cash flow.", ["C.001"], "guided"),
+                                 cite("Consensus EPS is $1.23.", ["M.01"], "estimate"),
+                                 cite("A preview expects $1.25.", ["N.01"], "estimate"),
+                                 cite("Last quarter's story.", ["N.02"], "estimate")]
+        return llm.StructuredReply(output_format(**draft), 1000, 200)
     monkeypatch.setattr(baseline_mod, "structured_call", fake_call)
 
-    report, store = baseline_mod.run_baseline("test", _filing_set(_QUARTERLY, _ANNUAL))
+    report, store = baseline_mod.run_baseline("test", _sources(_filing_set(_QUARTERLY, _ANNUAL)))
 
-    assert asked == [ReportDraft]
+    # The writer saw its news with dates, after the shared sources.
+    news_block = sent[0]["system"][1]["text"]
+    assert f"[N.01] ({RECENT}) TEST preview" in news_block and f"[N.02] ({OLD}) Old story" in news_block
+    # Code filled the header from the shared sources.
     assert [(f.filing_type, f.filing_date) for f in report.filings] == [("10-Q", "2026-05-01"), ("10-K", "2026-02-01")]
+    assert report.earnings_call == "Q3 FY2026 earnings call (2026-10-27)"
+    assert report.current_report.startswith("8-K filed 2026-10-13: Item 2.02")
+    assert report.market_expectations.consensus_eps.value == "$1.23"
+    # The checks kept the good citations and removed the made-up and the old one.
     assert report.setup_summary[0].evidence_ids == ["Q.001"]
+    assert [claim.evidence_ids for claim in report.since_filing] == [["E.002"], ["C.001"], ["M.01"], ["N.01"], []]
     assert any("'Q.999', which is not in the evidence" in gap for gap in report.data_gaps)
-    assert "Q.001" in report.sources and report.market_expectations is None
-    # The judge reads the same store the writer had.
-    assert store.shown_ids and store.passages[0].id == "Q.001"
-    # The cost line counts the cache write (900 tokens) the runner parses.
-    log = capsys.readouterr().out
-    assert "900 cache write" in log and "Total cost: $" in log
+    assert {"E.002", "C.001", "M.01", "N.01"} <= set(report.sources) and "N.02" not in report.sources
+    # The judge reads the same store, news included.
+    assert {"N.01", "N.02"} <= set(store.shown_ids) and "Total cost: $" in capsys.readouterr().out
 
 
 def test_baseline_report_lists_what_it_could_not_read(monkeypatch):
-    # A fact sheet that couldn't be fetched and a filing that couldn't be
-    # downloaded reach the reader through data_gaps, not only the log.
-    monkeypatch.setattr(baseline_mod, "fetch_fact_sheet",
-                        lambda filing_set, snapshot: ([], ["Fact sheet: SEC companyfacts unreachable."]))
-    monkeypatch.setattr(baseline_mod, "structured_call", lambda output_format, **request: llm.StructuredReply(
-        output_format(**sample_report().model_dump(include=set(ReportDraft.model_fields))), 1, 1))
+    # A source that couldn't be had, a filing that couldn't be downloaded and
+    # a failed news search reach the reader through data_gaps, not only the log.
+    def broken_search(query, max_results, since):
+        raise RuntimeError("Tavily search failed: HTTPError: 432")
+    monkeypatch.setattr(baseline_mod, "search_news", broken_search)
+    _fake_model(monkeypatch)
     filing_set = FilingSet(ticker="TEST", cik=1, filings=[_QUARTERLY], errors=["could not fetch the 10-K"])
 
-    report, _ = baseline_mod.run_baseline("TEST", filing_set)
+    report, store = baseline_mod.run_baseline("TEST", _sources(filing_set, gaps=["Fact sheet: SEC unreachable."]))
 
-    assert "Fact sheet: SEC companyfacts unreachable." in report.data_gaps
+    assert "Fact sheet: SEC unreachable." in report.data_gaps
     assert "Filing not analyzed: could not fetch the 10-K." in report.data_gaps
+    assert "News search failed: Tavily search failed: HTTPError: 432" in report.data_gaps
+    assert not any(p.kind == "news" for p in store.passages)
 
 
-def test_baseline_without_filing_raises_clear_error():
-    with pytest.raises(ValueError, match="nothing to read"):
-        baseline_mod.run_baseline("TEST", None)
+def test_another_arms_research_never_reaches_the_baseline(monkeypatch):
+    # The HARD GUARDRAIL of next_steps item 2: a marker planted in another
+    # arm's saved report, evidence store and news on disk must never appear
+    # in the baseline's prompt, built from the shared sources and its own
+    # search only.
+    marker = "LEAK-MARKER-7f3a"
+    eval_dir = runner.DEFAULT_OUT_DIR
+    eval_dir.mkdir(parents=True)
+    (eval_dir / "yoda_TEST.json").write_text(sample_report(company_name=marker).model_dump_json(), encoding="utf-8")
+    store = sample_store()
+    store.passages[0].text = marker
+    (eval_dir / "yoda_TEST_evidence.json").write_text(store.model_dump_json(), encoding="utf-8")
+    (eval_dir / "yoda_TEST_news_pool.json").write_text(f'[{{"title": "{marker}"}}]', encoding="utf-8")
+    _fake_news(monkeypatch)
+    sent = []
+    _fake_model(monkeypatch, sent)
+
+    baseline_mod.run_baseline("TEST", _sources(_filing_set(_QUARTERLY, _ANNUAL)))
+
+    assert marker not in json.dumps(sent[0])
 
 
 # ---------------------------------------------------------------------------

@@ -31,8 +31,8 @@ unverifiable. When sources disagree:
 # What to do when something dated after the filing disagrees with it. It
 # adds to CONFLICT_RULES rather than changing them: the reader is told
 # about the contradiction, while which source the report relies on still
-# follows the tier rules. Read by the personalities and synthesis (not the
-# judge, whose rubric quotes CONFLICT_RULES alone).
+# follows the tier rules. Read by the report writers (the baseline today, the
+# Rec arms from step 8), not the judge, whose rubric quotes CONFLICT_RULES alone.
 NEWER_CONTRADICTION_RULE = """When an item dated after the filing (the 8-K, the earnings call, a news
 article) contradicts the filing, flag the contradiction: show both, each
 with its date, and say which is newer. Which one to rely on still follows

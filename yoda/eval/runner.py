@@ -60,7 +60,8 @@ from yoda.eval.judge import (
 from yoda.eval.rubric import DIMENSIONS, RUBRIC_TEXT, JudgeScores
 from yoda.ingest.edgar import fetch_filings
 from yoda.modes.baseline import BASELINE_MODEL, run_baseline
-from yoda.schema import EarningsReport, EvidenceStore, FilingSet
+from yoda.schema import EarningsReport, EvidenceStore
+from yoda.sources import SharedSources, fetch_shared_sources
 from yoda.tickers import normalize_tickers
 
 
@@ -144,10 +145,13 @@ def _capture(fn: Callable[..., tuple[EarningsReport, EvidenceStore]], *args) -> 
     )
 
 
-def _run_mode(mode: str, ticker: str, filing_set: FilingSet | None) -> ModeRun:
-    """Run one mode for one ticker and return its ModeRun. Raises ValueError for a mode that can't run."""
+def _run_mode(mode: str, ticker: str, sources: SharedSources) -> ModeRun:
+    """Run one mode for one ticker on the shared *sources* and return its ModeRun.
+
+    Raises ValueError for a mode that can't run.
+    """
     if mode == "baseline":
-        return _capture(lambda symbol, filings: tuple(run_baseline(symbol, filings)), ticker, filing_set)
+        return _capture(lambda symbol, shared: tuple(run_baseline(symbol, shared)), ticker, sources)
     if mode == "yoda":
         raise ValueError("The yoda mode was the personality panel, now removed; it returns with Rec 1 (step 8).")
     raise ValueError(f"Unknown mode: {mode}")
@@ -276,14 +280,21 @@ def run_eval(
     for ticker in tickers:
         print(f"\n=== {ticker} ===")
 
-        # Fetch the filings once per ticker, shared by every mode. A fetch
-        # failure skips this ticker only.
-        print(f"  fetching filings for {ticker}...")
+        # Fetch the filings and the shared sources (8-K, call, market data,
+        # fact sheet) once per ticker, so every mode reads identical data and
+        # the paid whisper lookup runs at most once. A fetch failure, or no
+        # filing to read, skips this ticker only.
+        print(f"  fetching filings and shared sources for {ticker}...")
         try:
             filing = fetch_filings(ticker)
+            sources = fetch_shared_sources(filing) if filing is not None else None
         except (requests.RequestException, RuntimeError) as exc:
-            failures.append((ticker, "fetch filing", f"{type(exc).__name__}: {exc}"))
-            print(f"  ERROR fetching filing: {exc}")
+            failures.append((ticker, "fetch sources", f"{type(exc).__name__}: {exc}"))
+            print(f"  ERROR fetching sources: {exc}")
+            continue
+        if sources is None:
+            failures.append((ticker, "fetch sources", "no recent 10-Q or annual report"))
+            print("  ERROR: no recent 10-Q or annual report")
             continue
 
         for mode in modes:
@@ -292,7 +303,7 @@ def run_eval(
             # kept and reported in summary.md, not just printed.
             print(f"  running mode={mode}...")
             try:
-                run = _run_mode(mode, ticker, filing)
+                run = _run_mode(mode, ticker, sources)
             except Exception as exc:
                 failures.append((ticker, mode, f"{type(exc).__name__}: {exc}"))
                 print(f"  ERROR in mode={mode}: {exc}")

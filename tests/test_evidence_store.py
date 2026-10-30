@@ -133,7 +133,14 @@ def test_mode_additions_come_after_the_shared_part():
                                       published_date="2026-10-28", source_domain="news.example")])
     shared = render_sources(store).text
     everything = render_sources(store, kinds=("filing", "8-K", "call", "fact", "market", "news")).text
-    assert everything.startswith(shared) and "[N.01] Chip demand" in everything
+    assert everything.startswith(shared) and "[N.01] (2026-10-28) Chip demand" in everything
+
+
+def test_a_news_line_shows_its_date_or_says_undated():
+    # The writer needs the date to apply the 14-day citation rule.
+    store = _store()
+    add_news(store, [NewsSearchResult(title="Undated", url="https://news.example/u", snippet="x")])
+    assert "[N.01] (undated) Undated" in render_sources(store, kinds=("news",)).text
 
 
 def test_trimming_leaves_out_whole_sections_of_the_older_report_in_order():

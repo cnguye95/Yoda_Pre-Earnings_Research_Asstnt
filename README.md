@@ -1,6 +1,6 @@
 # Yoda — Pre-Earnings Research Assistant
 
-> **Status (2026-10-30):** the personality panel described below was removed when the report format changed. A report is now a set of sections (setup summary, metrics to model, guidance, since the filing, key debates, scenarios, key risks, questions for management), and every claim cites evidence IDs that code checks against the sources the writer was given. Report generation in the app returns with Rec 1 (next_steps step 8); until then only the baseline writes reports, through the eval runner. The rest of this README is rewritten in next_steps item 5.
+> **Status (2026-10-30):** the personality panel described below was removed when the report format changed. A report is now a set of sections (setup summary, metrics to model, guidance, since the filing, key debates, scenarios, key risks, questions for management), and every claim cites evidence IDs that code checks against the sources the writer was given. Report generation in the app returns with Rec 1 (next_steps step 8); until then only the baseline writes reports, through the eval runner. The baseline (one Claude call, the comparison's lower bound) reads the SEC filings, the XBRL fact sheet, the latest 8-K, the latest earnings call, the market snapshot and one generic news search. The rest of this README is rewritten in next_steps item 5.
 
 ---
 ## 1. Context, User, and Problem

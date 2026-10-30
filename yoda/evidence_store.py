@@ -56,6 +56,15 @@ MODE_KINDS: tuple[PassageKind, ...] = ("news", "article", "peer")
 # Factors are never left out.
 TRIM_ORDER = ("Financial Statements", "Quantitative Disclosures", "MD&A", "Other")
 
+# Most text the shared sources may take in one prompt, the same for every
+# arm, so every arm reads (and the judge sees) identical filing text
+# (next_steps item 4d). Filings tokenize at ~2.3-2.7 characters per token,
+# so 2.0M characters is at most ~870K tokens, leaving room under Sonnet
+# 5.5's 1M-token context for an arm's own news, its instructions and the
+# report. Only a very large filer's 10-Q + 10-K (e.g. JPM) goes over; the
+# older annual report is then shortened (render_sources).
+SOURCE_CHARS_LIMIT = 2_000_000
+
 
 # ---------------------------------------------------------------------------
 # Cutting text into passages
@@ -351,13 +360,16 @@ _ONE_URL_KINDS = ("filing", "8-K", "call", "article")
 def _passage_line(passage: Passage) -> str:
     """One passage as a model reads it: its ID in brackets, then its text.
 
-    A call turn says whose side it is; a news result ends with its own URL.
+    A call turn says whose side it is; a news result starts with its date
+    (so a writer can apply the 14-day citation rule) and ends with its own
+    URL.
     """
     if passage.kind == "call":
         side = "company" if passage.speaker_is_company else "analyst"
         return f"[{passage.id}] ({side}) {passage.text}"
-    if passage.kind == "news" and passage.url:
-        return f"[{passage.id}] {passage.text}\n{passage.url}"
+    if passage.kind == "news":
+        line = f"[{passage.id}] ({passage.as_of or 'undated'}) {passage.text}"
+        return f"{line}\n{passage.url}" if passage.url else line
     return f"[{passage.id}] {passage.text}"
 
 
