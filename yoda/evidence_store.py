@@ -216,12 +216,13 @@ def _market_passages(snapshot: MarketSnapshot) -> list[Passage]:
 
 
 def build_base_store(filing_set: FilingSet, eight_ks: list[EightKFiling], transcript: CallTranscript | None,
-                     snapshot: MarketSnapshot | None) -> EvidenceStore:
-    """Return the passages every mode shares for one ticker: filings, the 8-K, the call and the market data.
+                     snapshot: MarketSnapshot | None, facts: list[Passage] = ()) -> EvidenceStore:
+    """Return the passages every mode shares for one ticker: filings, the 8-K, the call, facts and market data.
 
     *filing_set* is fetch_filings' result (newest first), *eight_ks* the
     current report(s) read after it (fetch_post_filing_8ks: zero or one),
-    *transcript* the latest earnings call, *snapshot* the market data. A
+    *transcript* the latest earnings call, *snapshot* the market data,
+    *facts* the XBRL fact sheet (yoda/ingest/xbrl.py, already "F.nn"). A
     missing source is simply absent. The same inputs always give the same
     passages and IDs. Raises ValueError if two filings would share an ID
     prefix (two 10-Qs, or two annual reports).
@@ -234,6 +235,7 @@ def build_base_store(filing_set: FilingSet, eight_ks: list[EightKFiling], transc
     passages += _eight_k_passages(eight_ks)
     if transcript is not None:
         passages += _call_passages(transcript)
+    passages += list(facts)
     if snapshot is not None:
         passages += _market_passages(snapshot)
     return EvidenceStore(ticker=filing_set.ticker, passages=passages)
@@ -340,11 +342,22 @@ class RenderedSources(NamedTuple):
     left_out: list[str]
 
 
+# The kinds whose passages all come from one document with one URL, so the
+# URL is shown once, in the document's header. Other kinds (news results,
+# fact-sheet rows) mix sources under one heading.
+_ONE_URL_KINDS = ("filing", "8-K", "call", "article")
+
+
 def _passage_line(passage: Passage) -> str:
-    """One passage as a model reads it: its ID in brackets, then its text (a call turn says whose side)."""
+    """One passage as a model reads it: its ID in brackets, then its text.
+
+    A call turn says whose side it is; a news result ends with its own URL.
+    """
     if passage.kind == "call":
         side = "company" if passage.speaker_is_company else "analyst"
         return f"[{passage.id}] ({side}) {passage.text}"
+    if passage.kind == "news" and passage.url:
+        return f"[{passage.id}] {passage.text}\n{passage.url}"
     return f"[{passage.id}] {passage.text}"
 
 
@@ -364,7 +377,8 @@ def _render(passages: list[Passage], dropped: set[tuple[str, str]], omitted: set
             continue
         if passage.document != document:
             document, section, noted = passage.document, None, False
-            blocks.append(f"=== {document}" + (f" — {passage.url}" if passage.url else "") + " ===")
+            url = passage.url if passage.kind in _ONE_URL_KINDS else None
+            blocks.append(f"=== {document}" + (f" — {url}" if url else "") + " ===")
         if (passage.document, passage.section) in dropped:
             if not noted:
                 blocks.append(f"[Left out for length: {passage.section} — the newer 10-Q updates this.]")

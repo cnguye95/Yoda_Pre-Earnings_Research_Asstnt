@@ -252,6 +252,9 @@ class Filing(BaseModel):
     kept so the text can be rebuilt from the disk cache. *link_targets* are
     the filing's internal links (mostly its table of contents) as (offset in
     clean_text, link text); the chunker uses them to find its sections.
+    *cik* is the SEC company number the filing was downloaded from: after a
+    reorganisation it can differ from the company's own (XOM's 10-K is filed
+    under its predecessor). None in caches written before it was recorded.
     """
     model_config = ConfigDict(extra="forbid")
 
@@ -260,6 +263,7 @@ class Filing(BaseModel):
     filing_date: str                   # ISO date, e.g. "2026-04-18"
     accession_number: str              # SEC's unique filing ID, e.g. "0000320193-26-000123"
     url: str | None = None             # None when the archive URL is unknown
+    cik: int | None = None             # SEC company number it was filed under
     raw_html: str = ""
     clean_text: str = ""
     link_targets: list[tuple[int, str]] = []

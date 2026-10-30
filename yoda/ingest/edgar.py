@@ -880,6 +880,7 @@ def fetch_filings(ticker: str) -> FilingSet | None:
             filing_date=meta["filing_date"],
             accession_number=meta["accession_number"],
             url=url,
+            cik=meta["cik"],
             raw_html=raw_html,
             clean_text=clean_text,
             link_targets=link_targets,

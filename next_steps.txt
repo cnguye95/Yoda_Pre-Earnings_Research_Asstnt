@@ -223,6 +223,19 @@ WHEN labels (relative to the architecture comparison, item 4; set
         company-facts JSON; 8-K press releases aren't tagged;
         company-specific tags vary. A figure not found is shown as
         missing.
+      - DONE (2026-10-30): yoda/ingest/xbrl.py (fact_rows,
+        fetch_fact_sheet); rows are F.nn passages in the shared evidence
+        store. Headline rows only from the filings read (by accession),
+        each with its year-ago comparative; derived rows (YoY, margins,
+        FCF, a newest annual report's Q4 = year - nine months,
+        consensus-implied growth) name their input rows; inputs from
+        earlier filings are labelled so. Every SEC number involved is
+        fetched (XOM's 10-Q facts are under its new CIK, its 10-K's under
+        the old one). Checked against NVDA's 10-Q and USB's 10-K
+        statements. Filing.cik added (old filing caches re-download once).
+        Known gaps: banks/oil majors tag no OperatingIncomeLoss or
+        LongTermDebt (shown MISSING); IFRS filers (20-F/40-F) have no
+        us-gaap facts, so their sheet is all MISSING.
    b. Give baseline option B the new report schema.
       - The schema change (setup summary, key debates, scenarios with
         triggers, metrics to model vs consensus, questions for
@@ -314,8 +327,8 @@ WHEN labels (relative to the architecture comparison, item 4; set
     6. Shared foundation: evidence store with passage IDs, XBRL fact
        sheet (4a), new report schema (4b).
        6a evidence store DONE 2026-10-30 (yoda/evidence_store.py, market
-       text moved to yoda/market_text.py). 6b fact sheet and 6c schema
-       still to do. Note for steps 8/9: tools.retrieve_filing and the
+       text moved to yoda/market_text.py). 6b fact sheet DONE 2026-10-30
+       (yoda/ingest/xbrl.py). 6c schema still to do. Note for steps 8/9: tools.retrieve_filing and the
        vector store still return chunker windows without passage IDs; an
        arm that retrieves must return store passages (step 9 embeds store
        passages if Rec 2's workers search).
