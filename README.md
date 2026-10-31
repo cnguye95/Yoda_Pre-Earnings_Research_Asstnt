@@ -132,9 +132,21 @@ app.py (Streamlit — Single ticker + Queue tabs)
 
 ## 3. Evaluation and Results
 
-### Evaluation Scope
+### What Is Compared
 
-By default, `run_eval()` evaluates against a **curated 20-ticker universe**: two per sector/archetype, with the second chosen to be structurally different from the first, so the eval covers diverse filing structures and business narratives. Twenty (not ten) because the stronger single-pass baseline is expected to narrow the gap to Yoda, and smaller gaps need more tickers to tell apart from judge noise.
+Two candidate architectures for Yoda are run against a baseline on the same tickers; the better candidate becomes Yoda.
+
+| Mode | What it does |
+|---|---|
+| **`baseline`** (`yoda/modes/baseline.py`) | One Claude Sonnet 5.5 call over the shared sources plus **one** generic news search ("&lt;company&gt; &lt;ticker&gt; earnings", last 14 days), returning the report in one response. No retrieval, no agent loop, no second pass: the lower bound. Sent through the Anthropic Batch API at half price. |
+| **`pipeline`** — the staged pipeline (`yoda/modes/pipeline.py`) | Fixed stages: code builds the facts and the expectations; a filing extractor, a post-filing extractor (8-K and call) and two news/peer researchers (Haiku 5.5) feed one writer (Sonnet 5.5). |
+| **`lead`** — the lead analyst method (`yoda/modes/lead.py`) | A lead (Sonnet 5.5) picks 4–6 company-specific questions, briefs one worker (Sonnet 5.5) per question, reviews their findings, asks one round of follow-ups, then writes. |
+
+All three read the **same shared sources** (`yoda/sources.py`), fetched once per ticker with one length limit: the recent 10-Q and/or annual report, the XBRL fact sheet, the latest 8-K, the latest earnings call and the market snapshot (consensus, whisper, implied and historical move). In both candidates every claim is then checked against the passages it cites (Haiku 5.5, with a Sonnet 5.5 second opinion before anything is removed), followed by one repair pass. Nothing another mode found can reach the baseline.
+
+### Test Set
+
+A **curated 20-ticker universe**: two per sector/archetype, the second chosen to be structurally different from the first, so the eval covers diverse filing structures and business narratives ([`CURATED_TICKERS` in `yoda/eval/runner.py`](yoda/eval/runner.py)).
 
 | Sector | Tickers |
 |---|---|
@@ -149,51 +161,46 @@ By default, `run_eval()` evaluates against a **curated 20-ticker universe**: two
 | Industrials | CAT, BA |
 | Software | PANW (cybersecurity), CRM (SaaS) |
 
-Each ticker runs against two modes: `baseline` and `yoda`. To evaluate a custom set:
-```bash
-python -m yoda.eval.runner NFLX AAPL JPM  # Custom tickers
-python -m yoda.eval.runner NFLX            # Single ticker (quick test)
-```
-
-**Cost / Latency** (measured on the 2026-10-26 full run): the baseline averages ~$0.31 and ~58s per ticker (more for very long filings — JPM's ~210K-token 10-Q costs ~$0.85), Yoda ~$0.43 and ~2.8 min. A full 20-ticker run is ~$15 of generation plus ~$1–2 of judging, ~75 min. A single ticker is ~$0.75 and ~4 min.
-
-### Modes Compared
-
-- **`baseline`** — Single-pass (`yoda/modes/baseline.py`): "here are the SEC filings; write a pre-earnings research brief." One Claude Sonnet 5.5 call receives the **full text** of the same filings Yoda reads (the recent 10-Q and/or annual report) and returns the report in one response. No retrieval, no news, no agent loop, no second pass. Its only instruction beyond the report format is the citation rule; since it gets no news, any news items or URLs it returns are stripped in code. It reads the same filings Yoda reads, so the comparison measures what Yoda's extra steps add — not how much filing text each side saw.
-- **`yoda`** — Full personality panel (Haiku 5.5 loops, Sonnet 5.5 critique and synthesis) with OpenAI `text-embedding-3-small` for retrieval. Vectors stored in the `filings_openai` Chroma collection.
+Each ticker is also labelled **complex** (9: JPM, USB, UNH, XOM, KO, AMZN, JNJ, DIS, BA) or **simple** (the other 11), fixed before any report was written (`yoda/eval/complexity.py`), so the summary can show whether the lead analyst method does better on complex companies.
 
 ### Rubric
 
-Reports are scored by OpenAI `gpt-6.1-sol` through `yoda/eval/judge.py` — a different model family from the Claude models that write the reports, so the judge can't favour its own family's output. The judge sees the report JSON plus **only the first 30,000 characters of the filing**, so it cannot verify facts from later in long filings; keep this in mind when reading the accuracy and traceability scores. Judge outputs are cached under `data/eval/judge_cache/` so re-runs are free; a manifest written per run lets `prune_judge_cache(keep_runs=2)` keep only the two most recent runs' cached files. Each report is scored on five dimensions, rated 1–5:
+Reports are scored by OpenAI `gpt-6.1-sol` (reasoning effort medium) through `yoda/eval/judge.py`, a different model family from the Claude models that write the reports, so the judge can't favour its own family's output. The judge reads the report and **the evidence its writer had** (`{mode}_{ticker}_evidence.json`), so every citation can be checked against the passage it names. Each justification must quote the passages behind its score; quotes that don't appear where they claim to are flagged. Eight dimensions, each rated 1–5 against written anchors (`yoda/eval/rubric.py`):
 
 | Dimension | What it measures |
 |---|---|
-| **Extraction completeness** | Did the report extract the key facts actually available in the filing? |
-| **Accuracy** | Are the figures correct relative to the source filing? |
-| **Source traceability** | Do citations resolve to real sections or chunks? |
-| **Relevance** | Is the content focused on pre-earnings analysis? |
-| **Usefulness** | Would a sell-side analyst find this actionable before an earnings call? |
+| **filing_extraction** | The latest reported quarter's headline figures and segments, the guidance, new or changed risks and material post-filing 8-Ks |
+| **figure_accuracy** | Each checkable figure matches the source it is attributed to |
+| **reasoning_quality** | Conclusions follow the evidence; conflicts between sources are flagged and resolved by the agreed rules |
+| **evidence_labelling** | Post-filing claims say where they came from, as of when, and whether they are results, outlook or estimates |
+| **source_traceability** | Every claim cites evidence IDs that exist and contain the fact |
+| **relevance** | Focus on what bears on the upcoming report, not boilerplate |
+| **sell_side_usefulness** | Metrics to model vs consensus, guidance that matters, questions for management |
+| **buy_side_usefulness** | Whisper vs consensus vs guidance, implied vs historical move, catalysts, a clear setup |
 
-### Test Set
+A dimension a mode had no evidence for is marked N/A by code and left out of that ticker's comparison. The report's market-expectations section is not scored: code fills it from the market data every mode shares, so it would measure the code, not the mode.
 
-Twenty US-listed stocks, two per sector/archetype (see the table above), all with at least 3 years of public trading history. See [`CURATED_TICKERS` in `yoda/eval/runner.py`](yoda/eval/runner.py) for the source list.
+### How Results Are Read
+
+Modes are compared **ticker by ticker**: for each ticker, one mode's score minus the other's, so how easy or hard a company is cancels out. The summary reports the mean gap, a 95% bootstrap range (the tickers resampled 10,000 times), and wins/ties/losses. A range entirely above or below 0 means the difference holds whichever tickers happen to be in the sample; a range crossing 0 means the data can't tell the two apart. With few tickers, read a result as a direction, not proof.
 
 ### Results
 
-**Last run: 2026-10-26** — 20 tickers × 2 modes, filings refreshed from SEC the same day. Generation: Claude Sonnet 5.5 (baseline, Yoda synthesis + critique) and Haiku 5.5 (Yoda loops). Judge: `gpt-6.1-sol`.
+**Full run: not run yet** (20 tickers × 3 modes).
 
-| Mode | Extraction | Accuracy | Traceability | Relevance | Usefulness | Latency | Cost |
-|---|---|---|---|---|---|---|---|
-| Baseline (single-pass) | 3.25 | 3.05 | 2.00 | 5.00 | 3.25 | 58s | $0.31 |
-| Yoda (panel) | 2.85 | 2.45 | 1.30 | 4.30 | 2.80 | 167s | $0.43 |
+**Smoke run, 2026-10-31** — 5 tickers (USB, XOM, DIS complex; NVDA, HD simple) × 3 modes. Mean scores on the eight current dimensions:
 
-**On this rubric, the single-pass baseline beats Yoda.** Paired by ticker, Yoda's average score is 0.57 lower (95% bootstrap range −0.75 to −0.39, entirely below zero), and Yoda won 1 of 20 tickers, tied 2, lost 17. The biggest gaps are source traceability and relevance (−0.7 each) and accuracy (−0.6).
+| Mode | Filing | Figures | Reasoning | Labelling | Traceability | Relevance | Sell-side | Buy-side | **Average** | Cost / report | Time / report |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| Baseline | 3.6 | 3.2 | 2.6 | 3.8 | 3.6 | 4.4 | 4.6 | 4.4 | **3.78** | $0.36 (batched) | — |
+| Staged pipeline | 3.4 | 4.8 | 3.4 | 4.2 | 4.0 | 4.6 | 5.0 | 4.8 | **4.27** | $1.74 | 383 s |
+| Lead analyst | 3.2 | 4.0 | 2.6 | 4.0 | 3.2 | 4.0 | 4.6 | 4.4 | **3.75** | $3.19 | 532 s |
 
-How to read this: the current rubric measures how well a report extracts and cites facts **from the filing**, and the judge sees only the filing's first 30K characters — exactly the single-pass baseline's strength, since it reads the full filings directly while Yoda's synthesis sees ~14 retrieved chunks. It does not measure what Yoda adds (current news, peer comparison, market expectations). Next steps already planned: rebuild the rubric around Yoda's purpose as a pre-earnings brief (market expectations including consensus and whisper numbers, reasoning over dated news, usefulness to sell- and buy-side analysts), and close the filing gaps (full filing in synthesis, filing-matched citations). This run's 40 reports are archived so they can be re-scored under the new rubric.
+Paired by ticker, the **staged pipeline beat the baseline** (+0.50, 95% range +0.28 to +0.72, 5 of 5 tickers) **and the lead analyst method** (+0.52, +0.22 to +0.78, 4 of 5, 1 tie); the lead analyst method vs the baseline was inconclusive (−0.02). Judging cost $0.22 per report.
 
-![Mean rubric scores by mode — Baseline vs Yoda](data/eval/comparison.png)
+Read these as a direction: 5 tickers, judged on the earlier nine-dimension rubric (re-averaged here without market expectations; the reworded filing_extraction anchors aren't reflected), and written before the news-search fix (date windows enforced, a 14-day window for the baseline).
 
-Full per-ticker results and the paired confidence table are in [`data/eval/summary.md`](data/eval/summary.md) and [`data/eval/results.csv`](data/eval/results.csv). The complete run — all 40 report JSONs plus these outputs — is archived in [`data/eval/archive_2026-10-26_claude-panel_old-rubric/`](data/eval/archive_2026-10-26_claude-panel_old-rubric/).
+**Earlier run, 2026-10-26** — a retired architecture (a multi-agent "personality panel") against the old filing-only baseline, on a five-dimension rubric whose judge saw only the filing's first 30,000 characters: the baseline won (Yoda −0.57; 1 win, 2 ties, 17 losses of 20). Those results led to the current rubric, the shared sources and the two candidate architectures. All 40 reports and outputs are archived in [`data/eval/archive_2026-10-26_claude-panel_old-rubric/`](data/eval/archive_2026-10-26_claude-panel_old-rubric/).
 
 ---
 
@@ -339,57 +346,33 @@ The first run for a ticker fetches and indexes the SEC filings — a 10-Q filed 
 
 ### Run the Evaluation Harness
 
-```bash
-# Single ticker (cheap verification, ~$0.60, ~4 min)
-python -m yoda.eval.runner NFLX
+Two commands, so the judge's cost is seen before it is spent. Each writes into the folder given by `--out`; use a new folder per run (a folder named `smoke_*` is gitignored).
 
-# Full curated 20-ticker run (see Cost / Latency in section 3)
-python -m yoda.eval.runner
+```bash
+# 1. Generate the reports (paid on Anthropic; nothing is judged)
+python -m yoda.eval.runner --out data/eval/full                       # all 20 curated tickers, all 3 modes
+python -m yoda.eval.runner NVDA HD --out data/eval/check              # chosen tickers
+python -m yoda.eval.runner XOM --modes pipeline --out data/eval/full  # redo one mode for one ticker
 ```
 
-Outputs `data/eval/results.csv`, `data/eval/summary.md` (headed with the run date and models, and including the paired Yoda-vs-baseline confidence table), and `data/eval/comparison.png` (subtitled with the same run line). Judge results are cached in `data/eval/judge_cache/` so repeated runs are free; only the two most recent runs' cached files are kept on disk.
+```bash
+# 2. Judge them, spending at most the budget (paid on OpenAI)
+python -m yoda.eval.runner --rescore data/eval/full --judge-budget 10
+```
 
-**What the judge reads** (`yoda/eval/evidence.py`). The judge reads the evidence each report was written from, saved as `{mode}_{ticker}_evidence.json`:
-- **Yoda:** the 10-Q/10-K, the latest 8-K, the market data, the news results and the articles read.
-- **The baseline (for now):** the filing(s) it read.
+**Step 1** writes, per (mode, ticker), the report `{mode}_{ticker}.json`, the evidence its writer had `{mode}_{ticker}_evidence.json` and the mode's log `{mode}_{ticker}.log` (per-stage tokens, cost and cache reads); `generation.csv` (each report's cost, time and any error; a rerun replaces only the rows it redoes); and `judge_estimate.md` (each judge call's expected and worst-case cost). Each (mode, ticker) is isolated: a failure skips only that report, and its error, with what it spent before failing, is kept in `generation.csv`.
 
-The report is judged without `hypotheses_explored`. To stay under the judge's 272K-token price line:
+**Step 2** judges each saved report against its saved evidence, a ticker's reports back to back, and stops before any report whose worst-case cost would pass `--judge-budget`. It writes into `rescore/`: `results.csv` (scores plus judge details), `summary.md` (mean scores and costs per mode, the paired comparison for each pair of modes, the lead-vs-pipeline gap by complexity, judge reliability checks, failures), `justifications.md` (a few judge justifications per dimension) and `comparison.png`. Add `--repeat` to score each report a second time and see how often the two scores agree.
+
+**What the judge reads** (`yoda/eval/evidence.py`): the report, without `hypotheses_explored`, and the evidence its writer had. To stay under the judge's 272K-token price line:
 - 8-K documents the report doesn't cite are shortened to their first 2,000 characters;
 - if the prompt is still too long, uncited news snippets are dropped;
 - the judge is told what was left out;
 - a prompt still over the line is sent and flagged.
 
-Dimensions a mode had no evidence for (e.g. market expectations for the baseline) are marked N/A by code.
+**Judge reliability.** Each row of `results.csv` records the judge version OpenAI reports, the prompt, completion and reasoning tokens, why the call stopped, whether the prompt went over 272K, the tier that served it (Flex at half price, or standard) and its cost, the dimensions whose quoted passages weren't found, and the report's length. `summary.md` warns when judge versions are mixed, counts calls that didn't stop normally, and shows failed quotes per dimension and the length-vs-score correlation (Spearman).
 
-**Judge reliability.** Each row of `results.csv` records:
-- the judge version OpenAI reports;
-- the prompt and completion tokens, and whether the prompt went over 272K;
-- an upper-bound judge cost ($2 / $10 per million tokens, cache discount not applied);
-- the dimensions whose quoted passages weren't found;
-- the report's length.
-
-`summary.md` warns when judge versions are mixed or differ from the previous run, and shows:
-- failed quotes per dimension;
-- the length-vs-score correlation (Spearman);
-- for the Yoda-vs-baseline comparison and the chart, only tickers where both modes were scored on a dimension.
-
-`justifications.md` lists a few of the judge's justifications per dimension. To judge reports already on disk without running the modes again (every uncached judge call is paid):
-
-```bash
-python -m yoda.eval.runner --rescore data/eval/archive_2026-10-26_claude-panel_old-rubric NFLX JPM
-```
-
-```bash
-python -m yoda.eval.runner --rescore data/eval --repeat AAPL JPM NFLX
-```
-
-The first re-scores archived reports against the filing they were written from, skipping any whose filing has changed since. The second scores the same reports a second time and adds a repeat-agreement table.
-
-Cache cleanup at the end of every run:
-- `data/eval/{mode}_{TICKER}.json` — one report JSON per `(mode, ticker)` (overwrites older copies)
-- `data/eval/judge_cache/` — JSON cache files from the two most recent runs only (older are pruned via run manifests)
-- `data/reports/{TICKER}_{ts}.pdf` — one PDF per ticker (older are deleted)
-- `data/queue_zips/yoda_queue_{ts}.zip` — at most the two most recent ZIP bundles
+Judge results are cached in `data/eval/judge_cache/`, keyed by the judge model, the rubric, the N/A list, the report and its evidence, so re-judging an unchanged report is free and a changed rubric is never served old scores. Only the two most recent runs' cached scores are kept.
 
 ### Run the Tests
 
