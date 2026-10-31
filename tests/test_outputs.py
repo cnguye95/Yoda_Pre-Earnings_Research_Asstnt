@@ -571,6 +571,23 @@ def _app(**session) -> AppTest:
     return app.run()
 
 
+def _free_whisper(found: bool):
+    # A stand-in for the free preview check: the whisper found ($2.07) or not.
+    def check(ticker, consensus_row):
+        result = consensus._skipped_whisper(ticker, None if found else "preview: no preview within 30 days.")
+        if found:
+            result.update(whisper_status="verified", whisper_eps=2.07, page_date="2026-10-26")
+        return result
+    return check
+
+
+@pytest.fixture(autouse=True)
+def _whisper_found_free(monkeypatch):
+    # Every app test starts with the whisper found free (no prompt); a test
+    # about the prompt switches it off.
+    monkeypatch.setattr(consensus, "get_preview_whisper", _free_whisper(True))
+
+
 def _no_report_date(monkeypatch) -> None:
     # The next-report-date check (a free call) finds nothing, without the network.
     monkeypatch.setattr(consensus, "next_report_date", lambda ticker: (None, "no source had a date"))
@@ -676,28 +693,8 @@ def _days_from_now(days: int) -> str:
     return (market_today() + timedelta(days=days)).isoformat()
 
 
-@pytest.mark.parametrize("found, ticked", [
-    ((_days_from_now(2), None), True),             # inside the 3-day window
-    ((_days_from_now(82), None), False),           # far off: opted out
-    ((None, "Finnhub refused the request"), False),  # date not found: opted out
-])
-def test_whisper_setting_is_preset_from_the_next_report_date(monkeypatch, found, ticked):
-    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: found)
-    app = _app()
-
-    app.text_input(key="single_ticker_input").input("NFLX").run()
-
-    assert app.checkbox(key="whisper_NFLX").value is ticked
-    captions = " ".join(caption.value for caption in app.caption)
-    assert "about \\$0.12–0.15" in captions                       # the cost note, always shown
-    if found[0] is None:
-        assert "Next report date not found — Finnhub refused the request" in captions
-
-
-def test_ticking_whisper_outside_the_window_warns_and_is_passed_on(monkeypatch):
-    # The person may still ask for a lookup when the report is far off; the
-    # page warns it will likely find nothing, and the choice reaches the staged pipeline.
-    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: (_days_from_now(82), None))
+def test_a_whisper_found_free_asks_nothing_and_turns_the_paid_search_off(monkeypatch):
+    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: (_days_from_now(2), None))
     choices = []
 
     def generate(ticker, **settings):
@@ -706,13 +703,72 @@ def test_ticking_whisper_outside_the_window_warns_and_is_passed_on(monkeypatch):
     monkeypatch.setattr(pipeline, "generate_report", generate)
     app = _app()
     app.text_input(key="single_ticker_input").input("NFLX").run()
-    assert not app.warning
 
-    app.checkbox(key="whisper_NFLX").check().run()
-    assert "The report is 82 days away" in app.warning[0].value
-
+    assert "found free in Earnings Whispers' preview (2026-10-26)" in app.success[0].value
+    assert len(app.radio) == 1                                                # only the view toggle
+    assert "0.12" not in " ".join(w.value for w in app.warning)               # no cost notice
     app.button(key="single_generate").click().run()
-    assert choices == [True]
+    assert choices == [False]
+
+
+@pytest.mark.parametrize("offset, far_note", [(2, False), (82, True)])
+def test_no_free_whisper_asks_to_allow_spend_before_generating(monkeypatch, offset, far_note):
+    # The cost notice appears only when the paid search would run, and the
+    # report waits for the person's choice, which reaches the staged pipeline.
+    monkeypatch.setattr(consensus, "get_preview_whisper", _free_whisper(False))
+    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: (_days_from_now(offset), None))
+    choices = []
+
+    def generate(ticker, **settings):
+        choices.append(settings.get("whisper_lookup"))
+        raise RuntimeError("stop here")
+    monkeypatch.setattr(pipeline, "generate_report", generate)
+    app = _app()
+    app.text_input(key="single_ticker_input").input("NFLX").run()
+
+    notice = app.warning[0].value
+    assert "No free whisper number found (no preview within 30 days). Allow spend on whisper number search?" in notice
+    assert "about \\$0.12–0.15" in notice
+    assert app.radio(key="whisper_spend_NFLX").value is None and app.button(key="single_generate").disabled
+    captions = " ".join(caption.value for caption in app.caption)
+    assert ("likely find nothing" in captions) is far_note
+
+    app.radio(key="whisper_spend_NFLX").set_value("Allow spend").run()
+    app.button(key="single_generate").click().run()
+    app.radio(key="whisper_spend_NFLX").set_value("Disallow").run()
+    app.button(key="single_generate").click().run()
+    assert choices == [True, False]
+
+
+def test_the_queue_asks_once_for_the_tickers_with_no_free_whisper(monkeypatch, tmp_path):
+    # AAA's preview has the whisper; BBB's and CCC's don't, so spend is asked
+    # for those two only, and Run Queue waits for the answer.
+    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: (_days_from_now(5), None))
+    found = _free_whisper(True)
+    monkeypatch.setattr(consensus, "get_preview_whisper",
+                        lambda ticker, row: found(ticker, row) if ticker == "AAA" else _free_whisper(False)(ticker, row))
+    zip_path = tmp_path / "yoda_queue_x.zip"
+    zipfile.ZipFile(zip_path, "w").close()
+    runs = []
+    monkeypatch.setattr(processor, "process_queue",
+                        lambda tickers, **options: runs.append(options) or processor.QueueRun(zip_path, [], None))
+    app = _app(queue=["AAA", "BBB", "CCC"], view=_QUEUE_VIEW)
+
+    notice = app.warning[0].value
+    assert notice.startswith("No free whisper number for BBB, CCC. Allow spend on whisper number search for these 2")
+    assert "about \\$0.24–0.30 in all" in notice
+    assert app.button(key="queue_run").disabled
+
+    app.radio(key="queue_whisper_spend_BBB-CCC").set_value("Allow spend").run()
+    app.button(key="queue_run").click().run()
+    assert runs[-1]["whisper_lookup"] is True
+
+
+def test_a_queue_with_every_whisper_found_free_asks_nothing(monkeypatch, tmp_path):
+    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: (_days_from_now(5), None))
+    app = _app(queue=["AAA", "BBB"], view=_QUEUE_VIEW)
+    assert app.success[0].value.startswith("Every queued ticker's whisper number was found free")
+    assert not app.warning and not app.button(key="queue_run").disabled
 
 
 def test_results_view_shows_every_section_with_its_sources():
@@ -781,14 +837,16 @@ def test_a_paused_queue_continues_with_the_data_or_stops(monkeypatch, tmp_path):
     assert app.warning[0].value.startswith("Queue stopped at BBB (market data unavailable)")
 
 
-def test_queue_whisper_box_reaches_the_queue(monkeypatch, tmp_path):
+def test_disallowing_spend_reaches_the_queue(monkeypatch, tmp_path):
+    monkeypatch.setattr(consensus, "next_report_date", lambda ticker: (None, "no source had a date"))
+    monkeypatch.setattr(consensus, "get_preview_whisper", _free_whisper(False))
     zip_path = tmp_path / "yoda_queue_x.zip"
     zipfile.ZipFile(zip_path, "w").close()
     seen = []
     monkeypatch.setattr(processor, "process_queue", lambda tickers, **options: seen.append(options["whisper_lookup"])
                         or processor.QueueRun(zip_path, [], None))
     app = _app(queue=["AAA"], view=_QUEUE_VIEW)
-    app.checkbox(key="queue_skip_whispers").check().run()
+    app.radio(key="queue_whisper_spend_AAA").set_value("Disallow").run()
     app.button(key="queue_run").click().run()
     assert seen == [False]
 

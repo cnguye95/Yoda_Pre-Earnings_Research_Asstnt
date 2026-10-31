@@ -164,10 +164,11 @@ def process_queue(
     prior_results : optional list of TickerResult
         Results from the run that paused, so the continued run's results and
         ZIP include every finished ticker.
-    whisper_lookup : None or False
-        None: each ticker's paid whisper lookup follows the default rule
-        (only when its own next report is a few days away). False: no
-        whisper lookups for the whole batch.
+    whisper_lookup : None, True or False
+        The paid whisper search, tried only for a ticker whose free preview
+        has no whisper. None: each ticker follows the default rule (only
+        when its own next report is a few days away). True: allowed for the
+        whole batch (the app asks the person first). False: never.
 
     Returns
     -------

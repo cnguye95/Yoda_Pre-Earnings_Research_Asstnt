@@ -23,7 +23,7 @@ from yoda.retrieval.embeddings import EMBEDDING_MODEL
 from yoda.schema import Claim, EarningsReport
 from yoda.tickers import normalize_tickers
 from yoda.tools.consensus import (
-    WHISPER_COST_NOTE, WHISPER_WINDOW_DAYS, days_to_report, next_report_date, whisper_by_default,
+    WHISPER_COST_NOTE, days_to_report, get_preview_whisper, next_report_date, whisper_by_default,
 )
 
 
@@ -114,42 +114,61 @@ def _ensure_pdf(report: EarningsReport) -> bytes:
 # Report generation helpers (single ticker)
 # ---------------------------------------------------------------------------
 
-def _whisper_setting(ticker: str) -> bool:
-    """Draw the "Advanced search settings" box for *ticker* and return the whisper choice.
+_ALLOW_SPEND, _DISALLOW_SPEND = "Allow spend", "Disallow"
 
-    The next report date is checked once per ticker (a free call, kept in
-    session state so reruns don't repeat it). The free whisper source, Earnings
-    Whispers' preview article, is always checked; this box is the paid Claude
-    search tried when the preview has no whisper. It is ticked by default
-    only when that report is at most WHISPER_WINDOW_DAYS days away; an
-    unknown date leaves it unticked. The person can change it.
+
+def _free_whisper_check(ticker: str) -> tuple[str | None, str | None, dict]:
+    """Return (next report date, why it is missing, the free preview's whisper result) for *ticker*.
+
+    Both checks are free (the report date, then Earnings Whispers' preview
+    article) and run once per ticker: the results are kept in session state
+    so Streamlit's reruns don't repeat them.
     """
-    # Find the next report date once per ticker.
     dates = st.session_state.setdefault("next_report", {})
+    previews = st.session_state.setdefault("free_whisper", {})
     if ticker not in dates:
         with st.spinner(f"Checking {ticker}'s next report date..."):
             dates[ticker] = next_report_date(ticker)
     report_date, problem = dates[ticker]
+    if ticker not in previews:
+        with st.spinner(f"Looking for {ticker}'s whisper number in Earnings Whispers' free preview..."):
+            previews[ticker] = get_preview_whisper(ticker, {"next_earnings_date": report_date})
+    return report_date, problem, previews[ticker]
+
+
+def _whisper_setting(ticker: str) -> bool | None:
+    """Draw the "Advanced search settings" box for *ticker* and return whether the paid whisper search may run.
+
+    The free preview is checked first. When it has the whisper, nothing is
+    asked and the paid search is off (False). When it doesn't, the person is
+    asked to allow or disallow spend on the paid search: True or False once
+    they choose, None until then (Generate waits for the choice).
+    """
+    report_date, problem, preview = _free_whisper_check(ticker)
     days = days_to_report(report_date)
 
     with st.expander("Advanced search settings", expanded=True):
-        st.caption("The whisper number is first looked for, free, in Earnings Whispers' preview of the "
-                   "report (usually published about a week before).")
         if report_date is None:
-            st.caption(f"Next report date not found — {problem}. The paid search is off by default.")
+            st.caption(f"Next report date not found — {problem}.")
         else:
-            st.caption(f"Next report: {report_date} ({days} days away). The paid search runs by default "
-                       f"only when the report is {WHISPER_WINDOW_DAYS} days away or less.")
+            st.caption(f"Next report: {report_date} ({days} days away).")
+        if preview["whisper_status"] == "verified":
+            st.success(_md(f"Whisper number ${preview['whisper_eps']:.2f} found free in Earnings Whispers' "
+                           f"preview ({preview['page_date']}); no paid search is needed."))
+            return False
 
-        # The checkbox key carries the ticker, so each ticker starts from its own default.
-        lookup = st.checkbox("If the preview has no whisper, search for it with Claude (paid)",
-                             value=whisper_by_default(days), key=f"whisper_{ticker}")
-        st.caption(_md(WHISPER_COST_NOTE))
-        if lookup and not whisper_by_default(days):
+        # No free whisper: the paid search only with the person's say-so.
+        # The radio's key carries the ticker, so each ticker is asked anew.
+        why = (preview["reason"] or "").removeprefix("preview: ").rstrip(".")
+        st.warning(_md(f"No free whisper number found ({why}). Allow spend on whisper number search? "
+                       f"{WHISPER_COST_NOTE}"))
+        if not whisper_by_default(days):
             when = f"The report is {days} days away" if days is not None else "The report date is unknown"
-            st.warning(_md(f"{when}; a whisper the free preview lacks is rarely found this early, so this "
-                           "search will likely cost about $0.12–0.15 and find nothing."))
-    return lookup
+            st.caption(_md(f"{when}; a whisper number is rarely found this early, so the search will likely "
+                           "find nothing."))
+        choice = st.radio("Whisper number search", [_ALLOW_SPEND, _DISALLOW_SPEND], index=None, horizontal=True,
+                          key=f"whisper_spend_{ticker}")
+    return None if choice is None else choice == _ALLOW_SPEND
 
 
 def _generate_report(ticker: str, pause: MarketDataUnavailable | None = None,
@@ -296,16 +315,19 @@ if view == _SINGLE_VIEW:
     ticker = ticker_raw.strip().upper()
 
     # Search settings for this ticker, set before searching (only once a
-    # ticker is entered, since the defaults depend on its next report date).
+    # ticker is entered, since they depend on its free whisper check).
     whisper_lookup = _whisper_setting(ticker) if ticker else False
 
-    # Generate button is disabled until the user enters a ticker.
+    # Generate waits for a ticker, and for the allow/disallow choice when the
+    # paid whisper search would be needed.
     generate_clicked = st.button(
         "Generate Report",
-        disabled=not ticker,
+        disabled=not ticker or whisper_lookup is None,
         type="primary",
         key="single_generate",
     )
+    if ticker and whisper_lookup is None:
+        st.caption("Choose Allow spend or Disallow above to generate the report.")
 
     # Generation handler — runs when the button is clicked.
     if generate_clicked:
@@ -500,22 +522,36 @@ if view == _QUEUE_VIEW:
     else:
         st.info("Queue is empty. Add tickers above.")
 
-    # Search settings for the batch: each ticker's paid whisper lookup follows
-    # the default rule from its own next report date, unless switched off for
-    # the whole batch (None = the rule, False = off).
-    with st.expander("Advanced search settings", expanded=True):
-        st.caption(f"Each ticker's whisper number is looked up automatically only when its next report "
-                   f"is {WHISPER_WINDOW_DAYS} days away or less.")
-        skip_whispers = st.checkbox("Skip whisper lookups for this batch", key="queue_skip_whispers")
-        st.caption(_md(WHISPER_COST_NOTE))
-    queue_whisper_lookup = False if skip_whispers else None
+    # Search settings for the batch: each queued ticker's free whisper check
+    # runs first; spend on the paid search is asked once, for the tickers it
+    # found nothing for (True = allowed, False = not needed or disallowed,
+    # None = not chosen yet). Tickers whose preview has the whisper never
+    # reach the paid search, whatever is chosen.
+    queue_whisper_lookup: bool | None = False
+    if st.session_state["queue"]:
+        with st.expander("Advanced search settings", expanded=True):
+            missing = [queued for queued in st.session_state["queue"]
+                       if _free_whisper_check(queued)[2]["whisper_status"] != "verified"]
+            if not missing:
+                st.success("Every queued ticker's whisper number was found free in Earnings Whispers' "
+                           "previews; no paid search is needed.")
+            else:
+                st.warning(_md(f"No free whisper number for {', '.join(missing)}. Allow spend on whisper number "
+                               f"search for {'these' if len(missing) > 1 else 'this'} {len(missing)} "
+                               f"(about ${0.12 * len(missing):.2f}–{0.15 * len(missing):.2f} in all)? "
+                               f"{WHISPER_COST_NOTE}"))
+                # The key carries the tickers, so a changed set is asked anew.
+                choice = st.radio("Whisper number search", [_ALLOW_SPEND, _DISALLOW_SPEND], index=None,
+                                  horizontal=True, key=f"queue_whisper_spend_{'-'.join(missing)}")
+                queue_whisper_lookup = None if choice is None else choice == _ALLOW_SPEND
 
-    # Disabled while the queue is empty, already running, or paused waiting
-    # for the user to choose continue or stop.
+    # Disabled while the queue is empty, already running, paused waiting for
+    # the user to choose continue or stop, or waiting for the whisper choice.
     run_clicked = st.button(
         "Run Queue",
         disabled=not st.session_state["queue"]
-                  or st.session_state["queue_status"] in ("running", "paused"),
+                  or st.session_state["queue_status"] in ("running", "paused")
+                  or queue_whisper_lookup is None,
         type="primary",
         key="queue_run",
     )
