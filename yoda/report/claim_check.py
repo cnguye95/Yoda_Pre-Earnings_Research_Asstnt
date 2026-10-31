@@ -28,7 +28,7 @@ from pydantic import BaseModel
 
 from yoda import pricing
 from yoda.evidence_store import citation, passages_by_id
-from yoda.modes.llm import NoStructuredOutput, Usage, add_usage, call_usage, failed_usage, log_usage, structured_call
+from yoda.modes.llm import NoStructuredOutput, Usage, add_usage, failed_usage, log_usage, reply_usage, structured_call
 from yoda.report.checks import iter_claims, normalize_id
 from yoda.schema import Claim, EarningsReport, EvidenceStore, Passage
 
@@ -206,7 +206,7 @@ def _ask(model: str, effort: str, items: list[ClaimItem]) -> _Asked:
                                for item in batch})
             continue
 
-        usage = add_usage(usage, call_usage(model, tuple(reply[1:])))
+        usage = add_usage(usage, reply_usage(model, reply))
         asked = {item.where for item in batch}
         answered = {verdict.where.strip(): verdict for verdict in reply.parsed.verdicts
                     if verdict.where.strip() in asked}

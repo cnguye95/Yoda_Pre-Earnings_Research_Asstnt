@@ -39,8 +39,8 @@ from yoda.evidence_store import add_article, add_news, add_peer, passages_by_id,
 from yoda.evidence_text import CONFLICT_RULES, NEWER_CONTRADICTION_RULE
 from yoda.modes import tools
 from yoda.modes.llm import (
-    MAX_RESUBMITS, NoStructuredOutput, Usage, add_usage, call_usage, client, failed_usage, log_usage, schema_problem,
-    submit_call, usage_counts,
+    MAX_RESUBMITS, NoStructuredOutput, Usage, add_usage, call_usage, client, failed_usage, log_usage, reply_usage,
+    schema_problem, submit_call, usage_counts,
 )
 from yoda.report.claim_check import Repairs, apply_repairs, check_claims, claim_items, remove_claims, render_claim
 from yoda.schema import EarningsReport, EvidenceStore
@@ -381,7 +381,7 @@ def check_and_repair(report: EarningsReport, store: EvidenceStore, sources_text:
         reply = submit_call(submit_tool="submit_repairs", output_format=Repairs,
                             **source_request(sources_text, tools_offered, REPAIR, f"{dates}\n\n{listed}",
                                              REPAIR_MAX_TOKENS))
-        repair = call_usage(SOURCE_MODEL, tuple(reply[1:]), CACHE_TTL)
+        repair = reply_usage(SOURCE_MODEL, reply, CACHE_TTL)
         rewritten = apply_repairs(report, reply.parsed, checked.unsupported)
     except STAGE_ERRORS as exc:
         repair = failed_usage(SOURCE_MODEL, exc, CACHE_TTL)

@@ -27,13 +27,16 @@ class StructuredReply(NamedTuple):
 
     *input_tokens* are prompt tokens read normally; *cache_write_tokens* and
     *cache_read_tokens* are the prompt tokens stored in, and served from,
-    the prompt cache (priced differently: yoda/pricing.py).
+    the prompt cache (priced differently: yoda/pricing.py). *calls* is how
+    many calls those tokens add up (2 when submit_call() had the answer
+    resubmitted). reply_usage() turns a reply into its stage's Usage.
     """
     parsed: BaseModel
     input_tokens: int
     output_tokens: int
     cache_write_tokens: int = 0
     cache_read_tokens: int = 0
+    calls: int = 1
 
 
 def _cache_tokens(usage) -> tuple[int, int]:
@@ -46,17 +49,19 @@ class NoStructuredOutput(RuntimeError):
     """Claude stopped without producing the requested object.
 
     Raised for a refusal or a reply cut off at max_tokens. The call was
-    still paid for, so the exception carries its token counts and callers
-    can add them to their cost totals instead of losing them.
+    still paid for, so the exception carries its token counts (and, in
+    *calls*, how many calls they add up) and callers can add them to their
+    cost totals instead of losing them.
     """
 
     def __init__(self, model: str, stop_reason: str | None, input_tokens: int, output_tokens: int,
-                 cache_write_tokens: int = 0, cache_read_tokens: int = 0):
+                 cache_write_tokens: int = 0, cache_read_tokens: int = 0, calls: int = 1):
         super().__init__(f"{model} returned no structured output (stop_reason={stop_reason})")
         self.input_tokens = input_tokens
         self.output_tokens = output_tokens
         self.cache_write_tokens = cache_write_tokens
         self.cache_read_tokens = cache_read_tokens
+        self.calls = calls
 
 
 class BrokenStructuredOutput(NoStructuredOutput):
@@ -68,8 +73,8 @@ class BrokenStructuredOutput(NoStructuredOutput):
     """
 
     def __init__(self, model: str, problem: str, input_tokens: int, output_tokens: int,
-                 cache_write_tokens: int = 0, cache_read_tokens: int = 0):
-        super().__init__(model, None, input_tokens, output_tokens, cache_write_tokens, cache_read_tokens)
+                 cache_write_tokens: int = 0, cache_read_tokens: int = 0, calls: int = 1):
+        super().__init__(model, None, input_tokens, output_tokens, cache_write_tokens, cache_read_tokens, calls)
         self.args = (f"{model}'s answer broke the schema twice ({problem})",)
 
 
@@ -108,9 +113,17 @@ class Usage(NamedTuple):
     cost_usd: float = 0.0
 
 
-def call_usage(model: str, counts: tuple[int, int, int, int], cache_ttl: Literal["5m", "1h"] = "5m") -> Usage:
-    """Return one call's Usage, priced from its (input, output, cache write, cache read) *counts*."""
-    return Usage(1, *counts, pricing.call_cost(model, *counts, cache_ttl=cache_ttl))
+def call_usage(model: str, counts: tuple[int, int, int, int], cache_ttl: Literal["5m", "1h"] = "5m",
+               calls: int = 1) -> Usage:
+    """Return the Usage of *calls* call(s) (one unless a resubmit added one), priced from their summed
+    (input, output, cache write, cache read) *counts*."""
+    return Usage(calls, *counts, pricing.call_cost(model, *counts, cache_ttl=cache_ttl))
+
+
+def reply_usage(model: str, reply: StructuredReply, cache_ttl: Literal["5m", "1h"] = "5m") -> Usage:
+    """Return the Usage of a structured *reply*: its tokens, priced, and how many calls they took."""
+    counts = (reply.input_tokens, reply.output_tokens, reply.cache_write_tokens, reply.cache_read_tokens)
+    return call_usage(model, counts, cache_ttl, reply.calls)
 
 
 def failed_usage(model: str, exc: Exception, cache_ttl: Literal["5m", "1h"] = "5m") -> Usage:
@@ -118,7 +131,7 @@ def failed_usage(model: str, exc: Exception, cache_ttl: Literal["5m", "1h"] = "5
     if not isinstance(exc, NoStructuredOutput):
         return Usage()
     return call_usage(model, (exc.input_tokens, exc.output_tokens, exc.cache_write_tokens, exc.cache_read_tokens),
-                      cache_ttl)
+                      cache_ttl, exc.calls)
 
 
 def add_usage(*usages: Usage) -> Usage:
@@ -163,13 +176,13 @@ def submit_call(model: str, max_tokens: int, submit_tool: str, output_format: ty
         uses = [block for block in resp.content if block.type == "tool_use"]
         submitted = next((use for use in uses if use.name == submit_tool), None)
         if submitted is None:
-            raise NoStructuredOutput(model, resp.stop_reason, *tokens)
+            raise NoStructuredOutput(model, resp.stop_reason, *tokens, calls=attempt + 1)
         try:
-            return StructuredReply(output_format.model_validate(submitted.input), *tokens)
+            return StructuredReply(output_format.model_validate(submitted.input), *tokens, calls=attempt + 1)
         except pydantic.ValidationError as exc:
             problem = schema_problem(exc)
             if attempt == MAX_RESUBMITS:
-                raise BrokenStructuredOutput(model, problem, *tokens) from exc
+                raise BrokenStructuredOutput(model, problem, *tokens, calls=attempt + 1) from exc
 
         # Send the broken answer back with what was wrong. Any other tool
         # the model called in that turn gets a result too, as the API requires.

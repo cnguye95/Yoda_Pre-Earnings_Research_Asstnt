@@ -61,6 +61,7 @@ import anthropic
 import numpy as np
 import pandas as pd
 import pydantic
+from scipy.stats import binomtest
 import requests
 
 from yoda import config, pricing
@@ -874,24 +875,46 @@ def _paired_gaps(df: pd.DataFrame, mode: str, against: str) -> pd.DataFrame:
     return gaps
 
 
-def _gap_stats(values: np.ndarray, rng: np.random.Generator, n_boot: int) -> dict:
-    """Return pairs, mean gap, its 95% bootstrap range, and wins/ties/losses for a set of per-ticker gaps.
+# Which test a comparison row shows depends on how many tickers are paired.
+# A bootstrap can only reshuffle the tickers it has, so with few its range
+# comes out too narrow (about 10% at 5): it is shown from BOOTSTRAP_MIN_PAIRS
+# paired tickers up. A sign test makes no assumption about how the gaps are
+# spread (it asks only how likely the win/loss split would be if neither
+# mode were better), so it is shown up to SIGN_TEST_MAX_PAIRS. At exactly 10
+# both are shown. A value not computed for that size is left empty.
+BOOTSTRAP_MIN_PAIRS = 10
+SIGN_TEST_MAX_PAIRS = 10
 
-    The range: resample the tickers with replacement *n_boot* times and take
-    the 2.5th and 97.5th percentiles of the resampled means.
+# A sign test p-value below this counts as a real difference.
+SIGN_TEST_ALPHA = 0.05
+
+
+def _sign_test_p(wins: int, losses: int) -> float:
+    """Return the two-sided sign test p-value for *wins* vs *losses* (ties are left out); 1.0 when all tied."""
+    if wins + losses == 0:
+        return 1.0
+    return round(binomtest(wins, wins + losses, 0.5).pvalue, 4)
+
+
+def _gap_stats(values: np.ndarray, rng: np.random.Generator, n_boot: int) -> dict:
+    """Return pairs, mean gap, wins/ties/losses, and the test(s) that fit how many pairs there are.
+
+    ci_low / ci_high, the 95% bootstrap range, from BOOTSTRAP_MIN_PAIRS
+    pairs up: resample the tickers with replacement *n_boot* times and take
+    the 2.5th and 97.5th percentiles of the resampled means. sign_p, the
+    sign test's p-value, up to SIGN_TEST_MAX_PAIRS pairs. Each is None when
+    not computed.
     """
-    sample_idx = rng.integers(0, len(values), size=(n_boot, len(values)))
-    boot_means = values[sample_idx].mean(axis=1)
-    low, high = np.percentile(boot_means, [2.5, 97.5])
-    return {
-        "pairs":    len(values),
-        "mean_gap": round(values.mean(), 2),
-        "ci_low":   round(low, 2),
-        "ci_high":  round(high, 2),
-        "wins":     int((values > 0).sum()),
-        "ties":     int((values == 0).sum()),
-        "losses":   int((values < 0).sum()),
-    }
+    wins, ties, losses = int((values > 0).sum()), int((values == 0).sum()), int((values < 0).sum())
+    stats = {"pairs": len(values), "mean_gap": round(values.mean(), 2), "ci_low": None, "ci_high": None,
+             "sign_p": None, "wins": wins, "ties": ties, "losses": losses}
+    if len(values) >= BOOTSTRAP_MIN_PAIRS:
+        sample_idx = rng.integers(0, len(values), size=(n_boot, len(values)))
+        low, high = np.percentile(values[sample_idx].mean(axis=1), [2.5, 97.5])
+        stats["ci_low"], stats["ci_high"] = round(low, 2), round(high, 2)
+    if len(values) <= SIGN_TEST_MAX_PAIRS:
+        stats["sign_p"] = _sign_test_p(wins, losses)
+    return stats
 
 
 def _paired_comparison(df: pd.DataFrame, mode: str, against: str, n_boot: int = 10_000) -> pd.DataFrame:
@@ -902,6 +925,9 @@ def _paired_comparison(df: pd.DataFrame, mode: str, against: str, n_boot: int = 
       - pairs: how many tickers that is
       - mean_gap: average of (*mode* score − *against* score)
       - ci_low / ci_high: 95% confidence range for that mean, by bootstrap
+        (from BOOTSTRAP_MIN_PAIRS pairs up; empty below)
+      - sign_p: the sign test's p-value (up to SIGN_TEST_MAX_PAIRS pairs;
+        empty above)
       - wins / ties / losses: tickers where *mode* scored higher / equal / lower
     """
     gaps = _paired_gaps(df, mode, against)
@@ -943,15 +969,27 @@ def _complexity_split(df: pd.DataFrame, mode: str, against: str, n_boot: int = 1
 
 
 def _verdict(comparison: pd.DataFrame, n_tickers: int, mode: str, against: str) -> str:
-    """Return a plain-English reading of the "average" row's confidence range for *mode* against *against*.
+    """Return a plain-English reading of the "average" row for *mode* against *against*.
 
-    Below 5 paired tickers a bootstrap range is meaningless, so it says so.
+    Below 5 paired tickers nothing is meaningful, so it says so. From
+    BOOTSTRAP_MIN_PAIRS up it reads the bootstrap range; below that, the
+    sign test.
     """
     if n_tickers < 5:
-        return (f"Only {n_tickers} paired ticker(s) — too few for a meaningful confidence "
-                f"range. Treat these gaps as anecdotal.")
-    low, high = comparison.loc["average", ["ci_low", "ci_high"]]
+        return (f"Only {n_tickers} paired ticker(s) — too few for a meaningful test. "
+                f"Treat these gaps as anecdotal.")
     winner, loser = _phrase(mode), _phrase(against)
+    if n_tickers < BOOTSTRAP_MIN_PAIRS:
+        row = comparison.loc["average"]
+        p, wins, ties, losses = row["sign_p"], int(row["wins"]), int(row["ties"]), int(row["losses"])
+        split = f"{wins} win(s), {ties} tie(s), {losses} loss(es) over {n_tickers} paired tickers"
+        if p < SIGN_TEST_ALPHA and wins != losses:
+            better, worse = (winner, loser) if wins > losses else (loser, winner)
+            return (f"{better[0].upper() + better[1:]} beats {worse} overall: {split} for {winner}; "
+                    f"sign test p = {p} (below {SIGN_TEST_ALPHA}).")
+        return (f"Inconclusive: {split} for {winner}; sign test p = {p}, not below {SIGN_TEST_ALPHA}, "
+                f"so this sample can't separate the two.")
+    low, high = comparison.loc["average", ["ci_low", "ci_high"]]
     if low > 0:
         return (f"{winner[0].upper() + winner[1:]} beats {loser} overall: across {n_tickers} paired tickers "
                 f"the 95% range for the average gap ({low} to {high}) is entirely above 0.")
@@ -960,6 +998,11 @@ def _verdict(comparison: pd.DataFrame, n_tickers: int, mode: str, against: str) 
                 f"the 95% range for the average gap ({low} to {high}) is entirely below 0.")
     return (f"Inconclusive: across {n_tickers} paired tickers the 95% range for the "
             f"average gap ({low} to {high}) includes 0, so this sample can't separate the two.")
+
+
+def _shown(table: pd.DataFrame) -> pd.DataFrame:
+    """Return a comparison table for display: a test not computed for its row's size shows as "—"."""
+    return table.astype(object).where(table.notna(), "—")
 
 
 def _comparison_lines(df: pd.DataFrame) -> list[str]:
@@ -973,9 +1016,10 @@ def _comparison_lines(df: pd.DataFrame) -> list[str]:
         lines += [
             f"## {_display(mode)} vs {_display(against)} (paired by ticker)", "",
             f"mean_gap = average of ({_display(mode)} score − {_display(against)} score); ci_low/ci_high = "
-            f"95% bootstrap confidence range; wins/ties/losses = tickers where {_display(mode)} "
-            "scored higher/equal/lower.", "",
-            _df_to_markdown(comparison), "",
+            f"95% bootstrap confidence range (shown from {BOOTSTRAP_MIN_PAIRS} paired tickers up); sign_p = "
+            f"sign test p-value on wins vs losses, ties left out (shown up to {SIGN_TEST_MAX_PAIRS} paired "
+            f"tickers); wins/ties/losses = tickers where {_display(mode)} scored higher/equal/lower.", "",
+            _df_to_markdown(_shown(comparison)), "",
             _verdict(comparison, paired, mode, against), "",
         ]
         if (mode, against) == _DECIDING:
@@ -983,7 +1027,7 @@ def _comparison_lines(df: pd.DataFrame) -> list[str]:
                       "The average gap over all paired tickers and within the complex and simple ones (labels "
                       "fixed before any report: yoda/eval/complexity.py). With few tickers in a group, read its "
                       "gap as a direction, not proof.", "",
-                      _df_to_markdown(_complexity_split(df, mode, against)), ""]
+                      _df_to_markdown(_shown(_complexity_split(df, mode, against))), ""]
     if not lines and df["mode"].nunique() > 1:
         lines += ["No ticker has reports from both modes of any comparison, so there is no paired comparison.", ""]
     return lines

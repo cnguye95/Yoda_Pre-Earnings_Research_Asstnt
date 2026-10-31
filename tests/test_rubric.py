@@ -794,15 +794,24 @@ def _three_methods(gaps: dict[str, tuple[int, int]], **costs) -> pd.DataFrame:
 
 
 def test_summary_compares_every_pair_of_methods(tmp_path):
-    df = _three_methods({f"T{n}": (1, 2) for n in range(5)})
+    df = _three_methods({f"T{n}": (1, 2) for n in range(12)})
     runner._write_summary(df, tmp_path / "summary.md", "Run: test")
     text = (tmp_path / "summary.md").read_text(encoding="utf-8")
     assert "## Staged pipeline vs Baseline (paired by ticker)" in text
     assert "## Lead analyst vs Baseline (paired by ticker)" in text
     assert "## Lead analyst vs Staged pipeline (paired by ticker)" in text
     assert "Yoda" not in text   # no archived panel results, so no such comparison
-    assert "The lead analyst method beats the staged pipeline overall: across 5 paired tickers" in text
+    assert "The lead analyst method beats the staged pipeline overall: across 12 paired tickers" in text
     assert "The staged pipeline beats the baseline overall" in text
+
+
+def test_a_small_run_shows_the_sign_test_and_no_range(tmp_path):
+    # 8 tickers: below BOOTSTRAP_MIN_PAIRS, so the range is shown as "—".
+    df = _three_methods({f"T{n}": (1, 2) for n in range(8)})
+    runner._write_summary(df, tmp_path / "summary.md", "Run: test")
+    text = (tmp_path / "summary.md").read_text(encoding="utf-8")
+    assert "| average | 8 | 1.0 | — | — | 0.0078 | 8 | 0 | 0 |" in text
+    assert "The lead analyst method beats the staged pipeline overall: 8 win(s)" in text
 
 
 def test_the_deciding_comparison_is_split_by_complexity():

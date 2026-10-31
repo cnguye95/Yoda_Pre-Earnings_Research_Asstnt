@@ -251,13 +251,3 @@ WHEN labels (relative to the full eval run, item 4f):
       tests that point at it).
     - Once ExxonMobil Holdings files its own 10-K (early 2027), XOM no
       longer needs the link at all.
-
-
-14. Small clean-ups (added 2026-10-31)
-    WHEN: any time; none changes a report or a score.
-    - tests/test_source_calls.py holds the three broken-answer tool_loop
-      tests twice; only the second copy runs. Delete the first.
-    - A resubmitted single call (llm.submit_call) is logged as "1 call" in
-      its stage's usage line, though its tokens and cost include both
-      attempts.
-

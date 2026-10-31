@@ -503,9 +503,10 @@ def _scores_df(gaps: list[int]) -> pd.DataFrame:
 
 
 def test_paired_comparison_counts_and_mean():
-    result = _paired_comparison(_scores_df([1, 0, -1, 2]), "yoda", "baseline")
+    # 12 tickers: enough for a bootstrap range (BOOTSTRAP_MIN_PAIRS is 10).
+    result = _paired_comparison(_scores_df([1, 0, -1, 2] * 3), "yoda", "baseline")
     row = result.loc["average"]
-    assert (row["wins"], row["ties"], row["losses"]) == (2, 1, 1)
+    assert (row["wins"], row["ties"], row["losses"]) == (6, 3, 3)
     assert row["mean_gap"] == 0.5
     # A real 95% range strictly contains the mean but sits inside the data's
     # extremes (-1 and 2): catches a range collapsed to the mean or set to min/max.
@@ -514,7 +515,7 @@ def test_paired_comparison_counts_and_mean():
 
 
 def test_paired_comparison_identical_gaps_give_point_range():
-    row = _paired_comparison(_scores_df([1, 1, 1]), "yoda", "baseline").loc["figure_accuracy"]
+    row = _paired_comparison(_scores_df([1] * 10), "yoda", "baseline").loc["figure_accuracy"]
     assert row["ci_low"] == row["ci_high"] == row["mean_gap"] == 1.0
 
 
@@ -540,7 +541,7 @@ def test_paired_comparison_ignores_unpaired_tickers():
     # Only the two paired tickers (gap 1 each) count, so the result is exact
     # and finite — an unpaired ticker would make these NaN.
     assert row["mean_gap"] == 1.0
-    assert row["ci_low"] == row["ci_high"] == 1.0
+    assert row["sign_p"] == 0.5   # 2 wins of 2
 
 
 # ---------------------------------------------------------------------------
@@ -590,9 +591,36 @@ def _average_row(low: float, high: float) -> pd.DataFrame:
     return pd.DataFrame({"ci_low": [low], "ci_high": [high]}, index=["average"])
 
 
+def _sign_row(wins: int, ties: int, losses: int) -> pd.DataFrame:
+    # One-row comparison table holding the "average" row's sign test.
+    return pd.DataFrame({"sign_p": [runner._sign_test_p(wins, losses)], "wins": [wins], "ties": [ties],
+                         "losses": [losses]}, index=["average"])
+
+
 def test_verdict_needs_five_tickers():
-    assert _verdict(_average_row(0.5, 1.0), 4, "yoda", "baseline").startswith("Only 4")
-    assert _verdict(_average_row(0.5, 1.0), 5, "yoda", "baseline").startswith("Yoda beats")
+    assert _verdict(_sign_row(4, 0, 0), 4, "yoda", "baseline").startswith("Only 4")
+
+
+def test_below_ten_tickers_the_verdict_reads_the_sign_test():
+    # 5 wins of 5 is p = 0.0625: not below 0.05, so inconclusive (the smoke
+    # run's bootstrap called it a win). 8 of 8 is p = 0.0078.
+    assert _verdict(_sign_row(5, 0, 0), 5, "yoda", "baseline").startswith("Inconclusive: 5 win(s), 0 tie(s)")
+    assert _verdict(_sign_row(8, 0, 0), 8, "yoda", "baseline").startswith("Yoda beats the baseline overall")
+    assert _verdict(_sign_row(0, 1, 8), 9, "yoda", "baseline").startswith("The baseline beats Yoda overall")
+
+
+@pytest.mark.parametrize("pairs, has_range, has_sign", [(9, False, True), (10, True, True), (11, True, False)])
+def test_the_number_of_tickers_decides_which_test_is_shown(pairs, has_range, has_sign):
+    row = _paired_comparison(_scores_df([1, 0, -1, 2, 1] * 3)[: 2 * pairs], "yoda", "baseline").loc["average"]
+    assert row["pairs"] == pairs
+    assert pd.notna(row["ci_low"]) == has_range and pd.notna(row["ci_high"]) == has_range
+    assert pd.notna(row["sign_p"]) == has_sign
+
+
+def test_sign_test_p_values():
+    assert runner._sign_test_p(5, 0) == 0.0625
+    assert runner._sign_test_p(15, 5) == 0.0414
+    assert runner._sign_test_p(0, 0) == 1.0   # all ties: no evidence either way
 
 
 def test_verdict_range_touching_zero_is_inconclusive():

@@ -182,7 +182,12 @@ A dimension a mode had no evidence for is marked N/A by code and left out of tha
 
 ### How Results Are Read
 
-Modes are compared **ticker by ticker**: for each ticker, one mode's score minus the other's, so how easy or hard a company is cancels out. The summary reports the mean gap, a 95% bootstrap range (the tickers resampled 10,000 times), and wins/ties/losses. A range entirely above or below 0 means the difference holds whichever tickers happen to be in the sample; a range crossing 0 means the data can't tell the two apart. With few tickers, read a result as a direction, not proof.
+Modes are compared **ticker by ticker**: for each ticker, one mode's score minus the other's, so how easy or hard a company is cancels out. The summary reports the mean gap and wins/ties/losses, then a test that fits how many tickers are paired:
+
+- **10 or more tickers: a 95% bootstrap range.** The tickers are resampled with replacement 10,000 times and the middle 95% of the resampled mean gaps is kept. A range entirely above or below 0 means the difference holds whichever tickers happen to be in the sample; a range crossing 0 means the data can't tell the two apart.
+- **10 or fewer tickers: a sign test.** With ties left out, how likely the win/loss split would be if neither mode were better; a p-value below 0.05 counts as a real difference. A bootstrap of a few tickers can only reshuffle those few, so its range comes out too narrow. (At exactly 10 both are shown.)
+
+With fewer than 5 tickers no test is meaningful, and the summary says so.
 
 ### Results
 
@@ -196,7 +201,7 @@ Modes are compared **ticker by ticker**: for each ticker, one mode's score minus
 | Staged pipeline | 3.4 | 4.8 | 3.4 | 4.2 | 4.0 | 4.6 | 5.0 | 4.8 | **4.27** | $1.74 | 383 s |
 | Lead analyst | 3.2 | 4.0 | 2.6 | 4.0 | 3.2 | 4.0 | 4.6 | 4.4 | **3.75** | $3.19 | 532 s |
 
-Paired by ticker, the **staged pipeline beat the baseline** (+0.50, 95% range +0.28 to +0.72, 5 of 5 tickers) **and the lead analyst method** (+0.52, +0.22 to +0.78, 4 of 5, 1 tie); the lead analyst method vs the baseline was inconclusive (−0.02). Judging cost $0.22 per report.
+Paired by ticker, the staged pipeline scored higher than the baseline on **5 of 5** tickers (mean gap +0.50) and higher than the lead analyst method on 4 of 5 (+0.52, 1 tie); the lead analyst method vs the baseline split 2–3 (−0.02). With 5 tickers the sign test can't confirm any of these (5 of 5 gives p = 0.0625, just above 0.05). Judging cost $0.22 per report.
 
 Read these as a direction: 5 tickers, judged on the earlier nine-dimension rubric (re-averaged here without market expectations; the reworded filing_extraction anchors aren't reflected), and written before the news-search fix (date windows enforced, a 14-day window for the baseline).
 
