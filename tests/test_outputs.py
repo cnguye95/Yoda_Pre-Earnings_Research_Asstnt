@@ -475,7 +475,7 @@ def test_a_ticker_with_no_filing_is_a_failure_not_a_run(monkeypatch, tmp_path):
     generated = runner.run_eval(["AAA"], out_dir=tmp_path)
     df = runner.rescore(tmp_path, ["AAA"], out_dir=tmp_path, judge_budget=100.0)
 
-    assert df.empty and list(generated["error"]) == ["fetch sources: no recent 10-Q or annual report"]
+    assert df.empty and set(generated["error"]) == {"fetch sources: no recent 10-Q or annual report"}
     assert "| AAA | baseline | fetch sources: no recent 10-Q or annual report |" in (
         tmp_path / "summary.md").read_text(encoding="utf-8")
 

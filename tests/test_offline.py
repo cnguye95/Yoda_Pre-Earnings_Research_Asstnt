@@ -501,7 +501,7 @@ def _scores_df(gaps: list[int]) -> pd.DataFrame:
 
 
 def test_paired_comparison_counts_and_mean():
-    result = _paired_comparison(_scores_df([1, 0, -1, 2]))
+    result = _paired_comparison(_scores_df([1, 0, -1, 2]), "yoda", "baseline")
     row = result.loc["average"]
     assert (row["wins"], row["ties"], row["losses"]) == (2, 1, 1)
     assert row["mean_gap"] == 0.5
@@ -512,7 +512,7 @@ def test_paired_comparison_counts_and_mean():
 
 
 def test_paired_comparison_identical_gaps_give_point_range():
-    row = _paired_comparison(_scores_df([1, 1, 1])).loc["figure_accuracy"]
+    row = _paired_comparison(_scores_df([1, 1, 1]), "yoda", "baseline").loc["figure_accuracy"]
     assert row["ci_low"] == row["ci_high"] == row["mean_gap"] == 1.0
 
 
@@ -522,7 +522,7 @@ def test_na_dimension_drops_only_that_pair():
     df = _scores_df([1, 1, 1])
     df.loc[(df["ticker"] == "T0") & (df["mode"] == "baseline"), "market_expectations"] = None
 
-    result = _paired_comparison(df)
+    result = _paired_comparison(df, "yoda", "baseline")
 
     assert result.loc["market_expectations", "pairs"] == 2
     assert result.loc["relevance", "pairs"] == 3
@@ -533,7 +533,7 @@ def test_paired_comparison_ignores_unpaired_tickers():
     df = _scores_df([1, 1])
     # A ticker where only Yoda succeeded must not enter the comparison.
     df = pd.concat([df, pd.DataFrame([{"ticker": "SOLO", "mode": "yoda", **{c: 5 for c in SCORE_COLS}}])])
-    row = _paired_comparison(df).loc["average"]
+    row = _paired_comparison(df, "yoda", "baseline").loc["average"]
     assert row["wins"] + row["ties"] + row["losses"] == 2
     # Only the two paired tickers (gap 1 each) count, so the result is exact
     # and finite — an unpaired ticker would make these NaN.
@@ -589,15 +589,15 @@ def _average_row(low: float, high: float) -> pd.DataFrame:
 
 
 def test_verdict_needs_five_tickers():
-    assert _verdict(_average_row(0.5, 1.0), 4).startswith("Only 4")
-    assert _verdict(_average_row(0.5, 1.0), 5).startswith("Yoda beats")
+    assert _verdict(_average_row(0.5, 1.0), 4, "yoda", "baseline").startswith("Only 4")
+    assert _verdict(_average_row(0.5, 1.0), 5, "yoda", "baseline").startswith("Yoda beats")
 
 
 def test_verdict_range_touching_zero_is_inconclusive():
     # A range that reaches exactly 0 does not exclude "no difference".
-    assert _verdict(_average_row(0.0, 1.0), 20).startswith("Inconclusive")
-    assert _verdict(_average_row(-1.0, 0.0), 20).startswith("Inconclusive")
-    assert _verdict(_average_row(-1.0, -0.01), 20).startswith("The baseline beats")
+    assert _verdict(_average_row(0.0, 1.0), 20, "yoda", "baseline").startswith("Inconclusive")
+    assert _verdict(_average_row(-1.0, 0.0), 20, "yoda", "baseline").startswith("Inconclusive")
+    assert _verdict(_average_row(-1.0, -0.01), 20, "yoda", "baseline").startswith("The baseline beats")
 
 
 # ---------------------------------------------------------------------------

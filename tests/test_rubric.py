@@ -302,7 +302,8 @@ def test_runner_judges_each_mode_on_its_own_evidence(monkeypatch, tmp_path):
 
 
 def test_runner_defaults_to_the_baseline_and_the_retired_yoda_mode_points_to_the_pipeline(monkeypatch, tmp_path):
-    assert runner.DEFAULT_MODES == ("baseline",) and runner._parse_args([]).modes == ["baseline"]
+    assert runner.DEFAULT_MODES == ("baseline", "pipeline", "lead")
+    assert runner._parse_args([]).modes == ["baseline", "pipeline", "lead"]
     assert runner._parse_args(["--modes", "baseline", "pipeline"]).modes == ["baseline", "pipeline"]
     with pytest.raises(ValueError, match="the staged pipeline runs as mode pipeline"):
         runner._run_mode("yoda", "TEST", _Q_ONLY)
@@ -739,3 +740,75 @@ def test_judged_rows_take_cost_and_time_from_generation(monkeypatch, tmp_path):
 def test_a_negative_judge_budget_fails_loudly(tmp_path):
     with pytest.raises(ValueError, match="can't be negative"):
         runner.rescore(tmp_path, judge_budget=-1.0)
+
+
+
+# ---------------------------------------------------------------------------
+# Three methods: every pair compared, the deciding one by complexity, costs
+# ---------------------------------------------------------------------------
+
+def _three_methods(gaps: dict[str, tuple[int, int]], **costs) -> pd.DataFrame:
+    # One row per (ticker, mode): the baseline scores 2 everywhere; the staged
+    # pipeline 2 + its gap and the lead analyst 2 + its gap, per ticker as
+    # given by *gaps* (ticker -> (pipeline gap, lead gap)). *costs* set columns.
+    rows = []
+    for ticker, (pipeline_gap, lead_gap) in gaps.items():
+        for mode, gap in (("baseline", 0), ("pipeline", pipeline_gap), ("lead", lead_gap)):
+            rows.append({"ticker": ticker, "mode": mode, "latency_seconds": 1.0, "cost_usd": 1.0,
+                         **{col: 2 + gap for col in runner.SCORE_COLS}})
+    df = pd.DataFrame(rows)
+    for column, values in costs.items():
+        df[column] = values
+    return df
+
+
+def test_summary_compares_every_pair_of_methods(tmp_path):
+    df = _three_methods({f"T{n}": (1, 2) for n in range(5)})
+    runner._write_summary(df, tmp_path / "summary.md", "Run: test")
+    text = (tmp_path / "summary.md").read_text(encoding="utf-8")
+    assert "## Staged pipeline vs Baseline (paired by ticker)" in text
+    assert "## Lead analyst vs Baseline (paired by ticker)" in text
+    assert "## Lead analyst vs Staged pipeline (paired by ticker)" in text
+    assert "Yoda" not in text   # no archived panel results, so no such comparison
+    assert "The lead analyst method beats the staged pipeline overall: across 5 paired tickers" in text
+    assert "The staged pipeline beats the baseline overall" in text
+
+
+def test_the_deciding_comparison_is_split_by_complexity():
+    # USB and XOM are labelled complex, NVDA and HD simple; TEST has no label.
+    df = _three_methods({"USB": (0, 2), "XOM": (0, 2), "NVDA": (0, -1), "HD": (0, -1), "TEST": (0, 0)})
+    split = runner._complexity_split(df, "lead", "pipeline")
+    assert list(split.index) == ["all", "complex", "simple", "unlabelled"]
+    assert split.loc["complex", "mean_gap"] == 2.0 and split.loc["complex", "pairs"] == 2
+    assert split.loc["simple", "mean_gap"] == -1.0
+    assert split.loc["all", "pairs"] == 5 and split.loc["all", "mean_gap"] == 0.4
+
+
+def test_the_complexity_split_appears_only_under_the_deciding_comparison(tmp_path):
+    df = _three_methods({"USB": (1, 2), "NVDA": (1, 0)})
+    runner._write_summary(df, tmp_path / "summary.md", "Run: test")
+    text = (tmp_path / "summary.md").read_text(encoding="utf-8")
+    assert text.count("### By complexity") == 1
+    assert text.index("## Lead analyst vs Staged pipeline") < text.index("### By complexity")
+    assert "| complex | 1 | 1.0 |" in text and "| simple | 1 | -1.0 |" in text
+
+
+def test_the_cost_table_totals_each_method_and_counts_unknown_costs(tmp_path):
+    df = _three_methods({"A": (0, 0), "B": (0, 0)},
+                        cost_usd=[0.5, 1.5, 3.0, 0.5, None, 3.0],
+                        cost_standard_usd=[1.0, 1.5, 3.0, 1.0, None, 3.0],
+                        judge_cost_usd=[0.1] * 6)
+    lines = runner._cost_lines(df)
+    text = "\n".join(lines)
+    assert "| baseline | 2 | 1.0 | 2.0 | 0.2 |" in text
+    assert "| pipeline | 2 | 1.5 | 1.5 | 0.2 |" in text   # the unknown cost is left out, never added as 0
+    assert "Totals leave out reports with no recorded cost: generation_paid 1, generation_full_price 1." in text
+
+
+def test_chart_means_with_three_methods_use_only_tickers_every_method_scored():
+    df = _three_methods({"A": (1, 2), "B": (0, 0)})
+    df.loc[(df["ticker"] == "B") & (df["mode"] == "lead"), "relevance"] = None   # B leaves relevance only
+    means = runner._paired_means(df)
+    assert list(means.index) == ["baseline", "pipeline", "lead"]
+    assert means.loc["lead", "relevance"] == 4 and means.loc["pipeline", "relevance"] == 3   # ticker A only
+    assert means.loc["lead", "figure_accuracy"] == 3                                        # both tickers

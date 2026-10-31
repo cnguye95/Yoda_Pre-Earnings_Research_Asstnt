@@ -19,10 +19,12 @@ Outputs written to disk (data/eval/ unless another folder is passed):
   results.csv     — step 2: one row per report: the nine scores (empty
                     when N/A), latency and cost, and the judge's details
                     (version, tokens, cost, failed quotes, report length)
-  summary.md      — run date + models, mean scores per mode, the paired
-                    Yoda-vs-baseline confidence table, judge reliability
-                    checks, and a Failures section listing every
-                    (ticker, mode) that didn't score
+  summary.md      — run date + models, mean scores and costs per mode, a
+                    paired confidence table for each pair of methods (the
+                    lead analyst method vs the staged pipeline also by
+                    ticker complexity), judge reliability checks, and a
+                    Failures section listing every (ticker, mode) that
+                    didn't score
   justifications.md — a few judge justifications per dimension, with quotes
   comparison.png  — grouped bar chart, subtitled with the run date
   repeat.csv      — rescore(repeat=True) only: the second scores
@@ -58,6 +60,7 @@ import pydantic
 import requests
 
 from yoda import config, pricing
+from yoda.eval.complexity import is_complex
 from yoda.eval.evidence import PROMPT_TOKEN_LINE, RenderedEvidence, na_dimensions, render_evidence
 from yoda.eval.judge import (
     JUDGE_MODEL, JUDGE_REASONING_EFFORT, JudgeResult, cache_key_for, is_cached, judge_cost, judge_report,
@@ -101,10 +104,10 @@ SCORE_COLS = list(DIMENSIONS)
 # test) is stale and removed at the end of a run. "pipeline" is the staged pipeline
 # (yoda/modes/pipeline.py) and "lead" the lead analyst method (yoda/modes/lead.py). "yoda" stays known, so the
 # saved reports of the retired personality panel are never deleted, but it
-# no longer runs. DEFAULT_MODES are what runs; the summary still compares
-# baseline with "yoda" until it compares all three arms (item 4d's last part).
+# no longer runs. DEFAULT_MODES are what runs and is judged by default: the
+# three arms of the comparison (next_steps item 4).
 KNOWN_MODES = ("baseline", "pipeline", "lead", "yoda")
-DEFAULT_MODES = ("baseline",)
+DEFAULT_MODES = ("baseline", "pipeline", "lead")
 
 # Where outputs go unless run_eval() is given another folder.
 DEFAULT_OUT_DIR = config.DATA_DIR / "eval"
@@ -781,59 +784,124 @@ def _write_justifications(judged_results: Sequence[tuple[str, str, JudgeResult]]
 
 
 # ---------------------------------------------------------------------------
-# Paired comparison — how confident is "Yoda beats the baseline"?
+# Paired comparisons — how confident is "this method beats that one"?
 # ---------------------------------------------------------------------------
 
-def _paired_comparison(df: pd.DataFrame, n_boot: int = 10_000) -> pd.DataFrame:
-    """Compare Yoda and the baseline ticker by ticker.
+# How each mode is named in summary.md headings and on the chart, and in a
+# sentence (results.csv keeps the short keys).
+_MODE_DISPLAY = {"baseline": "Baseline", "pipeline": "Staged pipeline", "lead": "Lead analyst",
+                 "yoda": "Yoda (retired panel)"}
+_MODE_PHRASE = {"baseline": "the baseline", "pipeline": "the staged pipeline", "lead": "the lead analyst method",
+                "yoda": "Yoda"}
 
-    For each rubric dimension (plus the average over the dimensions both
-    modes were scored on) it computes, over the tickers where BOTH modes have
-    a score for that dimension:
-      - pairs: how many tickers that is (an N/A dimension leaves a ticker out
-        of that dimension only, never out of the others)
-      - mean_gap: average of (Yoda score - baseline score)
-      - ci_low / ci_high: 95% confidence range for that mean, by bootstrap —
-        resample the tickers with replacement n_boot times and take the
-        2.5th and 97.5th percentiles of the resampled means
-      - wins / ties / losses: tickers where Yoda scored higher / equal / lower
+# The paired comparisons summary.md shows, as (mode, against), each only
+# when some ticker has reports from both. The lead analyst method against
+# the staged pipeline decides which candidate becomes Yoda (next_steps item
+# 4), so it is also split by ticker complexity; "yoda" against the baseline
+# is for archived runs of the retired panel.
+COMPARISONS = [("pipeline", "baseline"), ("lead", "baseline"), ("lead", "pipeline"), ("yoda", "baseline")]
+_DECIDING = ("lead", "pipeline")
+
+
+def _display(mode: str) -> str:
+    """Return a mode's name as summary.md headings and the chart show it ("lead" -> "Lead analyst")."""
+    return _MODE_DISPLAY.get(mode, mode)
+
+
+def _phrase(mode: str) -> str:
+    """Return a mode's name inside a sentence ("lead" -> "the lead analyst method")."""
+    return _MODE_PHRASE.get(mode, mode)
+
+
+def _paired_count(df: pd.DataFrame, mode: str, against: str) -> int:
+    """Return how many tickers have reports from both *mode* and *against*."""
+    return int(df.groupby("ticker")["mode"].apply(set).map({mode, against}.issubset).sum())
+
+
+def _paired_gaps(df: pd.DataFrame, mode: str, against: str) -> pd.DataFrame:
+    """Return one row per ticker with reports from both modes: (*mode* score − *against* score) per dimension.
+
+    An N/A score stays empty, so its gap is empty too. The "average" column
+    is each ticker's mean gap over the dimensions both were scored on.
+    Call only when _paired_count() is above 0.
     """
-    # One row per ticker, one column per (mode, dimension). Only tickers where
-    # both modes produced a report are kept; within them an N/A score stays
-    # empty, so its gap is empty too.
-    has_both = df.groupby("ticker")["mode"].apply(set).map({"baseline", "yoda"}.issubset)
+    has_both = df.groupby("ticker")["mode"].apply(set).map({mode, against}.issubset)
     wide = df.pivot(index="ticker", columns="mode", values=SCORE_COLS).loc[has_both[has_both].index]
-    gaps = pd.DataFrame({col: wide[(col, "yoda")] - wide[(col, "baseline")] for col in SCORE_COLS})
+    gaps = pd.DataFrame({col: wide[(col, mode)] - wide[(col, against)] for col in SCORE_COLS})
     gaps["average"] = gaps.mean(axis=1)   # skips the empty (N/A) gaps
+    return gaps
+
+
+def _gap_stats(values: np.ndarray, rng: np.random.Generator, n_boot: int) -> dict:
+    """Return pairs, mean gap, its 95% bootstrap range, and wins/ties/losses for a set of per-ticker gaps.
+
+    The range: resample the tickers with replacement *n_boot* times and take
+    the 2.5th and 97.5th percentiles of the resampled means.
+    """
+    sample_idx = rng.integers(0, len(values), size=(n_boot, len(values)))
+    boot_means = values[sample_idx].mean(axis=1)
+    low, high = np.percentile(boot_means, [2.5, 97.5])
+    return {
+        "pairs":    len(values),
+        "mean_gap": round(values.mean(), 2),
+        "ci_low":   round(low, 2),
+        "ci_high":  round(high, 2),
+        "wins":     int((values > 0).sum()),
+        "ties":     int((values == 0).sum()),
+        "losses":   int((values < 0).sum()),
+    }
+
+
+def _paired_comparison(df: pd.DataFrame, mode: str, against: str, n_boot: int = 10_000) -> pd.DataFrame:
+    """Compare *mode* with *against* ticker by ticker, one row per dimension plus "average".
+
+    Over the tickers where BOTH have a score for that dimension (an N/A
+    leaves a ticker out of that dimension only, never out of the others):
+      - pairs: how many tickers that is
+      - mean_gap: average of (*mode* score − *against* score)
+      - ci_low / ci_high: 95% confidence range for that mean, by bootstrap
+      - wins / ties / losses: tickers where *mode* scored higher / equal / lower
+    """
+    gaps = _paired_gaps(df, mode, against)
 
     # Fixed seed so the same results always give the same confidence range.
     rng = np.random.default_rng(0)
-
-    rows = {}
-    for col in gaps.columns:
-        values = gaps[col].dropna().to_numpy(dtype=float)
-        if len(values) == 0:
-            continue                      # N/A for every ticker: nothing to compare
-        sample_idx = rng.integers(0, len(values), size=(n_boot, len(values)))
-        boot_means = values[sample_idx].mean(axis=1)
-        low, high = np.percentile(boot_means, [2.5, 97.5])
-        rows[col] = {
-            "pairs":    len(values),
-            "mean_gap": round(values.mean(), 2),
-            "ci_low":   round(low, 2),
-            "ci_high":  round(high, 2),
-            "wins":     int((values > 0).sum()),
-            "ties":     int((values == 0).sum()),
-            "losses":   int((values < 0).sum()),
-        }
-
+    rows = {col: _gap_stats(gaps[col].dropna().to_numpy(dtype=float), rng, n_boot)
+            for col in gaps.columns if gaps[col].notna().any()}   # N/A for every ticker: nothing to compare
     result = pd.DataFrame.from_dict(rows, orient="index")
     result.index.name = "dimension"
     return result
 
 
-def _verdict(comparison: pd.DataFrame, n_tickers: int) -> str:
-    """Return a plain-English reading of the "average" row's confidence range.
+def _complexity_label(ticker: str) -> str:
+    """Return "complex" or "simple" from the fixed labels (yoda/eval/complexity.py); "unlabelled" if it has none."""
+    try:
+        return "complex" if is_complex(ticker) else "simple"
+    except KeyError:
+        return "unlabelled"
+
+
+def _complexity_split(df: pd.DataFrame, mode: str, against: str, n_boot: int = 10_000) -> pd.DataFrame:
+    """Return the average gap (*mode* − *against*) over all paired tickers, then within each complexity group.
+
+    One row per group (all, complex, simple, and unlabelled when any ticker
+    has no label), with the same columns as _paired_comparison().
+    """
+    average = _paired_gaps(df, mode, against)["average"].dropna()
+    labels = average.index.map(_complexity_label)
+    rng = np.random.default_rng(0)
+    rows = {"all": _gap_stats(average.to_numpy(dtype=float), rng, n_boot)}
+    for group in ("complex", "simple", "unlabelled"):
+        values = average[labels == group].to_numpy(dtype=float)
+        if len(values):
+            rows[group] = _gap_stats(values, rng, n_boot)
+    result = pd.DataFrame.from_dict(rows, orient="index")
+    result.index.name = "group"
+    return result
+
+
+def _verdict(comparison: pd.DataFrame, n_tickers: int, mode: str, against: str) -> str:
+    """Return a plain-English reading of the "average" row's confidence range for *mode* against *against*.
 
     Below 5 paired tickers a bootstrap range is meaningless, so it says so.
     """
@@ -841,14 +909,69 @@ def _verdict(comparison: pd.DataFrame, n_tickers: int) -> str:
         return (f"Only {n_tickers} paired ticker(s) — too few for a meaningful confidence "
                 f"range. Treat these gaps as anecdotal.")
     low, high = comparison.loc["average", ["ci_low", "ci_high"]]
+    winner, loser = _phrase(mode), _phrase(against)
     if low > 0:
-        return (f"Yoda beats the baseline overall: across {n_tickers} paired tickers "
+        return (f"{winner[0].upper() + winner[1:]} beats {loser} overall: across {n_tickers} paired tickers "
                 f"the 95% range for the average gap ({low} to {high}) is entirely above 0.")
     if high < 0:
-        return (f"The baseline beats Yoda overall: across {n_tickers} paired tickers "
+        return (f"{loser[0].upper() + loser[1:]} beats {winner} overall: across {n_tickers} paired tickers "
                 f"the 95% range for the average gap ({low} to {high}) is entirely below 0.")
     return (f"Inconclusive: across {n_tickers} paired tickers the 95% range for the "
-            f"average gap ({low} to {high}) includes 0, so this sample can't separate the modes.")
+            f"average gap ({low} to {high}) includes 0, so this sample can't separate the two.")
+
+
+def _comparison_lines(df: pd.DataFrame) -> list[str]:
+    """Return summary.md's paired comparisons: one section for each pair in COMPARISONS that some ticker has both of."""
+    lines: list[str] = []
+    for mode, against in COMPARISONS:
+        paired = _paired_count(df, mode, against)
+        if not paired:
+            continue
+        comparison = _paired_comparison(df, mode, against)
+        lines += [
+            f"## {_display(mode)} vs {_display(against)} (paired by ticker)", "",
+            f"mean_gap = average of ({_display(mode)} score − {_display(against)} score); ci_low/ci_high = "
+            f"95% bootstrap confidence range; wins/ties/losses = tickers where {_display(mode)} "
+            "scored higher/equal/lower.", "",
+            _df_to_markdown(comparison), "",
+            _verdict(comparison, paired, mode, against), "",
+        ]
+        if (mode, against) == _DECIDING:
+            lines += ["### By complexity", "",
+                      "The average gap over all paired tickers and within the complex and simple ones (labels "
+                      "fixed before any report: yoda/eval/complexity.py). With few tickers in a group, read its "
+                      "gap as a direction, not proof.", "",
+                      _df_to_markdown(_complexity_split(df, mode, against)), ""]
+    if not lines and df["mode"].nunique() > 1:
+        lines += ["No ticker has reports from both modes of any comparison, so there is no paired comparison.", ""]
+    return lines
+
+
+def _cost_lines(df: pd.DataFrame) -> list[str]:
+    """Return summary.md's cost table: per method, what its reports cost to generate and to judge, in total.
+
+    generation_paid is what was paid (a batched baseline at half price),
+    generation_full_price the same calls at full price, for comparing
+    methods on equal terms. A total leaves out reports whose cost is
+    unknown (empty when none is known), and says how many, never adding $0.
+    """
+    columns = {"cost_usd": "generation_paid", "cost_standard_usd": "generation_full_price",
+               "judge_cost_usd": "judge"}
+    present = {col: label for col, label in columns.items() if col in df}
+    if not present:
+        return []
+    totals = df.groupby("mode").agg(reports=("ticker", "size"),
+                                    **{label: (col, lambda values: values.sum(min_count=1))
+                                       for col, label in present.items()}).round(4)
+    lines = ["## Cost by method", "",
+             "Totals in USD over the scored reports. generation_full_price is the same calls at full price "
+             "(it differs from generation_paid only for a batched baseline).", "",
+             _df_to_markdown(totals), ""]
+    unknown = {label: int(df[col].isna().sum()) for col, label in present.items() if df[col].isna().any()}
+    if unknown:
+        lines += ["Totals leave out reports with no recorded cost: "
+                  + ", ".join(f"{label} {count}" for label, count in unknown.items()) + ".", ""]
+    return lines
 
 
 # ---------------------------------------------------------------------------
@@ -961,10 +1084,11 @@ def _write_summary(
     agreement: pd.DataFrame | None = None,
     whisper_line: str | None = None,
 ) -> None:
-    """Write summary.md: run details, mean scores by mode, the paired comparison, reliability checks and failures.
+    """Write summary.md: run details, mean scores and costs by mode, paired comparisons, reliability, failures.
 
-    Mean cost skips rows whose cost is unknown, and the summary says how
-    many there were, so an average is never quietly based on made-up zeros.
+    Mean and total costs skip rows whose cost is unknown, and the summary
+    says how many there were, so a cost is never quietly based on made-up
+    zeros.
     *previous_snapshots* are the judge versions the previous run used;
     *agreement* is the repeat check's table, when one was run;
     *whisper_line* is the run's shared whisper cost (see _whisper_line).
@@ -977,28 +1101,18 @@ def _write_summary(
     if df.empty:
         lines += ["No (ticker, mode) pair produced a scored report in this run.", ""]
     else:
-        ops_cols = [col for col in ("latency_seconds", "cost_usd", "judge_cost_usd") if col in df]
+        ops_cols = [col for col in ("latency_seconds", "cost_usd", "cost_standard_usd", "judge_cost_usd")
+                    if col in df]
         mode_means = df.groupby("mode")[SCORE_COLS + ops_cols].mean().round(2)
         lines += ["## Mean scores by mode", "", _df_to_markdown(mode_means), ""]
         unknown_costs = int(df["cost_usd"].isna().sum())
         if unknown_costs:
             lines += [f"cost_usd averages leave out {unknown_costs} row(s) with no recorded cost.", ""]
+        lines += _cost_lines(df)
 
-        # Paired confidence table, only when at least one ticker has BOTH modes
-        # (otherwise every statistic would be NaN).
-        paired = df.groupby("ticker")["mode"].apply(set).map({"baseline", "yoda"}.issubset).sum()
-        if paired:
-            comparison = _paired_comparison(df)
-            lines += [
-                "## Yoda vs baseline (paired by ticker)", "",
-                "mean_gap = average of (Yoda score − baseline score); ci_low/ci_high = "
-                "95% bootstrap confidence range; wins/ties/losses = tickers where Yoda "
-                "scored higher/equal/lower.", "",
-                _df_to_markdown(comparison), "",
-                _verdict(comparison, int(paired)), "",
-            ]
-        elif df["mode"].nunique() > 1:
-            lines += ["No ticker has reports from both modes, so there is no paired comparison.", ""]
+        # The paired confidence tables, one per pair of modes that some
+        # ticker has both of (otherwise every statistic would be NaN).
+        lines += _comparison_lines(df)
 
         # Per-ticker mean if more than one ticker was evaluated.
         if df["ticker"].nunique() > 1:
@@ -1020,33 +1134,27 @@ def _write_summary(
 
 
 # ---------------------------------------------------------------------------
-# Comparison chart — grouped bar chart, baseline vs Yoda across the nine dimensions
+# Comparison chart — grouped bar chart, one bar per method in each of the nine dimensions
 # ---------------------------------------------------------------------------
-
-# Display-name mapping for the chart legend / title. Keep the underlying
-# mode keys intact in the DataFrame / CSV / summary.md — only the chart
-# rebrands the modes for slide presentation.
-_MODE_DISPLAY = {
-    "baseline": "Baseline",
-    "yoda":     "Yoda",
-}
-
 
 def _paired_means(df: pd.DataFrame) -> pd.DataFrame:
     """Return each mode's mean score per dimension, as the chart shows them (index mode, columns SCORE_COLS).
 
-    When both modes are present, each dimension is averaged only over the
-    tickers where both modes have a score for it, so an N/A on one side
-    never makes the other side's average look different; a dimension with
-    no such pair is empty. With a single mode, that mode's plain means.
+    With two or more modes, each dimension is averaged only over the
+    tickers where every mode has a score for it, so an N/A on one side
+    never makes another side's average look different; a dimension with no
+    such ticker is empty. With a single mode, that mode's plain means. Modes
+    are in _MODE_DISPLAY's order.
     """
-    if not {"baseline", "yoda"}.issubset(set(df["mode"])):
+    present = set(df["mode"])
+    modes = [mode for mode in _MODE_DISPLAY if mode in present] + sorted(present - set(_MODE_DISPLAY))
+    if len(modes) < 2:
         return df.groupby("mode")[SCORE_COLS].mean()
     means = {}
     for col in SCORE_COLS:
-        wide = df.pivot(index="ticker", columns="mode", values=col)[["baseline", "yoda"]].dropna()
-        means[col] = wide.mean() if not wide.empty else pd.Series({"baseline": np.nan, "yoda": np.nan})
-    return pd.DataFrame(means)
+        wide = df.pivot(index="ticker", columns="mode", values=col)[modes].dropna()
+        means[col] = wide.mean() if not wide.empty else pd.Series(np.nan, index=modes)
+    return pd.DataFrame(means).loc[modes]
 
 
 def _write_chart(df: pd.DataFrame, path: pathlib.Path, run_line: str) -> None:
@@ -1075,15 +1183,15 @@ def _write_chart(df: pd.DataFrame, path: pathlib.Path, run_line: str) -> None:
     for position, mode in enumerate(mode_means.index):
         offset = (position - (n_modes - 1) / 2) * width
         values = mode_means.loc[mode]
-        bars = ax.bar(x + offset, values.fillna(0), width, label=_MODE_DISPLAY.get(mode, mode))
-        ax.bar_label(bars, labels=["" if pd.isna(v) else f"{v:.2f}" for v in values], padding=3, fontsize=8)
+        bars = ax.bar(x + offset, values.fillna(0), width, label=_display(mode))
+        ax.bar_label(bars, labels=["" if pd.isna(v) else f"{v:.2f}" for v in values], padding=3, fontsize=7)
     for position, col in enumerate(SCORE_COLS):
         if mode_means[col].isna().all():
             ax.text(position, 0.15, "no pairs", ha="center", fontsize=7, color="dimgray")
 
     # Labels, title, run-date subtitle, axis limits, and grid.
     ax.set_ylabel("Mean Score (1-5)")
-    fig.suptitle("Baseline vs Yoda — Mean Rubric Scores", fontsize=12)
+    fig.suptitle("Mean Rubric Scores by Method", fontsize=12)
     ax.set_title(run_line, fontsize=7, color="dimgray", wrap=True)
     ax.set_xticks(x)
     ax.set_xticklabels([m.replace("_", "\n") for m in SCORE_COLS], fontsize=7)

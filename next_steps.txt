@@ -121,7 +121,11 @@ WHEN labels (relative to the architecture comparison, item 4; set
      after the writer's read); no cross-arm sharing;
      prove it with yoda/prompt_cache.cache_misses(). The baseline has no
      breakpoint: it makes one call, so nothing would read the cache.
-   d. Run harness (BEFORE SMOKE).
+   d. Run harness (BEFORE SMOKE). DONE (2026-10-31): the parts below,
+      plus a summary and chart for the three arms: a paired table for
+      each pair of methods, the lead analyst vs staged pipeline gap
+      also by complexity group, and a cost table per method (paid, full
+      price, judge). The runner's default modes are the three arms.
       - Reports first, judge second: generate every arm's reports, then
         estimate the judge cost from the saved evidence (the runner
         already estimates each prompt's tokens) and judge only after
@@ -176,7 +180,7 @@ WHEN labels (relative to the architecture comparison, item 4; set
       - After it: item 13 (remove XOM's saved predecessor link).
 
    Order of the remaining BEFORE SMOKE work (one item at a time; steps
-   1-9 are done):
+   1-10 are done):
     8. Staged pipeline. DONE (2026-10-30): yoda/report/claim_check.py
        (Haiku check, Sonnet second opinion, repair helpers),
        yoda/modes/pipeline.py (runner mode "pipeline"; generate_report()
@@ -192,7 +196,9 @@ WHEN labels (relative to the architecture comparison, item 4; set
        are not needed before the smoke run. Not yet run against the real
        models: a paid one-ticker check (python -m yoda.modes.lead NVDA,
        ~$3.30) needs an explicit yes.
-   10. Item 4d: run harness, including the judge logging for 1b.
+   10. Item 4d: run harness, including the judge logging for 1b. DONE
+       (2026-10-31). Run it as: python -m yoda.eval.runner TICKERS, then
+       python -m yoda.eval.runner --rescore data/eval --judge-budget USD.
    11. Credit check (4e), then the smoke run.
 
 
