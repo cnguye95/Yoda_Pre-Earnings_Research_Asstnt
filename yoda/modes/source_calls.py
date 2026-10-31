@@ -39,7 +39,8 @@ from yoda.evidence_store import add_article, add_news, add_peer, passages_by_id,
 from yoda.evidence_text import CONFLICT_RULES, NEWER_CONTRADICTION_RULE
 from yoda.modes import tools
 from yoda.modes.llm import (
-    NoStructuredOutput, Usage, add_usage, call_usage, client, failed_usage, log_usage, submit_call, usage_counts,
+    MAX_RESUBMITS, NoStructuredOutput, Usage, add_usage, call_usage, client, failed_usage, log_usage, schema_problem,
+    submit_call, usage_counts,
 )
 from yoda.report.claim_check import Repairs, apply_repairs, check_claims, claim_items, remove_claims, render_claim
 from yoda.schema import EarningsReport, EvidenceStore
@@ -242,22 +243,6 @@ def run_tool(ctx: tools.ToolContext, store: EvidenceStore, lock: threading.Lock,
         by_id = passages_by_id(store)
         text = render_passages([by_id[passage_id] for passage_id in dict.fromkeys(ids)])
     return text or f"No results. Try a different query or tool, or call {submit_tool}."
-
-
-# How many times a loop's model may resubmit an answer that broke its
-# schema, after being told what was wrong.
-MAX_RESUBMITS = 1
-
-
-def schema_problem(exc: pydantic.ValidationError) -> str:
-    """Return the first problem in a validation error, for a reader, e.g. "claims: Input should be a valid list".
-
-    Pydantic's full message repeats the input it rejected and adds a web
-    link; a report's data gaps need only which field was wrong and how.
-    """
-    problem = exc.errors()[0]
-    where = ".".join(str(part) for part in problem["loc"])
-    return f"{where}: {problem['msg']}" if where else problem["msg"]
 
 
 def failure_reason(exc: Exception) -> str:

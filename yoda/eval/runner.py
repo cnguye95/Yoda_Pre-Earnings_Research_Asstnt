@@ -15,7 +15,8 @@ Outputs written to disk (data/eval/ unless another folder is passed):
                     had (yoda/evidence_store.py), which the judge reads
   {mode}_{ticker}.log           — what the mode printed while writing it
                     (per-stage tokens and cost, failures, claim-check
-                    repairs); not for batched baselines, which print nothing
+                    repairs), also kept for a run that failed partway;
+                    not for batched baselines, which print nothing
   generation.csv  — step 1: each report's cost and time, the ticker's
                     whisper cost, and the error for any that failed
   judge_estimate.md — steps 1 and 2: each judge call's estimated cost
@@ -133,6 +134,9 @@ JUDGE_OUTPUT_TOKENS_ESTIMATE = 16_000
 
 _RE_WALL_TIME = re.compile(r"Wall time:\s+([\d.]+)s")
 _RE_COST      = re.compile(r"Total cost:\s+\$([\d.]+)")
+# One stage's usage line (llm.log_usage), e.g. "[pipeline] Writer: 1 call, ..., $0.23662".
+# A mode that fails prints no "Total cost:", so its spend is these lines summed.
+_RE_STAGE_COST = re.compile(r"^\[[^\]]+\] [^\n]*: \d+ calls?, [^\n]*, \$([\d.]+)$", re.MULTILINE)
 
 
 # ---------------------------------------------------------------------------
@@ -150,15 +154,27 @@ class ModeRun(NamedTuple):
     evidence: EvidenceStore
 
 
+class ModeFailed(Exception):
+    """A mode that raised partway (*cause*, kept as __cause__), with *log*: what it had printed by then."""
+
+    def __init__(self, cause: Exception, log: str):
+        super().__init__(f"{type(cause).__name__}: {cause}")
+        self.log = log
+
+
 def _capture(fn: Callable[..., tuple[EarningsReport, EvidenceStore]], *args) -> ModeRun:
     """Run fn(*args) with its printed output captured, and read cost and time from that log.
 
-    *fn* returns (report, evidence store).
+    *fn* returns (report, evidence store). Raises ModeFailed when *fn*
+    raises, so the log of a failed run (and what it spent) isn't lost.
     """
     buf = io.StringIO()
     started = time.perf_counter()
     with contextlib.redirect_stdout(buf):
-        report, evidence = fn(*args)
+        try:
+            report, evidence = fn(*args)
+        except Exception as exc:
+            raise ModeFailed(exc, buf.getvalue()) from exc
     elapsed = time.perf_counter() - started
     log = buf.getvalue()
 
@@ -523,13 +539,21 @@ def run_eval(
                 continue
             # Each (ticker, mode) is isolated on purpose: whatever one report
             # hits, the rest of a 20-ticker run still completes. The error is
-            # kept in generation.csv and shown in the judged summary.
+            # kept in generation.csv and shown in the judged summary. A run
+            # that failed partway keeps its log, and the error says what its
+            # logged stages spent; cost_usd stays empty, because that sum
+            # misses any call that failed without logging its usage.
             print(f"  running mode={mode}...")
             try:
                 run = _run_mode(mode, ticker, sources)
             except Exception as exc:
+                error = f"{type(exc).__name__}: {exc}"
+                if isinstance(exc, ModeFailed):
+                    (out_dir / f"{mode}_{ticker}.log").write_text(exc.log, encoding="utf-8")
+                    spent = sum(float(cost) for cost in _RE_STAGE_COST.findall(exc.log))
+                    error = f"spent ${spent:.5f} before failing (summed from its log): {exc}"
                 rows.append({"ticker": ticker, "mode": mode, "whisper_cost_usd": whisper[ticker],
-                             "error": f"{type(exc).__name__}: {exc}"})
+                             "error": error})
                 print(f"  ERROR in mode={mode}: {exc}")
                 _save_generation(out_dir, rows)
                 continue

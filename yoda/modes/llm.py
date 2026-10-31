@@ -8,6 +8,7 @@ so every mode handles a missing answer, and counts the tokens it paid for
 
 from typing import Literal, NamedTuple, TypeVar
 
+import pydantic
 from anthropic import Anthropic
 from pydantic import BaseModel
 
@@ -56,6 +57,36 @@ class NoStructuredOutput(RuntimeError):
         self.output_tokens = output_tokens
         self.cache_write_tokens = cache_write_tokens
         self.cache_read_tokens = cache_read_tokens
+
+
+class BrokenStructuredOutput(NoStructuredOutput):
+    """Claude's answer broke the requested schema again after being told what was wrong.
+
+    A NoStructuredOutput, so every caller that already handles a missing
+    answer (and counts its tokens) handles this one too. It carries the
+    tokens of every attempt, each of which was paid for.
+    """
+
+    def __init__(self, model: str, problem: str, input_tokens: int, output_tokens: int,
+                 cache_write_tokens: int = 0, cache_read_tokens: int = 0):
+        super().__init__(model, None, input_tokens, output_tokens, cache_write_tokens, cache_read_tokens)
+        self.args = (f"{model}'s answer broke the schema twice ({problem})",)
+
+
+# How many times a model may resubmit an answer that broke its schema,
+# after being told what was wrong (submit_call and source_calls.tool_loop).
+MAX_RESUBMITS = 1
+
+
+def schema_problem(exc: pydantic.ValidationError) -> str:
+    """Return the first problem in a validation error, for a reader, e.g. "claims: Input should be a valid list".
+
+    Pydantic's full message repeats the input it rejected and adds a web
+    link; a report's data gaps need only which field was wrong and how.
+    """
+    problem = exc.errors()[0]
+    where = ".".join(str(part) for part in problem["loc"])
+    return f"{where}: {problem['msg']}" if where else problem["msg"]
 
 
 def usage_counts(usage) -> tuple[int, int, int, int]:
@@ -112,18 +143,44 @@ def submit_call(model: str, max_tokens: int, submit_tool: str, output_format: ty
     matches on, so calls with different formats can't share it, while
     calls offering the same tools can (each is told which tool to call).
     *kwargs* (system, messages, tools, output_config, ...) go straight to
-    the API. Streams like structured_call(). Raises NoStructuredOutput if
+    the API. Streams like structured_call().
+
+    The submit tools aren't schema-enforced by the API, so an answer can
+    break *output_format* (e.g. a whole report nested under a "report"
+    key). Such an answer is sent back MAX_RESUBMITS time(s) with what was
+    wrong, as source_calls.tool_loop() does. The returned tokens add up
+    every attempt, since each was paid for. Raises NoStructuredOutput if
     Claude stopped without calling *submit_tool*, and
-    pydantic.ValidationError if the tool's input breaks the model's rules.
+    BrokenStructuredOutput if the resubmitted answer breaks the schema too;
+    both carry every attempt's tokens.
     """
-    with client.messages.stream(model=model, max_tokens=max_tokens, **kwargs) as stream:
-        resp = stream.get_final_message()
-    calls = [block for block in resp.content if block.type == "tool_use" and block.name == submit_tool]
-    if not calls:
-        raise NoStructuredOutput(model, resp.stop_reason, resp.usage.input_tokens, resp.usage.output_tokens,
-                                 *_cache_tokens(resp.usage))
-    return StructuredReply(output_format.model_validate(calls[0].input), resp.usage.input_tokens,
-                           resp.usage.output_tokens, *_cache_tokens(resp.usage))
+    messages = list(kwargs.pop("messages"))
+    tokens = (0, 0, 0, 0)
+    for attempt in range(MAX_RESUBMITS + 1):
+        with client.messages.stream(model=model, max_tokens=max_tokens, messages=messages, **kwargs) as stream:
+            resp = stream.get_final_message()
+        tokens = tuple(total + new for total, new in zip(tokens, usage_counts(resp.usage)))
+        uses = [block for block in resp.content if block.type == "tool_use"]
+        submitted = next((use for use in uses if use.name == submit_tool), None)
+        if submitted is None:
+            raise NoStructuredOutput(model, resp.stop_reason, *tokens)
+        try:
+            return StructuredReply(output_format.model_validate(submitted.input), *tokens)
+        except pydantic.ValidationError as exc:
+            problem = schema_problem(exc)
+            if attempt == MAX_RESUBMITS:
+                raise BrokenStructuredOutput(model, problem, *tokens) from exc
+
+        # Send the broken answer back with what was wrong. Any other tool
+        # the model called in that turn gets a result too, as the API requires.
+        print(f"  [{submit_tool}] answer broke the schema ({problem}); asked to resubmit")
+        messages += [{"role": "assistant", "content": resp.content}, {"role": "user", "content": [
+            {"type": "tool_result", "tool_use_id": submitted.id, "is_error": True,
+             "content": f"Your {submit_tool} input broke the schema: {problem}. Call {submit_tool} again "
+                        "with valid input."}
+            if use is submitted else
+            {"type": "tool_result", "tool_use_id": use.id, "content": f"Not run: fix your {submit_tool} call first."}
+            for use in uses]}]
 
 
 def warm_cache(**request) -> tuple[int, int, int, int]:

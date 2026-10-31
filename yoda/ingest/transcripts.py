@@ -17,6 +17,7 @@ key, network trouble) comes back as None with the reason, never an error:
 the report lists it as a data gap and carries on.
 """
 
+import time
 from typing import NamedTuple
 
 import pydantic
@@ -31,6 +32,11 @@ _AV_URL = "https://www.alphavantage.co/query"
 
 # Where found transcripts are kept: data/transcripts/{TICKER}/{YYYY}Q{n}.json.
 _CACHE_DIR = config.DATA_DIR / "transcripts"
+
+# Alpha Vantage's free key also allows only 1 request per second, and refuses
+# a second request sent straight after the first. The wait starts once the
+# first reply is back, so network delays can only lengthen the gap.
+_SECONDS_BETWEEN_REQUESTS = 1.1
 
 
 class TranscriptFetch(NamedTuple):
@@ -176,8 +182,11 @@ def find_last_call(ticker: str, consensus: dict | None) -> TranscriptFetch:
     if latest.transcript is not None or latest.refused:
         return latest
 
-    # Not there yet: the quarter before it.
+    # Not there yet: the quarter before it, after the wait Alpha Vantage
+    # needs between two requests (the first one just went out: a cached
+    # transcript would have been found).
     earlier_quarter, earlier_year = last_reported_quarter(quarter, year)
+    time.sleep(_SECONDS_BETWEEN_REQUESTS)
     earlier = fetch_transcript(ticker, earlier_quarter, earlier_year)
     if earlier.transcript is not None:
         return TranscriptFetch(earlier.transcript, f"the Q{quarter} FY{year} call isn't available yet "

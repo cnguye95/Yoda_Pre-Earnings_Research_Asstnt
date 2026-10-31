@@ -52,7 +52,7 @@ from yoda.dates import dates_line
 from yoda.evidence_store import MODE_KINDS, SOURCE_CHARS_LIMIT, render_passages, render_sources
 from yoda.ingest.edgar import fetch_filings
 from yoda.modes import tools
-from yoda.modes.llm import Usage, call_usage, failed_usage, log_usage, submit_call, warm_cache
+from yoda.modes.llm import NoStructuredOutput, Usage, call_usage, failed_usage, log_usage, submit_call, warm_cache
 from yoda.modes.source_calls import (
     CACHE_TTL, CITATION_RULES, REPORT_MAX_TOKENS, SOURCE_MODEL, STAGE_ERRORS, SUBMIT_DESCRIPTIONS, WRITING_RULES,
     check_and_repair, check_fits, company_context, failure_reason, source_request, submit_tools, tool_loop,
@@ -304,7 +304,13 @@ def run_pipeline(ticker: str, sources: SharedSources, on_notice: Callable[[str],
                              f"{dates}\n\n{notes_text}\n\n=== Passages the researchers found ===\n{found_text}\n\n"
                              "Write the report.", REPORT_MAX_TOKENS)
     check_fits(request)
-    reply = submit_call(submit_tool="submit_report", output_format=ReportDraft, **request)
+    # A writer with no valid report ends the run, but its spend is logged
+    # first, so the eval runner can still count what the run cost.
+    try:
+        reply = submit_call(submit_tool="submit_report", output_format=ReportDraft, **request)
+    except NoStructuredOutput as exc:
+        log_usage("pipeline", "Writer (failed)", SOURCE_MODEL, failed_usage(SOURCE_MODEL, exc, CACHE_TTL))
+        raise
     writer = call_usage(SOURCE_MODEL, tuple(reply[1:]), CACHE_TTL)
     log_usage("pipeline", "Writer", SOURCE_MODEL, writer)
     cost += writer.cost_usd

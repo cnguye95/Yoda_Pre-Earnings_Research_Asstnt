@@ -14,7 +14,7 @@ import pytest
 from pydantic import BaseModel
 
 from samples import sample_store
-from yoda.modes import source_calls, tools
+from yoda.modes import llm, source_calls, tools
 
 
 def _reply(*blocks) -> SimpleNamespace:
@@ -34,8 +34,8 @@ class _Answer(BaseModel):
     answer: str
 
 
-def _fake_client(monkeypatch, replies: list) -> list[dict]:
-    """Make source_calls' client stream *replies* in order; return the list each request is recorded in."""
+def _fake_client(monkeypatch, replies: list, module=source_calls) -> list[dict]:
+    """Make *module*'s client stream *replies* in order; return the list each request is recorded in."""
     sent: list[dict] = []
     queue = iter(replies)
 
@@ -43,7 +43,7 @@ def _fake_client(monkeypatch, replies: list) -> list[dict]:
         sent.append({**request, "messages": list(request["messages"])})
         reply = next(queue)
         return nullcontext(SimpleNamespace(get_final_message=lambda: reply))
-    monkeypatch.setattr(source_calls, "client", SimpleNamespace(messages=SimpleNamespace(stream=stream)))
+    monkeypatch.setattr(module, "client", SimpleNamespace(messages=SimpleNamespace(stream=stream)))
     return sent
 
 
@@ -198,3 +198,42 @@ def test_a_broken_submit_made_with_another_call_gets_results_for_both(monkeypatc
     answers = sent[1]["messages"][-1]["content"]
     assert [(a["tool_use_id"], a.get("is_error", False)) for a in answers] == [("t1", False), ("t2", True)]
     assert answers[0]["content"] == "Not run: fix your submit_findings call first."
+
+
+def _submit(monkeypatch, replies: list):
+    """Make one llm.submit_call for an _Answer against *replies*; return (its result or error, requests sent)."""
+    sent = _fake_client(monkeypatch, replies, module=llm)
+    try:
+        result = llm.submit_call(model="claude-sonnet-5-5", max_tokens=1000, submit_tool="submit_report",
+                                 output_format=_Answer, system="Answer.", tools=[],
+                                 messages=[{"role": "user", "content": "Go."}])
+    except llm.NoStructuredOutput as exc:
+        result = exc
+    return result, sent
+
+
+def test_a_single_call_answer_that_breaks_its_schema_is_sent_back_once(monkeypatch):
+    # Bug (smoke run, DIS, 2026-10-31): the staged pipeline's writer nested
+    # its report under a "report" key, and the run failed on the first
+    # broken answer. Both attempts were paid for, so both are counted.
+    reply, sent = _submit(monkeypatch, [
+        _reply(_tool_use("submit_report", {"report": {"answer": "Revenue rose."}}, "t1")),
+        _reply(_tool_use("submit_report", {"answer": "Revenue rose."}, "t2")),
+    ])
+    assert reply.parsed == _Answer(answer="Revenue rose.")
+    assert (reply.input_tokens, reply.output_tokens) == (200, 200)
+    error = sent[1]["messages"][-1]["content"][0]
+    assert error == {"type": "tool_result", "tool_use_id": "t1", "is_error": True,
+                     "content": "Your submit_report input broke the schema: answer: Field required. "
+                                "Call submit_report again with valid input."}
+
+
+def test_a_single_call_answer_broken_twice_raises_and_keeps_every_attempts_tokens(monkeypatch):
+    # Bug (smoke run, NVDA, 2026-10-31): a broken extractor answer was
+    # logged as "0 calls, $0" although the call was paid for.
+    broken = _reply(_tool_use("submit_report", {"answer": ["not text"]}, "t1"))
+    error, sent = _submit(monkeypatch, [broken, broken, broken])
+    assert isinstance(error, llm.BrokenStructuredOutput) and len(sent) == 2
+    assert str(error) == "claude-sonnet-5-5's answer broke the schema twice (answer: Input should be a valid string)"
+    paid = llm.failed_usage("claude-sonnet-5-5", error)
+    assert (paid.input_tokens, paid.output_tokens) == (200, 200) and paid.cost_usd > 0

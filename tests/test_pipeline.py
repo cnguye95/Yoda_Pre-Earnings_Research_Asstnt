@@ -218,6 +218,15 @@ def test_a_failed_stage_is_a_gap_and_the_report_is_still_written(monkeypatch):
     assert run.report.setup_summary
 
 
+def test_a_failed_writer_logs_what_it_spent_before_the_run_fails(monkeypatch, capsys):
+    # The eval runner sums a failed run's usage lines, so the writer's
+    # paid-for attempt must be logged before its error ends the run.
+    _Fakes(monkeypatch, fail_stage=pipeline._WRITER)
+    with pytest.raises(llm.NoStructuredOutput):
+        pipeline.run_pipeline("TEST", _sources())
+    assert "[pipeline] Writer (failed): 1 call, claude-sonnet-5-5, 5 in / 5 out" in capsys.readouterr().out
+
+
 def test_no_8k_and_no_call_skips_the_post_filing_extractor(monkeypatch):
     fakes = _Fakes(monkeypatch)
     run = pipeline.run_pipeline("TEST", _sources(eight_ks=[], call=TranscriptFetch(None, "none found")))

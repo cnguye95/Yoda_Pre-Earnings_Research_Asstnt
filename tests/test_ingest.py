@@ -727,12 +727,27 @@ def test_latest_call_falls_back_one_quarter_and_says_so(monkeypatch):
     q2_reply = dict(_CALL_REPLY, quarter="2026Q2")
     fake = _AlphaVantage({"symbol": "BA", "quarter": "2026Q3", "transcript": []}, q2_reply)
     monkeypatch.setattr(transcripts, "session", fake)
+    monkeypatch.setattr(transcripts.time, "sleep", lambda seconds: None)
 
     found = transcripts.find_last_call("BA", {"fiscal_quarter": 4, "fiscal_year": 2026})
 
     assert [call["quarter"] for call in fake.calls] == ["2026Q3", "2026Q2"]
     assert (found.transcript.fiscal_quarter, found.transcript.fiscal_year) == (2, 2026)
     assert "the Q3 FY2026 call isn't available yet" in found.reason
+
+
+def test_the_fallback_request_waits_for_alpha_vantages_per_second_limit(monkeypatch):
+    # The smoke run lost XOM's and HD's calls: the fallback request went out
+    # straight after the first and was refused ("1 request per second").
+    fake = _AlphaVantage({"symbol": "BA", "quarter": "2026Q3", "transcript": []},
+                         dict(_CALL_REPLY, quarter="2026Q2"))
+    monkeypatch.setattr(transcripts, "session", fake)
+    monkeypatch.setattr(transcripts.time, "sleep", lambda seconds: fake.calls.append(f"wait {seconds}s"))
+
+    transcripts.find_last_call("BA", {"fiscal_quarter": 4, "fiscal_year": 2026})
+
+    assert [call if isinstance(call, str) else call["quarter"] for call in fake.calls] == \
+        ["2026Q3", "wait 1.1s", "2026Q2"]
 
 
 def test_refusal_is_not_retried_and_unknown_quarter_is_not_looked_up(monkeypatch):

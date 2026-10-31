@@ -852,3 +852,23 @@ def test_app_caption_names_the_earnings_call():
     app = _app(report=_report(earnings_call="Q3 FY2026 earnings call (2026-10-27)"), pdf_bytes=b"%PDF",
                pdf_ticker="TEST")
     assert any("Earnings call: Q3 FY2026 (2026-10-27)" in caption.value for caption in app.caption)
+
+
+def test_a_mode_that_fails_partway_keeps_its_log_and_says_what_it_spent(monkeypatch, tmp_path):
+    # Bug (smoke run, DIS, 2026-10-31): a failed staged pipeline run lost
+    # its log and recorded no spend, though its calls had been paid for.
+    def failing_pipeline(ticker, sources):
+        print("[pipeline] Cache warm-up: 1 call, claude-sonnet-5-5, 80 in / 0 out / 9 cache write / "
+              "0 cache read, $0.90000")
+        print("[pipeline] Writer (failed): 2 calls, claude-sonnet-5-5, 9 in / 9 out / 0 cache write / "
+              "9 cache read, $0.60000")
+        raise RuntimeError("the writer's answer broke the schema twice")
+    _stub_runner(monkeypatch, lambda mode, ticker, sources: runner._capture(failing_pipeline, ticker, sources))
+
+    runner.run_eval(["AAA"], modes=("pipeline",), out_dir=tmp_path)
+
+    row = pd.read_csv(tmp_path / "generation.csv").iloc[0]
+    assert pd.isna(row["cost_usd"])   # a partial sum is never shown as the run's cost
+    assert row["error"] == ("spent $1.50000 before failing (summed from its log): "
+                            "RuntimeError: the writer's answer broke the schema twice")
+    assert "Writer (failed)" in (tmp_path / "pipeline_AAA.log").read_text(encoding="utf-8")
