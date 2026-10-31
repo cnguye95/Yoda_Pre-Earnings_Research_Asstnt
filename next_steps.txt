@@ -82,7 +82,10 @@ WHEN labels (relative to the architecture comparison, item 4; set
      one repair pass.
    - Lead analyst method: a lead picks 4-6 company-specific questions and
      briefs one worker per question; the lead reviews the findings, fills
-     gaps once and writes; the same claim check follows.
+     gaps once and writes; the same claim check follows. Decided
+     2026-10-31: workers read the full shared sources from the one cache
+     (no passage search); a follow-up goes back to the same worker; each
+     worker may make 4 tool calls, 2 more on a follow-up.
    - Models (decided 2026-10-30): writer Sonnet 5.5 (also the lead in the
      lead analyst method); staged pipeline researchers Haiku 5.5; lead
      analyst workers Sonnet 5.5; claim check Haiku 5.5, with a Sonnet 5.5
@@ -140,42 +143,40 @@ WHEN labels (relative to the architecture comparison, item 4; set
         20-ticker mean, so smoke costs scale ~4x to the full run.
       - REMINDER: before starting, check there is enough API credit on
         both accounts. Estimate (offline cost model rerun 2026-10-30 with
-        measured source sizes, all cost methods): ~$20.40 in total —
-        Anthropic ~$18.30 (baseline ~$1.57 batched, staged pipeline
-        ~$6.29, lead analyst ~$10.41, or ~$10.95 if its workers read the
-        full text), OpenAI
-        judge ~$2.10 — plus up to ~$0.75 of whisper lookups.
+        measured source sizes, all cost methods; updated 2026-10-31):
+        ~$27.60 in total — Anthropic ~$25.50 (baseline ~$1.57 batched,
+        staged pipeline ~$7.45 from its measured NVDA run, lead analyst
+        ~$16.50 estimated from its design), OpenAI judge ~$2.10 — plus up
+        to ~$0.75 of whisper lookups. The NVDA-based figure is rough: NVDA's
+        sources may be smaller than the smoke mean.
       - Measures the real cost per arm and the judge's cache-hit rate;
         those numbers replace the estimates for the full run.
    f. Full run: 3 arms x 20 tickers, with the judge (NOT RUN YET; needs an
       explicit yes).
       - REMINDER: before starting, check there is enough API credit on
         both accounts, using the smoke run's measured costs. Estimate
-        (same model): ~$80.90 — Anthropic ~$73.10 (baseline ~$6.28
-        batched, staged pipeline ~$25.17, lead analyst ~$41.65-43.78),
-        OpenAI judge ~$7.77.
+        (same basis, updated 2026-10-31): ~$110 — Anthropic ~$102
+        (baseline ~$6.28 batched, staged pipeline ~$30, lead analyst
+        ~$66), OpenAI judge ~$7.77.
       - After it: item 13 (remove XOM's saved predecessor link).
 
    Order of the remaining BEFORE SMOKE work (one item at a time; steps
-   1-8 are done):
+   1-9 are done):
     8. Staged pipeline. DONE (2026-10-30): yoda/report/claim_check.py
        (Haiku check, Sonnet second opinion, repair helpers),
        yoda/modes/pipeline.py (runner mode "pipeline"; generate_report()
        for the app), and the app's report generation, market-data pause,
        whisper setting and live notices.
-       Not yet run against the real models: a paid one-ticker check
-       (python -m yoda.modes.pipeline TICKER, ~$1.55) needs an explicit yes.
-       Smoke estimate for the staged pipeline is now ~$7.75 (1-hour cache
-       write).
-    9. Lead analyst method design; item 9 R5 if its workers search
-       passages, then R4/R6 if R5 shows weak recall; then build the lead
-       analyst method. Cost doesn't decide whether workers read the full
-       source (with caching it costs about the same as passage search), so
-       choose on quality; full text makes R5/R4/R6 unnecessary for the
-       lead analyst method. Note: tools.retrieve_filing and the
-       vector store still return chunker windows without passage IDs; an
-       arm that retrieves must return store passages, the unit every
-       citation is checked against.
+       First paid run (2026-10-30): NVDA, $1.49 and 391 s; its fixes
+       (non-strict submit tools, warm-up first, a failed debate side
+       dropped alone) are in.
+    9. Lead analyst method. DONE (2026-10-31): yoda/modes/lead.py
+       (runner mode "lead"), with what both methods share moved to
+       yoda/modes/source_calls.py (the staged pipeline's prompts pinned
+       unchanged by a test). Workers read the full sources, so R5/R4/R6
+       are not needed before the smoke run. Not yet run against the real
+       models: a paid one-ticker check (python -m yoda.modes.lead NVDA,
+       ~$3.30) needs an explicit yes.
    10. Item 4d: run harness, including the judge logging for 1b.
    11. Credit check (4e), then the smoke run.
 
@@ -237,11 +238,12 @@ WHEN labels (relative to the architecture comparison, item 4; set
      WFC-specific rules, then fresh hold-outs to check they generalise.
      Minor: SU's MD&A after its risk factors is labelled Other; USB's
      EX-13 "Company Information" is not recognised.
-   WHEN for the rest: R5 CONDITIONAL, BEFORE SMOKE if the lead analyst
-   method's workers search passages (decided when that method is
-   designed); otherwise it covers only peer lookups. R4/R6 CONDITIONAL,
-   BEFORE SMOKE only if R5 shows weak recall (they change what the lead
-   analyst method reads); otherwise not needed.
+   WHEN for the rest: AFTER, and only if wanted. The lead analyst
+   method's workers read the full sources (decided 2026-10-31), so R5
+   would cover only peer lookups, and R4/R6 only if R5 shows weak
+   recall. Note: tools.retrieve_filing and the vector store still return
+   chunker windows without passage IDs; an arm that retrieves must return
+   store passages, the unit every citation is checked against.
    R4. Improve chunks, not by semantic chunking (today's chunker already
        splits at paragraph breaks):
        a. Prefix each chunk's embedded text with where it came from

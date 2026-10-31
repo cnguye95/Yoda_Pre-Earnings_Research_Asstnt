@@ -54,8 +54,8 @@ from yoda.ingest.edgar import fetch_filings
 from yoda.modes import tools
 from yoda.modes.llm import Usage, call_usage, failed_usage, log_usage, submit_call, warm_cache
 from yoda.modes.source_calls import (
-    CACHE_TTL, CITATION_RULES, REPORT_MAX_TOKENS, SOURCE_MODEL, STAGE_ERRORS, WRITING_RULES, check_and_repair,
-    check_fits, company_context, source_request, submit_tools, tool_loop,
+    CACHE_TTL, CITATION_RULES, REPORT_MAX_TOKENS, SOURCE_MODEL, STAGE_ERRORS, SUBMIT_DESCRIPTIONS, WRITING_RULES,
+    check_and_repair, check_fits, company_context, source_request, submit_tools, tool_loop,
 )
 from yoda.report.checks import check_report
 from yoda.report.claim_check import Repairs
@@ -111,8 +111,7 @@ _SUBMIT_MODELS: dict[str, type[BaseModel]] = {"submit_notes": Notes, "submit_rep
                                                "submit_report": ReportDraft}
 _SUBMIT_DESCRIPTIONS = {
     "submit_notes": "Submit your notes. Call it once, with every note, when your instructions ask for notes.",
-    "submit_repairs": "Submit one repair per unsupported claim. Call it once, when your instructions ask for repairs.",
-    "submit_report": "Submit the finished report. Call it once, when your instructions ask for the report.",
+    **SUBMIT_DESCRIPTIONS,
 }
 SOURCE_TOOLS = submit_tools(_SUBMIT_MODELS, _SUBMIT_DESCRIPTIONS)
 

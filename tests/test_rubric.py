@@ -16,7 +16,7 @@ from samples import RECENT, claim, sample_report, sample_store
 from yoda.eval import evidence, judge, rubric, runner
 from yoda.eval.rubric import DIMENSIONS, NO_QUOTE, DimensionScore, JudgeQuote, JudgeScores
 from yoda.evidence_text import CONFLICT_RULES
-from yoda.modes import pipeline
+from yoda.modes import lead, pipeline
 from yoda.schema import EvidenceStore, Filing, FilingSet, Passage
 
 
@@ -313,6 +313,15 @@ def test_runner_runs_pipeline_and_reads_its_cost_and_time(monkeypatch):
     monkeypatch.setattr(runner, "run_pipeline", fake_pipeline)
     run = runner._run_mode("pipeline", "TEST", _Q_ONLY)
     assert (run.cost_usd, run.latency_seconds, run.latency_source) == (1.23456, 12.5, "logged")
+
+
+def test_runner_runs_the_lead_analyst_method_and_reads_its_cost_and_time(monkeypatch):
+    def fake_lead(ticker, sources):
+        print("[lead] Wall time:  30.00s\n[lead] Total cost: $3.21000")
+        return lead.LeadRun(sample_report(), sample_store())
+    monkeypatch.setattr(runner, "run_lead", fake_lead)
+    run = runner._run_mode("lead", "TEST", _Q_ONLY)
+    assert (run.cost_usd, run.latency_seconds, run.latency_source) == (3.21, 30.0, "logged")
 
 
 # ---------------------------------------------------------------------------

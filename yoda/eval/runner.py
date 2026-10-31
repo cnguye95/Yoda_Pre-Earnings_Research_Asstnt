@@ -1,7 +1,7 @@
 """Evaluation runner.
 
-run_eval() runs the modes (the baseline and the staged pipeline; the lead
-analyst method is added next) against a list of tickers, judges each report against the evidence it was written from with
+run_eval() runs the modes (the baseline, the staged pipeline and the lead
+analyst method) against a list of tickers, judges each report against the evidence it was written from with
 judge_report() (see yoda/eval/evidence.py), and returns a long-format
 DataFrame with per-row scores, latency, and cost. rescore() judges reports
 already saved on disk instead (the archive check and the repeat check),
@@ -59,6 +59,7 @@ from yoda.eval.judge import (
 from yoda.eval.rubric import DIMENSIONS, RUBRIC_TEXT, JudgeScores
 from yoda.ingest.edgar import fetch_filings
 from yoda.modes.baseline import BASELINE_MODEL, run_baseline
+from yoda.modes.lead import run_lead
 from yoda.modes.pipeline import run_pipeline
 from yoda.schema import EarningsReport, EvidenceStore
 from yoda.sources import SharedSources, fetch_shared_sources
@@ -88,11 +89,11 @@ SCORE_COLS = list(DIMENSIONS)
 # Every mode the runner knows. Report files named after one of these are
 # results; any other *.json in the output folder (e.g. an old panel_* smoke
 # test) is stale and removed at the end of a run. "pipeline" is the staged pipeline
-# (yoda/modes/pipeline.py). "yoda" stays known, so the
+# (yoda/modes/pipeline.py) and "lead" the lead analyst method (yoda/modes/lead.py). "yoda" stays known, so the
 # saved reports of the retired personality panel are never deleted, but it
 # no longer runs. DEFAULT_MODES are what runs; the summary still compares
 # baseline with "yoda" until the run harness compares all three arms (item 4d).
-KNOWN_MODES = ("baseline", "pipeline", "yoda")
+KNOWN_MODES = ("baseline", "pipeline", "lead", "yoda")
 DEFAULT_MODES = ("baseline",)
 
 # Where outputs go unless run_eval() is given another folder.
@@ -156,6 +157,8 @@ def _run_mode(mode: str, ticker: str, sources: SharedSources) -> ModeRun:
         return _capture(lambda symbol, shared: tuple(run_baseline(symbol, shared)), ticker, sources)
     if mode == "pipeline":
         return _capture(lambda symbol, shared: tuple(run_pipeline(symbol, shared)), ticker, sources)
+    if mode == "lead":
+        return _capture(lambda symbol, shared: tuple(run_lead(symbol, shared)), ticker, sources)
     if mode == "yoda":
         raise ValueError("The yoda mode was the personality panel, now removed; the staged pipeline runs as "
                          "mode pipeline.")

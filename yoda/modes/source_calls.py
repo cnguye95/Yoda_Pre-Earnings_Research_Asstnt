@@ -126,6 +126,14 @@ Call submit_repairs once, with one repair per claim listed."""
 # Building the source-reading requests
 # ---------------------------------------------------------------------------
 
+# The descriptions of the submit tools both methods offer, so a report and
+# its repairs are asked for in the same words by either method.
+SUBMIT_DESCRIPTIONS = {
+    "submit_repairs": "Submit one repair per unsupported claim. Call it once, when your instructions ask for repairs.",
+    "submit_report": "Submit the finished report. Call it once, when your instructions ask for the report.",
+}
+
+
 def submit_tools(models: dict[str, type[BaseModel]], descriptions: dict[str, str]) -> list[dict]:
     """Return the "submit" tools a Sonnet call answers with, sorted by name so the list is identical every time.
 
