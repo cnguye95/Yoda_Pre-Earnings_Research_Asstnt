@@ -13,6 +13,10 @@ The exact shape of each dict is declared as a TypedDict below.
                                           analyst count.
   get_basic_metrics(ticker)             — current price, market cap, trailing-
                                           twelve-month EPS, last fiscal year's EPS.
+  get_preview_whisper(ticker, consensus) — the "whisper" EPS from Earnings
+                                          Whispers' free preview article for the
+                                          upcoming report (code only, no cost);
+                                          the first source tried.
   get_eps_whisper(ticker, consensus)    — the "whisper" EPS for the upcoming
                                           quarter, found by Claude web search and
                                           fetch and checked in code against the
@@ -31,8 +35,10 @@ The exact shape of each dict is declared as a TypedDict below.
   get_market_snapshot(ticker)           — all of the above that a report uses,
                                           fetched once, with any provider that
                                           refused the request listed by name.
-                                          The paid whisper lookup follows the
-                                          search setting (see whisper_by_default).
+                                          The free preview lookup always runs;
+                                          the paid whisper lookup only when it
+                                          finds nothing, and follows the search
+                                          setting (see whisper_by_default).
   next_report_date(ticker)              — the next report date alone, so the
                                           app can pre-set that setting.
 
@@ -151,6 +157,30 @@ _HISTORICAL_MOVE_REPORTS = 8
 
 # A browser-like header so the cited page is served normally when we check it.
 _PAGE_HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; Yoda research tool)"}
+
+# The free whisper source, tried first. earningswhispers.com's company page
+# shows only the LAST quarter's whisper (checked 2026-10-31: Apple's page two
+# days before its report), but the site writes a free preview article for
+# widely followed companies about a week before a report, and it states the
+# upcoming whisper ("The Earnings Whisper of $2.07 ..."). Previews are listed
+# on the company's news page, each link carrying its date and the label
+# "Earnings Whispers · Preview".
+_PREVIEW_NEWS_URL = "https://www.earningswhispers.com/news/{ticker}"
+_PREVIEW_SITE = "https://www.earningswhispers.com"
+
+# A preview counts only if published at most this many days before the next
+# report (and not after it): the previous quarter's preview, about 90 days
+# earlier, can never match.
+_PREVIEW_MAX_DAYS_BEFORE = 30
+
+# The sentence a preview states its whisper in, e.g. "The Earnings Whisper of
+# $1.98 is only modestly above consensus". A minus sign written either side
+# of the dollar sign is kept.
+_PREVIEW_WHISPER = re.compile(r"Earnings Whisper(?:®)?(?: number)? (?:of|is|at) (-)?\$(-)?(\d+\.\d+)")
+
+# A link's date, as the news page writes it ("Monday October 26, 2026").
+_PREVIEW_DATE = re.compile(r"(January|February|March|April|May|June|July|August|September|October|November|"
+                           r"December) (\d{1,2}), (\d{4})")
 
 # One shared Claude client, created once when the module loads.
 _claude = Anthropic(api_key=config.ANTHROPIC_API_KEY, max_retries=3)
@@ -1131,6 +1161,87 @@ def get_eps_whisper(ticker: str, consensus: dict, include_signals: bool = True) 
     return whisper
 
 
+def _preview_link(ticker: str, report_date: date) -> tuple[str | None, str]:
+    """Find *ticker*'s Earnings Whispers preview for the report on *report_date*.
+
+    Returns (article URL, its ISO date), or (None, why there is none): the
+    newest link labelled a preview and dated within _PREVIEW_MAX_DAYS_BEFORE
+    days before the report.
+    """
+    try:
+        resp = session.get(_PREVIEW_NEWS_URL.format(ticker=ticker), headers=_PAGE_HEADERS, timeout=15)
+    except requests.exceptions.RequestException as exc:
+        return None, f"preview: the news page could not be fetched ({type(exc).__name__})."
+    if not resp.ok:
+        return None, f"preview: the news page returned HTTP {resp.status_code}."
+
+    # Each article link carries its date and, for a preview, the label.
+    candidates = []
+    for link in BeautifulSoup(resp.text, "lxml").select(f'a[href*="/article/{ticker}/"]'):
+        text = " ".join(link.get_text(" ").split())
+        found = _PREVIEW_DATE.search(text)
+        if "preview" not in text.lower() or "Earnings Whispers" not in text or not found:
+            continue
+        published = datetime.strptime(" ".join(found.groups()), "%B %d %Y").date()
+        if 0 <= (report_date - published).days <= _PREVIEW_MAX_DAYS_BEFORE:
+            candidates.append((published, link["href"]))
+    if not candidates:
+        return None, (f"preview: no Earnings Whispers preview within {_PREVIEW_MAX_DAYS_BEFORE} days before "
+                      f"the {report_date.isoformat()} report.")
+    published, href = max(candidates)
+    url = href if href.startswith("http") else _PREVIEW_SITE + href
+    return url, published.isoformat()
+
+
+def get_preview_whisper(ticker: str, consensus: dict) -> WhisperResult:
+    """EPS whisper number for the upcoming report from Earnings Whispers' free preview article.
+
+    Code only (no Claude call, no cost), so it is tried first and for any
+    report date. *consensus* (from get_consensus()) gives the next report's
+    date and fiscal quarter. The whisper is kept only if the preview is
+    dated within _PREVIEW_MAX_DAYS_BEFORE days before that report and its
+    text states exactly one whisper number, not worded as a loss (the sign
+    of "a loss of $0.12" can't be read safely). Anything else is "not_found"
+    with the reason; a number is never guessed.
+    """
+    ticker = ticker.upper().strip()
+    whisper = _skipped_whisper(ticker, None)
+    try:
+        report_date = date.fromisoformat(consensus.get("next_earnings_date") or "")
+    except ValueError:
+        whisper["reason"] = "preview: next report date unknown."
+        return whisper
+
+    # The preview for this report, then its visible text.
+    url, found = _preview_link(ticker, report_date)
+    if url is None:
+        whisper["reason"] = found
+        return whisper
+    page_text, problem = _fetch_page_text(url)
+    if page_text is None:
+        whisper["reason"] = f"preview: {problem} ({url})"
+        return whisper
+
+    # Exactly one whisper number, and not one worded as a loss.
+    page_text = " ".join(page_text.split())
+    matches = list(_PREVIEW_WHISPER.finditer(page_text))
+    values = {(-1 if m.group(1) or m.group(2) else 1) * float(m.group(3)) for m in matches}
+    if len(values) != 1:
+        whisper["reason"] = (f"preview: {len(values)} whisper number(s) in the preview, so none is used "
+                             f"({url}).")
+        return whisper
+    if any("loss" in page_text[max(0, m.start() - 40):m.end() + 20].lower() for m in matches):
+        whisper["reason"] = f"preview: the whisper is worded as a loss, so its sign is unclear ({url})."
+        return whisper
+
+    value = values.pop()
+    whisper.update(whisper_status="verified", whisper_eps=value, fiscal_quarter=consensus.get("fiscal_quarter"),
+                   fiscal_year=consensus.get("fiscal_year"), source_url=url, page_date=found,
+                   matches_consensus=value == consensus.get("eps_estimate"))
+    whisper["note"] = _whisper_note(ticker, consensus, whisper)
+    return whisper
+
+
 # ---------------------------------------------------------------------------
 # Options-implied earnings move (EarningsWatcher)
 # ---------------------------------------------------------------------------
@@ -1389,19 +1500,27 @@ def get_market_snapshot(ticker: str, whisper_lookup: bool | None = None) -> Mark
     # reason then says which); an Anthropic error leaves its cost unknown.
     # Its own fallback signals are not fetched, because they are fetched once
     # below.
+    # The free preview lookup comes first; the paid one runs only when it
+    # finds nothing. A whisper found by neither keeps both reasons.
     whisper, whisper_cost = None, 0.0
     days = days_to_report(consensus["next_earnings_date"]) if consensus else None
-    if consensus is not None and whisper_lookup is False:
-        whisper = _skipped_whisper(ticker, "not looked up: turned off in the search settings.")
+    preview = get_preview_whisper(ticker, consensus) if consensus is not None else None
+    if preview is not None and preview["whisper_status"] == "verified":
+        whisper = preview
+    elif consensus is not None and whisper_lookup is False:
+        whisper = _skipped_whisper(ticker, f"{preview['reason']} Paid lookup not made: turned off in the "
+                                           "search settings.")
     elif consensus is not None and whisper_lookup is None and not whisper_by_default(days):
-        reason = ("not looked up: next report date unknown." if days is None else
-                  f"not looked up: next report is {days} days away (looked up automatically "
+        reason = ("Paid lookup not made: next report date unknown." if days is None else
+                  f"Paid lookup not made: next report is {days} days away (made automatically "
                   f"within {WHISPER_WINDOW_DAYS} days).")
-        whisper = _skipped_whisper(ticker, reason)
+        whisper = _skipped_whisper(ticker, f"{preview['reason']} {reason}")
     elif consensus is not None:
         try:
             whisper = get_eps_whisper(ticker, consensus, include_signals=False)
             whisper_cost = whisper["cost_usd"]
+            if whisper.get("whisper_status") != "verified":
+                whisper["reason"] = f"{preview['reason']} Paid lookup: {whisper.get('reason')}"
         except anthropic.APIError as exc:
             whisper_cost = None
             failures.append(ApiFailure("whisper", "Anthropic (whisper lookup)", f"{type(exc).__name__}: {exc}"))

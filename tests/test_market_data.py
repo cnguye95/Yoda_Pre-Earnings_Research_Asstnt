@@ -857,6 +857,8 @@ def _snapshot_parts(monkeypatch, consensus_fn, whisper_fn, signals_fn) -> list:
     # EarningsWatcher ones record the report date they were given.
     seen = []
     monkeypatch.setattr(consensus, "get_consensus", consensus_fn)
+    monkeypatch.setattr(consensus, "get_preview_whisper",
+                        lambda ticker, consensus_row: consensus._skipped_whisper(ticker, "preview: none."))
     monkeypatch.setattr(consensus, "get_eps_whisper", whisper_fn)
     monkeypatch.setattr(consensus, "get_expectation_signals", signals_fn)
     monkeypatch.setattr(consensus, "get_implied_move",
@@ -958,10 +960,11 @@ def _whisper_calls(monkeypatch, report_offset: int | None) -> list:
 
 @pytest.mark.parametrize("setting, offset, looked_up, reason", [
     (None, 2, True, None),                                   # the rule: close enough
-    (None, 82, False, "not looked up: next report is 82 days away (looked up automatically within 3 days)."),
-    (None, None, False, "not looked up: next report date unknown."),
+    (None, 82, False, "preview: none. Paid lookup not made: next report is 82 days away (made automatically "
+                      "within 3 days)."),
+    (None, None, False, "preview: none. Paid lookup not made: next report date unknown."),
     (True, 82, True, None),                                  # the person asked for it anyway
-    (False, 2, False, "not looked up: turned off in the search settings."),
+    (False, 2, False, "preview: none. Paid lookup not made: turned off in the search settings."),
 ])
 def test_snapshot_follows_the_whisper_setting(monkeypatch, setting, offset, looked_up, reason):
     calls = _whisper_calls(monkeypatch, offset)
@@ -985,3 +988,83 @@ def test_next_report_date_says_why_it_is_missing(monkeypatch):
 
     monkeypatch.setattr(consensus, "get_consensus", lambda ticker: {"next_earnings_date": "2027-01-18", "data_gaps": []})
     assert consensus.next_report_date("TEST") == ("2027-01-18", None)
+
+
+# ---------------------------------------------------------------------------
+# The free preview whisper lookup (Earnings Whispers' preview articles)
+# ---------------------------------------------------------------------------
+
+def _news_page(*links: tuple[str, str, bool]) -> str:
+    # A news page listing articles, each (href, date as the page writes it,
+    # labelled a preview?), in the page's link format.
+    rows = "".join(f'<a href="{href}">{when} 6:48 PM ET Headline'
+                   f'{" Earnings Whispers · Preview" if preview else " Business Wire"}</a>'
+                   for href, when, preview in links)
+    return f"<html><body><main>{rows}</main></body></html>"
+
+
+def _long_date(offset: int) -> str:
+    # A date *offset* days from today, written as the news page writes it.
+    return (market_today() + timedelta(days=offset)).strftime("%A %B %d, %Y").replace(" 0", " ")
+
+
+def _preview(monkeypatch, article_text: str, published: int = -5, report: int = 2):
+    # Fake the news page (one preview published *published* days from today,
+    # and an older press release) and the article; return the lookup's result
+    # for a report *report* days away.
+    _fake_http(monkeypatch, {
+        "https://www.earningswhispers.com/news/TEST": _response(text=_news_page(
+            ("/article/TEST/2", _long_date(published), True), ("/article/TEST/1", _long_date(-80), False))),
+        "https://www.earningswhispers.com/article/TEST/2": _response(
+            text=f"<html><body><p>{article_text}</p><script>var x = 'Earnings Whisper of $9.99';</script></body></html>"),
+    })
+    row = {"next_earnings_date": _day(report), "fiscal_quarter": 4, "fiscal_year": 2026, "eps_estimate": 2.00}
+    return consensus.get_preview_whisper("test", row)
+
+
+def test_the_preview_states_the_upcoming_whisper(monkeypatch):
+    # Found 2026-10-31: the company page shows only last quarter's whisper,
+    # while the free preview states the upcoming one. (The number inside the
+    # page's script is not visible text and is ignored.)
+    found = _preview(monkeypatch, "Wall Street expects $2.00. The Earnings Whisper of $2.07, however, sits above.")
+    assert (found["whisper_status"], found["whisper_eps"], found["cost_usd"]) == ("verified", 2.07, 0.0)
+    assert found["source_url"] == "https://www.earningswhispers.com/article/TEST/2"
+    assert found["page_date"] == _day(-5) and (found["fiscal_quarter"], found["fiscal_year"]) == (4, 2026)
+    assert found["note"] == ("The EPS whisper number for TEST's Q4 FY2026 report is $2.07 "
+                             "(https://www.earningswhispers.com/article/TEST/2).")
+
+
+def test_a_preview_from_an_earlier_quarter_is_never_used(monkeypatch):
+    found = _preview(monkeypatch, "The Earnings Whisper of $2.07.", published=-40, report=2)
+    assert found["whisper_status"] == "not_found" and found["whisper_eps"] is None
+    assert "no Earnings Whispers preview within 30 days" in found["reason"]
+
+
+@pytest.mark.parametrize("text, reason", [
+    ("Last quarter the Earnings Whisper of $1.97 was missed; the Earnings Whisper of $2.07 is higher.",
+     "2 whisper number(s)"),
+    ("The company is expected to post a loss. The Earnings Whisper of $0.12 is narrower.", "worded as a loss"),
+    ("No whisper is stated in this preview.", "0 whisper number(s)"),
+])
+def test_an_unclear_preview_gives_no_whisper(monkeypatch, text, reason):
+    found = _preview(monkeypatch, text)
+    assert found["whisper_status"] == "not_found" and found["whisper_eps"] is None and reason in found["reason"]
+
+
+def test_a_found_preview_means_no_paid_lookup(monkeypatch):
+    # The free lookup comes first; the paid one isn't made when it finds the whisper.
+    _snapshot_parts(monkeypatch, lambda ticker: {"next_earnings_date": _day(2)},
+                    lambda *a, **k: pytest.fail("the paid lookup must not run"), lambda ticker: {"beat_history": None})
+    found = consensus._skipped_whisper("TEST", None) | {"whisper_status": "verified", "whisper_eps": 2.07}
+    monkeypatch.setattr(consensus, "get_preview_whisper", lambda ticker, consensus_row: found)
+
+    snapshot = consensus.get_market_snapshot("TEST", whisper_lookup=True)
+
+    assert snapshot.whisper["whisper_eps"] == 2.07 and snapshot.whisper_cost_usd == 0.0
+
+
+def test_no_preview_still_tries_the_paid_lookup_and_keeps_both_reasons(monkeypatch):
+    calls = _whisper_calls(monkeypatch, 2)
+    snapshot = consensus.get_market_snapshot("TEST")
+    assert calls == ["TEST"] and snapshot.whisper_cost_usd == 0.13
+    assert snapshot.whisper["reason"].startswith("preview: none. Paid lookup:")

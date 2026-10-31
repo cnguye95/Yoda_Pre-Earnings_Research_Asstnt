@@ -11,17 +11,6 @@ WHEN labels (relative to the full eval run, item 4f):
   comments cite them ("next_steps item 12").
 
 
-1. Open checks on the judge
-   d. Whisper lookup may rarely verify even inside the 3-day window:
-      upcoming whispers were seen only in earningswhispers.com homepage
-      previews, not on the company pages the lookup checks the number
-      against (e.g. AMZN, 1 day out). Each failed lookup still costs
-      ~$0.12-0.15. Consider accepting the homepage preview as a source, or
-      another check.
-      WHEN: AFTER. Every arm shares one market snapshot per ticker, and the
-      lookup runs only for reports 3 days away or less.
-
-
 2. Eval baseline
    Option B (one Claude call over the shared sources plus one generic
    news search over the last 14 days; yoda/modes/baseline.py) is the

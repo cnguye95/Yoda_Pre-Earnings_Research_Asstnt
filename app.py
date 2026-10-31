@@ -118,9 +118,11 @@ def _whisper_setting(ticker: str) -> bool:
     """Draw the "Advanced search settings" box for *ticker* and return the whisper choice.
 
     The next report date is checked once per ticker (a free call, kept in
-    session state so reruns don't repeat it). The whisper lookup is ticked
-    by default only when that report is at most WHISPER_WINDOW_DAYS days
-    away; an unknown date leaves it unticked. The person can change it.
+    session state so reruns don't repeat it). The free whisper source, Earnings
+    Whispers' preview article, is always checked; this box is the paid Claude
+    search tried when the preview has no whisper. It is ticked by default
+    only when that report is at most WHISPER_WINDOW_DAYS days away; an
+    unknown date leaves it unticked. The person can change it.
     """
     # Find the next report date once per ticker.
     dates = st.session_state.setdefault("next_report", {})
@@ -131,20 +133,22 @@ def _whisper_setting(ticker: str) -> bool:
     days = days_to_report(report_date)
 
     with st.expander("Advanced search settings", expanded=True):
+        st.caption("The whisper number is first looked for, free, in Earnings Whispers' preview of the "
+                   "report (usually published about a week before).")
         if report_date is None:
-            st.caption(f"Next report date not found — {problem}. The whisper lookup is off by default.")
+            st.caption(f"Next report date not found — {problem}. The paid search is off by default.")
         else:
-            st.caption(f"Next report: {report_date} ({days} days away). The whisper lookup runs by default "
+            st.caption(f"Next report: {report_date} ({days} days away). The paid search runs by default "
                        f"only when the report is {WHISPER_WINDOW_DAYS} days away or less.")
 
         # The checkbox key carries the ticker, so each ticker starts from its own default.
-        lookup = st.checkbox("Look up the whisper number (paid)", value=whisper_by_default(days),
-                             key=f"whisper_{ticker}")
+        lookup = st.checkbox("If the preview has no whisper, search for it with Claude (paid)",
+                             value=whisper_by_default(days), key=f"whisper_{ticker}")
         st.caption(_md(WHISPER_COST_NOTE))
         if lookup and not whisper_by_default(days):
             when = f"The report is {days} days away" if days is not None else "The report date is unknown"
-            st.warning(_md(f"{when}; a whisper number is usually published only 1–2 days before the "
-                           "report, so this lookup will likely cost about $0.12–0.15 and find nothing."))
+            st.warning(_md(f"{when}; a whisper the free preview lacks is rarely found this early, so this "
+                           "search will likely cost about $0.12–0.15 and find nothing."))
     return lookup
 
 
