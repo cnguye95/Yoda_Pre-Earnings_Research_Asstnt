@@ -69,6 +69,17 @@ def _no_live_shared_sources(monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _baselines_run_as_normal_calls(monkeypatch):
+    """Run the eval's baselines one by one, like the other modes, instead of as a Batch API batch.
+
+    Runner tests fake each mode's run; the batch's own tests
+    (tests/test_baseline_batch.py) turn batching back on and fake the batch.
+    """
+    from yoda.eval import runner
+    monkeypatch.setattr(runner, "BATCH_BASELINES", False)
+
+
+@pytest.fixture(autouse=True)
 def _no_live_transcripts(monkeypatch):
     """Block the transcript module's web session in every test (tests must not call live APIs)."""
     from yoda.ingest import transcripts

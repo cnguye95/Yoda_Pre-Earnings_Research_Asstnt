@@ -138,6 +138,12 @@ WHEN labels (relative to the architecture comparison, item 4; set
       - Send all baselines through the Anthropic Batch API (half price;
         baseline.build_request is already a pure function), with standard
         calls if the batch fails; also report arm costs at standard prices.
+        DONE (2026-10-31): the batch is sent before the other modes run and
+        collected last; a request that errors, expires or isn't done within
+        an hour (the batch is then cancelled) is sent as a normal call, and
+        a refused batch sends them all normally. generation.csv and
+        results.csv carry cost_standard_usd; a batched baseline's latency is
+        unknown ("batch").
       - Total the shared whisper cost per run. DONE (2026-10-31: a
         summary.md line, each ticker counted once).
       - The judge records its finish reason and reasoning tokens (1b).

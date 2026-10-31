@@ -51,6 +51,7 @@ from collections.abc import Callable, Sequence
 from datetime import datetime, timezone
 from typing import NamedTuple
 
+import anthropic
 import numpy as np
 import pandas as pd
 import pydantic
@@ -64,7 +65,10 @@ from yoda.eval.judge import (
 )
 from yoda.eval.rubric import DIMENSIONS, RUBRIC_TEXT, JudgeScores
 from yoda.ingest.edgar import fetch_filings
-from yoda.modes.baseline import BASELINE_MODEL, run_baseline
+from yoda.modes.baseline import (
+    BASELINE_MODEL, BaselinePrep, BatchedBaseline, call_baseline, collect_baselines, prepare_baseline, run_baseline,
+    submit_baselines,
+)
 from yoda.modes.lead import run_lead
 from yoda.modes.pipeline import run_pipeline
 from yoda.schema import EarningsReport, EvidenceStore
@@ -104,6 +108,11 @@ DEFAULT_MODES = ("baseline",)
 
 # Where outputs go unless run_eval() is given another folder.
 DEFAULT_OUT_DIR = config.DATA_DIR / "eval"
+
+# Whether run_eval() sends the baselines through the Batch API (half price,
+# results within the hour). False runs each as a normal call, like the
+# other modes; the tests use that, except those of the batch itself.
+BATCH_BASELINES = True
 
 # The judge's output per call (hidden reasoning plus the scores), assumed
 # for the cost estimate until a judged run measures it (results.csv's
@@ -305,9 +314,12 @@ def _load_saved(report_dir: pathlib.Path, ticker: str, mode: str) -> tuple[Earni
 # ---------------------------------------------------------------------------
 
 # generation.csv's columns: what each (ticker, mode) cost and took to
-# generate, the ticker's whisper lookup cost (shared by its modes, the same
-# on each of its rows), and the error when it produced no report.
-GENERATION_COLS = ["ticker", "mode", "latency_seconds", "latency_source", "cost_usd", "whisper_cost_usd", "error"]
+# generate (cost_standard_usd: the same calls at full price, which differs
+# from cost_usd only for a batched baseline), the ticker's whisper lookup
+# cost (shared by its modes, the same on each of its rows), and the error
+# when it produced no report.
+GENERATION_COLS = ["ticker", "mode", "latency_seconds", "latency_source", "cost_usd", "cost_standard_usd",
+                   "whisper_cost_usd", "error"]
 
 
 def _read_generation(report_dir: pathlib.Path) -> pd.DataFrame:
@@ -392,6 +404,59 @@ def _write_estimate(estimate: pd.DataFrame, path: pathlib.Path) -> str:
 # Public API
 # ---------------------------------------------------------------------------
 
+class _PendingBaselines(NamedTuple):
+    """Baselines sent as one batch and not yet collected.
+
+    *preps* are the prepared requests by ticker; *batch_id* is None when the
+    batch was refused (each is then sent as a normal call); *errors* are the
+    tickers whose request couldn't be prepared, with why.
+    """
+    preps: dict[str, BaselinePrep]
+    batch_id: str | None
+    errors: dict[str, str]
+
+
+def _submit_baselines(fetched: dict[str, SharedSources]) -> _PendingBaselines:
+    """Prepare every ticker's baseline request and send them all as one batch (half price).
+
+    A ticker whose request can't be prepared is kept as an error; a refused
+    batch leaves batch_id None, so _collect_baselines sends each request as
+    a normal call instead.
+    """
+    preps, errors = {}, {}
+    for ticker, sources in fetched.items():
+        try:
+            preps[ticker] = prepare_baseline(ticker, sources)
+        except Exception as exc:
+            errors[ticker] = f"{type(exc).__name__}: {exc}"
+    batch_id = None
+    if preps:
+        try:
+            batch_id = submit_baselines(preps)
+        except anthropic.APIError as exc:
+            print(f"  WARNING: the baseline batch was refused ({type(exc).__name__}: {exc}); "
+                  "sending each as a normal call (full price)")
+    return _PendingBaselines(preps, batch_id, errors)
+
+
+def _collect_baselines(pending: _PendingBaselines) -> dict[str, BatchedBaseline]:
+    """Return every ticker's baseline from *pending*: from the batch, or from normal calls when it was refused."""
+    outcomes = {ticker: BatchedBaseline(None, None, None, None, "measured", error)
+                for ticker, error in pending.errors.items()}
+    if pending.batch_id is not None:
+        outcomes.update(collect_baselines(pending.batch_id, pending.preps))
+    else:
+        outcomes.update({ticker: call_baseline(prep) for ticker, prep in pending.preps.items()})
+    return outcomes
+
+
+def _save_report(out_dir: pathlib.Path, mode: str, ticker: str, report: EarningsReport,
+                 evidence: EvidenceStore) -> None:
+    """Save a report and, beside it, the evidence store it was written from (the judge checks one against the other)."""
+    (out_dir / f"{mode}_{ticker}.json").write_text(report.model_dump_json(indent=2), encoding="utf-8")
+    (out_dir / f"{mode}_{ticker}_evidence.json").write_text(evidence.model_dump_json(), encoding="utf-8")
+
+
 def run_eval(
     tickers: Sequence[str],
     modes: Sequence[str] = DEFAULT_MODES,
@@ -399,14 +464,17 @@ def run_eval(
 ) -> pd.DataFrame:
     """Generate each (ticker, mode) report and save it; return the generation records. Nothing is judged.
 
-    For each ticker the shared sources are fetched once, then each mode
-    writes its report, saved as {mode}_{ticker}.json with the evidence its
-    writer had. generation.csv records each pair's cost, time, the ticker's
-    whisper cost and any error (columns GENERATION_COLS); a failure for one
-    ticker or mode skips just that pair. At the end the judge's cost for
-    the saved reports is estimated (judge_estimate.md) and the run stops:
-    judging is rescore(), with a budget, once the estimate is checked
-    against the OpenAI credit left.
+    The shared sources are fetched once per ticker. The baselines are then
+    sent together as one Batch API batch (half price, when BATCH_BASELINES),
+    which processes while the other modes run ticker by ticker; they are
+    collected last. Each report is saved as {mode}_{ticker}.json with the
+    evidence its writer had. generation.csv records each pair's cost (and
+    the same call at full price), time, the ticker's whisper cost and any
+    error (columns GENERATION_COLS); a failure for one ticker or mode skips
+    just that pair. At the end the judge's cost for the saved reports is
+    estimated (judge_estimate.md) and the run stops: judging is rescore(),
+    with a budget, once the estimate is checked against the OpenAI credit
+    left.
     """
     out_dir = pathlib.Path(out_dir) if out_dir is not None else DEFAULT_OUT_DIR
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -416,14 +484,14 @@ def run_eval(
     tickers = normalize_tickers(tickers)
     rows: list[dict] = []
 
+    # Fetch the filings and the shared sources (8-K, call, market data, fact
+    # sheet) once per ticker, so every mode reads identical data and the paid
+    # whisper lookup runs at most once. A fetch failure, or no filing to
+    # read, skips this ticker only.
+    fetched: dict[str, SharedSources] = {}
+    whisper: dict[str, float | None] = {}
     for ticker in tickers:
-        print(f"\n=== {ticker} ===")
-
-        # Fetch the filings and the shared sources (8-K, call, market data,
-        # fact sheet) once per ticker, so every mode reads identical data and
-        # the paid whisper lookup runs at most once. A fetch failure, or no
-        # filing to read, skips this ticker only.
-        print(f"  fetching filings and shared sources for {ticker}...")
+        print(f"\n=== {ticker}: fetching filings and shared sources ===")
         try:
             filing = fetch_filings(ticker)
             sources = fetch_shared_sources(filing) if filing is not None else None
@@ -435,9 +503,18 @@ def run_eval(
             rows += [{"ticker": ticker, "mode": mode, "error": f"fetch sources: {problem}"} for mode in modes]
             _save_generation(out_dir, rows)
             continue
-        whisper = sources.snapshot.whisper_cost_usd if sources.snapshot is not None else None
+        fetched[ticker] = sources
+        whisper[ticker] = sources.snapshot.whisper_cost_usd if sources.snapshot is not None else None
 
+    # The baselines go first, as one batch that works while the rest run.
+    batching = BATCH_BASELINES and "baseline" in modes
+    pending = _submit_baselines(fetched) if batching else None
+
+    for ticker, sources in fetched.items():
+        print(f"\n=== {ticker} ===")
         for mode in modes:
+            if batching and mode == "baseline":
+                continue
             # Each (ticker, mode) is isolated on purpose: whatever one report
             # hits, the rest of a 20-ticker run still completes. The error is
             # kept in generation.csv and shown in the judged summary.
@@ -445,26 +522,39 @@ def run_eval(
             try:
                 run = _run_mode(mode, ticker, sources)
             except Exception as exc:
-                rows.append({"ticker": ticker, "mode": mode, "whisper_cost_usd": whisper,
+                rows.append({"ticker": ticker, "mode": mode, "whisper_cost_usd": whisper[ticker],
                              "error": f"{type(exc).__name__}: {exc}"})
                 print(f"  ERROR in mode={mode}: {exc}")
                 _save_generation(out_dir, rows)
                 continue
 
-            # Save the report and, next to it, the evidence store it was
-            # written from, so the judge can check one against the other.
-            (out_dir / f"{mode}_{ticker}.json").write_text(run.report.model_dump_json(indent=2), encoding="utf-8")
-            (out_dir / f"{mode}_{ticker}_evidence.json").write_text(run.evidence.model_dump_json(), encoding="utf-8")
-
-            # Its cost and time (an unknown cost stays empty, never $0),
-            # saved at once so progress survives a crash.
+            # The report, its cost and time (an unknown cost stays empty,
+            # never $0; these calls are all at full price), saved at once so
+            # progress survives a crash.
+            _save_report(out_dir, mode, ticker, run.report, run.evidence)
+            cost = round(run.cost_usd, 5) if run.cost_usd is not None else None
             rows.append({"ticker": ticker, "mode": mode, "latency_seconds": round(run.latency_seconds, 2),
-                         "latency_source": run.latency_source,
-                         "cost_usd": round(run.cost_usd, 5) if run.cost_usd is not None else None,
-                         "whisper_cost_usd": whisper, "error": None})
+                         "latency_source": run.latency_source, "cost_usd": cost, "cost_standard_usd": cost,
+                         "whisper_cost_usd": whisper[ticker], "error": None})
             _save_generation(out_dir, rows)
-            cost_text = f"${run.cost_usd:.4f}" if run.cost_usd is not None else "unknown"
-            print(f"  mode={mode} done — latency={run.latency_seconds:.1f}s cost={cost_text}")
+            print(f"  mode={mode} done — latency={run.latency_seconds:.1f}s "
+                  f"cost={f'${cost:.4f}' if cost is not None else 'unknown'}")
+
+    # The batched baselines, collected last (the batch has been working all
+    # along). A batched report has no time of its own.
+    if pending is not None:
+        print("\n=== baselines (batch) ===")
+        for ticker, outcome in _collect_baselines(pending).items():
+            if outcome.run is not None:
+                _save_report(out_dir, "baseline", ticker, outcome.run.report, outcome.run.store)
+            rows.append({"ticker": ticker, "mode": "baseline", "latency_seconds": outcome.latency_seconds,
+                         "latency_source": outcome.latency_source,
+                         "cost_usd": round(outcome.cost_usd, 5) if outcome.cost_usd is not None else None,
+                         "cost_standard_usd": (round(outcome.cost_standard_usd, 5)
+                                               if outcome.cost_standard_usd is not None else None),
+                         "whisper_cost_usd": whisper[ticker], "error": outcome.error})
+            print(f"  {ticker}: {'ERROR ' + outcome.error if outcome.error else 'saved'}")
+        _save_generation(out_dir, rows)
 
     # Delete report JSONs that belong to no known mode (e.g. old panel_*
     # smoke-test files). Results of a known mode that wasn't run this time
@@ -586,13 +676,16 @@ def rescore(
             run_cache_keys.add(judged.cache_key)
             judged_results.append((ticker, mode, judged.result))
 
-            # The judged columns plus what the report cost to generate (when
-            # recorded; unknown stays empty, never 0).
+            # The judged columns plus what the report cost to generate, as
+            # paid and at full price (when recorded; unknown stays empty,
+            # never 0; a generation.csv from before batching has no
+            # full-price column).
             recorded = record is not None and not failed_to_generate
             rows.append({**judged.row,
                          "latency_seconds": record.latency_seconds if recorded else None,
                          "latency_source": record.latency_source if recorded else None,
-                         "cost_usd": record.cost_usd if recorded else None})
+                         "cost_usd": record.cost_usd if recorded else None,
+                         "cost_standard_usd": getattr(record, "cost_standard_usd", None) if recorded else None})
             if second is not None:
                 run_cache_keys.add(second.cache_key)
                 repeat_rows.append(second.row)
