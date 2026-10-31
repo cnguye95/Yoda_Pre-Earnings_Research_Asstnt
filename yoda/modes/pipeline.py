@@ -29,6 +29,11 @@ is part of what the cache matches on. The cache is kept for 1 hour, not 5
 minutes: the repair pass starts more than 5 minutes after the writer last
 read it (decided 2026-10-30).
 
+What the two candidate methods share — the request builder, the size
+check, the researchers' tool loop, the repair pass and the citation and
+writing rules — is in yoda/modes/source_calls.py; this module holds only
+what is the staged pipeline's own.
+
 generate_report() is the app's entry point: it fetches the sources itself
 and pauses (raises MarketDataUnavailable) when market data was refused,
 before any report model is paid for.
@@ -40,28 +45,20 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import date
 from typing import Callable, NamedTuple
 
-import anthropic
-import openai
-import pydantic
-import requests
-from anthropic import transform_schema
 from pydantic import BaseModel
 
 from yoda import config
 from yoda.dates import dates_line
-from yoda.evidence_store import (
-    MODE_KINDS, SOURCE_CHARS_LIMIT, add_article, add_news, add_peer, passages_by_id, render_passages,
-    render_sources,
-)
-from yoda.evidence_text import CONFLICT_RULES, NEWER_CONTRADICTION_RULE
+from yoda.evidence_store import MODE_KINDS, SOURCE_CHARS_LIMIT, render_passages, render_sources
 from yoda.ingest.edgar import fetch_filings
 from yoda.modes import tools
-from yoda.modes.llm import (
-    NoStructuredOutput, Usage, add_usage, call_usage, client, failed_usage, log_usage, submit_call, usage_counts,
-    warm_cache,
+from yoda.modes.llm import Usage, call_usage, failed_usage, log_usage, submit_call, warm_cache
+from yoda.modes.source_calls import (
+    CACHE_TTL, CITATION_RULES, REPORT_MAX_TOKENS, SOURCE_MODEL, STAGE_ERRORS, WRITING_RULES, check_and_repair,
+    check_fits, company_context, source_request, submit_tools, tool_loop,
 )
 from yoda.report.checks import check_report
-from yoda.report.claim_check import Repairs, apply_repairs, check_claims, claim_items, remove_claims, render_claim
+from yoda.report.claim_check import Repairs
 from yoda.report.header import MarketDataUnavailable, assemble_report, filings_read
 from yoda.retrieval.vector_store import ChromaStore
 from yoda.schema import Claim, EarningsReport, EvidenceStore, ReportDraft
@@ -73,20 +70,14 @@ from yoda.tools.news import NEWS_CITABLE_DAYS
 # Constants
 # ---------------------------------------------------------------------------
 
-# The models (decided 2026-10-30), each with its effort pinned at the
-# model's default, so a change of default can't silently change reports.
-# Every call that reads the sources uses SOURCE_MODEL at SOURCE_EFFORT:
-# a different model or effort would miss the shared cache.
-SOURCE_MODEL, SOURCE_EFFORT = "claude-sonnet-5-5", "high"
+# The researchers' model (decided 2026-10-30), with its effort pinned at
+# the model's default, so a change of default can't silently change
+# reports. Every call that reads the sources uses source_calls.SOURCE_MODEL.
 RESEARCH_MODEL, RESEARCH_EFFORT = "claude-haiku-5-5", "medium"
 
-# How long the sources stay in the prompt cache (see the module docstring).
-CACHE_TTL = "1h"
-
-# Output ceilings: each answer plus the model's thinking must fit. The
-# report is the longest answer.
+# Output ceilings: each answer plus the model's thinking must fit. (The
+# report's, REPORT_MAX_TOKENS, is shared with the other method.)
 _NOTES_MAX_TOKENS = 32000
-_REPORT_MAX_TOKENS = 64000
 _RESEARCH_MAX_TOKENS = 8000
 
 # Each researcher may make this many tool calls, and stops searching after
@@ -94,25 +85,6 @@ _RESEARCH_MAX_TOKENS = 8000
 # so the writer isn't held up.
 MAX_TOOL_CALLS = 6
 RESEARCH_SECONDS = 120
-
-# The models' context window, in tokens: the prompt plus the output ceiling
-# must fit.
-_CONTEXT_TOKENS = 1_000_000
-
-# Characters per token for the quick size estimate (filings measured ~2.7;
-# 2.5 overestimates, so the exact count is asked for whenever it could
-# matter).
-_CHARS_PER_TOKEN = 2.5
-
-# The ways one stage's model call can fail that the run can carry on from:
-# an API error the SDK's retries didn't fix, no answer, or an answer that
-# breaks its schema. The stage then becomes a data gap.
-_STAGE_ERRORS = (anthropic.APIError, NoStructuredOutput, pydantic.ValidationError)
-
-# The ways a researcher's tool can fail (a page that can't be read, a peer
-# with no filing, a search or embedding service that refuses): the
-# researcher is told and tries something else.
-_TOOL_ERRORS = (RuntimeError, ValueError, OSError, requests.RequestException, openai.OpenAIError)
 
 
 # ---------------------------------------------------------------------------
@@ -133,11 +105,8 @@ class Notes(BaseModel):
 
 
 # The tools a Sonnet call answers with, by name. Every source-reading call
-# is offered all of them (sorted, so the list is identical every time) and
-# told which one to call. They are not "strict" (schema-enforced by the
-# API): the API refused the three together as too large a grammar
-# (2026-10-30), so llm.submit_call validates each answer with Pydantic
-# instead, and a broken answer fails loudly.
+# is offered all of them (so they share one cache entry) and told which one
+# to call; source_calls.submit_tools() explains why they aren't strict.
 _SUBMIT_MODELS: dict[str, type[BaseModel]] = {"submit_notes": Notes, "submit_repairs": Repairs,
                                                "submit_report": ReportDraft}
 _SUBMIT_DESCRIPTIONS = {
@@ -145,9 +114,7 @@ _SUBMIT_DESCRIPTIONS = {
     "submit_repairs": "Submit one repair per unsupported claim. Call it once, when your instructions ask for repairs.",
     "submit_report": "Submit the finished report. Call it once, when your instructions ask for the report.",
 }
-SOURCE_TOOLS = [{"name": name, "description": _SUBMIT_DESCRIPTIONS[name],
-                 "input_schema": transform_schema(model)}
-                for name, model in sorted(_SUBMIT_MODELS.items())]
+SOURCE_TOOLS = submit_tools(_SUBMIT_MODELS, _SUBMIT_DESCRIPTIONS)
 
 # The researchers' tools: the news and competitor tools from
 # yoda/modes/tools.py plus submit_notes, sorted by name.
@@ -160,13 +127,6 @@ RESEARCH_TOOLS = sorted([*(schema for schema in tools.TOOL_SCHEMAS if schema["na
 # Prompts
 # ---------------------------------------------------------------------------
 
-# How every stage cites. The same rules as the baseline's, worded for notes.
-_CITATION_RULES = f"""Citations — the rule every claim follows:
-- Every claim has evidence_ids: the IDs of the source passages that support it, copied exactly as shown in square brackets ("K.042", "F.03"). Cite only passages that contain the fact.
-- Tag each claim's evidence_type: reported (a company's actual results), guided (management's own outlook), estimate (third-party expectations such as consensus), proxy (an indirect signal, such as a competitor's figures), unverifiable (no source backs it).
-- Rows starting with F are the XBRL fact sheet: figures the company tagged in these filings, and figures derived from them (labelled derived). Prefer them for headline numbers.
-- News shows its date. Only news from the last {NEWS_CITABLE_DAYS} days may be cited; older news is background only."""
-
 _FILING_EXTRACTOR = f"""You are the filing extractor on a team preparing a pre-earnings preview of this company's upcoming quarterly report. From the 10-Q and/or annual report and the XBRL fact sheet above, extract what the writer needs. Note topics:
 - kpis: the headline figures of the latest period and the metrics that drive them;
 - segments: each segment's or region's results and trend;
@@ -174,7 +134,7 @@ _FILING_EXTRACTOR = f"""You are the filing extractor on a team preparing a pre-e
 - risks: risk factors that matter for the upcoming report, especially new or changed ones;
 - notable: one-off items, accounting changes, legal matters, capital returns, debt.
 
-{_CITATION_RULES}
+{CITATION_RULES}
 
 Each note is one specific, checkable claim. Call submit_notes once with all your notes."""
 
@@ -184,7 +144,7 @@ _POST_FILING_EXTRACTOR = f"""You are the post-filing extractor on a team prepari
 - call_themes: what analysts pushed on, and how management answered;
 - contradictions: where the 8-K or the call contradicts the filing (cite both, each with its date).
 
-{_CITATION_RULES}
+{CITATION_RULES}
 
 Each note is one specific, checkable claim. Call submit_notes once with all your notes."""
 
@@ -192,25 +152,7 @@ _WRITER = f"""You are the writer: write a pre-earnings research report on this c
 
 The stage notes come from colleagues who read the filings, the 8-K and the call, recent news and competitors' filings. Use them as leads: every claim you write cites passages (the passages the researchers found are given with their notes), never a note.
 
-{_CITATION_RULES}
-- Anything you cannot cite goes in data_gaps, not into a claim.
-
-When sources disagree:
-{CONFLICT_RULES}
-{NEWER_CONTRADICTION_RULE}
-
-Focus on what matters for the upcoming report: the setup, the metrics to model and where the risk to expectations lies, guidance, what changed since the filing, the open debates, how the quarter could go, the key risks and what to ask management.
-
-Call submit_report once with the whole report."""
-
-_REPAIR = f"""You wrote a pre-earnings report from the sources above. A check found that some of its claims say more than the passages they cite. For each claim in the message, either:
-- rewrite it so it says only what passages support (you may cite other passages from the sources above), or
-- delete it, when no passage supports anything like it.
-Never add a claim, and keep each claim's location exactly as given.
-
-{_CITATION_RULES}
-
-Call submit_repairs once, with one repair per claim listed."""
+{WRITING_RULES}"""
 
 # The researchers' briefs: what each looks for. Neither overlaps the other.
 _RESEARCH_BRIEFS = {
@@ -223,44 +165,6 @@ _RESEARCH_RULES = f"""How to work:
 - Every result comes back with passage IDs in square brackets. Your notes cite those IDs exactly; a note may cite only passages a tool returned to you.
 - Tag a claim from news estimate (or unverifiable), and a competitor's figures proxy. Only news from the last {NEWS_CITABLE_DAYS} days may be cited.
 - You have at most {MAX_TOOL_CALLS} tool calls. Stop searching as soon as you have what matters, then call submit_notes once with every note (topic: a short label of your choosing)."""
-
-
-# ---------------------------------------------------------------------------
-# Building the source-reading requests
-# ---------------------------------------------------------------------------
-
-def source_request(sources_text: str, role: str | None, user_content: str, max_tokens: int) -> dict:
-    """Return the request parameters of one Sonnet call that reads the sources.
-
-    The prefix every such call shares, in the order the API reads it: the
-    pinned model and effort, SOURCE_TOOLS, then the rendered sources as
-    system block 1, marked as the cache breakpoint (CACHE_TTL). Then this
-    call's *role* (None for the warm-up, which needs only the shared part)
-    and its *user_content*, which may change from call to call.
-    """
-    system = [{"type": "text", "text": sources_text, "cache_control": {"type": "ephemeral", "ttl": CACHE_TTL}}]
-    if role is not None:
-        system.append({"type": "text", "text": role})
-    return {"model": SOURCE_MODEL, "max_tokens": max_tokens, "output_config": {"effort": SOURCE_EFFORT},
-            "tools": SOURCE_TOOLS, "system": system, "messages": [{"role": "user", "content": user_content}]}
-
-
-def _check_fits(request: dict) -> None:
-    """Raise RuntimeError if *request*'s prompt plus its output ceiling can't fit the model's context window.
-
-    A quick character estimate settles almost every request; the exact
-    count (a free API call) is asked for only when the estimate is near the
-    limit, e.g. a very large filer's 10-Q and 10-K together.
-    """
-    texts = [block["text"] for block in request["system"]] + [m["content"] for m in request["messages"]]
-    room = _CONTEXT_TOKENS - request["max_tokens"]
-    if sum(len(text) for text in texts) / _CHARS_PER_TOKEN <= room:
-        return
-    counted = client.messages.count_tokens(model=request["model"], system=request["system"],
-                                           messages=request["messages"], tools=request["tools"]).input_tokens
-    if counted > room:
-        raise RuntimeError(f"The {request['model']} prompt is {counted:,} tokens; with {request['max_tokens']:,} "
-                           f"tokens of output it doesn't fit the {_CONTEXT_TOKENS:,}-token context window.")
 
 
 # ---------------------------------------------------------------------------
@@ -278,40 +182,11 @@ def _extract(role: str, sources_text: str, dates: str) -> StageResult:
     """Run one extractor (a Sonnet call over the cached sources) and return its notes."""
     try:
         reply = submit_call(submit_tool="submit_notes", output_format=Notes,
-                            **source_request(sources_text, role, f"{dates}\nExtract your notes.", _NOTES_MAX_TOKENS))
-    except _STAGE_ERRORS as exc:
+                            **source_request(sources_text, SOURCE_TOOLS, role, f"{dates}\nExtract your notes.",
+                                             _NOTES_MAX_TOKENS))
+    except STAGE_ERRORS as exc:
         return StageResult([], failed_usage(SOURCE_MODEL, exc, CACHE_TTL), f"{type(exc).__name__}: {exc}")
     return StageResult(reply.parsed.notes, call_usage(SOURCE_MODEL, tuple(reply[1:]), CACHE_TTL))
-
-
-def _run_tool(ctx: tools.ToolContext, store: EvidenceStore, lock: threading.Lock, name: str, args: dict) -> str:
-    """Run one researcher tool call and return what the model is shown: the results as passages with their IDs.
-
-    The arguments are checked first. Every result is added to the arm's
-    evidence *store* (under *lock*: both researchers write to it), so it can
-    be cited and the judge sees it. A failed call is explained to the model,
-    which can try something else.
-    """
-    try:
-        checked = tools.TOOL_ARGS[name].model_validate(args).model_dump()
-    except pydantic.ValidationError as exc:
-        problem = exc.errors()[0]
-        return f"Invalid arguments for {name}: {problem['msg']} ({problem['loc']})."
-    try:
-        raw = tools.TOOL_DISPATCH[name](ctx, **checked)
-    except _TOOL_ERRORS as exc:
-        return f"Tool {name} failed: {type(exc).__name__}: {exc}"
-
-    with lock:
-        if name == "search_news":
-            ids = add_news(store, raw)
-        elif name == "read_article":
-            ids = add_article(store, raw)
-        else:
-            ids = add_peer(store, raw)
-        by_id = passages_by_id(store)
-        text = render_passages([by_id[passage_id] for passage_id in dict.fromkeys(ids)])
-    return text or "No results. Try a different query or tool, or call submit_notes."
 
 
 def _research(brief: str, first_message: str, ctx: tools.ToolContext, store: EvidenceStore,
@@ -320,56 +195,16 @@ def _research(brief: str, first_message: str, ctx: tools.ToolContext, store: Evi
 
     Limits that keep it short: MAX_TOOL_CALLS tool calls and
     RESEARCH_SECONDS of searching, after which only submit_notes is
-    accepted, and a repeated call is refused without running. The loop's
-    growing prompt is cached between turns (5-minute cache).
+    accepted, and a repeated call is refused without running
+    (source_calls.tool_loop). The loop's growing prompt is cached between
+    turns (5-minute cache).
     """
-    system = f"{brief}\n\n{_RESEARCH_RULES}"
-    messages: list[dict] = [{"role": "user", "content": first_message}]
-    calls_used, usage, tried = 0, Usage(), set()
-    started = time.perf_counter()
-
-    # MAX_TOOL_CALLS turns of tool use, plus a few to submit.
-    for _ in range(MAX_TOOL_CALLS + 3):
-        try:
-            resp = client.messages.create(model=RESEARCH_MODEL, max_tokens=_RESEARCH_MAX_TOKENS,
-                                          output_config={"effort": RESEARCH_EFFORT}, system=system,
-                                          tools=RESEARCH_TOOLS, messages=messages,
-                                          cache_control={"type": "ephemeral"})
-        except anthropic.APIError as exc:
-            return StageResult([], usage, f"{type(exc).__name__}: {exc}")
-        usage = add_usage(usage, call_usage(RESEARCH_MODEL, usage_counts(resp.usage)))
-        messages.append({"role": "assistant", "content": resp.content})
-        uses = [block for block in resp.content if block.type == "tool_use"]
-
-        # The notes, when submitted, end the loop.
-        submitted = next((use for use in uses if use.name == "submit_notes"), None)
-        if submitted is not None:
-            try:
-                return StageResult(Notes.model_validate(submitted.input).notes, usage)
-            except pydantic.ValidationError as exc:
-                return StageResult([], usage, f"its notes broke the schema: {exc}")
-        if not uses:
-            messages.append({"role": "user", "content": "Call submit_notes now, with every note."})
-            continue
-
-        # Run each tool call; all results go back together in one message.
-        out_of_budget = calls_used >= MAX_TOOL_CALLS or time.perf_counter() - started >= RESEARCH_SECONDS
-        results = []
-        for use in uses:
-            key = tools.normalize_call(use.name, use.input)
-            if out_of_budget:
-                observation = "No more tool calls: call submit_notes now, with every note."
-            elif use.name not in tools.TOOL_DISPATCH or use.name == "retrieve_filing":
-                observation = f"Unknown tool {use.name}."
-            elif key in tried:
-                observation = "You already made this exact call. Try a different query, or call submit_notes."
-            else:
-                tried.add(key)
-                calls_used += 1
-                observation = _run_tool(ctx, store, lock, use.name, use.input)
-            results.append({"type": "tool_result", "tool_use_id": use.id, "content": observation})
-        messages.append({"role": "user", "content": results})
-    return StageResult([], usage, "it never submitted its notes")
+    request = {"model": RESEARCH_MODEL, "max_tokens": _RESEARCH_MAX_TOKENS,
+               "output_config": {"effort": RESEARCH_EFFORT}, "system": f"{brief}\n\n{_RESEARCH_RULES}",
+               "tools": RESEARCH_TOOLS, "cache_control": {"type": "ephemeral"}}
+    result = tool_loop(request, [{"role": "user", "content": first_message}], "submit_notes", Notes,
+                       "with every note", ctx, store, lock, MAX_TOOL_CALLS, RESEARCH_SECONDS)
+    return StageResult(result.parsed.notes if result.parsed is not None else [], result.usage, result.gap)
 
 
 def _render_notes(stage: str, result: StageResult) -> str:
@@ -383,15 +218,7 @@ def _render_notes(stage: str, result: StageResult) -> str:
 
 def _research_message(sources: SharedSources, dates: str) -> str:
     """Return the researchers' first message: today's date, the company, its newest filing and the next report."""
-    filing_set = sources.filing_set
-    lines = [dates, f"Company: {filing_set.company_name or filing_set.ticker} ({filing_set.ticker}).",
-             f"Newest filing: {filing_set.newest.filing_type} filed {filing_set.newest.filing_date}."]
-    consensus = sources.snapshot.consensus if sources.snapshot is not None else None
-    if consensus and consensus.get("fiscal_quarter"):
-        lines.append(f"Next report: Q{consensus['fiscal_quarter']} FY{consensus['fiscal_year']}, "
-                     f"expected {consensus.get('next_earnings_date') or 'on an unknown date'}.")
-    lines.append("Research, then call submit_notes.")
-    return "\n".join(lines)
+    return f"{company_context(sources, dates)}\nResearch, then call submit_notes."
 
 
 # ---------------------------------------------------------------------------
@@ -442,7 +269,8 @@ def run_pipeline(ticker: str, sources: SharedSources, on_notice: Callable[[str],
     # The warm-up comes first, before anything paid starts: the extractors
     # then read one cache entry rather than each writing its own, and a
     # request the API refuses stops the run before any other call is made.
-    warm_up = call_usage(SOURCE_MODEL, warm_cache(**source_request(rendered.text, None, "Ready.", 1)), CACHE_TTL)
+    warm_up = call_usage(SOURCE_MODEL, warm_cache(**source_request(rendered.text, SOURCE_TOOLS, None, "Ready.", 1)),
+                         CACHE_TTL)
     log_usage("pipeline", "Cache warm-up", SOURCE_MODEL, warm_up)
     cost = warm_up.cost_usd
 
@@ -473,10 +301,10 @@ def run_pipeline(ticker: str, sources: SharedSources, on_notice: Callable[[str],
     store.shown_ids += [p.id for p in found]
     notes_text = "\n\n".join(_render_notes(name, result) for name, result in stages.items())
     found_text = render_passages(found) or "(none)"
-    request = source_request(rendered.text, _WRITER,
+    request = source_request(rendered.text, SOURCE_TOOLS, _WRITER,
                              f"{dates}\n\n{notes_text}\n\n=== Passages the researchers found ===\n{found_text}\n\n"
-                             "Write the report.", _REPORT_MAX_TOKENS)
-    _check_fits(request)
+                             "Write the report.", REPORT_MAX_TOKENS)
+    check_fits(request)
     reply = submit_call(submit_tool="submit_report", output_format=ReportDraft, **request)
     writer = call_usage(SOURCE_MODEL, tuple(reply[1:]), CACHE_TTL)
     log_usage("pipeline", "Writer", SOURCE_MODEL, writer)
@@ -486,52 +314,12 @@ def run_pipeline(ticker: str, sources: SharedSources, on_notice: Callable[[str],
 
     # Stage 4: the claim check, one repair pass, a re-check of the rewritten
     # claims, and removal of whatever still fails. Then the ID checks.
-    cost += _check_and_repair(report, store, rendered.text, dates)
+    cost += check_and_repair(report, store, rendered.text, dates, SOURCE_TOOLS, "pipeline")
     check_report(report, store)
 
     print(f"[pipeline] Wall time:  {time.perf_counter() - started:.2f}s")
     print(f"[pipeline] Total cost: ${cost:.5f}")
     return PipelineRun(report, store)
-
-
-def _check_and_repair(report: EarningsReport, store: EvidenceStore, sources_text: str, dates: str) -> float:
-    """Check every claim, repair the unsupported ones once, and remove what still fails; return the cost.
-
-    A failed repair call leaves every unsupported claim to be removed, with
-    the failure in the report's data gaps.
-    """
-    checked = check_claims(report, store)
-    cost = checked.cost_usd
-    if not checked.unsupported:
-        return cost
-
-    # The repair pass sees each unsupported claim, why it failed and its
-    # passages; the rest of the sources are in its cached prompt.
-    items = claim_items(report, store, set(checked.unsupported))
-    listed = "\n\n".join(f"{render_claim(item)}\n--- Why it failed ---\n{checked.unsupported[item.where]}"
-                         for item in items)
-    try:
-        reply = submit_call(submit_tool="submit_repairs", output_format=Repairs,
-                            **source_request(sources_text, _REPAIR, f"{dates}\n\n{listed}", _NOTES_MAX_TOKENS))
-        repair = call_usage(SOURCE_MODEL, tuple(reply[1:]), CACHE_TTL)
-        rewritten = apply_repairs(report, reply.parsed, checked.unsupported)
-    except _STAGE_ERRORS as exc:
-        repair = failed_usage(SOURCE_MODEL, exc, CACHE_TTL)
-        report.data_gaps.append(f"The repair pass failed ({type(exc).__name__}: {exc}); unsupported claims "
-                                "were removed instead.")
-        rewritten = []
-    log_usage("pipeline", "Repair pass", SOURCE_MODEL, repair)
-    cost += repair.cost_usd
-
-    # Rewritten claims get one more check; deleted and unrepaired ones go.
-    rechecked = check_claims(report, store, only=set(rewritten)) if rewritten else None
-    still_failing = {where: why for where, why in checked.unsupported.items() if where not in rewritten}
-    if rechecked is not None:
-        cost += rechecked.cost_usd
-        still_failing |= rechecked.unsupported
-    remove_claims(report, still_failing)
-    print(f"[pipeline] Repair: {len(rewritten)} rewritten, {len(still_failing)} removed")
-    return cost
 
 
 def generate_report(ticker: str, market: MarketSnapshot | None = None, allow_missing_market_data: bool = False,

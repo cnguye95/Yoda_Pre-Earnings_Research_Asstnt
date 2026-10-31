@@ -1,0 +1,640 @@
+{
+ "filing_extractor": "You are the filing extractor on a team preparing a pre-earnings preview of this company's upcoming quarterly report. From the 10-Q and/or annual report and the XBRL fact sheet above, extract what the writer needs. Note topics:\n- kpis: the headline figures of the latest period and the metrics that drive them;\n- segments: each segment's or region's results and trend;\n- guidance: the filing's own outlook and targets;\n- risks: risk factors that matter for the upcoming report, especially new or changed ones;\n- notable: one-off items, accounting changes, legal matters, capital returns, debt.\n\nCitations \u2014 the rule every claim follows:\n- Every claim has evidence_ids: the IDs of the source passages that support it, copied exactly as shown in square brackets (\"K.042\", \"F.03\"). Cite only passages that contain the fact.\n- Tag each claim's evidence_type: reported (a company's actual results), guided (management's own outlook), estimate (third-party expectations such as consensus), proxy (an indirect signal, such as a competitor's figures), unverifiable (no source backs it).\n- Rows starting with F are the XBRL fact sheet: figures the company tagged in these filings, and figures derived from them (labelled derived). Prefer them for headline numbers.\n- News shows its date. Only news from the last 14 days may be cited; older news is background only.\n\nEach note is one specific, checkable claim. Call submit_notes once with all your notes.",
+ "post_filing_extractor": "You are the post-filing extractor on a team preparing a pre-earnings preview of this company's upcoming quarterly report. From what came after the filing \u2014 the 8-K and the earnings call above \u2014 extract what the writer needs. Note topics:\n- release_figures: every figure in the earnings release;\n- guidance_updates: each guidance statement, and whether it is new, raised, maintained, lowered or withdrawn against the filing;\n- call_themes: what analysts pushed on, and how management answered;\n- contradictions: where the 8-K or the call contradicts the filing (cite both, each with its date).\n\nCitations \u2014 the rule every claim follows:\n- Every claim has evidence_ids: the IDs of the source passages that support it, copied exactly as shown in square brackets (\"K.042\", \"F.03\"). Cite only passages that contain the fact.\n- Tag each claim's evidence_type: reported (a company's actual results), guided (management's own outlook), estimate (third-party expectations such as consensus), proxy (an indirect signal, such as a competitor's figures), unverifiable (no source backs it).\n- Rows starting with F are the XBRL fact sheet: figures the company tagged in these filings, and figures derived from them (labelled derived). Prefer them for headline numbers.\n- News shows its date. Only news from the last 14 days may be cited; older news is background only.\n\nEach note is one specific, checkable claim. Call submit_notes once with all your notes.",
+ "repair": "You wrote a pre-earnings report from the sources above. A check found that some of its claims say more than the passages they cite. For each claim in the message, either:\n- rewrite it so it says only what passages support (you may cite other passages from the sources above), or\n- delete it, when no passage supports anything like it.\nNever add a claim, and keep each claim's location exactly as given.\n\nCitations \u2014 the rule every claim follows:\n- Every claim has evidence_ids: the IDs of the source passages that support it, copied exactly as shown in square brackets (\"K.042\", \"F.03\"). Cite only passages that contain the fact.\n- Tag each claim's evidence_type: reported (a company's actual results), guided (management's own outlook), estimate (third-party expectations such as consensus), proxy (an indirect signal, such as a competitor's figures), unverifiable (no source backs it).\n- Rows starting with F are the XBRL fact sheet: figures the company tagged in these filings, and figures derived from them (labelled derived). Prefer them for headline numbers.\n- News shows its date. Only news from the last 14 days may be cited; older news is background only.\n\nCall submit_repairs once, with one repair per claim listed.",
+ "research_briefs": {
+  "news": "You research recent news about {company} ({ticker}) for a pre-earnings preview of its upcoming quarterly report: earnings previews and what analysts expect, analyst rating and target changes, company announcements and events since its latest filing, and industry news that could move the quarter. Leave competitors' filings to a colleague.",
+  "peers": "You research {company} ({ticker})'s competitors for a pre-earnings preview of its upcoming quarterly report. Pick the 1-3 closest competitors and read their latest filings (lookup_peer) and recent results news, for what they say about demand, pricing, costs and share that reads across to {ticker}. Leave {ticker}'s own news to a colleague."
+ },
+ "research_message": "Today's date: 2026-10-31.\nCompany: Test Co (TEST).\nNewest filing: 10-Q filed 2026-08-06.\nNext report: Q3 FY2026, expected 2026-11-01.\nResearch, then call submit_notes.",
+ "research_rules": "How to work:\n- Use the tools to find evidence: search_news (from the filing date on), read_article (only a URL a search returned, when the snippet isn't enough), lookup_peer (a competitor's newest filing).\n- Every result comes back with passage IDs in square brackets. Your notes cite those IDs exactly; a note may cite only passages a tool returned to you.\n- Tag a claim from news estimate (or unverifiable), and a competitor's figures proxy. Only news from the last 14 days may be cited.\n- You have at most 6 tool calls. Stop searching as soon as you have what matters, then call submit_notes once with every note (topic: a short label of your choosing).",
+ "research_tools": [
+  {
+   "description": "Fetch a competitor's most recent SEC filing and search it for evidence on a topic. Use this to compare the primary company against a named peer (e.g., DIS for NFLX, BX for COIN).",
+   "input_schema": {
+    "additionalProperties": false,
+    "properties": {
+     "k": {
+      "description": "How many chunks to return (default 3, max 5).",
+      "maximum": 5,
+      "minimum": 1,
+      "type": "integer"
+     },
+     "peer_ticker": {
+      "description": "The peer company's ticker symbol (e.g., 'DIS').",
+      "type": "string"
+     },
+     "query": {
+      "description": "What to search for in the peer's filing.",
+      "type": "string"
+     }
+    },
+    "required": [
+     "peer_ticker",
+     "query"
+    ],
+    "type": "object"
+   },
+   "name": "lookup_peer"
+  },
+  {
+   "description": "Read the full text of a news article that search_news already returned in this run (pass its exact URL). Use it when the snippet cuts off where a claim came from or the detail you need. Long articles are cut at about 5,000 tokens.",
+   "input_schema": {
+    "additionalProperties": false,
+    "properties": {
+     "url": {
+      "description": "The article's URL, exactly as search_news returned it.",
+      "type": "string"
+     }
+    },
+    "required": [
+     "url"
+    ],
+    "type": "object"
+   },
+   "name": "read_article"
+  },
+  {
+   "description": "Search the web for recent news about the company or its industry. Use this for sentiment, competitor moves, regulatory developments, or events that happened after the filing date.",
+   "input_schema": {
+    "additionalProperties": false,
+    "properties": {
+     "max_results": {
+      "description": "How many articles to return (default 3, max 5).",
+      "maximum": 5,
+      "minimum": 1,
+      "type": "integer"
+     },
+     "query": {
+      "description": "Search query in natural language.",
+      "type": "string"
+     }
+    },
+    "required": [
+     "query"
+    ],
+    "type": "object"
+   },
+   "name": "search_news"
+  },
+  {
+   "description": "Submit your notes. Call it once, with every note, when your instructions ask for notes.",
+   "input_schema": {
+    "$defs": {
+     "Claim": {
+      "additionalProperties": false,
+      "properties": {
+       "evidence_ids": {
+        "items": {
+         "type": "string"
+        },
+        "title": "Evidence Ids",
+        "type": "array"
+       },
+       "evidence_type": {
+        "enum": [
+         "reported",
+         "guided",
+         "estimate",
+         "proxy",
+         "unverifiable"
+        ],
+        "title": "Evidence Type",
+        "type": "string"
+       },
+       "text": {
+        "title": "Text",
+        "type": "string"
+       }
+      },
+      "required": [
+       "text",
+       "evidence_ids",
+       "evidence_type"
+      ],
+      "title": "Claim",
+      "type": "object"
+     },
+     "Note": {
+      "additionalProperties": false,
+      "properties": {
+       "claim": {
+        "$ref": "#/$defs/Claim"
+       },
+       "topic": {
+        "title": "Topic",
+        "type": "string"
+       }
+      },
+      "required": [
+       "topic",
+       "claim"
+      ],
+      "title": "Note",
+      "type": "object"
+     }
+    },
+    "additionalProperties": false,
+    "properties": {
+     "notes": {
+      "items": {
+       "$ref": "#/$defs/Note"
+      },
+      "title": "Notes",
+      "type": "array"
+     }
+    },
+    "required": [
+     "notes"
+    ],
+    "title": "Notes",
+    "type": "object"
+   },
+   "name": "submit_notes"
+  }
+ ],
+ "source_tools": [
+  {
+   "description": "Submit your notes. Call it once, with every note, when your instructions ask for notes.",
+   "input_schema": {
+    "$defs": {
+     "Claim": {
+      "additionalProperties": false,
+      "properties": {
+       "evidence_ids": {
+        "items": {
+         "type": "string"
+        },
+        "title": "Evidence Ids",
+        "type": "array"
+       },
+       "evidence_type": {
+        "enum": [
+         "reported",
+         "guided",
+         "estimate",
+         "proxy",
+         "unverifiable"
+        ],
+        "title": "Evidence Type",
+        "type": "string"
+       },
+       "text": {
+        "title": "Text",
+        "type": "string"
+       }
+      },
+      "required": [
+       "text",
+       "evidence_ids",
+       "evidence_type"
+      ],
+      "title": "Claim",
+      "type": "object"
+     },
+     "Note": {
+      "additionalProperties": false,
+      "properties": {
+       "claim": {
+        "$ref": "#/$defs/Claim"
+       },
+       "topic": {
+        "title": "Topic",
+        "type": "string"
+       }
+      },
+      "required": [
+       "topic",
+       "claim"
+      ],
+      "title": "Note",
+      "type": "object"
+     }
+    },
+    "additionalProperties": false,
+    "properties": {
+     "notes": {
+      "items": {
+       "$ref": "#/$defs/Note"
+      },
+      "title": "Notes",
+      "type": "array"
+     }
+    },
+    "required": [
+     "notes"
+    ],
+    "title": "Notes",
+    "type": "object"
+   },
+   "name": "submit_notes"
+  },
+  {
+   "description": "Submit one repair per unsupported claim. Call it once, when your instructions ask for repairs.",
+   "input_schema": {
+    "$defs": {
+     "Claim": {
+      "additionalProperties": false,
+      "properties": {
+       "evidence_ids": {
+        "items": {
+         "type": "string"
+        },
+        "title": "Evidence Ids",
+        "type": "array"
+       },
+       "evidence_type": {
+        "enum": [
+         "reported",
+         "guided",
+         "estimate",
+         "proxy",
+         "unverifiable"
+        ],
+        "title": "Evidence Type",
+        "type": "string"
+       },
+       "text": {
+        "title": "Text",
+        "type": "string"
+       }
+      },
+      "required": [
+       "text",
+       "evidence_ids",
+       "evidence_type"
+      ],
+      "title": "Claim",
+      "type": "object"
+     },
+     "Repair": {
+      "additionalProperties": false,
+      "properties": {
+       "action": {
+        "enum": [
+         "rewrite",
+         "delete"
+        ],
+        "title": "Action",
+        "type": "string"
+       },
+       "claim": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/Claim"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "where": {
+        "title": "Where",
+        "type": "string"
+       }
+      },
+      "required": [
+       "where",
+       "action",
+       "claim"
+      ],
+      "title": "Repair",
+      "type": "object"
+     }
+    },
+    "additionalProperties": false,
+    "properties": {
+     "repairs": {
+      "items": {
+       "$ref": "#/$defs/Repair"
+      },
+      "title": "Repairs",
+      "type": "array"
+     }
+    },
+    "required": [
+     "repairs"
+    ],
+    "title": "Repairs",
+    "type": "object"
+   },
+   "name": "submit_repairs"
+  },
+  {
+   "description": "Submit the finished report. Call it once, when your instructions ask for the report.",
+   "input_schema": {
+    "$defs": {
+     "Claim": {
+      "additionalProperties": false,
+      "properties": {
+       "evidence_ids": {
+        "items": {
+         "type": "string"
+        },
+        "title": "Evidence Ids",
+        "type": "array"
+       },
+       "evidence_type": {
+        "enum": [
+         "reported",
+         "guided",
+         "estimate",
+         "proxy",
+         "unverifiable"
+        ],
+        "title": "Evidence Type",
+        "type": "string"
+       },
+       "text": {
+        "title": "Text",
+        "type": "string"
+       }
+      },
+      "required": [
+       "text",
+       "evidence_ids",
+       "evidence_type"
+      ],
+      "title": "Claim",
+      "type": "object"
+     },
+     "Debate": {
+      "additionalProperties": false,
+      "properties": {
+       "bear": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/Claim"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "bull": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/Claim"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "question": {
+        "title": "Question",
+        "type": "string"
+       },
+       "what_settles_it": {
+        "title": "What Settles It",
+        "type": "string"
+       }
+      },
+      "required": [
+       "question",
+       "bull",
+       "bear",
+       "what_settles_it"
+      ],
+      "title": "Debate",
+      "type": "object"
+     },
+     "GuidanceItem": {
+      "additionalProperties": false,
+      "properties": {
+       "claim": {
+        "$ref": "#/$defs/Claim"
+       },
+       "guidance": {
+        "title": "Guidance",
+        "type": "string"
+       },
+       "metric": {
+        "title": "Metric",
+        "type": "string"
+       },
+       "period": {
+        "title": "Period",
+        "type": "string"
+       },
+       "status": {
+        "enum": [
+         "new",
+         "raised",
+         "maintained",
+         "lowered",
+         "withdrawn",
+         "unclear"
+        ],
+        "title": "Status",
+        "type": "string"
+       }
+      },
+      "required": [
+       "metric",
+       "guidance",
+       "period",
+       "status",
+       "claim"
+      ],
+      "title": "GuidanceItem",
+      "type": "object"
+     },
+     "KeyRisk": {
+      "additionalProperties": false,
+      "properties": {
+       "claim": {
+        "$ref": "#/$defs/Claim"
+       },
+       "is_new": {
+        "title": "Is New",
+        "type": "boolean"
+       }
+      },
+      "required": [
+       "claim",
+       "is_new"
+      ],
+      "title": "KeyRisk",
+      "type": "object"
+     },
+     "ManagementQuestion": {
+      "additionalProperties": false,
+      "properties": {
+       "question": {
+        "title": "Question",
+        "type": "string"
+       },
+       "why": {
+        "$ref": "#/$defs/Claim"
+       }
+      },
+      "required": [
+       "question",
+       "why"
+      ],
+      "title": "ManagementQuestion",
+      "type": "object"
+     },
+     "MetricToModel": {
+      "additionalProperties": false,
+      "properties": {
+       "consensus": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/Claim"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "last_reported": {
+        "anyOf": [
+         {
+          "$ref": "#/$defs/Claim"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "metric": {
+        "title": "Metric",
+        "type": "string"
+       },
+       "period": {
+        "title": "Period",
+        "type": "string"
+       },
+       "view": {
+        "$ref": "#/$defs/Claim"
+       }
+      },
+      "required": [
+       "metric",
+       "period",
+       "last_reported",
+       "consensus",
+       "view"
+      ],
+      "title": "MetricToModel",
+      "type": "object"
+     },
+     "Scenario": {
+      "additionalProperties": false,
+      "properties": {
+       "description": {
+        "$ref": "#/$defs/Claim"
+       },
+       "name": {
+        "enum": [
+         "bull",
+         "base",
+         "bear"
+        ],
+        "title": "Name",
+        "type": "string"
+       },
+       "triggers": {
+        "items": {
+         "type": "string"
+        },
+        "title": "Triggers",
+        "type": "array"
+       }
+      },
+      "required": [
+       "name",
+       "description",
+       "triggers"
+      ],
+      "title": "Scenario",
+      "type": "object"
+     }
+    },
+    "additionalProperties": false,
+    "properties": {
+     "data_gaps": {
+      "items": {
+       "type": "string"
+      },
+      "title": "Data Gaps",
+      "type": "array"
+     },
+     "guidance": {
+      "items": {
+       "$ref": "#/$defs/GuidanceItem"
+      },
+      "title": "Guidance",
+      "type": "array"
+     },
+     "key_debates": {
+      "items": {
+       "$ref": "#/$defs/Debate"
+      },
+      "title": "Key Debates",
+      "type": "array"
+     },
+     "key_risks": {
+      "items": {
+       "$ref": "#/$defs/KeyRisk"
+      },
+      "title": "Key Risks",
+      "type": "array"
+     },
+     "metrics_to_model": {
+      "items": {
+       "$ref": "#/$defs/MetricToModel"
+      },
+      "title": "Metrics To Model",
+      "type": "array"
+     },
+     "questions_for_management": {
+      "items": {
+       "$ref": "#/$defs/ManagementQuestion"
+      },
+      "title": "Questions For Management",
+      "type": "array"
+     },
+     "scenarios": {
+      "items": {
+       "$ref": "#/$defs/Scenario"
+      },
+      "title": "Scenarios",
+      "type": "array"
+     },
+     "setup_summary": {
+      "items": {
+       "$ref": "#/$defs/Claim"
+      },
+      "title": "Setup Summary",
+      "type": "array"
+     },
+     "since_filing": {
+      "items": {
+       "$ref": "#/$defs/Claim"
+      },
+      "title": "Since Filing",
+      "type": "array"
+     }
+    },
+    "required": [
+     "setup_summary",
+     "metrics_to_model",
+     "guidance",
+     "since_filing",
+     "key_debates",
+     "scenarios",
+     "key_risks",
+     "questions_for_management",
+     "data_gaps"
+    ],
+    "title": "EarningsReport",
+    "type": "object"
+   },
+   "name": "submit_report"
+  }
+ ],
+ "writer": "You are the writer: write a pre-earnings research report on this company's upcoming quarterly report, from the sources above and the stage notes in the message.\n\nThe stage notes come from colleagues who read the filings, the 8-K and the call, recent news and competitors' filings. Use them as leads: every claim you write cites passages (the passages the researchers found are given with their notes), never a note.\n\nCitations \u2014 the rule every claim follows:\n- Every claim has evidence_ids: the IDs of the source passages that support it, copied exactly as shown in square brackets (\"K.042\", \"F.03\"). Cite only passages that contain the fact.\n- Tag each claim's evidence_type: reported (a company's actual results), guided (management's own outlook), estimate (third-party expectations such as consensus), proxy (an indirect signal, such as a competitor's figures), unverifiable (no source backs it).\n- Rows starting with F are the XBRL fact sheet: figures the company tagged in these filings, and figures derived from them (labelled derived). Prefer them for headline numbers.\n- News shows its date. Only news from the last 14 days may be cited; older news is background only.\n- Anything you cannot cite goes in data_gaps, not into a claim.\n\nWhen sources disagree:\nEvidence tiers, most reliable first: reported > guided > estimate > proxy >\nunverifiable. When sources disagree:\n  - For the same metric and period, the more reliable tier wins and both\n    are shown.\n  - Newer information is preferred only within the same tier, or when it\n    covers a later period.\n  - Guidance, consensus and whisper for the same period are different\n    quantities, not conflicting claims. Showing the gap between them is\n    good. The tier rule applies only when sources give different values for\n    the same fact.\nWhen an item dated after the filing (the 8-K, the earnings call, a news\narticle) contradicts the filing, flag the contradiction: show both, each\nwith its date, and say which is newer. Which one to rely on still follows\nthe rules above, and a newer item never overwrites a filing figure.\n\nFocus on what matters for the upcoming report: the setup, the metrics to model and where the risk to expectations lies, guidance, what changed since the filing, the open debates, how the quarter could go, the key risks and what to ask management.\n\nCall submit_report once with the whole report."
+}

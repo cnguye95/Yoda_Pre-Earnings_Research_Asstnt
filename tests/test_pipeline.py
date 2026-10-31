@@ -6,6 +6,9 @@ fakes that record what they were sent.
 Run with: python -m pytest -q tests/test_pipeline.py
 """
 
+import json
+from contextlib import nullcontext
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -15,7 +18,7 @@ from yoda.eval import runner
 from yoda.evidence_store import SOURCE_CHARS_LIMIT
 from yoda.evidence_text import CONFLICT_RULES, NEWER_CONTRADICTION_RULE
 from yoda.ingest.transcripts import TranscriptFetch
-from yoda.modes import llm, pipeline, tools
+from yoda.modes import llm, pipeline, source_calls, tools
 from yoda.prompt_cache import cache_misses
 from yoda.report.claim_check import ClaimCheck, Repair, Repairs
 from yoda.report.header import MarketDataUnavailable
@@ -78,9 +81,13 @@ class _Fakes:
 
         monkeypatch.setattr(pipeline, "ChromaStore", lambda: None)
         monkeypatch.setattr(pipeline, "warm_cache", self.warm)
+        # The extractors and the writer call submit_call from pipeline.py;
+        # the repair pass, the research loop and the claim check run in
+        # source_calls.py, so both modules are patched.
         monkeypatch.setattr(pipeline, "submit_call", self.submit)
-        monkeypatch.setattr(pipeline, "client", SimpleNamespace(messages=SimpleNamespace(create=self.create)))
-        monkeypatch.setattr(pipeline, "check_claims", self.check)
+        monkeypatch.setattr(source_calls, "submit_call", self.submit)
+        monkeypatch.setattr(source_calls, "client", SimpleNamespace(messages=SimpleNamespace(stream=self.stream)))
+        monkeypatch.setattr(source_calls, "check_claims", self.check)
         monkeypatch.setitem(tools.TOOL_DISPATCH, "search_news", self.search)
 
     def warm(self, **request):
@@ -100,11 +107,13 @@ class _Fakes:
             parsed = self.repairs
         return llm.StructuredReply(parsed, 10, 10, 0, 2000)
 
-    def create(self, **request):
+    def stream(self, **request):
+        """A fake streamed researcher turn: a context manager whose get_final_message() is the next scripted reply."""
         self.haiku.append(request)
         key = request["system"]
         self.turn[key] = self.turn.get(key, 0) + 1
-        return self.research_turns[min(self.turn[key], len(self.research_turns)) - 1]()
+        reply = self.research_turns[min(self.turn[key], len(self.research_turns)) - 1]()
+        return nullcontext(SimpleNamespace(get_final_message=lambda: reply))
 
     def check(self, report, store, only=None):
         self.checks.append(only)
@@ -183,7 +192,7 @@ def test_a_researcher_stops_at_its_tool_budget_and_repeats_are_refused(monkeypat
     pipeline.run_pipeline("TEST", _sources())
     # Each researcher ran its search once; every later identical call was refused, then the loop gave up.
     assert fakes.searches == ["same", "same"]
-    assert stages["News researcher"].gap == "it never submitted its notes"
+    assert stages["News researcher"].gap == "it never called submit_notes"
     observations = [m["content"][0]["content"] for m in fakes.haiku[-1]["messages"]
                     if m["role"] == "user" and isinstance(m["content"], list)]
     assert observations[1].startswith("You already made this exact call")
@@ -305,13 +314,15 @@ def test_the_whisper_setting_reaches_the_market_data_fetch(monkeypatch):
 
 def test_a_prompt_too_long_for_the_context_window_fails_loudly(monkeypatch):
     counted = []
-    monkeypatch.setattr(pipeline, "client", SimpleNamespace(messages=SimpleNamespace(
+    monkeypatch.setattr(source_calls, "client", SimpleNamespace(messages=SimpleNamespace(
         count_tokens=lambda **request: counted.append(request) or SimpleNamespace(input_tokens=990_000))))
-    huge = pipeline.source_request("x" * 2_400_000, pipeline._WRITER, "Write.", pipeline._REPORT_MAX_TOKENS)
+    huge = source_calls.source_request("x" * 2_400_000, pipeline.SOURCE_TOOLS, pipeline._WRITER, "Write.",
+                                       source_calls.REPORT_MAX_TOKENS)
     with pytest.raises(RuntimeError, match="doesn't fit"):
-        pipeline._check_fits(huge)
+        source_calls.check_fits(huge)
     # A normal-sized prompt is settled by the estimate alone: no count is asked for.
-    pipeline._check_fits(pipeline.source_request(_FILING_TEXT, pipeline._WRITER, "Write.", pipeline._REPORT_MAX_TOKENS))
+    source_calls.check_fits(source_calls.source_request(_FILING_TEXT, pipeline.SOURCE_TOOLS, pipeline._WRITER,
+                                                        "Write.", source_calls.REPORT_MAX_TOKENS))
     assert len(counted) == 1
 
 
@@ -322,3 +333,23 @@ def test_the_source_text_is_identical_to_every_other_arms(monkeypatch):
     pipeline.run_pipeline("TEST", sources)
     expected = pipeline.render_sources(base_store(sources), max_chars=SOURCE_CHARS_LIMIT).text
     assert fakes.warmed[0]["system"][0]["text"] == expected
+
+
+def test_the_prompts_are_unchanged_by_the_move_to_the_shared_module():
+    # The shared parts moved to source_calls.py (2026-10-31). The staged
+    # pipeline must send exactly what it sent before, so its NVDA run stays
+    # comparable; tests/fixtures/pipeline_prompts.json is that earlier text.
+    pinned = json.loads((Path(__file__).parent / "fixtures" / "pipeline_prompts.json").read_text(encoding="utf-8"))
+    now = {
+        "filing_extractor": pipeline._FILING_EXTRACTOR,
+        "post_filing_extractor": pipeline._POST_FILING_EXTRACTOR,
+        "writer": pipeline._WRITER,
+        "repair": source_calls.REPAIR,
+        "research_rules": pipeline._RESEARCH_RULES,
+        "research_briefs": pipeline._RESEARCH_BRIEFS,
+        "research_message": pipeline._research_message(_sources(), "Today's date: 2026-10-31."),
+        "source_tools": pipeline.SOURCE_TOOLS,
+        "research_tools": pipeline.RESEARCH_TOOLS,
+    }
+    for name, value in now.items():
+        assert json.loads(json.dumps(value)) == pinned[name], name
