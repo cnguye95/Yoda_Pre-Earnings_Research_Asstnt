@@ -48,9 +48,14 @@ WHEN labels (relative to the architecture comparison, item 4; set
    Option B (one Claude call over the shared sources plus one generic
    news search; yoda/modes/baseline.py) is the baseline. To watch on the
    smoke run:
-   - News yield: on NVDA the search ("<company> <ticker> earnings", 10
-     results, from the newest filing's date) returned only 2 results, and
-     the one cited was older than 14 days.
+   - News yield: FIXED (2026-10-31). On the smoke run the search
+     ("<company> <ticker> earnings", 10 asked for, from the newest filing's
+     date) returned 2-4 results, mostly months old: tavily-python 0.5.0
+     always sent "days", which Tavily neither enforced nor let return more
+     than 3 results. Now (tavily-python 0.8.5) every search sends
+     start_date, which Tavily enforces (10 results in a test), and drops
+     anything older; the baseline's one search covers the last 14 days.
+     The smoke run's reports used the old search (all three arms).
    - Alpha Vantage's free tier allows 25 requests a day; a first 20-ticker
      run may lose some calls (the same for every arm; cached once
      fetched).

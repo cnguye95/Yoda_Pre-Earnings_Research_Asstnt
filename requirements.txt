@@ -32,7 +32,10 @@ pydantic==2.9.2
 finnhub-python==2.4.21
 
 # News / web search
-tavily-python==0.5.0
+# 0.8.x, not 0.5.x: 0.5.0 always sent "days", so a search couldn't send
+# start_date, the window Tavily actually enforces (with "days" it returned
+# articles older than the window, and only 3 results per search).
+tavily-python==0.8.5
 
 # PDF generation
 reportlab==4.2.5

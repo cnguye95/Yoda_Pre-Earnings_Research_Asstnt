@@ -31,6 +31,8 @@ from yoda.modes.tools import TOOL_DISPATCH, TOOL_SCHEMAS
 from yoda.retrieval import vector_store
 from yoda.schema import ArticleText, Filing, FilingSet, NewsSearchResult, ReportDraft
 from yoda.sources import SharedSources, base_store
+from yoda.dates import market_today
+from yoda.tools.news import NEWS_CITABLE_DAYS
 
 
 # ---------------------------------------------------------------------------
@@ -319,14 +321,14 @@ def test_every_arm_rendering_the_same_sources_gets_identical_shared_text():
     assert first["system"][0]["text"] == second["system"][0]["text"]
 
 
-def test_the_news_search_is_generic_and_from_the_filing_date(monkeypatch):
+def test_the_news_search_is_generic_and_covers_the_last_14_days(monkeypatch):
     queries = _fake_news(monkeypatch)
     _fake_model(monkeypatch)
     named = _filing_set(_QUARTERLY).model_copy(update={"company_name": "Test Co Inc"})
     baseline_mod.run_baseline("TEST", _sources(named))
     baseline_mod.run_baseline("TEST", _sources(_filing_set(_QUARTERLY)))
-    assert queries == [("Test Co Inc TEST earnings", 10, datetime.date(2026, 5, 1)),
-                       ("TEST earnings", 10, datetime.date(2026, 5, 1))]
+    since = market_today() - datetime.timedelta(days=NEWS_CITABLE_DAYS)
+    assert queries == [("Test Co Inc TEST earnings", 10, since), ("TEST earnings", 10, since)]
 
 
 def test_baseline_writes_a_checked_report_from_one_call(monkeypatch, capsys):

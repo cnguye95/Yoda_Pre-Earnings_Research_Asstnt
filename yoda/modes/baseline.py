@@ -6,7 +6,8 @@ Claude Sonnet 5.5 for the report in ONE response:
   - the shared sources every arm reads (yoda/sources.py): the company's
     recent SEC filings (10-Q and/or annual report), its XBRL fact sheet, the
     latest 8-K, the latest earnings call and the market snapshot;
-  - the results of ONE generic news search ("<company> <ticker> earnings"),
+  - the results of ONE generic news search ("<company> <ticker> earnings")
+    over the last 14 days (NEWS_CITABLE_DAYS),
     its own, never the searches another arm chose.
 
 No retrieval, no agent loop, no second pass, and none of Yoda's method: the
@@ -27,7 +28,7 @@ would ever read the cache (a cache write costs 25% more than plain input).
 """
 
 import time
-from datetime import date
+from datetime import timedelta
 from typing import NamedTuple
 
 import anthropic
@@ -35,7 +36,7 @@ import pydantic
 from anthropic import transform_schema
 
 from yoda import config, pricing
-from yoda.dates import dates_line
+from yoda.dates import dates_line, market_today
 from yoda.evidence_store import SOURCE_CHARS_LIMIT, add_news, render_passages, render_sources
 from yoda.evidence_text import CONFLICT_RULES, NEWER_CONTRADICTION_RULE
 from yoda.modes.llm import client, structured_call, usage_counts
@@ -154,12 +155,15 @@ def prepare_baseline(ticker: str, sources: SharedSources) -> BaselinePrep:
     rendered = render_sources(store, max_chars=SOURCE_CHARS_LIMIT)
     gaps = [*sources.gaps, *rendered.left_out]
 
-    # Its own one news search, from the newest filing's date on. A failed
-    # search is a gap; the report goes on without news.
+    # Its own one news search, over the last NEWS_CITABLE_DAYS days only: the
+    # quick search an analyst would type, and the window in which news may be
+    # cited (from the filing date on, the few results went to months-old
+    # coverage of the last quarter). A failed search is a gap; the report
+    # goes on without news.
     news_ids: list[str] = []
     try:
         results = search_news(news_query(filing_set), max_results=NEWS_RESULTS,
-                              since=date.fromisoformat(filing_set.newest.filing_date))
+                              since=market_today() - timedelta(days=NEWS_CITABLE_DAYS))
         news_ids = list(dict.fromkeys(add_news(store, results)))
     except RuntimeError as exc:
         gaps.append(f"News search failed: {exc}")

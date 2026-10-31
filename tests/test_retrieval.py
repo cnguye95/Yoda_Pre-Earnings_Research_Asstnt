@@ -334,14 +334,15 @@ def _fake_tavily(monkeypatch, reply=None, error=None) -> list[dict]:
 
 def test_news_results_without_url_are_dropped(monkeypatch):
     _fake_tavily(monkeypatch, reply={"results": [
-        {"title": "Has link", "url": "https://www.reuters.com/a", "content": "body", "published_date": "2026-10-01"},
+        {"title": "Has link", "url": "https://www.reuters.com/a", "content": "body",
+         "published_date": (market_today() - timedelta(days=5)).isoformat()},
         {"title": "No link", "url": "", "content": "body"},
         {"title": "Missing link key", "content": "body"},
     ]})
     results = news.search_news("q")
     assert [r.title for r in results] == ["Has link"]
     assert results[0].source_domain == "reuters.com"
-    assert results[0].published_date == "2026-10-01"
+    assert results[0].published_date == (market_today() - timedelta(days=5)).isoformat()
 
 
 def test_news_missing_date_stays_missing(monkeypatch):
@@ -371,24 +372,34 @@ def test_news_bug_in_yoda_is_not_relabelled_as_tavily_failure(monkeypatch):
 
 
 def test_news_search_starts_at_the_filing_date(monkeypatch):
-    # A news search from the filing date on, set with "days" alone: Tavily
-    # rejects a request that also has start_date (HTTP 400 "When days is set,
-    # start_date or end_date cannot be set", found in the 2026-10-28 smoke test).
+    # The window is sent as start_date, which Tavily enforces; "days" isn't
+    # sent (it wasn't enforced and capped a search at 3 results).
     calls = _fake_tavily(monkeypatch, reply={"results": []})
     filing_date = market_today() - timedelta(days=60)
 
     news.search_news("q", since=filing_date)
 
     assert calls[0]["topic"] == "news"
-    assert calls[0]["days"] == 60
-    assert "start_date" not in calls[0] and "end_date" not in calls[0]
+    assert calls[0]["start_date"] == filing_date.isoformat()
+    assert "days" not in calls[0]
 
 
 def test_news_search_without_a_filing_covers_30_days(monkeypatch):
     calls = _fake_tavily(monkeypatch, reply={"results": []})
     news.search_news("q")
-    assert calls[0]["days"] == 30
-    assert "start_date" not in calls[0]
+    assert calls[0]["start_date"] == (market_today() - timedelta(days=30)).isoformat()
+
+
+def test_news_older_than_the_window_is_dropped(monkeypatch):
+    # Bug (smoke run, 2026-10-31): a search from 2026-08-05 on returned a
+    # 2025-11-13 article. An undated article is kept (it's never citable).
+    since = market_today() - timedelta(days=14)
+    _fake_tavily(monkeypatch, reply={"results": [
+        {"title": "old", "url": "https://x.com/old", "published_date": (since - timedelta(days=1)).isoformat()},
+        {"title": "new", "url": "https://x.com/new", "published_date": since.isoformat()},
+        {"title": "undated", "url": "https://x.com/undated"},
+    ]})
+    assert [result.title for result in news.search_news("q", since=since)] == ["new", "undated"]
 
 
 @pytest.mark.parametrize("raw, expected", [
@@ -399,15 +410,8 @@ def test_news_search_without_a_filing_covers_30_days(monkeypatch):
 ])
 def test_news_dates_become_iso(monkeypatch, raw, expected):
     _fake_tavily(monkeypatch, reply={"results": [{"title": "t", "url": "https://x.com/a", "published_date": raw}]})
-    assert news.search_news("q")[0].published_date == expected
-
-
-def test_news_search_from_today_still_asks_for_one_day(monkeypatch):
-    # A filing dated today gives a zero-day window, which Tavily would
-    # reject; at least one day is always asked for.
-    calls = _fake_tavily(monkeypatch, reply={"results": []})
-    news.search_news("q", since=market_today())
-    assert calls[0]["days"] == 1
+    # A window from long ago, so the fixed dates above are never "too old".
+    assert news.search_news("q", since=market_today() - timedelta(days=3650))[0].published_date == expected
 
 
 # ---------------------------------------------------------------------------

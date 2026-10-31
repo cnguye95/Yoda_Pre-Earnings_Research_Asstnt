@@ -96,23 +96,20 @@ def search_news(query: str, max_results: int = 5, since: date | None = None) -> 
     happened after the filing; with no filing it is the last 30 days. Uses
     Tavily's news search, which also dates each article. Returns up to
     *max_results* NewsSearchResult records. Results without a URL are
-    dropped, because a claim the reader can't follow back can't be cited;
-    articles Tavily can't date are kept with no date. An empty list is a
-    valid answer when nothing matches.
+    dropped, because a claim the reader can't follow back can't be cited,
+    and so are results dated before *since*; articles Tavily can't date are
+    kept with no date. An empty list is a valid answer when nothing matches.
 
     Raises RuntimeError naming the cause when Tavily can't be reached or
     rejects the request, or answers with something other than search results.
     """
     client = TavilyClient(api_key=config.TAVILY_API_KEY)
 
-    # The window runs from *since* to today, given to Tavily as a number of
-    # days. Only "days" is sent: Tavily rejects a request that also has a
-    # start_date ("When days is set, start_date or end_date cannot be set"),
-    # and its client always sends days (3 unless told otherwise), so days is
-    # the one window setting that can be used. At least one day is asked for.
-    today = market_today()
-    window_start = since or today - timedelta(days=_NO_FILING_WINDOW_DAYS)
-    window_days = max((today - window_start).days, 1)
+    # The window runs from *since* to today, sent to Tavily as start_date.
+    # Tavily enforces start_date; its older "days" setting was not enforced
+    # (the smoke run got articles months older than the window) and capped a
+    # search at 3 results.
+    window_start = since or market_today() - timedelta(days=_NO_FILING_WINDOW_DAYS)
 
     # Issue the search. search_depth="basic" avoids crawling full page content,
     # keeping latency low and staying within Tavily's free-tier rate limits.
@@ -123,7 +120,7 @@ def search_news(query: str, max_results: int = 5, since: date | None = None) -> 
             search_depth="basic",
             include_raw_content=False,
             topic="news",
-            days=window_days,
+            start_date=window_start.isoformat(),
         )
     except _TAVILY_ERRORS as exc:
         raise RuntimeError(f"Tavily search failed: {type(exc).__name__}: {exc}") from exc
@@ -134,16 +131,19 @@ def search_news(query: str, max_results: int = 5, since: date | None = None) -> 
         raise RuntimeError(f"Tavily search returned an unexpected reply: {response!r}")
 
     # Turn each usable hit into a NewsSearchResult. The domain is taken from
-    # the URL with "www." removed, so citations read "reuters.com".
+    # the URL with "www." removed, so citations read "reuters.com". A result
+    # dated before the window is dropped too, in case Tavily ever lets one
+    # through (external data is checked where it enters).
     results = []
     for item in response.get("results") or []:
         url = item.get("url")
-        if not url:
+        published = _iso_date(item.get("published_date"))
+        if not url or (published is not None and published < window_start.isoformat()):
             continue
         results.append(NewsSearchResult(
             title=item.get("title") or "(untitled)",
             url=url,
-            published_date=_iso_date(item.get("published_date")),
+            published_date=published,
             snippet=(item.get("content") or "")[:_SNIPPET_CHARS],
             source_domain=urlparse(url).netloc.removeprefix("www."),
         ))
