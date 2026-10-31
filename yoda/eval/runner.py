@@ -74,7 +74,9 @@ from yoda.eval.judge import (
     prune_judge_cache, write_run_manifest,
 )
 from yoda.eval.rubric import DIMENSIONS, RUBRIC_TEXT, JudgeScores
-from yoda.ingest.edgar import fetch_filings
+from yoda.ingest.edgar import cached_accessions, fetch_filings
+from yoda.ingest.transcripts import cached_transcript_keys
+from yoda.retrieval.vector_store import prune_vector_store
 from yoda.modes.baseline import (
     BASELINE_MODEL, BaselinePrep, BatchedBaseline, call_baseline, collect_baselines, prepare_baseline, run_baseline,
     submit_baselines,
@@ -601,6 +603,13 @@ def run_eval(
                          "whisper_cost_usd": whisper[ticker], "error": outcome.error})
             print(f"  {ticker}: {'ERROR ' + outcome.error if outcome.error else 'saved'}")
         _save_generation(out_dir, rows)
+
+    # The vector store would otherwise only grow: embeddings of filings no
+    # longer read (replaced 10-Qs, old 8-Ks) and leftover collections are
+    # deleted once per run, after every report is written. Local and free.
+    pruned, dropped = prune_vector_store(cached_accessions() | cached_transcript_keys())
+    print(f"\n[vector store] deleted {pruned} chunk(s) of filings no longer read"
+          + (f"; dropped unused collection(s): {', '.join(dropped)}" if dropped else ""))
 
     # Delete report JSONs that belong to no known mode (e.g. old panel_*
     # smoke-test files). Results of a known mode that wasn't run this time

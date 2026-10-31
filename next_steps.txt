@@ -141,22 +141,6 @@ WHEN labels (relative to the full eval run, item 4f):
    - Store it as its own file in the repo, with a pointer from the README.
 
 
-7. Investigate Chroma usage reporting
-   WHEN: AFTER. Doesn't affect report quality; may become unnecessary if
-   the winning architecture doesn't use ChromaDB (both candidates use it
-   only for competitors' filings, lookup_peer).
-   - Do a full inspection of the ChromaDB pipeline.
-   - Known facts (2026-10-30): one persistent collection
-     ("filings_openai", yoda/retrieval/vector_store.py), chunks keyed by
-     accession number (filings, 8-Ks/6-Ks) or the call's key; a document
-     is embedded only once (index_if_missing).
-   - Embeddings are never deleted: when a newer 10-Q replaces a cached one,
-     edgar.py deletes the old HTML file but its chunks stay in ChromaDB,
-     and so do old 8-Ks and calls. The collection only grows.
-   - Embedding cost is not counted in any arm's cost: the real token count
-     from OpenAI's embedding response is not used.
-
-
 8. Add Repo Overview to README
    WHEN: AFTER (the code changes a lot before then).
    - Quick headline descriptions of each code file: a more accessible

@@ -36,6 +36,7 @@ def _keep_real_data_safe(monkeypatch, tmp_path):
     from yoda.eval import judge, runner
     from yoda.ingest import edgar, transcripts
     from yoda.queue import processor
+    from yoda.retrieval import vector_store
 
     data = tmp_path / "data"
     monkeypatch.setattr(runner, "DEFAULT_OUT_DIR", data / "eval")
@@ -45,6 +46,10 @@ def _keep_real_data_safe(monkeypatch, tmp_path):
     monkeypatch.setattr(transcripts, "_CACHE_DIR", data / "transcripts")
     monkeypatch.setattr(processor, "_REPORTS_DIR", data / "reports")
     monkeypatch.setattr(processor, "_ZIPS_DIR", data / "queue_zips")
+    monkeypatch.setattr(vector_store, "_CHROMA_DIR", data / "chroma")
+    # The runner's prune would open a database for every runner test; it is
+    # tested on its own (tests/test_retrieval.py).
+    monkeypatch.setattr(runner, "prune_vector_store", lambda keep: (0, []))
 
 
 class _NoNetwork:

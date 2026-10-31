@@ -50,7 +50,7 @@ from yoda.dates import dates_line
 from yoda.evidence_store import MODE_KINDS, SOURCE_CHARS_LIMIT, render_passages, render_sources
 from yoda.ingest.edgar import fetch_filings
 from yoda.modes import tools
-from yoda.modes.llm import log_usage
+from yoda.modes.llm import call_usage, log_usage
 from yoda.modes.source_calls import (
     CACHE_TTL, CITATION_RULES, REPORT_MAX_TOKENS, SOURCE_MODEL, SUBMIT_DESCRIPTIONS, WRITING_RULES, LoopResult,
     check_and_repair, company_context, source_request, submit_tools, tool_loop,
@@ -58,6 +58,7 @@ from yoda.modes.source_calls import (
 from yoda.report.checks import check_report
 from yoda.report.claim_check import Repairs
 from yoda.report.header import assemble_report, filings_read
+from yoda.retrieval.embeddings import EMBEDDING_MODEL
 from yoda.retrieval.vector_store import ChromaStore
 from yoda.schema import Claim, EarningsReport, EvidenceStore, Passage, ReportDraft
 from yoda.sources import SharedSources, base_store, fetch_shared_sources
@@ -396,6 +397,12 @@ def run_lead(ticker: str, sources: SharedSources) -> LeadRun:
     # claims, and removal of whatever still fails. Then the ID checks.
     cost += check_and_repair(report, store, rendered.text, dates, LEAD_TOOLS, "lead")
     check_report(report, store)
+
+    # Embedding for lookup_peer (OpenAI: competitors' filings and the
+    # searches over them), counted like every other call.
+    embedding = call_usage(EMBEDDING_MODEL, (ctx.store.embedding_tokens, 0, 0, 0), calls=ctx.store.embedding_calls)
+    log_usage("lead", "Embeddings (peer filings)", EMBEDDING_MODEL, embedding)
+    cost += embedding.cost_usd
 
     print(f"[lead] Wall time:  {time.perf_counter() - started:.2f}s")
     print(f"[lead] Total cost: ${cost:.5f}")

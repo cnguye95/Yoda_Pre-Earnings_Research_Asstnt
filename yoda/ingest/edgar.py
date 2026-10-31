@@ -511,6 +511,26 @@ def _read_disk_cache(ticker: str) -> FilingSet | None:
     return filing_set
 
 
+def cached_accessions() -> set[str]:
+    """Return the accession number of every filing and 8-K in the filing cache: the ones Yoda still reads.
+
+    A filing replaced by a newer one has already left its company's cache,
+    so it is not returned. Only each latest.json is read (not the filings'
+    HTML, which _read_disk_cache would load and clean), so this takes a
+    moment even for a large cache. A latest.json that can't be read counts
+    as empty.
+    """
+    accessions: set[str] = set()
+    for meta_path in _CACHE_DIR.glob("*/latest.json"):
+        try:
+            accessions |= {filing["accession_number"]
+                           for filing in json.loads(meta_path.read_text(encoding="utf-8"))["filings"]}
+        except (ValueError, KeyError, TypeError):
+            continue
+    accessions |= {eight_k.name for eight_k in _CACHE_DIR.glob("*/8k/*") if eight_k.is_dir()}
+    return accessions
+
+
 def _write_disk_cache(filing_set: FilingSet) -> None:
     """Save *filing_set* to data/filings/{ticker}/ so later calls skip the downloads.
 

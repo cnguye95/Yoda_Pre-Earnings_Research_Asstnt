@@ -97,7 +97,7 @@ class _Fakes:
         self.worker = worker or self.default_worker
         self.lead_searches_first = lead_searches_first
 
-        monkeypatch.setattr(lead, "ChromaStore", lambda: None)
+        monkeypatch.setattr(lead, "ChromaStore", lambda: SimpleNamespace(embedding_calls=0, embedding_tokens=0))
         monkeypatch.setattr(source_calls, "client", SimpleNamespace(messages=SimpleNamespace(stream=self.stream)))
         monkeypatch.setattr(source_calls, "check_claims", self.check)
         monkeypatch.setattr(source_calls, "submit_call", self.repair)
@@ -319,7 +319,7 @@ def test_usage_is_printed_once_per_stage_and_the_runner_can_read_it(monkeypatch,
               for line in out.splitlines() if line.startswith("[lead]") and " cache read, $" in line]
     assert labels == ["Lead: questions", "Worker 1 (claims: 1)", "Worker 2 (claims: 1)", "Worker 3 (claims: 1)",
                       "Worker 4 (claims: 1)", "Lead: review", "Worker 2 follow-up (claims: 1)", "Lead: report",
-                      "Repair pass"]
+                      "Repair pass", "Embeddings (peer filings)"]
     assert f"[lead] Worker 1 (claims: 1): 2 calls, {source_calls.SOURCE_MODEL}, 20 in / 20 out / " \
            "0 cache write / 4,000 cache read, $" in out
     assert runner._RE_COST.search(out) and runner._RE_WALL_TIME.search(out)

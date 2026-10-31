@@ -62,6 +62,7 @@ from yoda.modes.source_calls import (
 from yoda.report.checks import check_report
 from yoda.report.claim_check import Repairs
 from yoda.report.header import MarketDataUnavailable, assemble_report, filings_read
+from yoda.retrieval.embeddings import EMBEDDING_MODEL
 from yoda.retrieval.vector_store import ChromaStore
 from yoda.schema import Claim, EarningsReport, EvidenceStore, ReportDraft
 from yoda.sources import SharedSources, base_store, fetch_shared_sources
@@ -323,6 +324,12 @@ def run_pipeline(ticker: str, sources: SharedSources, on_notice: Callable[[str],
     # claims, and removal of whatever still fails. Then the ID checks.
     cost += check_and_repair(report, store, rendered.text, dates, SOURCE_TOOLS, "pipeline")
     check_report(report, store)
+
+    # Embedding for lookup_peer (OpenAI: competitors' filings and the
+    # searches over them), counted like every other call.
+    embedding = call_usage(EMBEDDING_MODEL, (ctx.store.embedding_tokens, 0, 0, 0), calls=ctx.store.embedding_calls)
+    log_usage("pipeline", "Embeddings (peer filings)", EMBEDDING_MODEL, embedding)
+    cost += embedding.cost_usd
 
     print(f"[pipeline] Wall time:  {time.perf_counter() - started:.2f}s")
     print(f"[pipeline] Total cost: ${cost:.5f}")

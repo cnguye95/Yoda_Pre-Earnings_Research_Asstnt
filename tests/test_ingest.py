@@ -789,3 +789,19 @@ def test_transcript_chunks_name_the_call_and_the_side():
     assert chunks[0].text.startswith("Brian West, Chief Financial Officer:\nWe expect free cash flow")
     assert [chunk.chunk_index for chunk in chunks] == [0, 1]
     assert chunker.transcript_key(fake_transcript) == "transcript:BA:2026Q3"
+
+
+
+def test_the_cache_lists_the_filings_and_8ks_still_read(cache_dir):
+    # What the vector store prune keeps: cached filings and 8-Ks, not a
+    # filing a newer one replaced (its HTML and metadata are gone).
+    edgar._write_disk_cache(_filing_set())
+    (cache_dir / "TEST" / "8k" / "0001-26-000009").mkdir(parents=True)
+    assert edgar.cached_accessions() == {"0001-26-000001", "0001-26-000000", "0001-26-000009"}
+
+
+def test_cached_transcripts_give_their_vector_store_keys(monkeypatch, tmp_path):
+    monkeypatch.setattr(transcripts, "_CACHE_DIR", tmp_path)
+    (tmp_path / "BA").mkdir()
+    (tmp_path / "BA" / "2026Q3.json").write_text("{}", encoding="utf-8")
+    assert transcripts.cached_transcript_keys() == {"transcript:BA:2026Q3"}

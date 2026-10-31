@@ -149,6 +149,11 @@ def fetch_transcript(ticker: str, fiscal_quarter: int, fiscal_year: int) -> Tran
     return TranscriptFetch(transcript, None)
 
 
+def cached_transcript_keys() -> set[str]:
+    """Return the vector-store key of every cached transcript, e.g. "transcript:BA:2026Q3" (chunker.transcript_key)."""
+    return {f"transcript:{path.parent.name}:{path.stem}" for path in _CACHE_DIR.glob("*/*.json")}
+
+
 def render_call_text(transcript: CallTranscript) -> str:
     """Return a whole earnings call transcript as text, as synthesis and the eval judge read it.
 

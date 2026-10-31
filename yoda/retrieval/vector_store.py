@@ -15,12 +15,25 @@ gitignored (added in Phase 0).
 """
 
 import hashlib
+import threading
 
 import chromadb
+import chromadb.config
 
 from yoda import config
 from yoda.ingest.chunker import Chunk
 from yoda.retrieval.embeddings import embed_texts
+
+# Where the database lives, and the one collection Yoda reads (vectors from
+# text-embedding-3-small). Any other collection is a leftover of an earlier
+# experiment and is dropped by prune_vector_store().
+_CHROMA_DIR = config.DATA_DIR / "chroma"
+_COLLECTION = "filings_openai"
+
+# Every connection to the database uses the same settings (Chroma refuses
+# two in one process with different ones), with Chroma's anonymous usage
+# reporting off, so the database never contacts anyone.
+_SETTINGS = chromadb.config.Settings(anonymized_telemetry=False)
 
 
 # ---------------------------------------------------------------------------
@@ -50,18 +63,23 @@ class ChromaStore:
 
     A class is used here because it holds the Chroma client and collection
     objects across multiple upsert/query calls within a single process. Using
-    a class avoids reopening the on-disk database on every call.
+    a class avoids reopening the on-disk database on every call. It also
+    adds up the embedding calls it made and the tokens OpenAI charged for
+    them (*embedding_calls*, *embedding_tokens*), so the report that used it
+    can count that cost; a lock keeps parallel workers' counts intact.
     """
 
     def __init__(self) -> None:
         """Open (or create) the on-disk database and its filings collection."""
+        self.embedding_calls, self.embedding_tokens = 0, 0
+        self._usage_lock = threading.Lock()
         # Chroma creates the data/chroma/ directory if it doesn't exist.
-        self._client = chromadb.PersistentClient(path=str(config.DATA_DIR / "chroma"))
+        self._client = chromadb.PersistentClient(path=str(_CHROMA_DIR), settings=_SETTINGS)
 
         # Get or create the collection. Cosine distance is the standard metric
         # for unit-vector embeddings from text-embedding-3-small.
         self._collection = self._client.get_or_create_collection(
-            name="filings_openai",
+            name=_COLLECTION,
             metadata={"hnsw:space": "cosine"},
         )
 
@@ -124,6 +142,14 @@ class ChromaStore:
             metadatas=metadatas,
         )
 
+    def _embed(self, texts: list[str]) -> list[list[float]]:
+        """Embed *texts* and add the call and its tokens to this store's totals."""
+        embedded = embed_texts(texts)
+        with self._usage_lock:
+            self.embedding_calls += 1
+            self.embedding_tokens += embedded.tokens
+        return embedded.vectors
+
     def count(self, accession_number: str) -> int:
         """Return how many chunks are stored for *accession_number*."""
         # include=[] fetches only the IDs, so no documents or vectors are loaded.
@@ -153,7 +179,7 @@ class ChromaStore:
         # the old extra ones would linger, keep the counts unequal, and force
         # a re-embed on every run.
         self._collection.delete(where={"accession": accession_number})
-        embeddings = embed_texts([c.text for c in chunks])
+        embeddings = self._embed([c.text for c in chunks])
         self.upsert(accession_number, chunks, embeddings)
         return True
 
@@ -180,7 +206,7 @@ class ChromaStore:
             Number of results to return (default 5).
         """
         # Embed the query text so it lives in the same vector space as the stored chunks.
-        query_vector = embed_texts([query_text])[0]
+        query_vector = self._embed([query_text])[0]
 
         # Query Chroma with the where= filter locked to this accession.
         # Without the filter, results from other filings could appear.
@@ -201,7 +227,7 @@ class ChromaStore:
         """
         if not accession_numbers:
             return []
-        query_vector = embed_texts([query_text])[0]
+        query_vector = self._embed([query_text])[0]
         results = self._collection.query(
             query_embeddings=[query_vector],
             n_results=k,
@@ -234,3 +260,33 @@ class ChromaStore:
             )
 
         return chunks
+
+
+# ---------------------------------------------------------------------------
+# Pruning — the store would otherwise only grow
+# ---------------------------------------------------------------------------
+
+def prune_vector_store(keep: set[str]) -> tuple[int, list[str]]:
+    """Delete what Yoda no longer reads; return (chunks deleted, collections dropped).
+
+    *keep* holds every document key still read (accession numbers of cached
+    filings and 8-Ks, and cached transcripts' keys). Chunks of any other
+    document (an older 10-Q a newer one replaced, an old 8-K) are deleted,
+    and so is every collection other than _COLLECTION. Local and free: no
+    API call. A document deleted here is embedded again if it is ever read
+    again.
+    """
+    client = chromadb.PersistentClient(path=str(_CHROMA_DIR), settings=_SETTINGS)
+
+    # Leftover collections from earlier experiments.
+    dropped = sorted(collection.name for collection in client.list_collections() if collection.name != _COLLECTION)
+    for name in dropped:
+        client.delete_collection(name)
+
+    # Chunks of documents no longer read.
+    collection = client.get_or_create_collection(name=_COLLECTION, metadata={"hnsw:space": "cosine"})
+    stored = [meta["accession"] for meta in collection.get(include=["metadatas"])["metadatas"]]
+    stale = sorted(set(stored) - keep)
+    if stale:
+        collection.delete(where={"accession": {"$in": stale}})
+    return sum(accession in stale for accession in stored), dropped

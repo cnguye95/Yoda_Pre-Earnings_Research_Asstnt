@@ -58,6 +58,9 @@ PRICES: dict[str, ModelPrices] = {
         long_prompt=Price(4.00, 4.00, 4.00, 0.20, 15.00),
         long_prompt_over=272_000,
     ),
+    # The embedding model behind lookup_peer's search of competitors'
+    # filings: input only ($0.02 per million tokens), no cache, no output.
+    "text-embedding-3-small": ModelPrices(Price(0.02, 0.02, 0.02, 0.02, 0.0)),
 }
 
 # How a request was sent, and what that does to every price.

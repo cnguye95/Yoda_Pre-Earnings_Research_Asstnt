@@ -80,7 +80,7 @@ class _Fakes:
         self.repairs = repairs
         self.fail_stage = fail_stage
 
-        monkeypatch.setattr(pipeline, "ChromaStore", lambda: None)
+        monkeypatch.setattr(pipeline, "ChromaStore", lambda: SimpleNamespace(embedding_calls=0, embedding_tokens=0))
         monkeypatch.setattr(pipeline, "warm_cache", self.warm)
         # The extractors and the writer call submit_call from pipeline.py;
         # the repair pass, the research loop and the claim check run in
@@ -283,6 +283,8 @@ def test_usage_is_printed_once_per_stage_with_its_calls_summed(monkeypatch, caps
         f"[pipeline] Peers researcher (notes: 1): 2 calls, {haiku}, 200 in / 200 out / 0 cache write / 0 cache read, $",
         f"[pipeline] Writer: 1 call, {sonnet}, 10 in / 10 out / 0 cache write / 2,000 cache read, $",
         f"[pipeline] Repair pass: 1 call, {sonnet}, 10 in / 10 out / 0 cache write / 2,000 cache read, $",
+        "[pipeline] Embeddings (peer filings): 0 calls, text-embedding-3-small, 0 in / 0 out / 0 cache write / "
+        "0 cache read, $",
     ]
     assert len(lines) == len(expected)
     for line, start in zip(lines, expected):
@@ -401,3 +403,14 @@ def test_a_broken_repair_answer_is_a_short_gap(monkeypatch):
     assert ("The repair pass failed (its answer broke the schema (repairs: Input should be a valid list)); "
             "unsupported claims were removed instead.") in run.report.data_gaps
     assert not any("pydantic" in gap for gap in run.report.data_gaps)
+
+
+def test_embedding_for_peer_lookups_is_logged_and_added_to_the_total(monkeypatch, capsys):
+    # Bug (2026-10-31): lookup_peer's embedding (OpenAI) was paid for but counted nowhere.
+    _Fakes(monkeypatch)
+    store = SimpleNamespace(embedding_calls=3, embedding_tokens=150_000)
+    monkeypatch.setattr(pipeline, "ChromaStore", lambda: store)
+    pipeline.run_pipeline("TEST", _sources())
+    out = capsys.readouterr().out
+    assert ("[pipeline] Embeddings (peer filings): 3 calls, text-embedding-3-small, 150,000 in / 0 out / "
+            "0 cache write / 0 cache read, $0.00300") in out

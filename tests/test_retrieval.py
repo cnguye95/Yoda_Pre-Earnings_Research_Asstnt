@@ -5,6 +5,7 @@ Run with: python -m pytest -q
 OpenAI and Tavily are replaced with fakes, so nothing here costs money.
 """
 
+import threading
 from datetime import timedelta
 from types import SimpleNamespace
 
@@ -247,8 +248,10 @@ def _memory_store(monkeypatch, name: str) -> vector_store.ChromaStore:
     # A ChromaStore backed by an in-memory Chroma collection (nothing on
     # disk), with embeddings faked so OpenAI is never called and Chroma's
     # usage telemetry switched off so the test makes no network call.
-    monkeypatch.setattr(vector_store, "embed_texts", lambda texts: [[1.0, 0.0, 0.0]] * len(texts))
+    monkeypatch.setattr(vector_store, "embed_texts",
+                        lambda texts: embeddings.Embedded([[1.0, 0.0, 0.0]] * len(texts), 7 * len(texts)))
     store = vector_store.ChromaStore.__new__(vector_store.ChromaStore)
+    store.embedding_calls, store.embedding_tokens, store._usage_lock = 0, 0, threading.Lock()
     client = chromadb.EphemeralClient(settings=chromadb.config.Settings(anonymized_telemetry=False))
     store._collection = client.get_or_create_collection(name=name, metadata={"hnsw:space": "cosine"})
     return store
@@ -296,7 +299,7 @@ def test_chunk_stored_before_labels_reads_back_unlabelled(monkeypatch):
 
 def _fake_embeddings(monkeypatch, make_items):
     # Replace the OpenAI client with one whose reply is built by make_items(batch).
-    create = lambda model, input: SimpleNamespace(data=make_items(input))
+    create = lambda model, input: SimpleNamespace(data=make_items(input), usage=SimpleNamespace(prompt_tokens=5))
     monkeypatch.setattr(embeddings, "_client", SimpleNamespace(embeddings=SimpleNamespace(create=create)))
 
 
@@ -305,7 +308,8 @@ def test_embeddings_are_returned_in_input_order(monkeypatch):
     _fake_embeddings(monkeypatch, lambda batch: [
         SimpleNamespace(index=i, embedding=[float(i)]) for i in reversed(range(len(batch)))
     ])
-    assert embeddings.embed_texts(["a", "b", "c"]) == [[0.0], [1.0], [2.0]]
+    embedded = embeddings.embed_texts(["a", "b", "c"])
+    assert embedded.vectors == [[0.0], [1.0], [2.0]] and embedded.tokens == 5   # the tokens OpenAI reported
 
 
 def test_embeddings_count_mismatch_raises(monkeypatch):
@@ -462,3 +466,31 @@ def test_read_article_tavily_failure_names_the_cause(monkeypatch):
     _fake_tavily(monkeypatch, error=requests.ConnectionError("offline"))
     with pytest.raises(RuntimeError, match="Tavily extract failed: ConnectionError"):
         news.read_article(_ARTICLE_URL)
+
+
+
+def test_the_store_counts_every_embedding_call_and_its_tokens(monkeypatch):
+    # The cost of embedding is added to the report that caused it.
+    store = _memory_store(monkeypatch, "count_usage")
+    store.index_if_missing("A-1", [chunker.Chunk(text="Revenue rose.", section="MD&A", chunk_index=0,
+                                                 char_start=0, char_end=13)])
+    store.query("A-1", "revenue", k=1)
+    assert (store.embedding_calls, store.embedding_tokens) == (2, 14)
+
+
+def test_prune_deletes_what_is_no_longer_read_and_leftover_collections(monkeypatch, tmp_path):
+    # Found 2026-10-31: the store only grew (21% of its chunks were replaced filings,
+    # plus two collections no code reads). Local, no API call.
+    monkeypatch.setattr(vector_store, "_CHROMA_DIR", tmp_path / "chroma")
+    client = chromadb.PersistentClient(path=str(tmp_path / "chroma"), settings=vector_store._SETTINGS)
+    kept = client.get_or_create_collection(vector_store._COLLECTION, metadata={"hnsw:space": "cosine"})
+    kept.upsert(ids=["CUR_0", "OLD_0", "OLD_1"], embeddings=[[1.0, 0.0]] * 3, documents=["a", "b", "c"],
+                metadatas=[{"accession": "CUR"}, {"accession": "OLD"}, {"accession": "OLD"}])
+    client.get_or_create_collection("filings_qwen").upsert(ids=["x"], embeddings=[[0.0, 1.0]], documents=["x"])
+
+    deleted, dropped = vector_store.prune_vector_store(keep={"CUR"})
+
+    assert (deleted, dropped) == (2, ["filings_qwen"])
+    reopened = chromadb.PersistentClient(path=str(tmp_path / "chroma"), settings=vector_store._SETTINGS)
+    assert [c.name for c in reopened.list_collections()] == [vector_store._COLLECTION]
+    assert reopened.get_collection(vector_store._COLLECTION).get()["ids"] == ["CUR_0"]

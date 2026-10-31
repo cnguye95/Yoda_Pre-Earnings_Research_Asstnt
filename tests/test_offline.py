@@ -10,6 +10,7 @@ keys present (yoda.config checks them), but nothing here calls an API.
 
 import datetime
 import json
+import threading
 import time
 
 import pandas as pd
@@ -28,7 +29,7 @@ from yoda.evidence_text import CONFLICT_RULES, NEWER_CONTRADICTION_RULE
 from yoda.ingest.transcripts import TranscriptFetch
 from yoda.modes import llm, tools
 from yoda.modes.tools import TOOL_DISPATCH, TOOL_SCHEMAS
-from yoda.retrieval import vector_store
+from yoda.retrieval import embeddings, vector_store
 from yoda.schema import ArticleText, Filing, FilingSet, NewsSearchResult, ReportDraft
 from yoda.sources import SharedSources, base_store
 from yoda.dates import market_today
@@ -439,9 +440,11 @@ def fake_store(monkeypatch):
     # A ChromaStore with an in-memory collection and an embed_texts that
     # records how many times it was called instead of hitting OpenAI.
     calls = []
-    monkeypatch.setattr(vector_store, "embed_texts", lambda texts: calls.append(len(texts)) or [[0.0]] * len(texts))
+    monkeypatch.setattr(vector_store, "embed_texts",
+                        lambda texts: calls.append(len(texts)) or embeddings.Embedded([[0.0]] * len(texts), 10))
     store = vector_store.ChromaStore.__new__(vector_store.ChromaStore)
     store._collection = _FakeCollection()
+    store.embedding_calls, store.embedding_tokens, store._usage_lock = 0, 0, threading.Lock()
     return store, calls
 
 
