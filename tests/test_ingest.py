@@ -750,6 +750,19 @@ def test_the_fallback_request_waits_for_alpha_vantages_per_second_limit(monkeypa
         ["2026Q3", "wait 1.1s", "2026Q2"]
 
 
+def test_a_refusal_never_repeats_the_api_key(monkeypatch):
+    # Bug (pre-flight check, 2026-10-31): Alpha Vantage's daily-limit message
+    # quotes the key ("We have detected your API key as ..."), and that
+    # message became a data gap shown in reports and sent to the judge.
+    key = transcripts.config.ALPHAVANTAGE_API_KEY
+    fake = _AlphaVantage({"Information": f"We have detected your API key as {key} and our standard API rate "
+                                         "limit is 25 requests per day."})
+    monkeypatch.setattr(transcripts, "session", fake)
+    refused = transcripts.fetch_transcript("BA", 3, 2026)
+    assert refused.refused and key not in refused.reason
+    assert "your API key as [API key] and our standard API rate limit" in refused.reason
+
+
 def test_refusal_is_not_retried_and_unknown_quarter_is_not_looked_up(monkeypatch):
     fake = _AlphaVantage({"Information": "rate limit"})
     monkeypatch.setattr(transcripts, "session", fake)

@@ -1,0 +1,2 @@
+ticker,mode,filing_extraction,figure_accuracy,reasoning_quality,evidence_labelling,source_traceability,relevance,sell_side_usefulness,buy_side_usefulness,figures_checked,failed_quote_dims,judge_snapshot,prompt_tokens,completion_tokens,cached_tokens,service_tier,over_272k,judge_cost_usd,report_chars,finish_reason,reasoning_tokens,latency_seconds,latency_source,cost_usd,cost_standard_usd
+DIS,baseline,3,4,4,4,3,4,5,5,104,,gpt-6.1-sol,170609,4381,0,flex,False,0.19251,47527,stop,1536,,batch,0.36471,0.72942

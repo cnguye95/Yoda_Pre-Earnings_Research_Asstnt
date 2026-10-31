@@ -97,23 +97,6 @@ WHEN labels (relative to the full eval run, item 4f):
      on the old nine-dimension rubric. On today's eight (market_expectations
      removed, 2026-10-31) its gaps are +0.50 and +0.52; the reworded
      filing_extraction is not reflected (that needs re-judging).
-   e. Pre-flight checks, instead of a second smoke run (added 2026-10-31).
-      WHEN: BEFORE FULL, on a day before the full run (they use part of
-      that day's Alpha Vantage allowance).
-      - One live search through yoda/tools/news.search_news, to check
-        tavily-python 0.8.5 end to end (1 Tavily credit).
-      - Fetch the shared sources of all 20 tickers with the paid whisper
-        lookup off (free): finds fetch failures before any paid call, and
-        caches the call transcripts so the full run stays within Alpha
-        Vantage's 25 requests a day (13 of the 20 had no cached call).
-      - One baseline report (e.g. DIS) into data/eval/smoke_check, then
-        judge it: checks the new news search in a real report (~$0.35
-        Anthropic, ~$0.20 OpenAI).
-      - Effects on the full run: none. Filings, calls and judge scores are
-        cached by content or quarter, and newer filings and calls are still
-        picked up. The judge keeps cached scores of its 2 latest runs only,
-        so the smoke run's cache goes after the full run (its results.csv
-        stays).
    f. Full run: 3 arms x 20 tickers, with the judge (NOT RUN YET; needs an
       explicit yes).
       - REMINDER: before starting, check there is enough credit on every
@@ -129,6 +112,19 @@ WHEN labels (relative to the full eval run, item 4f):
           python -m yoda.eval.runner --out data/eval/full
         then, after checking judge_estimate.md against the OpenAI credit:
           python -m yoda.eval.runner --rescore data/eval/full --judge-budget USD
+      - Pre-flight checks done (2026-10-31; they replaced a second smoke
+        run): the new news search returns 10 in-window results; all 20
+        tickers fetch without error; a DIS baseline got 10 news results
+        (cited 6, all within 14 days; the smoke run's got 2, cited 0) and
+        was judged for $0.19 against a $0.20 estimate. What the full run
+        will have:
+        * No call transcript yet: CAT, PANW, CRM (Alpha Vantage's 25 a day
+          ran out on 2026-10-31; fetched on the run day) and HD (Alpha
+          Vantage doesn't have its latest calls). An earlier quarter's call
+          is used for MSFT, XOM and PG (the latest isn't published yet).
+        * Analyst grades refused by FMP's free plan (HTTP 402) for HD, USB,
+          SLB, PG, CAT, PANW and CRM: their beat/miss record, analyst
+          actions and price target are N/A, the same for every arm.
       - After it: items 10 and 13.
 
 

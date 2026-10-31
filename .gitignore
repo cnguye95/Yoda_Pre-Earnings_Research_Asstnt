@@ -10,9 +10,13 @@ venv/
 data/eval/judge_cache/
 data/reports/
 data/queue_zips/
-# Smoke-test outputs: the panel's command-line runs and the eval smoke-test folders.
-#data/eval/panel_*.json
-#data/eval/smoke_*/
+# Smoke-test outputs of the retired personality panel (its command-line runs
+# and its two BA smoke runs): kept on disk, never pushed. Smoke runs of the
+# current architectures (data/eval/smoke, data/eval/smoke_check, ...) are
+# tracked like any other eval output.
+data/eval/panel_*.json
+data/eval/smoke_7_BA/
+data/eval/smoke_8_BA/
 # Earnings call transcripts cached from Alpha Vantage (re-fetched when missing).
 data/transcripts/
 .claude/**

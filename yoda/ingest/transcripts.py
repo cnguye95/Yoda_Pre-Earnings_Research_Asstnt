@@ -129,7 +129,11 @@ def fetch_transcript(ticker: str, fiscal_quarter: int, fiscal_year: int) -> Tran
     # A refusal arrives as a message instead of a transcript.
     for field in ("Information", "Note", "Error Message"):
         if field in data:
-            return TranscriptFetch(None, f"Alpha Vantage: {str(data[field])[:200]}", refused=True)
+            # Its daily-limit message quotes the API key back; the key is
+            # blanked out, because this reason ends up in reports, the
+            # judge's prompt and git.
+            message = str(data[field]).replace(config.ALPHAVANTAGE_API_KEY, "[API key]")
+            return TranscriptFetch(None, f"Alpha Vantage: {message[:200]}", refused=True)
 
     # No usable turns: the transcript isn't there (yet).
     turns = _turns(data.get("transcript") or [])
