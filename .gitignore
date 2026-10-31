@@ -11,8 +11,8 @@ data/eval/judge_cache/
 data/reports/
 data/queue_zips/
 # Smoke-test outputs: the panel's command-line runs and the eval smoke-test folders.
-data/eval/panel_*.json
-data/eval/smoke_*/
+#data/eval/panel_*.json
+#data/eval/smoke_*/
 # Earnings call transcripts cached from Alpha Vantage (re-fetched when missing).
 data/transcripts/
 .claude/**

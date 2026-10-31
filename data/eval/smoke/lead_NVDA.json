@@ -1,0 +1,1514 @@
+{
+  "ticker": "NVDA",
+  "company_name": "NVIDIA CORP",
+  "report_generated_at": "2026-10-31T07:54:45+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-08-26",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-02-25",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm"
+    }
+  ],
+  "earnings_call": "Q2 FY2027 earnings call (date unknown)",
+  "current_report": "8-K filed 2026-09-03: Item 8.01 other events",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$2.53",
+      "fiscal_quarter": 3,
+      "fiscal_year": 2027,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-10-31",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$111.36B",
+      "fiscal_quarter": 3,
+      "fiscal_year": 2027,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-10-31",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "not looked up: next report is 17 days away (looked up automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": "±8.7%",
+      "fiscal_quarter": 3,
+      "fiscal_year": 2027,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/nvda-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "historical_move": {
+      "value": "±4.0% average closing move over the last 8 reports (2024-11-20 to 2026-08-26)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/nvda-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": "4 beats, 0 misses in the last 4 quarters, average surprise +3.4%",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "Finnhub earnings surprises",
+      "as_of_date": "2026-10-31",
+      "missing_reason": null
+    },
+    "analyst_actions": {
+      "value": "Last 30 days, newest first: Needham maintained Buy (2026-10-22); Cantor Fitzgerald maintained Overweight (2026-10-01)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP grades",
+      "as_of_date": "2026-10-31",
+      "missing_reason": null
+    },
+    "price_target": {
+      "value": "$339.17, +65.7% vs current $204.64",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP price target consensus",
+      "as_of_date": "2026-10-31",
+      "missing_reason": null
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "NVIDIA reports fiscal Q3 2027 on 2026-11-17 after the close. Consensus is revenue of $111.36B and EPS of $2.53. That is about 95% year-over-year revenue growth, down from 106% in Q2. The options market implies a ±8.7% move, against a ±4.0% average closing move over the last 8 reports. The record is 4 beats and 0 misses, with a +3.4% average surprise.",
+      "evidence_ids": [
+        "M.01",
+        "F.70",
+        "F.37",
+        "M.03",
+        "M.04",
+        "M.05"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Q2 FY27 (reported 8/26): revenue $96.22B (+106% y/y, +18% q/q), GAAP gross margin 75.0%, operating income $63.7B (66.2% margin), diluted EPS $2.46 (+128% y/y). Data Center was $89.0B, with hyperscale $48.7B (+13% q/q) and AI Clouds, Industrial & Enterprise (ACIE) $40.3B (+25% q/q, +138% y/y).",
+      "evidence_ids": [
+        "F.01",
+        "F.37",
+        "Q.064",
+        "Q.065",
+        "F.53",
+        "F.09"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q3 guide is revenue of $108B ±2% (about $105.8B–$110.2B), GAAP and non-GAAP gross margin of 74% ±50bp, GAAP opex of about $9.2B and non-GAAP opex of about $9.0B. Vera Rubin is about 20% of Q3 Data Center revenue. The outlook excludes China data center compute revenue. Management called it supply-constrained. Q3 growth is led by ACIE, with hyperscale reaccelerating in Q4.",
+      "evidence_ids": [
+        "C.014",
+        "C.015"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "Consensus revenue of $111.36B sits about 3.1% above the guide midpoint and about 1% above the top of the guided range. It implies about +15.7% sequential growth from $96.2B. The last two quarters grew about +19.8% (Q1: $81.6B on a derived Q4 FY26 of $68.1B) and +18% (Q2).",
+      "evidence_ids": [
+        "M.01",
+        "C.014",
+        "F.01",
+        "Q.064",
+        "Q.065",
+        "F.23",
+        "F.04",
+        "F.69"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Management gave a first-ever full-year view: FY28 revenue growth of about 70%, supply-constrained, against demand growth the CEO described as about 100% or 'much higher'. Supply is expected to stay a bottleneck at least through the end of FY28.",
+      "evidence_ids": [
+        "C.004",
+        "C.015",
+        "C.019",
+        "C.020"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "The margin reset is the other main driver of the print. Management guided Q3 to 74%, Q4 to bottom at 71–72%, and FY28 to 72–73% after executed price increases in Q1. It blamed memory prices that exceeded its prior expectations and are 'headed even higher into next year'. Q2 gross margin was 75.0%.",
+      "evidence_ids": [
+        "C.015",
+        "Q.064"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "Balance-sheet and financing exposure has grown quickly. Supply commitments rose from $119B to $279B. Guarantees total $108.5B, including $105B for SB Energy/OpenAI. AI-cloud commitments are $36B and equity investments are $99B, with $25B more committed. Debt is $33.4B after a $25B June issuance. Receivables are $63.1B and inventory is $31.6B.",
+      "evidence_ids": [
+        "Q.028",
+        "Q.033",
+        "Q.059",
+        "Q.060",
+        "Q.026",
+        "Q.006"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Sentiment is supportive. The consensus price target is $339.17, 65.7% above the $204.64 price. Needham (10/22) and Cantor (10/1) both maintained positive ratings.",
+      "evidence_ids": [
+        "M.07",
+        "M.06"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Revenue",
+      "period": "Q3 FY27",
+      "last_reported": {
+        "text": "Q2 FY27 revenue was $96.22B, up 106% y/y.",
+        "evidence_ids": [
+          "F.01",
+          "F.37"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus is $111.36B, which is +95.3% y/y and above the top of the guided range.",
+        "evidence_ids": [
+          "M.01",
+          "F.70"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "The guide is $108B ±2%. Consensus needs +15.7% sequential growth, below the roughly +18–20% of the last two quarters, so the bar looks beatable if supply allows. The risk is that supply constraints cap the quarter and that ACIE, which leads Q3 growth, depends on neocloud capacity coming online. Microsoft cited delays at third-party GPU providers.",
+        "evidence_ids": [
+          "C.014",
+          "M.01",
+          "F.01",
+          "Q.064",
+          "F.23",
+          "F.04",
+          "F.69",
+          "A.001"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "GAAP gross margin",
+      "period": "Q3 FY27",
+      "last_reported": {
+        "text": "Q2 GAAP gross margin was 75.0%, versus 74.9% in Q1.",
+        "evidence_ids": [
+          "Q.064"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guide is 74% ±50bp for Q3, with margins guided to bottom at 71–72% in Q4. Q2 gross margin was roughly flat sequentially because Blackwell remains the vast majority of revenue, and Rubin is about 20% of Data Center revenue in Q3. Inventory and purchase-obligation provisions net cost about 0.8 points of margin in Q2. One point of margin on the $108B revenue guide is about $1.08B of gross profit, or roughly $0.04 of EPS at the Q2 16.5% tax rate and 24.3B diluted shares. The Q4 margin guide matters more than the Q3 number.",
+        "evidence_ids": [
+          "C.014",
+          "C.015",
+          "Q.066",
+          "Q.072",
+          "Q.074",
+          "Q.005"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Operating expenses",
+      "period": "Q3 FY27 and FY27",
+      "last_reported": {
+        "text": "Q2 GAAP opex was $8.41B, up 55% y/y. H1 opex was $16.0B, up 53%.",
+        "evidence_ids": [
+          "Q.065",
+          "Q.073"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Q3 guide is GAAP opex of about $9.2B (+9% q/q) and non-GAAP of about $9.0B. FY27 opex growth is now guided in the low 50s on FY26's $23.1B, which implies about $35B for the year. After H1's $16.0B and Q3's $9.2B, that leaves Q4 near $9.8–10.0B. This is my arithmetic.",
+        "evidence_ids": [
+          "C.015",
+          "C.016",
+          "Q.073",
+          "K.212"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Diluted EPS",
+      "period": "Q3 FY27",
+      "last_reported": {
+        "text": "Q2 GAAP diluted EPS was $2.46, which included about $7.8B of pre-tax equity gains.",
+        "evidence_ids": [
+          "F.09",
+          "Q.023"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus EPS is $2.53. Whether it is GAAP or non-GAAP is not confirmed.",
+        "evidence_ids": [
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "At the guide midpoint ($108B, 74% gross margin, $9.0B non-GAAP opex, 16% tax, about 24.2B shares) with no equity gains, EPS is about $2.46. On GAAP opex of $9.2B it is about $2.43. Reaching $2.53 needs revenue of about $111B or more, so the whole gap to consensus is a revenue beat and does not need equity gains. The ±2% revenue band is about ±$0.055 of EPS. This is my estimate.",
+        "evidence_ids": [
+          "C.014",
+          "C.015",
+          "C.016",
+          "Q.005",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Other income / equity-security gains (GAAP only)",
+      "period": "Q3 FY27",
+      "last_reported": {
+        "text": "Q2 other income was $7.77B, of which equity-security gains were $7.77B. H1 gains were $23.7B.",
+        "evidence_ids": [
+          "Q.023"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Equity gains are not forecastable: they were $7.8B in Q2 and $23.7B in H1. Marketable equity securities were $42.8B at quarter-end, and $36.9B of publicly-held equity investments are subject to lock-up restrictions. A 10% move in the $42.8B is about $4.3B pre-tax, or roughly $0.14–0.15 per share after tax at the 16.5% Q2 rate and 24.3B diluted shares. Interest expense also rises after the $25B June debt raise, from $227M in Q2 against $62M a year earlier.",
+        "evidence_ids": [
+          "Q.016",
+          "Q.023",
+          "Q.026",
+          "Q.074",
+          "Q.005"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Segment mix: ACIE vs hyperscale; Vera Rubin share",
+      "period": "Q3 FY27",
+      "last_reported": {
+        "text": "Q2: hyperscale $48.7B and ACIE $40.3B. One direct customer was 16% of revenue.",
+        "evidence_ids": [
+          "Q.065",
+          "Q.046"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Sequential growth is guided to come mainly from ACIE, with Rubin about 20% of Data Center revenue (roughly $20B on a $108B quarter, my arithmetic). Hyperscale reaccelerates in Q4. Watch whether hyperscale grows slower than the 13% of Q2 and whether the Rubin share beats 20%.",
+        "evidence_ids": [
+          "C.014",
+          "C.015",
+          "Q.065"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Receivables, DSO and free cash flow",
+      "period": "Q3 FY27",
+      "last_reported": {
+        "text": "Receivables were $63.06B, DSO was 60 days, and H1 free cash flow was $69.99B against net income of $118.0B (about 59% conversion, versus about 88% a year earlier).",
+        "evidence_ids": [
+          "Q.006",
+          "C.014",
+          "F.65",
+          "F.07",
+          "F.66",
+          "F.08"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management says extended terms apply to large purchases by investment-grade customers to be shipped over multiple quarters, DSO rose to 60 days, and the 10-Q says these arrangements will continue to affect the timing of operating cash flows. The 10-Q says terms can run 90 days to one year. Five direct customers held 70% of receivables (22%, 14%, 13%, 11%, 10%), against three customers holding 56% at year-end. Q2 included two federal estimated tax payments against none in Q1, which affects cash comparisons.",
+        "evidence_ids": [
+          "C.014",
+          "Q.021",
+          "Q.020",
+          "Q.080",
+          "Q.077"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Effective tax rate",
+      "period": "Q3 / FY27",
+      "last_reported": {
+        "text": "Q2 GAAP effective tax rate was 16.5%, against 15.3% a year earlier.",
+        "evidence_ids": [
+          "Q.074"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management continues to expect GAAP and non-GAAP taxes of 16–18% for FY27, excluding discrete items and material changes to the tax environment.",
+        "evidence_ids": [
+          "C.016"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Capital return and share count",
+      "period": "Q3 FY27",
+      "last_reported": {
+        "text": "Q2 buybacks were $19.7B (94M shares at monthly average prices of $202–214) and dividends were $6.0B at $0.25 per share. $99.3B of authorization remains.",
+        "evidence_ids": [
+          "Q.041",
+          "Q.118",
+          "Q.119"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management returned 60% of year-to-date free cash flow against a 50%-or-more plan and intends to increase returns of excess free cash flow net of strategic uses. Strategic uses are sizable: the 10-Q shows $18B of equity investment commitments in the remainder of FY27. A buyback pace below $20B would suggest more cash going to ecosystem commitments.",
+        "evidence_ids": [
+          "C.014",
+          "Q.027"
+        ],
+        "evidence_type": "estimate"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Revenue",
+      "guidance": "$108B ±2% (about $105.8B–$110.2B); no China data center compute revenue assumed",
+      "period": "Q3 FY27",
+      "status": "new",
+      "claim": {
+        "text": "Q3 revenue is guided to $108B ±2%, supply-constrained, with growth led by ACIE.",
+        "evidence_ids": [
+          "C.014"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "GAAP and non-GAAP gross margin",
+      "guidance": "74% ±50bp",
+      "period": "Q3 FY27",
+      "status": "lowered",
+      "claim": {
+        "text": "Q3 gross margin is guided to 74% ±50bp, from 75.0% in Q2, on memory costs.",
+        "evidence_ids": [
+          "C.015",
+          "Q.064"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Gross margin trough and recovery",
+      "guidance": "Q4 FY27 bottoms at 71–72%; FY28 72–73% as executed price increases take effect in Q1",
+      "period": "Q4 FY27 and FY28",
+      "status": "lowered",
+      "claim": {
+        "text": "Management guided Q4 gross margin to a 71–72% trough and FY28 to 72–73% after price increases in Q1. This resets expectations from the mid-70s.",
+        "evidence_ids": [
+          "C.015"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Operating expenses",
+      "guidance": "Q3 GAAP about $9.2B, non-GAAP about $9.0B; FY27 growth in the low 50s",
+      "period": "Q3 and FY27",
+      "status": "raised",
+      "claim": {
+        "text": "Q3 opex is guided to about $9.2B GAAP and $9.0B non-GAAP. Management 'now' expects FY27 opex to grow in the low 50s, driven by a broader product portfolio and AI-tool usage.",
+        "evidence_ids": [
+          "C.015",
+          "C.016"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Revenue growth",
+      "guidance": "About 70% year-over-year growth, preliminary and supply-constrained; supply a bottleneck through at least end of FY28",
+      "period": "FY28",
+      "status": "new",
+      "claim": {
+        "text": "FY28 revenue growth is guided at about 70%, the first-ever year-ahead guide, against demand management says is much higher.",
+        "evidence_ids": [
+          "C.015",
+          "C.019",
+          "C.020"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Vera Rubin contribution",
+      "guidance": "About 20% of Data Center revenue in Q3; fastest ramp in company history expected",
+      "period": "Q3 FY27",
+      "status": "new",
+      "claim": {
+        "text": "Rubin should be about 20% of Q3 Data Center revenue. Management has purchase orders from every major hyperscaler, AI cloud and system OEM.",
+        "evidence_ids": [
+          "C.014",
+          "C.006",
+          "C.007"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Tax rate",
+      "guidance": "GAAP and non-GAAP 16–18%, excluding discrete items",
+      "period": "FY27",
+      "status": "maintained",
+      "claim": {
+        "text": "Management continues to expect a 16–18% tax rate for FY27.",
+        "evidence_ids": [
+          "C.016"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "China data center compute",
+      "guidance": "None included in the outlook; Hopper shipments to China were under 1% of Data Center revenue in Q2 and dilute gross margin",
+      "period": "Q3 FY27",
+      "status": "unclear",
+      "claim": {
+        "text": "The forward outlook contains no China data center compute revenue given geopolitical uncertainty. H200 shipments under US licenses were under 1% of Data Center revenue in Q2.",
+        "evidence_ids": [
+          "C.013",
+          "C.014",
+          "Q.063"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Capital return",
+      "guidance": "Return 50% or more of free cash flow; intends to increase returns of excess free cash flow net of strategic uses",
+      "period": "Ongoing",
+      "status": "new",
+      "claim": {
+        "text": "Management returned a record $26B in Q2 (60% of year-to-date free cash flow) and intends to increase returns of excess free cash flow net of strategic uses.",
+        "evidence_ids": [
+          "C.014"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "Hugging Face deal (8-K, 9/3). NVIDIA agreed to buy Hugging Face for about $11.9B plus up to about $1.0B of equity retention, with closing expected in 1H 2027 subject to regulatory approvals. NVIDIA committed to keep the platform open. Press reports put the total at $12.9–13B, which is consistent with the sum. The 8-K adds a risk factor on government restrictions on models, including those originating in China.",
+      "evidence_ids": [
+        "E.002",
+        "E.003",
+        "E.004",
+        "N.40",
+        "N.41"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Regulatory scrutiny is new. On 10/28 Reuters, via Bloomberg, reported that the US Justice Department is making inquiries about the Hugging Face deal and looking at NVIDIA's sales practices. The question is whether the deal could give NVIDIA control of a key distribution hub. This is a news report and not a company disclosure.",
+      "evidence_ids": [
+        "N.41",
+        "N.40"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Hyperscaler capex is mixed but very large. Amazon's Q3 capex was $77.3B against $58.7B expected. Microsoft cut its 2026 capex forecast to $170B from $175B and Alphabet held $195–205B, both below estimates. Meta guided $135–145B. Business Insider puts the aggregate for Amazon, Alphabet, Meta, Microsoft and SpaceX at $803–828B for 2026, against management's 'nearly $800B' for the top five.",
+      "evidence_ids": [
+        "N.69",
+        "N.29",
+        "A.001",
+        "A.002",
+        "N.28",
+        "C.004"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Neocloud capacity is a soft spot for the ACIE-led Q3 guide. Microsoft's CFO said third-party GPU providers had delays pushing some capacity into 1H27, and expects capex to accelerate then on component costs and delayed deliveries. Neocloud shares fell, lenders are reported to be pulling back, and NVIDIA-backed Firmus withdrew its IPO. Hyperscaler capex is still expected to top $1T next year.",
+      "evidence_ids": [
+        "A.001",
+        "A.002",
+        "A.003"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Memory supplier evidence supports NVIDIA's cost argument. SK Hynix reported record Q3 results on 10/27–29, with revenue +327.9% and operating profit +632.1% y/y, beating estimates. Reuters puts operating profit at 83 trillion won. Its shareholder-return figure differs by source: more than $25B at CNBC and $75B at Reuters. TrendForce-sourced reporting (10/24) has Q4 DRAM contract prices rising about 20% q/q, a slower pace. Micron's FY26 10-K shows DRAM average selling prices up in the low 40s percent and gross margin of 81%.",
+      "evidence_ids": [
+        "N.52",
+        "N.54",
+        "N.12",
+        "P.009"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Frontier-lab funding is active. Reuters (10/19–20) reports OpenAI seeking about $30B at a valuation above $1.4T ahead of an Anthropic IPO. CNBC reports Anthropic is set to go public and that OpenAI has said a 2027 IPO is likely. These counterparties are a large share of NVIDIA's ecosystem exposure, so their funding and listings matter for the financing debate.",
+      "evidence_ids": [
+        "N.19",
+        "A.002"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Intel's Q3 (10-Q filed 10/30) shows DCAI revenue of $7.3B against $4.1B a year earlier, at a 42% operating margin. AMD's Data Center revenue was $6.7B (+107%) in the June quarter, with a 54% gross margin. Both remain a fraction of NVIDIA's $89.0B Data Center revenue.",
+      "evidence_ids": [
+        "P.011",
+        "P.001",
+        "P.002",
+        "Q.066"
+      ],
+      "evidence_type": "proxy"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Is consensus above the guide top end beatable, or is the quarter supply-capped?",
+      "bull": {
+        "text": "Consensus of $111.36B needs +15.7% sequential growth, below the roughly +18–20% of the last two quarters. Management says demand far exceeds supply, Rubin production shipments have started, and supply commitments rose to $279B to support the ramp.",
+        "evidence_ids": [
+          "M.01",
+          "Q.064",
+          "Q.065",
+          "F.23",
+          "F.04",
+          "F.69",
+          "Q.028",
+          "C.020"
+        ],
+        "evidence_type": "estimate"
+      },
+      "bear": {
+        "text": "Consensus is already about 1% above the top of the guide. Management calls the outlook supply-constrained, expects hyperscale to reaccelerate only in Q4, and relies on ACIE for Q3 growth. Microsoft flagged delays at third-party GPU providers and neocloud financing is tightening.",
+        "evidence_ids": [
+          "M.01",
+          "C.014",
+          "A.001",
+          "A.002"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "The reported Q3 revenue against $110.2B, the ACIE and hyperscale split, the Rubin share (guided about 20%) and the Q4 revenue guide."
+    },
+    {
+      "question": "How deep and how credible is the gross-margin reset?",
+      "bull": {
+        "text": "The Q4 trough of 71–72% is roughly the FY26 average of 71.1%, and FY28 is guided to 72–73% after price increases in Q1. Management says tight memory is a symptom of the same demand surge driving its growth, and it has long relationships with all three memory suppliers.",
+        "evidence_ids": [
+          "C.015",
+          "K.168"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Memory pricing has exceeded management's expectations and is 'headed even higher'. Q4 DRAM contract prices are expected to rise about 20% q/q, Micron's gross margin is 81%, and SK Hynix posted record profit. That shows memory suppliers capturing the cost. The recovery depends on price increases that have not yet taken effect.",
+        "evidence_ids": [
+          "C.015",
+          "N.12",
+          "P.009",
+          "N.52"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Q3 gross margin against 74% ±50bp, whether the Q4 guide sits inside or below 71–72%, and any evidence price increases are being accepted for Q1."
+    },
+    {
+      "question": "Is the ecosystem financing a demand multiplier or a circularity and counterparty risk?",
+      "bull": {
+        "text": "Management says the roughly $50B invested in frontier labs is a small fraction of expected free cash flow, that the compute is fungible and redeployable, and that the compute shipped will be consumed by investment-grade customers or those backed by one. It also describes the $500B third-party financing platforms as independently underwritten.",
+        "evidence_ids": [
+          "C.011",
+          "C.012",
+          "C.013"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Guarantees total $108.5B, AI-cloud commitments are $36B, supply commitments are $279B, and receivables are $63.1B with five customers each holding at least 10%. The 10-Q adds a new risk factor on counterparty and recovery risk, and management expects AI labs it supports with its balance sheet to be about a quarter of next year's business.",
+        "evidence_ids": [
+          "Q.033",
+          "Q.060",
+          "Q.028",
+          "Q.006",
+          "Q.020",
+          "Q.085",
+          "Q.088",
+          "C.013"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "DSO, receivables and free cash flow conversion in Q3, any new guarantees or commitments, whether the $500B platforms become definitive, and the OpenAI and Anthropic funding and listing outcomes."
+    },
+    {
+      "question": "Does custom silicon cap NVIDIA's share and pricing?",
+      "bull": {
+        "text": "Management says NVIDIA runs every frontier model, closed and open, and that Vera Rubin raises its revenue per gigawatt to about $40B from about $25B with Blackwell. NVIDIA's Data Center revenue of $89.0B is about 4.3x Broadcom's entire semiconductor segment of $20.8B.",
+        "evidence_ids": [
+          "C.005",
+          "C.006",
+          "Q.066",
+          "P.013"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Broadcom's semiconductor segment grew 127% y/y, faster than NVIDIA's Data Center at 117%, led by custom AI accelerators. A single distributor was 50% of Broadcom's revenue. Its AI XPV platform is financing more than 20 gigawatts for frontier labs through 2028. Frontier labs are NVIDIA's own financing recipients and are also building custom chips.",
+        "evidence_ids": [
+          "P.013",
+          "P.014",
+          "P.005",
+          "Q.065",
+          "C.032"
+        ],
+        "evidence_type": "proxy"
+      },
+      "what_settles_it": "The Rubin ramp and its share of Data Center revenue, the FY28 hyperscale re-acceleration, and whether the Q1 price increases hold against custom-silicon pricing."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "bull",
+      "description": {
+        "text": "Revenue lands near or above $113B with margin at 74% or better. Rubin exceeds 20% of Data Center revenue and the Q4 guide is built around the supply-constrained path to the ~70% FY28 growth. EPS is about $2.60 or more before any equity gains. This would need a beat of roughly 5% over the guide midpoint.",
+        "evidence_ids": [
+          "C.014",
+          "C.015",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Q3 revenue at or above about $113B",
+        "Gross margin at or above 74.5%",
+        "Q4 guide above the sell-side consensus with gross margin at the high end of 71–72%",
+        "Hyperscale growth accelerating earlier than Q4",
+        "DSO flat or lower and free cash flow conversion recovering"
+      ]
+    },
+    {
+      "name": "base",
+      "description": {
+        "text": "Revenue is about $110–112B, in line with consensus or slightly above. Gross margin is 74–74.5%. EPS is about $2.50–2.60 before equity gains. The market focuses on the Q4 margin trough and on whether FY28 growth of about 70% still looks conservative. The ±8.7% implied move is more than double the 4.0% historical average, so the bar is demanding.",
+        "evidence_ids": [
+          "M.01",
+          "M.03",
+          "M.04",
+          "C.014",
+          "C.015"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Revenue between $110B and $112B",
+        "Gross margin 74% to 74.5%",
+        "Q4 gross margin guide within 71–72%",
+        "DSO rising modestly with multi-quarter shipments",
+        "No new large guarantees"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Revenue is near the guide ($108–110B), below consensus. Neocloud delays weaken the ACIE-led growth, and the Q4 margin guide is below 71%. Receivables and DSO rise further and free cash flow conversion stays weak. New guarantees and commitments, or a DOJ escalation on Hugging Face, add to the circular-financing worry.",
+        "evidence_ids": [
+          "C.014",
+          "A.001",
+          "A.002",
+          "N.41",
+          "Q.006"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Revenue at or below $110.2B",
+        "Q3 gross margin below 74%",
+        "Q4 gross margin guide below 71%",
+        "DSO above 60 days and free cash flow conversion below H1's roughly 59%",
+        "Further growth in guarantees or equity commitments",
+        "Neocloud financing stress or customer delay disclosures"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "Commitments, guarantees and counterparty risk: $108.5B of guarantees (including $105B for SB Energy/OpenAI, effective from FY2029), $36B of AI-cloud commitments and $25B of equity commitments. The 10-Q added a new risk factor saying customers may fail to fulfil obligations, that NVIDIA may be unable to reduce its own commitments if demand differs, and that recovery from OpenAI may not be prompt or full.",
+        "evidence_ids": [
+          "Q.033",
+          "Q.060",
+          "Q.028",
+          "Q.032",
+          "Q.085",
+          "Q.086",
+          "Q.088"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Supply and inventory exposure: supply commitments rose from $119B to $279B in a quarter and inventory was $31.6B. If demand is smaller than planned, the 10-Q says NVIDIA may be unable to reduce commitments, and Q2 provisions already cost about 0.8 points of gross margin.",
+        "evidence_ids": [
+          "Q.028",
+          "Q.055",
+          "Q.006",
+          "Q.072"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Memory-cost and gross-margin risk: management guided gross margin down to a 71–72% trough in Q4 and says memory costs are rising beyond its expectations. The recovery depends on price increases in Q1 that are not yet in the numbers.",
+        "evidence_ids": [
+          "C.015"
+        ],
+        "evidence_type": "guided"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Working-capital quality: DSO rose to 60 days on extended terms of up to one year for investment-grade customers. Receivables rose $24.6B in H1. Five direct customers held about 70% of receivables, and one customer was 16% of Q2 revenue. H1 free cash flow converted only about 59% of net income.",
+        "evidence_ids": [
+          "C.014",
+          "Q.021",
+          "Q.006",
+          "Q.020",
+          "Q.046",
+          "F.65",
+          "F.07"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Equity-portfolio volatility in GAAP results: H1 equity gains were $23.7B and marketable equity was $42.8B, most of it under lock-up. The 10-Q warns that additional investments could materially affect carrying value. GAAP EPS can diverge sharply from operating results in either direction.",
+        "evidence_ids": [
+          "Q.023",
+          "Q.016",
+          "Q.081"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Regulatory and deal risk: the DOJ is reported to be making inquiries about the Hugging Face acquisition and NVIDIA's sales practices. The 10-Q also lists broad competition-regulator requests in the EU, US, UK, China and South Korea, and China's preliminary September 2025 finding on the Mellanox approval.",
+        "evidence_ids": [
+          "N.41",
+          "N.40",
+          "Q.090",
+          "Q.099"
+        ],
+        "evidence_type": "proxy"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "China and export policy: NVIDIA says it is effectively foreclosed from China data center compute. H200 shipments carry a 25% tariff it cannot pass on and were under 1% of Data Center revenue. The GAIN AI Act and RASA remain open risks. China is excluded from guidance, so policy change is optionality rather than a base-case driver.",
+        "evidence_ids": [
+          "Q.063",
+          "Q.104",
+          "Q.106",
+          "C.014"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Customer and neocloud financing risk: the ACIE segment drives Q3 growth and depends on neoclouds that need outside capital. Microsoft cited delays at third-party GPU providers, lenders are reported to be pulling back and Firmus withdrew its IPO. A tight credit market could slow ACIE shipments.",
+        "evidence_ids": [
+          "C.014",
+          "A.001",
+          "A.002",
+          "A.003"
+        ],
+        "evidence_type": "proxy"
+      },
+      "is_new": true
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "Q3 revenue is guided to $108B but consensus is $111.4B. How much of the supply you secure is available in Q3 versus Q4, and what limits upside this quarter: wafers, HBM, packaging or rack integration?",
+      "why": {
+        "text": "Management calls the outlook supply-constrained and consensus sits above the top of the range.",
+        "evidence_ids": [
+          "C.014",
+          "C.015",
+          "M.01"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "Give a bridge for the gross-margin decline from 75% to the Q4 trough of 71–72%: memory cost, Rubin mix, Groq LPX ramp and inventory provisions. How much of the Q1 FY28 price increase is already contracted?",
+      "why": {
+        "text": "Management gave no split of the decline and the recovery to 72–73% depends on price increases that take effect in Q1.",
+        "evidence_ids": [
+          "C.015",
+          "C.008"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "DSO rose to 60 days on extended terms for investment-grade customers. What is the expected peak DSO, how long are the longest terms, and what credit insurance or collateral covers them?",
+      "why": {
+        "text": "Receivables rose $24.6B in H1, five customers hold about 70% of the balance, and terms can run up to one year.",
+        "evidence_ids": [
+          "C.014",
+          "Q.006",
+          "Q.020",
+          "Q.021"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is the total cash and credit exposure across guarantees, AI-cloud take-or-pay commitments, equity commitments and residual-value support in FY28, and when do the $500B financing platforms become definitive?",
+      "why": {
+        "text": "Guarantees total $108.5B and AI-cloud commitments $36B, and the platforms are still MOUs. Management also expects labs backed by its balance sheet to be about a quarter of next year's business.",
+        "evidence_ids": [
+          "Q.033",
+          "Q.060",
+          "Q.062",
+          "C.013"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "Microsoft said third-party GPU providers had delays. Are you seeing neocloud or ACIE customers delaying deployments or struggling to finance them, and how is that reflected in the Q3 guide?",
+      "why": {
+        "text": "The Q3 guide relies on ACIE for sequential growth, and Microsoft cited delays at third-party GPU providers that push capacity into 1H27.",
+        "evidence_ids": [
+          "C.014",
+          "A.001",
+          "A.002"
+        ],
+        "evidence_type": "proxy"
+      }
+    }
+  ],
+  "data_gaps": [
+    "The consensus basis for the $2.53 EPS (GAAP or non-GAAP) is not confirmed. If it is GAAP, it would need equity gains or a larger revenue beat. The 8/26 non-GAAP EPS of $2.22 reported by Investing.com is outside the 14-day window and background only.",
+    "Prior-quarter guide-versus-actual history (Q4 FY26 guide $65B, Q1 FY27 $78B, Q2 FY27 $91B, each beaten by about 4.6–5.7% at the midpoint) comes from older news outside the 14-day window and is not cited as evidence. Extrapolating that cadence to $108B gives about $113B. That is background arithmetic, not a sourced forecast.",
+    "No sell-side estimates for Q4 FY27 or FY28 gross margin or revenue were found, and no high/low range for Q3 revenue estimates. Whisper EPS is not yet looked up (the print is 17 days out).",
+    "No post-8/26 results or channel checks from TSMC, Samsung or Micron's latest quarter were retrieved. HBM pricing guidance in the SK Hynix coverage was truncated.",
+    "The Bloomberg report (8/22) that NVIDIA told large customers of server price increases above 15% on systems shipping early next year is outside the 14-day window, so it is not cited. No newer source confirms executed increases.",
+    "No Rubin delay, yield, HBM or rack-level problem was found in the sources, but absence of reports is not proof there are none. The earlier SemiAnalysis note on HBM4 bandwidth is dated February and not cited.",
+    "The Jefferies call that Rubin exceeds 40% of revenue by fiscal year-end, and the 8/27 premarket move, could not be verified against in-window sources and are not used.",
+    "China status: no news from the last 14 days on H200 licensing, export rules, GAIN AI/RASA or the SAMR probe. Whether the 75,000-per-customer H200 cap was adopted and whether SAMR closed its probe are unestablished. The 10-Q still carries the SAMR finding as a live risk.",
+    "Quarterly free cash flow split (Q1 $48.6B, Q2 $21.3B) comes from an 8/28 third-party article outside the window. Only the H1 total of about $70B is derived from filings.",
+    "Broadcom does not break out AI revenue in the retrieved 10-Q passages, so the 4.3x NVIDIA-to-Broadcom ratio is a floor using its whole semiconductor segment. No AMD Q3 report date or MI450 revenue timing was found, and no Google TPU volumes.",
+    "SK Hynix's shareholder-return figure conflicts across sources ($25B+ at CNBC versus $75B at Reuters). The Amazon press release (N.70) carries a May date stamp despite describing Q3 results, so its AWS growth figure is not used.",
+    "Share count for Q3 EPS (about 24.2B diluted) and the tax and interest assumptions in my EPS bridge are my own and ignore any change in other income.",
+    "A claim was removed because its sources don't support it: 'Management said it will return excess free cash flow net of strategic uses. H1 free cash flow was $69.99B against net income of $118.01B, about 59% conversion. Equity investment commitments were $25B at July 26, up from $11.4B investment commitments at year-end.' (The passages give $25B of equity investment commitments at July 26, 2026, but nothing for year-end showing $11.4B of investment commitments, so the 'up from' comparison has no source (the K.255 passage covers only supply commitments and debt).)."
+  ],
+  "sources": {
+    "Q.005": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.006": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.016": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Financial Statements — Note 3 - Net Income Per Share",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.020": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Financial Statements — Equity Method Investments",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.021": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Financial Statements — Note 7 - Supplemental Financial Statement Information",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.023": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Financial Statements — Deferred Revenue",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.026": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Financial Statements — Public Company Warrants",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.027": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Financial Statements — Public Company Warrants",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.028": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Financial Statements — Commitments",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.032": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Financial Statements — Guarantees",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.033": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Financial Statements — Guarantees",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.041": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Financial Statements — Capital Return Program",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.046": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Financial Statements — Note 13 - Segment Information",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.055": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · MD&A — Recent Developments, Future Objectives and Challenges",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.059": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · MD&A — Recent Developments, Future Objectives and Challenges",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.060": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · MD&A — Recent Developments, Future Objectives and Challenges",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.062": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · MD&A — Recent Developments, Future Objectives and Challenges",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.063": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · MD&A — Recent Developments, Future Objectives and Challenges",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.064": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · MD&A — Recent Developments, Future Objectives and Challenges",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.065": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · MD&A — Recent Developments, Future Objectives and Challenges",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.066": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · MD&A — Revenue was $96.2 billion, up 106% from a year ago and up 18% sequentially.",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.072": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · MD&A — Gross Profit and Gross Margin",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.073": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · MD&A — Gross Profit and Gross Margin",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.074": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · MD&A — Gross Profit and Gross Margin",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.077": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · MD&A — Liquidity",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.080": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · MD&A — Material Cash Requirements and Other Obligations",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.081": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Quantitative Disclosures",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.085": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Risk Factors — Item 1A. Risk Factors",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.086": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Risk Factors — Item 1A. Risk Factors",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.088": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Risk Factors — Item 1A. Risk Factors",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.090": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Risk Factors — Item 1A. Risk Factors",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.099": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Risk Factors — Item 1A. Risk Factors",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.104": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Risk Factors — Item 1A. Risk Factors",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.106": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 · Risk Factors — Item 1A. Risk Factors",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.118": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "Q.119": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-26 — Issuer Purchases of Equity Securities",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "K.168": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-25 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm",
+      "as_of": "2026-02-25"
+    },
+    "K.212": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-25 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm",
+      "as_of": "2026-02-25"
+    },
+    "E.002": {
+      "kind": "8-K",
+      "citation": "8-K Item 8.01 (filed 2026-09-03) — The Nasdaq Global Select Market",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000078/nvda-20260902.htm",
+      "as_of": "2026-09-03"
+    },
+    "E.003": {
+      "kind": "8-K",
+      "citation": "8-K Item 8.01 (filed 2026-09-03) — Item 8.01. Other Events.",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000078/nvda-20260902.htm",
+      "as_of": "2026-09-03"
+    },
+    "E.004": {
+      "kind": "8-K",
+      "citation": "8-K Item 8.01 (filed 2026-09-03) — Risks Related to the Proposed Acquisition of Hugging Face",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000078/nvda-20260902.htm",
+      "as_of": "2026-09-03"
+    },
+    "C.004": {
+      "kind": "call",
+      "citation": "Q2 FY2027 earnings call (date unknown) — Colette Kress, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NVDA&quarter=2027Q2",
+      "as_of": null
+    },
+    "C.005": {
+      "kind": "call",
+      "citation": "Q2 FY2027 earnings call (date unknown) — Colette Kress, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NVDA&quarter=2027Q2",
+      "as_of": null
+    },
+    "C.006": {
+      "kind": "call",
+      "citation": "Q2 FY2027 earnings call (date unknown) — Colette Kress, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NVDA&quarter=2027Q2",
+      "as_of": null
+    },
+    "C.007": {
+      "kind": "call",
+      "citation": "Q2 FY2027 earnings call (date unknown) — Colette Kress, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NVDA&quarter=2027Q2",
+      "as_of": null
+    },
+    "C.008": {
+      "kind": "call",
+      "citation": "Q2 FY2027 earnings call (date unknown) — Colette Kress, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NVDA&quarter=2027Q2",
+      "as_of": null
+    },
+    "C.011": {
+      "kind": "call",
+      "citation": "Q2 FY2027 earnings call (date unknown) — Colette Kress, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NVDA&quarter=2027Q2",
+      "as_of": null
+    },
+    "C.012": {
+      "kind": "call",
+      "citation": "Q2 FY2027 earnings call (date unknown) — Colette Kress, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NVDA&quarter=2027Q2",
+      "as_of": null
+    },
+    "C.013": {
+      "kind": "call",
+      "citation": "Q2 FY2027 earnings call (date unknown) — Colette Kress, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NVDA&quarter=2027Q2",
+      "as_of": null
+    },
+    "C.014": {
+      "kind": "call",
+      "citation": "Q2 FY2027 earnings call (date unknown) — Colette Kress, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NVDA&quarter=2027Q2",
+      "as_of": null
+    },
+    "C.015": {
+      "kind": "call",
+      "citation": "Q2 FY2027 earnings call (date unknown) — Colette Kress, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NVDA&quarter=2027Q2",
+      "as_of": null
+    },
+    "C.016": {
+      "kind": "call",
+      "citation": "Q2 FY2027 earnings call (date unknown) — Colette Kress, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NVDA&quarter=2027Q2",
+      "as_of": null
+    },
+    "C.019": {
+      "kind": "call",
+      "citation": "Q2 FY2027 earnings call (date unknown) — Jensen Huang, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NVDA&quarter=2027Q2",
+      "as_of": null
+    },
+    "C.020": {
+      "kind": "call",
+      "citation": "Q2 FY2027 earnings call (date unknown) — Jensen Huang, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NVDA&quarter=2027Q2",
+      "as_of": null
+    },
+    "C.032": {
+      "kind": "call",
+      "citation": "Q2 FY2027 earnings call (date unknown) — Vivek Arya, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NVDA&quarter=2027Q2",
+      "as_of": null
+    },
+    "F.01": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2026-07-26",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "F.04": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — six months ended 2025-07-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "F.07": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Net income — six months ended 2026-07-26",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "F.08": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Net income — six months ended 2025-07-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "F.09": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2026-07-26",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "as_of": "2026-08-26"
+    },
+    "F.23": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — year ended 2026-01-25",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm",
+      "as_of": "2026-02-25"
+    },
+    "F.37": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — quarter ended 2026-07-26",
+      "url": null,
+      "as_of": null
+    },
+    "F.53": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2026-07-26",
+      "url": null,
+      "as_of": null
+    },
+    "F.65": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — six months ended 2026-07-26",
+      "url": null,
+      "as_of": null
+    },
+    "F.66": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — six months ended 2025-07-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.69": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-10-26",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581025000230/0001045810-25-000230-index.htm",
+      "as_of": "2025-11-19"
+    },
+    "F.70": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q3 2027",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.03": {
+      "kind": "market",
+      "citation": "Market data — Options-implied move",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "M.05": {
+      "kind": "market",
+      "citation": "Market data — Beat/miss record",
+      "url": null,
+      "as_of": null
+    },
+    "M.06": {
+      "kind": "market",
+      "citation": "Market data — Analyst rating actions",
+      "url": null,
+      "as_of": null
+    },
+    "M.07": {
+      "kind": "market",
+      "citation": "Market data — Consensus price target",
+      "url": null,
+      "as_of": null
+    },
+    "N.12": {
+      "kind": "news",
+      "citation": "trendforce.com, 2026-10-24 — [News] DRAM Prices Seen Rising 20% QoQ in 4Q26 Despite Slower Gains; AI Demand, Tight Supply Support Outlook",
+      "url": "https://www.trendforce.com/news/2026/10/20/news-dram-prices-seen-rising-20-qoq-in-4q26-despite-slower-gains-ai-demand-tight-supply-support-outlook",
+      "as_of": "2026-10-24"
+    },
+    "N.19": {
+      "kind": "news",
+      "citation": "reuters.com, 2026-10-20 — OpenAI seeks to accelerate fundraising ahead of Anthropic ...",
+      "url": "https://www.reuters.com/world/openai-seeks-accelerate-fundraising-ahead-anthropic-ipo-sources-say-2026-10-19",
+      "as_of": "2026-10-20"
+    },
+    "P.001": {
+      "kind": "peer",
+      "citation": "PEER AMD 10-Q filed 2026-08-05 · MD&A — Data Center",
+      "url": null,
+      "as_of": null
+    },
+    "P.002": {
+      "kind": "peer",
+      "citation": "PEER AMD 10-Q filed 2026-08-05 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "N.28": {
+      "kind": "news",
+      "citation": "businessinsider.com, 2026-10-30 — AI hyperscalers expected to spend up to a whopping $828B in 2026",
+      "url": "https://www.businessinsider.com/amazon-alphabet-meta-microsoft-spacex-capex-ai-spending-total-2026-10",
+      "as_of": "2026-10-30"
+    },
+    "N.29": {
+      "kind": "news",
+      "citation": "cnbc.com, 2026-10-29 — AI buildout hits snag as Google and Microsoft hold capex forecasts",
+      "url": "https://www.cnbc.com/2026/10/29/microsoft-google-ai-capex-estimates.html",
+      "as_of": "2026-10-29"
+    },
+    "N.40": {
+      "kind": "news",
+      "citation": "the-decoder.com, 2026-10-29 — US antitrust regulators are scrutinizing Nvidia's Hugging Face deal and sales practices",
+      "url": "https://the-decoder.com/us-antitrust-regulators-are-scrutinizing-nvidias-hugging-face-deal-and-sales-practices",
+      "as_of": "2026-10-29"
+    },
+    "N.41": {
+      "kind": "news",
+      "citation": "bloomberg.com, 2026-10-28 — DOJ Probes Nvidia’s $13 Billion Hugging Face Deal Over AI Competition Concerns - Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/doj-inquires-about-nvidia-s-hugging-face-deal-reuters-says",
+      "as_of": "2026-10-28"
+    },
+    "A.001": {
+      "kind": "article",
+      "citation": "Article (cnbc.com)",
+      "url": "https://www.cnbc.com/2026/10/29/microsoft-google-ai-capex-estimates.html",
+      "as_of": "2026-10-29"
+    },
+    "A.002": {
+      "kind": "article",
+      "citation": "Article (cnbc.com)",
+      "url": "https://www.cnbc.com/2026/10/29/microsoft-google-ai-capex-estimates.html",
+      "as_of": "2026-10-29"
+    },
+    "A.003": {
+      "kind": "article",
+      "citation": "Article (cnbc.com)",
+      "url": "https://www.cnbc.com/2026/10/29/microsoft-google-ai-capex-estimates.html",
+      "as_of": "2026-10-29"
+    },
+    "P.005": {
+      "kind": "peer",
+      "citation": "PEER AVGO 10-Q filed 2026-09-10 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "P.009": {
+      "kind": "peer",
+      "citation": "PEER MU 10-K filed 2026-10-09 · MD&A — M and NAND products.",
+      "url": null,
+      "as_of": null
+    },
+    "P.011": {
+      "kind": "peer",
+      "citation": "PEER INTC 10-Q filed 2026-10-30",
+      "url": null,
+      "as_of": null
+    },
+    "P.013": {
+      "kind": "peer",
+      "citation": "PEER AVGO 10-Q filed 2026-09-10 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "P.014": {
+      "kind": "peer",
+      "citation": "PEER AVGO 10-Q filed 2026-09-10 · MD&A — Net Revenue",
+      "url": null,
+      "as_of": null
+    },
+    "N.52": {
+      "kind": "news",
+      "citation": "cnbc.com, 2026-10-27 — SK Hynix shares soar as third-quarter profit beats estimates",
+      "url": "https://www.cnbc.com/2026/10/28/sk-hynix-third-quarter-profit.html",
+      "as_of": "2026-10-27"
+    },
+    "N.54": {
+      "kind": "news",
+      "citation": "reuters.com, 2026-10-29 — Chipmaker SK Hynix to return $75 billion to shareholders after record profit",
+      "url": "https://www.reuters.com/world/asia-pacific/sk-hynix-q3-profit-jumps-more-than-7-fold-beats-forecasts-2026-10-27",
+      "as_of": "2026-10-29"
+    },
+    "N.69": {
+      "kind": "news",
+      "citation": "cnbc.com, 2026-10-29 — Amazon (AMZN) Q3 earnings report 2026",
+      "url": "https://www.cnbc.com/2026/10/29/amazon-amzn-q3-earnings-report-2026.html",
+      "as_of": "2026-10-29"
+    }
+  },
+  "check_notes": [
+    "metrics_to_model[1].view: rewritten to what its sources support (The guide, flat sequential margin, Rubin share and 0.8-point provision cost are supported, but the $1.08B-per-point gross profit sensitivity and $0.04 EPS per point are not derivable from the passages (no Q3 revenue-based calc or share count shown, and $108B revenue gives about $1.08B, yet EPS and the 'little room to beat' view lack basis).).",
+    "metrics_to_model[4].view: rewritten to what its sources support (Marketable equity of $42.8B and $36.9B lock-up are supported, but the claim that a 10% mark is about $0.15 per share after tax needs a share count and tax rate not in the passages, and the $4.3B figure includes $5.0B long-term holdings in other assets only partly.).",
+    "metrics_to_model[6].view: rewritten to what its sources support (Terms of 90 days to one year, multi-quarter extended terms and two tax payments are supported, but the 70% concentration is wrong: five customers sum to 70% yes, while the year-end figure of about 56% is 25+18+13=56% from three customers, so these check out; however the claim that cash-tax timing flatters or hurts comparisons and a DSO increase being plausible are fine, yet the passages give no basis for 'keep affecting' beyond the 10-Q, so overall it is mostly supported but the passage does not show the Q1 DSO comparison.).",
+    "metrics_to_model[7].last_reported: rewritten to what its sources support (The cited passage gives no Q2 GAAP effective tax rate of 16.5%; it only describes the drivers of the rate change.).",
+    "metrics_to_model[7].view: rewritten to what its sources support (Management's 16–18% FY27 tax guide excluding discrete items is supported, but the $0.03–0.05 EPS benefit of the low end versus the high end is not in the passage.).",
+    "metrics_to_model[8].last_reported: rewritten to what its sources support (Buybacks of $19.7B, 94M shares, $6.0B dividends, $0.25 per share and $99.3B authorization are supported, but the $202–214 average price range is not fully shown; only $202.40 for one period appears.).",
+    "metrics_to_model[8].view: rewritten to what its sources support (The 60% year-to-date return versus a 50%-or-more plan and the intent to return excess FCF net of strategic uses are supported, but the $18B of equity commitments in the rest of FY27 is not in the passages.).",
+    "questions_for_management[5]: rewritten to what its sources support (The return of excess FCF net of strategic uses is supported and H1 FCF is $69.99B, but net income is not in the passages so the 59% conversion cannot be verified, and 'strategic uses are rising' is only loosely backed by commitments.).",
+    "questions_for_management[5]: its whole questions_for_management[5] item was removed — its sources don't support it (The passages give $25B of equity investment commitments at July 26, 2026, but nothing for year-end showing $11.4B of investment commitments, so the 'up from' comparison has no source (the K.255 passage covers only supply commitments and debt).)."
+  ]
+}

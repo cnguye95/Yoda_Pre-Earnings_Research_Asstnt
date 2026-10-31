@@ -1,0 +1,46 @@
+ticker,mode,latency_seconds,latency_source,cost_usd,cost_standard_usd,whisper_cost_usd,error
+USB,pipeline,367.49,logged,2.27691,2.27691,0.0,
+USB,lead,610.49,logged,3.96472,3.96472,0.0,
+XOM,pipeline,413.86,logged,1.72255,1.72255,0.0,
+XOM,lead,460.07,logged,3.14876,3.14876,0.0,
+DIS,pipeline,,,,,0.0,"ValidationError: 10 validation errors for EarningsReport
+setup_summary
+  Field required [type=missing, input_value={'report': {'setup_summar... not in the sources.']}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+metrics_to_model
+  Field required [type=missing, input_value={'report': {'setup_summar... not in the sources.']}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+guidance
+  Field required [type=missing, input_value={'report': {'setup_summar... not in the sources.']}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+since_filing
+  Field required [type=missing, input_value={'report': {'setup_summar... not in the sources.']}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+key_debates
+  Field required [type=missing, input_value={'report': {'setup_summar... not in the sources.']}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+scenarios
+  Field required [type=missing, input_value={'report': {'setup_summar... not in the sources.']}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+key_risks
+  Field required [type=missing, input_value={'report': {'setup_summar... not in the sources.']}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+questions_for_management
+  Field required [type=missing, input_value={'report': {'setup_summar... not in the sources.']}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+data_gaps
+  Field required [type=missing, input_value={'report': {'setup_summar... not in the sources.']}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+report
+  Extra inputs are not permitted [type=extra_forbidden, input_value={'setup_summary': [{'text...s not in the sources.']}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/extra_forbidden"
+DIS,lead,559.95,logged,3.45197,3.45197,0.0,
+NVDA,pipeline,308.95,logged,1.29491,1.29491,0.0,
+NVDA,lead,401.3,logged,2.5915,2.5915,0.0,
+HD,pipeline,244.97,logged,0.99886,0.99886,0.0,
+HD,lead,589.57,logged,2.6239,2.6239,0.0,
+USB,baseline,,batch,0.46943,0.93886,0.0,
+XOM,baseline,,batch,0.32853,0.65706,0.0,
+DIS,baseline,,batch,0.38256,0.76511,0.0,
+NVDA,baseline,,batch,0.33585,0.67171,0.0,
+HD,baseline,,batch,0.25673,0.51345,0.0,

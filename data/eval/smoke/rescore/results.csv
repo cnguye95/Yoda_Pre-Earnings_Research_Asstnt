@@ -1,0 +1,16 @@
+ticker,mode,filing_extraction,market_expectations,figure_accuracy,reasoning_quality,evidence_labelling,source_traceability,relevance,sell_side_usefulness,buy_side_usefulness,figures_checked,failed_quote_dims,judge_snapshot,prompt_tokens,completion_tokens,cached_tokens,service_tier,over_272k,judge_cost_usd,report_chars,finish_reason,reasoning_tokens,latency_seconds,latency_source,cost_usd,cost_standard_usd
+DIS,baseline,4,5,3,3,4,4,4,5,5,110,,gpt-6.1-sol,170000,3770,0,flex,False,0.18885,49410,stop,986,,batch,0.38256,0.76511
+DIS,pipeline,4,5,5,3,5,4,4,5,5,150,,gpt-6.1-sol,185875,4682,0,flex,False,0.20928,59365,stop,2014,434.6,logged,1.85741,1.85741
+DIS,lead,4,5,5,2,4,3,4,4,4,100,,gpt-6.1-sol,208024,3145,0,flex,False,0.22375,58452,stop,695,559.95,logged,3.45197,3.45197
+HD,baseline,4,5,3,3,4,4,5,4,4,109,,gpt-6.1-sol,106113,3565,0,flex,False,0.12394,36077,stop,1024,,batch,0.25673,0.51345
+HD,pipeline,4,5,5,4,4,4,5,5,4,100,,gpt-6.1-sol,114444,3716,0,flex,False,0.13302,40715,stop,1024,244.97,logged,0.99886,0.99886
+HD,lead,4,5,4,3,3,2,4,5,4,120,,gpt-6.1-sol,144154,3454,0,flex,False,0.16142,61501,stop,512,589.57,logged,2.6239,2.6239
+NVDA,baseline,3,5,3,3,4,3,4,5,5,136,,gpt-6.1-sol,135633,3512,0,flex,False,0.15319,46612,stop,985,,batch,0.33585,0.67171
+NVDA,pipeline,3,5,5,4,4,4,5,5,5,104,reasoning_quality,gpt-6.1-sol,148783,3241,0,flex,False,0.16499,50390,stop,487,335.52,logged,1.3878,1.3878
+NVDA,lead,3,5,3,3,5,4,4,5,5,162,,gpt-6.1-sol,163548,4011,0,flex,False,0.1836,54925,stop,1489,401.3,logged,2.5915,2.5915
+USB,baseline,3,5,4,3,4,4,5,5,4,109,,gpt-6.1-sol,258926,4604,0,flex,False,0.28195,42384,stop,1536,,batch,0.46943,0.93886
+USB,pipeline,2,5,5,3,4,4,5,5,5,145,,gpt-6.1-sol,270265,5094,0,flex,False,0.29574,49291,stop,1904,367.49,logged,2.27691,2.27691
+USB,lead,2,5,3,2,4,3,4,4,4,88,,gpt-6.1-sol,277897,4129,0,flex,True,0.58676,50159,stop,910,610.49,logged,3.96472,3.96472
+XOM,baseline,4,5,3,1,3,3,4,4,4,123,buy_side_usefulness,gpt-6.1-sol,166291,3471,0,flex,False,0.18365,47232,stop,370,,batch,0.34514,0.69029
+XOM,pipeline,4,5,4,3,4,4,4,5,5,157,,gpt-6.1-sol,178839,3521,0,flex,False,0.19644,49586,stop,512,532.33,logged,2.15486,2.15486
+XOM,lead,3,5,5,3,4,4,4,5,5,155,,gpt-6.1-sol,198964,3786,0,flex,False,0.21789,48728,stop,920,496.2,logged,3.33085,3.33085

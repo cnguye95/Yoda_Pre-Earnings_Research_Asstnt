@@ -1,0 +1,1446 @@
+{
+  "ticker": "HD",
+  "company_name": "HOME DEPOT, INC.",
+  "report_generated_at": "2026-10-31T08:06:39+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-08-25",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-03-18",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm"
+    }
+  ],
+  "earnings_call": "not available",
+  "current_report": "No 8-K or 6-K recent enough to read",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$3.95",
+      "fiscal_quarter": 3,
+      "fiscal_year": 2027,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-10-31",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$44.04B",
+      "fiscal_quarter": 3,
+      "fiscal_year": 2027,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-10-31",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "not looked up: next report is 17 days away (looked up automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": "±7.2%",
+      "fiscal_quarter": 3,
+      "fiscal_year": 2027,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/hd-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "historical_move": {
+      "value": "±2.1% average closing move over the last 8 reports (2024-11-12 to 2026-08-18)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/hd-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "analyst_actions": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "price_target": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "Q2 FY2026 (quarter ended Aug 2, 2026): sales were $47.86B (+5.7%), GAAP diluted EPS was $4.79 vs $4.58 (+4.6%), and operating margin fell to 14.3% from 14.5%. Revenue growth outran operating income growth (+4.3%).",
+      "evidence_ids": [
+        "F.01",
+        "F.37",
+        "F.09",
+        "F.10",
+        "F.41",
+        "F.43",
+        "F.53",
+        "F.55"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Quality of the Q2 beat: about $730M of IEEPA tariff refunds was received. About $685M cut cost of goods sold, almost all in the Primary segment, and refund interest went to interest income. The 10-Q says gross margin rose to 33.7% from 33.4% because of the refunds, 'largely offset' by fuel, energy and input costs and by GMS. SG&A grew 8.5% against sales +5.7%.",
+      "evidence_ids": [
+        "Q.039",
+        "Q.043",
+        "Q.044",
+        "Q.040"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "On the Aug 18 call (coverage dated Aug 18, background), management put the recognized refund at about 145 bp of gross margin. It netted that against about 60 bp of unplanned fuel, energy and input costs and about 60 bp of GMS mix drag, leaving the reported +25 bp. About $45M of the refund stayed in inventory and will flow through COGS later.",
+      "evidence_ids": [],
+      "evidence_type": "unverifiable"
+    },
+    {
+      "text": "Company-defined adjusted EPS was $4.92 vs $4.68 (+5.1%) against a $4.73 estimate. It excludes acquired-intangible amortization but includes the refund. My estimate of the refund is about $0.52 per share after tax ($685M at the 24.5% Q2 tax rate on 996M diluted shares, excluding refund interest income). That puts ex-refund adjusted EPS near $4.40, about -6% year on year.",
+      "evidence_ids": [
+        "F.09",
+        "Q.011"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Demand: Q2 comparable sales rose 1.7% (ticket +2.8%, transactions -1.0%), with FX adding about 25 bp. Primary segment sales rose only about 1.5% ($42.8B vs $42.2B). Other (SRS, GMS, Mingledorff's) rose to $5.06B from $3.12B and supplied most of the growth. Acquisitions are doing the heavy lifting on reported sales.",
+      "evidence_ids": [
+        "Q.040",
+        "Q.042",
+        "Q.020",
+        "Q.021"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Cash and capital: six-month operating cash flow was $11.42B (+27%) and free cash flow was $9.70B. The 10-Q attributes the gain mainly to working-capital timing and fewer tax payments. Management does not plan to resume buybacks in FY2026 as it pays down debt ($3.0B of long-term debt repaid in H1). ROIC was 24.8% vs 27.2%.",
+      "evidence_ids": [
+        "F.17",
+        "F.45",
+        "F.65",
+        "Q.055",
+        "Q.051",
+        "Q.056",
+        "Q.038"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Leadership: the Q2 10-Q is signed by CFO Richard McPhail as 'Interim Principal Executive Officer'. Per Aug 12 reports (background), CEO Ted Decker took a temporary medical leave expected to last a few months. Ann-Marie Campbell runs day-to-day operations, McPhail runs finance and Pro, and lead director Greg Brenneman is acting Chair. No permanent successor has been named.",
+      "evidence_ids": [
+        "Q.058",
+        "Q.064"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Setup for the Nov 17 print (time of day not available): consensus is $44.04B revenue (+6.5% vs $41.35B) and $3.95 EPS. The options market implies a ±7.2% move against a ±2.1% average closing move over the last 8 reports.",
+      "evidence_ids": [
+        "M.01",
+        "F.70",
+        "F.72",
+        "M.03",
+        "M.04",
+        "F.69"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Q3 FY2026 revenue",
+      "period": "Q3 FY2026 (quarter ending ~Nov 1, 2026)",
+      "last_reported": {
+        "text": "Q2 FY26 revenue was $47.86B (+5.7%). Q3 FY25 was $41.35B, of which Primary was $37.46B (+0.5%), so Other (SRS incl. about 8.5 weeks of GMS) was about $3.89B by subtraction.",
+        "evidence_ids": [
+          "F.01",
+          "F.37",
+          "F.69"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus revenue is $44.04B, +6.5% on $41.35B.",
+        "evidence_ids": [
+          "M.01",
+          "F.70"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "My bridge gives about $42.75–43.45B (+3.4% to +5.1%), $0.6–1.3B below consensus. Primary at +1.5–2.0% adds $0.55–0.75B. Incremental GMS adds only about $0.5–0.6B, because GMS closed Sept 4, 2025 and contributed an implied $0.8B in Q3 FY25 (my estimate from $2.0B over 21 weeks), against $1.4B in Q2. Legacy SRS plus Mingledorff's adds $0.35–1.0B; the top end assumes Q2's unexplained ~$0.5B of Other growth beyond GMS repeats. The Q4 guide math points the same way: consensus Q3 plus a flat Q4 (Q4 FY25 was $38.2B) gives about +4.4% for the year, the top of the +2.5–4.5% guide. Revenue is the likeliest line to land below consensus, unless the Finnhub figure is stale or on another basis.",
+        "evidence_ids": [
+          "F.69",
+          "K.257",
+          "Q.041",
+          "Q.020",
+          "Q.021",
+          "Q.035",
+          "F.23",
+          "F.03",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Q3 diluted EPS (basis to confirm)",
+      "period": "Q3 FY2026",
+      "last_reported": {
+        "text": "Q2 FY26 GAAP diluted EPS was $4.79 and adjusted $4.92. Q3 FY25 was $3.62 GAAP and $3.74 adjusted.",
+        "evidence_ids": [
+          "F.09",
+          "F.71"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus is $3.95. The basis is not stated in the Finnhub data. It is +9.2% on the GAAP base ($3.62) but +5.6% on the adjusted base ($3.74), and HD guides and headlines on the adjusted measure.",
+        "evidence_ids": [
+          "M.01",
+          "F.72",
+          "F.71"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Treat $3.95 as probably adjusted, not confirmed. Against the $3.62 GAAP base it is +9.2%, but against the $3.74 adjusted Q3 FY25 base it is +5.6%. H1 adjusted EPS was $8.35 ($3.43 in Q1 plus $4.92 in Q2). Q3 loses the Q2 refund cushion: only about $45M of the $730M refund remained in inventory, roughly $0.03 a share at the 24.5% Q2 tax rate and 996M shares (my estimate). Fuel and energy costs also persist. I do not derive an H2 or Q4 EPS path from the guide, because the FY25 adjusted EPS base is not in the sources. My range is $3.85–3.98 on the adjusted basis.",
+        "evidence_ids": [
+          "F.71",
+          "F.72",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Q3 comparable sales (total company)",
+      "period": "Q3 FY2026",
+      "last_reported": {
+        "text": "Q2 comp was +1.7% (ticket +2.8%, transactions -1.0%, FX about +25 bp). H1 comp was +1.2%. Monthly Q2 comps (coverage): May +1.2%, June +1.5%, July +2.3%.",
+        "evidence_ids": [
+          "Q.040",
+          "Q.042"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "No analyst Q3 comp estimate was found.",
+        "evidence_ids": [
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "I expect a positive, ticket-led comp of about +1.0–2.0%. Management said the start of Q3 was 'really consistent' with Q2. Last year's compare is easy (Q3 FY25 +0.2%: Aug +2.0%, Sept +0.5%, Oct -1.5%). Against that, new-home sales fell 4.6% in September and diesel is $6.35 a gallon, and Lowe's Q2 transactions were -2.1% while HD's were -1.0%. The full-year comp guide of flat to +2% against H1 +1.2% leaves room for an H2 slowdown. Management said on the call that the guide midpoint implies deceleration.",
+        "evidence_ids": [
+          "N.59",
+          "N.60",
+          "P.002",
+          "P.004"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Gross margin",
+      "period": "Q3 FY2026 / H2",
+      "last_reported": {
+        "text": "Q2 gross margin was 33.7% vs 33.4%, including about 145 bp from refunds. H1 was 33.4% vs 33.6%.",
+        "evidence_ids": [
+          "Q.040",
+          "Q.045"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The FY guide of about 33.1% on H1's $29.9B gross profit implies H2 gross margin of about 32.8–32.9%, against about 33.0% in H2 FY25 ($26.3B on $79.55B). Management said Q4 gross margin would be 'right around flat', which would put more of the year-on-year decline in Q3. That is my inference; the guide's rounding makes it approximate. Refunds should fade in Q3. Peer Floor & Decor is still recognizing refunds as inventory sells, so a small HD tail from the $45M is plausible.",
+        "evidence_ids": [
+          "Q.045",
+          "K.176",
+          "K.145",
+          "P.010",
+          "Q.039"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "SG&A and operating margin",
+      "period": "Q3 FY2026 / H2",
+      "last_reported": {
+        "text": "Q2 SG&A was 17.6% of sales vs 17.1% (+8.5% in dollars). Operating margin was 14.3% vs 14.5%. Adjusted operating margin was 14.7% vs 14.8%.",
+        "evidence_ids": [
+          "Q.040",
+          "Q.043",
+          "F.53",
+          "F.55"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management reaffirmed an adjusted operating margin guide of 12.8–13.0% for FY26. H1 adjusted operating income is about $12.2B (GAAP $11.82B plus $349M of intangible amortization), about 13.6% of H1 revenue of $89.63B (my estimate). That is above the full-year guide, so the guide implies an H2 step-down, but I do not size H2 because the H2 revenue base is not in the sources. H1 GAAP operating margin was 13.2% vs 13.7% a year earlier. Tractor Supply also reported adjusted SG&A deleverage of 99 bp in H1.",
+        "evidence_ids": [
+          "F.15",
+          "F.03",
+          "F.57",
+          "F.59",
+          "Q.028",
+          "P.007"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Other (SRS/GMS/HVAC) segment",
+      "period": "Q3 FY2026",
+      "last_reported": {
+        "text": "Q2 Other sales were $5.06B vs $3.12B and operating income was $247M (4.9%) vs $201M. About $125M of intangible amortization falls in Other each quarter. Roofing was about 39% of Other sales vs about 62% a year ago. Mingledorff's (about $1.1B price) added little in Q2.",
+        "evidence_ids": [
+          "Q.020",
+          "Q.021",
+          "Q.022",
+          "Q.024",
+          "Q.035"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management gave no Other-segment margin guide. Model about 4–5% GAAP (about 7.4% before amortization) and Other sales of about $4.8–5.1B. The organic guide is mid-single-digit growth for SRS for FY26 (reaffirmed Q1/Q2 coverage). Q1 roofing comps were low-single-digit negative, but the Q3 FY25 hail compare was easy. The roofing share math implies Q2 roofing was roughly flat.",
+        "evidence_ids": [
+          "Q.020",
+          "Q.022",
+          "Q.024",
+          "N.37"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Effective tax rate and interest",
+      "period": "H2 FY2026",
+      "last_reported": {
+        "text": "H1 effective tax rate was 24.7%. H1 net interest and other was $1.128B.",
+        "evidence_ids": [
+          "Q.048",
+          "Q.045"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The FY guide is about 24.3% tax and about $2.3B net interest. That implies H2 tax below 24.3% (a modest tailwind) and H2 net interest of about $1.15–1.2B. Refund interest income in Q2 does not recur.",
+        "evidence_ids": [
+          "Q.044",
+          "Q.048"
+        ],
+        "evidence_type": "estimate"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Total sales growth",
+      "guidance": "About +2.5% to +4.5% from $164.68B, which is $168.8–172.1B. This implies H2 sales of $79.2–82.5B vs $79.55B in H2 FY25.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "The Aug 18 release reaffirmed FY26 total sales growth of about 2.5–4.5%. The guide includes the effect of IEEPA tariff refunds in earnings.",
+        "evidence_ids": [
+          "F.23"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Comparable sales",
+      "guidance": "About flat to +2.0%. H1 was +1.2%. Management called the guide 'prudent' and said the midpoint implies a deceleration from Q2.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "FY26 comp growth guide of about flat to +2.0% reaffirmed. On the call (coverage dated Aug 18), management conceded that comps could reach the high end if ticket holds and traffic improves slightly, but did not signal an upgrade.",
+        "evidence_ids": [],
+        "evidence_type": "unverifiable"
+      }
+    },
+    {
+      "metric": "Gross margin",
+      "guidance": "About 33.1% for FY26 (FY25 was 33.3%). Q4 gross margin expected 'right around flat' year on year (call coverage).",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "FY26 gross margin guide of about 33.1% reaffirmed. Management said the refund benefit would be fully offset by incremental fuel, energy and input costs by year-end, and that Q4 gross margin would be about flat year on year.",
+        "evidence_ids": [],
+        "evidence_type": "unverifiable"
+      }
+    },
+    {
+      "metric": "Operating margin (GAAP and adjusted)",
+      "guidance": "GAAP about 12.4–12.6%. Adjusted about 12.8–13.0%. FY25 GAAP was 12.7%. Adjusted excludes acquired-intangible amortization.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "FY26 GAAP operating margin guide of about 12.4–12.6% and adjusted of about 12.8–13.0%, both reaffirmed, against H1 GAAP of 13.2%.",
+        "evidence_ids": [
+          "F.57",
+          "F.61"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Diluted EPS (GAAP)",
+      "guidance": "Growth of about flat to +4.0% from $14.23, which is $14.23–$14.80. H1 GAAP was $8.09.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "GAAP diluted EPS guide is flat to +4% from $14.23. With H1 at $8.09, GAAP H2 is $6.14–$6.71, against about $6.20 in H2 FY25 ($14.23 less $8.03).",
+        "evidence_ids": [
+          "F.27",
+          "F.11",
+          "F.12"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Adjusted diluted EPS",
+      "guidance": "Growth of about flat to +4.0% from $14.69, which is $14.69–$15.28. H1 adjusted was about $8.35. Implied H2 is $6.34–$6.93, against $6.44 in H2 FY25. The guide includes the refunds.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "Adjusted EPS guide is flat to +4% from $14.69 and includes IEEPA refunds. H1 adjusted is $3.43 plus $4.92. H2 FY25 adjusted is about $6.44 ($3.74 in Q3 plus $2.70 in Q4, derived from FY $14.69 less nine-month $11.99).",
+        "evidence_ids": [],
+        "evidence_type": "unverifiable"
+      }
+    },
+    {
+      "metric": "Tax rate and net interest expense",
+      "guidance": "Effective tax rate about 24.3%. Net interest expense about $2.3B.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "FY26 effective tax rate about 24.3% and net interest expense about $2.3B, both reaffirmed.",
+        "evidence_ids": [],
+        "evidence_type": "unverifiable"
+      }
+    },
+    {
+      "metric": "Capital expenditures and stores",
+      "guidance": "Capex about $4B, about 2.5% of sales. About 15 new Home Depot stores. Coverage adds 40–50 new SRS branches.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "Capex of about $4B (about 2.5% of sales) is unchanged. H1 capex was $1.72B, flat year on year, so H2 capex steps up to about $2.3B.",
+        "evidence_ids": [
+          "Q.052",
+          "F.19",
+          "F.46"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Share repurchases",
+      "guidance": "No plans to resume repurchases in FY2026 while the company reduces debt. About $11.7B of authorization remains.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "Buybacks stay paused (since March 2024). The 10-Q repeats that the company does not plan to resume them in FY2026.",
+        "evidence_ids": [
+          "Q.051",
+          "Q.032"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "SRS organic sales growth",
+      "guidance": "Mid-single-digit positive organic growth for FY26, with compares improving in H2.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "SRS organic guide of mid-single-digit growth was given on the Q4 FY25 and Q1 FY26 calls and shown again in the Q2 call coverage's guidance table. I found no Q2-call revision.",
+        "evidence_ids": [],
+        "evidence_type": "unverifiable"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "Fuel is a growing cost issue. FleetOwner reported on Oct 28 that national diesel averaged $6.35 a gallon, with Strait of Hormuz disruptions and elevated crude still driving US fuel costs. HD named fuel and energy as the main cost offset to the Q2 refunds. This supports the risk that Q3 gross margin and freight carry more pressure than assumed in the Q2 guide.",
+      "evidence_ids": [
+        "N.60",
+        "Q.043"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Housing remains weak. Zonda's Oct 23 update (Builder) put September new-home sales down 4.6% year on year at 690,215, with 63% of communities offering incentives, citing elevated mortgage rates and economic uncertainty. This is a poor backdrop for big-ticket remodel demand. HD management said on Aug 18 there was 'no sign of an inflection point' in housing turnover.",
+      "evidence_ids": [
+        "N.59"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Floor & Decor's Q3 10-Q (filed Oct 29, quarter ended Sept 24) is the freshest peer read. Net sales rose 3.0%. Gross margin rose about 30 bp to 43.7%, driven by IEEPA refunds recognized as the related inventory sold, which offset higher supply chain costs. SG&A was flat at 37.3% of sales. Refunds are boosting peers' margins while cost pressure persists. HD's $45M inventory-held portion should follow the same pattern.",
+      "evidence_ids": [
+        "P.010",
+        "P.009",
+        "Q.039"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Insider Monkey (Oct 21) notes that Q2 distribution operating profit was $247M, a 4.9% margin, against 15.4% for Primary, and that Primary received nearly all of the refund benefit. This reinforces the view that Primary's Q2 margin was flattered by the refund and that distribution dilutes consolidated margin.",
+      "evidence_ids": [
+        "N.37",
+        "Q.039",
+        "Q.020"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Peer Q2 filings show a similar pattern, though only Tractor Supply's (filed 2026-08-06) preceded HD's 10-Q. Lowe's 10-Q was filed 2026-08-27, after HD's. Lowe's gross margin fell 77 bp on acquisition cost structure and fuel, partly offset by credit revenue and tariff refunds. Its Q2 comp was +0.2% with transactions -2.1% and ticket +2.3%. Tractor Supply's adjusted gross margin gained 24 bp in Q2 on tariff-related benefits, partly offset by freight, and its H1 adjusted SG&A deleveraged 99 bp. HD and Lowe's both show negative transactions and ticket-led comps.",
+      "evidence_ids": [
+        "P.001",
+        "P.002",
+        "P.004",
+        "P.008",
+        "P.007",
+        "Q.040"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Options pricing as of Oct 30 implies ±7.2% for the Nov 17 report against a ±2.1% eight-report average closing move. This is a wide event-risk premium for a stock whose average reaction has been small.",
+      "evidence_ids": [
+        "M.03",
+        "M.04"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Is the $3.95 EPS consensus a fair bar once the tariff-refund cushion is gone?",
+      "bull": {
+        "text": "If $3.95 is adjusted, it is +5.6% on the $3.74 adjusted Q3 FY25 base. Q2 adjusted EPS of $4.92 beat the $4.73 estimate by $0.19, and management reaffirmed FY26 guidance. Q3 FY25 is an easy compare (comp +0.2%, adjusted EPS down 1.1%).",
+        "evidence_ids": [
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "bear": {
+        "text": "Ex-refund, Q2 adjusted EPS was about $4.40 ($4.92 less roughly $0.52 for the $685M refund), about -6% against $4.68 a year earlier. Q3 would need roughly a 12-point improvement in underlying growth from that run-rate to reach +5.6% adjusted. Almost no refund is left (about $45M in inventory) and management guided Q4 gross margin to be roughly flat. Diesel has since risen to $6.35. The +9.2% headline compares a probably-adjusted consensus with a GAAP base and overstates the growth ask, but even +5.6% is demanding.",
+        "evidence_ids": [
+          "N.60",
+          "F.71",
+          "F.72",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Q3 gross margin ex-refund and SG&A growth on Nov 17, the remaining refund flow-through, and management's reconciliation of adjusted EPS to $3.95. Also whether the consensus is adjusted or GAAP."
+    },
+    {
+      "question": "Does the +6.5% revenue consensus reconcile with Primary growth and acquisition lapping?",
+      "bull": {
+        "text": "Total comps improved to +1.7% in Q2 from +1.0% a year earlier, and management said the start of Q3 was consistent with Q2 demand. SRS comped above the company average with positive comps in all verticals, and management said 90% of stores have closed a SRS sale in the past 12 months. Other net sales rose about $1.9B ($5,055M vs $3,120M), of which GMS contributed $1.4B, leaving about $0.5B from legacy SRS, new branches and Mingledorff's (whose sales were immaterial). Management noted that Q2 and Q3 of last year had some of the lowest recorded hail.",
+        "evidence_ids": [
+          "Q.040",
+          "Q.021",
+          "Q.022",
+          "Q.041",
+          "Q.035"
+        ],
+        "evidence_type": "estimate"
+      },
+      "bear": {
+        "text": "GMS closed Sept 4, 2025, so only about $0.5–0.6B of incremental GMS remains in Q3 (vs $1.4B in Q2). Primary grew only about 1.5% in Q2. The bridge reaches $42.75–43.45B, $0.6–1.3B short. Consensus Q3 plus a flat Q4 reaches the top of the 2.5–4.5% sales guide, and H2 guide midpoint (+1.7%) would imply a Q4 decline if Q3 were +6.5%.",
+        "evidence_ids": [
+          "F.69",
+          "Q.041",
+          "Q.020",
+          "F.70",
+          "M.01",
+          "F.23",
+          "F.03"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Reported Q3 net sales, the Other segment line, and the GMS incremental-sales disclosure in the 10-Q MD&A. Also whether management raises the sales guide."
+    },
+    {
+      "question": "Is Home Depot gaining share in a frozen housing market, or are comps ticket and price-driven and fragile?",
+      "bull": {
+        "text": "Management cites share gains: 13 of 16 departments positive, online +11% for a fifth straight quarter, Pros outperforming DIY, record on-shelf availability and express delivery. Comp +1.7% beat the 0.9% StreetAccount estimate.",
+        "evidence_ids": [],
+        "evidence_type": "unverifiable"
+      },
+      "bear": {
+        "text": "Transactions are negative (-1.0% in Q2, -1.2% in H1) and the comp is ticket-driven (+2.8%), helped by about 25 bp of FX. Management says there is 'no sign of an inflection point' in housing. September new-home sales fell 4.6% and big-ticket demand remains under pressure. Lowe's comp was only +0.2% with transactions -2.1%.",
+        "evidence_ids": [
+          "Q.040",
+          "Q.042",
+          "N.59",
+          "P.002"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q3 monthly comps (August, September, October) against compares of +2.0%, +0.5% and -1.5%, and the transactions line. The call's color on November and the early Q4 trend."
+    },
+    {
+      "question": "Does the interim CEO arrangement change how the market reads the quarter?",
+      "bull": {
+        "text": "Operations are in experienced hands. Campbell has been at HD since 1985 and McPhail has been CFO since 2019, and they have worked together for over 20 years. The board said the arrangement was in line with Decker's recommendation, and the Q2 call and guidance were delivered on schedule.",
+        "evidence_ids": [],
+        "evidence_type": "unverifiable"
+      },
+      "bear": {
+        "text": "The leave is open-ended ('next few months'). The company classified the leave duration and return timing as forward-looking statements. A broader leadership realignment came less than two weeks earlier. A leadership gap raises strategy and capital-allocation uncertainty (buybacks, M&A).",
+        "evidence_ids": [
+          "Q.058",
+          "Q.051"
+        ],
+        "evidence_type": "unverifiable"
+      },
+      "what_settles_it": "Who leads the Nov 17 call, any update on Decker's return, and any board statement on succession or governance."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "bull",
+      "description": {
+        "text": "Comp of +2% or better with positive transactions, and gross margin holding near flat as the remaining refunds and pricing offset fuel. Adjusted EPS lands at $4.00 or above and revenue comes in near $43.5B or better, helped by an easy hail compare in SRS. Management signals the upper half of the comp and EPS guide. Probability is lowest of the three, given the revenue bridge.",
+        "evidence_ids": [
+          "M.01",
+          "F.70"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Comp of +2.0% or better, and positive or flat transactions",
+        "Gross margin down no more than about 20 bp year on year",
+        "SRS organic growth above mid-single digit with roofing positive",
+        "Management raises or narrows the FY guide upward"
+      ]
+    },
+    {
+      "name": "base",
+      "description": {
+        "text": "Revenue lands about $43.0–43.4B, below the $44.04B consensus (Q3 FY25 was $41.35B) as the GMS acquisition of Sept 4, 2025 begins to lap. EPS is around $3.88–3.95, near the (probably adjusted) $3.95 consensus. Comp is about +1–2%, ticket-led as in Q2. Guidance is reaffirmed with the usual caution on housing. The stock reaction is likely smaller than the ±7.2% options-implied move (the last 8 reports averaged ±2.1%) unless gross margin surprises.",
+        "evidence_ids": [
+          "M.01",
+          "F.69",
+          "Q.041",
+          "Q.042",
+          "M.03",
+          "M.04"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Comp of about +1% to +2% with transactions slightly negative",
+        "Revenue $0.6–1.0B below consensus but EPS near $3.90",
+        "FY guide reaffirmed, Q4 gross margin described as flat",
+        "No news on the CEO beyond the existing leave"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Gross margin falls year on year as fuel, energy and input costs and GMS mix outweigh the small refund tail, and SG&A deleverages again (it grew 8.5% against sales +5.7% in Q2). Comp is below +1% on weak traffic. Revenue misses by more than $1B, adjusted EPS comes in below $3.85, and management signals the low end of the FY guide. A leadership gap compounds the move, which could exceed the ±7.2% implied.",
+        "evidence_ids": [
+          "Q.043",
+          "Q.044",
+          "N.60",
+          "N.59",
+          "P.002",
+          "M.03"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Comp below +1.0% or negative October versus the -1.5% compare",
+        "Gross margin down more than 40 bp year on year",
+        "SG&A growth well above sales growth",
+        "FY guide cut or narrowed to the low end; extended CEO leave"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "Refund cliff and underlying margin: about $685M of one-time refunds supported Q2 gross margin by about 145 bp. Management says they will be fully offset by unplanned costs by year-end, and that there should be no annual lap into 2027 but some quarterly lapping. Underlying gross margin carried about 120 bp of pressure (60 bp costs, 60 bp GMS mix) in Q2.",
+        "evidence_ids": [
+          "Q.039"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Fuel and energy cost shock tied to the Strait of Hormuz. Diesel averaged $6.35 a gallon on Oct 28, and the 10-Q already cites fuel, energy and input cost pressure. HD said that if energy prices stay elevated it will need to respond through pricing, efficiencies, or both (call coverage).",
+        "evidence_ids": [
+          "N.60",
+          "Q.043"
+        ],
+        "evidence_type": "proxy"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Leadership transition: the CEO is on temporary medical leave with a return 'within the next few months'. The CFO, who also signs as interim principal executive officer, is running both finance and the Pro business. The 10-K already lists management transitions as a risk, and separation agreements with two executives (Siddiqui, Padilla) were filed in FY25.",
+        "evidence_ids": [
+          "Q.058",
+          "Q.064",
+          "K.095",
+          "K.284"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Housing and consumer demand: transactions are negative (-1.0% in Q2) and the comp depends on small repair and maintenance projects. The 10-Q cites consumer uncertainty and housing affordability pressure. September new-home sales fell 4.6% year on year.",
+        "evidence_ids": [
+          "Q.040",
+          "Q.042",
+          "N.59"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Acquisition and SRS risk: the acquisitions supply most of the reported growth and dilute margins. SRS roofing depends on storm activity (Q1 roofing comps were low-single-digit negative) and distribution earns a 4.9% operating margin. Integration of GMS and Mingledorff's, goodwill of $22.9B and intangibles of $10.5B all carry impairment risk if growth disappoints.",
+        "evidence_ids": [
+          "Q.020",
+          "Q.021",
+          "Q.026",
+          "Q.027",
+          "K.067"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Leverage and capital allocation: long-term debt including current installments is about $48.6B ($4.7B current plus $44.0B long-term), plus $4.2B of commercial paper. Buybacks are paused with no plan to resume in FY2026, ROIC is down to 24.8% from 27.2%, and dividends cost $4.6B in H1. H1 operating cash flow was lifted by working-capital and tax timing that may reverse.",
+        "evidence_ids": [
+          "Q.010",
+          "Q.029",
+          "Q.051",
+          "Q.038",
+          "Q.037",
+          "Q.014",
+          "Q.055"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "What were August, September and October comps, with transactions and ticket, and how much did FX add? What are the November trends?",
+      "why": {
+        "text": "Management said early Q3 was 'really consistent' with Q2 (Q2 comp +1.7%, transactions -1.0%). The compares in Q3 FY25 were +2.0%, +0.5% and -1.5%, so the monthly cadence shows whether the comp is durable.",
+        "evidence_ids": [
+          "Q.040"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What gross margin did Q3 deliver excluding refunds, how much of the $45M inventory-held refund flowed through, and is Q4 still 'right around flat'?",
+      "why": {
+        "text": "The Q2 refund benefit was about 145 bp of gross margin, offset by about 60 bp of unplanned fuel, energy and input costs and about 60 bp of GMS mix, and management guided Q4 gross margin to be roughly flat. How does gross margin trend through H2 as the refund fades?",
+        "evidence_ids": [],
+        "evidence_type": "unverifiable"
+      }
+    },
+    {
+      "question": "How much of the SG&A growth of 8.5% in Q2 was acquisitions, payroll, fuel and delivery, and what is the Q3 and Q4 SG&A growth outlook?",
+      "why": {
+        "text": "SG&A rose 8.5% against sales +5.7%, and the 10-Q attributes the deleverage to 'higher operating costs relative to comparable sales performance'. The reaffirmed FY adjusted operating margin guide is 12.8–13.0%.",
+        "evidence_ids": [
+          "Q.043",
+          "F.37"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What was SRS organic growth by vertical in Q3, and what is the margin outlook for Other, including Mingledorff's and about $125M a quarter of intangible amortization?",
+      "why": {
+        "text": "Other earned a 4.9% operating margin on $5.06B. Mingledorff's contribution was immaterial in Q2 and SRS roofing comps were negative in Q1. Mid-single-digit organic growth is guided for FY26.",
+        "evidence_ids": [
+          "Q.020",
+          "Q.021",
+          "Q.022",
+          "Q.035"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How should we reconcile Q3 net sales with the guide? Consensus implies +6.5% in Q3, while the H2 guide midpoint implies low-single-digit growth.",
+      "why": {
+        "text": "GMS was acquired Sept 4, 2025, so Q3 incremental GMS sales should be only roughly $0.5B (my estimate) against $1.4B in Q2. Consensus Q3 revenue of $44.04B plus a flat Q4 (Q4 FY25 about $38.2B) gives FY26 sales of about $171.9B, +4.4% and at the top of the 2.5–4.5% sales guide.",
+        "evidence_ids": [
+          "Q.041",
+          "M.01",
+          "F.03",
+          "F.04",
+          "F.69",
+          "F.23"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "question": "What is the CEO's status and timeline, who will lead the call, and does the board's capital allocation (buybacks, debt paydown, M&A) change under the interim arrangement?",
+      "why": {
+        "text": "The 10-Q shows the CFO as interim principal executive officer, buybacks are paused with $11.7B authorized, and the company called the leave duration forward-looking.",
+        "evidence_ids": [
+          "Q.058",
+          "Q.064",
+          "Q.051",
+          "Q.032"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "Is the fuel and energy cost pressure from Hormuz above what was in the Q2 guide, and what pricing action is planned?",
+      "why": {
+        "text": "Management said it would respond through pricing or efficiencies if energy prices stay elevated. Diesel was $6.35 on Oct 28.",
+        "evidence_ids": [
+          "N.60"
+        ],
+        "evidence_type": "proxy"
+      }
+    }
+  ],
+  "data_gaps": [
+    "Basis of the $3.95 EPS consensus (adjusted or GAAP) is not stated in the Finnhub data (M.01) or any source I found. The adjusted-basis reading is an inference from HD guiding on adjusted EPS. Likewise, whether the $44.04B revenue consensus is current or stale is unknown.",
+    "No analyst Q3 comp estimate, no beat/miss record, no analyst price-target or rating actions and no consensus revisions since Aug 18 (FMP refused the request). Sentiment and revision trends are therefore unestablished.",
+    "HD's current share price and its move since Aug 18 were not found. The $337.49 close on Aug 18 comes from an Aug 25 article. Valuation work is limited to the Trefis price-to-sales comment, which I did not verify.",
+    "Call-content details (monthly comps, 145/60/60 bp bridge, Q4 gross margin flat, SRS comps above the company average) rely on secondhand coverage dated Aug 18–27, which is outside the 14-day window and used as background. Verify against the call transcript.",
+    "The $0.52 refund EPS effect is my derivation. Management gave no per-share figure, and refund-related interest income in 'interest income and other' is not quantified.",
+    "Adjusted H1 operating income and the release's reconciliation table were not retrieved. The H2 adjusted operating margin of about 12.0–12.5% is my estimate (adding back intangible amortization).",
+    "GMS's Q3 FY25 revenue (about $0.8B) is implied, not read from the Q3 FY25 10-Q. The roughly $0.5B of Q2 Other growth beyond GMS is unexplained (Mingledorff's versus legacy SRS rebound). This widens the bridge range.",
+    "No data on Aug–Oct storm or hurricane activity, mortgage rates (the most recent items are older than 14 days), lumber prices, or the post-IEEPA tariff regime. NAR September existing-home sales (3.99M, dated Oct 13) and Oct 8 oil news are background only.",
+    "Leadership: no news after Aug 13 on whether Decker has returned or his leave was extended; no 8-K or succession comment after Aug 12; who will lead the Nov 17 call; who moved where in the realignment; titles and reasons for the Siddiqui and Padilla separations.",
+    "The Lowe's Q3 report date was not confirmed, and no Aug–Oct home improvement trend read from peers other than Floor & Decor's Q3 (quarter ended Sept 24) was found.",
+    "Market data: signals figures are N/A because FMP refused the request (FMP refused https://financialmodelingprep.com/stable/grades (HTTP 402): Premium Query Parameter: 'Special Endpoint : This value set for 'symbol' is not available under your current subscription please visit our subscription page to upgrade your plan at https://financialmo Check FMP_API_KEY in .env and the FMP plan.).",
+    "Earnings call transcript not analyzed: Alpha Vantage has no transcript for HD 2027Q2; and for the quarter before: Alpha Vantage: Thank you for using Alpha Vantage! Please consider spreading out your free API requests more sparingly (1 request per second). You may subscribe to any of the premium plans at https://www.alphavantage."
+  ],
+  "sources": {
+    "Q.010": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.011": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Contingencies (Note 9)",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.014": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Contingencies (Note 9)",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.020": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Segment Reporting",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.021": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Segment Reporting",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.022": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.024": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.026": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Leases",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.027": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Leases",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.028": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Leases",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.029": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Short-Term Debt",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.032": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Stock Rollforward",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.035": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Mingledorff's Acquisition",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.037": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.038": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — EXECUTIVE SUMMARY",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.039": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — Tariffs and Other Trade Policy Matters",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.040": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — RESULTS OF OPERATIONS",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.041": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — RESULTS OF OPERATIONS",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.042": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.043": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.044": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — Our operating expenses are composed of SG&A and depreciation and amortization.",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.045": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — Diluted Earnings per Share",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.048": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — Our operating expenses are composed of SG&A and depreciation and amortization.",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.051": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — LIQUIDITY AND CAPITAL RESOURCES",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.052": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — LIQUIDITY AND CAPITAL RESOURCES",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.055": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — Operating Activities",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.056": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — Investing Activities",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.058": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 — Item 4. Controls and Procedures.",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.064": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 — SIGNATURES",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "K.067": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-18 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+      "as_of": "2026-03-18"
+    },
+    "K.095": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-18 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+      "as_of": "2026-03-18"
+    },
+    "K.145": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-18 · MD&A — RESULTS OF OPERATIONS",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+      "as_of": "2026-03-18"
+    },
+    "K.176": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-18 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+      "as_of": "2026-03-18"
+    },
+    "K.257": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-18 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+      "as_of": "2026-03-18"
+    },
+    "K.284": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-18 — 3. Exhibits",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+      "as_of": "2026-03-18"
+    },
+    "F.01": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2026-08-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "F.03": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — six months ended 2026-08-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "F.04": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — six months ended 2025-08-03",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "F.09": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2026-08-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "F.10": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-08-03",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "F.11": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — six months ended 2026-08-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "F.12": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — six months ended 2025-08-03",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "F.15": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating income — six months ended 2026-08-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "F.17": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow — six months ended 2026-08-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "F.19": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure — six months ended 2026-08-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "F.23": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — year ended 2026-02-01",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+      "as_of": "2026-03-18"
+    },
+    "F.27": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — year ended 2026-02-01",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+      "as_of": "2026-03-18"
+    },
+    "F.37": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — quarter ended 2026-08-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.41": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS growth — quarter ended 2026-08-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.43": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating income growth — quarter ended 2026-08-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.45": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow growth — six months ended 2026-08-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.46": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure growth — six months ended 2026-08-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.53": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2026-08-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.55": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2025-08-03",
+      "url": null,
+      "as_of": null
+    },
+    "F.57": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — six months ended 2026-08-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.59": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — six months ended 2025-08-03",
+      "url": null,
+      "as_of": null
+    },
+    "F.61": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — year ended 2026-02-01",
+      "url": null,
+      "as_of": null
+    },
+    "F.65": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — six months ended 2026-08-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.69": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-11-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828025053868/0001628280-25-053868-index.htm",
+      "as_of": "2025-11-25"
+    },
+    "F.70": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q3 2027",
+      "url": null,
+      "as_of": null
+    },
+    "F.71": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-11-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828025053868/0001628280-25-053868-index.htm",
+      "as_of": "2025-11-25"
+    },
+    "F.72": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q3 2027",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.03": {
+      "kind": "market",
+      "citation": "Market data — Options-implied move",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "P.001": {
+      "kind": "peer",
+      "citation": "PEER LOW 10-Q filed 2026-08-27 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "P.002": {
+      "kind": "peer",
+      "citation": "PEER LOW 10-Q filed 2026-08-27 · MD&A — Table of Contents",
+      "url": null,
+      "as_of": null
+    },
+    "P.004": {
+      "kind": "peer",
+      "citation": "PEER LOW 10-Q filed 2026-08-27 · MD&A — Table of Contents",
+      "url": null,
+      "as_of": null
+    },
+    "P.007": {
+      "kind": "peer",
+      "citation": "PEER TSCO 10-Q filed 2026-08-06 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "P.008": {
+      "kind": "peer",
+      "citation": "PEER TSCO 10-Q filed 2026-08-06 · MD&A — Table of Contents",
+      "url": null,
+      "as_of": null
+    },
+    "P.009": {
+      "kind": "peer",
+      "citation": "PEER FND 10-Q filed 2026-10-29 · MD&A — Selling, General and Administrative Expenses",
+      "url": null,
+      "as_of": null
+    },
+    "P.010": {
+      "kind": "peer",
+      "citation": "PEER FND 10-Q filed 2026-10-29 · MD&A — Gross Profit and Gross Margin",
+      "url": null,
+      "as_of": null
+    },
+    "N.37": {
+      "kind": "news",
+      "citation": "insidermonkey.com, 2026-10-21 — Home Depot (HD): Does Becoming a Bigger Distributor Change How the Stock Should Be Valued? - Insider Monkey",
+      "url": "https://www.insidermonkey.com/news/home-depot-hd-does-becoming-a-bigger-distributor-change-how-the-stock-should-be-valued-1851739",
+      "as_of": "2026-10-21"
+    },
+    "N.59": {
+      "kind": "news",
+      "citation": "builderonline.com, 2026-10-23 — New-Home Market Remains Under Pressure in September - Builder Magazine",
+      "url": "https://www.builderonline.com/data-analysis/new-home-market-remains-under-pressure-in-september/",
+      "as_of": "2026-10-23"
+    },
+    "N.60": {
+      "kind": "news",
+      "citation": "fleetowner.com, 2026-10-28 — Diesel climbs to $6.35 nationally, while gasoline prices edge lower - FleetOwner",
+      "url": "https://www.fleetowner.com/emissions-efficiency/news/55414741/us-diesel-prices-hit-635-per-gallon-as-trucking-fuel-costs-rise-year-over-year",
+      "as_of": "2026-10-28"
+    }
+  },
+  "check_notes": [
+    "metrics_to_model[1].view: rewritten to what its sources support (The FY25 adjusted EPS of $14.69 and the flat-to-4% adjusted EPS growth guide are not in the cited passages, so the guide range, the H2 range and the Q4 implied figures cannot be checked.).",
+    "metrics_to_model[4].view: rewritten to what its sources support (The 12.8–13.0% adjusted operating margin guide is not in the cited passages, nor is a basis for H2 FY25 at 12.0%; the FND passage also shows no SG&A deleverage.).",
+    "since_filing[4]: rewritten to what its sources support (Lowe's 10-Q was filed 2026-08-27, after HD's 2026-08-25 10-Q, so it did not come before it.).",
+    "key_debates[0].bull: rewritten to what its sources support (The claim rests on the adjusted guide midpoint, H2 of $6.34–6.93 and Q4 of about $2.69, and the cited passages contain no FY guide figures or FY25 full-year adjusted EPS.).",
+    "key_debates[0].bear: rewritten to what its sources support (The passages support Q4 gross margin guided flat, but nothing says H2 margins were guided flat.).",
+    "key_debates[1].bull: rewritten to what its sources support (The cited passages have neither the 2025 Other sales figure nor the $1.4B GMS incremental sales, so the 'about $0.5B beyond GMS' growth cannot be derived.).",
+    "scenarios[1]: rewritten to what its sources support (No cited passage supports the claimed tax-rate and interest help that keeps EPS in line despite lower revenue.).",
+    "key_risks[5]: rewritten to what its sources support (The $9.3B annual dividend cost is not in the cited passages; the debt, commercial paper, buyback pause and ROIC figures are supported.).",
+    "questions_for_management[1]: rewritten to what its sources support (The roughly 33.1% FY gross-margin guide and the implied H2 of 32.8–32.9% are not in the cited passages; only the 145 bp refund and about 120 bp of offsets are.).",
+    "questions_for_management[2]: rewritten to what its sources support (The SG&A figures and the 10-Q wording are supported, but the H2 adjusted margin guide of 12.0–12.5% is not in the cited passages.).",
+    "questions_for_management[4]: rewritten to what its sources support (The 2.5–4.5% sales growth guide is not in the cited passages, so reaching its top end cannot be verified.).",
+    "setup_summary[2]: A.006 removed — news older than 14 days (or undated) is background only.",
+    "setup_summary[2]: A.007 removed — news older than 14 days (or undated) is background only.",
+    "setup_summary[2]: tag 'reported' → 'unverifiable' (no valid citation).",
+    "setup_summary[3]: A.037 removed — news older than 14 days (or undated) is background only.",
+    "setup_summary[3]: A.022 removed — news older than 14 days (or undated) is background only.",
+    "setup_summary[3]: A.024 removed — news older than 14 days (or undated) is background only.",
+    "setup_summary[6]: A.001 removed — news older than 14 days (or undated) is background only.",
+    "setup_summary[6]: N.21 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[0].last_reported: N.54 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[0].view: N.54 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[0].view: A.037 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[1].last_reported: A.037 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[1].last_reported: N.33 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[1].consensus: N.33 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[1].view: N.33 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[1].view: N.34 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[1].view: N.23 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[1].view: A.037 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[1].view: A.024 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[1].view: A.007 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[2].last_reported: A.045 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[2].last_reported: A.006 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[2].view: A.010 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[2].view: N.04 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[2].view: A.037 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[3].last_reported: A.007 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[3].view: A.037 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[3].view: A.007 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[4].last_reported: A.025 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[4].view: A.010 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[5].view: A.010 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[5].view: N.23 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[5].view: N.25 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[5].view: N.43 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[6].view: A.037 removed — news older than 14 days (or undated) is background only.",
+    "guidance[0]: A.028 removed — news older than 14 days (or undated) is background only.",
+    "guidance[0]: A.037 removed — news older than 14 days (or undated) is background only.",
+    "guidance[1]: A.028 removed — news older than 14 days (or undated) is background only.",
+    "guidance[1]: A.010 removed — news older than 14 days (or undated) is background only.",
+    "guidance[1]: A.011 removed — news older than 14 days (or undated) is background only.",
+    "guidance[1]: A.045 removed — news older than 14 days (or undated) is background only.",
+    "guidance[1]: tag 'guided' → 'unverifiable' (no valid citation).",
+    "guidance[2]: A.028 removed — news older than 14 days (or undated) is background only.",
+    "guidance[2]: A.007 removed — news older than 14 days (or undated) is background only.",
+    "guidance[2]: N.08 removed — news older than 14 days (or undated) is background only.",
+    "guidance[2]: tag 'guided' → 'unverifiable' (no valid citation).",
+    "guidance[3]: A.028 removed — news older than 14 days (or undated) is background only.",
+    "guidance[3]: N.07 removed — news older than 14 days (or undated) is background only.",
+    "guidance[4]: A.028 removed — news older than 14 days (or undated) is background only.",
+    "guidance[5]: A.028 removed — news older than 14 days (or undated) is background only.",
+    "guidance[5]: A.037 removed — news older than 14 days (or undated) is background only.",
+    "guidance[5]: N.23 removed — news older than 14 days (or undated) is background only.",
+    "guidance[5]: N.34 removed — news older than 14 days (or undated) is background only.",
+    "guidance[5]: A.025 removed — news older than 14 days (or undated) is background only.",
+    "guidance[5]: tag 'guided' → 'unverifiable' (no valid citation).",
+    "guidance[6]: A.028 removed — news older than 14 days (or undated) is background only.",
+    "guidance[6]: N.07 removed — news older than 14 days (or undated) is background only.",
+    "guidance[6]: tag 'guided' → 'unverifiable' (no valid citation).",
+    "guidance[7]: A.028 removed — news older than 14 days (or undated) is background only.",
+    "guidance[7]: A.010 removed — news older than 14 days (or undated) is background only.",
+    "guidance[9]: N.42 removed — news older than 14 days (or undated) is background only.",
+    "guidance[9]: N.23 removed — news older than 14 days (or undated) is background only.",
+    "guidance[9]: A.010 removed — news older than 14 days (or undated) is background only.",
+    "guidance[9]: tag 'guided' → 'unverifiable' (no valid citation).",
+    "since_filing[0]: A.007 removed — news older than 14 days (or undated) is background only.",
+    "since_filing[1]: A.009 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[0].bull: N.33 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[0].bull: N.34 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[0].bull: A.022 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[0].bull: A.037 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[0].bear: A.024 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[0].bear: A.007 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[0].bear: A.037 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[0].bear: N.34 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[1].bull: A.010 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[1].bull: A.008 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[1].bull: N.25 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[1].bear: N.54 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[1].bear: A.037 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[2].bull: A.004 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[2].bull: A.005 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[2].bull: A.008 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[2].bull: N.17 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[2].bull: tag 'reported' → 'unverifiable' (no valid citation).",
+    "key_debates[2].bear: A.045 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[2].bear: A.009 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[3].bull: A.001 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[3].bull: A.005 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[3].bull: A.028 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[3].bull: tag 'reported' → 'unverifiable' (no valid citation).",
+    "key_debates[3].bear: N.21 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[3].bear: N.40 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[3].bear: N.01 removed — news older than 14 days (or undated) is background only.",
+    "scenarios[0]: A.010 removed — news older than 14 days (or undated) is background only.",
+    "scenarios[0]: N.04 removed — news older than 14 days (or undated) is background only.",
+    "scenarios[0]: A.008 removed — news older than 14 days (or undated) is background only.",
+    "key_risks[0]: A.007 removed — news older than 14 days (or undated) is background only.",
+    "key_risks[0]: A.011 removed — news older than 14 days (or undated) is background only.",
+    "key_risks[0]: N.08 removed — news older than 14 days (or undated) is background only.",
+    "key_risks[1]: A.011 removed — news older than 14 days (or undated) is background only.",
+    "key_risks[2]: A.001 removed — news older than 14 days (or undated) is background only.",
+    "key_risks[2]: N.21 removed — news older than 14 days (or undated) is background only.",
+    "key_risks[4]: N.25 removed — news older than 14 days (or undated) is background only.",
+    "questions_for_management[0]: A.010 removed — news older than 14 days (or undated) is background only.",
+    "questions_for_management[0]: N.04 removed — news older than 14 days (or undated) is background only.",
+    "questions_for_management[1]: A.007 removed — news older than 14 days (or undated) is background only.",
+    "questions_for_management[1]: A.024 removed — news older than 14 days (or undated) is background only.",
+    "questions_for_management[1]: tag 'reported' → 'unverifiable' (no valid citation).",
+    "questions_for_management[2]: A.010 removed — news older than 14 days (or undated) is background only.",
+    "questions_for_management[3]: N.25 removed — news older than 14 days (or undated) is background only.",
+    "questions_for_management[3]: A.010 removed — news older than 14 days (or undated) is background only.",
+    "questions_for_management[4]: A.010 removed — news older than 14 days (or undated) is background only.",
+    "questions_for_management[5]: N.40 removed — news older than 14 days (or undated) is background only.",
+    "questions_for_management[6]: A.011 removed — news older than 14 days (or undated) is background only."
+  ]
+}
