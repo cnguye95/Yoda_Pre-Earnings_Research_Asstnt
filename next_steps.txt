@@ -35,18 +35,6 @@ WHEN labels (relative to the full eval run, item 4f):
       another check.
       WHEN: AFTER. Every arm shares one market snapshot per ticker, and the
       lookup runs only for reports 3 days away or less.
-   e. Rubric dimensions that may not measure what they should (seen on the
-      smoke run, 2026-10-31).
-      WHEN: BEFORE FULL (changing the rubric after would need re-judging).
-      - market_expectations scored 5.0 on all 15 smoke reports: as judged,
-        it can't tell the arms apart. Check whether the rubric's bar is too
-        low or every arm really covers expectations fully (they share the
-        same market snapshot).
-      - filing_extraction: on USB the two candidate methods scored 2 (the
-        baseline 3) because they wrote about the newer Q3 results (8-K and
-        call) instead of the Q2 10-Q's figures and segments. Decide whether
-        the dimension should reward covering the filing, or the newest
-        information about the same quarters.
 
 
 2. Eval baseline
@@ -120,7 +108,10 @@ WHEN labels (relative to the full eval run, item 4f):
      is a direction, not proof. Measured per report: baseline $0.36
      (batched), staged pipeline $1.74 and 383 s, lead analyst $3.19 and
      532 s; judge $0.22 per report. Its reports used the old news search
-     (fixed since: start_date, 14-day baseline window).
+     (fixed since: start_date, 14-day baseline window), and were judged
+     on the old nine-dimension rubric. On today's eight (market_expectations
+     removed, 2026-10-31) its gaps are +0.50 and +0.52; the reworded
+     filing_extraction is not reflected (that needs re-judging).
    e. Pre-flight checks, instead of a second smoke run (added 2026-10-31).
       WHEN: BEFORE FULL, on a day before the full run (they use part of
       that day's Alpha Vantage allowance).

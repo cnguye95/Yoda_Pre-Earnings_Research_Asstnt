@@ -1,7 +1,7 @@
 """Model-as-judge scoring for the evaluation.
 
 judge_report() calls OpenAI gpt-6.1-sol to score an EarningsReport against
-the evidence it was written from, using the nine-dimension rubric in
+the evidence it was written from, using the eight-dimension rubric in
 yoda/eval/rubric.py. Code then applies the N/A rules and the quote check
 (rubric.check_scores, rubric.failed_quotes). Results are cached on disk so
 re-running the same report does not re-spend API budget.
@@ -62,7 +62,7 @@ _SYSTEM_PROMPT = (
     "You are an expert financial analyst grading a pre-earnings research "
     "report against the evidence it was written from: the 10-Q/10-K and, "
     "when the report had them, 8-Ks filed since, market data and news. "
-    "Score the report on the nine rubric dimensions. "
+    "Score the report on the eight rubric dimensions. "
     "Base your scores only on the provided report JSON and evidence."
 )
 
@@ -117,7 +117,7 @@ _client = OpenAI(api_key=config.OPENAI_API_KEY, max_retries=3)
 def _na_text(na: dict[str, str]) -> str:
     """List the dimensions code marked N/A, with why, for the judge to leave unscored."""
     if not na:
-        return "N/A dimensions: none — score all nine."
+        return "N/A dimensions: none — score all eight."
     return "N/A dimensions (give score null):\n" + "\n".join(f"- {name}: {reason}" for name, reason in na.items())
 
 

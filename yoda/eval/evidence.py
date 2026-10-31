@@ -47,7 +47,6 @@ def cited_ids(report: EarningsReport) -> set[str]:
 def na_dimensions(store: EvidenceStore, report: EarningsReport) -> dict[str, str]:
     """Return the rubric dimensions that are N/A for *report*, each with the reason.
 
-    market_expectations is N/A when the mode had no market data.
     evidence_labelling is N/A only when the mode had no post-filing evidence
     (the 8-K, the earnings call, market data, news or articles) AND the
     report makes no post-filing claims; post-filing claims without evidence
@@ -56,8 +55,6 @@ def na_dimensions(store: EvidenceStore, report: EarningsReport) -> dict[str, str
     """
     kinds = {passage.kind for passage in store.passages}
     na = {}
-    if "market" not in kinds:
-        na["market_expectations"] = "the report's writer had no market data"
     post_filing_claims = report.since_filing or report.market_expectations is not None
     if not kinds & set(_POST_FILING_KINDS) and not post_filing_claims:
         na["evidence_labelling"] = "no post-filing evidence and the report makes no post-filing claims"

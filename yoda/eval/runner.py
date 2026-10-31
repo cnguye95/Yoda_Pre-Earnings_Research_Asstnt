@@ -20,7 +20,7 @@ Outputs written to disk (data/eval/ unless another folder is passed):
   generation.csv  — step 1: each report's cost and time, the ticker's
                     whisper cost, and the error for any that failed
   judge_estimate.md — steps 1 and 2: each judge call's estimated cost
-  results.csv     — step 2: one row per report: the nine scores (empty
+  results.csv     — step 2: one row per report: the eight scores (empty
                     when N/A), latency and cost, and the judge's details
                     (version, tokens, cost, failed quotes, report length)
   summary.md      — run date + models, mean scores and costs per mode, a
@@ -99,7 +99,7 @@ CURATED_TICKERS = [
     "PANW", "CRM",    # Software — cybersecurity, SaaS
 ]
 
-# The nine rubric dimensions, in display order. A dimension marked N/A for a
+# The eight rubric dimensions, in display order. A dimension marked N/A for a
 # report is an empty cell, never 0.
 SCORE_COLS = list(DIMENSIONS)
 
@@ -213,7 +213,7 @@ def _run_mode(mode: str, ticker: str, sources: SharedSources) -> ModeRun:
 # ---------------------------------------------------------------------------
 
 def _scores_to_dict(scores: JudgeScores) -> dict[str, int | None]:
-    """Flatten the nine DimensionScore objects into plain columns (None for an N/A dimension)."""
+    """Flatten the eight DimensionScore objects into plain columns (None for an N/A dimension)."""
     return {col: getattr(scores, col).score for col in SCORE_COLS}
 
 
@@ -268,7 +268,7 @@ def _judge_row(ticker: str, mode: str, report: EarningsReport, call: JudgeCall, 
     *repeat* asks for a second, independent score (the repeat check).
     Raises whatever judge_report raises.
 
-    Columns: ticker, mode, the nine scores (empty when N/A), figures_checked,
+    Columns: ticker, mode, the eight scores (empty when N/A), figures_checked,
     failed_quote_dims (the dimensions whose quotes didn't check out,
     ";"-joined), judge_snapshot, prompt/completion tokens, over_272k (from
     OpenAI's real count), cached_tokens and service_tier (how the call was
@@ -1164,7 +1164,7 @@ def _write_summary(
 
 
 # ---------------------------------------------------------------------------
-# Comparison chart — grouped bar chart, one bar per method in each of the nine dimensions
+# Comparison chart — grouped bar chart, one bar per method in each of the eight dimensions
 # ---------------------------------------------------------------------------
 
 def _paired_means(df: pd.DataFrame) -> pd.DataFrame:

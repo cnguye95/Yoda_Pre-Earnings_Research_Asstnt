@@ -519,14 +519,14 @@ def test_paired_comparison_identical_gaps_give_point_range():
 
 
 def test_na_dimension_drops_only_that_pair():
-    # T0's baseline has market_expectations N/A (empty): T0 leaves that one
+    # T0's baseline has evidence_labelling N/A (empty): T0 leaves that one
     # dimension's comparison, but still counts in every other dimension.
     df = _scores_df([1, 1, 1])
-    df.loc[(df["ticker"] == "T0") & (df["mode"] == "baseline"), "market_expectations"] = None
+    df.loc[(df["ticker"] == "T0") & (df["mode"] == "baseline"), "evidence_labelling"] = None
 
     result = _paired_comparison(df, "yoda", "baseline")
 
-    assert result.loc["market_expectations", "pairs"] == 2
+    assert result.loc["evidence_labelling", "pairs"] == 2
     assert result.loc["relevance", "pairs"] == 3
     assert result.loc["average", "pairs"] == 3
 

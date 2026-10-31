@@ -52,7 +52,7 @@ def test_rubric_text_has_every_dimension_and_its_anchors():
     flat = " ".join(rubric.RUBRIC_TEXT.split())
     for anchor in (
         "Judge materiality, not volume.",
-        "items the data lacked are shown as N/A with the reason, not left out or guessed.",
+        "figures for the quarter it supersedes are not required.",
         "A figure whose source is not in the evidence is unverifiable: list it, and do not count it as an error.",
         "the guidance/consensus/whisper gap is treated as a gap, not a conflict",
         'Plain wording ("the Street expects", "per the 8-K", "according to Reuters") scores the same',
@@ -63,6 +63,23 @@ def test_rubric_text_has_every_dimension_and_its_anchors():
         assert anchor in flat
     # reasoning_quality carries the shared conflict rules, word for word.
     assert CONFLICT_RULES in rubric.RUBRIC_TEXT
+
+
+def test_market_expectations_is_no_longer_judged():
+    # Code fills that report section from the market data every arm shares,
+    # so it scored the code, not the arm (5.0 on all 15 smoke reports).
+    assert "market_expectations" not in DIMENSIONS and "market_expectations" not in JudgeScores.model_fields
+    assert "market_expectations" not in rubric.RUBRIC_TEXT
+
+
+def test_filing_extraction_expects_the_latest_reported_quarter():
+    # Smoke run (USB, XOM): the candidates wrote about Q3 from the newer
+    # earnings release and were marked down for leaving out the Q2 10-Q's
+    # figures, which the release had superseded.
+    flat = " ".join(rubric.RUBRIC_TEXT.split())
+    assert ("when a post-filing earnings release reports a later quarter than the filing, they come from the "
+            "release, and figures for the quarter it supersedes are not required.") in flat
+    assert "The filing stays the source for its guidance, its risks and anything the release does not cover." in flat
 
 
 def test_rubric_names_the_report_sections_and_evidence_ids():
@@ -78,8 +95,8 @@ def test_rubric_names_the_report_sections_and_evidence_ids():
 # ---------------------------------------------------------------------------
 
 def test_na_dimensions_lose_any_score_the_judge_gave():
-    checked = rubric.check_scores(_answer(4), na={"market_expectations": "the mode had no market data"})
-    assert checked.market_expectations.score is None
+    checked = rubric.check_scores(_answer(4), na={"evidence_labelling": "no post-filing evidence"})
+    assert checked.evidence_labelling.score is None
     assert checked.relevance.score == 4
 
 
@@ -96,8 +113,8 @@ def test_a_scored_dimension_needs_a_score_from_1_to_5(bad):
 
 
 def test_an_na_dimension_may_come_back_without_a_score():
-    answer = _answer(3, market_expectations=DimensionScore(score=None, justification="N/A", quotes=[]))
-    assert rubric.check_scores(answer, na={"market_expectations": "no market data"}).market_expectations.score is None
+    answer = _answer(3, evidence_labelling=DimensionScore(score=None, justification="N/A", quotes=[]))
+    assert rubric.check_scores(answer, na={"evidence_labelling": "no post-filing evidence"}).evidence_labelling.score is None
 
 
 # ---------------------------------------------------------------------------
@@ -126,8 +143,8 @@ def test_quotes_are_checked_against_the_text_they_name():
 
 
 def test_na_dimensions_are_not_quote_checked():
-    answer = _answer(3, market_expectations=DimensionScore(score=None, justification="N/A", quotes=[]))
-    assert "market_expectations" not in rubric.failed_quotes(answer, "Revenue rose", "")
+    answer = _answer(3, evidence_labelling=DimensionScore(score=None, justification="N/A", quotes=[]))
+    assert "evidence_labelling" not in rubric.failed_quotes(answer, "Revenue rose", "")
 
 
 # ---------------------------------------------------------------------------
@@ -143,7 +160,7 @@ def _report():
 def test_cache_key_changes_with_rubric_evidence_and_na(monkeypatch):
     key = judge.cache_key_for(_report(), "evidence", {})
     assert judge.cache_key_for(_report(), "other evidence", {}) != key
-    assert judge.cache_key_for(_report(), "evidence", {"market_expectations": "no market data"}) != key
+    assert judge.cache_key_for(_report(), "evidence", {"evidence_labelling": "no post-filing evidence"}) != key
     monkeypatch.setattr(judge, "RUBRIC_TEXT", rubric.RUBRIC_TEXT + "\nA new rule.")
     assert judge.cache_key_for(_report(), "evidence", {}) != key
 
@@ -194,13 +211,13 @@ def _cited_report():
 
 def test_na_follows_what_the_mode_had():
     filing_only = _filing_only_store()
-    assert set(evidence.na_dimensions(filing_only, _report())) == {"market_expectations", "evidence_labelling"}
+    assert set(evidence.na_dimensions(filing_only, _report())) == {"evidence_labelling"}
     # Post-filing claims with no post-filing evidence are still scored (and score 1).
-    assert set(evidence.na_dimensions(filing_only, _cited_report())) == {"market_expectations"}
+    assert evidence.na_dimensions(filing_only, _cited_report()) == {}
     # Market data counts as post-filing evidence (AGREED); so does a call alone.
     assert evidence.na_dimensions(sample_store(), _report()) == {}
     call_only = EvidenceStore(ticker="TEST", passages=[p for p in sample_store().passages if p.kind in ("filing", "call")])
-    assert set(evidence.na_dimensions(call_only, _report())) == {"market_expectations"}
+    assert evidence.na_dimensions(call_only, _report()) == {}
 
 
 def test_evidence_shows_what_the_writer_saw_plus_every_cited_passage():
@@ -257,14 +274,14 @@ def test_judge_reads_evidence_before_the_report_and_records_the_call(monkeypatch
                                                         finish_reason="stop")])
     monkeypatch.setattr(judge, "_client", SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(parse=parse))))
 
-    result = judge.judge_report(_report(), "EVIDENCE TEXT", {"market_expectations": "no market data"})
+    result = judge.judge_report(_report(), "EVIDENCE TEXT", {"evidence_labelling": "no post-filing evidence"})
 
     prompt = sent["messages"][1]["content"]
     assert prompt.index("EVIDENCE TEXT") < prompt.index("N/A dimensions") < prompt.index("--- REPORT JSON ---")
     assert sent["reasoning_effort"] == "medium"
     assert (result.judge_snapshot, result.reasoning_effort) == ("gpt-6.1-sol-2026-09-29", "medium")
     assert (result.prompt_tokens, result.completion_tokens) == (180_000, 4_000)
-    assert result.scores.market_expectations.score is None
+    assert result.scores.evidence_labelling.score is None
 
 
 # ---------------------------------------------------------------------------
@@ -294,7 +311,7 @@ def test_runner_judges_each_mode_on_its_own_evidence(monkeypatch, tmp_path):
     runner.rescore(tmp_path, ["TEST"], modes=("baseline", "pipeline"), out_dir=tmp_path, judge_budget=100.0)
 
     (base_text, base_na), (other_text, other_na) = calls
-    assert set(base_na) == {"market_expectations", "evidence_labelling"} and other_na == {}
+    assert set(base_na) == {"evidence_labelling", "evidence_labelling"} and other_na == {}
     assert "[M.01]" not in base_text and "[M.01] Consensus EPS: $1.23" in other_text
     # Each store is saved next to its report, and reads back as it was.
     saved = EvidenceStore.model_validate_json((tmp_path / "baseline_TEST_evidence.json").read_text(encoding="utf-8"))
@@ -461,14 +478,14 @@ def _stub_eval(monkeypatch, results: list[judge.JudgeResult]) -> None:
 
 def test_rows_carry_the_judge_details_and_keep_na_empty(monkeypatch, tmp_path):
     na_answer = DimensionScore(score=None, justification="N/A", quotes=[])
-    _stub_eval(monkeypatch, [_judge_result(3, market_expectations=na_answer, failed={"relevance": [NO_QUOTE]}),
+    _stub_eval(monkeypatch, [_judge_result(3, evidence_labelling=na_answer, failed={"relevance": [NO_QUOTE]}),
                              _judge_result(4, prompt_tokens=300_000)])
 
     runner.run_eval(["TEST"], modes=("baseline", "yoda"), out_dir=tmp_path)
     df = runner.rescore(tmp_path, ["TEST"], modes=("baseline", "yoda"), out_dir=tmp_path, judge_budget=100.0)
 
     baseline_row, yoda_row = df.iloc[0], df.iloc[1]
-    assert pd.isna(baseline_row["market_expectations"]) and baseline_row["relevance"] == 3
+    assert pd.isna(baseline_row["evidence_labelling"]) and baseline_row["relevance"] == 3
     assert baseline_row["failed_quote_dims"] == "relevance"
     assert baseline_row["judge_snapshot"] == "gpt-6.1-sol-2026-09-29" and baseline_row["figures_checked"] == 2
     assert baseline_row["judge_cost_usd"] == pytest.approx(judge.judge_cost(_priced(50_000, 5_000)))
@@ -531,13 +548,13 @@ def test_summary_without_reliability_columns_still_writes(tmp_path):
 def test_chart_means_leave_out_na_pairs():
     df = _results_df()
     df.loc[(df["ticker"] == "A") & (df["mode"] == "baseline"), "relevance"] = None    # A's pair dropped
-    df["market_expectations"] = df["market_expectations"].where(df["mode"] == "yoda")  # baseline always N/A
+    df["evidence_labelling"] = df["evidence_labelling"].where(df["mode"] == "yoda")   # baseline always N/A
 
     means = runner._paired_means(df)
 
     # relevance: only ticker B counts (baseline 4, yoda 2), not A's yoda 3.
     assert means.loc["yoda", "relevance"] == 2 and means.loc["baseline", "relevance"] == 4
-    assert means["market_expectations"].isna().all()                                  # no pairs at all
+    assert means["evidence_labelling"].isna().all()                                  # no pairs at all
 
 
 # ---------------------------------------------------------------------------

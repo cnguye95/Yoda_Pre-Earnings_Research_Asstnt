@@ -1,10 +1,15 @@
 """The eval rubric: what the judge scores, how, and the checks code runs on its answer.
 
-The judge scores nine dimensions 1-5, each against written 1, 3 and 5
+The judge scores eight dimensions 1-5, each against written 1, 3 and 5
 anchors agreed with the user when the rubric was designed and copied here
 word for word (only bookkeeping notes such as "(AGREED)" are left out),
-except dimensions 1 and 6, reworded on 2026-10-30 for the new report
-sections and evidence-ID citations. RUBRIC_TEXT is the text the judge is shown.
+except dimensions 1 and 5, reworded on 2026-10-30 for the new report
+sections and evidence-ID citations, and dimension 1 again on 2026-10-31 (an
+earnings release newer than the filing). market_expectations was removed on
+2026-10-31: code fills that report section from the market data every arm
+shares, so it scored the code, not the arm (5.0 on all 15 smoke reports);
+how a report uses expectations is scored in the two usefulness dimensions.
+RUBRIC_TEXT is the text the judge is shown.
 
 JudgeScores is also the structured-output format of the judge call
 (client.chat.completions.parse(response_format=JudgeScores)), so the judge
@@ -53,9 +58,8 @@ class DimensionScore(BaseModel):
 
 
 class JudgeScores(BaseModel):
-    # The nine rubric dimensions.
+    # The eight rubric dimensions.
     filing_extraction: DimensionScore
-    market_expectations: DimensionScore
     figure_accuracy: DimensionScore
     reasoning_quality: DimensionScore
     evidence_labelling: DimensionScore
@@ -71,9 +75,9 @@ class JudgeScores(BaseModel):
     overall_comment: str
 
 
-# The nine dimensions, in display order (results columns, summary, chart).
+# The eight dimensions, in display order (results columns, summary, chart).
 DIMENSIONS = (
-    "filing_extraction", "market_expectations", "figure_accuracy", "reasoning_quality",
+    "filing_extraction", "figure_accuracy", "reasoning_quality",
     "evidence_labelling", "source_traceability", "relevance",
     "sell_side_usefulness", "buy_side_usefulness",
 )
@@ -101,28 +105,24 @@ Rules for every dimension:
    guidance, key_risks) and in post-filing 8-Ks (since_filing:
    earnings-release results, guidance updates, material events). Company
    guidance, from filing or 8-K, is scored here. Judge materiality, not
-   volume.
-   1 = misses most headline figures (revenue, EPS, segment results) or the
-       filing's guidance; ignores post-filing 8-Ks that were in the evidence.
-   3 = headline figures and most segments captured, but misses some material
-       items: guidance details, a new or changed risk, or a material 8-K
-       event or release figure.
-   5 = all headline figures, every reported segment, the filing's guidance
-       and new or changed risks, and every material post-filing 8-K captured.
+   volume. The headline figures and segment results expected are those of
+   the latest reported quarter: when a post-filing earnings release reports
+   a later quarter than the filing, they come from the release, and figures
+   for the quarter it supersedes are not required. The filing stays the
+   source for its guidance, its risks and anything the release does not
+   cover.
+   1 = misses most headline figures (revenue, EPS, segment results) of the
+       latest reported quarter, or the guidance; ignores post-filing 8-Ks
+       that were in the evidence.
+   3 = headline figures and most segments of the latest reported quarter
+       captured, but misses some material items: guidance details, a new or
+       changed risk, or a material 8-K event or release figure.
+   5 = all headline figures and every reported segment of the latest
+       reported quarter, the guidance and new or changed risks, and every
+       material post-filing 8-K captured.
    The 8-K part is N/A when the mode had no 8-Ks.
 
-2. market_expectations — third-party expectations only: consensus
-   EPS/revenue, whisper, implied move, historical move. Scores coverage and
-   the right quarter; the numbers are checked in figure_accuracy.
-   1 = no expectation figures, or figures for the wrong quarter.
-   3 = consensus EPS and revenue for the right quarter, but whisper, implied
-       move or historical move missing although the market data had them.
-   5 = every item the market data had is present for the right quarter;
-       items the data lacked are shown as N/A with the reason, not left out
-       or guessed.
-   N/A when the mode had no market data.
-
-3. figure_accuracy — A figure is accurate if it matches the source it is
+2. figure_accuracy — A figure is accurate if it matches the source it is
    attributed to, as that source appears in the evidence. A consensus number
    is checked against consensus, not reported results. A figure whose source
    is not in the evidence is unverifiable: list it, and do not count it as an
@@ -139,7 +139,7 @@ Rules for every dimension:
    no figure is checkable, code marks this dimension N/A; leaning on
    unverifiable claims is penalized under reasoning_quality instead.
 
-4. reasoning_quality — conflicts between sources follow these rules:
+3. reasoning_quality — conflicts between sources follow these rules:
 """ + CONFLICT_RULES + """
    Contradictions are flagged. A conclusion resting only on unverifiable
    claims is weak and lowers the score. A conclusion supported by at least
@@ -159,7 +159,7 @@ Rules for every dimension:
        is treated as a gap, not a conflict; no conclusion rests only on
        unverifiable claims.
 
-5. evidence_labelling — post-filing information is labelled and not mixed
+4. evidence_labelling — post-filing information is labelled and not mixed
    into reported figures. Judged tag-agnostic — for each post-filing claim,
    can a reader tell where it came from, as of when, and whether it is a
    reported result, management outlook or third-party estimate? Plain
@@ -175,7 +175,7 @@ Rules for every dimension:
    N/A only when the mode had no post-filing evidence AND the report makes
    no post-filing claims (post-filing claims with no evidence still score 1).
 
-6. source_traceability — every claim cites evidence IDs (such as [K.042],
+5. source_traceability — every claim cites evidence IDs (such as [K.042],
    [F.03], [M.01]) that exist in the evidence and contain the fact; the
    report's "sources" lists each cited ID's location. A claim with no valid
    citation counts as missing.
@@ -185,7 +185,7 @@ Rules for every dimension:
        that is only loosely related.
    5 = every claim cites passages in the evidence that contain the fact.
 
-7. relevance — focus on what matters for the upcoming report.
+6. relevance — focus on what matters for the upcoming report.
    1 = mostly generic company description or boilerplate not tied to the
        upcoming report.
    3 = on-topic but padded: standard risk-factor boilerplate, stale items, or
@@ -194,14 +194,14 @@ Rules for every dimension:
        drivers, guidance, KPIs, and the risks and developments that could
        move results or the stock; boilerplate left out.
 
-8. sell_side_usefulness —
+7. sell_side_usefulness —
    1 = restates the filing, no consensus-relative view.
    3 = names the key metrics and guidance items but no consensus comparison
        or questions for management.
    5 = metrics to model vs consensus, specific questions for management,
        which guidance items matter, what would surprise the Street.
 
-9. buy_side_usefulness —
+8. buy_side_usefulness —
    1 = no view on expectations.
    3 = covers part of the expectations gap, implied move or catalysts, but no
        clear setup.
