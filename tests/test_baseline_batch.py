@@ -7,6 +7,7 @@ Run with: python -m pytest -q tests/test_baseline_batch.py
 """
 
 from contextlib import nullcontext
+from datetime import timedelta
 from types import SimpleNamespace
 
 import anthropic
@@ -16,11 +17,13 @@ import pytest
 
 from samples import sample_8k, sample_call, sample_report, sample_snapshot
 from yoda import pricing
+from yoda.dates import market_today
 from yoda.eval import runner
 from yoda.ingest.transcripts import TranscriptFetch
 from yoda.modes import baseline
 from yoda.schema import Filing, FilingSet, ReportDraft
 from yoda.sources import SharedSources
+from yoda.tools.news import NEWS_CITABLE_DAYS
 
 
 def _filings(ticker: str) -> FilingSet:
@@ -169,3 +172,16 @@ def test_a_refused_batch_sends_each_baseline_as_a_normal_call(monkeypatch, tmp_p
     assert len(fake_api.streamed) == 2
     assert generated.loc[("AAA", "baseline"), "cost_usd"] == round(_FULL_PRICE, 5)
     assert (tmp_path / "baseline_AAA.json").exists()
+
+
+def test_the_baseline_searches_news_from_the_last_14_days_only(monkeypatch):
+    # Bug (smoke run, 2026-10-31): searching from the filing date (about 3
+    # months back), the baseline's few results were months-old coverage of
+    # the last quarter, too old to cite. Its one quick search covers the
+    # window in which news may be cited.
+    seen = {}
+    monkeypatch.setattr(baseline, "search_news",
+                        lambda query, max_results, since: seen.update(since=since, max_results=max_results) or [])
+    baseline.prepare_baseline("AAA", _sources(_filings("AAA")))
+    assert seen["since"] == market_today() - timedelta(days=NEWS_CITABLE_DAYS)
+    assert seen["max_results"] == baseline.NEWS_RESULTS

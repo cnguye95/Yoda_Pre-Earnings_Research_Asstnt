@@ -54,7 +54,7 @@ Each personality uses four tools: `retrieve_filing` (semantic search across the 
 | OpenAI `gpt-6.1-sol` as eval judge | Different model family from the Claude-based generation system; prevents self-preference bias in scoring. Sol is OpenAI's counterpart to Sonnet 5.5 |
 | Embed only filings not already stored | ChromaDB is checked first; a filing is embedded only when its stored chunk count differs from its current one (new, half-stored, or re-chunked) |
 
-> **`UNVERIFIED` vs `unverifiable` — two different labels.** `UNVERIFIED` is the citation label above: a filing figure whose citation pointed outside the filing. `unverifiable` is an evidence tag (`next_steps.txt` 3.2): a claim whose source does not say where the claim came from, or one code could not check against what the panel was shown. The eval judge will treat it the same way — a claim whose source is not in the evidence the judge sees is listed as unverifiable, not counted as an error.
+> **`UNVERIFIED` vs `unverifiable` — two different labels.** `UNVERIFIED` is the citation label above: a filing figure whose citation pointed outside the filing. `unverifiable` is an evidence tag: a claim whose source does not say where the claim came from, or one code could not check against what the panel was shown. The eval judge will treat it the same way — a claim whose source is not in the evidence the judge sees is listed as unverifiable, not counted as an error.
 
 > **8-K figures.** Figures from 8-K earnings releases appear in the report's since_filing section, tagged reported with the period they cover. They are never placed in key_metrics, which holds only figures from the 10-Q/10-K.
 

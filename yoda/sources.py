@@ -9,7 +9,7 @@ fetch_shared_sources() gathers, for one ticker's FilingSet:
     consensus.
 The eval runner fetches them once per ticker and hands the same
 SharedSources to every arm, so every arm sees identical numbers and the one
-paid call (the whisper lookup) runs at most once (next_steps item 4d).
+paid call (the whisper lookup) runs at most once (next_steps item 4).
 
 This is also the guardrail of next_steps item 2: SharedSources can hold
 only SEC filings, the call and market data. Nothing another arm found (its

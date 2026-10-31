@@ -383,7 +383,7 @@ def test_judge_asks_for_flex_and_records_the_cache_and_tier(monkeypatch):
 
 
 def test_judge_records_why_it_stopped_and_how_much_it_reasoned(monkeypatch):
-    # next_steps 1b: a cut-off judge call, and where the judge's output
+    # A cut-off judge call, and where the judge's output
     # tokens go, must be visible in the results.
     _fake_openai(monkeypatch, lambda **kwargs: _judge_reply(reasoning_tokens=3_000, finish_reason="length"))
     result = judge.judge_report(_report(), "EVIDENCE TEXT", {})

@@ -58,7 +58,7 @@ TRIM_ORDER = ("Financial Statements", "Quantitative Disclosures", "MD&A", "Other
 
 # Most text the shared sources may take in one prompt, the same for every
 # arm, so every arm reads (and the judge sees) identical filing text
-# (next_steps item 4d). Filings tokenize at ~2.3-2.7 characters per token,
+# (the eval comparison, next_steps item 4). Filings tokenize at ~2.3-2.7 characters per token,
 # so 2.0M characters is at most ~870K tokens, leaving room under Sonnet
 # 5.5's 1M-token context for an arm's own news, its instructions and the
 # report. Only a very large filer's 10-Q + 10-K (e.g. JPM) goes over; the

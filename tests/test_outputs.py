@@ -554,7 +554,7 @@ def test_normalize_tickers_splits_cleans_and_dedupes():
 
 
 # ---------------------------------------------------------------------------
-# Streamlit app — the UI bugs in next_steps item 1, run with Streamlit's own
+# Streamlit app — regression tests for UI bugs found earlier, run with Streamlit's own
 # test harness (no browser, nothing live: the staged pipeline and the queue are faked).
 # ---------------------------------------------------------------------------
 
