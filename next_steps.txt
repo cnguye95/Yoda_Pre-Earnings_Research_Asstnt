@@ -179,10 +179,20 @@ WHEN labels (relative to the full eval run, item 4f):
        over the top ~20, a larger or finance-tuned hosted embedding model
        (check current options and prices first). Each adds a cost or a
        dependency and is measurable with R5.
-   Note on the predecessor lookup (edgar.py, "Predecessor companies"): it
-   uses EDGAR's search box endpoint (efts keysTyped), which is not a
-   documented API; when it fails, the report says so in its data gaps
-   and no annual report is read for that company.
+   - Value (checked 2026-10-31): marginal for now. Retrieval serves only
+     lookup_peer, and peer filings backed 7.1% of the staged pipeline's
+     and 9.3% of the lead analyst method's claims on the smoke run. After
+     the full run, count how much the winning method cites peers; do R5
+     first if it leans on them.
+   - Clean-up: tools.retrieve_filing (search of the company's own filing)
+     is used by neither candidate method, only by the retired panel.
+   Note on the predecessor lookup (edgar.py, "Predecessor companies"):
+   EDGAR's search box endpoint (efts.sec.gov) is not a documented API and
+   can't be made one (SEC documents only data.sec.gov's submissions and
+   XBRL APIs and their bulk ZIPs). Since 2026-10-31 the co-filers on the
+   new company's 10-Qs are tried first, from SEC's archive and the
+   documented submissions API; the search is asked only when they don't
+   give exactly one match. XOM's predecessor is found this way.
 
 
 10. Tavily pay-as-you-go around the full eval run (added 2026-10-31)
@@ -218,5 +228,8 @@ WHEN labels (relative to the full eval run, item 4f):
       decide whether saved links go back to the gitignored filing cache
       (edgar._PREDECESSORS_PATH and its comment, the README note, and the
       tests that point at it).
+    - Since 2026-10-31 XOM's predecessor is found from the co-filers on its
+      10-Qs, without EDGAR's search box, so an EDGAR search outage no
+      longer threatens XOM even without the saved link.
     - Once ExxonMobil Holdings files its own 10-K (early 2027), XOM no
       longer needs the link at all.

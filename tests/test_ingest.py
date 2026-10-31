@@ -313,12 +313,41 @@ def test_each_check_can_reject_a_candidate(cache_dir, monkeypatch, old_company, 
     assert filing_set.notes == [] and not edgar._PREDECESSORS_PATH.exists()
 
 
+def test_a_single_co_filer_is_used_without_the_search_box(cache_dir, monkeypatch):
+    # XOM's case, checked live on 2026-10-31: the co-filer on its 10-Qs is
+    # the old company, so the undocumented EDGAR search is never asked (it
+    # was down on 2026-10-30). The name search would not even have found it.
+    log = _fake_predecessor_sec(monkeypatch, {NEW_CIK: _new_company(), OLD_CIK: _old_company()},
+                                search_error=AssertionError("the search box must not be asked"))
+
+    filing_set = edgar.fetch_filings("TEST")
+
+    assert [filing.accession_number for filing in filing_set.filings] == ["q1", "k1"]
+    assert not any(entry.startswith("search:") for entry in log)
+    assert any(entry.startswith("header:") for entry in log)       # the co-filers came from the header page
+
+
+def test_two_passing_co_filers_fall_back_to_the_search(cache_dir, monkeypatch):
+    # Two co-filers pass, so the co-filers alone can't decide: the search
+    # runs, and with no single match, nothing is guessed.
+    twin = _record(3, "TEST CORP II", [("10-Q", 30, "q1"), ("10-K", 100, "k3")])
+    log = _fake_predecessor_sec(monkeypatch, {NEW_CIK: _new_company(), OLD_CIK: _old_company(), 3: twin},
+                                co_filers=(OLD_CIK, 3))
+
+    filing_set = edgar.fetch_filings("TEST")
+
+    assert any(entry.startswith("search:") for entry in log)
+    assert [filing.accession_number for filing in filing_set.filings] == ["q1"]
+    assert filing_set.notes[0].startswith("No predecessor company was used: several companies matched equally")
+
+
 def test_several_matches_means_no_guess(cache_dir, monkeypatch):
     # Two companies pass every check (like Navient's look-alike trusts would
     # without the industry check): neither is used, the note names both.
+    # (No co-filers, so the search box is what finds them.)
     twin = _record(3, "TEST CORP II", [("10-K", 100, "k3")])
     _fake_predecessor_sec(monkeypatch, {NEW_CIK: _new_company(), OLD_CIK: _old_company(), 3: twin},
-                          address_hits=(OLD_CIK, 3))
+                          address_hits=(OLD_CIK, 3), co_filers=())
 
     filing_set = edgar.fetch_filings("TEST")
 

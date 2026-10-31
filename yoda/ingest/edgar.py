@@ -609,12 +609,14 @@ def _write_8k_cache(eight_k: EightKFiling) -> None:
 # the old company's number (XOM in 2026: ExxonMobil Holdings Corp, CIK
 # 2115436, took over from Exxon Mobil Corp, CIK 34088). The SEC's records do
 # not link the two numbers, so Yoda finds the old company itself:
-#   1. Gather candidates from three places: companies that filed the new
-#      company's 10-Qs jointly with it, companies with a similar name, and
-#      companies whose recent annual report shows the same street address.
-#   2. Keep a candidate only if it passes every check in _is_predecessor().
-#   3. Accept it only if exactly one passes. None, or several, means no
-#      guess: the report shows that no annual report was read, as before.
+#   1. Try the companies that filed the new company's 10-Qs jointly with it
+#      (from the filings' header pages in SEC's archive). If exactly one
+#      passes every check in _is_predecessor(), it is used: no search.
+#   2. Otherwise add candidates from EDGAR's search box (an undocumented
+#      endpoint): companies with a similar name, and companies whose recent
+#      annual report shows the same street address.
+#   3. Accept a candidate only if exactly one passes. None, or several,
+#      means no guess: the report shows that no annual report was read.
 # A link found is saved in yoda/ingest/predecessors.json, so the search
 # runs once per company. It only runs for a company with no recent annual
 # report that filed a successor notice (an 8-K12B or 8-K12G3), so other
@@ -709,8 +711,9 @@ def _predecessor_for(ticker: str, cik: int, own_filings: list[dict], notes: list
 def _find_predecessor(cik: int, own_filings: list[dict], notes: list[str]) -> tuple[int, str] | None:
     """Search the SEC for the old company that the company with *cik* took over from.
 
-    Candidates come from co-filers on its two newest 10-Qs, a company-name
-    search and a search of recent annual reports for its street address.
+    The co-filers on its two newest 10-Qs are tried first. Only when they
+    don't give exactly one company that passes are a company-name search
+    and a search of recent annual reports for its street address added.
     Returns (CIK, name) when exactly one candidate passes _is_predecessor();
     with several, their names go into *notes* and None is returned (no
     guessing). Raises requests.RequestException or RuntimeError when a
@@ -719,18 +722,22 @@ def _find_predecessor(cik: int, own_filings: list[dict], notes: list[str]) -> tu
     new = _submissions(cik)
     cutoff = market_today() - relativedelta(months=ANNUAL_WINDOW_MONTHS)
 
-    # Gather candidates from the three sources.
+    # The co-filers first: a company that filed the new company's 10-Qs
+    # jointly with it is the strongest link, and finding it needs only the
+    # filings' header pages in SEC's archive and the documented submissions
+    # API. When exactly one passes, the EDGAR search box (undocumented, and
+    # down on 2026-10-30) is never asked: XOM's predecessor is found this way.
     joint: set[int] = set()
     for meta in [meta for meta in own_filings if meta["form"] == "10-Q"][:2]:
         joint |= _co_filers(cik, meta["accession_number"])
-    candidates = (joint | _name_matches(new.get("name") or "") | _address_matches(_business_street(new), cutoff)) - {cik}
+    passed = _passing(joint - {cik}, new, joint, cutoff)
+    if len(passed) == 1:
+        return passed[0]
 
-    # Check each candidate against the new company's own record.
-    passed = []
-    for other in sorted(candidates):
-        record = _submissions(other)
-        if _is_predecessor(record, new, other in joint, cutoff):
-            passed.append((other, record.get("name") or f"CIK {other}"))
+    # Otherwise all three sources: the co-filers, a name search and an
+    # address search of recent annual reports.
+    candidates = (joint | _name_matches(new.get("name") or "") | _address_matches(_business_street(new), cutoff)) - {cik}
+    passed = _passing(candidates, new, joint, cutoff)
 
     # Exactly one must pass; several are named so the reader knows why none was used.
     if len(passed) == 1:
@@ -739,6 +746,19 @@ def _find_predecessor(cik: int, own_filings: list[dict], notes: list[str]) -> tu
         notes.append("No predecessor company was used: several companies matched equally ("
                      + ", ".join(f"{name}, CIK {other}" for other, name in passed) + ").")
     return None
+
+
+def _passing(candidates: set[int], new: dict, joint: set[int], cutoff: date) -> list[tuple[int, str]]:
+    """Return (CIK, name) for each of *candidates* that passes _is_predecessor() against *new*, in CIK order.
+
+    *joint* holds the CIKs that filed the new company's 10-Qs jointly with it.
+    """
+    passed = []
+    for other in sorted(candidates):
+        record = _submissions(other)
+        if _is_predecessor(record, new, other in joint, cutoff):
+            passed.append((other, record.get("name") or f"CIK {other}"))
+    return passed
 
 
 def _is_predecessor(candidate: dict, new: dict, co_filer: bool, cutoff: date) -> bool:
