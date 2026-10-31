@@ -542,7 +542,7 @@ def test_paired_comparison_ignores_unpaired_tickers():
 
 
 # ---------------------------------------------------------------------------
-# run_eval — one judge failure must not end the whole run
+# Judging — one judge failure must not end the whole run
 # ---------------------------------------------------------------------------
 
 def _judge_result(value: int) -> judge.JudgeResult:
@@ -572,9 +572,11 @@ def test_judge_failure_skips_row_not_run(monkeypatch, tmp_path):
     fake_judge.calls = 0
     monkeypatch.setattr(runner, "judge_report", fake_judge)
 
-    df = runner.run_eval(["GOOD", "BAD"], modes=("baseline", "yoda"), out_dir=tmp_path / "data/eval")
+    out = tmp_path / "data/eval"
+    runner.run_eval(["GOOD", "BAD"], modes=("baseline", "yoda"), out_dir=out)
+    df = runner.rescore(out, ["GOOD", "BAD"], modes=("baseline", "yoda"), out_dir=out, judge_budget=100.0)
     assert len(df) == 3                                  # only BAD/baseline missing
-    assert (tmp_path / "data/eval/summary.md").exists()  # the run still finished
+    assert (out / "summary.md").exists()                 # the run still finished
 
 
 # ---------------------------------------------------------------------------
@@ -629,8 +631,8 @@ def test_duplicate_tickers_run_once(monkeypatch, tmp_path):
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
     monkeypatch.setattr(runner, "judge_report", lambda report, evidence_text, na, repeat=False: _judge_result(3))
 
-    df = runner.run_eval(["NFLX", "nflx"], modes=("baseline", "yoda"), out_dir=tmp_path / "data/eval")
-    assert len(df) == 2   # one ticker x two modes
+    generated = runner.run_eval(["NFLX", "nflx"], modes=("baseline", "yoda"), out_dir=tmp_path / "data/eval")
+    assert len(generated) == 2   # one ticker x two modes
 
 
 def test_summary_without_pairs_has_no_nan_table(tmp_path):

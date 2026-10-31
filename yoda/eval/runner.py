@@ -1,19 +1,24 @@
-"""Evaluation runner.
+"""Evaluation runner, in two steps so the judge's cost is seen before it is spent.
 
-run_eval() runs the modes (the baseline, the staged pipeline and the lead
-analyst method) against a list of tickers, judges each report against the evidence it was written from with
-judge_report() (see yoda/eval/evidence.py), and returns a long-format
-DataFrame with per-row scores, latency, and cost. rescore() judges reports
-already saved on disk instead (the archive check and the repeat check),
-without running the modes again.
+1. run_eval() runs the modes (the baseline, the staged pipeline and the
+   lead analyst method) against a list of tickers and saves each report
+   with the evidence its writer had. It judges nothing: it ends by
+   estimating what judging the saved reports would cost.
+2. rescore() judges the saved reports against their evidence with
+   judge_report() (see yoda/eval/evidence.py), within a dollar budget, and
+   returns a long-format DataFrame with per-row scores, latency, and cost.
+   It is also the archive check and the repeat check.
 
 Outputs written to disk (data/eval/ unless another folder is passed):
   {mode}_{ticker}.json          — each report
   {mode}_{ticker}_evidence.json — the evidence store the report's writer
                     had (yoda/evidence_store.py), which the judge reads
-  results.csv     — one row per report: the nine scores (empty when N/A),
-                    latency and cost, and the judge's details (version,
-                    tokens, cost upper bound, failed quotes, report length)
+  generation.csv  — step 1: each report's cost and time, the ticker's
+                    whisper cost, and the error for any that failed
+  judge_estimate.md — steps 1 and 2: each judge call's estimated cost
+  results.csv     — step 2: one row per report: the nine scores (empty
+                    when N/A), latency and cost, and the judge's details
+                    (version, tokens, cost, failed quotes, report length)
   summary.md      — run date + models, mean scores per mode, the paired
                     Yoda-vs-baseline confidence table, judge reliability
                     checks, and a Failures section listing every
@@ -29,10 +34,11 @@ refactoring the mode APIs. When a line is missing, cost is left empty
 (unknown, not $0) and latency falls back to the time measured here — the
 latency_source column says which.
 
-CLI (every judge call not already cached is paid):
-  python -m yoda.eval.runner [TICKER ...] [--modes baseline]
-      default tickers: CURATED_TICKERS (20 US-listed stocks, two per sector)
-  python -m yoda.eval.runner --rescore DIR [TICKER ...] [--repeat] [--out DIR]
+CLI (report generation is paid on Anthropic; judging on OpenAI, unless cached):
+  python -m yoda.eval.runner [TICKER ...] [--modes baseline pipeline lead]
+      step 1; default tickers: CURATED_TICKERS (20 US-listed stocks, two per sector)
+  python -m yoda.eval.runner --rescore DIR --judge-budget USD [TICKER ...] [--repeat] [--out DIR]
+      step 2
 """
 
 import argparse
@@ -50,11 +56,11 @@ import pandas as pd
 import pydantic
 import requests
 
-from yoda import config
-from yoda.eval.evidence import PROMPT_TOKEN_LINE, na_dimensions, render_evidence
+from yoda import config, pricing
+from yoda.eval.evidence import PROMPT_TOKEN_LINE, RenderedEvidence, na_dimensions, render_evidence
 from yoda.eval.judge import (
-    JUDGE_MODEL, JUDGE_REASONING_EFFORT, JudgeResult, cache_key_for, judge_cost, judge_report, prune_judge_cache,
-    write_run_manifest,
+    JUDGE_MODEL, JUDGE_REASONING_EFFORT, JudgeResult, cache_key_for, is_cached, judge_cost, judge_report,
+    prune_judge_cache, write_run_manifest,
 )
 from yoda.eval.rubric import DIMENSIONS, RUBRIC_TEXT, JudgeScores
 from yoda.ingest.edgar import fetch_filings
@@ -92,12 +98,18 @@ SCORE_COLS = list(DIMENSIONS)
 # (yoda/modes/pipeline.py) and "lead" the lead analyst method (yoda/modes/lead.py). "yoda" stays known, so the
 # saved reports of the retired personality panel are never deleted, but it
 # no longer runs. DEFAULT_MODES are what runs; the summary still compares
-# baseline with "yoda" until the run harness compares all three arms (item 4d).
+# baseline with "yoda" until it compares all three arms (item 4d's last part).
 KNOWN_MODES = ("baseline", "pipeline", "lead", "yoda")
 DEFAULT_MODES = ("baseline",)
 
 # Where outputs go unless run_eval() is given another folder.
 DEFAULT_OUT_DIR = config.DATA_DIR / "eval"
+
+# The judge's output per call (hidden reasoning plus the scores), assumed
+# for the cost estimate until a judged run measures it (results.csv's
+# completion_tokens). Generous on purpose: an estimate that is too low
+# could let judging overspend.
+JUDGE_OUTPUT_TOKENS_ESTIMATE = 16_000
 
 
 # ---------------------------------------------------------------------------
@@ -185,13 +197,45 @@ class JudgedRow(NamedTuple):
     result: JudgeResult
 
 
-def _judge_row(ticker: str, mode: str, report: EarningsReport, evidence: EvidenceStore,
-               repeat: bool = False) -> JudgedRow:
-    """Judge *report* against *evidence* (its writer's evidence store) and return its results.csv columns.
+class JudgeCall(NamedTuple):
+    """One judge call, worked out before it is made: what the judge reads, its cache key, and what it would cost.
+
+    *cached* is True when the score is already in the judge cache (free).
+    *expected_usd* prices the call at Flex with no cache discount and
+    JUDGE_OUTPUT_TOKENS_ESTIMATE output tokens; *worst_usd* the same at the
+    standard tier (Flex unavailable). Both are estimates from the prompt's
+    estimated size, not OpenAI's count.
+    """
+    na: dict[str, str]
+    rendered: RenderedEvidence
+    cache_key: str
+    cached: bool
+    expected_usd: float
+    worst_usd: float
+
+
+def _plan_judge_call(report: EarningsReport, evidence: EvidenceStore, repeat: bool = False) -> JudgeCall:
+    """Work out the judge call for *report* against *evidence* (its writer's evidence store), without making it.
+
+    *repeat* is the repeat check's second, independent score (its own
+    cache entry).
+    """
+    na = na_dimensions(evidence, report)
+    rendered = render_evidence(evidence, report, extra_chars=len(RUBRIC_TEXT) + len(report.model_dump_json()))
+    cache_key = cache_key_for(report, rendered.text, na, repeat)
+    tokens = rendered.estimated_tokens
+    return JudgeCall(na, rendered, cache_key, is_cached(cache_key),
+                     expected_usd=pricing.call_cost(JUDGE_MODEL, tokens, JUDGE_OUTPUT_TOKENS_ESTIMATE, tier="flex"),
+                     worst_usd=pricing.call_cost(JUDGE_MODEL, tokens, JUDGE_OUTPUT_TOKENS_ESTIMATE))
+
+
+def _judge_row(ticker: str, mode: str, report: EarningsReport, call: JudgeCall, repeat: bool = False) -> JudgedRow:
+    """Make the judge *call* for *report* and return its results.csv columns.
 
     The judge sees the report, the evidence (cut where needed to stay under
-    the price line) and which dimensions code marks N/A for this mode. *repeat* asks for a second, independent
-    score (the repeat check). Raises whatever judge_report raises.
+    the price line) and which dimensions code marks N/A for this mode.
+    *repeat* asks for a second, independent score (the repeat check).
+    Raises whatever judge_report raises.
 
     Columns: ticker, mode, the nine scores (empty when N/A), figures_checked,
     failed_quote_dims (the dimensions whose quotes didn't check out,
@@ -202,15 +246,13 @@ def _judge_row(ticker: str, mode: str, report: EarningsReport, evidence: Evidenc
     finish_reason / reasoning_tokens (why the judge stopped and how much of
     its output was reasoning; empty when OpenAI didn't say).
     """
-    judged = report
-    na = na_dimensions(evidence, judged)
-    rendered = render_evidence(evidence, judged, extra_chars=len(RUBRIC_TEXT) + len(judged.model_dump_json()))
+    rendered = call.rendered
     print(f"  judge prompt ~{rendered.estimated_tokens:,} tokens (estimate); "
-          f"N/A: {', '.join(na) or 'none'}; left out: {'; '.join(rendered.left_out) or 'nothing'}")
+          f"N/A: {', '.join(call.na) or 'none'}; left out: {'; '.join(rendered.left_out) or 'nothing'}")
     if rendered.over_line:
         print(f"  WARNING: over {PROMPT_TOKEN_LINE:,} tokens even after cuts; this call costs more")
 
-    result = judge_report(judged, rendered.text, na, repeat=repeat)
+    result = judge_report(report, rendered.text, call.na, repeat=repeat)
     row = {
         "ticker": ticker,
         "mode": mode,
@@ -224,11 +266,11 @@ def _judge_row(ticker: str, mode: str, report: EarningsReport, evidence: Evidenc
         "service_tier": result.service_tier,
         "over_272k": result.prompt_tokens > PROMPT_TOKEN_LINE,
         "judge_cost_usd": round(judge_cost(result), 5),
-        "report_chars": len(judged.model_dump_json()),
+        "report_chars": len(report.model_dump_json()),
         "finish_reason": result.finish_reason,
         "reasoning_tokens": result.reasoning_tokens,
     }
-    return JudgedRow(row, cache_key_for(judged, rendered.text, na, repeat), result)
+    return JudgedRow(row, call.cache_key, result)
 
 
 def _previous_snapshots(results_path: pathlib.Path) -> set[str]:
@@ -237,6 +279,113 @@ def _previous_snapshots(results_path: pathlib.Path) -> set[str]:
         return set()
     previous = pd.read_csv(results_path)
     return set(previous["judge_snapshot"].dropna()) if "judge_snapshot" in previous else set()
+
+
+def _load_saved(report_dir: pathlib.Path, ticker: str, mode: str) -> tuple[EarningsReport, EvidenceStore] | str:
+    """Return a saved report and the evidence store saved with it, or why they can't be judged.
+
+    A missing report, a report saved without its store, and a report in the
+    old format (before 2026-10-30) can't be judged.
+    """
+    report_path = report_dir / f"{mode}_{ticker}.json"
+    evidence_path = report_dir / f"{mode}_{ticker}_evidence.json"
+    if not report_path.exists():
+        return "no saved report"
+    if not evidence_path.exists():
+        return "no saved evidence store"
+    try:
+        return (EarningsReport.model_validate_json(report_path.read_text(encoding="utf-8")),
+                EvidenceStore.model_validate_json(evidence_path.read_text(encoding="utf-8")))
+    except (ValueError, pydantic.ValidationError) as exc:
+        return f"saved report or evidence unreadable (old format?): {type(exc).__name__}: {exc}"
+
+
+# ---------------------------------------------------------------------------
+# Generation records and the judge estimate
+# ---------------------------------------------------------------------------
+
+# generation.csv's columns: what each (ticker, mode) cost and took to
+# generate, the ticker's whisper lookup cost (shared by its modes, the same
+# on each of its rows), and the error when it produced no report.
+GENERATION_COLS = ["ticker", "mode", "latency_seconds", "latency_source", "cost_usd", "whisper_cost_usd", "error"]
+
+
+def _read_generation(report_dir: pathlib.Path) -> pd.DataFrame:
+    """Return the generation records saved in *report_dir* (an empty table if there are none)."""
+    path = report_dir / "generation.csv"
+    if not path.exists():
+        return pd.DataFrame(columns=GENERATION_COLS)
+    return pd.read_csv(path)
+
+
+def _save_generation(report_dir: pathlib.Path, new_rows: list[dict]) -> pd.DataFrame:
+    """Add *new_rows* to generation.csv, replacing any older row for the same (ticker, mode); return the table.
+
+    Rows for pairs not generated again are kept, as their saved reports are.
+    """
+    replaced = {(row["ticker"], row["mode"]) for row in new_rows}
+    kept = [row for row in _read_generation(report_dir).to_dict("records")
+            if (row["ticker"], row["mode"]) not in replaced]
+    table = pd.DataFrame([*kept, *new_rows], columns=GENERATION_COLS)
+    table.to_csv(report_dir / "generation.csv", index=False)
+    return table
+
+
+def _whisper_line(generation: pd.DataFrame) -> str | None:
+    """Return summary.md's line on the run's shared whisper lookups (None with no generation records).
+
+    Each ticker's cost is counted once; a ticker whose cost is unknown is
+    left out of the total and counted, never added as $0.
+    """
+    if generation.empty:
+        return None
+    per_ticker = generation.groupby("ticker")["whisper_cost_usd"].first()
+    unknown = int(per_ticker.isna().sum())
+    ending = f"; {unknown} ticker(s) with an unknown cost." if unknown else "."
+    return (f"Whisper lookups (shared by every mode of a ticker): ${per_ticker.sum():.4f} in total over "
+            f"{len(per_ticker) - unknown} ticker(s){ending}")
+
+
+def _judge_estimate(report_dir: pathlib.Path, tickers: Sequence[str], modes: Sequence[str],
+                    repeat: bool = False) -> pd.DataFrame:
+    """Return one row per judge call the saved reports would need: ticker, mode, prompt tokens, cached, costs.
+
+    A report that can't be judged (missing, no store, old format) has no
+    row. With *repeat*, each report needs two calls.
+    """
+    rows = []
+    for ticker in tickers:
+        for mode in modes:
+            saved = _load_saved(report_dir, ticker, mode)
+            if isinstance(saved, str):
+                continue
+            report, evidence = saved
+            for second in ([False, True] if repeat else [False]):
+                call = _plan_judge_call(report, evidence, repeat=second)
+                rows.append({"ticker": ticker, "mode": mode, "repeat": second,
+                             "prompt_tokens": call.rendered.estimated_tokens, "cached": call.cached,
+                             "expected_usd": round(call.expected_usd, 4), "worst_usd": round(call.worst_usd, 4)})
+    return pd.DataFrame(rows, columns=["ticker", "mode", "repeat", "prompt_tokens", "cached", "expected_usd",
+                                       "worst_usd"])
+
+
+def _write_estimate(estimate: pd.DataFrame, path: pathlib.Path) -> str:
+    """Write judge_estimate.md from *estimate* and return its headline, which is also printed.
+
+    Scores already in the judge cache cost nothing and are counted apart.
+    """
+    to_pay = estimate[~estimate["cached"].astype(bool)] if not estimate.empty else estimate
+    headline = (f"Judge estimate: ${to_pay['expected_usd'].sum():.2f} expected (Flex price), "
+                f"${to_pay['worst_usd'].sum():.2f} at worst (standard price), for {len(to_pay)} call(s); "
+                f"{len(estimate) - len(to_pay)} already scored (free).")
+    lines = ["# Judge cost estimate", "", headline, "",
+             f"Each call: its prompt's estimated size, no cache discount, and {JUDGE_OUTPUT_TOKENS_ESTIMATE:,} "
+             "output tokens (an assumption until a run measures it). OpenAI's prompt cache usually makes the "
+             "real cost lower. Judge with: python -m yoda.eval.runner --rescore DIR --judge-budget USD", ""]
+    if not estimate.empty:
+        lines += [_df_to_markdown(estimate.set_index("ticker")), ""]
+    path.write_text("\n".join(lines), encoding="utf-8")
+    return headline
 
 
 # ---------------------------------------------------------------------------
@@ -248,46 +397,24 @@ def run_eval(
     modes: Sequence[str] = DEFAULT_MODES,
     out_dir: pathlib.Path | None = None,
 ) -> pd.DataFrame:
-    """Run each (ticker, mode) pair, judge it, and return a long-format DataFrame.
+    """Generate each (ticker, mode) report and save it; return the generation records. Nothing is judged.
 
-    DataFrame columns:
-        ticker, mode, latency_seconds, latency_source, cost_usd, and one
-        column per rubric dimension (SCORE_COLS; empty when N/A)
-
-    A failure for one ticker or mode (filing fetch, report generation or
-    judging) skips just that row; it is printed and listed in the Failures
-    section of summary.md. Writes results.csv, summary.md and comparison.png
-    to *out_dir* (data/eval/ when not given).
+    For each ticker the shared sources are fetched once, then each mode
+    writes its report, saved as {mode}_{ticker}.json with the evidence its
+    writer had. generation.csv records each pair's cost, time, the ticker's
+    whisper cost and any error (columns GENERATION_COLS); a failure for one
+    ticker or mode skips just that pair. At the end the judge's cost for
+    the saved reports is estimated (judge_estimate.md) and the run stops:
+    judging is rescore(), with a budget, once the estimate is checked
+    against the OpenAI credit left.
     """
     out_dir = pathlib.Path(out_dir) if out_dir is not None else DEFAULT_OUT_DIR
     out_dir.mkdir(parents=True, exist_ok=True)
-    results_path = out_dir / "results.csv"
 
     # Upper-case and drop repeats (keeping order) so "NFLX nflx" runs once —
     # a duplicate (ticker, mode) row would break the paired comparison.
     tickers = normalize_tickers(tickers)
-
-    # One line describing when and with which models this run happened.
-    # It heads summary.md and subtitles the chart.
-    started = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    run_line = (
-        f"Run: {started} · {len(tickers)} tickers · "
-        f"Baseline: {BASELINE_MODEL} · "
-        f"Judge: {JUDGE_MODEL} (reasoning effort {JUDGE_REASONING_EFFORT})"
-    )
-
-    # Note which judge versions the previous run used (for the summary's
-    # warning), then remove its results file, which may be a partial one
-    # from an interrupted run.
-    previous_snapshots = _previous_snapshots(results_path)
-    results_path.unlink(missing_ok=True)
-
-    rows = []
-    failures: list[tuple[str, str, str]] = []   # (ticker, step, error)
-    # Keys of every judge_report() call this run; written to a manifest at the end.
-    run_cache_keys: set[str] = set()
-    # Every judge result, for the sample justifications file.
-    judged_results: list[tuple[str, str, JudgeResult]] = []
+    rows: list[dict] = []
 
     for ticker in tickers:
         print(f"\n=== {ticker} ===")
@@ -300,90 +427,61 @@ def run_eval(
         try:
             filing = fetch_filings(ticker)
             sources = fetch_shared_sources(filing) if filing is not None else None
+            problem = None if sources is not None else "no recent 10-Q or annual report"
         except (requests.RequestException, RuntimeError) as exc:
-            failures.append((ticker, "fetch sources", f"{type(exc).__name__}: {exc}"))
-            print(f"  ERROR fetching sources: {exc}")
+            problem = f"{type(exc).__name__}: {exc}"
+        if problem is not None:
+            print(f"  ERROR fetching sources: {problem}")
+            rows += [{"ticker": ticker, "mode": mode, "error": f"fetch sources: {problem}"} for mode in modes]
+            _save_generation(out_dir, rows)
             continue
-        if sources is None:
-            failures.append((ticker, "fetch sources", "no recent 10-Q or annual report"))
-            print("  ERROR: no recent 10-Q or annual report")
-            continue
+        whisper = sources.snapshot.whisper_cost_usd if sources.snapshot is not None else None
 
         for mode in modes:
             # Each (ticker, mode) is isolated on purpose: whatever one report
             # hits, the rest of a 20-ticker run still completes. The error is
-            # kept and reported in summary.md, not just printed.
+            # kept in generation.csv and shown in the judged summary.
             print(f"  running mode={mode}...")
             try:
                 run = _run_mode(mode, ticker, sources)
             except Exception as exc:
-                failures.append((ticker, mode, f"{type(exc).__name__}: {exc}"))
+                rows.append({"ticker": ticker, "mode": mode, "whisper_cost_usd": whisper,
+                             "error": f"{type(exc).__name__}: {exc}"})
                 print(f"  ERROR in mode={mode}: {exc}")
+                _save_generation(out_dir, rows)
                 continue
 
-            # Save report JSON — overwrites previous run, keeping 1 per (mode, ticker).
-            (out_dir / f"{mode}_{ticker}.json").write_text(
-                run.report.model_dump_json(indent=2), encoding="utf-8"
-            )
+            # Save the report and, next to it, the evidence store it was
+            # written from, so the judge can check one against the other.
+            (out_dir / f"{mode}_{ticker}.json").write_text(run.report.model_dump_json(indent=2), encoding="utf-8")
+            (out_dir / f"{mode}_{ticker}_evidence.json").write_text(run.evidence.model_dump_json(), encoding="utf-8")
 
-            # Save the evidence store the report was written from next to it,
-            # so the judge can check the report against what it saw.
-            evidence = run.evidence
-            (out_dir / f"{mode}_{ticker}_evidence.json").write_text(evidence.model_dump_json(), encoding="utf-8")
-
-            # Judge it. A judge failure (refusal, cut-off, API error after
-            # retries) skips this row like a mode failure does, instead of
-            # ending the whole run.
-            try:
-                judged = _judge_row(ticker, mode, run.report, evidence)
-            except Exception as exc:
-                failures.append((ticker, f"judge {mode}", f"{type(exc).__name__}: {exc}"))
-                print(f"  ERROR judging mode={mode}: {exc}")
-                continue
-            run_cache_keys.add(judged.cache_key)
-            judged_results.append((ticker, mode, judged.result))
-
-            # The judged columns plus the mode's own latency and cost
-            # (unknown cost stays empty, never $0).
-            row = {
-                **judged.row,
-                "latency_seconds": round(run.latency_seconds, 2),
-                "latency_source": run.latency_source,
-                "cost_usd": round(run.cost_usd, 5) if run.cost_usd is not None else None,
-            }
-            rows.append(row)
-
-            # Write this row immediately so progress survives a crash.
-            pd.DataFrame([row]).to_csv(
-                results_path, mode="a", header=len(rows) == 1, index=False
-            )
+            # Its cost and time (an unknown cost stays empty, never $0),
+            # saved at once so progress survives a crash.
+            rows.append({"ticker": ticker, "mode": mode, "latency_seconds": round(run.latency_seconds, 2),
+                         "latency_source": run.latency_source,
+                         "cost_usd": round(run.cost_usd, 5) if run.cost_usd is not None else None,
+                         "whisper_cost_usd": whisper, "error": None})
+            _save_generation(out_dir, rows)
             cost_text = f"${run.cost_usd:.4f}" if run.cost_usd is not None else "unknown"
             print(f"  mode={mode} done — latency={run.latency_seconds:.1f}s cost={cost_text}")
 
-    df = pd.DataFrame(rows)
-
-    # Overwrite with the complete, clean DataFrame (removes any
-    # partial-write artifacts), then the summary, chart and justifications.
-    df.to_csv(results_path, index=False)
-    _write_outputs(df, out_dir, run_line, failures, previous_snapshots, judged_results)
-
-    # Write a manifest for this run and prune cache to the last 2 runs.
-    write_run_manifest(run_cache_keys)
-    prune_judge_cache(keep_runs=2)
-
     # Delete report JSONs that belong to no known mode (e.g. old panel_*
     # smoke-test files). Results of a known mode that wasn't run this time
-    # are kept, so a baseline-only run never deletes the Yoda reports.
+    # are kept, so a baseline-only run never deletes the other reports.
     known_prefixes = tuple(f"{mode}_" for mode in KNOWN_MODES)
     for json_file in out_dir.glob("*.json"):
         if not json_file.name.startswith(known_prefixes):
             json_file.unlink()
 
-    return df
+    # What judging these reports would cost; the run stops here.
+    headline = _write_estimate(_judge_estimate(out_dir, tickers, modes), out_dir / "judge_estimate.md")
+    print(f"\n{headline}\nSaved to {out_dir}. Nothing was judged.")
+    return pd.DataFrame(rows, columns=GENERATION_COLS)
 
 
 def _saved_tickers(report_dir: pathlib.Path, modes: Sequence[str]) -> list[str]:
-    """Return every ticker with a saved report of one of *modes* in *report_dir* ("yoda_NFLX.json" -> NFLX)."""
+    """Return every ticker with a saved report of one of *modes* in *report_dir* ("pipeline_NFLX.json" -> NFLX)."""
     tickers = set()
     for mode in modes:
         for path in report_dir.glob(f"{mode}_*.json"):
@@ -398,30 +496,47 @@ def rescore(
     modes: Sequence[str] = DEFAULT_MODES,
     out_dir: pathlib.Path | None = None,
     repeat: bool = False,
+    *,
+    judge_budget: float,
 ) -> pd.DataFrame:
-    """Judge reports already saved in *report_dir*, without running the modes again.
+    """Judge reports saved in *report_dir*, spending at most *judge_budget* dollars on new judge calls.
 
-    Used for the repeat check (*repeat*=True). Each saved {mode}_{ticker}.json
-    is judged against its saved {mode}_{ticker}_evidence.json (the evidence
-    store its writer had); a report without one, or in the old report format
-    (before 2026-10-30), is skipped and listed under Failures. *tickers*
-    None means every saved report.
+    The judging step after run_eval(), and the repeat check (*repeat*=True:
+    each report is judged a second time, independently; the second scores
+    go to repeat.csv and summary.md shows how often the two agree). Each
+    saved {mode}_{ticker}.json is judged against its saved evidence store,
+    a ticker's reports back to back so OpenAI can serve their shared filing
+    text from its cache. *tickers* None means every saved report.
 
-    With *repeat*, each report is judged twice: the normal score (free when
-    it is already in the judge cache) and a second, independent score. The
-    second scores go to repeat.csv and summary.md shows how often the two
-    agree. Writes results.csv, summary.md, comparison.png and
-    justifications.md to *out_dir* (report_dir/"rescore" when not given).
-    Every judge call is paid unless cached, so run it only when intended.
+    The estimate is printed and saved first (judge_estimate.md). Before each
+    report, judging stops if what was spent plus the report's worst-case
+    cost (JudgeCall.worst_usd, for its calls not already cached) would pass
+    *judge_budget*; reports not judged are listed under Failures, and a
+    later rescore() picks them up, the judged ones then free from the cache.
+    Cost and time come from report_dir's generation.csv when it has them
+    (otherwise unknown, never 0), and its errors explain missing reports.
+    Writes results.csv, summary.md, comparison.png and justifications.md to
+    *out_dir* (report_dir/"rescore" when not given). Raises ValueError for
+    a negative budget.
     """
+    if judge_budget < 0:
+        raise ValueError(f"judge_budget can't be negative, got {judge_budget}")
     report_dir = pathlib.Path(report_dir)
     out_dir = pathlib.Path(out_dir) if out_dir is not None else report_dir / "rescore"
     out_dir.mkdir(parents=True, exist_ok=True)
     tickers = normalize_tickers(tickers) if tickers else _saved_tickers(report_dir, modes)
 
+    # What the reports cost to generate, and why any are missing.
+    generation = _read_generation(report_dir)
+    generated = {(row.ticker, row.mode): row for row in generation.itertuples(index=False)}
+
+    # The estimate first, so the spend can be seen before it happens.
+    headline = _write_estimate(_judge_estimate(report_dir, tickers, modes, repeat), out_dir / "judge_estimate.md")
+    print(f"{headline}\nJudge budget: ${judge_budget:.2f}")
+
     started = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    run_line = (f"Re-score: {started} · {len(tickers)} tickers from {report_dir} · "
-                f"Judge: {JUDGE_MODEL} (reasoning effort {JUDGE_REASONING_EFFORT})"
+    run_line = (f"Judged: {started} · {len(tickers)} tickers from {report_dir} · "
+                f"Judge: {JUDGE_MODEL} (reasoning effort {JUDGE_REASONING_EFFORT}) · budget ${judge_budget:.2f}"
                 + (" · with repeat scoring" if repeat else ""))
     previous_snapshots = _previous_snapshots(out_dir / "results.csv")
 
@@ -429,44 +544,59 @@ def rescore(
     failures: list[tuple[str, str, str]] = []
     run_cache_keys: set[str] = set()
     judged_results: list[tuple[str, str, JudgeResult]] = []
+    spent, out_of_budget = 0.0, False
 
     for ticker in tickers:
         print(f"\n=== {ticker} ===")
         for mode in modes:
-            report_path = report_dir / f"{mode}_{ticker}.json"
-            if not report_path.exists():
-                failures.append((ticker, mode, "no saved report"))
+            # A report that can't be judged: the generation error when there
+            # was one, otherwise why the saved files can't be read.
+            saved = _load_saved(report_dir, ticker, mode)
+            record = generated.get((ticker, mode))
+            failed_to_generate = record is not None and isinstance(record.error, str)
+            if isinstance(saved, str):
+                failures.append((ticker, mode, record.error if failed_to_generate else saved))
+                continue
+            report, evidence = saved
+            if out_of_budget:
+                failures.append((ticker, f"judge {mode}", "not judged: the judge budget was reached"))
                 continue
 
-            # The report and the evidence store saved with it (an old-format
-            # report, or one saved without evidence, can't be judged).
-            evidence_path = report_dir / f"{mode}_{ticker}_evidence.json"
-            if not evidence_path.exists():
-                failures.append((ticker, mode, "no saved evidence store"))
-                continue
-            try:
-                report = EarningsReport.model_validate_json(report_path.read_text(encoding="utf-8"))
-                evidence = EvidenceStore.model_validate_json(evidence_path.read_text(encoding="utf-8"))
-            except (ValueError, pydantic.ValidationError) as exc:
-                failures.append((ticker, mode, f"saved report or evidence unreadable (old format?): "
-                                               f"{type(exc).__name__}: {exc}"))
+            # Stop before a report whose new calls could take the spend past
+            # the budget; cached scores are free.
+            calls = [_plan_judge_call(report, evidence, repeat=second)
+                     for second in ([False, True] if repeat else [False])]
+            worst = sum(call.worst_usd for call in calls if not call.cached)
+            if spent + worst > judge_budget:
+                print(f"  judge budget reached: ${spent:.2f} spent, this report could cost up to ${worst:.2f}")
+                out_of_budget = True
+                failures.append((ticker, f"judge {mode}", "not judged: the judge budget was reached"))
                 continue
 
             # Judge it (and, for the repeat check, judge it again).
             try:
-                judged = _judge_row(ticker, mode, report, evidence)
-                second = _judge_row(ticker, mode, report, evidence, repeat=True) if repeat else None
+                judged = _judge_row(ticker, mode, report, calls[0])
+                second = _judge_row(ticker, mode, report, calls[1], repeat=True) if repeat else None
             except Exception as exc:
                 failures.append((ticker, f"judge {mode}", f"{type(exc).__name__}: {exc}"))
                 print(f"  ERROR judging mode={mode}: {exc}")
                 continue
+            spent += sum(result.row["judge_cost_usd"] for result, call in zip((judged, second), calls)
+                         if result is not None and not call.cached)
             run_cache_keys.add(judged.cache_key)
             judged_results.append((ticker, mode, judged.result))
-            # No mode was run here, so its latency and cost are unknown (empty, never 0).
-            rows.append({**judged.row, "latency_seconds": None, "latency_source": None, "cost_usd": None})
+
+            # The judged columns plus what the report cost to generate (when
+            # recorded; unknown stays empty, never 0).
+            recorded = record is not None and not failed_to_generate
+            rows.append({**judged.row,
+                         "latency_seconds": record.latency_seconds if recorded else None,
+                         "latency_source": record.latency_source if recorded else None,
+                         "cost_usd": record.cost_usd if recorded else None})
             if second is not None:
                 run_cache_keys.add(second.cache_key)
                 repeat_rows.append(second.row)
+    print(f"\nJudge spend: ${spent:.4f} of the ${judge_budget:.2f} budget")
 
     # Results, the repeat scores and their agreement, then the summary and chart.
     df = pd.DataFrame(rows)
@@ -476,7 +606,8 @@ def rescore(
         repeat_df = pd.DataFrame(repeat_rows)
         repeat_df.to_csv(out_dir / "repeat.csv", index=False)
         agreement = _repeat_agreement(df, repeat_df) if not repeat_df.empty else None
-    _write_outputs(df, out_dir, run_line, failures, previous_snapshots, judged_results, agreement)
+    _write_outputs(df, out_dir, run_line, failures, previous_snapshots, judged_results, agreement,
+                   _whisper_line(generation[generation["ticker"].isin(tickers)]))
 
     write_run_manifest(run_cache_keys)
     prune_judge_cache(keep_runs=2)
@@ -491,9 +622,10 @@ def _write_outputs(
     previous_snapshots: set[str],
     judged_results: Sequence[tuple[str, str, JudgeResult]],
     agreement: pd.DataFrame | None = None,
+    whisper_line: str | None = None,
 ) -> None:
     """Write summary.md, justifications.md and (with at least one scored row) comparison.png to *out_dir*."""
-    _write_summary(df, out_dir / "summary.md", run_line, failures, previous_snapshots, agreement)
+    _write_summary(df, out_dir / "summary.md", run_line, failures, previous_snapshots, agreement, whisper_line)
     _write_justifications(judged_results, out_dir / "justifications.md")
     print(f"\nResults, summary and justifications saved to {out_dir}")
     if not df.empty:
@@ -734,15 +866,19 @@ def _write_summary(
     failures: Sequence[tuple[str, str, str]] = (),
     previous_snapshots: set[str] = frozenset(),
     agreement: pd.DataFrame | None = None,
+    whisper_line: str | None = None,
 ) -> None:
     """Write summary.md: run details, mean scores by mode, the paired comparison, reliability checks and failures.
 
     Mean cost skips rows whose cost is unknown, and the summary says how
     many there were, so an average is never quietly based on made-up zeros.
     *previous_snapshots* are the judge versions the previous run used;
-    *agreement* is the repeat check's table, when one was run.
+    *agreement* is the repeat check's table, when one was run;
+    *whisper_line* is the run's shared whisper cost (see _whisper_line).
     """
     lines = ["# Evaluation Summary", "", run_line, ""]
+    if whisper_line:
+        lines += [whisper_line, ""]
 
     # With no scored rows there are no means to show — say so plainly.
     if df.empty:
@@ -875,27 +1011,35 @@ def _write_chart(df: pd.DataFrame, path: pathlib.Path, run_line: str) -> None:
 def _parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     """Read the command line.
 
-      python -m yoda.eval.runner [TICKER ...] [--modes baseline]
-          run the modes and judge them (default: the curated 20 tickers)
-      python -m yoda.eval.runner --rescore DIR [TICKER ...] [--repeat] [--out DIR]
-          judge reports already saved in DIR, without running the modes again
+      python -m yoda.eval.runner [TICKER ...] [--modes baseline pipeline lead]
+          generate the reports and estimate the judge's cost (default: the curated 20 tickers)
+      python -m yoda.eval.runner --rescore DIR --judge-budget USD [TICKER ...] [--repeat] [--out DIR]
+          judge the reports saved in DIR, spending at most USD on the judge
+    --judge-budget is required with --rescore, and only there.
     """
-    parser = argparse.ArgumentParser(description="Run or re-score the Yoda evaluation (paid API calls).")
+    parser = argparse.ArgumentParser(description="Generate or judge the Yoda evaluation (paid API calls).")
     parser.add_argument("tickers", nargs="*", help="tickers (default: all — the curated set, or every saved report)")
     parser.add_argument("--modes", nargs="+", choices=KNOWN_MODES, default=list(DEFAULT_MODES))
     parser.add_argument("--rescore", type=pathlib.Path, metavar="DIR", help="judge the reports saved in DIR")
     parser.add_argument("--repeat", action="store_true", help="with --rescore: score each report a second time")
     parser.add_argument("--out", type=pathlib.Path, metavar="DIR", help="where to write the outputs")
+    parser.add_argument("--judge-budget", type=float, metavar="USD",
+                        help="with --rescore: the most to spend on new judge calls, in dollars")
     args = parser.parse_args(argv)
     if args.repeat and args.rescore is None:
         parser.error("--repeat needs --rescore DIR")
+    if args.rescore is not None and args.judge_budget is None:
+        parser.error("--rescore needs --judge-budget USD: check judge_estimate.md against your OpenAI credit")
+    if args.rescore is None and args.judge_budget is not None:
+        parser.error("--judge-budget goes with --rescore DIR: generating reports doesn't judge them")
     return args
 
 
 if __name__ == "__main__":
     cli = _parse_args()
     if cli.rescore is not None:
-        results = rescore(cli.rescore, cli.tickers or None, cli.modes, cli.out, repeat=cli.repeat)
+        results = rescore(cli.rescore, cli.tickers or None, cli.modes, cli.out, repeat=cli.repeat,
+                          judge_budget=cli.judge_budget)
     else:
         results = run_eval(cli.tickers or CURATED_TICKERS, cli.modes, cli.out)
     print(results.to_string(index=False))

@@ -396,7 +396,9 @@ def test_failures_are_listed_in_the_summary(monkeypatch, tmp_path):
     _stub_runner(monkeypatch, run_mode)
 
     runner.run_eval(["AAA"], modes=("baseline", "yoda"), out_dir=tmp_path)
+    runner.rescore(tmp_path, ["AAA"], modes=("baseline", "yoda"), out_dir=tmp_path, judge_budget=100.0)
 
+    # The generation error is kept in generation.csv and shown when judging.
     summary = (tmp_path / "summary.md").read_text(encoding="utf-8")
     assert "## Failures" in summary
     assert "| AAA | yoda | ValueError: synthesis fabricated a URL |" in summary
@@ -407,7 +409,8 @@ def test_no_results_gives_a_summary_not_a_crash(monkeypatch, tmp_path):
         raise RuntimeError("down")
     _stub_runner(monkeypatch, run_mode)
 
-    df = runner.run_eval(["AAA"], out_dir=tmp_path)
+    runner.run_eval(["AAA"], out_dir=tmp_path)
+    df = runner.rescore(tmp_path, ["AAA"], out_dir=tmp_path, judge_budget=100.0)
 
     assert df.empty
     assert "No (ticker, mode) pair produced a scored report" in (tmp_path / "summary.md").read_text(encoding="utf-8")
@@ -452,7 +455,8 @@ def test_run_mode_passes_on_the_baselines_store(monkeypatch):
 def test_shared_sources_are_fetched_once_and_reach_every_mode(monkeypatch, tmp_path):
     # One fetch per ticker (one paid whisper lookup at most); every mode gets the same object.
     fetched, seen = [], []
-    monkeypatch.setattr(runner, "fetch_shared_sources", lambda filing_set: fetched.append(filing_set) or "SOURCES")
+    shared = SimpleNamespace(snapshot=None)   # stands in for the fetched SharedSources
+    monkeypatch.setattr(runner, "fetch_shared_sources", lambda filing_set: fetched.append(filing_set) or shared)
 
     def run_mode(mode, ticker, sources):
         seen.append(sources)
@@ -461,17 +465,18 @@ def test_shared_sources_are_fetched_once_and_reach_every_mode(monkeypatch, tmp_p
 
     runner.run_eval(["AAA"], modes=("baseline", "yoda"), out_dir=tmp_path)
 
-    assert fetched == [_FILINGS] and seen == ["SOURCES", "SOURCES"]
+    assert fetched == [_FILINGS] and seen == [shared, shared]
 
 
 def test_a_ticker_with_no_filing_is_a_failure_not_a_run(monkeypatch, tmp_path):
     _stub_runner(monkeypatch)
     monkeypatch.setattr(runner, "fetch_filings", lambda ticker: None)
 
-    df = runner.run_eval(["AAA"], out_dir=tmp_path)
+    generated = runner.run_eval(["AAA"], out_dir=tmp_path)
+    df = runner.rescore(tmp_path, ["AAA"], out_dir=tmp_path, judge_budget=100.0)
 
-    assert df.empty
-    assert "| AAA | fetch sources | no recent 10-Q or annual report |" in (
+    assert df.empty and list(generated["error"]) == ["fetch sources: no recent 10-Q or annual report"]
+    assert "| AAA | baseline | fetch sources: no recent 10-Q or annual report |" in (
         tmp_path / "summary.md").read_text(encoding="utf-8")
 
 

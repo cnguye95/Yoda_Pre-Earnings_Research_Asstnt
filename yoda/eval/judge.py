@@ -271,6 +271,22 @@ def cache_key_for(report: EarningsReport, evidence_text: str, na: dict[str, str]
     return f"{key}-repeat" if repeat else key
 
 
+def is_cached(cache_key: str) -> bool:
+    """Return True when a readable score is already cached under *cache_key*, so judging it again is free.
+
+    An unreadable cache file counts as not cached: judge_report() would
+    score that report again, and pay for it.
+    """
+    cache_file = _CACHE_DIR / f"{cache_key}.json"
+    if not cache_file.exists():
+        return False
+    try:
+        JudgeResult.model_validate_json(cache_file.read_text(encoding="utf-8"))
+    except pydantic.ValidationError:
+        return False
+    return True
+
+
 def write_run_manifest(cache_keys: set[str]) -> None:
     """Write a manifest listing every cache key one eval run used.
 

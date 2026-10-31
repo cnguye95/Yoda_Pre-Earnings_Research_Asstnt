@@ -127,12 +127,19 @@ WHEN labels (relative to the architecture comparison, item 4; set
         already estimates each prompt's tokens) and judge only after
         checking the estimate against the OpenAI credit left. Stop
         cleanly before a call that would go over a set budget.
+        DONE (2026-10-31), as two commands: the runner generates and
+        saves generation.csv and judge_estimate.md, then
+        --rescore DIR --judge-budget USD judges, stopping before a report
+        whose worst case (standard tier, no cache discount) would pass the
+        budget. The judge's output size is assumed (16,000 tokens per call)
+        until the smoke run measures it.
       - Judge a ticker's three reports back to back so OpenAI's prompt
-        cache can serve the shared filing text.
+        cache can serve the shared filing text. DONE (rescore's order).
       - Send all baselines through the Anthropic Batch API (half price;
         baseline.build_request is already a pure function), with standard
         calls if the batch fails; also report arm costs at standard prices.
-      - Total the shared whisper cost per run.
+      - Total the shared whisper cost per run. DONE (2026-10-31: a
+        summary.md line, each ticker counted once).
       - The judge records its finish reason and reasoning tokens (1b).
         DONE (2026-10-31).
       - Already done in step 7: one market snapshot per ticker for every

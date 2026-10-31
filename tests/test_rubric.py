@@ -13,11 +13,12 @@ import pytest
 
 
 from samples import RECENT, claim, sample_report, sample_store
+from yoda import pricing
 from yoda.eval import evidence, judge, rubric, runner
 from yoda.eval.rubric import DIMENSIONS, NO_QUOTE, DimensionScore, JudgeQuote, JudgeScores
 from yoda.evidence_text import CONFLICT_RULES
 from yoda.modes import lead, pipeline
-from yoda.schema import EvidenceStore, Filing, FilingSet, Passage
+from yoda.schema import EarningsReport, EvidenceStore, Filing, FilingSet, Passage
 
 
 # ---------------------------------------------------------------------------
@@ -290,6 +291,7 @@ def test_runner_judges_each_mode_on_its_own_evidence(monkeypatch, tmp_path):
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
 
     runner.run_eval(["TEST"], modes=("baseline", "pipeline"), out_dir=tmp_path)
+    runner.rescore(tmp_path, ["TEST"], modes=("baseline", "pipeline"), out_dir=tmp_path, judge_budget=100.0)
 
     (base_text, base_na), (other_text, other_na) = calls
     assert set(base_na) == {"market_expectations", "evidence_labelling"} and other_na == {}
@@ -461,7 +463,8 @@ def test_rows_carry_the_judge_details_and_keep_na_empty(monkeypatch, tmp_path):
     _stub_eval(monkeypatch, [_judge_result(3, market_expectations=na_answer, failed={"relevance": [NO_QUOTE]}),
                              _judge_result(4, prompt_tokens=300_000)])
 
-    df = runner.run_eval(["TEST"], modes=("baseline", "yoda"), out_dir=tmp_path)
+    runner.run_eval(["TEST"], modes=("baseline", "yoda"), out_dir=tmp_path)
+    df = runner.rescore(tmp_path, ["TEST"], modes=("baseline", "yoda"), out_dir=tmp_path, judge_budget=100.0)
 
     baseline_row, yoda_row = df.iloc[0], df.iloc[1]
     assert pd.isna(baseline_row["market_expectations"]) and baseline_row["relevance"] == 3
@@ -565,7 +568,7 @@ def test_rescore_judges_saved_reports_on_their_saved_store(monkeypatch, tmp_path
     calls = []
     _stub_rescore(monkeypatch, calls)
 
-    df = runner.rescore(_saved(tmp_path), out_dir=tmp_path / "out")
+    df = runner.rescore(_saved(tmp_path), out_dir=tmp_path / "out", judge_budget=100.0)
 
     assert list(df["ticker"]) == ["TEST"] and df["filing_extraction"].iloc[0] == 3
     [(evidence_text, repeat)] = calls
@@ -579,7 +582,7 @@ def test_rescore_skips_a_report_without_its_store_or_in_the_old_format(monkeypat
     calls = []
     _stub_rescore(monkeypatch, calls)
 
-    df = runner.rescore(_saved(tmp_path, with_evidence=False), out_dir=tmp_path / "out")
+    df = runner.rescore(_saved(tmp_path, with_evidence=False), out_dir=tmp_path / "out", judge_budget=100.0)
     assert df.empty and calls == []
     assert "no saved evidence store" in (tmp_path / "out" / "summary.md").read_text(encoding="utf-8")
 
@@ -588,7 +591,7 @@ def test_rescore_skips_a_report_without_its_store_or_in_the_old_format(monkeypat
     old.mkdir()
     (old / "baseline_TEST.json").write_text('{"ticker": "TEST", "what_to_watch": []}', encoding="utf-8")
     (old / "baseline_TEST_evidence.json").write_text(_judged_store().model_dump_json(), encoding="utf-8")
-    df = runner.rescore(old, out_dir=tmp_path / "out_old")
+    df = runner.rescore(old, out_dir=tmp_path / "out_old", judge_budget=100.0)
     assert df.empty and calls == []
     assert "unreadable (old format?)" in (tmp_path / "out_old" / "summary.md").read_text(encoding="utf-8")
 
@@ -597,7 +600,7 @@ def test_repeat_scoring_records_how_often_scores_agree(monkeypatch, tmp_path):
     calls = []
     _stub_rescore(monkeypatch, calls)
 
-    runner.rescore(_saved(tmp_path), out_dir=tmp_path / "out", repeat=True)
+    runner.rescore(_saved(tmp_path), out_dir=tmp_path / "out", repeat=True, judge_budget=100.0)
 
     assert [repeat for _, repeat in calls] == [False, True]
     repeat_df = pd.read_csv(tmp_path / "out" / "repeat.csv")
@@ -625,7 +628,114 @@ def test_repeat_agreement_counts_matches_and_differences():
 def test_command_line_forms():
     run = runner._parse_args(["BA", "--modes", "yoda"])
     assert (run.tickers, run.modes, run.rescore) == (["BA"], ["yoda"], None)
-    again = runner._parse_args(["--rescore", "data/eval", "--repeat", "NFLX"])
+    again = runner._parse_args(["--rescore", "data/eval", "--judge-budget", "7.5", "--repeat", "NFLX"])
     assert again.rescore == pathlib.Path("data/eval") and again.repeat and again.tickers == ["NFLX"]
+    assert again.judge_budget == 7.5
     with pytest.raises(SystemExit):
         runner._parse_args(["--repeat"])                          # repeat only makes sense with --rescore
+    with pytest.raises(SystemExit):
+        runner._parse_args(["--rescore", "data/eval"])            # judging always names its budget
+    with pytest.raises(SystemExit):
+        runner._parse_args(["BA", "--judge-budget", "5"])         # generating doesn't judge
+
+
+
+# ---------------------------------------------------------------------------
+# Two steps: generation (no judge), then judging within a budget
+# ---------------------------------------------------------------------------
+
+def _generate(monkeypatch, tmp_path, modes=("baseline", "pipeline"), whisper=0.02, cost=0.1) -> pd.DataFrame:
+    # run_eval with every outside step faked; any judge call fails the test.
+    monkeypatch.setattr(runner, "fetch_filings", lambda ticker: _Q_ONLY)
+    snapshot = SimpleNamespace(whisper_cost_usd=whisper)
+    monkeypatch.setattr(runner, "fetch_shared_sources", lambda filing_set: SimpleNamespace(snapshot=snapshot))
+    monkeypatch.setattr(runner, "_run_mode", lambda mode, ticker, sources: runner.ModeRun(
+        _report(), 12.5, "logged", cost, "", _filing_only_store() if mode == "baseline" else _judged_store()))
+    monkeypatch.setattr(runner, "judge_report", lambda *args, **kwargs: pytest.fail("generation called the judge"))
+    return runner.run_eval(["TEST"], modes=modes, out_dir=tmp_path)
+
+
+def _judge_with(monkeypatch, results: list) -> list:
+    # Make the judge return *results* in turn; return the list each call is recorded in.
+    calls = []
+    answers = iter(results)
+    monkeypatch.setattr(runner, "judge_report",
+                        lambda report, text, na, repeat=False: calls.append((text, repeat)) or next(answers))
+    monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
+    monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
+    return calls
+
+
+def test_generation_saves_reports_and_costs_and_judges_nothing(monkeypatch, tmp_path):
+    generated = _generate(monkeypatch, tmp_path)
+    assert list(generated["mode"]) == ["baseline", "pipeline"] and generated["error"].isna().all()
+    saved = pd.read_csv(tmp_path / "generation.csv")
+    assert list(saved["cost_usd"]) == [0.1, 0.1] and list(saved["whisper_cost_usd"]) == [0.02, 0.02]
+    assert (tmp_path / "pipeline_TEST.json").exists() and (tmp_path / "pipeline_TEST_evidence.json").exists()
+    estimate = (tmp_path / "judge_estimate.md").read_text(encoding="utf-8")
+    assert "for 2 call(s); 0 already scored (free)" in estimate
+    assert not (tmp_path / "results.csv").exists() and not (tmp_path / "summary.md").exists()
+
+
+def test_generating_one_mode_keeps_the_other_modes_records(monkeypatch, tmp_path):
+    _generate(monkeypatch, tmp_path)
+    _generate(monkeypatch, tmp_path, modes=("baseline",), whisper=None, cost=0.3)
+    saved = pd.read_csv(tmp_path / "generation.csv").set_index("mode")
+    assert saved.loc["baseline", "cost_usd"] == 0.3 and saved.loc["pipeline", "cost_usd"] == 0.1
+    assert pd.isna(saved.loc["baseline", "whisper_cost_usd"])   # unknown stays unknown, never 0
+
+
+def test_the_estimate_prices_each_call_and_counts_cached_ones_free(monkeypatch, tmp_path):
+    _generate(monkeypatch, tmp_path)
+    estimate = runner._judge_estimate(tmp_path, ["TEST"], ["baseline", "pipeline"])
+    for row in estimate.itertuples():
+        report = EarningsReport.model_validate_json((tmp_path / f"{row.mode}_TEST.json").read_text(encoding="utf-8"))
+        store = EvidenceStore.model_validate_json(
+            (tmp_path / f"{row.mode}_TEST_evidence.json").read_text(encoding="utf-8"))
+        tokens = evidence.render_evidence(store, report, len(rubric.RUBRIC_TEXT) + len(report.model_dump_json())
+                                          ).estimated_tokens
+        assert row.prompt_tokens == tokens
+        out = runner.JUDGE_OUTPUT_TOKENS_ESTIMATE
+        assert row.expected_usd == round(pricing.call_cost(judge.JUDGE_MODEL, tokens, out, tier="flex"), 4)
+        assert row.worst_usd == round(pricing.call_cost(judge.JUDGE_MODEL, tokens, out), 4)
+        assert row.worst_usd > row.expected_usd and not row.cached
+    # Once a score is cached, the estimate counts it as free.
+    monkeypatch.setattr(runner, "is_cached", lambda key: True)
+    assert runner._judge_estimate(tmp_path, ["TEST"], ["baseline", "pipeline"])["cached"].all()
+
+
+def test_judging_stops_before_the_report_that_could_pass_the_budget(monkeypatch, tmp_path):
+    _generate(monkeypatch, tmp_path)
+    worst = runner._judge_estimate(tmp_path, ["TEST"], ["baseline", "pipeline"])["worst_usd"]
+    calls = _judge_with(monkeypatch, [_judge_result(3), _judge_result(3)])
+    # Enough for the first report's worst case, not for the second as well.
+    budget = worst.iloc[0] + worst.iloc[1] / 2
+
+    df = runner.rescore(tmp_path, ["TEST"], modes=("baseline", "pipeline"), out_dir=tmp_path, judge_budget=budget)
+
+    assert len(calls) == 1 and list(df["mode"]) == ["baseline"]
+    summary = (tmp_path / "summary.md").read_text(encoding="utf-8")
+    assert "| TEST | judge pipeline | not judged: the judge budget was reached |" in summary
+
+
+def test_cached_scores_are_free_under_any_budget(monkeypatch, tmp_path):
+    _generate(monkeypatch, tmp_path)
+    calls = _judge_with(monkeypatch, [_judge_result(3), _judge_result(3)])
+    monkeypatch.setattr(runner, "is_cached", lambda key: True)
+    df = runner.rescore(tmp_path, ["TEST"], modes=("baseline", "pipeline"), out_dir=tmp_path, judge_budget=0.0)
+    assert len(calls) == 2 and len(df) == 2
+
+
+def test_judged_rows_take_cost_and_time_from_generation(monkeypatch, tmp_path):
+    _generate(monkeypatch, tmp_path)
+    _judge_with(monkeypatch, [_judge_result(3), _judge_result(3)])
+    df = runner.rescore(tmp_path, ["TEST"], modes=("baseline", "pipeline"), out_dir=tmp_path, judge_budget=100.0)
+    assert list(df["cost_usd"]) == [0.1, 0.1] and list(df["latency_seconds"]) == [12.5, 12.5]
+    summary = (tmp_path / "summary.md").read_text(encoding="utf-8")
+    # The ticker's whisper cost is counted once, not once per mode.
+    assert "Whisper lookups (shared by every mode of a ticker): $0.0200 in total over 1 ticker(s)." in summary
+
+
+def test_a_negative_judge_budget_fails_loudly(tmp_path):
+    with pytest.raises(ValueError, match="can't be negative"):
+        runner.rescore(tmp_path, judge_budget=-1.0)
