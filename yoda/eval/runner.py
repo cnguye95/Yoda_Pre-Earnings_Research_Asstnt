@@ -197,8 +197,10 @@ def _judge_row(ticker: str, mode: str, report: EarningsReport, evidence: Evidenc
     failed_quote_dims (the dimensions whose quotes didn't check out,
     ";"-joined), judge_snapshot, prompt/completion tokens, over_272k (from
     OpenAI's real count), cached_tokens and service_tier (how the call was
-    served), judge_cost_usd and report_chars
-    (the judged report's length, for the length-vs-score check).
+    served), judge_cost_usd, report_chars
+    (the judged report's length, for the length-vs-score check), and
+    finish_reason / reasoning_tokens (why the judge stopped and how much of
+    its output was reasoning; empty when OpenAI didn't say).
     """
     judged = report
     na = na_dimensions(evidence, judged)
@@ -223,6 +225,8 @@ def _judge_row(ticker: str, mode: str, report: EarningsReport, evidence: Evidenc
         "over_272k": result.prompt_tokens > PROMPT_TOKEN_LINE,
         "judge_cost_usd": round(judge_cost(result), 5),
         "report_chars": len(judged.model_dump_json()),
+        "finish_reason": result.finish_reason,
+        "reasoning_tokens": result.reasoning_tokens,
     }
     return JudgedRow(row, cache_key_for(judged, rendered.text, na, repeat), result)
 
@@ -669,6 +673,21 @@ def _reliability_lines(df: pd.DataFrame, previous_snapshots: set[str],
         if previous_snapshots and previous_snapshots != set(snapshots):
             lines += [f"WARNING: the previous run was scored by {', '.join(sorted(previous_snapshots))}; "
                       "compare the two runs with care.", ""]
+
+    # Judge calls that stopped for any reason but finishing (e.g. cut off at
+    # the length limit), out of those whose reason was recorded.
+    if "finish_reason" in df and df["finish_reason"].notna().any():
+        reasons = df["finish_reason"].dropna()
+        unusual = reasons[reasons != "stop"]
+        detail = ", ".join(f"{reason}: {count}" for reason, count in unusual.value_counts().items())
+        lines += [f"Judge calls that didn't stop normally: {len(unusual)} of {len(reasons)} with a recorded "
+                  f"finish reason{f' ({detail})' if detail else ''}.", ""]
+
+    # How much of the judge's output was hidden reasoning, on average.
+    if "reasoning_tokens" in df and df["reasoning_tokens"].notna().any():
+        reasoning = df["reasoning_tokens"].dropna()
+        lines += [f"Judge reasoning: {reasoning.mean():,.0f} tokens per call on average, over the "
+                  f"{len(reasoning)} calls that reported it.", ""]
 
     # Prompts that went over the price line even after the cuts.
     if "over_272k" in df:

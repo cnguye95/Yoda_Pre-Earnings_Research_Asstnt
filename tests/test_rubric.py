@@ -351,13 +351,17 @@ def test_judge_cost_prices_cache_reads_flex_and_long_prompts():
     assert (old.cached_tokens, old.service_tier, judge.judge_cost(old)) == (0, "default", pytest.approx(0.25))
 
 
-def _judge_reply(service_tier: str = "flex", cached_tokens: int = 70_000) -> SimpleNamespace:
-    # An OpenAI reply with scores, cache details and the tier that answered.
+def _judge_reply(service_tier: str = "flex", cached_tokens: int = 70_000, reasoning_tokens: int | None = 3_000,
+                 finish_reason: str = "stop") -> SimpleNamespace:
+    # An OpenAI reply with scores, cache details, the tier that answered, and
+    # how much of the output was reasoning (None: the reply didn't say).
+    details = None if reasoning_tokens is None else SimpleNamespace(reasoning_tokens=reasoning_tokens)
     usage = SimpleNamespace(prompt_tokens=180_000, completion_tokens=4_000,
-                            prompt_tokens_details=SimpleNamespace(cached_tokens=cached_tokens))
+                            prompt_tokens_details=SimpleNamespace(cached_tokens=cached_tokens),
+                            completion_tokens_details=details)
     return SimpleNamespace(model="gpt-6.1-sol-2026-09-29", service_tier=service_tier, usage=usage,
                            choices=[SimpleNamespace(message=SimpleNamespace(parsed=_answer(4), refusal=None),
-                                                    finish_reason="stop")])
+                                                    finish_reason=finish_reason)])
 
 
 def _fake_openai(monkeypatch, parse) -> None:
@@ -373,6 +377,24 @@ def test_judge_asks_for_flex_and_records_the_cache_and_tier(monkeypatch):
 
     assert sent[0]["service_tier"] == "flex" and sent[0]["timeout"] == judge.JUDGE_TIMEOUT_SECONDS
     assert (result.cached_tokens, result.service_tier) == (70_000, "flex")
+
+
+def test_judge_records_why_it_stopped_and_how_much_it_reasoned(monkeypatch):
+    # next_steps 1b: a cut-off judge call, and where the judge's output
+    # tokens go, must be visible in the results.
+    _fake_openai(monkeypatch, lambda **kwargs: _judge_reply(reasoning_tokens=3_000, finish_reason="length"))
+    result = judge.judge_report(_report(), "EVIDENCE TEXT", {})
+    assert (result.finish_reason, result.reasoning_tokens) == ("length", 3_000)
+
+
+def test_missing_reasoning_counts_stay_missing(monkeypatch):
+    # A reply that doesn't say, and a result cached before these were
+    # recorded, show them as missing, never as 0 or "stop".
+    _fake_openai(monkeypatch, lambda **kwargs: _judge_reply(reasoning_tokens=None))
+    assert judge.judge_report(_report(), "EVIDENCE TEXT", {}).reasoning_tokens is None
+    old = judge.JudgeResult.model_validate_json(
+        _priced(100_000, 5_000).model_dump_json(exclude={"finish_reason", "reasoning_tokens"}))
+    assert (old.finish_reason, old.reasoning_tokens) == (None, None)
 
 
 def test_judge_falls_back_to_the_standard_tier_when_flex_is_unavailable(monkeypatch):
@@ -420,7 +442,8 @@ def _judge_result(score: int | None = 3, snapshot: str = "gpt-6.1-sol-2026-09-29
     # A judge result as judge_report() would return it.
     return judge.JudgeResult(scores=_answer(score, **dimensions), failed_quotes=failed or {},
                              judge_snapshot=snapshot, reasoning_effort="medium",
-                             prompt_tokens=prompt_tokens, completion_tokens=5_000)
+                             prompt_tokens=prompt_tokens, completion_tokens=5_000,
+                             finish_reason="stop", reasoning_tokens=2_000)
 
 
 def _stub_eval(monkeypatch, results: list[judge.JudgeResult]) -> None:
@@ -448,6 +471,7 @@ def test_rows_carry_the_judge_details_and_keep_na_empty(monkeypatch, tmp_path):
     assert (baseline_row["cached_tokens"], baseline_row["service_tier"]) == (0, "default")
     assert not baseline_row["over_272k"] and yoda_row["over_272k"]
     assert baseline_row["report_chars"] == len(_report().model_dump_json())
+    assert baseline_row["finish_reason"] == "stop" and baseline_row["reasoning_tokens"] == 2_000
     assert (tmp_path / "justifications.md").exists()
 
 
@@ -481,6 +505,14 @@ def test_summary_reports_the_judge_reliability_checks(tmp_path):
     assert "| relevance | 2 | 0 |" in text                   # failed quotes: baseline 2, yoda 0
     assert "| figure_accuracy | 1 | 0 |" in text
     assert "## Report length vs score" in text and "| dimension | spearman | rows |" in text
+
+
+def test_summary_counts_cut_off_judge_calls_and_averages_reasoning(tmp_path):
+    df = _results_df(finish_reason=["stop", "length", "stop", None], reasoning_tokens=[1_000, 3_000, None, None])
+    runner._write_summary(df, tmp_path / "summary.md", "Run: test")
+    text = (tmp_path / "summary.md").read_text(encoding="utf-8")
+    assert "Judge calls that didn't stop normally: 1 of 3 with a recorded finish reason (length: 1)." in text
+    assert "Judge reasoning: 2,000 tokens per call on average, over the 2 calls that reported it." in text
 
 
 def test_summary_without_reliability_columns_still_writes(tmp_path):

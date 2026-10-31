@@ -84,6 +84,11 @@ class JudgeResult(pydantic.BaseModel):
     prompt cache. *service_tier* is the tier OpenAI says answered ("flex",
     or "default" for standard). Results cached before these two were
     recorded load with 0 and "default": an upper-bound cost.
+    *finish_reason* is why the judge stopped ("stop" normally, "length"
+    when cut off) and *reasoning_tokens* the part of *completion_tokens*
+    spent on hidden reasoning; both are None when OpenAI's reply didn't
+    say, or for a result cached before they were recorded (missing, never
+    "stop" or 0).
     """
     scores: JudgeScores
     failed_quotes: dict[str, list[str]]
@@ -93,6 +98,8 @@ class JudgeResult(pydantic.BaseModel):
     completion_tokens: int
     cached_tokens: int = 0
     service_tier: str = "default"
+    finish_reason: str | None = None
+    reasoning_tokens: int | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -222,12 +229,17 @@ def judge_report(report: EarningsReport, evidence_text: str, na: dict[str, str],
     # answered; either may be missing from a reply (then: none cached,
     # standard tier, which can only overstate the cost).
     details = getattr(response.usage, "prompt_tokens_details", None)
+    # Why it stopped and how much of its output was reasoning: recorded as
+    # given, or missing (None) when the reply doesn't say.
+    output_details = getattr(response.usage, "completion_tokens_details", None)
     result = JudgeResult(
         scores=scores, failed_quotes=failed_quotes(scores, report_json, evidence_text),
         judge_snapshot=response.model, reasoning_effort=JUDGE_REASONING_EFFORT,
         prompt_tokens=response.usage.prompt_tokens, completion_tokens=response.usage.completion_tokens,
         cached_tokens=getattr(details, "cached_tokens", None) or 0,
         service_tier=getattr(response, "service_tier", None) or "default",
+        finish_reason=response.choices[0].finish_reason,
+        reasoning_tokens=getattr(output_details, "reasoning_tokens", None),
     )
     if result.failed_quotes:
         print(f"  [judge] quotes not found for: {', '.join(result.failed_quotes)}")
@@ -335,5 +347,6 @@ if __name__ == "__main__":
     print(f"\nFigures checked: {result.scores.figures_checked}; quotes not found: {result.failed_quotes or 'none'}")
     print(f"Judge: {result.judge_snapshot} (effort {result.reasoning_effort}, {result.service_tier} tier); "
           f"{result.prompt_tokens:,} prompt ({result.cached_tokens:,} cached) / "
-          f"{result.completion_tokens:,} completion tokens; ${judge_cost(result):.4f}")
+          f"{result.completion_tokens:,} completion tokens ({result.reasoning_tokens or 'unknown'} reasoning); "
+          f"finish reason {result.finish_reason or 'unknown'}; ${judge_cost(result):.4f}")
     print(f"Overall: {result.scores.overall_comment}")

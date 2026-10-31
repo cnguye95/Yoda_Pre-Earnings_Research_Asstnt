@@ -19,9 +19,10 @@ WHEN labels (relative to the architecture comparison, item 4; set
    b. Judge output cap: one earlier judge call used exactly 4,096
       completion tokens. judge.py sets reasoning_effort but no output
       limit, so check whether a hidden limit cuts justifications short.
-      WHEN: BEFORE FULL. Before the smoke run the judge must record why it
-      stopped (finish reason) and its reasoning tokens (built in 4d); the
-      smoke run's judge calls then settle it.
+      WHEN: BEFORE FULL. The judge now records why it stopped (finish
+      reason) and its reasoning tokens (DONE 2026-10-31: results.csv
+      columns, and a summary line counting calls that didn't stop
+      normally); the smoke run's judge calls then settle it.
    c. Judge token estimate: the judge's prompt size is estimated as
       characters / 4 (eval/evidence.py CHARS_PER_TOKEN). Above 272K tokens
       the whole call costs 2x input / 1.5x output and uncited news is left
@@ -133,6 +134,7 @@ WHEN labels (relative to the architecture comparison, item 4; set
         calls if the batch fails; also report arm costs at standard prices.
       - Total the shared whisper cost per run.
       - The judge records its finish reason and reasoning tokens (1b).
+        DONE (2026-10-31).
       - Already done in step 7: one market snapshot per ticker for every
         arm, and one fixed length limit so every arm reads identical
         filing text.
