@@ -11,6 +11,7 @@ from contextlib import nullcontext
 from pathlib import Path
 from types import SimpleNamespace
 
+import pydantic
 import pytest
 
 from samples import RECENT, claim, sample_8k, sample_call, sample_report, sample_snapshot
@@ -353,3 +354,41 @@ def test_the_prompts_are_unchanged_by_the_move_to_the_shared_module():
     }
     for name, value in now.items():
         assert json.loads(json.dumps(value)) == pinned[name], name
+
+
+def _schema_error(model, data) -> pydantic.ValidationError:
+    """Return the real error *model* raises for *data* (an answer that broke its schema)."""
+    try:
+        model.model_validate(data)
+    except pydantic.ValidationError as exc:
+        return exc
+    raise AssertionError("the data was valid")
+
+
+def test_a_broken_extractor_answer_is_a_short_gap(monkeypatch):
+    # Bug: a stage's data gap held Pydantic's whole error text (the rejected
+    # input and a web link), which a reader shouldn't see.
+    fakes = _Fakes(monkeypatch)
+    original = fakes.submit
+
+    def submit(submit_tool, output_format, **request):
+        if "post-filing extractor" in request["system"][1]["text"]:
+            raise _schema_error(pipeline.Notes, {"notes": "<note>text</note>"})
+        return original(submit_tool, output_format, **request)
+    monkeypatch.setattr(pipeline, "submit_call", submit)
+    run = pipeline.run_pipeline("TEST", _sources())
+    assert ("Post-filing extractor produced no notes (its answer broke the schema (notes: Input should be a "
+            "valid list)).") in run.report.data_gaps
+    assert not any("pydantic" in gap for gap in run.report.data_gaps)
+
+
+def test_a_broken_repair_answer_is_a_short_gap(monkeypatch):
+    _Fakes(monkeypatch, unsupported={"setup_summary[0]": "wrong period"})
+
+    def submit(submit_tool, output_format, **request):
+        raise _schema_error(Repairs, {"repairs": "<repair>text</repair>"})
+    monkeypatch.setattr(source_calls, "submit_call", submit)
+    run = pipeline.run_pipeline("TEST", _sources())
+    assert ("The repair pass failed (its answer broke the schema (repairs: Input should be a valid list)); "
+            "unsupported claims were removed instead.") in run.report.data_gaps
+    assert not any("pydantic" in gap for gap in run.report.data_gaps)

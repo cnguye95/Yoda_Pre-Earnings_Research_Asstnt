@@ -244,6 +244,34 @@ def run_tool(ctx: tools.ToolContext, store: EvidenceStore, lock: threading.Lock,
     return text or f"No results. Try a different query or tool, or call {submit_tool}."
 
 
+# How many times a loop's model may resubmit an answer that broke its
+# schema, after being told what was wrong.
+MAX_RESUBMITS = 1
+
+
+def schema_problem(exc: pydantic.ValidationError) -> str:
+    """Return the first problem in a validation error, for a reader, e.g. "claims: Input should be a valid list".
+
+    Pydantic's full message repeats the input it rejected and adds a web
+    link; a report's data gaps need only which field was wrong and how.
+    """
+    problem = exc.errors()[0]
+    where = ".".join(str(part) for part in problem["loc"])
+    return f"{where}: {problem['msg']}" if where else problem["msg"]
+
+
+def failure_reason(exc: Exception) -> str:
+    """Return why a stage's call failed, as a report's data gaps should say it.
+
+    An answer that broke its schema is named by its first problem
+    (schema_problem); any other failure (an API error, no answer) by its
+    type and message, which are already short.
+    """
+    if isinstance(exc, pydantic.ValidationError):
+        return f"its answer broke the schema ({schema_problem(exc)})"
+    return f"{type(exc).__name__}: {exc}"
+
+
 class LoopResult(NamedTuple):
     """What tool_loop() returns.
 
@@ -274,10 +302,11 @@ def tool_loop(request: dict, messages: list[dict], submit_tool: str, output_form
     other call is refused; a repeated call is refused without running; and
     a turn that would not fit the context window ends the loop. Each turn
     streams, because a long answer (a whole report) is too large for a
-    non-streaming call. A failed turn ends the loop with a gap, keeping the
-    usage paid so far.
+    non-streaming call. An answer that breaks *output_format* is sent back
+    for MAX_RESUBMITS resubmission. A failed turn ends the loop with a gap,
+    keeping the usage paid so far.
     """
-    calls_used, usage, tried = 0, Usage(), set()
+    calls_used, usage, tried, broken_answers = 0, Usage(), set(), 0
     started = time.perf_counter()
     submit_now = f"call {submit_tool} now, {answer_hint}."
 
@@ -293,13 +322,28 @@ def tool_loop(request: dict, messages: list[dict], submit_tool: str, output_form
         messages.append({"role": "assistant", "content": resp.content})
         uses = [block for block in resp.content if block.type == "tool_use"]
 
-        # The answer, when submitted, ends the loop.
+        # A valid answer ends the loop. A broken one (e.g. a list sent as
+        # text: the submit tools aren't schema-enforced by the API) is sent
+        # back once with what was wrong; a second one ends the loop. Every
+        # other call in that turn gets a result too, as the API requires.
         submitted = next((use for use in uses if use.name == submit_tool), None)
         if submitted is not None:
             try:
                 return LoopResult(output_format.model_validate(submitted.input), messages, usage)
             except pydantic.ValidationError as exc:
-                return LoopResult(None, messages, usage, f"its answer broke the schema: {exc}")
+                problem = schema_problem(exc)
+                if broken_answers >= MAX_RESUBMITS:
+                    return LoopResult(None, messages, usage, f"its answer broke the schema twice ({problem})")
+                broken_answers += 1
+                messages.append({"role": "user", "content": [
+                    {"type": "tool_result", "tool_use_id": submitted.id, "is_error": True,
+                     "content": f"Your {submit_tool} input broke the schema: {problem}. Call {submit_tool} again "
+                                "with valid input."}
+                    if use is submitted else
+                    {"type": "tool_result", "tool_use_id": use.id,
+                     "content": f"Not run: fix your {submit_tool} call first."}
+                    for use in uses]})
+                continue
         if not uses:
             messages.append({"role": "user", "content": submit_now[0].upper() + submit_now[1:]})
             continue
@@ -356,7 +400,7 @@ def check_and_repair(report: EarningsReport, store: EvidenceStore, sources_text:
         rewritten = apply_repairs(report, reply.parsed, checked.unsupported)
     except STAGE_ERRORS as exc:
         repair = failed_usage(SOURCE_MODEL, exc, CACHE_TTL)
-        report.data_gaps.append(f"The repair pass failed ({type(exc).__name__}: {exc}); unsupported claims "
+        report.data_gaps.append(f"The repair pass failed ({failure_reason(exc)}); unsupported claims "
                                 "were removed instead.")
         rewritten = []
     log_usage(tag, "Repair pass", SOURCE_MODEL, repair)

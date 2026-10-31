@@ -55,7 +55,7 @@ from yoda.modes import tools
 from yoda.modes.llm import Usage, call_usage, failed_usage, log_usage, submit_call, warm_cache
 from yoda.modes.source_calls import (
     CACHE_TTL, CITATION_RULES, REPORT_MAX_TOKENS, SOURCE_MODEL, STAGE_ERRORS, SUBMIT_DESCRIPTIONS, WRITING_RULES,
-    check_and_repair, check_fits, company_context, source_request, submit_tools, tool_loop,
+    check_and_repair, check_fits, company_context, failure_reason, source_request, submit_tools, tool_loop,
 )
 from yoda.report.checks import check_report
 from yoda.report.claim_check import Repairs
@@ -184,7 +184,7 @@ def _extract(role: str, sources_text: str, dates: str) -> StageResult:
                             **source_request(sources_text, SOURCE_TOOLS, role, f"{dates}\nExtract your notes.",
                                              _NOTES_MAX_TOKENS))
     except STAGE_ERRORS as exc:
-        return StageResult([], failed_usage(SOURCE_MODEL, exc, CACHE_TTL), f"{type(exc).__name__}: {exc}")
+        return StageResult([], failed_usage(SOURCE_MODEL, exc, CACHE_TTL), failure_reason(exc))
     return StageResult(reply.parsed.notes, call_usage(SOURCE_MODEL, tuple(reply[1:]), CACHE_TTL))
 
 

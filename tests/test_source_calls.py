@@ -94,3 +94,107 @@ def test_the_size_check_counts_tool_calls_and_results_not_only_text(monkeypatch)
     with pytest.raises(RuntimeError, match="doesn't fit"):
         source_calls.check_fits(request)
     assert len(counted) == 1
+
+
+class _Listed(BaseModel):
+    # An answer holding a list, the field the model sent as text on the NVDA run.
+    claims: list[str]
+
+
+def _listed_loop(monkeypatch, replies: list):
+    """Run a no-tools loop that must submit a _Listed answer, against *replies*; return (result, requests sent)."""
+    sent = _fake_client(monkeypatch, replies)
+    request = {"model": "claude-sonnet-5-5", "max_tokens": 1000, "system": "Answer.", "tools": []}
+    result = source_calls.tool_loop(request, [{"role": "user", "content": "Go."}], "submit_findings", _Listed,
+                                    "with your findings", ctx=None, store=sample_store(), lock=threading.Lock(),
+                                    max_tool_calls=0, seconds=60)
+    return result, sent
+
+
+def test_a_broken_answer_is_sent_back_once_and_the_fixed_one_kept(monkeypatch):
+    # Bug (lead analyst NVDA run, 2026-10-31): a worker sent its claims as
+    # one block of text instead of a list, and the loop gave up on the
+    # first broken answer, losing that question's findings.
+    result, sent = _listed_loop(monkeypatch, [
+        _reply(_tool_use("submit_findings", {"claims": "<claim>Revenue rose.</claim>"}, "t1")),
+        _reply(_tool_use("submit_findings", {"claims": ["Revenue rose."]}, "t2")),
+    ])
+    assert result.parsed == _Listed(claims=["Revenue rose."]) and result.gap is None
+    error = sent[1]["messages"][-1]["content"][0]
+    assert error == {"type": "tool_result", "tool_use_id": "t1", "is_error": True,
+                     "content": "Your submit_findings input broke the schema: claims: Input should be a valid "
+                                "list. Call submit_findings again with valid input."}
+
+
+def test_a_second_broken_answer_ends_with_a_short_reason(monkeypatch):
+    broken = _reply(_tool_use("submit_findings", {"claims": "not a list"}, "t1"))
+    result, sent = _listed_loop(monkeypatch, [broken, broken, broken])
+    assert result.parsed is None and len(sent) == 2   # one resubmission, no more
+    assert result.gap == "its answer broke the schema twice (claims: Input should be a valid list)"
+
+
+def test_a_broken_submit_made_with_another_call_gets_results_for_both(monkeypatch):
+    # The API needs a result for every tool call in a turn before the
+    # conversation goes on.
+    result, sent = _listed_loop(monkeypatch, [
+        _reply(_tool_use("search_news", {"query": "late"}, "t1"),
+               _tool_use("submit_findings", {"claims": "not a list"}, "t2")),
+        _reply(_tool_use("submit_findings", {"claims": ["Fixed."]}, "t3")),
+    ])
+    assert result.parsed == _Listed(claims=["Fixed."])
+    answers = sent[1]["messages"][-1]["content"]
+    assert [(a["tool_use_id"], a.get("is_error", False)) for a in answers] == [("t1", False), ("t2", True)]
+    assert answers[0]["content"] == "Not run: fix your submit_findings call first."
+
+
+class _Listed(BaseModel):
+    # An answer holding a list, the field the model sent as text on the NVDA run.
+    claims: list[str]
+
+
+def _listed_loop(monkeypatch, replies: list):
+    """Run a no-tools loop that must submit a _Listed answer, against *replies*; return (result, requests sent)."""
+    sent = _fake_client(monkeypatch, replies)
+    request = {"model": "claude-sonnet-5-5", "max_tokens": 1000, "system": "Answer.", "tools": []}
+    result = source_calls.tool_loop(request, [{"role": "user", "content": "Go."}], "submit_findings", _Listed,
+                                    "with your findings", ctx=None, store=sample_store(), lock=threading.Lock(),
+                                    max_tool_calls=0, seconds=60)
+    return result, sent
+
+
+def test_a_broken_answer_is_sent_back_once_and_the_fixed_one_kept(monkeypatch):
+    # Bug (lead analyst NVDA run, 2026-10-31): a worker sent its claims as
+    # one block of text instead of a list, and the loop gave up on the
+    # first broken answer, losing that question's findings.
+    result, sent = _listed_loop(monkeypatch, [
+        _reply(_tool_use("submit_findings", {"claims": "<claim>Revenue rose.</claim>"}, "t1")),
+        _reply(_tool_use("submit_findings", {"claims": ["Revenue rose."]}, "t2")),
+    ])
+    assert result.parsed == _Listed(claims=["Revenue rose."]) and result.gap is None
+    error = sent[1]["messages"][-1]["content"][0]
+    assert error == {"type": "tool_result", "tool_use_id": "t1", "is_error": True,
+                     "content": "Your submit_findings input broke the schema: claims: Input should be a valid "
+                                "list. Call submit_findings again with valid input."}
+
+
+def test_a_second_broken_answer_ends_with_a_short_reason(monkeypatch):
+    # The reason goes into the report's data gaps, so it names the field
+    # and the problem, never Pydantic's full error text.
+    broken = _reply(_tool_use("submit_findings", {"claims": "not a list"}, "t1"))
+    result, sent = _listed_loop(monkeypatch, [broken, broken, broken])
+    assert result.parsed is None and len(sent) == 2   # one resubmission, no more
+    assert result.gap == "its answer broke the schema twice (claims: Input should be a valid list)"
+
+
+def test_a_broken_submit_made_with_another_call_gets_results_for_both(monkeypatch):
+    # The API needs a result for every tool call in a turn before the
+    # conversation goes on.
+    result, sent = _listed_loop(monkeypatch, [
+        _reply(_tool_use("search_news", {"query": "late"}, "t1"),
+               _tool_use("submit_findings", {"claims": "not a list"}, "t2")),
+        _reply(_tool_use("submit_findings", {"claims": ["Fixed."]}, "t3")),
+    ])
+    assert result.parsed == _Listed(claims=["Fixed."])
+    answers = sent[1]["messages"][-1]["content"]
+    assert [(a["tool_use_id"], a.get("is_error", False)) for a in answers] == [("t1", False), ("t2", True)]
+    assert answers[0]["content"] == "Not run: fix your submit_findings call first."
