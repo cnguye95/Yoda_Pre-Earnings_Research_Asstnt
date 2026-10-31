@@ -13,6 +13,9 @@ Outputs written to disk (data/eval/ unless another folder is passed):
   {mode}_{ticker}.json          — each report
   {mode}_{ticker}_evidence.json — the evidence store the report's writer
                     had (yoda/evidence_store.py), which the judge reads
+  {mode}_{ticker}.log           — what the mode printed while writing it
+                    (per-stage tokens and cost, failures, claim-check
+                    repairs); not for batched baselines, which print nothing
   generation.csv  — step 1: each report's cost and time, the ticker's
                     whisper cost, and the error for any that failed
   judge_estimate.md — steps 1 and 2: each judge call's estimated cost
@@ -533,8 +536,11 @@ def run_eval(
 
             # The report, its cost and time (an unknown cost stays empty,
             # never $0; these calls are all at full price), saved at once so
-            # progress survives a crash.
+            # progress survives a crash. The mode's captured log is saved
+            # beside it: its per-stage usage lines (cache reads), failed
+            # workers and claim-check removals are printed nowhere else.
             _save_report(out_dir, mode, ticker, run.report, run.evidence)
+            (out_dir / f"{mode}_{ticker}.log").write_text(run.log, encoding="utf-8")
             cost = round(run.cost_usd, 5) if run.cost_usd is not None else None
             rows.append({"ticker": ticker, "mode": mode, "latency_seconds": round(run.latency_seconds, 2),
                          "latency_source": run.latency_source, "cost_usd": cost, "cost_standard_usd": cost,

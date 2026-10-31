@@ -404,6 +404,17 @@ def test_failures_are_listed_in_the_summary(monkeypatch, tmp_path):
     assert "| AAA | yoda | ValueError: synthesis fabricated a URL |" in summary
 
 
+def test_each_mode_log_is_saved_beside_its_report(monkeypatch, tmp_path):
+    # The log is the only place a stage's cache reads and claim-check removals appear.
+    log = "[pipeline] Writer: 1 call, ..., 0 cache write / 90,000 cache read, $0.10000\n"
+    _stub_runner(monkeypatch, lambda mode, ticker, filing: runner.ModeRun(
+        _report(), 1.0, "logged", 0.1, log, sample_store()))
+
+    runner.run_eval(["AAA"], modes=("pipeline",), out_dir=tmp_path)
+
+    assert (tmp_path / "pipeline_AAA.log").read_text(encoding="utf-8") == log
+
+
 def test_no_results_gives_a_summary_not_a_crash(monkeypatch, tmp_path):
     def run_mode(mode, ticker, filing):
         raise RuntimeError("down")
