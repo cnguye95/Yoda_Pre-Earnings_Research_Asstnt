@@ -65,9 +65,11 @@ import requests
 
 from yoda import config, pricing
 from yoda.eval.complexity import is_complex
-from yoda.eval.evidence import PROMPT_TOKEN_LINE, RenderedEvidence, na_dimensions, render_evidence
+from yoda.eval.evidence import (
+    CHARS_PER_TOKEN, MEAN_CHARS_PER_TOKEN, PROMPT_TOKEN_LINE, RenderedEvidence, na_dimensions, render_evidence,
+)
 from yoda.eval.judge import (
-    JUDGE_MODEL, JUDGE_REASONING_EFFORT, JudgeResult, cache_key_for, is_cached, judge_cost, judge_report,
+    JUDGE_MAX_OUTPUT_TOKENS, JUDGE_MODEL, JUDGE_REASONING_EFFORT, JudgeResult, cache_key_for, is_cached, judge_cost, judge_report,
     prune_judge_cache, write_run_manifest,
 )
 from yoda.eval.rubric import DIMENSIONS, RUBRIC_TEXT, JudgeScores
@@ -121,11 +123,11 @@ DEFAULT_OUT_DIR = config.DATA_DIR / "eval"
 # other modes; the tests use that, except those of the batch itself.
 BATCH_BASELINES = True
 
-# The judge's output per call (hidden reasoning plus the scores), assumed
-# for the cost estimate until a judged run measures it (results.csv's
-# completion_tokens). Generous on purpose: an estimate that is too low
-# could let judging overspend.
-JUDGE_OUTPUT_TOKENS_ESTIMATE = 16_000
+# The judge's output per call (hidden reasoning plus the scores) assumed
+# for the EXPECTED cost: the smoke run's 15 calls used at most 5,094 (mean
+# 3,847; results.csv's completion_tokens). The worst case uses the judge's
+# real cap, judge.JUDGE_MAX_OUTPUT_TOKENS, so the budget can't be overspent.
+JUDGE_OUTPUT_TOKENS_EXPECTED = 5_000
 
 
 # ---------------------------------------------------------------------------
@@ -232,10 +234,13 @@ class JudgeCall(NamedTuple):
     """One judge call, worked out before it is made: what the judge reads, its cache key, and what it would cost.
 
     *cached* is True when the score is already in the judge cache (free).
-    *expected_usd* prices the call at Flex with no cache discount and
-    JUDGE_OUTPUT_TOKENS_ESTIMATE output tokens; *worst_usd* the same at the
-    standard tier (Flex unavailable). Both are estimates from the prompt's
-    estimated size, not OpenAI's count.
+    *expected_usd* prices the call at Flex with no cache discount, the
+    prompt sized at the average characters per token
+    (evidence.MEAN_CHARS_PER_TOKEN) and JUDGE_OUTPUT_TOKENS_EXPECTED output
+    tokens. *worst_usd* prices it at the standard tier (Flex unavailable),
+    the prompt at its cautious size (rendered.estimated_tokens) and the
+    judge's output cap (JUDGE_MAX_OUTPUT_TOKENS). Both are estimates from
+    the prompt's characters, not OpenAI's count.
     """
     na: dict[str, str]
     rendered: RenderedEvidence
@@ -254,10 +259,14 @@ def _plan_judge_call(report: EarningsReport, evidence: EvidenceStore, repeat: bo
     na = na_dimensions(evidence, report)
     rendered = render_evidence(evidence, report, extra_chars=len(RUBRIC_TEXT) + len(report.model_dump_json()))
     cache_key = cache_key_for(report, rendered.text, na, repeat)
-    tokens = rendered.estimated_tokens
+    # The cautious size (CHARS_PER_TOKEN, the lowest ratio measured) for the
+    # worst case; the average ratio for the expected cost.
+    cautious_tokens = rendered.estimated_tokens
+    expected_tokens = round(cautious_tokens * CHARS_PER_TOKEN / MEAN_CHARS_PER_TOKEN)
     return JudgeCall(na, rendered, cache_key, is_cached(cache_key),
-                     expected_usd=pricing.call_cost(JUDGE_MODEL, tokens, JUDGE_OUTPUT_TOKENS_ESTIMATE, tier="flex"),
-                     worst_usd=pricing.call_cost(JUDGE_MODEL, tokens, JUDGE_OUTPUT_TOKENS_ESTIMATE))
+                     expected_usd=pricing.call_cost(JUDGE_MODEL, expected_tokens, JUDGE_OUTPUT_TOKENS_EXPECTED,
+                                                    tier="flex"),
+                     worst_usd=pricing.call_cost(JUDGE_MODEL, cautious_tokens, JUDGE_MAX_OUTPUT_TOKENS))
 
 
 def _judge_row(ticker: str, mode: str, report: EarningsReport, call: JudgeCall, repeat: bool = False) -> JudgedRow:
@@ -413,9 +422,12 @@ def _write_estimate(estimate: pd.DataFrame, path: pathlib.Path) -> str:
                 f"${to_pay['worst_usd'].sum():.2f} at worst (standard price), for {len(to_pay)} call(s); "
                 f"{len(estimate) - len(to_pay)} already scored (free).")
     lines = ["# Judge cost estimate", "", headline, "",
-             f"Each call: its prompt's estimated size, no cache discount, and {JUDGE_OUTPUT_TOKENS_ESTIMATE:,} "
-             "output tokens (an assumption until a run measures it). OpenAI's prompt cache usually makes the "
-             "real cost lower. Judge with: python -m yoda.eval.runner --rescore DIR --judge-budget USD", ""]
+             f"Each call, with no cache discount: expected = Flex price, the prompt at "
+             f"{MEAN_CHARS_PER_TOKEN} characters per token and {JUDGE_OUTPUT_TOKENS_EXPECTED:,} output tokens "
+             f"(measured); worst = standard price, the prompt at {CHARS_PER_TOKEN} characters per token (the "
+             f"prompt_tokens column) and the judge's cap of {JUDGE_MAX_OUTPUT_TOKENS:,} output tokens. OpenAI's "
+             "prompt cache usually makes the real cost lower. Judge with: python -m yoda.eval.runner --rescore DIR "
+             "--judge-budget USD", ""]
     if not estimate.empty:
         lines += [_df_to_markdown(estimate.set_index("ticker")), ""]
     path.write_text("\n".join(lines), encoding="utf-8")

@@ -12,21 +12,6 @@ WHEN labels (relative to the full eval run, item 4f):
 
 
 1. Open checks on the judge
-   c. Judge cost estimate (measured on the smoke run, 2026-10-31).
-      WHEN: BEFORE FULL.
-      - Prompt size: characters / 4 (eval/evidence.py CHARS_PER_TOKEN)
-        overestimated the judge's real prompt tokens by 7% on average
-        (0.6-13% over 15 reports). Change CHARS_PER_TOKEN to ~4.3. It also
-        decides when uncited news is cut to stay under the 272K-token price
-        line, so it changes what the judge sees for reports near the line.
-      - Output: the runner assumes 16,000 output tokens per judge call
-        (JUDGE_OUTPUT_TOKENS_ESTIMATE). Measured: mean 3,847, max 5,094,
-        every call finished normally (no hidden cap). Use ~5,000 for the
-        expected cost.
-      - Decide: the judge request has no output limit, so the budget's
-        worst case is an assumption. Either keep 16,000 as the worst case
-        only, or set a real cap of 16,000 output tokens on the judge, so
-        the worst case is guaranteed (the measured answers are far below).
    d. Whisper lookup may rarely verify even inside the 3-day window:
       upcoming whispers were seen only in earningswhispers.com homepage
       previews, not on the company pages the lookup checks the number
@@ -133,9 +118,9 @@ WHEN labels (relative to the full eval run, item 4f):
       explicit yes).
       - REMINDER: before starting, check there is enough credit on every
         account, and do item 10. Estimate (2026-10-31, from the smoke run's
-        measured costs, x4): Anthropic ~$95-120; OpenAI judge ~$21 expected
-        at the current estimate settings (~$13-15 after item 1c), ~$42
-        worst case; Tavily ~600 credits (up to ~980 if the methods use every
+        measured costs, x4): Anthropic ~$95-120; OpenAI judge ~$13 expected
+        (the estimate gave $3.38 for the smoke run's 15 reports, which cost
+        $3.30), ~$42 worst case (output capped at 16,000 tokens); Tavily ~600 credits (up to ~980 if the methods use every
         tool call), against 1,000 a month: running out mid-run would quietly
         leave the later tickers' reports without news. Time: ~15 minutes
         per ticker, ~5 hours.

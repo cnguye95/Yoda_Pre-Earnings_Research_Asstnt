@@ -332,7 +332,7 @@ def test_continued_queue_reuses_the_data_and_bundles_everything(monkeypatch):
 
 
 def test_finished_pdfs_are_kept_in_memory_so_a_pruned_file_still_downloads(monkeypatch):
-    # Bug 1b: download buttons (and a continued queue's ZIP) re-read PDFs
+    # UI bug: download buttons (and a continued queue's ZIP) re-read PDFs
     # from disk, which a later run of the same ticker may have deleted.
     def fake_build(ticker, market=None, allow_missing_market_data=False, whisper_lookup=None, on_notice=None):
         path = processor._REPORTS_DIR / f"{ticker}_20260101-000000.pdf"
@@ -591,7 +591,7 @@ def test_generate_writes_the_report_and_shows_it(monkeypatch):
 
 
 def test_failed_generation_shows_one_error_and_no_stale_report(monkeypatch):
-    # Bugs 1c and 1e: after a failed generation the previous ticker's report
+    # UI bugs: after a failed generation the previous ticker's report
     # stayed on the page, and the error was printed twice.
     def fail(ticker, **settings):
         raise ValueError("No recent 10-Q or annual report for ZZZZ")
@@ -730,14 +730,14 @@ def test_results_view_shows_every_section_with_its_sources():
 
 
 def test_add_to_queue_counts_only_new_tickers():
-    # Bug 1d: the button counted tickers already in the queue.
+    # UI bug: the button counted tickers already in the queue.
     app = _app(queue=["NFLX"], view=_QUEUE_VIEW)
     app.text_area(key="queue_text").input("NFLX, COIN").run()
     assert app.button(key="queue_add").label == "Add to Queue (1 new ticker)"
 
 
 def test_finished_queue_stays_on_the_queue_view(monkeypatch, tmp_path):
-    # Bug 1f: after a queue run the page went back to the Single ticker view.
+    # UI bug: after a queue run the page went back to the Single ticker view.
     zip_path = tmp_path / "yoda_queue_x.zip"
     zipfile.ZipFile(zip_path, "w").close()
     monkeypatch.setattr(processor, "process_queue",
@@ -811,7 +811,7 @@ def test_queue_whisper_setting_reaches_each_ticker(monkeypatch):
 
 
 def test_scroll_to_top_targets_streamlit_1_40s_main_area():
-    # Bug 1a: the script looked for "section.main", which Streamlit 1.40 no
+    # UI bug: the script looked for "section.main", which Streamlit 1.40 no
     # longer has; its main area is marked data-testid="stMain".
     source = _APP.read_text(encoding="utf-8")
     assert "querySelector('[data-testid=" in source and "stMain" in source

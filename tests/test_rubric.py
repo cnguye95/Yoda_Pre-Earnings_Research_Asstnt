@@ -399,6 +399,15 @@ def test_judge_asks_for_flex_and_records_the_cache_and_tier(monkeypatch):
     assert (result.cached_tokens, result.service_tier) == (70_000, "flex")
 
 
+def test_judge_output_is_capped_so_the_worst_case_is_real(monkeypatch):
+    # The budget's worst case assumes JUDGE_MAX_OUTPUT_TOKENS output tokens;
+    # without a cap on the request, one long answer could cost more.
+    sent = []
+    _fake_openai(monkeypatch, lambda **kwargs: sent.append(kwargs) or _judge_reply())
+    judge.judge_report(_report(), "EVIDENCE TEXT", {})
+    assert sent[0]["max_completion_tokens"] == judge.JUDGE_MAX_OUTPUT_TOKENS == 16_000
+
+
 def test_judge_records_why_it_stopped_and_how_much_it_reasoned(monkeypatch):
     # A cut-off judge call, and where the judge's output
     # tokens go, must be visible in the results.
@@ -713,9 +722,14 @@ def test_the_estimate_prices_each_call_and_counts_cached_ones_free(monkeypatch, 
         tokens = evidence.render_evidence(store, report, len(rubric.RUBRIC_TEXT) + len(report.model_dump_json())
                                           ).estimated_tokens
         assert row.prompt_tokens == tokens
-        out = runner.JUDGE_OUTPUT_TOKENS_ESTIMATE
-        assert row.expected_usd == round(pricing.call_cost(judge.JUDGE_MODEL, tokens, out, tier="flex"), 4)
-        assert row.worst_usd == round(pricing.call_cost(judge.JUDGE_MODEL, tokens, out), 4)
+        # Expected: Flex, the average prompt size and the measured output.
+        # Worst: standard, the cautious prompt size and the judge's output cap.
+        # (Smoke run, 2026-10-31: 16,000 assumed output tokens put the
+        # expected cost ~1.6x above what judging really cost.)
+        average_tokens = round(tokens * evidence.CHARS_PER_TOKEN / evidence.MEAN_CHARS_PER_TOKEN)
+        assert row.expected_usd == round(pricing.call_cost(judge.JUDGE_MODEL, average_tokens,
+                                                           runner.JUDGE_OUTPUT_TOKENS_EXPECTED, tier="flex"), 4)
+        assert row.worst_usd == round(pricing.call_cost(judge.JUDGE_MODEL, tokens, judge.JUDGE_MAX_OUTPUT_TOKENS), 4)
         assert row.worst_usd > row.expected_usd and not row.cached
     # Once a score is cached, the estimate counts it as free.
     monkeypatch.setattr(runner, "is_cached", lambda key: True)

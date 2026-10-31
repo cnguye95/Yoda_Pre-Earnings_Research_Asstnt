@@ -54,6 +54,12 @@ JUDGE_REASONING_EFFORT = "medium"
 JUDGE_SERVICE_TIER = "flex"
 JUDGE_TIMEOUT_SECONDS = 900
 
+# Most output tokens (hidden reasoning plus the scores) one judge call may
+# use, so the budget's worst case is a real limit, not an assumption. The
+# smoke run's 15 calls used at most 5,094 (mean 3,847). A call that hits it
+# returns no scores and fails loudly as unjudged (it was still paid for).
+JUDGE_MAX_OUTPUT_TOKENS = 16_000
+
 # Where to persist cached judge results. Created on first use.
 _CACHE_DIR = config.DATA_DIR / "eval" / "judge_cache"
 
@@ -162,7 +168,8 @@ def _ask_judge(messages: list[dict[str, str]]):
     quality, full price.
     """
     request = dict(model=JUDGE_MODEL, messages=messages, response_format=JudgeScores,
-                   reasoning_effort=JUDGE_REASONING_EFFORT, timeout=JUDGE_TIMEOUT_SECONDS)
+                   reasoning_effort=JUDGE_REASONING_EFFORT, max_completion_tokens=JUDGE_MAX_OUTPUT_TOKENS,
+                   timeout=JUDGE_TIMEOUT_SECONDS)
     try:
         return _client.chat.completions.parse(**request, service_tier=JUDGE_SERVICE_TIER)
     except openai.RateLimitError as exc:

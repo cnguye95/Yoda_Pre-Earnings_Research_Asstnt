@@ -25,10 +25,17 @@ from yoda.schema import EarningsReport, EvidenceStore, Passage
 # the whole call (gpt-6.1-sol pricing; yoda/pricing.py).
 PROMPT_TOKEN_LINE = 272_000
 
-# Characters per token used to estimate a prompt's size: measured on JPM's
-# 10-Q (847K characters ≈ 211K tokens). An estimate only; the judge records
-# the real count OpenAI reports.
+# Characters per token used to estimate a prompt's size, which decides when
+# uncited news is cut to stay under PROMPT_TOKEN_LINE and sets the worst-case
+# judge cost. The lowest ratio measured (XOM, smoke run 2026-10-31; also
+# JPM's 10-Q), so an estimate is never below the real size and a prompt
+# never slips over the line uncut. An estimate only; the judge records the
+# real count OpenAI reports.
 CHARS_PER_TOKEN = 4
+
+# The average ratio over the smoke run's 15 judged reports (4.0-4.5), used
+# only for the expected judge cost: with CHARS_PER_TOKEN it ran ~7% high.
+MEAN_CHARS_PER_TOKEN = 4.3
 
 # The kinds of source that come after the filing: what evidence_labelling
 # is about.
