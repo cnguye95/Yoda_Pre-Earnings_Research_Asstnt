@@ -22,7 +22,7 @@ from yoda.report.checks import iter_claims, normalize_id
 from yoda.schema import EarningsReport, EvidenceStore, Passage
 
 # Prompts above this many tokens cost the judge 2x input / 1.5x output for
-# the whole call (gpt-6.1-sol pricing, next_steps 3.7).
+# the whole call (gpt-6.1-sol pricing; yoda/pricing.py).
 PROMPT_TOKEN_LINE = 272_000
 
 # Characters per token used to estimate a prompt's size: measured on JPM's

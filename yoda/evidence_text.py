@@ -1,21 +1,18 @@
-"""Text shared by the panel and the eval judge for weighing and checking evidence.
+"""Text shared by the report writers and the eval judge for weighing and checking evidence.
 
 CONFLICT_RULES is the agreed wording of how sources that disagree are
-weighed (next_steps 3.4). The personalities, synthesis and the judge's
-reasoning_quality dimension all read this one text, so the wording can never
-drift apart between them. NEWER_CONTRADICTION_RULE adds what to do when a
-newer item contradicts the filing (for the writers only). The personality
-panel that read them was removed on 2026-10-30; the staged pipeline's prompts
-(yoda/modes/pipeline.py) take its place.
+weighed. Every writer (the baseline's and both candidate methods') and the
+judge's reasoning_quality dimension read this one text, so the wording can
+never drift apart between them. NEWER_CONTRADICTION_RULE adds what to do when a
+newer item contradicts the filing (for the writers only).
 
 normalize() and quote_in() check that a quoted passage really appears in a
-text: the panel uses them on each personality's evidence, and the judge's
-quote check uses them on each score's justification.
+text: the judge's quote check uses them on each score's justification.
 """
 
 import re
 
-# The evidence tier order and the three agreed conflict rules (next_steps 3.4).
+# The evidence tier order and the three agreed conflict rules.
 CONFLICT_RULES = """Evidence tiers, most reliable first: reported > guided > estimate > proxy >
 unverifiable. When sources disagree:
   - For the same metric and period, the more reliable tier wins and both

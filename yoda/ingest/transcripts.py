@@ -1,4 +1,4 @@
-"""Earnings call transcripts from Alpha Vantage (next_steps 3.8).
+"""Earnings call transcripts from Alpha Vantage.
 
 The transcript of a company's latest earnings call is the main source of
 management's guidance wording and of analysts' questions, and it isn't on

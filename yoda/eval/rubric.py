@@ -1,10 +1,10 @@
 """The eval rubric: what the judge scores, how, and the checks code runs on its answer.
 
 The judge scores nine dimensions 1-5, each against written 1, 3 and 5
-anchors agreed in next_steps 3.7 and copied here word for word (only
-bookkeeping notes such as "(AGREED)" are left out), except dimensions 1 and
-6, reworded on 2026-10-30 for the new report sections and evidence-ID
-citations (next_steps 4b). RUBRIC_TEXT is the text the judge is shown.
+anchors agreed with the user when the rubric was designed and copied here
+word for word (only bookkeeping notes such as "(AGREED)" are left out),
+except dimensions 1 and 6, reworded on 2026-10-30 for the new report
+sections and evidence-ID citations. RUBRIC_TEXT is the text the judge is shown.
 
 JudgeScores is also the structured-output format of the judge call
 (client.chat.completions.parse(response_format=JudgeScores)), so the judge
@@ -80,7 +80,7 @@ DIMENSIONS = (
 
 
 # ---------------------------------------------------------------------------
-# The rubric text the judge reads (next_steps 3.7, word for word)
+# The rubric text the judge reads (the agreed anchors, word for word)
 # ---------------------------------------------------------------------------
 
 RUBRIC_TEXT = """RUBRIC — score each dimension 1-5.

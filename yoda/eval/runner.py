@@ -760,7 +760,7 @@ _JUSTIFICATIONS_PER_DIMENSION = 3
 def _write_justifications(judged_results: Sequence[tuple[str, str, JudgeResult]], path: pathlib.Path) -> None:
     """Write a few of the judge's justifications per dimension, with their quotes, for a human to read.
 
-    Next_steps 3.7's validation step reads 2-3 per dimension to check the
+    The rubric's validation step reads 2-3 per dimension to check the
     judge reasons the way the anchors say. Quotes that failed the quote
     check are marked.
     """
@@ -993,7 +993,7 @@ def _df_to_markdown(df: pd.DataFrame) -> str:
 
 def _reliability_lines(df: pd.DataFrame, previous_snapshots: set[str],
                        agreement: pd.DataFrame | None) -> list[str]:
-    """Return summary.md's judge-reliability sections (next_steps 3.7).
+    """Return summary.md's judge-reliability sections.
 
     Judge cost (an upper bound), which judge versions scored the run (with a
     warning when they are mixed or differ from the previous run), prompts

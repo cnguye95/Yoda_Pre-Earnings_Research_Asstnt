@@ -47,7 +47,7 @@ def _quoted(*quotes: tuple[str, str]) -> DimensionScore:
 def test_rubric_text_has_every_dimension_and_its_anchors():
     for number, name in enumerate(DIMENSIONS, start=1):
         assert f"{number}. {name} —" in rubric.RUBRIC_TEXT
-    # A few anchor sentences copied word for word from next_steps 3.7
+    # A few anchor sentences copied word for word from the agreed rubric
     # (compared with line breaks and indentation collapsed to single spaces).
     flat = " ".join(rubric.RUBRIC_TEXT.split())
     for anchor in (

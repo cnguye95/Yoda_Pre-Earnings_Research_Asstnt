@@ -10,19 +10,19 @@ WHEN labels (relative to the architecture comparison, item 4; set
   BEFORE FULL   settled with the smoke run's data, before the full run.
   CONDITIONAL   depends on a result named in the item.
   AFTER         after the comparison: docs, UI, or work on the winner only.
-  The order of the remaining BEFORE SMOKE work: item 4, "Order".
+  All BEFORE SMOKE work is done (2026-10-31); what remains before the smoke
+  run is the credit check (item 4e).
   Item numbers are kept when items are finished, because code comments
   cite them ("next_steps item 4d").
 
 
-1. Open checks on the judge and the app
+1. Open checks on the judge
    b. Judge output cap: one earlier judge call used exactly 4,096
       completion tokens. judge.py sets reasoning_effort but no output
       limit, so check whether a hidden limit cuts justifications short.
-      WHEN: BEFORE FULL. The judge now records why it stopped (finish
-      reason) and its reasoning tokens (DONE 2026-10-31: results.csv
-      columns, and a summary line counting calls that didn't stop
-      normally); the smoke run's judge calls then settle it.
+      WHEN: BEFORE FULL. The judge now records its finish reason and
+      reasoning tokens (results.csv; summary.md counts calls that didn't
+      stop normally), so the smoke run's judge calls settle it.
    c. Judge token estimate: the judge's prompt size is estimated as
       characters / 4 (eval/evidence.py CHARS_PER_TOKEN). Above 272K tokens
       the whole call costs 2x input / 1.5x output and uncited news is left
@@ -31,7 +31,9 @@ WHEN labels (relative to the architecture comparison, item 4; set
       judge's (OpenAI) is unmeasured.
       WHEN: BEFORE FULL. Compare the estimate with the prompt_tokens OpenAI
       reports for 2-3 smoke reports of different sizes; adjust
-      CHARS_PER_TOKEN if it is off by more than ~5%.
+      CHARS_PER_TOKEN if it is off by more than ~5%. Also replace the
+      runner's assumed judge output (JUDGE_OUTPUT_TOKENS_ESTIMATE, 16,000
+      tokens) with the smoke run's measured completion_tokens.
    d. Whisper lookup may rarely verify even inside the 3-day window:
       upcoming whispers were seen only in earningswhispers.com homepage
       previews, not on the company pages the lookup checks the number
@@ -40,24 +42,18 @@ WHEN labels (relative to the architecture comparison, item 4; set
       another check.
       WHEN: AFTER. Every arm shares one market snapshot per ticker, and the
       lookup runs only for reports 3 days away or less.
-   e. App: the queue-view fix and the queue's live mid-run notices.
-      DONE (2026-10-30): seen in the browser with the staged pipeline
-      stubbed (the queue stays on its view, shows each ticker's mid-run
-      notice, pauses on refused market data and continues).
 
 
 2. Eval baseline
    Option B (one Claude call over the shared sources plus one generic
-   news search) is DONE (2026-10-30): yoda/modes/baseline.py,
-   yoda/sources.py. To watch on the smoke run:
+   news search; yoda/modes/baseline.py) is the baseline. To watch on the
+   smoke run:
    - News yield: on NVDA the search ("<company> <ticker> earnings", 10
      results, from the newest filing's date) returned only 2 results, and
      the one cited was older than 14 days.
    - Alpha Vantage's free tier allows 25 requests a day; a first 20-ticker
      run may lose some calls (the same for every arm; cached once
      fetched).
-   - The shared whisper cost is logged per ticker, not charged to an arm,
-     until the run harness (4d) totals it.
 
    Option C — ADD LATER as a second baseline: the SEC filings plus
    Claude's web search tool.
@@ -73,133 +69,79 @@ WHEN labels (relative to the architecture comparison, item 4; set
 4. Architecture comparison: staged pipeline vs lead analyst method vs
    baseline option B (NOT RUN YET: the smoke and full runs each need an
    explicit yes and enough credit)
-   The personality panel was removed (2026-10-30). Two candidate
-   architectures are built and run with the baseline on the full
-   20-ticker set; the better one becomes Yoda.
-   - Staged pipeline: code builds the facts; fixed stages (a filing
-     extractor, a post-filing extractor for the 8-K and the call, two
-     news/peer researchers, expectations computed in code) feed one
-     writer; every claim is checked against the passages it cites, then
-     one repair pass.
-   - Lead analyst method: a lead picks 4-6 company-specific questions and
-     briefs one worker per question; the lead reviews the findings, fills
-     gaps once and writes; the same claim check follows. Decided
-     2026-10-31: workers read the full shared sources from the one cache
-     (no passage search); a follow-up goes back to the same worker; each
-     worker may make 4 tool calls, 2 more on a follow-up.
-   - Models (decided 2026-10-30): writer Sonnet 5.5 (also the lead in the
-     lead analyst method); staged pipeline researchers Haiku 5.5; lead
-     analyst workers Sonnet 5.5; claim check Haiku 5.5, with a Sonnet 5.5
-     second opinion on the claims Haiku fails (a claim is removed only
-     when both agree).
-   - Built and shared by every arm (2026-10-30; were 4a and 4b): the evidence store
-     (yoda/evidence_store.py, passage IDs), the XBRL fact sheet
-     (yoda/ingest/xbrl.py), the report schema and citation checks
-     (yoda/schema.py, yoda/report/), and the shared sources fetched once
-     per ticker (yoda/sources.py: SharedSources, base_store(), one length
-     limit SOURCE_CHARS_LIMIT). Each arm starts its store with
-     sources.base_store() and adds its own news, articles and peers.
-     Known gaps: banks and oil majors tag no OperatingIncomeLoss or
-     LongTermDebt (shown missing); IFRS filers (20-F/40-F) have no us-gaap
-     facts, so their fact sheet is all missing.
-   - Complexity labels (was 4c; fixed before any report, yoda/eval/complexity.py,
+   Two candidate architectures run with the baseline on the full 20-ticker
+   set; the better one becomes Yoda.
+   - Staged pipeline (yoda/modes/pipeline.py): code builds the facts;
+     fixed stages (a filing extractor, a post-filing extractor for the 8-K
+     and the call, two news/peer researchers, expectations computed in
+     code) feed one writer; every claim is checked against the passages it
+     cites, then one repair pass. First paid run: NVDA, $1.49, 391 s.
+   - Lead analyst method (yoda/modes/lead.py): a lead picks 4-6
+     company-specific questions and briefs one worker per question; the
+     lead reviews the findings, asks one round of follow-ups (back to the
+     same worker) and writes; the same claim check follows. Workers read
+     the full shared sources and may make 4 tool calls, 2 more on a
+     follow-up. First paid run: NVDA, $2.31, 456 s.
+   - Models: writer Sonnet 5.5 (also the lead); staged pipeline
+     researchers Haiku 5.5; lead analyst workers Sonnet 5.5; claim check
+     Haiku 5.5, with a Sonnet 5.5 second opinion on the claims Haiku fails
+     (a claim is removed only when both agree).
+   - Shared by every arm: the evidence store, the XBRL fact sheet, the
+     report schema and citation checks, and the shared sources fetched
+     once per ticker with one length limit (yoda/sources.py). Known gaps:
+     banks and oil majors tag no OperatingIncomeLoss or LongTermDebt (shown
+     missing); IFRS filers (20-F/40-F) have no us-gaap facts, so their fact
+     sheet is all missing.
+   - Complexity labels (fixed before any report, yoda/eval/complexity.py,
      pinned by tests/test_complexity.py; must not change now):
      * Complex (9): JPM, USB, UNH, XOM, KO, AMZN, JNJ, DIS, BA.
      * Simple (11): AAPL, MSFT, NVDA, AMD, HD, SLB, PG, NFLX, CAT, PANW,
        CRM.
-     * Analysis: report the staged pipeline vs lead analyst score gap
-       within each group next to the overall gap. With 9-11 tickers per
-       group, read group differences as a direction, not proof.
+     * summary.md reports the lead analyst vs staged pipeline gap within
+       each group next to the overall gap. With 9-11 tickers per group,
+       read group differences as a direction, not proof.
    - Prompt-caching rules for the two candidate methods (item 12): the
-     shared source is the first system block, marked as a cache
-     breakpoint, role instructions after it; all of an arm's
-     source-reading calls share
-     model, pinned effort and a sorted tool list; nothing variable (dates,
-     IDs) before the breakpoint; warm the cache with one call before
-     fanning out parallel calls; 5-minute cache (the staged pipeline uses
-     1-hour, decided 2026-10-30: its repair pass starts over 5 minutes
-     after the writer's read); no cross-arm sharing;
-     prove it with yoda/prompt_cache.cache_misses(). The baseline has no
-     breakpoint: it makes one call, so nothing would read the cache.
-   d. Run harness (BEFORE SMOKE). DONE (2026-10-31): the parts below,
-      plus a summary and chart for the three arms: a paired table for
-      each pair of methods, the lead analyst vs staged pipeline gap
-      also by complexity group, and a cost table per method (paid, full
-      price, judge). The runner's default modes are the three arms.
-      - Reports first, judge second: generate every arm's reports, then
-        estimate the judge cost from the saved evidence (the runner
-        already estimates each prompt's tokens) and judge only after
-        checking the estimate against the OpenAI credit left. Stop
-        cleanly before a call that would go over a set budget.
-        DONE (2026-10-31), as two commands: the runner generates and
-        saves generation.csv and judge_estimate.md, then
-        --rescore DIR --judge-budget USD judges, stopping before a report
-        whose worst case (standard tier, no cache discount) would pass the
-        budget. The judge's output size is assumed (16,000 tokens per call)
-        until the smoke run measures it.
-      - Judge a ticker's three reports back to back so OpenAI's prompt
-        cache can serve the shared filing text. DONE (rescore's order).
-      - Send all baselines through the Anthropic Batch API (half price;
-        baseline.build_request is already a pure function), with standard
-        calls if the batch fails; also report arm costs at standard prices.
-        DONE (2026-10-31): the batch is sent before the other modes run and
-        collected last; a request that errors, expires or isn't done within
-        an hour (the batch is then cancelled) is sent as a normal call, and
-        a refused batch sends them all normally. generation.csv and
-        results.csv carry cost_standard_usd; a batched baseline's latency is
-        unknown ("batch").
-      - Total the shared whisper cost per run. DONE (2026-10-31: a
-        summary.md line, each ticker counted once).
-      - The judge records its finish reason and reasoning tokens (1b).
-        DONE (2026-10-31).
-      - Already done in step 7: one market snapshot per ticker for every
-        arm, and one fixed length limit so every arm reads identical
-        filing text.
+     shared sources are the first system block, marked as a cache
+     breakpoint (1 hour), role instructions after it; all of a method's
+     source-reading calls share model, pinned effort and a sorted tool
+     list; nothing variable (dates, IDs) before the breakpoint; no
+     cross-arm sharing; proven offline with
+     yoda/prompt_cache.cache_misses(). The baseline has no breakpoint: it
+     makes one call, so nothing would read the cache.
+   d. Run harness: DONE (2026-10-31; yoda/eval/runner.py). Two commands:
+      the runner generates every arm's reports (baselines through the
+      Batch API at half price) and estimates the judge's cost; then
+      --rescore DIR --judge-budget USD judges them, a ticker's reports
+      back to back, stopping before any report whose worst case would pass
+      the budget.
    e. Smoke run: 3 arms x 5 tickers, with the judge (NOT RUN YET; needs an
       explicit yes).
       - Tickers (decided 2026-10-30): USB, XOM, DIS (complex), NVDA, HD
         (simple). Their mean filing size (601K characters) equals the
         20-ticker mean, so smoke costs scale ~4x to the full run.
       - REMINDER: before starting, check there is enough API credit on
-        both accounts. Estimate (offline cost model rerun 2026-10-30 with
-        measured source sizes, all cost methods; updated 2026-10-31):
-        ~$27.60 in total — Anthropic ~$25.50 (baseline ~$1.57 batched,
-        staged pipeline ~$7.45 from its measured NVDA run, lead analyst
-        ~$16.50 estimated from its design), OpenAI judge ~$2.10 — plus up
-        to ~$0.75 of whisper lookups. The NVDA-based figure is rough: NVDA's
-        sources may be smaller than the smoke mean.
-      - Measures the real cost per arm and the judge's cache-hit rate;
-        those numbers replace the estimates for the full run.
+        both accounts. Estimate (2026-10-31): Anthropic ~$21.35 (baseline
+        ~$1.60 batched, staged pipeline ~$7.45 and lead analyst ~$11.55
+        from their measured NVDA runs, whisper lookups up to ~$0.75);
+        OpenAI judge ~$2.10. The NVDA-based figures are rough: NVDA's
+        sources may be smaller than the smoke mean. Time: ~70-80 minutes
+        to generate (both NVDA runs back to back, x5).
+      - Commands, into their own folder so the older reports in data/eval
+        are left alone (a folder named smoke_* would be gitignored):
+          python -m yoda.eval.runner USB XOM DIS NVDA HD --out data/eval/smoke
+        then, after checking judge_estimate.md against the OpenAI credit:
+          python -m yoda.eval.runner --rescore data/eval/smoke --judge-budget USD
+      - Measures the real cost and time per arm and the judge's cache-hit
+        rate; those numbers replace the estimates for the full run.
    f. Full run: 3 arms x 20 tickers, with the judge (NOT RUN YET; needs an
       explicit yes).
       - REMINDER: before starting, check there is enough API credit on
         both accounts, using the smoke run's measured costs. Estimate
-        (same basis, updated 2026-10-31): ~$110 — Anthropic ~$102
-        (baseline ~$6.28 batched, staged pipeline ~$30, lead analyst
-        ~$66), OpenAI judge ~$7.77.
+        (2026-10-31, same basis as the smoke run's): ~$93 — Anthropic ~$85
+        (baseline ~$6.30 batched, staged pipeline ~$30, lead analyst
+        ~$46, whisper up to ~$3), OpenAI judge ~$7.77, which is close to
+        the $8 of OpenAI credit on hand: top up first.
       - After it: item 13 (remove XOM's saved predecessor link).
-
-   Order of the remaining BEFORE SMOKE work (one item at a time; steps
-   1-10 are done):
-    8. Staged pipeline. DONE (2026-10-30): yoda/report/claim_check.py
-       (Haiku check, Sonnet second opinion, repair helpers),
-       yoda/modes/pipeline.py (runner mode "pipeline"; generate_report()
-       for the app), and the app's report generation, market-data pause,
-       whisper setting and live notices.
-       First paid run (2026-10-30): NVDA, $1.49 and 391 s; its fixes
-       (non-strict submit tools, warm-up first, a failed debate side
-       dropped alone) are in.
-    9. Lead analyst method. DONE (2026-10-31): yoda/modes/lead.py
-       (runner mode "lead"), with what both methods share moved to
-       yoda/modes/source_calls.py (the staged pipeline's prompts pinned
-       unchanged by a test). Workers read the full sources, so R5/R4/R6
-       are not needed before the smoke run. Not yet run against the real
-       models: a paid one-ticker check (python -m yoda.modes.lead NVDA,
-       ~$3.30) needs an explicit yes.
-   10. Item 4d: run harness, including the judge logging for 1b. DONE
-       (2026-10-31). Run it as: python -m yoda.eval.runner TICKERS, then
-       python -m yoda.eval.runner --rescore data/eval --judge-budget USD.
-   11. Credit check (4e), then the smoke run.
 
 
 5. Restructure README
@@ -228,7 +170,8 @@ WHEN labels (relative to the architecture comparison, item 4; set
 
 7. Investigate Chroma usage reporting
    WHEN: AFTER. Doesn't affect report quality; may become unnecessary if
-   the winning architecture doesn't use ChromaDB.
+   the winning architecture doesn't use ChromaDB (both candidates use it
+   only for competitors' filings, lookup_peer).
    - Do a full inspection of the ChromaDB pipeline.
    - Known facts (2026-10-30): one persistent collection
      ("filings_openai", yoda/retrieval/vector_store.py), chunks keyed by
@@ -237,9 +180,8 @@ WHEN labels (relative to the architecture comparison, item 4; set
    - Embeddings are never deleted: when a newer 10-Q replaces a cached one,
      edgar.py deletes the old HTML file but its chunks stay in ChromaDB,
      and so do old 8-Ks and calls. The collection only grows.
-   - Embedding cost in the run summary is an estimate (characters / 4,
-     labelled "estimated"); the real token count from OpenAI's embedding
-     response is not used.
+   - Embedding cost is not counted in any arm's cost: the real token count
+     from OpenAI's embedding response is not used.
 
 
 8. Add Repo Overview to README
@@ -249,22 +191,18 @@ WHEN labels (relative to the architecture comparison, item 4; set
 
 
 9. Improve Retrieval Quality
-   R1 (section test set), R2 (section detection from the filing's own
-   table-of-contents links) and R3 (reading a 10-K's EX-13 annual report)
-   are DONE (2026-10-30): tests/test_sections.py, yoda/ingest/chunker.py,
-   edgar._EXHIBITS_READ_WITH.
-   - Known gap from R2: WFC-style annual reports (EX-13 with no linked
-     table of contents, MD&A called "Financial Review") are mislabelled
-     (23% accurate); no eval ticker has this form. Fixing it means
-     WFC-specific rules, then fresh hold-outs to check they generalise.
-     Minor: SU's MD&A after its risk factors is labelled Other; USB's
-     EX-13 "Company Information" is not recognised.
-   WHEN for the rest: AFTER, and only if wanted. The lead analyst
-   method's workers read the full sources (decided 2026-10-31), so R5
-   would cover only peer lookups, and R4/R6 only if R5 shows weak
-   recall. Note: tools.retrieve_filing and the vector store still return
-   chunker windows without passage IDs; an arm that retrieves must return
-   store passages, the unit every citation is checked against.
+   WHEN: AFTER, and only if wanted. Neither candidate method searches the
+   company's own filings (both read the full sources), so retrieval only
+   serves competitors' filings (lookup_peer). Note: tools.retrieve_filing
+   and the vector store return chunker windows without passage IDs; an arm
+   that retrieves must return store passages, the unit every citation is
+   checked against.
+   - Known gap in section detection: WFC-style annual reports (EX-13 with
+     no linked table of contents, MD&A called "Financial Review") are
+     mislabelled (23% accurate); no eval ticker has this form. Fixing it
+     means WFC-specific rules, then fresh hold-outs to check they
+     generalise. Minor: SU's MD&A after its risk factors is labelled Other;
+     USB's EX-13 "Company Information" is not recognised.
    R4. Improve chunks, not by semantic chunking (today's chunker already
        splits at paragraph breaks):
        a. Prefix each chunk's embedded text with where it came from
@@ -291,15 +229,13 @@ WHEN labels (relative to the architecture comparison, item 4; set
 
 
 12. Investigate ways to cut report costs while keeping quality
-    The BEFORE SMOKE part is DONE (2026-10-30): prices verified in
-    yoda/pricing.py; adopted, none changing what a model reads or writes:
-    prompt caching within each arm (rules in item 4), the judge on OpenAI
-    Flex with cache hits, the baseline through the Batch API (built in
-    4d), effort pinned on every call, usage logged per call. Not adopted
-    (they trade quality or can't be measured without spend): lower effort,
-    more Haiku, less filing text for writers, splitting Haiku prompts
-    under 100K tokens, batching the two candidate methods.
-    WHEN for the rest: AFTER, on the winning architecture.
+    Already in place: prompt caching within each arm (rules in item 4),
+    the judge on OpenAI Flex with cache hits, the baseline through the
+    Batch API, effort pinned on every call, usage logged per stage. Not
+    adopted (they trade quality or can't be measured without spend):
+    lower effort, more Haiku, less filing text for writers, splitting
+    Haiku prompts under 100K tokens, batching the two candidate methods.
+    WHEN: AFTER, on the winning architecture.
     - Use the full run's per-stage costs and scores to find where money
       goes; compare candidate changes on a few tickers against those
       scores.

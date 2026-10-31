@@ -10,7 +10,7 @@ from yoda.eval.complexity import Segment, TickerFacts, criteria_met
 from yoda.eval.runner import CURATED_TICKERS
 
 # The labels as published on 2026-10-30, before any comparison report
-# existed (next_steps item 4c). If this test fails, a fact or the rule
+# existed (next_steps item 4, "Complexity labels"). If this test fails, a fact or the rule
 # changed: that must not happen once reports exist.
 PUBLISHED_COMPLEX = {"JPM", "USB", "UNH", "XOM", "KO", "AMZN", "JNJ", "DIS", "BA"}
 
