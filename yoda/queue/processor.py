@@ -1,6 +1,7 @@
 """Sequential ticker-queue processor (Phase 10).
 
-process_queue() runs report generation (Rec 1, yoda/modes/rec1.py) against a list of tickers, saves
+process_queue() runs report generation (the staged pipeline,
+yoda/modes/pipeline.py) against a list of tickers, saves
 each PDF to disk as it completes, and bundles everything into a ZIP at the
 end. Failures don't abort the queue — they're recorded with the reason and
 the run continues. The one exception is a market-data provider refusing a
@@ -22,7 +23,7 @@ from datetime import datetime
 from typing import Literal, NamedTuple
 
 from yoda import config
-from yoda.modes.rec1 import generate_report
+from yoda.modes.pipeline import generate_report
 from yoda.report.header import MarketDataUnavailable
 from yoda.report.pdf import report_to_pdf
 from yoda.tickers import normalize_tickers

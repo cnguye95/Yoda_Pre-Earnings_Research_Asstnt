@@ -15,8 +15,8 @@ rewritten claims are checked once more, and whatever still fails is removed
 (remove_claims). Every claim the check couldn't answer for, and every
 removal, is written into the report's check notes, never skipped silently.
 
-Shared by both candidate architectures (next_steps item 4: Rec 1's repair
-pass, Rec 2's "same claim check").
+Shared by both candidate architectures (next_steps item 4: the staged pipeline's repair
+pass, the lead analyst method's "same claim check").
 """
 
 import re
@@ -28,7 +28,7 @@ from pydantic import BaseModel
 
 from yoda import pricing
 from yoda.evidence_store import citation, passages_by_id
-from yoda.modes.llm import NoStructuredOutput, structured_call
+from yoda.modes.llm import NoStructuredOutput, Usage, add_usage, call_usage, failed_usage, log_usage, structured_call
 from yoda.report.checks import iter_claims, normalize_id
 from yoda.schema import Claim, EarningsReport, EvidenceStore, Passage
 
@@ -177,22 +177,22 @@ _CALL_ERRORS = (anthropic.APIError, NoStructuredOutput, pydantic.ValidationError
 
 
 class _Asked(NamedTuple):
-    """One checker's answers over a set of claims: verdicts by location, what wasn't answered, and the cost."""
+    """One checker's answers over a set of claims: verdicts by location, what wasn't answered, and the usage."""
     verdicts: dict[str, Verdict]
     unanswered: dict[str, str]     # location -> why no verdict came back
-    cost_usd: float
+    usage: Usage                   # summed over every batch
 
 
 def _ask(model: str, effort: str, items: list[ClaimItem]) -> _Asked:
     """Ask *model* for a verdict on every claim in *items*, one call per batch.
 
     A failed call leaves its claims unanswered (with the error), and a
-    verdict for a location that wasn't asked about is ignored. The cost
+    verdict for a location that wasn't asked about is ignored. The usage
     includes calls that were paid for but gave no answer.
     """
     verdicts: dict[str, Verdict] = {}
     unanswered: dict[str, str] = {}
-    cost = 0.0
+    usage = Usage()
     for batch in _batches(items):
         try:
             reply = structured_call(
@@ -201,23 +201,18 @@ def _ask(model: str, effort: str, items: list[ClaimItem]) -> _Asked:
                 messages=[{"role": "user", "content": "\n\n".join(render_claim(item) for item in batch)}],
             )
         except _CALL_ERRORS as exc:
-            if isinstance(exc, NoStructuredOutput):
-                cost += pricing.call_cost(model, exc.input_tokens, exc.output_tokens,
-                                          cache_write_tokens=exc.cache_write_tokens,
-                                          cache_read_tokens=exc.cache_read_tokens)
+            usage = add_usage(usage, failed_usage(model, exc))
             unanswered.update({item.where: f"{model} call failed ({type(exc).__name__}: {exc})"
                                for item in batch})
             continue
 
-        cost += pricing.call_cost(model, reply.input_tokens, reply.output_tokens,
-                                  cache_write_tokens=reply.cache_write_tokens,
-                                  cache_read_tokens=reply.cache_read_tokens)
+        usage = add_usage(usage, call_usage(model, tuple(reply[1:])))
         asked = {item.where for item in batch}
         answered = {verdict.where.strip(): verdict for verdict in reply.parsed.verdicts
                     if verdict.where.strip() in asked}
         verdicts.update(answered)
         unanswered.update({where: f"{model} returned no verdict for it" for where in asked - set(answered)})
-    return _Asked(verdicts, unanswered, cost)
+    return _Asked(verdicts, unanswered, usage)
 
 
 def check_claims(report: EarningsReport, store: EvidenceStore, only: set[str] | None = None) -> ClaimCheck:
@@ -226,8 +221,9 @@ def check_claims(report: EarningsReport, store: EvidenceStore, only: set[str] | 
     Haiku checks each claim; Sonnet gives a second opinion on each claim
     Haiku fails. Returns the claims both fail, with Sonnet's reason. A claim
     either model couldn't answer for is kept, and a note saying it was not
-    checked (and why) is added to report.check_notes. Prints one log line
-    with the counts and cost.
+    checked (and why) is added to report.check_notes. Prints the counts,
+    then one usage line per model ("Re-check" when *only* is given, as for
+    rewritten claims).
     """
     items = claim_items(report, store, only)
     first = _ask(CHECK_MODEL, CHECK_EFFORT, items)
@@ -238,10 +234,14 @@ def check_claims(report: EarningsReport, store: EvidenceStore, only: set[str] | 
     for where, why in {**first.unanswered, **second.unanswered}.items():
         report.check_notes.append(f"{where}: not checked against its passages — {why}.")
 
-    cost = first.cost_usd + second.cost_usd
     print(f"[claim check] {len(items)} claims checked; {len(failed)} failed by {CHECK_MODEL}, "
           f"{len(unsupported)} confirmed by {SECOND_MODEL}; "
-          f"{len(first.unanswered) + len(second.unanswered)} not checked; cost ${cost:.5f}")
+          f"{len(first.unanswered) + len(second.unanswered)} not checked")
+    phase = "Re-check" if only is not None else "Check"
+    log_usage("claim check", f"{phase}, first pass", CHECK_MODEL, first.usage)
+    if second.usage.calls:
+        log_usage("claim check", f"{phase}, second opinion", SECOND_MODEL, second.usage)
+    cost = first.usage.cost_usd + second.usage.cost_usd
     return ClaimCheck(unsupported, cost)
 
 

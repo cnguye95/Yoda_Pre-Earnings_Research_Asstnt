@@ -5,8 +5,8 @@ weighed (next_steps 3.4). The personalities, synthesis and the judge's
 reasoning_quality dimension all read this one text, so the wording can never
 drift apart between them. NEWER_CONTRADICTION_RULE adds what to do when a
 newer item contradicts the filing (for the writers only). The personality
-panel that read them was removed on 2026-10-30; Rec 1's prompts
-(yoda/modes/rec1.py) take its place.
+panel that read them was removed on 2026-10-30; the staged pipeline's prompts
+(yoda/modes/pipeline.py) take its place.
 
 normalize() and quote_in() check that a quoted passage really appears in a
 text: the panel uses them on each personality's evidence, and the judge's
@@ -32,7 +32,7 @@ unverifiable. When sources disagree:
 # adds to CONFLICT_RULES rather than changing them: the reader is told
 # about the contradiction, while which source the report relies on still
 # follows the tier rules. Read by the report writers (the baseline today, the
-# Rec arms), not the judge, whose rubric quotes CONFLICT_RULES alone.
+# candidate methods), not the judge, whose rubric quotes CONFLICT_RULES alone.
 NEWER_CONTRADICTION_RULE = """When an item dated after the filing (the 8-K, the earnings call, a news
 article) contradicts the filing, flag the contradiction: show both, each
 with its date, and say which is newer. Which one to rely on still follows

@@ -56,6 +56,25 @@ def test_a_claim_is_unsupported_only_when_both_models_fail_it(monkeypatch):
     assert result.cost_usd > 0
 
 
+def test_usage_is_printed_once_per_model_with_its_batches_summed(monkeypatch, capsys):
+    _fake_checkers(monkeypatch, {CHECK_MODEL: {"key_risks[0]"}})
+    monkeypatch.setattr(claim_check, "_batches", lambda items: [items[:1], items[1:]] if len(items) > 1 else [items])
+    check_claims(sample_report(), sample_store())
+    lines = [line for line in capsys.readouterr().out.splitlines() if " cache read, $" in line]
+    assert len(lines) == 2
+    assert lines[0].startswith(f"[claim check] Check, first pass: 2 calls, {CHECK_MODEL}, 2,000 in / 200 out / "
+                               "0 cache write / 0 cache read, $")
+    assert lines[1].startswith(f"[claim check] Check, second opinion: 1 call, {SECOND_MODEL}, 1,000 in / 100 out")
+
+
+def test_a_rewrite_recheck_is_labelled_as_one(monkeypatch, capsys):
+    _fake_checkers(monkeypatch, {})
+    check_claims(sample_report(), sample_store(), only={"guidance[0]"})
+    lines = [line for line in capsys.readouterr().out.splitlines() if " cache read, $" in line]
+    # Nothing failed, so no second opinion was asked for or logged.
+    assert [line.split(":")[0] for line in lines] == ["[claim check] Re-check, first pass"]
+
+
 def test_a_claim_citing_nothing_known_is_left_to_the_id_checks(monkeypatch):
     calls = []
     _fake_checkers(monkeypatch, {}, calls)

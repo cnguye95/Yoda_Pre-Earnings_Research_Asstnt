@@ -1,9 +1,9 @@
 """Labels each eval ticker "complex" or "simple" for the architecture comparison.
 
-The comparison (next_steps item 4) asks whether Recommendation 2 (a lead
-analyst with question workers) writes better reports than Recommendation 1
-on complex companies, while Rec 1 is enough for simpler ones. That only
-means something if the labels were fixed before any report existed, so the
+The comparison (next_steps item 4) asks whether the lead analyst method (a
+lead analyst with question workers) writes better reports than the staged
+pipeline on complex companies, while the staged pipeline is enough for
+simpler ones. That only means something if the labels were fixed before any report existed, so the
 split can't be chosen after seeing scores. The rule and the facts below were
 written down on 2026-10-30, before the comparison's first report.
 DO NOT change a label (or the facts behind it) once reports exist; a

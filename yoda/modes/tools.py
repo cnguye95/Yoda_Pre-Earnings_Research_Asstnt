@@ -1,8 +1,8 @@
 """Tool registry for the agent loops.
 
 Built for the multi-agent personality panel, which was removed with the new
-report format (2026-10-30). Rec 1's researchers (yoda/modes/rec1.py) use
-search_news, read_article and lookup_peer, with their own dispatcher that
+report format (2026-10-30). The staged pipeline's researchers
+(yoda/modes/pipeline.py) use search_news, read_article and lookup_peer, with their own dispatcher that
 adds every result to the evidence store. The rest of this docstring
 describes the panel's use.
 
@@ -376,7 +376,7 @@ class LookupPeerArgs(_ToolArgs):
 
 # Maps the tool name (as returned in the model's tool_use block) to the Python
 # function that implements it and to the model that checks its arguments.
-# A dispatcher (the panel's, until 2026-10-30; now rec1._run_tool) validates
+# A dispatcher (the panel's, until 2026-10-30; now pipeline._run_tool) validates
 # with TOOL_ARGS, then calls TOOL_DISPATCH with (ctx, **validated_args).
 TOOL_DISPATCH = {
     "retrieve_filing": retrieve_filing,

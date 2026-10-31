@@ -21,7 +21,7 @@ from samples import claim, sample_report, sample_snapshot, sample_store
 from yoda.dates import market_today
 from yoda.eval import judge, rubric, runner
 from yoda.eval.rubric import DimensionScore, JudgeScores
-from yoda.modes import rec1
+from yoda.modes import pipeline
 from yoda.modes.baseline import BaselineRun
 from yoda.queue import processor
 from yoda.report import pdf
@@ -216,13 +216,13 @@ def test_pdf_builds_with_every_section(tmp_path):
 # Queue processor
 # ---------------------------------------------------------------------------
 
-def test_queue_writes_each_report_with_rec_1_and_saves_its_pdf(monkeypatch):
-    # _build_pdf hands every setting to Rec 1 and saves the report as a PDF.
+def test_queue_writes_each_report_with_the_staged_pipeline_and_saves_its_pdf(monkeypatch):
+    # _build_pdf hands every setting to the staged pipeline and saves the report as a PDF.
     seen = []
 
     def fake_generate(ticker, **settings):
         seen.append((ticker, settings))
-        return rec1.Rec1Run(_report(), sample_store())
+        return pipeline.PipelineRun(_report(), sample_store())
     monkeypatch.setattr(processor, "generate_report", fake_generate)
     snapshot = sample_snapshot()
 
@@ -539,7 +539,7 @@ def test_normalize_tickers_splits_cleans_and_dedupes():
 
 # ---------------------------------------------------------------------------
 # Streamlit app — the UI bugs in next_steps item 1, run with Streamlit's own
-# test harness (no browser, nothing live: Rec 1 and the queue are faked).
+# test harness (no browser, nothing live: the staged pipeline and the queue are faked).
 # ---------------------------------------------------------------------------
 
 _APP = pathlib.Path(__file__).resolve().parents[1] / "app.py"
@@ -562,8 +562,8 @@ def _no_report_date(monkeypatch) -> None:
 
 def test_generate_writes_the_report_and_shows_it(monkeypatch):
     _no_report_date(monkeypatch)
-    monkeypatch.setattr(rec1, "generate_report",
-                        lambda ticker, **settings: rec1.Rec1Run(_report(), sample_store()))
+    monkeypatch.setattr(pipeline, "generate_report",
+                        lambda ticker, **settings: pipeline.PipelineRun(_report(), sample_store()))
     app = _app(pdf_bytes=b"%PDF", pdf_ticker="TEST")
     assert app.button(key="single_generate").disabled          # no ticker yet
 
@@ -579,7 +579,7 @@ def test_failed_generation_shows_one_error_and_no_stale_report(monkeypatch):
     # stayed on the page, and the error was printed twice.
     def fail(ticker, **settings):
         raise ValueError("No recent 10-Q or annual report for ZZZZ")
-    monkeypatch.setattr(rec1, "generate_report", fail)
+    monkeypatch.setattr(pipeline, "generate_report", fail)
     _no_report_date(monkeypatch)
     # A report for TEST is on screen (its PDF already cached).
     app = _app(report=_report(), pdf_bytes=b"%PDF", pdf_ticker="TEST")
@@ -596,12 +596,12 @@ def test_failed_generation_shows_one_error_and_no_stale_report(monkeypatch):
 
 
 def test_a_shortened_filing_pops_up_a_notification_during_generation(monkeypatch):
-    # Rec 1 says mid-run that the 10-K was shortened: the page shows it as a
+    # The staged pipeline says mid-run that the 10-K was shortened: the page shows it as a
     # notification straight away, before the report is finished.
     def generate(ticker, **settings):
         settings["on_notice"]("The 10-K was shortened to fit.")
         raise RuntimeError("stop here")
-    monkeypatch.setattr(rec1, "generate_report", generate)
+    monkeypatch.setattr(pipeline, "generate_report", generate)
     _no_report_date(monkeypatch)
     app = _app()
 
@@ -624,8 +624,8 @@ def test_refused_market_data_pauses_and_continue_reuses_the_data(monkeypatch):
         calls.append(settings)
         if not settings.get("allow_missing_market_data"):
             raise MarketDataUnavailable(snapshot)
-        return rec1.Rec1Run(_report(), sample_store())
-    monkeypatch.setattr(rec1, "generate_report", generate)
+        return pipeline.PipelineRun(_report(), sample_store())
+    monkeypatch.setattr(pipeline, "generate_report", generate)
     _no_report_date(monkeypatch)
     app = _app(pdf_bytes=b"%PDF", pdf_ticker="TEST")
 
@@ -642,7 +642,7 @@ def test_refused_market_data_pauses_and_continue_reuses_the_data(monkeypatch):
 def test_stopping_a_paused_report_clears_the_pause(monkeypatch):
     def refused(ticker, **settings):
         raise MarketDataUnavailable(_refused_snapshot())
-    monkeypatch.setattr(rec1, "generate_report", refused)
+    monkeypatch.setattr(pipeline, "generate_report", refused)
     _no_report_date(monkeypatch)
     app = _app()
     app.text_input(key="single_ticker_input").input("TEST").run()
@@ -680,14 +680,14 @@ def test_whisper_setting_is_preset_from_the_next_report_date(monkeypatch, found,
 
 def test_ticking_whisper_outside_the_window_warns_and_is_passed_on(monkeypatch):
     # The person may still ask for a lookup when the report is far off; the
-    # page warns it will likely find nothing, and the choice reaches Rec 1.
+    # page warns it will likely find nothing, and the choice reaches the staged pipeline.
     monkeypatch.setattr(consensus, "next_report_date", lambda ticker: (_days_from_now(82), None))
     choices = []
 
     def generate(ticker, **settings):
         choices.append(settings.get("whisper_lookup"))
         raise RuntimeError("stop here")
-    monkeypatch.setattr(rec1, "generate_report", generate)
+    monkeypatch.setattr(pipeline, "generate_report", generate)
     app = _app()
     app.text_input(key="single_ticker_input").input("NFLX").run()
     assert not app.warning

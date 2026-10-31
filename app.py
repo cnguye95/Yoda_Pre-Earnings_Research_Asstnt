@@ -2,8 +2,8 @@
 
 Two views, chosen with a toggle at the top: Single ticker (generate one
 report) and Queue (batch multiple tickers overnight, download all PDFs as a
-ZIP). Reports are written by Rec 1, the analyst-preview workflow
-(yoda/modes/rec1.py).
+ZIP). Reports are written by the staged pipeline
+(yoda/modes/pipeline.py).
 """
 
 import pathlib
@@ -12,7 +12,7 @@ import tempfile
 import streamlit as st
 import streamlit.components.v1 as components
 
-from yoda.modes.rec1 import generate_report
+from yoda.modes.pipeline import generate_report
 from yoda.queue.processor import process_queue
 from yoda.report.header import MarketDataUnavailable
 from yoda.report.pdf import (
@@ -150,7 +150,7 @@ def _whisper_setting(ticker: str) -> bool:
 
 def _generate_report(ticker: str, pause: MarketDataUnavailable | None = None,
                      whisper_lookup: bool | None = None) -> None:
-    """Write *ticker*'s report with Rec 1 and keep it in session state.
+    """Write *ticker*'s report with the staged pipeline and keep it in session state.
 
     *whisper_lookup* is the search setting for the paid whisper lookup.
     *pause* is the earlier MarketDataUnavailable when the person chose to

@@ -19,7 +19,7 @@ it; each arm adds its own news search to its own copy of the store.
 Nothing here pauses or raises for a missing source: each problem becomes a
 sentence in `gaps`, which goes into the report's data gaps, so the reader
 sees what is missing. (The app's pause on refused market data is in
-rec1.generate_report, before this is called.)
+pipeline.generate_report, before this is called.)
 """
 
 from typing import NamedTuple

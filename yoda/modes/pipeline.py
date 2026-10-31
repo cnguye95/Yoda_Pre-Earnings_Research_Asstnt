@@ -1,6 +1,6 @@
-"""Rec 1, the analyst-preview workflow (next_steps item 4): one candidate architecture for Yoda.
+"""The staged pipeline (next_steps item 4): one candidate architecture for Yoda.
 
-run_rec1() writes the report for one ticker in fixed stages, the way an
+run_pipeline() writes the report for one ticker in fixed stages, the way an
 analyst prepares an earnings preview:
   0. Code builds the facts: the shared sources (filings, XBRL fact sheet,
      the latest 8-K, the latest call, market data) as passages with IDs;
@@ -47,7 +47,7 @@ import requests
 from anthropic import transform_schema
 from pydantic import BaseModel
 
-from yoda import config, pricing
+from yoda import config
 from yoda.dates import dates_line
 from yoda.evidence_store import (
     MODE_KINDS, SOURCE_CHARS_LIMIT, add_article, add_news, add_peer, passages_by_id, render_passages,
@@ -56,7 +56,10 @@ from yoda.evidence_store import (
 from yoda.evidence_text import CONFLICT_RULES, NEWER_CONTRADICTION_RULE
 from yoda.ingest.edgar import fetch_filings
 from yoda.modes import tools
-from yoda.modes.llm import NoStructuredOutput, client, submit_call, usage_counts, warm_cache
+from yoda.modes.llm import (
+    NoStructuredOutput, Usage, add_usage, call_usage, client, failed_usage, log_usage, submit_call, usage_counts,
+    warm_cache,
+)
 from yoda.report.checks import check_report
 from yoda.report.claim_check import Repairs, apply_repairs, check_claims, claim_items, remove_claims, render_claim
 from yoda.report.header import MarketDataUnavailable, assemble_report, filings_read
@@ -242,20 +245,6 @@ def source_request(sources_text: str, role: str | None, user_content: str, max_t
             "tools": SOURCE_TOOLS, "system": system, "messages": [{"role": "user", "content": user_content}]}
 
 
-def _source_cost(input_tokens: int, output_tokens: int, cache_write: int, cache_read: int) -> float:
-    """Return the cost of one Sonnet source-reading call (its cache writes are 1-hour writes)."""
-    return pricing.call_cost(SOURCE_MODEL, input_tokens, output_tokens, cache_write_tokens=cache_write,
-                             cache_read_tokens=cache_read, cache_ttl=CACHE_TTL)
-
-
-def _failed_cost(model: str, exc: Exception, cache_ttl: str = "5m") -> float:
-    """Return what a failed call was still paid for: a NoStructuredOutput carries its tokens; other errors cost 0."""
-    if not isinstance(exc, NoStructuredOutput):
-        return 0.0
-    return pricing.call_cost(model, exc.input_tokens, exc.output_tokens, cache_write_tokens=exc.cache_write_tokens,
-                             cache_read_tokens=exc.cache_read_tokens, cache_ttl=cache_ttl)
-
-
 def _check_fits(request: dict) -> None:
     """Raise RuntimeError if *request*'s prompt plus its output ceiling can't fit the model's context window.
 
@@ -279,9 +268,9 @@ def _check_fits(request: dict) -> None:
 # ---------------------------------------------------------------------------
 
 class StageResult(NamedTuple):
-    """One stage's notes and cost; *gap* says why it produced none (None when it worked)."""
+    """One stage's notes and the calls, tokens and cost it used; *gap* says why it produced none (None when it worked)."""
     notes: list[Note]
-    cost_usd: float
+    usage: Usage
     gap: str | None = None
 
 
@@ -291,8 +280,8 @@ def _extract(role: str, sources_text: str, dates: str) -> StageResult:
         reply = submit_call(submit_tool="submit_notes", output_format=Notes,
                             **source_request(sources_text, role, f"{dates}\nExtract your notes.", _NOTES_MAX_TOKENS))
     except _STAGE_ERRORS as exc:
-        return StageResult([], _failed_cost(SOURCE_MODEL, exc, CACHE_TTL), f"{type(exc).__name__}: {exc}")
-    return StageResult(reply.parsed.notes, _source_cost(*reply[1:]))
+        return StageResult([], failed_usage(SOURCE_MODEL, exc, CACHE_TTL), f"{type(exc).__name__}: {exc}")
+    return StageResult(reply.parsed.notes, call_usage(SOURCE_MODEL, tuple(reply[1:]), CACHE_TTL))
 
 
 def _run_tool(ctx: tools.ToolContext, store: EvidenceStore, lock: threading.Lock, name: str, args: dict) -> str:
@@ -336,7 +325,7 @@ def _research(brief: str, first_message: str, ctx: tools.ToolContext, store: Evi
     """
     system = f"{brief}\n\n{_RESEARCH_RULES}"
     messages: list[dict] = [{"role": "user", "content": first_message}]
-    calls_used, cost, tried = 0, 0.0, set()
+    calls_used, usage, tried = 0, Usage(), set()
     started = time.perf_counter()
 
     # MAX_TOOL_CALLS turns of tool use, plus a few to submit.
@@ -347,8 +336,8 @@ def _research(brief: str, first_message: str, ctx: tools.ToolContext, store: Evi
                                           tools=RESEARCH_TOOLS, messages=messages,
                                           cache_control={"type": "ephemeral"})
         except anthropic.APIError as exc:
-            return StageResult([], cost, f"{type(exc).__name__}: {exc}")
-        cost += pricing.call_cost(RESEARCH_MODEL, *usage_counts(resp.usage))
+            return StageResult([], usage, f"{type(exc).__name__}: {exc}")
+        usage = add_usage(usage, call_usage(RESEARCH_MODEL, usage_counts(resp.usage)))
         messages.append({"role": "assistant", "content": resp.content})
         uses = [block for block in resp.content if block.type == "tool_use"]
 
@@ -356,9 +345,9 @@ def _research(brief: str, first_message: str, ctx: tools.ToolContext, store: Evi
         submitted = next((use for use in uses if use.name == "submit_notes"), None)
         if submitted is not None:
             try:
-                return StageResult(Notes.model_validate(submitted.input).notes, cost)
+                return StageResult(Notes.model_validate(submitted.input).notes, usage)
             except pydantic.ValidationError as exc:
-                return StageResult([], cost, f"its notes broke the schema: {exc}")
+                return StageResult([], usage, f"its notes broke the schema: {exc}")
         if not uses:
             messages.append({"role": "user", "content": "Call submit_notes now, with every note."})
             continue
@@ -380,7 +369,7 @@ def _research(brief: str, first_message: str, ctx: tools.ToolContext, store: Evi
                 observation = _run_tool(ctx, store, lock, use.name, use.input)
             results.append({"type": "tool_result", "tool_use_id": use.id, "content": observation})
         messages.append({"role": "user", "content": results})
-    return StageResult([], cost, "it never submitted its notes")
+    return StageResult([], usage, "it never submitted its notes")
 
 
 def _render_notes(stage: str, result: StageResult) -> str:
@@ -409,14 +398,14 @@ def _research_message(sources: SharedSources, dates: str) -> str:
 # Public API
 # ---------------------------------------------------------------------------
 
-class Rec1Run(NamedTuple):
-    """What run_rec1() returns: the checked report and the evidence its writer had (saved for the judge)."""
+class PipelineRun(NamedTuple):
+    """What run_pipeline() returns: the checked report and the evidence its writer had (saved for the judge)."""
     report: EarningsReport
     store: EvidenceStore
 
 
-def run_rec1(ticker: str, sources: SharedSources, on_notice: Callable[[str], None] | None = None) -> Rec1Run:
-    """Write Rec 1's report for *ticker* from the shared *sources* (see the module docstring for the stages).
+def run_pipeline(ticker: str, sources: SharedSources, on_notice: Callable[[str], None] | None = None) -> PipelineRun:
+    """Write the staged pipeline's report for *ticker* from the shared *sources* (stages: the module docstring).
 
     *on_notice* is told, during the run, about anything the reader should
     know at once (e.g. that the older annual report was shortened to fit).
@@ -453,7 +442,9 @@ def run_rec1(ticker: str, sources: SharedSources, on_notice: Callable[[str], Non
     # The warm-up comes first, before anything paid starts: the extractors
     # then read one cache entry rather than each writing its own, and a
     # request the API refuses stops the run before any other call is made.
-    cost = _source_cost(*warm_cache(**source_request(rendered.text, None, "Ready.", 1)))
+    warm_up = call_usage(SOURCE_MODEL, warm_cache(**source_request(rendered.text, None, "Ready.", 1)), CACHE_TTL)
+    log_usage("pipeline", "Cache warm-up", SOURCE_MODEL, warm_up)
+    cost = warm_up.cost_usd
 
     # Stages 1 and 2 run in parallel.
     with ThreadPoolExecutor(max_workers=4) as pool:
@@ -467,11 +458,13 @@ def run_rec1(ticker: str, sources: SharedSources, on_notice: Callable[[str], Non
                   **{f"{name.capitalize()} researcher": future.result() for name, future in research.items()}}
     if not has_post_filing:
         gaps.append("No 8-K or earnings call to extract from after the filing.")
+    # One usage line per stage: a researcher's line sums all its turns.
     for name, result in stages.items():
-        cost += result.cost_usd
-        print(f"[rec1] {name}: {len(result.notes)} notes, ${result.cost_usd:.5f}"
-              + (f" — FAILED: {result.gap}" if result.gap else ""))
+        cost += result.usage.cost_usd
+        log_usage("pipeline", f"{name} (notes: {len(result.notes)})",
+                  SOURCE_MODEL if name in extractors else RESEARCH_MODEL, result.usage)
         if result.gap:
+            print(f"[pipeline] {name} FAILED: {result.gap}")
             gaps.append(f"{name} produced no notes ({result.gap}).")
 
     # Stage 3: the writer reads the sources (cached), every stage's notes and
@@ -485,7 +478,9 @@ def run_rec1(ticker: str, sources: SharedSources, on_notice: Callable[[str], Non
                              "Write the report.", _REPORT_MAX_TOKENS)
     _check_fits(request)
     reply = submit_call(submit_tool="submit_report", output_format=ReportDraft, **request)
-    cost += _source_cost(*reply[1:])
+    writer = call_usage(SOURCE_MODEL, tuple(reply[1:]), CACHE_TTL)
+    log_usage("pipeline", "Writer", SOURCE_MODEL, writer)
+    cost += writer.cost_usd
     report = assemble_report(reply.parsed, filing_set, store, eight_ks=sources.eight_ks, call=sources.call,
                              snapshot=sources.snapshot, gaps=gaps)
 
@@ -494,9 +489,9 @@ def run_rec1(ticker: str, sources: SharedSources, on_notice: Callable[[str], Non
     cost += _check_and_repair(report, store, rendered.text, dates)
     check_report(report, store)
 
-    print(f"[rec1] Wall time:  {time.perf_counter() - started:.2f}s")
-    print(f"[rec1] Total cost: ${cost:.5f}")
-    return Rec1Run(report, store)
+    print(f"[pipeline] Wall time:  {time.perf_counter() - started:.2f}s")
+    print(f"[pipeline] Total cost: ${cost:.5f}")
+    return PipelineRun(report, store)
 
 
 def _check_and_repair(report: EarningsReport, store: EvidenceStore, sources_text: str, dates: str) -> float:
@@ -518,13 +513,15 @@ def _check_and_repair(report: EarningsReport, store: EvidenceStore, sources_text
     try:
         reply = submit_call(submit_tool="submit_repairs", output_format=Repairs,
                             **source_request(sources_text, _REPAIR, f"{dates}\n\n{listed}", _NOTES_MAX_TOKENS))
-        cost += _source_cost(*reply[1:])
+        repair = call_usage(SOURCE_MODEL, tuple(reply[1:]), CACHE_TTL)
         rewritten = apply_repairs(report, reply.parsed, checked.unsupported)
     except _STAGE_ERRORS as exc:
-        cost += _failed_cost(SOURCE_MODEL, exc, CACHE_TTL)
+        repair = failed_usage(SOURCE_MODEL, exc, CACHE_TTL)
         report.data_gaps.append(f"The repair pass failed ({type(exc).__name__}: {exc}); unsupported claims "
                                 "were removed instead.")
         rewritten = []
+    log_usage("pipeline", "Repair pass", SOURCE_MODEL, repair)
+    cost += repair.cost_usd
 
     # Rewritten claims get one more check; deleted and unrepaired ones go.
     rechecked = check_claims(report, store, only=set(rewritten)) if rewritten else None
@@ -533,13 +530,13 @@ def _check_and_repair(report: EarningsReport, store: EvidenceStore, sources_text
         cost += rechecked.cost_usd
         still_failing |= rechecked.unsupported
     remove_claims(report, still_failing)
-    print(f"[rec1] Repair: {len(rewritten)} rewritten, {len(still_failing)} removed")
+    print(f"[pipeline] Repair: {len(rewritten)} rewritten, {len(still_failing)} removed")
     return cost
 
 
 def generate_report(ticker: str, market: MarketSnapshot | None = None, allow_missing_market_data: bool = False,
                     whisper_lookup: bool | None = None,
-                    on_notice: Callable[[str], None] | None = None) -> Rec1Run:
+                    on_notice: Callable[[str], None] | None = None) -> PipelineRun:
     """Fetch everything for *ticker* and write its report (the app's and the queue's entry point).
 
     *market* is market data already fetched (when continuing after a
@@ -558,27 +555,27 @@ def generate_report(ticker: str, market: MarketSnapshot | None = None, allow_mis
     filing_set = fetch_filings(ticker)
     if filing_set is None:
         raise ValueError(f"No recent 10-Q or annual report for {ticker}: there is nothing to write the report from.")
-    return run_rec1(ticker, fetch_shared_sources(filing_set, snapshot=market), on_notice=on_notice)
+    return run_pipeline(ticker, fetch_shared_sources(filing_set, snapshot=market), on_notice=on_notice)
 
 
 # ---------------------------------------------------------------------------
-# Smoke test — run with: python -m yoda.modes.rec1 [TICKER]  (paid calls)
+# Smoke test — run with: python -m yoda.modes.pipeline [TICKER]  (paid calls)
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
     import sys
 
     ticker = (sys.argv[1] if len(sys.argv) > 1 else "NVDA").upper()
-    print(f"Running Rec 1 for {ticker}...")
+    print(f"Running the staged pipeline for {ticker}...")
     run = generate_report(ticker, allow_missing_market_data=True, on_notice=lambda message: print(f"NOTICE: {message}"))
 
     # Save to data/eval/ alongside the eval runner's outputs.
     out_dir = config.DATA_DIR / "eval"
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / f"rec1_{ticker}.json").write_text(run.report.model_dump_json(indent=2), encoding="utf-8")
-    (out_dir / f"rec1_{ticker}_evidence.json").write_text(run.store.model_dump_json(), encoding="utf-8")
+    (out_dir / f"pipeline_{ticker}.json").write_text(run.report.model_dump_json(indent=2), encoding="utf-8")
+    (out_dir / f"pipeline_{ticker}_evidence.json").write_text(run.store.model_dump_json(), encoding="utf-8")
     report = run.report
-    print(f"\nSaved to {out_dir / f'rec1_{ticker}.json'}")
+    print(f"\nSaved to {out_dir / f'pipeline_{ticker}.json'}")
     print(f"Sections:  setup {len(report.setup_summary)}, metrics {len(report.metrics_to_model)}, "
           f"guidance {len(report.guidance)}, since filing {len(report.since_filing)}, "
           f"debates {len(report.key_debates)}, risks {len(report.key_risks)}")

@@ -1,9 +1,9 @@
-"""Offline tests for Rec 1, the analyst-preview workflow (yoda/modes/rec1.py).
+"""Offline tests for the staged pipeline (yoda/modes/pipeline.py).
 
 No model, search or filing service is called: each test replaces them with
 fakes that record what they were sent.
 
-Run with: python -m pytest -q tests/test_rec1.py
+Run with: python -m pytest -q tests/test_pipeline.py
 """
 
 from types import SimpleNamespace
@@ -15,7 +15,7 @@ from yoda.eval import runner
 from yoda.evidence_store import SOURCE_CHARS_LIMIT
 from yoda.evidence_text import CONFLICT_RULES, NEWER_CONTRADICTION_RULE
 from yoda.ingest.transcripts import TranscriptFetch
-from yoda.modes import llm, rec1, tools
+from yoda.modes import llm, pipeline, tools
 from yoda.prompt_cache import cache_misses
 from yoda.report.claim_check import ClaimCheck, Repair, Repairs
 from yoda.report.header import MarketDataUnavailable
@@ -56,7 +56,7 @@ _NEWS = NewsSearchResult(title="TEST preview", url="https://news.example/a", sni
 
 
 class _Fakes:
-    """Every outside call of a Rec 1 run, faked; records what each was sent."""
+    """Every outside call of a staged pipeline run, faked; records what each was sent."""
 
     def __init__(self, monkeypatch, research_turns=None, unsupported=None, repairs=None, fail_stage=None):
         self.warmed: list[dict] = []
@@ -76,11 +76,11 @@ class _Fakes:
         self.repairs = repairs
         self.fail_stage = fail_stage
 
-        monkeypatch.setattr(rec1, "ChromaStore", lambda: None)
-        monkeypatch.setattr(rec1, "warm_cache", self.warm)
-        monkeypatch.setattr(rec1, "submit_call", self.submit)
-        monkeypatch.setattr(rec1, "client", SimpleNamespace(messages=SimpleNamespace(create=self.create)))
-        monkeypatch.setattr(rec1, "check_claims", self.check)
+        monkeypatch.setattr(pipeline, "ChromaStore", lambda: None)
+        monkeypatch.setattr(pipeline, "warm_cache", self.warm)
+        monkeypatch.setattr(pipeline, "submit_call", self.submit)
+        monkeypatch.setattr(pipeline, "client", SimpleNamespace(messages=SimpleNamespace(create=self.create)))
+        monkeypatch.setattr(pipeline, "check_claims", self.check)
         monkeypatch.setitem(tools.TOOL_DISPATCH, "search_news", self.search)
 
     def warm(self, **request):
@@ -93,7 +93,7 @@ class _Fakes:
         if self.fail_stage and self.fail_stage in role:
             raise llm.NoStructuredOutput(request["model"], "max_tokens", 5, 5)
         if submit_tool == "submit_notes":
-            parsed = rec1.Notes(notes=[rec1.Note(topic="kpis", claim=claim("Revenue was $11.5B.", "Q.001"))])
+            parsed = pipeline.Notes(notes=[pipeline.Note(topic="kpis", claim=claim("Revenue was $11.5B.", "Q.001"))])
         elif submit_tool == "submit_report":
             parsed = ReportDraft(**sample_report().model_dump(include=set(ReportDraft.model_fields)))
         else:
@@ -121,7 +121,7 @@ class _Fakes:
 def test_every_sonnet_call_reads_the_one_cache_entry_the_warm_up_wrote(monkeypatch):
     fakes = _Fakes(monkeypatch, unsupported={"setup_summary[0]": "wrong period"},
                    repairs=Repairs(repairs=[Repair(where="setup_summary[0]", action="delete", claim=None)]))
-    rec1.run_rec1("TEST", _sources())
+    pipeline.run_pipeline("TEST", _sources())
     requests = [*fakes.warmed, *fakes.sonnet]
     # Warm-up, two extractors, the writer and the repair pass.
     assert [r.get("submit_tool") for r in requests] == [None, "submit_notes", "submit_notes", "submit_report",
@@ -140,20 +140,20 @@ def test_a_refused_warm_up_stops_the_run_before_any_paid_call(monkeypatch):
 
     def refused(**request):
         raise RuntimeError("400: the compiled grammar is too large")
-    monkeypatch.setattr(rec1, "warm_cache", refused)
+    monkeypatch.setattr(pipeline, "warm_cache", refused)
     with pytest.raises(RuntimeError, match="grammar"):
-        rec1.run_rec1("TEST", _sources())
+        pipeline.run_pipeline("TEST", _sources())
     assert fakes.haiku == [] and fakes.sonnet == []
 
 
 def test_the_submit_tools_are_not_strict():
     # The API refuses the three submit tools as strict tools (grammar too large).
-    assert not any(tool.get("strict") for tool in rec1.SOURCE_TOOLS)
+    assert not any(tool.get("strict") for tool in pipeline.SOURCE_TOOLS)
 
 
 def test_the_writer_gets_the_fact_rules_the_notes_and_the_researchers_passages(monkeypatch):
     fakes = _Fakes(monkeypatch)
-    run = rec1.run_rec1("TEST", _sources())
+    run = pipeline.run_pipeline("TEST", _sources())
     writer = next(r for r in fakes.sonnet if r["submit_tool"] == "submit_report")
     role, message = writer["system"][1]["text"], writer["messages"][0]["content"]
     assert CONFLICT_RULES in role and NEWER_CONTRADICTION_RULE in role
@@ -166,12 +166,12 @@ def test_the_writer_gets_the_fact_rules_the_notes_and_the_researchers_passages(m
 
 def test_researcher_results_become_store_passages_the_model_sees_by_id(monkeypatch):
     fakes = _Fakes(monkeypatch)
-    run = rec1.run_rec1("TEST", _sources())
+    run = pipeline.run_pipeline("TEST", _sources())
     news = [p for p in run.store.passages if p.kind == "news"]
     assert [p.id for p in news] == ["N.01"]   # both researchers found it; stored once
     tool_result = fakes.haiku[1]["messages"][2]["content"][0]
     assert tool_result["type"] == "tool_result" and "[N.01]" in tool_result["content"]
-    assert {r["model"] for r in fakes.haiku} == {rec1.RESEARCH_MODEL}
+    assert {r["model"] for r in fakes.haiku} == {pipeline.RESEARCH_MODEL}
     assert [t["name"] for t in fakes.haiku[0]["tools"]] == ["lookup_peer", "read_article", "search_news",
                                                            "submit_notes"]
 
@@ -179,8 +179,8 @@ def test_researcher_results_become_store_passages_the_model_sees_by_id(monkeypat
 def test_a_researcher_stops_at_its_tool_budget_and_repeats_are_refused(monkeypatch):
     fakes = _Fakes(monkeypatch, research_turns=[lambda: _response(_tool_use("search_news", {"query": "same"}))])
     stages = {}
-    monkeypatch.setattr(rec1, "_render_notes", lambda name, result: stages.setdefault(name, result) and "")
-    rec1.run_rec1("TEST", _sources())
+    monkeypatch.setattr(pipeline, "_render_notes", lambda name, result: stages.setdefault(name, result) and "")
+    pipeline.run_pipeline("TEST", _sources())
     # Each researcher ran its search once; every later identical call was refused, then the loop gave up.
     assert fakes.searches == ["same", "same"]
     assert stages["News researcher"].gap == "it never submitted its notes"
@@ -193,8 +193,8 @@ def test_out_of_budget_calls_are_refused(monkeypatch):
     queries = iter(range(100))
     fakes = _Fakes(monkeypatch, research_turns=[
         lambda: _response(_tool_use("search_news", {"query": f"q{next(queries)}"}))])
-    monkeypatch.setattr(rec1, "MAX_TOOL_CALLS", 2)
-    rec1.run_rec1("TEST", _sources())
+    monkeypatch.setattr(pipeline, "MAX_TOOL_CALLS", 2)
+    pipeline.run_pipeline("TEST", _sources())
     assert len(fakes.searches) == 4   # two per researcher
     last = fakes.haiku[-1]["messages"][-1]["content"][0]["content"]
     assert last.startswith("No more tool calls")
@@ -202,7 +202,7 @@ def test_out_of_budget_calls_are_refused(monkeypatch):
 
 def test_a_failed_stage_is_a_gap_and_the_report_is_still_written(monkeypatch):
     _Fakes(monkeypatch, fail_stage="post-filing extractor")
-    run = rec1.run_rec1("TEST", _sources())
+    run = pipeline.run_pipeline("TEST", _sources())
     assert any(gap.startswith("Post-filing extractor produced no notes (NoStructuredOutput")
                for gap in run.report.data_gaps)
     assert run.report.setup_summary
@@ -210,7 +210,7 @@ def test_a_failed_stage_is_a_gap_and_the_report_is_still_written(monkeypatch):
 
 def test_no_8k_and_no_call_skips_the_post_filing_extractor(monkeypatch):
     fakes = _Fakes(monkeypatch)
-    run = rec1.run_rec1("TEST", _sources(eight_ks=[], call=TranscriptFetch(None, "none found")))
+    run = pipeline.run_pipeline("TEST", _sources(eight_ks=[], call=TranscriptFetch(None, "none found")))
     assert sum(r["submit_tool"] == "submit_notes" for r in fakes.sonnet) == 1
     assert "No 8-K or earnings call to extract from after the filing." in run.report.data_gaps
 
@@ -219,7 +219,7 @@ def test_unrepaired_claims_are_removed_and_rewrites_are_rechecked(monkeypatch):
     fakes = _Fakes(monkeypatch, unsupported={"setup_summary[0]": "wrong period", "key_risks[0]": "overstated"},
                    repairs=Repairs(repairs=[Repair(where="setup_summary[0]", action="rewrite",
                                                    claim=claim("Revenue was $11.5 billion.", "Q.001"))]))
-    run = rec1.run_rec1("TEST", _sources())
+    run = pipeline.run_pipeline("TEST", _sources())
     assert fakes.checks == [None, {"setup_summary[0]"}]
     assert run.report.setup_summary[0].text == "Revenue was $11.5 billion."
     assert run.report.key_risks == []   # not repaired, so removed
@@ -234,69 +234,91 @@ def test_a_shortened_filing_is_a_live_notice_and_a_gap(monkeypatch):
     sources = _sources()
     sources = sources._replace(filing_set=sources.filing_set.model_copy(
         update={"filings": [*sources.filing_set.filings, annual]}))
-    monkeypatch.setattr(rec1, "SOURCE_CHARS_LIMIT", len(_FILING_TEXT) + 2_000)
+    monkeypatch.setattr(pipeline, "SOURCE_CHARS_LIMIT", len(_FILING_TEXT) + 2_000)
     notices = []
-    run = rec1.run_rec1("TEST", sources, on_notice=notices.append)
+    run = pipeline.run_pipeline("TEST", sources, on_notice=notices.append)
     assert notices and notices[0].startswith("The 10-K filed 2026-02-01 was")
     assert notices[0] in run.report.data_gaps
 
 
 def test_cost_and_wall_time_lines_parse_with_the_runners_regexes(monkeypatch, capsys):
     _Fakes(monkeypatch)
-    rec1.run_rec1("TEST", _sources())
+    pipeline.run_pipeline("TEST", _sources())
     log = capsys.readouterr().out
     assert runner._RE_COST.search(log) and runner._RE_WALL_TIME.search(log)
+
+
+def test_usage_is_printed_once_per_stage_with_its_calls_summed(monkeypatch, capsys):
+    # One line per stage, not per call: a researcher's turns are summed, and
+    # a failed call that was still paid for counts toward its stage.
+    _Fakes(monkeypatch, fail_stage="post-filing extractor", unsupported={"setup_summary[0]": "wrong period"},
+           repairs=Repairs(repairs=[Repair(where="setup_summary[0]", action="delete", claim=None)]))
+    pipeline.run_pipeline("TEST", _sources())
+    lines = [line for line in capsys.readouterr().out.splitlines() if " cache read, $" in line]
+    sonnet, haiku = pipeline.SOURCE_MODEL, pipeline.RESEARCH_MODEL
+    expected = [
+        f"[pipeline] Cache warm-up: 1 call, {sonnet}, 10 in / 0 out / 2,000 cache write / 0 cache read, $",
+        f"[pipeline] Filing extractor (notes: 1): 1 call, {sonnet}, 10 in / 10 out / 0 cache write / 2,000 cache read, $",
+        f"[pipeline] Post-filing extractor (notes: 0): 1 call, {sonnet}, 5 in / 5 out / 0 cache write / 0 cache read, $",
+        f"[pipeline] News researcher (notes: 1): 2 calls, {haiku}, 200 in / 200 out / 0 cache write / 0 cache read, $",
+        f"[pipeline] Peers researcher (notes: 1): 2 calls, {haiku}, 200 in / 200 out / 0 cache write / 0 cache read, $",
+        f"[pipeline] Writer: 1 call, {sonnet}, 10 in / 10 out / 0 cache write / 2,000 cache read, $",
+        f"[pipeline] Repair pass: 1 call, {sonnet}, 10 in / 10 out / 0 cache write / 2,000 cache read, $",
+    ]
+    assert len(lines) == len(expected)
+    for line, start in zip(lines, expected):
+        assert line.startswith(start), line
 
 
 def test_refused_market_data_pauses_before_any_model_call(monkeypatch):
     fakes = _Fakes(monkeypatch)
     refused = sample_snapshot(failures=[ApiFailure("consensus", "Finnhub", "401 rejected key")])
-    monkeypatch.setattr(rec1, "get_market_snapshot", lambda ticker, whisper_lookup=None: refused)
-    monkeypatch.setattr(rec1, "fetch_filings", lambda ticker: pytest.fail("fetched filings before pausing"))
+    monkeypatch.setattr(pipeline, "get_market_snapshot", lambda ticker, whisper_lookup=None: refused)
+    monkeypatch.setattr(pipeline, "fetch_filings", lambda ticker: pytest.fail("fetched filings before pausing"))
     with pytest.raises(MarketDataUnavailable) as paused:
-        rec1.generate_report("test")
+        pipeline.generate_report("test")
     assert paused.value.snapshot is refused and fakes.warmed == [] and fakes.sonnet == []
 
 
 def test_continuing_after_a_pause_reuses_the_snapshot(monkeypatch):
     _Fakes(monkeypatch)
     refused = sample_snapshot(failures=[ApiFailure("consensus", "Finnhub", "401 rejected key")])
-    monkeypatch.setattr(rec1, "get_market_snapshot", lambda *a, **k: pytest.fail("fetched market data again"))
-    monkeypatch.setattr(rec1, "fetch_filings", lambda ticker: _sources().filing_set)
+    monkeypatch.setattr(pipeline, "get_market_snapshot", lambda *a, **k: pytest.fail("fetched market data again"))
+    monkeypatch.setattr(pipeline, "fetch_filings", lambda ticker: _sources().filing_set)
     passed = []
-    monkeypatch.setattr(rec1, "fetch_shared_sources", lambda filing_set, snapshot: passed.append(snapshot)
+    monkeypatch.setattr(pipeline, "fetch_shared_sources", lambda filing_set, snapshot: passed.append(snapshot)
                         or _sources(snapshot=snapshot))
-    rec1.generate_report("TEST", market=refused, allow_missing_market_data=True)
+    pipeline.generate_report("TEST", market=refused, allow_missing_market_data=True)
     assert passed == [refused]
 
 
 def test_the_whisper_setting_reaches_the_market_data_fetch(monkeypatch):
     _Fakes(monkeypatch)
     asked = []
-    monkeypatch.setattr(rec1, "get_market_snapshot",
+    monkeypatch.setattr(pipeline, "get_market_snapshot",
                         lambda ticker, whisper_lookup=None: asked.append(whisper_lookup) or sample_snapshot())
-    monkeypatch.setattr(rec1, "fetch_filings", lambda ticker: None)
+    monkeypatch.setattr(pipeline, "fetch_filings", lambda ticker: None)
     with pytest.raises(ValueError, match="No recent 10-Q"):
-        rec1.generate_report("TEST", whisper_lookup=False)
+        pipeline.generate_report("TEST", whisper_lookup=False)
     assert asked == [False]
 
 
 def test_a_prompt_too_long_for_the_context_window_fails_loudly(monkeypatch):
     counted = []
-    monkeypatch.setattr(rec1, "client", SimpleNamespace(messages=SimpleNamespace(
+    monkeypatch.setattr(pipeline, "client", SimpleNamespace(messages=SimpleNamespace(
         count_tokens=lambda **request: counted.append(request) or SimpleNamespace(input_tokens=990_000))))
-    huge = rec1.source_request("x" * 2_400_000, rec1._WRITER, "Write.", rec1._REPORT_MAX_TOKENS)
+    huge = pipeline.source_request("x" * 2_400_000, pipeline._WRITER, "Write.", pipeline._REPORT_MAX_TOKENS)
     with pytest.raises(RuntimeError, match="doesn't fit"):
-        rec1._check_fits(huge)
+        pipeline._check_fits(huge)
     # A normal-sized prompt is settled by the estimate alone: no count is asked for.
-    rec1._check_fits(rec1.source_request(_FILING_TEXT, rec1._WRITER, "Write.", rec1._REPORT_MAX_TOKENS))
+    pipeline._check_fits(pipeline.source_request(_FILING_TEXT, pipeline._WRITER, "Write.", pipeline._REPORT_MAX_TOKENS))
     assert len(counted) == 1
 
 
 def test_the_source_text_is_identical_to_every_other_arms(monkeypatch):
-    # Rec 1 renders the shared sources with the one length limit every arm uses.
+    # The staged pipeline renders the shared sources with the one length limit every arm uses.
     fakes = _Fakes(monkeypatch)
     sources = _sources()
-    rec1.run_rec1("TEST", sources)
-    expected = rec1.render_sources(base_store(sources), max_chars=SOURCE_CHARS_LIMIT).text
+    pipeline.run_pipeline("TEST", sources)
+    expected = pipeline.render_sources(base_store(sources), max_chars=SOURCE_CHARS_LIMIT).text
     assert fakes.warmed[0]["system"][0]["text"] == expected

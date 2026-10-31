@@ -40,9 +40,9 @@ WHEN labels (relative to the architecture comparison, item 4; set
       WHEN: AFTER. Every arm shares one market snapshot per ticker, and the
       lookup runs only for reports 3 days away or less.
    e. App: the queue-view fix and the queue's live mid-run notices.
-      DONE (2026-10-30): seen in the browser with Rec 1 stubbed (the queue
-      stays on its view, shows each ticker's mid-run notice, pauses on
-      refused market data and continues).
+      DONE (2026-10-30): seen in the browser with the staged pipeline
+      stubbed (the queue stays on its view, shows each ticker's mid-run
+      notice, pauses on refused market data and continues).
 
 
 2. Eval baseline
@@ -69,25 +69,25 @@ WHEN labels (relative to the architecture comparison, item 4; set
      store so the judge sees what it saw.
 
 
-4. Architecture comparison: Recommendation 1 vs Recommendation 2 vs
+4. Architecture comparison: staged pipeline vs lead analyst method vs
    baseline option B (NOT RUN YET: the smoke and full runs each need an
    explicit yes and enough credit)
    The personality panel was removed (2026-10-30). Two candidate
    architectures are built and run with the baseline on the full
    20-ticker set; the better one becomes Yoda.
-   - Rec 1, analyst-preview workflow: code builds the facts; fixed stages
-     (a filing extractor, a post-filing extractor for the 8-K and the
-     call, two news/peer researchers, expectations computed in code) feed
-     one writer; every claim is checked against the passages it cites,
-     then one repair pass.
-   - Rec 2, lead analyst with question workers: a lead picks 4-6
-     company-specific questions and briefs one worker per question; the
-     lead reviews the findings, fills gaps once and writes; the same claim
-     check follows.
-   - Models (decided 2026-10-30): writer Sonnet 5.5 (Rec 2's lead too);
-     Rec 1 researchers Haiku 5.5; Rec 2 workers Sonnet 5.5; claim check
-     Haiku 5.5, with a Sonnet 5.5 second opinion on the claims Haiku
-     fails (a claim is removed only when both agree).
+   - Staged pipeline: code builds the facts; fixed stages (a filing
+     extractor, a post-filing extractor for the 8-K and the call, two
+     news/peer researchers, expectations computed in code) feed one
+     writer; every claim is checked against the passages it cites, then
+     one repair pass.
+   - Lead analyst method: a lead picks 4-6 company-specific questions and
+     briefs one worker per question; the lead reviews the findings, fills
+     gaps once and writes; the same claim check follows.
+   - Models (decided 2026-10-30): writer Sonnet 5.5 (also the lead in the
+     lead analyst method); staged pipeline researchers Haiku 5.5; lead
+     analyst workers Sonnet 5.5; claim check Haiku 5.5, with a Sonnet 5.5
+     second opinion on the claims Haiku fails (a claim is removed only
+     when both agree).
    - Built and shared by every arm (2026-10-30; were 4a and 4b): the evidence store
      (yoda/evidence_store.py, passage IDs), the XBRL fact sheet
      (yoda/ingest/xbrl.py), the report schema and citation checks
@@ -103,17 +103,18 @@ WHEN labels (relative to the architecture comparison, item 4; set
      * Complex (9): JPM, USB, UNH, XOM, KO, AMZN, JNJ, DIS, BA.
      * Simple (11): AAPL, MSFT, NVDA, AMD, HD, SLB, PG, NFLX, CAT, PANW,
        CRM.
-     * Analysis: report the Rec 1 vs Rec 2 score gap within each group
-       next to the overall gap. With 9-11 tickers per group, read group
-       differences as a direction, not proof.
-   - Prompt-caching rules for the Rec arms (item 12): the shared source is
-     the first system block, marked as a cache breakpoint, role
-     instructions after it; all of an arm's source-reading calls share
+     * Analysis: report the staged pipeline vs lead analyst score gap
+       within each group next to the overall gap. With 9-11 tickers per
+       group, read group differences as a direction, not proof.
+   - Prompt-caching rules for the two candidate methods (item 12): the
+     shared source is the first system block, marked as a cache
+     breakpoint, role instructions after it; all of an arm's
+     source-reading calls share
      model, pinned effort and a sorted tool list; nothing variable (dates,
      IDs) before the breakpoint; warm the cache with one call before
-     fanning out parallel calls; 5-minute cache (Rec 1 uses 1-hour,
-     decided 2026-10-30: its repair pass starts over 5 minutes after the
-     writer's read); no cross-arm sharing;
+     fanning out parallel calls; 5-minute cache (the staged pipeline uses
+     1-hour, decided 2026-10-30: its repair pass starts over 5 minutes
+     after the writer's read); no cross-arm sharing;
      prove it with yoda/prompt_cache.cache_misses(). The baseline has no
      breakpoint: it makes one call, so nothing would read the cache.
    d. Run harness (BEFORE SMOKE).
@@ -140,8 +141,9 @@ WHEN labels (relative to the architecture comparison, item 4; set
       - REMINDER: before starting, check there is enough API credit on
         both accounts. Estimate (offline cost model rerun 2026-10-30 with
         measured source sizes, all cost methods): ~$20.40 in total —
-        Anthropic ~$18.30 (baseline ~$1.57 batched, Rec 1 ~$6.29, Rec 2
-        ~$10.41, or ~$10.95 if its workers read the full text), OpenAI
+        Anthropic ~$18.30 (baseline ~$1.57 batched, staged pipeline
+        ~$6.29, lead analyst ~$10.41, or ~$10.95 if its workers read the
+        full text), OpenAI
         judge ~$2.10 — plus up to ~$0.75 of whisper lookups.
       - Measures the real cost per arm and the judge's cache-hit rate;
         those numbers replace the estimates for the full run.
@@ -150,23 +152,27 @@ WHEN labels (relative to the architecture comparison, item 4; set
       - REMINDER: before starting, check there is enough API credit on
         both accounts, using the smoke run's measured costs. Estimate
         (same model): ~$80.90 — Anthropic ~$73.10 (baseline ~$6.28
-        batched, Rec 1 ~$25.17, Rec 2 ~$41.65-43.78), OpenAI judge ~$7.77.
+        batched, staged pipeline ~$25.17, lead analyst ~$41.65-43.78),
+        OpenAI judge ~$7.77.
       - After it: item 13 (remove XOM's saved predecessor link).
 
    Order of the remaining BEFORE SMOKE work (one item at a time; steps
    1-8 are done):
-    8. Rec 1. DONE (2026-10-30): yoda/report/claim_check.py (Haiku check,
-       Sonnet second opinion, repair helpers), yoda/modes/rec1.py (runner
-       mode "rec1"; generate_report() for the app), and the app's report
-       generation, market-data pause, whisper setting and live notices.
+    8. Staged pipeline. DONE (2026-10-30): yoda/report/claim_check.py
+       (Haiku check, Sonnet second opinion, repair helpers),
+       yoda/modes/pipeline.py (runner mode "pipeline"; generate_report()
+       for the app), and the app's report generation, market-data pause,
+       whisper setting and live notices.
        Not yet run against the real models: a paid one-ticker check
-       (python -m yoda.modes.rec1 TICKER, ~$1.55) needs an explicit yes.
-       Smoke estimate for Rec 1 is now ~$7.75 (1-hour cache write).
-    9. Rec 2 design; item 9 R5 if its workers search passages, then R4/R6
-       if R5 shows weak recall; then build Rec 2. Cost doesn't decide
-       whether workers read the full source (with caching it costs about
-       the same as passage search), so choose on quality; full text makes
-       R5/R4/R6 unnecessary for Rec 2. Note: tools.retrieve_filing and the
+       (python -m yoda.modes.pipeline TICKER, ~$1.55) needs an explicit yes.
+       Smoke estimate for the staged pipeline is now ~$7.75 (1-hour cache
+       write).
+    9. Lead analyst method design; item 9 R5 if its workers search
+       passages, then R4/R6 if R5 shows weak recall; then build the lead
+       analyst method. Cost doesn't decide whether workers read the full
+       source (with caching it costs about the same as passage search), so
+       choose on quality; full text makes R5/R4/R6 unnecessary for the
+       lead analyst method. Note: tools.retrieve_filing and the
        vector store still return chunker windows without passage IDs; an
        arm that retrieves must return store passages, the unit every
        citation is checked against.
@@ -231,10 +237,11 @@ WHEN labels (relative to the architecture comparison, item 4; set
      WFC-specific rules, then fresh hold-outs to check they generalise.
      Minor: SU's MD&A after its risk factors is labelled Other; USB's
      EX-13 "Company Information" is not recognised.
-   WHEN for the rest: R5 CONDITIONAL, BEFORE SMOKE if Rec 2's workers
-   search passages (decided when Rec 2 is designed); otherwise it covers
-   only peer lookups. R4/R6 CONDITIONAL, BEFORE SMOKE only if R5 shows
-   weak recall (they change what Rec 2 reads); otherwise not needed.
+   WHEN for the rest: R5 CONDITIONAL, BEFORE SMOKE if the lead analyst
+   method's workers search passages (decided when that method is
+   designed); otherwise it covers only peer lookups. R4/R6 CONDITIONAL,
+   BEFORE SMOKE only if R5 shows weak recall (they change what the lead
+   analyst method reads); otherwise not needed.
    R4. Improve chunks, not by semantic chunking (today's chunker already
        splits at paragraph breaks):
        a. Prefix each chunk's embedded text with where it came from
@@ -268,7 +275,7 @@ WHEN labels (relative to the architecture comparison, item 4; set
     4d), effort pinned on every call, usage logged per call. Not adopted
     (they trade quality or can't be measured without spend): lower effort,
     more Haiku, less filing text for writers, splitting Haiku prompts
-    under 100K tokens, batching the Rec arms.
+    under 100K tokens, batching the two candidate methods.
     WHEN for the rest: AFTER, on the winning architecture.
     - Use the full run's per-stage costs and scores to find where money
       goes; compare candidate changes on a few tickers against those

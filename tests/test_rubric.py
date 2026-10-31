@@ -16,7 +16,7 @@ from samples import RECENT, claim, sample_report, sample_store
 from yoda.eval import evidence, judge, rubric, runner
 from yoda.eval.rubric import DIMENSIONS, NO_QUOTE, DimensionScore, JudgeQuote, JudgeScores
 from yoda.evidence_text import CONFLICT_RULES
-from yoda.modes import rec1
+from yoda.modes import pipeline
 from yoda.schema import EvidenceStore, Filing, FilingSet, Passage
 
 
@@ -289,29 +289,29 @@ def test_runner_judges_each_mode_on_its_own_evidence(monkeypatch, tmp_path):
     monkeypatch.setattr(runner, "write_run_manifest", lambda keys: None)
     monkeypatch.setattr(runner, "prune_judge_cache", lambda keep_runs: None)
 
-    runner.run_eval(["TEST"], modes=("baseline", "rec1"), out_dir=tmp_path)
+    runner.run_eval(["TEST"], modes=("baseline", "pipeline"), out_dir=tmp_path)
 
     (base_text, base_na), (other_text, other_na) = calls
     assert set(base_na) == {"market_expectations", "evidence_labelling"} and other_na == {}
     assert "[M.01]" not in base_text and "[M.01] Consensus EPS: $1.23" in other_text
     # Each store is saved next to its report, and reads back as it was.
     saved = EvidenceStore.model_validate_json((tmp_path / "baseline_TEST_evidence.json").read_text(encoding="utf-8"))
-    assert saved == _filing_only_store() and (tmp_path / "rec1_TEST_evidence.json").exists()
+    assert saved == _filing_only_store() and (tmp_path / "pipeline_TEST_evidence.json").exists()
 
 
-def test_runner_defaults_to_the_baseline_and_the_retired_yoda_mode_points_to_rec1(monkeypatch, tmp_path):
+def test_runner_defaults_to_the_baseline_and_the_retired_yoda_mode_points_to_the_pipeline(monkeypatch, tmp_path):
     assert runner.DEFAULT_MODES == ("baseline",) and runner._parse_args([]).modes == ["baseline"]
-    assert runner._parse_args(["--modes", "baseline", "rec1"]).modes == ["baseline", "rec1"]
-    with pytest.raises(ValueError, match="Rec 1 runs as mode rec1"):
+    assert runner._parse_args(["--modes", "baseline", "pipeline"]).modes == ["baseline", "pipeline"]
+    with pytest.raises(ValueError, match="the staged pipeline runs as mode pipeline"):
         runner._run_mode("yoda", "TEST", _Q_ONLY)
 
 
-def test_runner_runs_rec1_and_reads_its_cost_and_time(monkeypatch):
-    def fake_rec1(ticker, sources):
-        print("[rec1] Wall time:  12.50s\n[rec1] Total cost: $1.23456")
-        return rec1.Rec1Run(sample_report(), sample_store())
-    monkeypatch.setattr(runner, "run_rec1", fake_rec1)
-    run = runner._run_mode("rec1", "TEST", _Q_ONLY)
+def test_runner_runs_pipeline_and_reads_its_cost_and_time(monkeypatch):
+    def fake_pipeline(ticker, sources):
+        print("[pipeline] Wall time:  12.50s\n[pipeline] Total cost: $1.23456")
+        return pipeline.PipelineRun(sample_report(), sample_store())
+    monkeypatch.setattr(runner, "run_pipeline", fake_pipeline)
+    run = runner._run_mode("pipeline", "TEST", _Q_ONLY)
     assert (run.cost_usd, run.latency_seconds, run.latency_source) == (1.23456, 12.5, "logged")
 
 

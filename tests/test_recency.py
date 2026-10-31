@@ -322,7 +322,7 @@ def test_whisper_lookup_and_judge_are_told_today(fixed_dates, monkeypatch):
 
 
 def test_a_newer_contradicting_item_is_flagged_without_changing_the_tier_rules():
-    # The rule for writers (unused until Rec 1's prompts, step 8) stays
+    # The rule for writers (unused until the staged pipeline's prompts, step 8) stays
     # separate from the shared conflict rules in the judge's rubric.
     assert "flag the contradiction" in evidence_text.NEWER_CONTRADICTION_RULE
     assert "never overwrites a filing figure" in evidence_text.NEWER_CONTRADICTION_RULE

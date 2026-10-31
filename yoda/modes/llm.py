@@ -6,12 +6,12 @@ so every mode handles a missing answer, and counts the tokens it paid for
 (prompt-cache reads and writes included), the same way.
 """
 
-from typing import NamedTuple, TypeVar
+from typing import Literal, NamedTuple, TypeVar
 
 from anthropic import Anthropic
 from pydantic import BaseModel
 
-from yoda import config
+from yoda import config, pricing
 
 # max_retries=3: the SDK itself retries rate-limit (429), server (5xx),
 # timeout, and connection errors with exponential backoff — important when
@@ -61,6 +61,46 @@ class NoStructuredOutput(RuntimeError):
 def usage_counts(usage) -> tuple[int, int, int, int]:
     """Return (input, output, cache write, cache read) tokens from an API usage record, in pricing.call_cost's order."""
     return (usage.input_tokens, usage.output_tokens, *_cache_tokens(usage))
+
+
+class Usage(NamedTuple):
+    """Calls, tokens and cost summed over one stage of a run (all zero for a stage that made no paid call).
+
+    The token fields mean what they mean in StructuredReply; cache reads
+    well above zero show the stage's prompt was served from the cache.
+    """
+    calls: int = 0
+    input_tokens: int = 0
+    output_tokens: int = 0
+    cache_write_tokens: int = 0
+    cache_read_tokens: int = 0
+    cost_usd: float = 0.0
+
+
+def call_usage(model: str, counts: tuple[int, int, int, int], cache_ttl: Literal["5m", "1h"] = "5m") -> Usage:
+    """Return one call's Usage, priced from its (input, output, cache write, cache read) *counts*."""
+    return Usage(1, *counts, pricing.call_cost(model, *counts, cache_ttl=cache_ttl))
+
+
+def failed_usage(model: str, exc: Exception, cache_ttl: Literal["5m", "1h"] = "5m") -> Usage:
+    """Return what a failed call was still paid for: a NoStructuredOutput carries its tokens; other errors cost 0."""
+    if not isinstance(exc, NoStructuredOutput):
+        return Usage()
+    return call_usage(model, (exc.input_tokens, exc.output_tokens, exc.cache_write_tokens, exc.cache_read_tokens),
+                      cache_ttl)
+
+
+def add_usage(*usages: Usage) -> Usage:
+    """Return the field-by-field sum of *usages* (Usage() for none)."""
+    return Usage(*(sum(values) for values in zip(Usage(), *usages)))
+
+
+def log_usage(tag: str, label: str, model: str, usage: Usage) -> None:
+    """Print one stage's summed calls, tokens and cost as one line, e.g. "[pipeline] Writer: 1 call, ..."."""
+    calls = f"{usage.calls} call{'' if usage.calls == 1 else 's'}"
+    print(f"[{tag}] {label}: {calls}, {model}, {usage.input_tokens:,} in / {usage.output_tokens:,} out / "
+          f"{usage.cache_write_tokens:,} cache write / {usage.cache_read_tokens:,} cache read, "
+          f"${usage.cost_usd:.5f}")
 
 
 def submit_call(model: str, max_tokens: int, submit_tool: str, output_format: type[_Model],
