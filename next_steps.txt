@@ -12,9 +12,9 @@ WHEN labels (relative to the full eval run, item 4f):
 
 
 2. Eval baseline
-   Option B (one Claude call over the shared sources plus one generic
-   news search over the last 14 days; yoda/modes/baseline.py) is the
-   baseline.
+   Option B: COMPLETE (built and in use as the baseline). One Claude call
+   over the shared sources plus one generic news search over the last 14
+   days; yoda/modes/baseline.py.
    - Guardrail: the baseline reads only the shared sources and its own
      news search. Nothing another arm found (its news, articles, reports or
      evidence store) may reach it (yoda/sources.py; pinned by
@@ -69,7 +69,9 @@ WHEN labels (relative to the full eval run, item 4f):
        read group differences as a direction, not proof.
    - Prompt-caching rules for the two candidate methods (item 12): the
      shared sources are the first system block, marked as a cache
-     breakpoint (1 hour), role instructions after it; all of a method's
+     breakpoint (5 minutes, kept alive for the whole report by
+     source_calls.keep_cache_alive, item 12), role instructions after it;
+     all of a method's
      source-reading calls share model, pinned effort and a sorted tool
      list; nothing variable (dates, IDs) before the breakpoint; no
      cross-arm sharing; proven offline with
@@ -114,6 +116,13 @@ WHEN labels (relative to the full eval run, item 4f):
         * Analyst grades refused by FMP's free plan (HTTP 402) for HD, USB,
           SLB, PG, CAT, PANW and CRM: their beat/miss record, analyst
           actions and price target are N/A, the same for every arm.
+      - After it, check the keep-alives (free; the 5-minute source cache
+        is first used in this run): every candidate report's log
+        (data/eval/full/{pipeline,lead}_*.log) has a "Keep-alives (misses:
+        N, failed: F)" line. Count the misses and any "WARNING: keep-alives
+        stopped" lines, and compare the run's cache-write cost with the
+        1-hour projection. If misses are frequent, set CACHE_TTL = "1h" in
+        yoda/modes/source_calls.py (the keep-alives then switch off).
       - After it: items 10 and 13.
 
 
@@ -215,6 +224,25 @@ WHEN labels (relative to the full eval run, item 4f):
       scores.
     - Done when: a change lowers the average report cost with no drop in
       the judge's scores beyond run-to-run noise.
+    - Built 2026-10-31, first used in the full run (4f): 5-minute cache +
+      keep-alive. Writing the shared sources to the 1-hour cache cost 2x
+      input (55% of a staged pipeline report, 41% of a lead analyst
+      report); the 5-minute cache costs 1.25x, and Anthropic offers no
+      lifetime in between. The 1-hour cache was chosen because the repair
+      pass starts over 5 minutes after the writer's read; now
+      source_calls.keep_cache_alive() re-reads the entry (llm.warm_cache,
+      max_tokens=0, billed as a cache read) every 4 minutes for a report's
+      whole run. One keep-alive that writes is a miss (logged); two in a
+      row stop the keep-alives with a WARNING; a refused one is skipped.
+      Dry test on the smoke logs (no API calls): saves $0.30 per
+      candidate report (95% CI $0.17-0.43, one-sided p = 0.0018; 9-15% of
+      cost), ~$11.50 per full run; projection to the other 15 tickers
+      consistent (Welch p = 0.99; leave-one-out prompt-size error 5.5%).
+      Risk: a late keep-alive rewrites the cache (~$0.60); the saving is
+      gone at ~0.5 late keep-alives per report, which only a real run can
+      measure. A test run would cost more than one full run saves, so no
+      test run: the full run is the test, and each report's log counts
+      its misses (the check is in 4f). Rollback: CACHE_TTL = "1h".
 
 
 13. Remove XOM's saved predecessor link from the repo (added 2026-10-30)

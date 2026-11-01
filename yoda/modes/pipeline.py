@@ -25,9 +25,11 @@ first system block marked as the cache breakpoint and its own role after
 it, so the sources are stored once (by a warm-up request) and read cheaply
 by every later call. Answers come back as calls to one of the shared
 "submit" tools rather than as a structured-output format, because a format
-is part of what the cache matches on. The cache is kept for 1 hour, not 5
-minutes: the repair pass starts more than 5 minutes after the writer last
-read it (decided 2026-10-30).
+is part of what the cache matches on. The cache lives 5 minutes (CACHE_TTL),
+and keep-alives re-read it every 4 minutes for the rest of the report
+(source_calls.keep_cache_alive), because the repair pass starts more than 5
+minutes after the writer last read it (decided 2026-10-31; it was a 1-hour
+cache, which costs more to write).
 
 What the two candidate methods share — the request builder, the size
 check, the researchers' tool loop, the repair pass and the citation and
@@ -57,7 +59,8 @@ from yoda.modes.llm import (
 )
 from yoda.modes.source_calls import (
     CACHE_TTL, CITATION_RULES, REPORT_MAX_TOKENS, SOURCE_MODEL, STAGE_ERRORS, SUBMIT_DESCRIPTIONS, WRITING_RULES,
-    check_and_repair, check_fits, company_context, failure_reason, source_request, submit_tools, tool_loop,
+    check_and_repair, check_fits, company_context, failure_reason, keep_cache_alive, source_request, submit_tools,
+    tool_loop,
 )
 from yoda.report.checks import check_report
 from yoda.report.claim_check import Repairs
@@ -271,59 +274,65 @@ def run_pipeline(ticker: str, sources: SharedSources, on_notice: Callable[[str],
     # The warm-up comes first, before anything paid starts: the extractors
     # then read one cache entry rather than each writing its own, and a
     # request the API refuses stops the run before any other call is made.
-    warm_up = call_usage(SOURCE_MODEL, warm_cache(**source_request(rendered.text, SOURCE_TOOLS, None, "Ready.", 1)),
-                         CACHE_TTL)
+    warm_request = source_request(rendered.text, SOURCE_TOOLS, None, "Ready.", 1)
+    warm_up = call_usage(SOURCE_MODEL, warm_cache(**warm_request), CACHE_TTL)
     log_usage("pipeline", "Cache warm-up", SOURCE_MODEL, warm_up)
     cost = warm_up.cost_usd
 
-    # Stages 1 and 2 run in parallel.
-    with ThreadPoolExecutor(max_workers=4) as pool:
-        research = {name: pool.submit(_research, brief.format(company=company, ticker=ticker), research_message,
-                                      ctx, store, lock)
-                    for name, brief in _RESEARCH_BRIEFS.items()}
-        extractors = {"Filing extractor": pool.submit(_extract, _FILING_EXTRACTOR, rendered.text, dates)}
-        if has_post_filing:
-            extractors["Post-filing extractor"] = pool.submit(_extract, _POST_FILING_EXTRACTOR, rendered.text, dates)
-        stages = {**{name: future.result() for name, future in extractors.items()},
-                  **{f"{name.capitalize()} researcher": future.result() for name, future in research.items()}}
-    if not has_post_filing:
-        gaps.append("No 8-K or earnings call to extract from after the filing.")
-    # One usage line per stage: a researcher's line sums all its turns.
-    for name, result in stages.items():
-        cost += result.usage.cost_usd
-        log_usage("pipeline", f"{name} (notes: {len(result.notes)})",
-                  SOURCE_MODEL if name in extractors else RESEARCH_MODEL, result.usage)
-        if result.gap:
-            print(f"[pipeline] {name} FAILED: {result.gap}")
-            gaps.append(f"{name} produced no notes ({result.gap}).")
+    # From here to the end of the claim check, keep-alives keep the warm-up's
+    # 5-minute cache entry alive (the repair pass starts more than 5 minutes
+    # after the writer's read).
+    with keep_cache_alive(warm_request, "pipeline") as kept:
+        # Stages 1 and 2 run in parallel.
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            research = {name: pool.submit(_research, brief.format(company=company, ticker=ticker), research_message,
+                                          ctx, store, lock)
+                        for name, brief in _RESEARCH_BRIEFS.items()}
+            extractors = {"Filing extractor": pool.submit(_extract, _FILING_EXTRACTOR, rendered.text, dates)}
+            if has_post_filing:
+                extractors["Post-filing extractor"] = pool.submit(_extract, _POST_FILING_EXTRACTOR, rendered.text,
+                                                                  dates)
+            stages = {**{name: future.result() for name, future in extractors.items()},
+                      **{f"{name.capitalize()} researcher": future.result() for name, future in research.items()}}
+        if not has_post_filing:
+            gaps.append("No 8-K or earnings call to extract from after the filing.")
+        # One usage line per stage: a researcher's line sums all its turns.
+        for name, result in stages.items():
+            cost += result.usage.cost_usd
+            log_usage("pipeline", f"{name} (notes: {len(result.notes)})",
+                      SOURCE_MODEL if name in extractors else RESEARCH_MODEL, result.usage)
+            if result.gap:
+                print(f"[pipeline] {name} FAILED: {result.gap}")
+                gaps.append(f"{name} produced no notes ({result.gap}).")
 
-    # Stage 3: the writer reads the sources (cached), every stage's notes and
-    # the passages the researchers found; the judge is shown them too.
-    found = [p for p in store.passages if p.kind in MODE_KINDS]
-    store.shown_ids += [p.id for p in found]
-    notes_text = "\n\n".join(_render_notes(name, result) for name, result in stages.items())
-    found_text = render_passages(found) or "(none)"
-    request = source_request(rendered.text, SOURCE_TOOLS, _WRITER,
-                             f"{dates}\n\n{notes_text}\n\n=== Passages the researchers found ===\n{found_text}\n\n"
-                             "Write the report.", REPORT_MAX_TOKENS)
-    check_fits(request)
-    # A writer with no valid report ends the run, but its spend is logged
-    # first, so the eval runner can still count what the run cost.
-    try:
-        reply = submit_call(submit_tool="submit_report", output_format=ReportDraft, **request)
-    except NoStructuredOutput as exc:
-        log_usage("pipeline", "Writer (failed)", SOURCE_MODEL, failed_usage(SOURCE_MODEL, exc, CACHE_TTL))
-        raise
-    writer = reply_usage(SOURCE_MODEL, reply, CACHE_TTL)
-    log_usage("pipeline", "Writer", SOURCE_MODEL, writer)
-    cost += writer.cost_usd
-    report = assemble_report(reply.parsed, filing_set, store, eight_ks=sources.eight_ks, call=sources.call,
-                             snapshot=sources.snapshot, gaps=gaps)
+        # Stage 3: the writer reads the sources (cached), every stage's notes and
+        # the passages the researchers found; the judge is shown them too.
+        found = [p for p in store.passages if p.kind in MODE_KINDS]
+        store.shown_ids += [p.id for p in found]
+        notes_text = "\n\n".join(_render_notes(name, result) for name, result in stages.items())
+        found_text = render_passages(found) or "(none)"
+        request = source_request(rendered.text, SOURCE_TOOLS, _WRITER,
+                                 f"{dates}\n\n{notes_text}\n\n=== Passages the researchers found ===\n{found_text}\n\n"
+                                 "Write the report.", REPORT_MAX_TOKENS)
+        check_fits(request)
+        # A writer with no valid report ends the run, but its spend is logged
+        # first, so the eval runner can still count what the run cost.
+        try:
+            reply = submit_call(submit_tool="submit_report", output_format=ReportDraft, **request)
+        except NoStructuredOutput as exc:
+            log_usage("pipeline", "Writer (failed)", SOURCE_MODEL, failed_usage(SOURCE_MODEL, exc, CACHE_TTL))
+            raise
+        writer = reply_usage(SOURCE_MODEL, reply, CACHE_TTL)
+        log_usage("pipeline", "Writer", SOURCE_MODEL, writer)
+        cost += writer.cost_usd
+        report = assemble_report(reply.parsed, filing_set, store, eight_ks=sources.eight_ks, call=sources.call,
+                                 snapshot=sources.snapshot, gaps=gaps)
 
-    # Stage 4: the claim check, one repair pass, a re-check of the rewritten
-    # claims, and removal of whatever still fails. Then the ID checks.
-    cost += check_and_repair(report, store, rendered.text, dates, SOURCE_TOOLS, "pipeline")
-    check_report(report, store)
+        # Stage 4: the claim check, one repair pass, a re-check of the rewritten
+        # claims, and removal of whatever still fails. Then the ID checks.
+        cost += check_and_repair(report, store, rendered.text, dates, SOURCE_TOOLS, "pipeline")
+        check_report(report, store)
+    cost += kept.usage.cost_usd
 
     # Embedding for lookup_peer (OpenAI: competitors' filings and the
     # searches over them), counted like every other call.

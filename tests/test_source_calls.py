@@ -7,9 +7,12 @@ Run with: python -m pytest -q tests/test_source_calls.py
 """
 
 import threading
+import time
 from contextlib import nullcontext
 from types import SimpleNamespace
 
+import anthropic
+import httpx
 import pytest
 from pydantic import BaseModel
 
@@ -194,3 +197,116 @@ def test_a_single_call_answer_broken_twice_raises_and_keeps_every_attempts_token
 def test_an_answer_valid_the_first_time_counts_one_call(monkeypatch):
     reply, sent = _submit(monkeypatch, [_reply(_tool_use("submit_report", {"answer": "Revenue rose."}, "t1"))])
     assert len(sent) == 1 and llm.reply_usage("claude-sonnet-5-5", reply).calls == 1
+
+
+# ---------------------------------------------------------------------------
+# keep_cache_alive(): the timer that keeps a 5-minute source cache alive
+# ---------------------------------------------------------------------------
+
+# usage_counts() tuples (input, output, cache write, cache read) for a
+# keep-alive that read the cached sources, and one that had to write them.
+_READ = (5, 0, 0, 1000)
+_WROTE = (5, 0, 1000, 0)
+_KEEP_ALIVE_REQUEST = {"model": "claude-sonnet-5-5", "max_tokens": 1, "system": "Sources.", "tools": []}
+
+
+def _fake_keep_alives(monkeypatch, script: list) -> tuple[list[dict], threading.Event]:
+    """Make keep-alives fire every 10 ms and answer from *script*, then read; return (sent, done).
+
+    Each entry of *script* is a usage_counts() tuple to return or an
+    exception to raise; once it runs out every keep-alive reads. *sent*
+    records each request; the event is set when the script's last entry has
+    been used, so a test can wait for exactly that.
+    """
+    sent: list[dict] = []
+    done = threading.Event()
+
+    def warm_cache(**request):
+        sent.append(request)
+        if len(sent) >= len(script):
+            done.set()
+        step = script[len(sent) - 1] if len(sent) <= len(script) else _READ
+        if isinstance(step, Exception):
+            raise step
+        return step
+    monkeypatch.setattr(source_calls, "warm_cache", warm_cache)
+    monkeypatch.setattr(source_calls, "KEEP_ALIVE_SECONDS", 0.01)
+    monkeypatch.setattr(source_calls, "CACHE_TTL", "5m")
+    return sent, done
+
+
+def test_keep_alives_fire_on_the_interval_and_their_usage_is_summed_and_logged(monkeypatch, capsys):
+    sent, done = _fake_keep_alives(monkeypatch, [_READ, _READ, _READ])
+    with source_calls.keep_cache_alive(_KEEP_ALIVE_REQUEST, "lead") as kept:
+        assert done.wait(5)
+    # Every keep-alive sent the method's own request, with its time limit
+    # (so a hung connection can't hold the report up), and each is counted.
+    limited = {**_KEEP_ALIVE_REQUEST, "timeout": source_calls.KEEP_ALIVE_TIMEOUT_SECONDS}
+    assert len(sent) >= 3 and all(request == limited for request in sent)
+    assert (kept.usage.calls, kept.usage.cache_read_tokens) == (len(sent), 1000 * len(sent))
+    assert kept.usage.cost_usd > 0 and (kept.misses, kept.failed, kept.stopped) == (0, 0, False)
+    calls = f"{len(sent)} call{'' if len(sent) == 1 else 's'}"
+    assert f"[lead] Keep-alives (misses: 0, failed: 0): {calls}, claude-sonnet-5-5" in capsys.readouterr().out
+
+
+def test_one_keep_alive_that_writes_is_a_miss_and_the_next_ones_go_on(monkeypatch, capsys):
+    # One write means the entry had lapsed (a slow request, say): the new
+    # entry it wrote is read by the next keep-alive, so they carry on.
+    sent, done = _fake_keep_alives(monkeypatch, [_READ, _WROTE, _READ, _READ])
+    with source_calls.keep_cache_alive(_KEEP_ALIVE_REQUEST, "pipeline") as kept:
+        assert done.wait(5)
+    assert len(sent) >= 4 and (kept.misses, kept.stopped) == (1, False)
+    out = capsys.readouterr().out
+    assert "[pipeline] Keep-alives (misses: 1, failed: 0)" in out and "WARNING" not in out
+
+
+def test_two_keep_alives_in_a_row_that_write_stop_the_keep_alives_with_a_warning(monkeypatch, capsys):
+    # Two writes in a row mean the keep-alive's prompt doesn't match the
+    # cached one, so each would pay for a new entry: stop sending them.
+    sent, done = _fake_keep_alives(monkeypatch, [_READ, _WROTE, _WROTE])
+    with source_calls.keep_cache_alive(_KEEP_ALIVE_REQUEST, "lead") as kept:
+        assert done.wait(5)
+        time.sleep(0.1)   # ten intervals: any keep-alive still running would fire
+    assert len(sent) == 3 and (kept.misses, kept.stopped) == (2, True)
+    out = capsys.readouterr().out
+    assert "[lead] WARNING: keep-alives stopped" in out
+    assert "[lead] Keep-alives (misses: 2, failed: 0): 3 calls" in out
+
+
+def test_a_refused_or_timed_out_keep_alive_is_logged_and_the_next_one_still_fires(monkeypatch, capsys):
+    api_request = httpx.Request("POST", "https://api.anthropic.com/v1/messages")
+    refused = anthropic.APIConnectionError(request=api_request)
+    timed_out = anthropic.APITimeoutError(request=api_request)
+    sent, done = _fake_keep_alives(monkeypatch, [refused, timed_out, _READ])
+    with source_calls.keep_cache_alive(_KEEP_ALIVE_REQUEST, "lead") as kept:
+        assert done.wait(5)
+    # The failed ones cost nothing; the ones after them were sent and counted.
+    assert len(sent) >= 3 and (kept.failed, kept.misses) == (2, 0) and kept.usage.calls == len(sent) - 2
+    out = capsys.readouterr().out
+    assert "[lead] Keep-alive failed (APIConnectionError" in out
+    assert "[lead] Keep-alive failed (APITimeoutError" in out
+    assert "[lead] Keep-alives (misses: 0, failed: 2)" in out
+
+
+def test_the_keep_alives_stop_and_are_logged_when_the_report_fails(monkeypatch, capsys):
+    # A report that raises must not leave a timer paying for keep-alives,
+    # and the spend so far must still be logged for the runner to count.
+    sent, done = _fake_keep_alives(monkeypatch, [_READ])
+    with pytest.raises(RuntimeError, match="report failed"):
+        with source_calls.keep_cache_alive(_KEEP_ALIVE_REQUEST, "lead"):
+            assert done.wait(5)
+            raise RuntimeError("The lead's report failed.")
+    sent_when_it_ended = len(sent)
+    time.sleep(0.1)   # ten intervals
+    assert len(sent) == sent_when_it_ended
+    assert f"[lead] Keep-alives (misses: 0, failed: 0): {sent_when_it_ended} call" in capsys.readouterr().out
+
+
+def test_with_a_1_hour_cache_no_keep_alive_is_sent(monkeypatch, capsys):
+    # The rollback: CACHE_TTL "1h" turns the keep-alives off, and nothing is logged.
+    sent, _ = _fake_keep_alives(monkeypatch, [])
+    monkeypatch.setattr(source_calls, "CACHE_TTL", "1h")
+    with source_calls.keep_cache_alive(_KEEP_ALIVE_REQUEST, "lead") as kept:
+        time.sleep(0.1)   # ten intervals
+    assert sent == [] and kept.usage.calls == 0 and kept.usage.cost_usd == 0
+    assert capsys.readouterr().out == ""

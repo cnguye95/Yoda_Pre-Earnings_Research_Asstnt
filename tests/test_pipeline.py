@@ -82,6 +82,10 @@ class _Fakes:
 
         monkeypatch.setattr(pipeline, "ChromaStore", lambda: SimpleNamespace(embedding_calls=0, embedding_tokens=0))
         monkeypatch.setattr(pipeline, "warm_cache", self.warm)
+        # The keep-alive: its request is recorded, and the API is never reached.
+        self.keep_alives: list[dict] = []
+        monkeypatch.setattr(pipeline, "keep_cache_alive", self.keep_alive)
+        monkeypatch.setattr(source_calls, "warm_cache", lambda **request: (10, 0, 0, 2000))
         # The extractors and the writer call submit_call from pipeline.py;
         # the repair pass, the research loop and the claim check run in
         # source_calls.py, so both modules are patched.
@@ -90,6 +94,11 @@ class _Fakes:
         monkeypatch.setattr(source_calls, "client", SimpleNamespace(messages=SimpleNamespace(stream=self.stream)))
         monkeypatch.setattr(source_calls, "check_claims", self.check)
         monkeypatch.setitem(tools.TOOL_DISPATCH, "search_news", self.search)
+
+    def keep_alive(self, request, tag):
+        """Stand in for keep_cache_alive(): record its request in self.keep_alives, then run the real one."""
+        self.keep_alives.append(request)
+        return source_calls.keep_cache_alive(request, tag)
 
     def warm(self, **request):
         self.warmed.append(request)
@@ -139,8 +148,11 @@ def test_every_sonnet_call_reads_the_one_cache_entry_the_warm_up_wrote(monkeypat
     assert cache_misses([{k: v for k, v in r.items() if k != "submit_tool"} for r in requests]) == \
         ["no earlier request", None, None, None, None]
     breakpoint_block = requests[0]["system"][0]
-    assert breakpoint_block["cache_control"] == {"type": "ephemeral", "ttl": "1h"}
+    assert breakpoint_block["cache_control"] == {"type": "ephemeral", "ttl": "5m"}
     assert "Today's date" not in breakpoint_block["text"]   # nothing that changes daily before the breakpoint
+    # The keep-alive reads the same entry, so it restarts that entry's 5 minutes instead of writing another.
+    assert len(fakes.keep_alives) == 1
+    assert cache_misses([requests[0], *fakes.keep_alives]) == ["no earlier request", None]
 
 
 def test_a_refused_warm_up_stops_the_run_before_any_paid_call(monkeypatch):
@@ -283,6 +295,8 @@ def test_usage_is_printed_once_per_stage_with_its_calls_summed(monkeypatch, caps
         f"[pipeline] Peers researcher (notes: 1): 2 calls, {haiku}, 200 in / 200 out / 0 cache write / 0 cache read, $",
         f"[pipeline] Writer: 1 call, {sonnet}, 10 in / 10 out / 0 cache write / 2,000 cache read, $",
         f"[pipeline] Repair pass: 1 call, {sonnet}, 10 in / 10 out / 0 cache write / 2,000 cache read, $",
+        f"[pipeline] Keep-alives (misses: 0, failed: 0): 0 calls, {sonnet}, 0 in / 0 out / 0 cache write / "
+        "0 cache read, $",
         "[pipeline] Embeddings (peer filings): 0 calls, text-embedding-3-small, 0 in / 0 out / 0 cache write / "
         "0 cache read, $",
     ]

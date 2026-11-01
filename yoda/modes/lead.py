@@ -25,7 +25,8 @@ one question each, and the lead checks their work and writes.
 
 Prompt caching (next_steps item 12): every Sonnet call here sends the same
 model, effort and tool list (LEAD_TOOLS), with the sources as system block
-1 marked as the cache breakpoint (1 hour), so the sources are stored once,
+1 marked as the cache breakpoint (5 minutes, kept alive for the rest of the
+report by source_calls.keep_cache_alive), so the sources are stored once,
 by the lead's first call, and read cheaply by every later call. Workers
 also cache their own growing conversation between turns (5 minutes). The
 lead is offered the search tools too, because a different tool list would
@@ -53,7 +54,7 @@ from yoda.modes import tools
 from yoda.modes.llm import call_usage, log_usage
 from yoda.modes.source_calls import (
     CACHE_TTL, CITATION_RULES, REPORT_MAX_TOKENS, SOURCE_MODEL, SUBMIT_DESCRIPTIONS, WRITING_RULES, LoopResult,
-    check_and_repair, company_context, source_request, submit_tools, tool_loop,
+    check_and_repair, company_context, keep_cache_alive, source_request, submit_tools, tool_loop,
 )
 from yoda.report.checks import check_report
 from yoda.report.claim_check import Repairs
@@ -200,7 +201,7 @@ def _lead_call(sources_text: str, role: str, user_content: str, max_tokens: int,
     A loop allowed no tool calls: the lead is offered the search tools
     (one shared cache) but may not use them, so a stray search is refused
     and the lead asked again to call *submit_tool*. Its cache writes are
-    the sources' 1-hour entry (the first call writes it).
+    the sources' entry (the first call writes it).
     """
     return tool_loop(_request(sources_text, role, max_tokens), [{"role": "user", "content": user_content}],
                      submit_tool, output_format, answer_hint, ctx=None, store=None, lock=None, max_tool_calls=0,
@@ -323,80 +324,88 @@ def run_lead(ticker: str, sources: SharedSources) -> LeadRun:
         raise RuntimeError(f"The lead picked no valid questions ({asked.gap}).")
     questions = asked.parsed.questions
 
-    # 2. One worker per question, all at once.
-    worker_request = {**_request(rendered.text, _WORKER, _WORKER_MAX_TOKENS), "cache_control": {"type": "ephemeral"}}
-    with ThreadPoolExecutor(max_workers=MAX_QUESTIONS) as pool:
-        futures = [pool.submit(_work, worker_request, number, question, context, ctx, store, lock)
-                   for number, question in enumerate(questions, start=1)]
-        workers = [_Worker(number, question, future.result())
-                   for number, (question, future) in enumerate(zip(questions, futures), start=1)]
-    for worker in workers:
-        cost += worker.first.usage.cost_usd
-        claims = len(worker.first.parsed.claims) if worker.first.parsed is not None else 0
-        log_usage("lead", f"Worker {worker.number} (claims: {claims})", SOURCE_MODEL, worker.first.usage)
-        if worker.first.gap:
-            print(f"[lead] Worker {worker.number} FAILED: {worker.first.gap}")
-            gaps.append(f"Question {worker.number} (\"{worker.question.question}\") has no findings "
-                        f"({worker.first.gap}).")
+    # Steps 2-6 run inside keep_cache_alive: the lead's first call has just
+    # written the sources' 5-minute cache entry, and the workers, review,
+    # follow-ups, report and repair pass take longer than that, so a timer
+    # re-reads the entry (cheaply) until the report is checked. Its request
+    # is the sources alone (no role), the prefix every call here shares.
+    with keep_cache_alive(source_request(rendered.text, LEAD_TOOLS, None, "Ready.", 1), "lead") as kept:
+        # 2. One worker per question, all at once.
+        worker_request = {**_request(rendered.text, _WORKER, _WORKER_MAX_TOKENS),
+                          "cache_control": {"type": "ephemeral"}}
+        with ThreadPoolExecutor(max_workers=MAX_QUESTIONS) as pool:
+            futures = [pool.submit(_work, worker_request, number, question, context, ctx, store, lock)
+                       for number, question in enumerate(questions, start=1)]
+            workers = [_Worker(number, question, future.result())
+                       for number, (question, future) in enumerate(zip(questions, futures), start=1)]
+        for worker in workers:
+            cost += worker.first.usage.cost_usd
+            claims = len(worker.first.parsed.claims) if worker.first.parsed is not None else 0
+            log_usage("lead", f"Worker {worker.number} (claims: {claims})", SOURCE_MODEL, worker.first.usage)
+            if worker.first.gap:
+                print(f"[lead] Worker {worker.number} FAILED: {worker.first.gap}")
+                gaps.append(f"Question {worker.number} (\"{worker.question.question}\") has no findings "
+                            f"({worker.first.gap}).")
 
-    # 3. The lead reads every answer and picks the follow-ups: at most one
-    # per question, and only to a worker that answered.
-    found_text = render_passages(_found(store)) or "(none)"
-    review = _lead_call(rendered.text, _REVIEW,
-                        f"{dates}\n\n{_render_findings(workers)}\n\n=== Passages your colleagues found ===\n"
-                        f"{found_text}\n\nFind the gaps.", _LEAD_MAX_TOKENS, "submit_follow_ups", FollowUps,
-                        "with your follow-ups (an empty list if nothing is missing)")
-    log_usage("lead", "Lead: review", SOURCE_MODEL, review.usage)
-    cost += review.usage.cost_usd
-    asks: dict[int, str] = {}
-    if review.parsed is None:
-        gaps.append(f"The lead's review failed ({review.gap}); no follow-up questions were asked.")
-    else:
-        for follow_up in review.parsed.follow_ups:
-            number = follow_up.question_number
-            if not 1 <= number <= len(workers):
-                print(f"[lead] Follow-up ignored: there is no question {number}.")
-            elif number in asks:
-                print(f"[lead] Follow-up ignored: question {number} already has one.")
-            elif workers[number - 1].first.parsed is None:
-                print(f"[lead] Follow-up skipped: worker {number} has no findings to build on.")
-            else:
-                asks[number] = follow_up.ask
+        # 3. The lead reads every answer and picks the follow-ups: at most one
+        # per question, and only to a worker that answered.
+        found_text = render_passages(_found(store)) or "(none)"
+        review = _lead_call(rendered.text, _REVIEW,
+                            f"{dates}\n\n{_render_findings(workers)}\n\n=== Passages your colleagues found ===\n"
+                            f"{found_text}\n\nFind the gaps.", _LEAD_MAX_TOKENS, "submit_follow_ups", FollowUps,
+                            "with your follow-ups (an empty list if nothing is missing)")
+        log_usage("lead", "Lead: review", SOURCE_MODEL, review.usage)
+        cost += review.usage.cost_usd
+        asks: dict[int, str] = {}
+        if review.parsed is None:
+            gaps.append(f"The lead's review failed ({review.gap}); no follow-up questions were asked.")
+        else:
+            for follow_up in review.parsed.follow_ups:
+                number = follow_up.question_number
+                if not 1 <= number <= len(workers):
+                    print(f"[lead] Follow-up ignored: there is no question {number}.")
+                elif number in asks:
+                    print(f"[lead] Follow-up ignored: question {number} already has one.")
+                elif workers[number - 1].first.parsed is None:
+                    print(f"[lead] Follow-up skipped: worker {number} has no findings to build on.")
+                else:
+                    asks[number] = follow_up.ask
 
-    # 4. Each follow-up goes back to the same worker, all at once.
-    with ThreadPoolExecutor(max_workers=MAX_QUESTIONS) as pool:
-        futures = {number: pool.submit(_follow_up, worker_request, workers[number - 1].first, ask, ctx, store, lock)
-                   for number, ask in asks.items()}
-        for number, future in futures.items():
-            workers[number - 1] = workers[number - 1]._replace(follow_up=future.result())
-    for number in asks:
-        follow_up = workers[number - 1].follow_up
-        cost += follow_up.usage.cost_usd
-        claims = len(follow_up.parsed.claims) if follow_up.parsed is not None else 0
-        log_usage("lead", f"Worker {number} follow-up (claims: {claims})", SOURCE_MODEL, follow_up.usage)
-        if follow_up.gap:
-            print(f"[lead] Worker {number} follow-up FAILED: {follow_up.gap}")
-            gaps.append(f"The follow-up to question {number} failed ({follow_up.gap}); its first answer was used.")
+        # 4. Each follow-up goes back to the same worker, all at once.
+        with ThreadPoolExecutor(max_workers=MAX_QUESTIONS) as pool:
+            futures = {number: pool.submit(_follow_up, worker_request, workers[number - 1].first, ask, ctx, store, lock)
+                       for number, ask in asks.items()}
+            for number, future in futures.items():
+                workers[number - 1] = workers[number - 1]._replace(follow_up=future.result())
+        for number in asks:
+            follow_up = workers[number - 1].follow_up
+            cost += follow_up.usage.cost_usd
+            claims = len(follow_up.parsed.claims) if follow_up.parsed is not None else 0
+            log_usage("lead", f"Worker {number} follow-up (claims: {claims})", SOURCE_MODEL, follow_up.usage)
+            if follow_up.gap:
+                print(f"[lead] Worker {number} follow-up FAILED: {follow_up.gap}")
+                gaps.append(f"The follow-up to question {number} failed ({follow_up.gap}); its first answer was used.")
 
-    # 5. The lead writes from the sources (cached), every answer and the
-    # passages the workers found; the judge is shown them too.
-    found = _found(store)
-    store.shown_ids += [passage.id for passage in found]
-    written = _lead_call(rendered.text, _WRITER,
-                         f"{dates}\n\n{_render_findings(workers)}\n\n=== Passages your colleagues found ===\n"
-                         f"{render_passages(found) or '(none)'}\n\nWrite the report.", REPORT_MAX_TOKENS,
-                         "submit_report", ReportDraft, "with the whole report")
-    log_usage("lead", "Lead: report", SOURCE_MODEL, written.usage)
-    cost += written.usage.cost_usd
-    if written.parsed is None:
-        raise RuntimeError(f"The lead's report failed ({written.gap}).")
-    report = assemble_report(written.parsed, filing_set, store, eight_ks=sources.eight_ks, call=sources.call,
-                             snapshot=sources.snapshot, gaps=gaps)
+        # 5. The lead writes from the sources (cached), every answer and the
+        # passages the workers found; the judge is shown them too.
+        found = _found(store)
+        store.shown_ids += [passage.id for passage in found]
+        written = _lead_call(rendered.text, _WRITER,
+                             f"{dates}\n\n{_render_findings(workers)}\n\n=== Passages your colleagues found ===\n"
+                             f"{render_passages(found) or '(none)'}\n\nWrite the report.", REPORT_MAX_TOKENS,
+                             "submit_report", ReportDraft, "with the whole report")
+        log_usage("lead", "Lead: report", SOURCE_MODEL, written.usage)
+        cost += written.usage.cost_usd
+        if written.parsed is None:
+            raise RuntimeError(f"The lead's report failed ({written.gap}).")
+        report = assemble_report(written.parsed, filing_set, store, eight_ks=sources.eight_ks, call=sources.call,
+                                 snapshot=sources.snapshot, gaps=gaps)
 
-    # 6. The claim check, one repair pass, a re-check of the rewritten
-    # claims, and removal of whatever still fails. Then the ID checks.
-    cost += check_and_repair(report, store, rendered.text, dates, LEAD_TOOLS, "lead")
-    check_report(report, store)
+        # 6. The claim check, one repair pass, a re-check of the rewritten
+        # claims, and removal of whatever still fails. Then the ID checks.
+        cost += check_and_repair(report, store, rendered.text, dates, LEAD_TOOLS, "lead")
+        check_report(report, store)
+    cost += kept.usage.cost_usd
 
     # Embedding for lookup_peer (OpenAI: competitors' filings and the
     # searches over them), counted like every other call.

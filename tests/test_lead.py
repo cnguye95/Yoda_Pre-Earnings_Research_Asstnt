@@ -101,7 +101,16 @@ class _Fakes:
         monkeypatch.setattr(source_calls, "client", SimpleNamespace(messages=SimpleNamespace(stream=self.stream)))
         monkeypatch.setattr(source_calls, "check_claims", self.check)
         monkeypatch.setattr(source_calls, "submit_call", self.repair)
+        # The keep-alive: its request is recorded, and the API is never reached.
+        self.keep_alives: list[dict] = []
+        monkeypatch.setattr(lead, "keep_cache_alive", self.keep_alive)
+        monkeypatch.setattr(source_calls, "warm_cache", lambda **request: (10, 0, 0, 2000))
         monkeypatch.setitem(tools.TOOL_DISPATCH, "search_news", self.search)
+
+    def keep_alive(self, request, tag):
+        """Stand in for keep_cache_alive(): record its request in self.keep_alives, then run the real one."""
+        self.keep_alives.append(request)
+        return source_calls.keep_cache_alive(request, tag)
 
     @staticmethod
     def default_worker(number: int, turn: int, follow_up: bool) -> SimpleNamespace:
@@ -161,7 +170,10 @@ def test_every_sonnet_call_reads_the_one_cache_entry_the_lead_wrote(monkeypatch)
     assert firsts[0]["system"][1]["text"] == lead._QUESTIONS   # the lead's first call comes first
     assert cache_misses(firsts) == ["no earlier request"] + [None] * (len(firsts) - 1)
     breakpoint_block = firsts[0]["system"][0]
-    assert breakpoint_block["cache_control"] == {"type": "ephemeral", "ttl": "1h"}
+    assert breakpoint_block["cache_control"] == {"type": "ephemeral", "ttl": "5m"}
+    # The keep-alive reads the entry the lead's first call wrote, so it restarts its 5 minutes.
+    assert len(fakes.keep_alives) == 1
+    assert cache_misses([firsts[0], *fakes.keep_alives]) == ["no earlier request", None]
     assert "Today's date" not in breakpoint_block["text"]   # nothing that changes daily before the breakpoint
     # Workers also cache their own growing conversation (5 minutes); the lead's calls don't need to.
     assert all(r["cache_control"] == {"type": "ephemeral"} for r in fakes.by_role(lead._WORKER))
@@ -319,7 +331,7 @@ def test_usage_is_printed_once_per_stage_and_the_runner_can_read_it(monkeypatch,
               for line in out.splitlines() if line.startswith("[lead]") and " cache read, $" in line]
     assert labels == ["Lead: questions", "Worker 1 (claims: 1)", "Worker 2 (claims: 1)", "Worker 3 (claims: 1)",
                       "Worker 4 (claims: 1)", "Lead: review", "Worker 2 follow-up (claims: 1)", "Lead: report",
-                      "Repair pass", "Embeddings (peer filings)"]
+                      "Repair pass", "Keep-alives (misses: 0, failed: 0)", "Embeddings (peer filings)"]
     assert f"[lead] Worker 1 (claims: 1): 2 calls, {source_calls.SOURCE_MODEL}, 20 in / 20 out / " \
            "0 cache write / 4,000 cache read, $" in out
     assert runner._RE_COST.search(out) and runner._RE_WALL_TIME.search(out)

@@ -7,6 +7,7 @@ holds what those calls have in common, so the two methods differ only in
 their architecture, not in how they ask, cite or check:
   - source_request(): the request every source-reading call sends, built
     so all of one method's calls share one prompt-cache entry;
+  - keep_cache_alive(): keeps that 5-minute entry alive for a whole report;
   - check_fits(): fail loudly before a prompt too long for the model;
   - run_tool() and tool_loop(): a model searching news and competitors'
     filings, each result added to the evidence store so it can be cited;
@@ -24,8 +25,11 @@ with the sources as system block 1 marked as the breakpoint; anything that
 differs between calls (the call's role, dates, notes) comes after it.
 """
 
+import contextlib
 import threading
 import time
+from collections.abc import Iterator
+from dataclasses import dataclass, field
 from typing import NamedTuple
 
 import anthropic
@@ -40,7 +44,7 @@ from yoda.evidence_text import CONFLICT_RULES, NEWER_CONTRADICTION_RULE
 from yoda.modes import tools
 from yoda.modes.llm import (
     MAX_RESUBMITS, NoStructuredOutput, Usage, add_usage, call_usage, client, failed_usage, log_usage, reply_usage,
-    schema_problem, submit_call, usage_counts,
+    schema_problem, submit_call, usage_counts, warm_cache,
 )
 from yoda.report.claim_check import Repairs, apply_repairs, check_claims, claim_items, remove_claims, render_claim
 from yoda.schema import EarningsReport, EvidenceStore
@@ -57,10 +61,26 @@ from yoda.tools.news import NEWS_CITABLE_DAYS
 # shared cache.
 SOURCE_MODEL, SOURCE_EFFORT = "claude-sonnet-5-5", "high"
 
-# How long the sources stay in the prompt cache: 1 hour, not 5 minutes,
-# because a method's repair pass starts more than 5 minutes after the
-# writer last read them (decided 2026-10-30).
-CACHE_TTL = "1h"
+# How long the sources stay in the prompt cache. Writing them is a method's
+# biggest cost: 1.25x input on the 5-minute cache, 2x on the 1-hour cache
+# (Anthropic offers nothing in between). A method's repair pass starts more
+# than 5 minutes after the writer's read, so the 5-minute cache is kept
+# alive by keep_cache_alive() (decided 2026-10-31; dry test on the smoke
+# logs: about $0.30 saved per report, 95% CI $0.17-0.43). "1h" switches the
+# keep-alives off and goes back to the 1-hour cache.
+CACHE_TTL = "5m"
+
+# How often keep_cache_alive() re-reads the cache: a minute inside the
+# 5-minute lifetime, which counts from the start of the last request that
+# read or wrote the entry.
+KEEP_ALIVE_SECONDS = 240
+
+# How long one keep-alive attempt may take before it is given up (it
+# normally takes a few seconds). Without a limit a hung connection would
+# wait the client's default 10 minutes, and the report would wait for it at
+# the end. The client still retries a timed-out attempt (max_retries in
+# llm.py); a keep-alive that runs out of retries counts as failed.
+KEEP_ALIVE_TIMEOUT_SECONDS = 60
 
 # Output ceilings: each answer plus the model's thinking must fit. The
 # report is the longest answer; a repair list is about as long as notes.
@@ -165,6 +185,80 @@ def source_request(sources_text: str, tools_offered: list[dict], role: str | Non
         system.append({"type": "text", "text": role})
     return {"model": SOURCE_MODEL, "max_tokens": max_tokens, "output_config": {"effort": SOURCE_EFFORT},
             "tools": tools_offered, "system": system, "messages": [{"role": "user", "content": user_content}]}
+
+
+@dataclass
+class KeepAlive:
+    """What keep_cache_alive() did for one report, filled in by its timer thread.
+
+    *misses*: keep-alives that wrote the cache instead of reading it (the
+    entry had expired, or the keep-alive's prompt didn't match). *failed*:
+    keep-alives the API refused. *stopped*: two misses in a row stopped the
+    keep-alives, because each was writing a new entry.
+    """
+    usage: Usage = field(default_factory=Usage)
+    misses: int = 0
+    failed: int = 0
+    stopped: bool = False
+
+
+@contextlib.contextmanager
+def keep_cache_alive(request: dict, tag: str) -> Iterator[KeepAlive]:
+    """Keep *request*'s cached sources alive while the block runs; log and yield what it cost.
+
+    *request* is the method's cache warm-up request (source_request() with
+    no role), which reads exactly the cached prefix. Every
+    KEEP_ALIVE_SECONDS a background thread sends it with max_tokens=0
+    (llm.warm_cache): billed as a cache read, it restarts the entry's
+    5-minute lifetime. A keep-alive that writes is a miss and the next one
+    goes on; two misses in a row mean its prompt writes a new entry each
+    time, so the keep-alives stop with a warning. A refused or timed-out
+    keep-alive (KEEP_ALIVE_TIMEOUT_SECONDS per attempt) is printed and
+    skipped: it never stops the report. However the block ends,
+    the thread is stopped and one usage line is logged (so a failed run's
+    spend includes it); the caller adds the yielded usage to its total.
+    With CACHE_TTL "1h" nothing is sent.
+    """
+    kept = KeepAlive()
+    if CACHE_TTL != "5m":
+        yield kept
+        return
+    stop = threading.Event()
+    last_wrote = False   # did the previous keep-alive write the cache?
+
+    def fire() -> None:
+        """Send one keep-alive and record it; stop the thread after two misses in a row."""
+        nonlocal last_wrote
+        try:
+            # A timeout raises anthropic.APITimeoutError, an APIError.
+            counts = warm_cache(**request, timeout=KEEP_ALIVE_TIMEOUT_SECONDS)
+        except anthropic.APIError as exc:
+            kept.failed += 1
+            print(f"[{tag}] Keep-alive failed ({type(exc).__name__}: {exc}); the next one will try again")
+            return
+        kept.usage = add_usage(kept.usage, call_usage(request["model"], counts, CACHE_TTL))
+        wrote = counts[2] > 0   # usage_counts order: input, output, cache write, cache read
+        kept.misses += wrote
+        if wrote and last_wrote:
+            kept.stopped = True
+            stop.set()
+            print(f"[{tag}] WARNING: keep-alives stopped: two in a row wrote the cache instead of reading it, "
+                  "so their prompt doesn't match the cached one")
+        last_wrote = wrote
+
+    def loop() -> None:
+        """Fire every KEEP_ALIVE_SECONDS until the block ends (or two misses in a row)."""
+        while not stop.wait(KEEP_ALIVE_SECONDS):
+            fire()
+
+    thread = threading.Thread(target=loop, daemon=True)
+    thread.start()
+    try:
+        yield kept
+    finally:
+        stop.set()
+        thread.join()
+        log_usage(tag, f"Keep-alives (misses: {kept.misses}, failed: {kept.failed})", request["model"], kept.usage)
 
 
 def _length(content) -> int:
