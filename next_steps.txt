@@ -14,22 +14,31 @@ Anything that spends API money needs an explicit yes first.
      tailor-resume skill cuts them to fit a posting, so this list is long
      on purpose. Pick, don't paste all.
    - REMOVE the old bullet "Beat single-pass baseline by 114% (Extraction)
-     and 93% (Usefulness) on a specialized rubric with Claude Sonnet judge".
-     It comes from an earlier run (May 2026) judged by a Claude model
-     grading Claude output (self-preference bias), and later, better-
-     controlled runs contradict it. An interviewer who opens the repo
+     and 93% (Usefulness) on a specialized rubric with ... judge". It comes
+     from an earlier run (May 2026) whose judge was Claude Sonnet 4.6
+     (data/eval/run_full_20260511_095810.log), not GPT-6.1 Sol: a Claude
+     model grading Claude output (self-preference bias). Later, better-
+     controlled runs contradict it, and an interviewer who opens the repo
      would find the opposite result.
+   - Consistency rule: every bullet must match README section 2. The judge
+     is OpenAI GPT-6.1 Sol (API model gpt-6.1-sol); call it "OpenAI" or
+     "GPT-6.1 Sol", never "ChatGPT" (the consumer app) or "Claude". The
+     planned judge check (item 4) keeps the same judge, so these bullets
+     stay true unless it changes the headline.
    - Project title: "Yoda: Agentic AI vs. Single-Call LLM for Pre-Earnings
      Equity Research" (or keep "Pre-Earnings Research Assistant for
      Financial Analysts" for finance-facing roles).
 
-   Evaluation (the summary bullet):
-   * Designed and ran a controlled evaluation of 3 LLM architectures on 20
-     S&P 500 stocks (60 reports): a cross-family LLM judge (OpenAI) scored
-     8 rubric dimensions against the same evidence each writer saw, with
-     paired-by-ticker 95% bootstrap confidence intervals; the agentic
-     pipeline matched the single-call baseline (gap -0.02, 95% CI -0.13 to
-     +0.11) at 4x the cost.
+   Evaluation (the summary bullet; pick one; finer detail lives in the
+   README's charts):
+   * Evaluated 3 LLM architectures on 20 stocks with an OpenAI GPT-6.1 Sol
+     judge: the agentic pipeline matched a single LLM call at 4x the cost
+     (recommended).
+   * Ran a 60-report controlled evaluation with an OpenAI judge: a 5-stage
+     agentic pipeline gave no quality gain over a single-call baseline at
+     4x the cost.
+   * Showed with a 60-report LLM-judged evaluation that a single LLM call
+     matched a 5-stage agentic pipeline, cutting cost per report 74%.
 
    Decision and cost:
    * Recommended the single-call design over a 5-stage agentic pipeline
@@ -81,11 +90,13 @@ Anything that spends API money needs an explicit yes first.
    * Shipped a Streamlit app that produces the report on screen and as a
      PDF, with a batch queue that bundles many tickers into a ZIP.
 
-   Stack line:
-   * Python, Anthropic Claude API (Sonnet 5.5, Haiku 5.5; tool use,
+   Stack line (replaces "Stack: Python, Streamlit, ChromaDB"):
+   * Stack: Python, Anthropic Claude API, OpenAI API, Pydantic, pandas,
+     SciPy, pytest, Streamlit, ChromaDB (short form).
+   * Stack: Python, Anthropic Claude API (Sonnet 5.5, Haiku 5.5; tool use,
      structured outputs, prompt caching, Batch API), OpenAI API, Pydantic,
-     pandas, NumPy, SciPy, matplotlib, Streamlit, ChromaDB, pytest, SEC
-     EDGAR / XBRL.
+     pandas, NumPy, SciPy, matplotlib, pytest, Streamlit, ChromaDB, SEC
+     EDGAR / XBRL (long form, for LLM-engineering postings).
 
    Keywords postings use that this project genuinely covers: LLM
    evaluation, LLM-as-a-judge, agentic AI, multi-agent systems, tool use,
@@ -333,8 +344,9 @@ Anything that spends API money needs an explicit yes first.
    - Then update the README's "Two modes" table ("Where it runs today").
 
 
-4. Improve the judge, check it against human scores, and re-judge
-   (added 2026-11-02)
+4. Check the judge: can it see differences, does it agree with a human,
+   and are the staged pipeline's claims more trustworthy? (added
+   2026-11-02, refined the same day)
    CODE CHANGES and PAID RUNS: plan and approve each step first.
    - Why: the full run found no difference between the staged pipeline
      and the baseline, but "no difference" is only as strong as the
@@ -344,51 +356,114 @@ Anything that spends API money needs an explicit yes first.
      first-draft claims unsupported while the unchecked baseline scored
      the same on figure accuracy and traceability. No human has checked
      the judge yet.
-   - Rule for the whole item: write down what will change and how the
-     result will be read BEFORE re-judging, and report the original
-     result next to the new one. Changing the rubric after seeing the
-     results otherwise looks like moving the goalposts.
+   - Three questions, each with its own test:
+     Q1 Can the judge see differences at all? (planted errors, step B)
+     Q2 Does the judge agree with a careful human? (claim audit, E and F)
+     Q3 Does the staged pipeline's claim check make its claims more
+        trustworthy than the baseline's? (unsupported-claim rate, F)
+   - Ground rules:
+     * Write the plan (step A) BEFORE any labelling or judging, and keep
+       it in the repo, so no result can be reinterpreted after the fact.
+     * The full run's eight-dimension result stays the primary published
+       result. New measures are added beside it; nothing replaces it.
+     * The judge stays OpenAI gpt-6.1-sol, so the README, the resume and
+       any new result keep describing the same judge. A second judge
+       (option H) is added beside it, never swapped in.
+     * Resume consistency (resume goes out before this item is done): the
+       resume may only claim what README section 2 says today. If this
+       item changes the headline, update the README and the resume
+       together.
+   - Flaws fixed from the first draft of this item (2026-11-02):
+     1. Human labels are per claim, but the judge's scores are per report
+        (1-5): they can't be compared directly. Fix: the judge labels the
+        SAME claims the human labels (step F), and agreement is measured
+        claim by claim.
+     2. Tuning the judge on the same human labels used to grade it would
+        flatter it. Fix: split the human labels into a calibration set
+        (prompt tuning) and a held-out set (the only one reported).
+     3. The only rater built the system and may lean towards it. Fix:
+        method hidden, evidence IDs and section names removed (method-
+        specific ID types like P.* give the method away), claims shuffled
+        across methods; re-label a random 30 a week later to measure
+        self-consistency; optionally a second person labels 50.
+     4. 10 tickers x 15 claims puts too much weight on a few companies.
+        Fix: all 20 tickers x 8 claims per method (320 claims), sampled
+        evenly across report sections; confidence ranges by resampling
+        tickers, not claims.
+     5. "Partly supported" was undefined. Fix: a written labelling guide
+        with examples, piloted on 20 claims before the real labelling.
+     6. Adding a rubric dimension changes the judge cache key, so all
+        eight existing dimensions would be re-scored and drift by LLM
+        noise. Fix: claim checking is a SEPARATE judge pass; the existing
+        scores are left untouched.
+     7. The audit measures whether claims are supported, not what a
+        report left out. Say so; omissions stay with filing_extraction.
+     8. "Design the rubric after the human audit" let the instrument fit
+        the data. Fix: the judge prompt is tuned on the calibration set
+        only (point 2).
    Steps:
-   a. Measure the judge's own noise (paid, ~$14, ~45 min; no code):
+   A. Write the plan (free, ~30 min): docs/judge_check_plan.md with the
+      three questions, the measures, and decision rules, e.g. "the judge
+      is trusted for claim checking if its agreement with the human on
+      held-out claims is Cohen's kappa >= 0.6"; "Q3 is answered if the
+      95% range of the unsupported-rate gap excludes 0".
+   B. Planted-error test, Q1 (code + paid, ~$2-3, ~20 min): copy 10
+      reports, change 3 figures and add 2 claims their sources don't
+      support in each, then judge originals (cached, free) and copies.
+      figure_accuracy and source_traceability must drop. If they don't,
+      the judge is blind to exactly what the claim check fixes, and the
+      "no difference" result is weak. Needs no human time.
+   C. Judge noise (paid, ~$14, ~45 min; no code):
         python -m yoda.eval.runner --rescore data/eval/full --repeat --judge-budget 20 --out data/eval/full/repeat
-      Shows how often the judge gives the same report the same score,
-      and so the smallest gap it can detect.
-   b. Human claim audit (free; ~5-7 hours of reading):
-      - Sample: 10 tickers x {baseline, staged pipeline} x 15 random
-        claims = 300 claims. Hide which method wrote each report.
-      - For each claim, read the passages it cites and mark it supported,
-        partly supported or unsupported. Needs care, not finance
-        expertise.
-      - Gives each method's unsupported-claim rate (the pipeline's claim
-        check is supposed to lower it) and a check of the judge's
-        traceability scores against a human.
-      - Size: ~150 claims per method detects a gap like 5% vs 14%
-        unsupported most of the time; claims from one report aren't
-        independent, so read it as approximate.
-      - Needs a small script (code, free) to sample claims and print each
-        with its cited passages, and a sheet to record the labels.
-      - Optional: a few holistic scores of whole reports (15-20 reports,
-        6-10 hours) to check how far the judge agrees with a human on
-        usefulness, which needs finance judgment.
-   c. Rubric change (code: yoda/eval/rubric.py, judge.py, tests): keep the
-      eight current dimensions unchanged so results stay comparable, and
-      add one, e.g. claim_support: the judge checks a sample of claims
-      against their cited passages and reports the unsupported share.
-      Consider sharpening the anchors where scores sit at the ceiling.
-   d. Re-judge all 60 reports (paid, ~$14-20, ~45 min; every report is
-      re-scored because the rubric is part of the judge cache key):
-        python -m yoda.eval.runner --rescore data/eval/full --judge-budget 25 --out data/eval/full/rescore_v2
-   e. Compare and publish: the judge against the human labels (agreement,
-      rank correlation), the old and new results side by side; rerun
-      docs/charts/make_charts.py on the new results.csv; update README
-      section 2 and its limitations.
-   - Running it safely, as the full run was: check credits first; run
-     from a separate terminal with output to a log file (cmd /c "... >
-     data\eval\NAME.log 2>&1", with -X utf8 -u); keep a budget on every
-     judging command; the judge cache keeps only its 2 latest runs, so
-     don't run other judging in between steps that rely on cached scores.
-   - Steps a and b can run in parallel; c comes after b (it should test
-     what humans found); d after c; e last. Elapsed time about 1-2 days.
+      How often the judge gives the same report the same score, and so
+      the smallest gap it can detect.
+   D. Build the audit kit (code, free): a script that samples the 320
+      claims as in flaw 4, shows each claim with the full text of the
+      passages it cites (IDs and method hidden), shuffles them, writes a
+      sheet to label (CSV) and keeps the answer key apart; marks 80 as
+      calibration (20 of them the pilot) and 240 as held-out. Plus the
+      labelling guide: supported / partly supported / unsupported /
+      can't tell, with rules for rounding, the writer's own arithmetic,
+      inferences labelled as estimates, and claims citing several
+      passages.
+   E. Human audit (free, ~6-8 hours, Calis): the pilot 20, then refine the
+      guide; then the rest; a week later, re-label 30 at random.
+   F. Claim-level judge pass, Q2 and Q3 (code + paid, ~$2-4 for all 40
+      baseline and staged pipeline reports): one judge call per report
+      labels every claim (~70) against its cited passages (~25K-token
+      prompt; measured 2026-11-02: 69-71 claims and ~75-88K characters
+      of cited text per report). Tune its prompt on the calibration set,
+      then report agreement on the held-out set (kappa, confusion
+      matrix). If it passes step A's rule, use its labels for all ~2,800
+      claims: each method's unsupported-claim rate with a 95% range by
+      resampling tickers. Optional: the lead analyst method's 20 reports
+      (~$1-2 more).
+   G. Publish: a "Judge check" subsection in README section 2 (planted
+      errors, noise, human agreement, unsupported-claim rate per method),
+      the original verdict next to any new finding; rerun
+      docs/charts/make_charts.py if any chart's numbers change; update the
+      limitations; update resume bullets only if the headline changed.
+   H. Options, only if B or C show the 1-5 scale can't separate methods:
+      - Pairwise judging: the judge sees both reports for a ticker and
+        picks the better per dimension, run in both orders to cancel
+        position bias. More sensitive than absolute scores near the
+        ceiling (~$10-15).
+      - A second judge from another model family (e.g. Google Gemini) on
+        the same rubric: shows whether the verdict depends on the judge
+        (~$15; new API key and pricing check first).
+      - Sharper anchors for the dimensions at the ceiling: this needs a
+        full re-judge and is reported as a new rubric version, not as a
+        correction.
+   - Order and timing: A now; B and C any time (paid, each needs a yes;
+     B before the resume goes out could add a "validated the judge with
+     planted errors" bullet); D before E; E after the resume; F after E's
+     calibration set; G last. About two working days in total, most of it
+     step E. Paid total about $20 without H.
+   - Running paid steps safely, as the full run was: check credits first;
+     run from a separate terminal with output to a log file (cmd /c "... >
+     data\eval\NAME.log 2>&1", with -X utf8 -u); a budget on every judging
+     command; the judge cache keeps only its 2 latest runs, so don't run
+     other judging between steps that rely on cached scores.
 
 
 5. Come up with how Yoda (staged pipeline) would need to change in order
@@ -428,7 +503,7 @@ Anything that spends API money needs an explicit yes first.
    - Ablation idea: drop one staged-pipeline stage at a time and keep only
      the stages that move the scores.
    - Done when: a change lowers the average report cost with no drop in
-     the judge's scores beyond run-to-run noise (item 4a measures it).
+     the judge's scores beyond run-to-run noise (item 4, step C, measures it).
 
 
 8. Remove XOM's saved predecessor link from the repo (added 2026-10-30)
