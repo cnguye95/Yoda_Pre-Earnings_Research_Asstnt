@@ -16,7 +16,7 @@ their architecture, not in how they ask, cite or check:
   - the shared instructions: how to cite (CITATION_RULES), how to write
     (WRITING_RULES) and how to repair (REPAIR).
 
-Prompt caching (next_steps item 12): the API caches a request's prompt up
+Prompt caching (docs/architecture.md, section 6): the API caches a request's prompt up
 to a marked "breakpoint" and a later request reads that cache only if
 everything before the breakpoint is byte-for-byte the same. The order is
 model and effort, then the tools, then the system prompt. So every source-

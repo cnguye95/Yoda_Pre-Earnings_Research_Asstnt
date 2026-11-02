@@ -15,7 +15,7 @@ rewritten claims are checked once more, and whatever still fails is removed
 (remove_claims). Every claim the check couldn't answer for, and every
 removal, is written into the report's check notes, never skipped silently.
 
-Shared by both candidate architectures (next_steps item 4: the staged pipeline's repair
+Shared by both candidate architectures (README section 3: the staged pipeline's repair
 pass, the lead analyst method's "same claim check").
 """
 

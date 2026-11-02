@@ -1,4 +1,4 @@
-"""Single-pass baseline mode for Yoda (option B, next_steps item 2).
+"""Single-pass baseline mode for Yoda (compared in README sections 2 and 4).
 
 run_baseline() is the "just hand the LLM the sources" approach: it puts what
 an analyst has on hand into ONE prompt, each passage after its ID, and asks

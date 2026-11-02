@@ -114,7 +114,7 @@ SCORE_COLS = list(DIMENSIONS)
 # (yoda/modes/pipeline.py) and "lead" the lead analyst method (yoda/modes/lead.py). "yoda" stays known, so the
 # saved reports of the retired personality panel are never deleted, but it
 # no longer runs. DEFAULT_MODES are what runs and is judged by default: the
-# three arms of the comparison (next_steps item 4).
+# three arms of the comparison (README section 4).
 KNOWN_MODES = ("baseline", "pipeline", "lead", "yoda")
 DEFAULT_MODES = ("baseline", "pipeline", "lead")
 
@@ -849,7 +849,7 @@ _MODE_PHRASE = {"baseline": "the baseline", "pipeline": "the staged pipeline", "
 # The paired comparisons summary.md shows, as (mode, against), each only
 # when some ticker has reports from both. The lead analyst method against
 # the staged pipeline was the comparison meant to pick between the two
-# candidate methods (next_steps item 4), so it is also split by ticker
+# candidate methods (README section 4), so it is also split by ticker
 # complexity; "yoda" against the baseline is for archived runs of the
 # retired panel. (Full run, 2026-11-01: the staged pipeline beat the lead
 # analyst method and tied the baseline; README section 2.)

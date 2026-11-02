@@ -1,4 +1,4 @@
-"""The staged pipeline (next_steps item 4): one candidate architecture for Yoda.
+"""The staged pipeline (compared in README section 2): one candidate architecture for Yoda.
 
 Result of the full evaluation (2026-11-01, 20 tickers; README section 2):
 it beat the lead analyst method (average gap +0.21) but did not beat the
@@ -24,7 +24,7 @@ analyst prepares an earnings preview:
      checkers fail; rewritten claims are checked again and whatever still
      fails is removed. check_report() then runs its ID checks.
 
-Prompt caching (next_steps item 12): every Sonnet call that reads the
+Prompt caching (docs/architecture.md, section 6): every Sonnet call that reads the
 sources sends the same model, effort and tools, with the sources as the
 first system block marked as the cache breakpoint and its own role after
 it, so the sources are stored once (by a warm-up request) and read cheaply

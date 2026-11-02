@@ -1,264 +1,498 @@
 
 IDEAS for Improvements/Changes
 
-WHEN labels (relative to the full eval run, item 4f):
-  BEFORE FULL   must be done before the full run: it changes what an arm
-                reads, how reports are written or how they are judged, so
-                doing it after would need a second full run.
-  CONDITIONAL   depends on a result named in the item.
-  AFTER         after the full run: docs, or work on the winning arm only.
-  Item numbers are kept when other items are finished, because code
-  comments cite them ("next_steps item 12").
+Open items only. Finished work is recorded in the README (results,
+design) and in git history; the full evaluation (2026-11-01) is README
+section 2. Items were renumbered on 2026-11-02, roughly in the order
+they should be done. Code comments don't cite item numbers (they point to
+the README or docs/architecture.md), so numbers may change freely.
+Anything that spends API money needs an explicit yes first.
 
-1. Ragas evaluation option
-  WHEN: AFTER
-  - Is this worth adding to Yoda?
-  - What is Ragas and how exactly does it work? 
-  What makes it different from a brute-force evaluation method?
-  - Compare to current judge
-  - Does it fit Yoda use case, and pipeline?
-  - Reason for suggestion: Ragas is overwhelmingly mentioned most often
-  for jr data science job postings under LLM Evaluation preferred skills
 
-2. Eval baseline
-   Option B: COMPLETE (built and in use as the baseline). One Claude call
-   over the shared sources plus one generic news search over the last 14
-   days; yoda/modes/baseline.py.
-   - Guardrail: the baseline reads only the shared sources and its own
-     news search. Nothing another arm found (its news, articles, reports or
-     evidence store) may reach it (yoda/sources.py; pinned by
-     tests/test_offline.py).
+1. Resume recommendations for the Yoda project (added 2026-11-02)
+   - The resume's base template holds every applicable bullet; the
+     tailor-resume skill cuts them to fit a posting, so this list is long
+     on purpose. Pick, don't paste all.
+   - REMOVE the old bullet "Beat single-pass baseline by 114% (Extraction)
+     and 93% (Usefulness) on a specialized rubric with Claude Sonnet judge".
+     It comes from an earlier run (May 2026) judged by a Claude model
+     grading Claude output (self-preference bias), and later, better-
+     controlled runs contradict it. An interviewer who opens the repo
+     would find the opposite result.
+   - Project title: "Yoda: Agentic AI vs. Single-Call LLM for Pre-Earnings
+     Equity Research" (or keep "Pre-Earnings Research Assistant for
+     Financial Analysts" for finance-facing roles).
 
-   Option C — ADD LATER as a second baseline: the SEC filings plus
-   Claude's web search tool.
-   WHEN: AFTER.
+   Evaluation (the summary bullet):
+   * Designed and ran a controlled evaluation of 3 LLM architectures on 20
+     S&P 500 stocks (60 reports): a cross-family LLM judge (OpenAI) scored
+     8 rubric dimensions against the same evidence each writer saw, with
+     paired-by-ticker 95% bootstrap confidence intervals; the agentic
+     pipeline matched the single-call baseline (gap -0.02, 95% CI -0.13 to
+     +0.11) at 4x the cost.
+
+   Decision and cost:
+   * Recommended the single-call design over a 5-stage agentic pipeline
+     after finding no measurable quality gain, cutting cost per report 74%
+     ($1.37 to $0.35).
+   * Ran the full 60-report experiment for about $108 in API fees: report
+     generation $94.48, at the low end of the $95-120 estimate, and judging
+     $13.62 against a $13 estimate, with a budget guard that stops judging
+     before any call could overspend.
+   * Cut the agentic pipeline's cost per report 21% ($1.74 to $1.37) with
+     Anthropic prompt caching and a keep-alive scheme (0 cache misses across
+     40 reports), and halved baseline cost with the Batch API.
+   * Ruled out a multi-agent "lead analyst" design that cost the most
+     ($3.00 per report) yet scored lower than both alternatives (-0.23 vs
+     the baseline, 95% CI -0.32 to -0.13; lost on 17 of 20 tickers).
+
+   Experimental rigor:
+   * Pre-registered company-complexity labels before generating any report,
+     so the complex-vs-simple comparison couldn't be chosen after seeing
+     the scores.
+   * Gave every method identical source data (SEC filings, XBRL facts,
+     earnings call, market data), so score differences reflect the method,
+     not the information it saw.
+   * Required the judge to quote evidence for every score and flagged
+     quotes it couldn't verify (3 of 480); checked judge reliability with
+     finish reasons, model-version checks and a length-vs-score correlation
+     (no length bias found).
+   * Caught a misleading pilot: a 5-ticker smoke test showed the pipeline
+     winning (+0.44); after fixing a broken baseline news search, the full
+     20-ticker run showed no difference.
+   * Redesigned the system after an earlier 6-agent "personality panel"
+     lost to its baseline (-0.57 on a 5-point scale, 17 of 20 tickers):
+     rebuilt the rubric, the shared sources and the evidence store.
+
+   Engineering:
+   * Built citation-checked report generation: every claim cites short
+     evidence IDs that code verifies against the source passages; a
+     two-model claim check (Claude Haiku 5.5, then Sonnet 5.5) caught about
+     11% of first-draft claims as unsupported before publication.
+   * Ingested SEC EDGAR filings (10-Q, 10-K, 20-F, 40-F, 8-K), XBRL company
+     facts, earnings call transcripts, consensus estimates (Finnhub, FMP)
+     and news (Tavily), including resolving a company's predecessor after
+     a corporate reorganisation.
+   * Built a two-step evaluation harness (generate, then judge within a
+     dollar budget) with per-report fault isolation: 60 of 60 reports
+     generated and judged with no failures in a 5-hour run.
+   * Wrote 595 offline pytest tests (no live API calls), including an
+     offline check that requests will share Anthropic's prompt cache.
+   * Shipped a Streamlit app that produces the report on screen and as a
+     PDF, with a batch queue that bundles many tickers into a ZIP.
+
+   Stack line:
+   * Python, Anthropic Claude API (Sonnet 5.5, Haiku 5.5; tool use,
+     structured outputs, prompt caching, Batch API), OpenAI API, Pydantic,
+     pandas, NumPy, SciPy, matplotlib, Streamlit, ChromaDB, pytest, SEC
+     EDGAR / XBRL.
+
+   Keywords postings use that this project genuinely covers: LLM
+   evaluation, LLM-as-a-judge, agentic AI, multi-agent systems, tool use,
+   prompt caching, cost optimization, bootstrap confidence intervals,
+   experimental design, data pipelines, SEC filings, financial NLP.
+   Don't list Ragas or RAG evaluation frameworks unless item 9 is done.
+
+
+2. README "Creator's Notes": a reflection on the project, written by Calis
+   (added 2026-11-01)
+   - A new README section (e.g. "Creator's Notes"), in Calis's own words.
+     Claude helps where marked [Claude's input] below: sources, drafts
+     to react to and an outside view, never the final wording.
+   - Outline:
+     1. The staged pipeline did not conclusively beat the baseline. Is it
+        a failure?
+        1.1 No. The test showed money can be saved with no conclusive
+            drop in quality, which is always a win.
+        1.2 Numerous studies and reports find AI delivering minimal or
+            no improvement in enterprises. [Claude's input: sources,
+            most recent first. Several are working papers or press
+            coverage, so check the primary report before quoting it.]
+            * NBER w34836, "Firm Data on AI" (2026): ~6,000 executives
+              in the US, UK, Germany and Australia (surveyed Nov 2025-Jan
+              2026); about 9 in 10 saw no measurable effect of AI on
+              productivity or employment over the previous three years.
+              https://www.nber.org/papers/w34836
+              (coverage: https://www.theregister.com/2026/02/18/ai_productivity_survey/)
+            * McKinsey, "The state of AI in 2026: On the road to ROI":
+              ~37% of respondents attribute any EBIT impact to AI,
+              unchanged from 2025; ~6% are "high performers" (5%+ of EBIT
+              from AI). Coverage:
+              https://www.fm-magazine.com/news/2026/sep/companies-financial-value-from-ai-holds-firm-in-2026/
+            * Harvard Business Review, "The Deployment Failure Holding
+              Back Your AI Investments" (Oct 2026):
+              https://hbr.org/2026/10/the-deployment-failure-holding-back-your-ai-investments
+            * MIT NANDA, "The GenAI Divide: State of AI in Business 2025":
+              95% of enterprise generative-AI pilots showed no measurable
+              P&L impact within six months (a narrow definition of
+              failure; 52 interviews, 153 surveyed leaders, 300 public
+              deployments). Coverage:
+              https://virtualizationreview.com/articles/2025/08/19/mit-report-finds-most-ai-business-investments-fail-reveals-genai-divide.aspx
+            * Humlum & Vestergaard, NBER w33777, "Large Language Models,
+              Small Labor Market Effects" (2025): Danish administrative
+              data, 25,000 workers; precise null effects on earnings and
+              hours, ruling out effects above 2% two years after adoption.
+              https://www.nber.org/papers/w33777
+            * METR (2025), randomized trial: experienced open-source
+              developers took 19% longer with early-2025 AI tools, though
+              they expected to be 24% faster. https://arxiv.org/abs/2507.09089
+            * More 2026 surveys (found through secondary coverage; find
+              the primary report before quoting):
+              - WRITER, 2026 survey of 2,400 leaders: 29% of organizations
+                see significant ROI from generative AI, 23% from AI agents.
+                https://writer.com/blog/enterprise-ai-adoption-2026/
+              - KPMG AI pulse (June 2026, via Forbes): about 7% report
+                established AI ROI.
+                https://www.forbes.com/sites/sandycarter/2026/08/06/enterprise-ai-roi-production-survey/
+              - IBM (February 2026, via secondary coverage): about 5% of
+                organizations achieve what IBM calls "substantial ROI".
+            * Note for the write-up: these measure whole organizations or
+              workforces; Yoda's result is one controlled comparison of
+              one task. The fair link is "measured gains are often smaller
+              than expected, so measure before scaling", not "AI doesn't
+              work".
+     2. My expectation that Yoda would definitively beat the baseline in
+        the original run, before the baseline was improved.
+        2.1 Yoda did beat the baseline at first, but the baseline was
+            weak. (Smoke run: +0.44 for the staged pipeline; its baseline's
+            news search ignored its date window, got 2 results, cited 0.)
+        2.2 My new expectation for the rework: marginal improvement was
+            possible, but might not justify the higher cost. The new test
+            asked whether either candidate (staged pipeline, lead analyst)
+            improved on the baseline, and if so, whether its extra cost
+            relative to the baseline justified the improvement.
+            2.2.1 Business decisions, especially high-stakes ones like
+                  investment and financial research, are driven mainly by
+                  cost-benefit: the change in revenue, or a company's
+                  internal rate of return.
+            2.2.2 We can't collect data on the revenue the Yoda modes would
+                  generate: that needs real users, and Yoda isn't built
+                  for them yet. Projecting revenue isn't viable either: it
+                  would need data on [Claude's input: e.g. how many
+                  analysts would use it, how much time a report saves
+                  each of them, and what they or their firms would pay],
+                  and in its current state this system is not a viable,
+                  scalable improvement on the baseline.
+                  * These are also unrealistic steps, because a system
+                    with Yoda's results against its baseline would not
+                    normally move to beta. In enterprises, if early
+                    evaluation shows limited or no improvement on the
+                    baseline in deliverable quality, time and cost, the
+                    project is stopped.
+        2.3 Enterprises were NOT the intended user for Yoda.
+            [Claude's input, a draft to react to:]
+            - Who it was for: an individual analyst, or a small fund or
+              independent research shop, without an in-house data team or
+              licensed feeds, for whom the alternative is 60-90 minutes of
+              tab-by-tab assembly per ticker. For that user the bar is
+              "faster and cheaper than doing it by hand, and trustworthy",
+              not "beats our existing platform", and either Yoda mode
+              costs cents to about a dollar against an hour of their time.
+            - Why enterprises differ: large banks and funds already
+              license consensus, transcripts and estimates (FactSet,
+              Bloomberg, Visible Alpha and the like), have compliance
+              rules on what a model may produce, and would compare Yoda
+              with their own tools, not with doing it by hand.
+            - CHECK: README section 1 currently describes the user as "a
+              buy-side or sell-side analyst who covers 10-50 tickers", who
+              usually works at an enterprise. Align that wording with
+              whatever this section says.
+            2.3.1 Do I see a world where it is used, at scale, by the
+                  intended user? Improvements would be needed.
+                  [Claude's input: plausibly yes for the baseline as a
+                  drafting aid, if (a) data comes from licensed feeds
+                  (the free tiers left 7 tickers without analyst grades
+                  and 2 without a call), (b) a human-scored sample shows
+                  its claims can be trusted, and (c) the reader always
+                  checks the cited sources before acting.]
+     3. Gaps and disadvantages of Yoda and the baseline, from a user's
+        point of view.
+        3.1 Baseline gaps and disadvantages.
+            - Mention the other suggested baseline (item 6: SEC filings
+              plus Claude's own web search, the model choosing its
+              searches). Checked 2026-11-01: it differs from today's
+              baseline (one code-chosen Tavily search) and could be
+              stronger.
+            - If it were built and performed better, the baseline would
+              improve further, making Yoda's extra stages even harder to
+              justify.
+            - [Claude's input:] no model reads its claims against their
+              passages (only code checks that the IDs exist), so
+              overreach goes uncaught; the staged pipeline's check found
+              ~11% of its own first-draft claims unsupported, and the
+              baseline has no equivalent number; one news search can miss
+              the story that matters; batching means waiting up to an
+              hour (a single call costs twice as much).
+        3.2 Yoda (staged pipeline) gaps and disadvantages.
+            [Claude's input, a draft to react to:]
+            - Cost set by others: every stage is a call to an external
+              LLM, priced by its vendor, and the pipeline makes many of
+              them (two extractors, two research loops, a writer, a
+              two-model claim check, a repair pass). A price change hits
+              it about 4 times harder than the baseline.
+            - An internal LLM would let the creator set the price and
+              could lower cost. Caveat: hosting a model as good as Sonnet
+              costs GPUs, operations and evaluation work, which only pays
+              off at high volume. A middle route is smaller or
+              fine-tuned models for the narrow stages (extraction, the
+              claim check's first pass) while keeping a strong writer.
+            - Time: about 6 minutes per report against one call.
+            - More moving parts, more ways to fail: e.g. KO's competitor
+              lookup lost a filing to an SEC server error during the full
+              run.
+            - Its main extra (every claim checked by two models) is
+              invisible to the rubric, so its value is unproven (item 4).
+            - Shared with the baseline: free data tiers leave gaps; US SEC
+              filers only; a snapshot at one moment; long reports (~55,000
+              characters) to read.
+     4. Why could the evaluation method (the judge) be wrong?
+        4.1 It doesn't factor in the intended user.
+            4.1.1 Could there be a reason Yoda is actually better than the
+                  baseline? [Claude's input: possibly in trustworthiness.
+                  The claim check removed or rewrote ~8 unsupported claims
+                  per staged pipeline report, yet the baseline (unchecked)
+                  scored the same on figure accuracy and traceability:
+                  either the baseline overreaches less, or the judge
+                  doesn't catch this kind of overreach. Other reasons the
+                  judge could be wrong: one judge with no human check yet;
+                  ceiling effects (sell-side usefulness 4.70-4.95, 15-17
+                  ties out of 20 on several dimensions); it sees a
+                  shortened 8-K and may drop uncited news to fit its
+                  prompt. Item 5 tests this.]
+        4.2 Could the baseline method be viable for use at scale?
+            (IMPORTANT QUESTION) [Claude's input: overlaps with 5; maybe
+            answer it there.]
+     5. If the current baseline became Yoda, could the new Yoda (the
+        baseline method) be viable at scale? (IMPORTANT QUESTION)
+        5.1 Yes: it saves users time, so they can do other work while Yoda
+            runs. [Claude's input: and it is cheap. ~$0.35 a report
+            batched; an analyst covering 50 tickers through 4 earnings
+            seasons is ~200 reports, ~$70 a year in model fees.]
+        5.2 No: [Claude's input, candidates: data licensing, not model
+            cost, dominates at scale (free tiers: Alpha Vantage ~25
+            requests a day, FMP refusals); without a model check of its
+            claims, trust rests on the reader checking the citations;
+            professional use needs compliance review and a record of
+            what was read; quality is proven only by an LLM judge on 20
+            large US companies.]
+        5.3 Conclusion between yes and no. [Claude's input: viable as a
+            citation-backed first draft with a human in the loop, once
+            the data is licensed and a human-scored sample confirms
+            accuracy; not as an autonomous research product. Cost is not
+            the obstacle; data and trust are.]
+     6. What would I change to make Yoda financially and systemically
+        viable? (Cheap enough, with measured improvements over the
+        baseline.)
+        6.1 Brainstorm improvements. [Claude's input:]
+            - Make the evaluation able to see what the pipeline adds: a
+              dimension for unsupported claims, and a human-scored sample
+              to check the judge (item 4).
+            - Ablation: remove one pipeline stage at a time (each
+              researcher, each extractor, the repair pass) and keep only
+              the stages that move the scores (item 7).
+            - Give the baseline a cheap Haiku claim check and measure
+              whether it changes anything; if so, that is the cheapest
+              "Yoda" there is.
+            - Build option C (item 6) so Yoda is measured against the
+              strongest realistic baseline, not a weak one.
+            - Licensed data for consensus, grades and transcripts.
+            - Shorter, more focused reports (relevance), which also cut
+              output cost and reading time.
+            - Measure user value directly: time to a finished earnings
+              dossier for a few analysts, with and without Yoda.
+            - See also item 5 (how the staged pipeline would have to
+              change to beat the baseline).
+
+
+3. A true mode switch in the app: baseline or staged pipeline (added
+   2026-11-01)
+   CODE CHANGE: plan and approve first.
+   - Decision (2026-11-01): Yoda offers both modes. The README already
+     describes both and their costs; today the app always runs the
+     staged pipeline, and the baseline runs only from the command line
+     and the eval runner.
+   - Question (2026-11-02): does Yoda offer the mode as a configuration
+     setting in the UI? NOT YET: app.py has no mode setting; both the
+     Single ticker and Queue views call the staged pipeline directly.
+   - Requirement: a mode setting in the UI where the user selects
+     "Baseline" or "Staged pipeline" before generating, applying to both
+     the Single ticker and Queue views, remembered for the session, with
+     each option's typical cost and time beside it (baseline ~$0.71 as a
+     single call or ~$0.35 batched; staged pipeline ~$1.37). The PDF
+     cover and the on-screen report should say which mode wrote the
+     report.
+   - Files: app.py, yoda/queue/processor.py. The queue could send its
+     baselines through the Batch API at half price, as the eval runner
+     does.
+   - Both modes already write the same EarningsReport, so the PDF and the
+     on-screen report need no structural change; check that the
+     market-data pause and the whisper "Allow spend" prompt behave the
+     same for both.
+   - Tests: the setting picks the right mode, and a baseline report
+     renders in the app and the PDF.
+   - Then update the README's "Two modes" table ("Where it runs today").
+
+
+4. Improve the judge, check it against human scores, and re-judge
+   (added 2026-11-02)
+   CODE CHANGES and PAID RUNS: plan and approve each step first.
+   - Why: the full run found no difference between the staged pipeline
+     and the baseline, but "no difference" is only as strong as the
+     judge's ability to see one. Two warning signs: ceiling effects
+     (sell-side usefulness 4.70-4.95; 15-17 ties of 20 on several
+     dimensions), and the claim check finding ~11% of the pipeline's
+     first-draft claims unsupported while the unchecked baseline scored
+     the same on figure accuracy and traceability. No human has checked
+     the judge yet.
+   - Rule for the whole item: write down what will change and how the
+     result will be read BEFORE re-judging, and report the original
+     result next to the new one. Changing the rubric after seeing the
+     results otherwise looks like moving the goalposts.
+   Steps:
+   a. Measure the judge's own noise (paid, ~$14, ~45 min; no code):
+        python -m yoda.eval.runner --rescore data/eval/full --repeat --judge-budget 20 --out data/eval/full/repeat
+      Shows how often the judge gives the same report the same score,
+      and so the smallest gap it can detect.
+   b. Human claim audit (free; ~5-7 hours of reading):
+      - Sample: 10 tickers x {baseline, staged pipeline} x 15 random
+        claims = 300 claims. Hide which method wrote each report.
+      - For each claim, read the passages it cites and mark it supported,
+        partly supported or unsupported. Needs care, not finance
+        expertise.
+      - Gives each method's unsupported-claim rate (the pipeline's claim
+        check is supposed to lower it) and a check of the judge's
+        traceability scores against a human.
+      - Size: ~150 claims per method detects a gap like 5% vs 14%
+        unsupported most of the time; claims from one report aren't
+        independent, so read it as approximate.
+      - Needs a small script (code, free) to sample claims and print each
+        with its cited passages, and a sheet to record the labels.
+      - Optional: a few holistic scores of whole reports (15-20 reports,
+        6-10 hours) to check how far the judge agrees with a human on
+        usefulness, which needs finance judgment.
+   c. Rubric change (code: yoda/eval/rubric.py, judge.py, tests): keep the
+      eight current dimensions unchanged so results stay comparable, and
+      add one, e.g. claim_support: the judge checks a sample of claims
+      against their cited passages and reports the unsupported share.
+      Consider sharpening the anchors where scores sit at the ceiling.
+   d. Re-judge all 60 reports (paid, ~$14-20, ~45 min; every report is
+      re-scored because the rubric is part of the judge cache key):
+        python -m yoda.eval.runner --rescore data/eval/full --judge-budget 25 --out data/eval/full/rescore_v2
+   e. Compare and publish: the judge against the human labels (agreement,
+      rank correlation), the old and new results side by side; rerun
+      docs/charts/make_charts.py on the new results.csv; update README
+      section 2 and its limitations.
+   - Running it safely, as the full run was: check credits first; run
+     from a separate terminal with output to a log file (cmd /c "... >
+     data\eval\NAME.log 2>&1", with -X utf8 -u); keep a budget on every
+     judging command; the judge cache keeps only its 2 latest runs, so
+     don't run other judging in between steps that rely on cached scores.
+   - Steps a and b can run in parallel; c comes after b (it should test
+     what humans found); d after c; e last. Elapsed time about 1-2 days.
+
+
+5. Come up with how Yoda (staged pipeline) would need to change in order
+   to beat the baseline while justifying its added cost.
+
+
+6. Second baseline: SEC filings plus Claude's own web search (option C)
    - Question it answers: "Does Yoda beat an analyst using a general AI
-     assistant with web search (e.g. Google AI Mode, ChatGPT search)?" —
+     assistant with web search (e.g. Google AI Mode, ChatGPT search)?" -
      likely the most common way analysts do quick research today.
+   - Different from today's baseline (checked 2026-11-01): today's makes
+     ONE news search that code chooses (Tavily, "<company> <ticker>
+     earnings", last 14 days); option C lets the model decide what to
+     search, as many times as it needs. It could be a stronger baseline,
+     which would make the case for the staged pipeline harder, not easier
+     (see item 5).
    - Results vary run to run, it costs more, and it is a small agent rather
      than one call; every search it runs must be saved to its evidence
      store so the judge sees what it saw.
-   - Checked 2026-11-01: option C is genuinely different from today's
-     baseline (option B). B makes ONE news search that code chooses (Tavily,
-     "<company> <ticker> earnings", last 14 days); C lets the model decide
-     what to search, as many times as it needs, with Claude's own web
-     search tool. C could be a stronger baseline (better news coverage),
-     which after the full run would make the case for the staged pipeline
-     harder, not easier (see item 14).
+   - Guardrail to keep: no baseline may read anything another method
+     found (yoda/sources.py; pinned by tests/test_offline.py).
 
 
-4. Architecture comparison: staged pipeline vs lead analyst method vs
-   baseline option B
-   Two candidate architectures run with the baseline on the full 20-ticker
-   set; the better one becomes Yoda.
-   - Staged pipeline (yoda/modes/pipeline.py): code builds the facts;
-     fixed stages (a filing extractor, a post-filing extractor for the 8-K
-     and the call, two news/peer researchers, expectations computed in
-     code) feed one writer; every claim is checked against the passages it
-     cites, then one repair pass.
-   - Lead analyst method (yoda/modes/lead.py): a lead picks 4-6
-     company-specific questions and briefs one worker per question; the
-     lead reviews the findings, asks one round of follow-ups (back to the
-     same worker) and writes; the same claim check follows. Workers read
-     the full shared sources and may make 4 tool calls, 2 more on a
-     follow-up.
-   - Models: writer Sonnet 5.5 (also the lead); staged pipeline
-     researchers Haiku 5.5; lead analyst workers Sonnet 5.5; claim check
-     Haiku 5.5, with a Sonnet 5.5 second opinion on the claims Haiku fails
-     (a claim is removed only when both agree).
-   - Shared by every arm: the evidence store, the XBRL fact sheet, the
-     report schema and citation checks, and the shared sources fetched
-     once per ticker with one length limit (yoda/sources.py). Known gaps:
-     banks and oil majors tag no OperatingIncomeLoss or LongTermDebt (shown
-     missing); IFRS filers (20-F/40-F) have no us-gaap facts, so their fact
-     sheet is all missing; FMP's free plan refuses analyst grades for some
-     tickers (USB, HD: HTTP 402), so their beat/miss record, analyst
-     actions and price target are N/A; Alpha Vantage may not have a
-     company's latest calls yet (HD on 2026-10-31).
-   - Complexity labels (fixed before any report, yoda/eval/complexity.py,
-     pinned by tests/test_complexity.py; must not change now):
-     * Complex (9): JPM, USB, UNH, XOM, KO, AMZN, JNJ, DIS, BA.
-     * Simple (11): AAPL, MSFT, NVDA, AMD, HD, SLB, PG, NFLX, CAT, PANW,
-       CRM.
-     * summary.md reports the lead analyst vs staged pipeline gap within
-       each group next to the overall gap. With 9-11 tickers per group,
-       read group differences as a direction, not proof.
-   - Prompt-caching rules for the two candidate methods (item 12): the
-     shared sources are the first system block, marked as a cache
-     breakpoint (5 minutes, kept alive for the whole report by
-     source_calls.keep_cache_alive, item 12), role instructions after it;
-     all of a method's
-     source-reading calls share model, pinned effort and a sorted tool
-     list; nothing variable (dates, IDs) before the breakpoint; no
-     cross-arm sharing; proven offline with
-     yoda/prompt_cache.cache_misses(). The baseline has no breakpoint: it
-     makes one call, so nothing would read the cache.
-   - Smoke run (2026-10-31, USB XOM DIS NVDA HD; reports and judged
-     results in data/eval/smoke): the staged pipeline beat the baseline
-     (+0.44, 95% range 0.24 to 0.64) and the lead analyst method (+0.47,
-     0.22 to 0.69); lead vs baseline was inconclusive. With 5 tickers this
-     is a direction, not proof. Measured per report: baseline $0.36
-     (batched), staged pipeline $1.74 and 383 s, lead analyst $3.19 and
-     532 s; judge $0.22 per report. Its reports used the old news search
-     (fixed since: start_date, 14-day baseline window), and were judged
-     on the old nine-dimension rubric. On today's eight (market_expectations
-     removed, 2026-10-31) its gaps are +0.50 and +0.52; the reworded
-     filing_extraction is not reflected (that needs re-judging).
-   f. Full run: 3 arms x 20 tickers, with the judge. DONE 2026-11-01.
-      Outputs in data/eval/full (judged results in data/eval/full/rescore;
-      batch A's separate judging in data/eval/full/rescore_batchA).
-      - RESULT: staged pipeline vs baseline inconclusive (average gap
-        -0.02, 95% range -0.13 to +0.11; 9 wins, 1 tie, 10 losses); the
-        baseline beat the lead analyst method (-0.23, -0.32 to -0.13; 17 of
-        20) and so did the staged pipeline (-0.21, -0.29 to -0.12; 17 of
-        20). Mean averages: baseline 4.14, staged pipeline 4.12, lead
-        analyst 3.91. By complexity, the lead analyst method trailed on
-        complex (-0.19, sign p = 0.07) and simple (-0.23) tickers alike.
-        The lead analyst method lost mostly on filing_extraction (-0.45 vs
-        both, no wins) and reasoning_quality (-0.60 vs the pipeline, no
-        wins). The smoke run's pipeline win (+0.44) did not replicate,
-        most likely because the smoke baseline's news search was broken.
-        Decision (2026-11-01): the lead analyst method is not adopted;
-        Yoda keeps the baseline and the staged pipeline as two modes
-        (item 16). Full write-up: README section 2.
-      - How it was run: two batches of 10, split by sector pair (A = AAPL
-        AMD AMZN JPM JNJ SLB KO DIS CAT CRM; B = the rest), from a separate
-        PowerShell window with output to data/eval/full_batch{A,B}.log;
-        batch A judged before batch B was generated, then all 60 judged
-        once (batch A's scores free from the judge cache). A free dry test
-        came first: all 20 tickers' sources fetched with paid calls off,
-        every prompt checked against the context window (JPM largest,
-        ~750K estimated tokens), keys checked, 595 tests passed.
-      - Cost against estimate:
-                                 Estimate                   Actual
-        Anthropic (generation)   $95-120; $106.50 by source $94.48 (baseline $7.06,
-                                 size; ~$95 after cache     staged pipeline $27.38,
-                                 savings                    lead analyst $60.03)
-        OpenAI (judge)           ~$13 expected, $42 worst   $13.62 (A $8.14, B $5.48)
-        Tavily                   ~600 credits, up to 980    ~330 per 10 tickers (A: 329)
-        Paid whisper lookups     $0                         $0
-        Total                                               ~$108 plus Tavily
-        Per report: baseline $0.35, staged pipeline $1.37, lead analyst
-        $3.00, judge ~$0.23. The staged pipeline cost 21% less per report
-        than in the smoke run ($1.74), mostly from the 5-minute cache.
-      - Time against estimate:
-                                 Estimate                   Actual
-        Generation, batch A      ~3 hours                   2 h 37 min
-        Generation, batch B      ~3 hours                   ~2 h 36 min
-        Generation, 20 tickers   5-6 hours                  ~5 h 13 min (~15.6 min per ticker)
-        Judging                  50-60 minutes              45 minutes (24 + 21)
-        Per report: staged pipeline 370 s, lead analyst 556 s; batched
-        baselines added no waiting time.
-      - Reliability: 60/60 generated, 60/60 judged, all judge calls
-        finish=stop, no budget stops. Minor: KO's staged pipeline report
-        couldn't download PepsiCo's newest 10-Q (SEC 503); 6 claims in 5
-        reports "not checked" by the claim check; 3 of 480 judge quotes not
-        found (scores kept, flagged). The claim check found ~11% of the
-        staged pipeline's and ~14% of the lead analyst method's first-draft
-        claims unsupported (both models agreeing).
-      - Keep-alive check DONE: 0 misses and 0 failures in all 40 candidate
-        reports, no "keep-alives stopped" warnings. Keep CACHE_TTL = "5m".
-      - Commands used, from the repo root (PowerShell):
-          cmd /c ".venv\Scripts\python.exe -X utf8 -u -m yoda.eval.runner AAPL AMD AMZN JPM JNJ SLB KO DIS CAT CRM --out data\eval\full > data\eval\full_batchA.log 2>&1"
-          cmd /c ".venv\Scripts\python.exe -X utf8 -u -m yoda.eval.runner --rescore data\eval\full --judge-budget 19 --out data\eval\full\rescore > data\eval\full_judge_all.log 2>&1"
-      - Pre-flight checks done (2026-10-31; they replaced a second smoke
-        run): the new news search returns 10 in-window results; all 20
-        tickers fetch without error; a DIS baseline got 10 news results
-        (cited 6, all within 14 days; the smoke run's got 2, cited 0) and
-        was judged for $0.19 against a $0.20 estimate. What the full run
-        had (confirmed by the 2026-11-01 dry test):
-        * No call transcript: HD and CRM (Alpha Vantage doesn't have their
-          latest calls). CAT and PANW were fetched on the run day. An
-          earlier quarter's call was used for MSFT, XOM and PG (the latest
-          wasn't published yet).
-        * Analyst grades refused by FMP's free plan (HTTP 402) for HD, USB,
-          SLB, PG, CAT, PANW and CRM: their beat/miss record, analyst
-          actions and price target are N/A, the same for every arm.
-      - After it: item 10 (turn Tavily pay-as-you-go OFF) and item 13.
+7. Cut report costs while keeping quality
+   Already in place: prompt caching within each method (5-minute cache
+   kept alive every 4 minutes; 0 misses in the full run's 40 candidate
+   reports; rollback: CACHE_TTL = "1h" in yoda/modes/source_calls.py),
+   the judge on OpenAI Flex, the baseline through the Batch API, effort
+   pinned on every call, usage logged per stage. Not adopted (they trade
+   quality or can't be measured without spend): lower effort, more Haiku,
+   less filing text for writers, splitting Haiku prompts under 100K
+   tokens, batching the two candidate methods.
+   - Use the full run's per-stage costs (each report's log in
+     data/eval/full, kept locally) and its scores to find where money
+     goes; compare candidate changes on a few tickers against those
+     scores.
+   - Ablation idea: drop one staged-pipeline stage at a time and keep only
+     the stages that move the scores.
+   - Done when: a change lowers the average report cost with no drop in
+     the judge's scores beyond run-to-run noise (item 4a measures it).
 
 
-5. Restructure README
-   WHEN: AFTER (needs the full run's result).
-   DONE 2026-11-01: README rewritten with the full run's result on the
-   first screen ("At a glance"), both modes and their costs, results,
-   cost and time against estimates, limitations, method, setup and a repo
-   overview. Criterion (c) below became "what the result was": the staged
-   pipeline tied the baseline rather than winning.
-   2026-11-02: framed as an experiment ("Can an agentic AI system beat a
-   single LLM call?"); results shown as charts with captions (light and
-   dark versions, drawn by docs/charts/make_charts.py from results.csv),
-   exact numbers kept in a collapsible table. Rerun the script after any
-   re-judging (e.g. a judge improvement) so the charts stay current.
-   - Put evaluation result at top.
-   - Acceptance: a reader who stops after the first screen knows (a) what
-     problem Yoda solves, (b) that it was evaluated against a baseline, and
-     (c) that it won, with numbers.
-   - The results in README section 3 come from the 2026-10-26 run of the
-     removed personality panel against the old filing-only baseline (the
-     baseline scored higher), and that section still says the judge sees
-     only the filing's first 30,000 characters. Replace both with the
-     full run's result, whichever arm wins.
+8. Remove XOM's saved predecessor link from the repo (added 2026-10-30)
+   - yoda/ingest/predecessors.json holds XOM's link (new CIK 2115436 ->
+     Exxon Mobil Corp, CIK 34088). It was committed to git only so the
+     smoke and full runs read XOM's 10-K even during an EDGAR search
+     outage, as happened on 2026-10-30. It is a temporary measure, not a
+     permanent design; the full run is done, so it can go.
+   - Remove XOM's entry (or the file) from git, and decide whether saved
+     links go back to the gitignored filing cache (edgar._PREDECESSORS_PATH
+     and its comment, the README's repo overview, and the tests that point
+     at it).
+   - Since 2026-10-31 XOM's predecessor is found from the co-filers on its
+     10-Qs, without EDGAR's search box, so an EDGAR search outage no
+     longer threatens XOM even without the saved link.
+   - Once ExxonMobil Holdings files its own 10-K (early 2027), XOM no
+     longer needs the link at all.
 
 
-6. Add diagram of system architecture
-   WHEN: AFTER (draw the architecture that wins).
-   DONE 2026-11-01: docs/architecture.md (Mermaid diagrams, drawn by
-   GitHub): the whole system, the staged pipeline, the baseline, the lead
-   analyst method (marked not adopted), the eval harness and the cost
-   controls. Linked from the README.
-   - README section 2's ASCII "Architecture" diagram describes the
-     removed panel. The new one should cover the shared sources (filings
-     with their windows and the predecessor lookup, the one 8-K/6-K, the
-     earnings call, the market snapshot, the fact sheet), the evidence
-     store and citation checks, the winning arm, the baseline, and the
-     judge's evidence.
-   - Store it as its own file in the repo, with a pointer from the README.
+9. Ragas evaluation option
+   - Is this worth adding to Yoda?
+   - What is Ragas and how exactly does it work? What makes it different
+     from a brute-force evaluation method?
+   - Compare to the current judge.
+   - Does it fit Yoda's use case and pipeline?
+   - Reason for suggestion: Ragas is mentioned most often for junior data
+     science job postings under LLM evaluation preferred skills.
 
 
-8. Add Repo Overview to README
-   WHEN: AFTER (the code changes a lot before then).
-   DONE 2026-11-01: README section 6, one line per code file.
-   - Quick headline descriptions of each code file: a more accessible
-     version of the file docstrings.
-
-
-9. Improve Retrieval Quality
-   WHEN: AFTER, and only if wanted. Neither candidate method searches the
-   company's own filings (both read the full sources), so retrieval only
-   serves competitors' filings (lookup_peer). Note: tools.retrieve_filing
-   and the vector store return chunker windows without passage IDs; an arm
-   that retrieves must return store passages, the unit every citation is
-   checked against.
+10. Improve retrieval quality (only if wanted)
+   Neither candidate method searches the company's own filings (both read
+   the full sources), so retrieval only serves competitors' filings
+   (lookup_peer). Note: tools.retrieve_filing and the vector store return
+   chunker windows without passage IDs; a method that retrieves must
+   return store passages, the unit every citation is checked against.
    - Known gap in section detection: WFC-style annual reports (EX-13 with
      no linked table of contents, MD&A called "Financial Review") are
      mislabelled (23% accurate); no eval ticker has this form. Fixing it
      means WFC-specific rules, then fresh hold-outs to check they
      generalise. Minor: SU's MD&A after its risk factors is labelled Other;
      USB's EX-13 "Company Information" is not recognised.
-   R4. Improve chunks, not by semantic chunking (today's chunker already
-       splits at paragraph breaks):
-       a. Prefix each chunk's embedded text with where it came from
-          ("JPM 10-K 2025 · MD&A · Net interest income"). Cheap; all
-          chunks re-embedded once (a few cents per ticker).
-       b. Keep financial tables in one chunk with their header row, so a
-          number is retrieved with its column and period. Long tables
-          need their own split rule.
-   R5. Measure retrieval before changing it: ~40 question -> expected
-       passage pairs over 4-5 filings, scored by whether the passage is in
-       the top 3 (embeddings only, cents per run). The only way to know
-       whether R4 or R6 helps; a small set can mislead.
-   R6. Embedding model: do NOT fine-tune (OpenAI offers no embedding
-       fine-tuning; it would mean hosting a model and building training
-       pairs). If R5 shows weak recall, try in this order: hybrid search
-       (BM25 + vectors; exact terms like "CET1" match better), a reranker
-       over the top ~20, a larger or finance-tuned hosted embedding model
-       (check current options and prices first). Each adds a cost or a
-       dependency and is measurable with R5.
-   - Value (checked 2026-10-31): marginal for now. Retrieval serves only
-     lookup_peer, and peer filings backed 7.1% of the staged pipeline's
-     and 9.3% of the lead analyst method's claims on the smoke run. After
-     the full run, count how much the winning method cites peers; do R5
-     first if it leans on them.
+   a. Improve chunks, not by semantic chunking (today's chunker already
+      splits at paragraph breaks):
+      - Prefix each chunk's embedded text with where it came from
+        ("JPM 10-K 2025 · MD&A · Net interest income"). Cheap; all chunks
+        re-embedded once (a few cents per ticker).
+      - Keep financial tables in one chunk with their header row, so a
+        number is retrieved with its column and period. Long tables need
+        their own split rule.
+   b. Measure retrieval before changing it: ~40 question -> expected
+      passage pairs over 4-5 filings, scored by whether the passage is in
+      the top 3 (embeddings only, cents per run). The only way to know
+      whether (a) or (c) helps; a small set can mislead.
+   c. Embedding model: do NOT fine-tune (OpenAI offers no embedding
+      fine-tuning; it would mean hosting a model and building training
+      pairs). If (b) shows weak recall, try in this order: hybrid search
+      (BM25 + vectors; exact terms like "CET1" match better), a reranker
+      over the top ~20, a larger or finance-tuned hosted embedding model
+      (check current options and prices first). Each adds a cost or a
+      dependency and is measurable with (b).
+   - Value (checked 2026-10-31): marginal for now. Peer filings backed
+     7.1% of the staged pipeline's claims on the smoke run. Count how much
+     the full run's staged pipeline cites peers (P.* IDs) before starting;
+     do (b) first if it leans on them.
    - Clean-up: tools.retrieve_filing (search of the company's own filing)
      is used by neither candidate method, only by the retired panel.
    Note on the predecessor lookup (edgar.py, "Predecessor companies"):
@@ -268,309 +502,3 @@ WHEN labels (relative to the full eval run, item 4f):
    new company's 10-Qs are tried first, from SEC's archive and the
    documented submissions API; the search is asked only when they don't
    give exactly one match. XOM's predecessor is found this way.
-
-
-10. Tavily pay-as-you-go around the full eval run (added 2026-10-31)
-    - BEFORE the full run (4f): remind me to turn on pay-as-you-go on the Tavily
-      account, so searches past the monthly 1,000 credits keep working
-      ($0.008 a credit) instead of failing.
-    - AFTER the full run: remind me to TURN PAY-AS-YOU-GO OFF again.
-    - Status 2026-11-01: turned on before the full run; the full run is
-      done, so it is due to be turned OFF.
-    - Note Tavily free API credit limits in README
-
-12. Investigate ways to cut report costs while keeping quality
-    Already in place: prompt caching within each arm (rules in item 4),
-    the judge on OpenAI Flex with cache hits, the baseline through the
-    Batch API, effort pinned on every call, usage logged per stage. Not
-    adopted (they trade quality or can't be measured without spend):
-    lower effort, more Haiku, less filing text for writers, splitting
-    Haiku prompts under 100K tokens, batching the two candidate methods.
-    WHEN: AFTER, on the winning architecture.
-    - Use the full run's per-stage costs and scores to find where money
-      goes; compare candidate changes on a few tickers against those
-      scores.
-    - Done when: a change lowers the average report cost with no drop in
-      the judge's scores beyond run-to-run noise.
-    - Built 2026-10-31, first used in the full run (4f): 5-minute cache +
-      keep-alive. Writing the shared sources to the 1-hour cache cost 2x
-      input (55% of a staged pipeline report, 41% of a lead analyst
-      report); the 5-minute cache costs 1.25x, and Anthropic offers no
-      lifetime in between. The 1-hour cache was chosen because the repair
-      pass starts over 5 minutes after the writer's read; now
-      source_calls.keep_cache_alive() re-reads the entry (llm.warm_cache,
-      max_tokens=0, billed as a cache read) every 4 minutes for a report's
-      whole run. One keep-alive that writes is a miss (logged); two in a
-      row stop the keep-alives with a WARNING; a refused one is skipped.
-      Dry test on the smoke logs (no API calls): saves $0.30 per
-      candidate report (95% CI $0.17-0.43, one-sided p = 0.0018; 9-15% of
-      cost), ~$11.50 per full run; projection to the other 15 tickers
-      consistent (Welch p = 0.99; leave-one-out prompt-size error 5.5%).
-      Risk: a late keep-alive rewrites the cache (~$0.60); the saving is
-      gone at ~0.5 late keep-alives per report, which only a real run can
-      measure. A test run would cost more than one full run saves, so no
-      test run: the full run is the test, and each report's log counts
-      its misses (the check is in 4f). Rollback: CACHE_TTL = "1h".
-
-
-13. Remove XOM's saved predecessor link from the repo (added 2026-10-30)
-    WHEN: AFTER the full eval run (4f).
-    - yoda/ingest/predecessors.json holds XOM's link (new CIK 2115436 ->
-      Exxon Mobil Corp, CIK 34088). It was committed to git only so the
-      smoke and full runs read XOM's 10-K even during an EDGAR search
-      outage, as happened on 2026-10-30. It is a temporary measure, not a
-      permanent design.
-    - After the full run: remove XOM's entry (or the file) from git, and
-      decide whether saved links go back to the gitignored filing cache
-      (edgar._PREDECESSORS_PATH and its comment, the README note, and the
-      tests that point at it).
-    - Since 2026-10-31 XOM's predecessor is found from the co-filers on its
-      10-Qs, without EDGAR's search box, so an EDGAR search outage no
-      longer threatens XOM even without the saved link.
-    - Once ExxonMobil Holdings files its own 10-K (early 2027), XOM no
-      longer needs the link at all.
-
-14. Come up with how Yoda (staged pipeline) would need to change in order to beat the baseline while justifying its added cost.
-
-
-15. README "Creator's Notes": a reflection on the project, written by Calis
-    (added 2026-11-01)
-    WHEN: AFTER (needs the full run's result, which is in).
-    - A new README section (e.g. "Creator's Notes"), in Calis's own words.
-      Claude helps where marked [Claude's input] below: sources, drafts
-      to react to and an outside view, never the final wording.
-    - Outline:
-      1. The staged pipeline did not conclusively beat the baseline. Is it
-         a failure?
-         1.1 No. The test showed money can be saved with no conclusive
-             drop in quality, which is always a win.
-         1.2 Numerous studies and reports find AI delivering minimal or
-             no improvement in enterprises. [Claude's input: sources,
-             most recent first. Several are working papers or press
-             coverage, so check the primary report before quoting it.]
-             * NBER w34836, "Firm Data on AI" (2026): ~6,000 executives
-               in the US, UK, Germany and Australia (surveyed Nov 2025-Jan
-               2026); about 9 in 10 saw no measurable effect of AI on
-               productivity or employment over the previous three years.
-               https://www.nber.org/papers/w34836
-               (coverage: https://www.theregister.com/2026/02/18/ai_productivity_survey/)
-             * McKinsey, "The state of AI in 2026: On the road to ROI":
-               ~37% of respondents attribute any EBIT impact to AI,
-               unchanged from 2025; ~6% are "high performers" (5%+ of EBIT
-               from AI). Coverage:
-               https://www.fm-magazine.com/news/2026/sep/companies-financial-value-from-ai-holds-firm-in-2026/
-             * Harvard Business Review, "The Deployment Failure Holding
-               Back Your AI Investments" (Oct 2026):
-               https://hbr.org/2026/10/the-deployment-failure-holding-back-your-ai-investments
-             * MIT NANDA, "The GenAI Divide: State of AI in Business 2025":
-               95% of enterprise generative-AI pilots showed no measurable
-               P&L impact within six months (a narrow definition of
-               failure; 52 interviews, 153 surveyed leaders, 300 public
-               deployments). Coverage:
-               https://virtualizationreview.com/articles/2025/08/19/mit-report-finds-most-ai-business-investments-fail-reveals-genai-divide.aspx
-             * Humlum & Vestergaard, NBER w33777, "Large Language Models,
-               Small Labor Market Effects" (2025): Danish administrative
-               data, 25,000 workers; precise null effects on earnings and
-               hours, ruling out effects above 2% two years after adoption.
-               https://www.nber.org/papers/w33777
-             * METR (2025), randomized trial: experienced open-source
-               developers took 19% longer with early-2025 AI tools, though
-               they expected to be 24% faster. https://arxiv.org/abs/2507.09089
-             * More 2026 surveys (found through secondary coverage; find
-               the primary report before quoting):
-               - WRITER, 2026 survey of 2,400 leaders: 29% of organizations
-                 see significant ROI from generative AI, 23% from AI agents.
-                 https://writer.com/blog/enterprise-ai-adoption-2026/
-               - KPMG AI pulse (June 2026, via Forbes): about 7% report
-                 established AI ROI.
-                 https://www.forbes.com/sites/sandycarter/2026/08/06/enterprise-ai-roi-production-survey/
-               - IBM (February 2026, via secondary coverage): about 5% of
-                 organizations achieve what IBM calls "substantial ROI".
-             * Note for the write-up: these measure whole organizations or
-               workforces; Yoda's result is one controlled comparison of
-               one task. The fair link is "measured gains are often smaller
-               than expected, so measure before scaling", not "AI doesn't
-               work".
-      2. My expectation that Yoda would definitively beat the baseline in
-         the original run, before the baseline was improved.
-         2.1 Yoda did beat the baseline at first, but the baseline was
-             weak. (Smoke run: +0.44 for the staged pipeline; its baseline's
-             news search ignored its date window, got 2 results, cited 0.)
-         2.2 My new expectation for the rework: marginal improvement was
-             possible, but might not justify the higher cost. The new test
-             asked whether either candidate (staged pipeline, lead analyst)
-             improved on the baseline, and if so, whether its extra cost
-             relative to the baseline justified the improvement.
-             2.2.1 Business decisions, especially high-stakes ones like
-                   investment and financial research, are driven mainly by
-                   cost-benefit: the change in revenue, or a company's
-                   internal rate of return.
-             2.2.2 We can't collect data on the revenue the Yoda modes would
-                   generate: that needs real users, and Yoda isn't built
-                   for them yet. Projecting revenue isn't viable either: it
-                   would need data on [Claude's input: e.g. how many
-                   analysts would use it, how much time a report saves
-                   each of them, and what they or their firms would pay],
-                   and in its current state this system is not a viable,
-                   scalable improvement on the baseline.
-                   * These are also unrealistic steps, because a system
-                     with Yoda's results against its baseline would not
-                     normally move to beta. In enterprises, if early
-                     evaluation shows limited or no improvement on the
-                     baseline in deliverable quality, time and cost, the
-                     project is stopped.
-         2.3 Enterprises were NOT the intended user for Yoda.
-             [Claude's input, a draft to react to:]
-             - Who it was for: an individual analyst, or a small fund or
-               independent research shop, without an in-house data team or
-               licensed feeds, for whom the alternative is 60-90 minutes of
-               tab-by-tab assembly per ticker. For that user the bar is
-               "faster and cheaper than doing it by hand, and trustworthy",
-               not "beats our existing platform", and either Yoda mode
-               costs cents to about a dollar against an hour of their time.
-             - Why enterprises differ: large banks and funds already
-               license consensus, transcripts and estimates (FactSet,
-               Bloomberg, Visible Alpha and the like), have compliance
-               rules on what a model may produce, and would compare Yoda
-               with their own tools, not with doing it by hand.
-             - CHECK: README section 1 currently describes the user as "a
-               buy-side or sell-side analyst who covers 10-50 tickers", who
-               usually works at an enterprise. Align that wording with
-               whatever this section says.
-             2.3.1 Do I see a world where it is used, at scale, by the
-                   intended user? Improvements would be needed.
-                   [Claude's input: plausibly yes for the baseline as a
-                   drafting aid, if (a) data comes from licensed feeds
-                   (the free tiers left 7 tickers without analyst grades
-                   and 2 without a call), (b) a human-scored sample shows
-                   its claims can be trusted, and (c) the reader always
-                   checks the cited sources before acting.]
-      3. Gaps and disadvantages of Yoda and the baseline, from a user's
-         point of view.
-         3.1 Baseline gaps and disadvantages.
-             - Mention the other suggested baseline (item 2, option C:
-               SEC filings plus Claude's own web search, the model choosing
-               its searches). Checked 2026-11-01: it differs from today's
-               baseline (one code-chosen Tavily search) and could be
-               stronger.
-             - If it were built and performed better, the baseline would
-               improve further, making Yoda's extra stages even harder to
-               justify.
-             - [Claude's input:] no model reads its claims against their
-               passages (only code checks that the IDs exist), so
-               overreach goes uncaught; the staged pipeline's check found
-               ~11% of its own first-draft claims unsupported, and the
-               baseline has no equivalent number; one news search can miss
-               the story that matters; batching means waiting up to an
-               hour (a single call costs twice as much).
-         3.2 Yoda (staged pipeline) gaps and disadvantages.
-             [Claude's input, a draft to react to:]
-             - Cost set by others: every stage is a call to an external
-               LLM, priced by its vendor, and the pipeline makes many of
-               them (two extractors, two research loops, a writer, a
-               two-model claim check, a repair pass). A price change hits
-               it about 4 times harder than the baseline.
-             - An internal LLM would let the creator set the price and
-               could lower cost. Caveat: hosting a model as good as Sonnet
-               costs GPUs, operations and evaluation work, which only pays
-               off at high volume. A middle route is smaller or
-               fine-tuned models for the narrow stages (extraction, the
-               claim check's first pass) while keeping a strong writer.
-             - Time: about 6 minutes per report against one call.
-             - More moving parts, more ways to fail: e.g. KO's competitor
-               lookup lost a filing to an SEC server error during the full
-               run.
-             - Its main extra (every claim checked by two models) is
-               invisible to the rubric, so its value is unproven.
-             - Shared with the baseline: free data tiers leave gaps; US SEC
-               filers only; a snapshot at one moment; long reports (~55,000
-               characters) to read.
-      4. Why could the evaluation method (the judge) be wrong?
-         4.1 It doesn't factor in the intended user.
-             4.1.1 Could there be a reason Yoda is actually better than the
-                   baseline? [Claude's input: possibly in trustworthiness.
-                   The claim check removed or rewrote ~8 unsupported claims
-                   per staged pipeline report, yet the baseline (unchecked)
-                   scored the same on figure accuracy and traceability:
-                   either the baseline overreaches less, or the judge
-                   doesn't catch this kind of overreach. Other reasons the
-                   judge could be wrong: one judge with no human check yet;
-                   ceiling effects (sell-side usefulness 4.70-4.95, 15-17
-                   ties out of 20 on several dimensions); it sees a
-                   shortened 8-K and may drop uncited news to fit its
-                   prompt. A test: hand-score a sample of baseline and
-                   staged pipeline reports for unsupported claims.]
-         4.2 Could the baseline method be viable for use at scale?
-             (IMPORTANT QUESTION) [Claude's input: overlaps with 5; maybe
-             answer it there.]
-      5. If the current baseline became Yoda, could the new Yoda (the
-         baseline method) be viable at scale? (IMPORTANT QUESTION)
-         5.1 Yes: it saves users time, so they can do other work while Yoda
-             runs. [Claude's input: and it is cheap. ~$0.35 a report
-             batched; an analyst covering 50 tickers through 4 earnings
-             seasons is ~200 reports, ~$70 a year in model fees.]
-         5.2 No: [Claude's input, candidates: data licensing, not model
-             cost, dominates at scale (free tiers: Alpha Vantage ~25
-             requests a day, FMP refusals); without a model check of its
-             claims, trust rests on the reader checking the citations;
-             professional use needs compliance review and a record of
-             what was read; quality is proven only by an LLM judge on 20
-             large US companies.]
-         5.3 Conclusion between yes and no. [Claude's input: viable as a
-             citation-backed first draft with a human in the loop, once
-             the data is licensed and a human-scored sample confirms
-             accuracy; not as an autonomous research product. Cost is not
-             the obstacle; data and trust are.]
-      6. What would I change to make Yoda financially and systemically
-         viable? (Cheap enough, with measured improvements over the
-         baseline.)
-         6.1 Brainstorm improvements. [Claude's input:]
-             - Make the evaluation able to see what the pipeline adds: a
-               dimension for unsupported claims, and a human-scored sample
-               to check the judge.
-             - Ablation: remove one pipeline stage at a time (each
-               researcher, each extractor, the repair pass) and keep only
-               the stages that move the scores (item 12).
-             - Give the baseline a cheap Haiku claim check and measure
-               whether it changes anything; if so, that is the cheapest
-               "Yoda" there is.
-             - Build option C (item 2) so Yoda is measured against the
-               strongest realistic baseline, not a weak one.
-             - Licensed data for consensus, grades and transcripts.
-             - Shorter, more focused reports (relevance), which also cut
-               output cost and reading time.
-             - Measure user value directly: time to a finished earnings
-               dossier for a few analysts, with and without Yoda.
-             - See also item 14 (how the staged pipeline would have to
-               change to beat the baseline).
-
-
-16. A true mode switch in the app: baseline or staged pipeline (added
-    2026-11-01)
-    WHEN: AFTER the full run (decided after its result). CODE CHANGE:
-    plan and approve first.
-    - Decision (2026-11-01): Yoda offers both modes. The README already
-      describes both and their costs; today the app always runs the
-      staged pipeline, and the baseline runs only from the command line
-      and the eval runner.
-    - Question (2026-11-02): does Yoda offer the mode as a configuration
-      setting in the UI? NOT YET: app.py has no mode setting; both the
-      Single ticker and Queue views call the staged pipeline directly.
-    - Requirement: a mode setting in the UI where the user selects
-      "Baseline" or "Staged pipeline" before generating, applying to both
-      the Single ticker and Queue views, remembered for the session, with
-      each option's typical cost and time beside it. The PDF cover and the
-      on-screen report should say which mode wrote the report.
-    - Scope: a mode choice in the Streamlit app's Single ticker and Queue
-      views (app.py, yoda/queue/processor.py), with each mode's cost and
-      time shown next to the choice (baseline ~$0.71 as a single call or
-      ~$0.35 batched; staged pipeline ~$1.37). The queue could send its
-      baselines through the Batch API at half price, as the eval runner
-      does.
-    - Both modes already write the same EarningsReport, so the PDF and the
-      on-screen report need no change; check that the market-data pause
-      and the whisper "Allow spend" prompt behave the same for both.
-    - Tests: the switch picks the right mode, and a baseline report
-      renders in the app and the PDF.
-    - Then update the README's "Two modes" table ("Where it runs today").
-

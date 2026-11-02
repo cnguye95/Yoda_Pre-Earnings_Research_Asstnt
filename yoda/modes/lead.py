@@ -1,4 +1,4 @@
-"""The lead analyst method (next_steps item 4): the second candidate architecture for Yoda.
+"""The lead analyst method (compared in README section 2): the second candidate architecture for Yoda.
 
 Result of the full evaluation (2026-11-01, 20 tickers; README section 2):
 it scored below both the staged pipeline (average gap -0.21) and the
@@ -29,7 +29,7 @@ one question each, and the lead checks their work and writes.
   5. The same claim check and repair pass as the staged pipeline
      (source_calls.check_and_repair), then check_report()'s ID checks.
 
-Prompt caching (next_steps item 12): every Sonnet call here sends the same
+Prompt caching (docs/architecture.md, section 6): every Sonnet call here sends the same
 model, effort and tool list (LEAD_TOOLS), with the sources as system block
 1 marked as the cache breakpoint (5 minutes, kept alive for the rest of the
 report by source_calls.keep_cache_alive), so the sources are stored once,

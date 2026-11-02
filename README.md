@@ -193,7 +193,7 @@ On 2026-10-26 a retired architecture (a multi-agent "personality panel") lost to
 | **Measured quality** | Average 4.14 / 5 | Average 4.12 / 5 (not distinguishable from the baseline) |
 | **Where it runs today** | Command line (`python -m yoda.modes.baseline TICKER`) and the eval runner | The Streamlit app (single ticker and queue), the command line and the eval runner |
 
-A switch between the two modes inside the app is planned (next_steps item 16). Today the app always uses the staged pipeline. The lead analyst method (`yoda/modes/lead.py`) stays in the repo so the evaluation can be reproduced, but no user-facing mode uses it.
+A switch between the two modes inside the app is planned (next_steps item 3). Today the app always uses the staged pipeline. The lead analyst method (`yoda/modes/lead.py`) stays in the repo so the evaluation can be reproduced, but no user-facing mode uses it.
 
 ### The shared sources
 
@@ -348,7 +348,7 @@ cp .env.example .env            # then fill in your keys
 | `OPENAI_API_KEY` | The eval judge (`gpt-6.1-sol`) and embeddings of competitors' filings (`text-embedding-3-small`) |
 | `FINNHUB_API_KEY` | Consensus estimates and the earnings calendar |
 | `FMP_API_KEY` | Financial Modeling Prep: backup consensus, analyst grades and price targets |
-| `TAVILY_API_KEY` | News search and article reading |
+| `TAVILY_API_KEY` | News search and article reading, 1000 free credits/month |
 | `ALPHAVANTAGE_API_KEY` | Earnings call transcripts (free key, about 25 requests a day; transcripts are cached in `data/transcripts/`) |
 | `SEC_USER_AGENT` | SEC EDGAR requires a contact string, e.g. `"Your Name you@example.com"` |
 
@@ -462,10 +462,7 @@ docs/architecture.md         Diagrams of the system, each method and the evaluat
 docs/charts/make_charts.py   Draws this README's result charts (light and dark) from a judged run's results.csv
 data/eval/full/              The full evaluation: 60 reports, their evidence, generation.csv; judged results in rescore/
 data/eval/smoke/             The 5-ticker smoke run (2026-10-31)
-.claude/commands/research.md A Claude Code /research command used while building (see below)
 ```
-
-**The `/research` command (dev tool).** A project-level Claude Code slash command that runs a fixed five-pass research routine: define the concepts, search and read real sources, lay out the approaches, weigh them against this repo, and end with a comparison table and open questions. Usage: `/research <topic or question>` inside a Claude Code session in this repo.
 
 ---
 

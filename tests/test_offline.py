@@ -389,7 +389,7 @@ def test_baseline_report_lists_what_it_could_not_read(monkeypatch):
 
 
 def test_another_arms_research_never_reaches_the_baseline(monkeypatch):
-    # The HARD GUARDRAIL of next_steps item 2: a marker planted in another
+    # The baseline's HARD GUARDRAIL (README section 4): a marker planted in another
     # arm's saved report, evidence store and news on disk must never appear
     # in the baseline's prompt, built from the shared sources and its own
     # search only.
