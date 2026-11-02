@@ -1,4 +1,4 @@
-"""Sequential ticker-queue processor (Phase 10).
+"""Sequential ticker-queue processor: many tickers in turn, the PDFs bundled into one ZIP.
 
 process_queue() runs report generation (the staged pipeline,
 yoda/modes/pipeline.py) against a list of tickers, saves

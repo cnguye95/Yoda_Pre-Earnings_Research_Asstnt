@@ -1,5 +1,11 @@
 """The lead analyst method (next_steps item 4): the second candidate architecture for Yoda.
 
+Result of the full evaluation (2026-11-01, 20 tickers; README section 2):
+it scored below both the staged pipeline (average gap -0.21) and the
+baseline (-0.23), mostly on filing extraction and reasoning quality, and it
+cost the most ($3.00 per report). Not adopted; kept so the evaluation can be
+reproduced.
+
 run_lead() writes the report for one ticker the way a lead analyst runs a
 small team: the lead decides what the quarter hinges on, colleagues answer
 one question each, and the lead checks their work and writes.

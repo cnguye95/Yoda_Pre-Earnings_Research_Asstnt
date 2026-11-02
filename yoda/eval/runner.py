@@ -848,9 +848,11 @@ _MODE_PHRASE = {"baseline": "the baseline", "pipeline": "the staged pipeline", "
 
 # The paired comparisons summary.md shows, as (mode, against), each only
 # when some ticker has reports from both. The lead analyst method against
-# the staged pipeline decides which candidate becomes Yoda (next_steps item
-# 4), so it is also split by ticker complexity; "yoda" against the baseline
-# is for archived runs of the retired panel.
+# the staged pipeline was the comparison meant to pick between the two
+# candidate methods (next_steps item 4), so it is also split by ticker
+# complexity; "yoda" against the baseline is for archived runs of the
+# retired panel. (Full run, 2026-11-01: the staged pipeline beat the lead
+# analyst method and tied the baseline; README section 2.)
 COMPARISONS = [("pipeline", "baseline"), ("lead", "baseline"), ("lead", "pipeline"), ("yoda", "baseline")]
 _DECIDING = ("lead", "pipeline")
 

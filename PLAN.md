@@ -1,6 +1,8 @@
 # PLAN.md — Yoda Pre-Earnings Research Assistant
 
-This document describes Yoda **as it is built today**: what it does, how the pieces fit, the rules every change must keep, and how it is evaluated. The original phase-by-phase build plan (OpenAI generation, RAG-LLM and Agent modes, prompt-only baseline) is preserved separately in [`ORIGINAL_BLUEPRINT.md`](ORIGINAL_BLUEPRINT.md) as history.
+> **Historical document.** This describes Yoda as it was built around 2026-10-26: the multi-agent personality panel, the filing-only baseline and the five-dimension rubric. All three were replaced after that version lost to its baseline. For how Yoda works today (the baseline and the staged pipeline, the shared sources, evidence IDs and the eight-dimension rubric) and the results of the full evaluation, see [`README.md`](README.md) and [`docs/architecture.md`](docs/architecture.md).
+
+This document described Yoda as it was built at the time: what it did, how the pieces fit, the rules every change had to keep, and how it was evaluated. The original phase-by-phase build plan (OpenAI generation, RAG-LLM and Agent modes, prompt-only baseline) is preserved separately in [`ORIGINAL_BLUEPRINT.md`](ORIGINAL_BLUEPRINT.md) as history.
 
 ---
 

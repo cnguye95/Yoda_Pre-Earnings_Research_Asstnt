@@ -1,5 +1,10 @@
 """The staged pipeline (next_steps item 4): one candidate architecture for Yoda.
 
+Result of the full evaluation (2026-11-01, 20 tickers; README section 2):
+it beat the lead analyst method (average gap +0.21) but did not beat the
+baseline (-0.02, 95% range -0.13 to +0.11), at $1.37 per report against the
+baseline's $0.35. It is the mode the app runs, and one of Yoda's two modes.
+
 run_pipeline() writes the report for one ticker in fixed stages, the way an
 analyst prepares an earnings preview:
   0. Code builds the facts: the shared sources (filings, XBRL fact sheet,

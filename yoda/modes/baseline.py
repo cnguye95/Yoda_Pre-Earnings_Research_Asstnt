@@ -17,6 +17,12 @@ method, not from what each side was allowed to see. It gets the same fact
 rules every writer gets (evidence_text: which source wins a disagreement,
 and how a newer source that contradicts the filing is flagged).
 
+Result of the full evaluation (2026-11-01, 20 tickers; README section 2):
+meant as the lower bound, the baseline scored the same as the staged
+pipeline (average gap -0.02, 95% range -0.13 to +0.11) at about a quarter
+of its cost ($0.35 against $1.37 per report), and above the lead analyst
+method. It is one of Yoda's two modes.
+
 The request is built by build_request(), separately from sending it, so a
 run of many tickers sends them together through the Batch API at half
 price (submit_baselines, then collect_baselines; the eval runner does this),
