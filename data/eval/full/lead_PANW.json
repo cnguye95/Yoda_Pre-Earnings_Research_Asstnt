@@ -1,0 +1,1467 @@
+{
+  "ticker": "PANW",
+  "company_name": "Palo Alto Networks Inc",
+  "report_generated_at": "2026-11-01T15:26:00+00:00",
+  "filings": [
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-09-10",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm"
+    }
+  ],
+  "earnings_call": "Q4 FY2026 earnings call (date unknown)",
+  "current_report": "No 8-K or 6-K recent enough to read",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$0.99",
+      "fiscal_quarter": 1,
+      "fiscal_year": 2027,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$3.37B",
+      "fiscal_quarter": 1,
+      "fiscal_year": 2027,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2026-11-12 report. Paid lookup not made: next report is 11 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "implied move: no live implied move yet (EarningsWatcher has no confirmed report date)."
+    },
+    "historical_move": {
+      "value": "±5.1% average closing move over the last 8 reports (2024-11-20 to 2026-09-01)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/panw-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "analyst_actions": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "price_target": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "FY26 (July year-end) revenue was $11.48B, up 24.5%. GAAP operating income was $695M (6.1% margin vs 13.5%), net income $307M and diluted EPS $0.40 vs $1.60. Reported results include Chronosphere (closed Jan 29, 2026) and CyberArk/Idira (closed Feb 11, 2026). GAAP results also carry higher intangible amortization ($640M vs $166M), higher share-based compensation ($1.815B vs $1.300B) and a $620M fair-value loss on the CyberArk 2030 notes.",
+      "evidence_ids": [
+        "F.01",
+        "F.21",
+        "F.07",
+        "F.27",
+        "F.29",
+        "F.03",
+        "F.05",
+        "F.06",
+        "K.216",
+        "K.327",
+        "K.225",
+        "K.338"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q4 FY26 revenue was $3.41B, up 34%. Non-GAAP EPS was $1.02, $0.04 above the top of the guided range, and management said it beat guidance on every metric. Derived Q4 GAAP operating margin was 5.0% and the derived GAAP net loss was $282M, against a 29.6% non-GAAP operating margin.",
+      "evidence_ids": [
+        "F.16",
+        "C.020",
+        "C.022",
+        "C.003",
+        "F.33",
+        "F.18",
+        "C.021"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "NGS ARR ended FY26 at $9.1B, up 63%, with nearly $1B of net new ARR in Q4. That included a nine-figure benefit from one large LLM customer migrating to Chronosphere. RPO was a record $21.2B, up 34%. Management reports about 22 net new platformizations in Q4 and net revenue retention above 120% for the platformized cohort.",
+      "evidence_ids": [
+        "C.003",
+        "C.018",
+        "C.020",
+        "C.005"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "The bar for the fiscal Q1 2027 print (consensus date per Finnhub: 2026-11-12, unconfirmed) is above guidance. Guidance is revenue $3.30-3.31B and non-GAAP EPS $0.96-0.98. Consensus is revenue $3.37B (about 1.8% above the top of the guide) and EPS $0.99. Consensus growth of about 36% compares with 33-34% guided.",
+      "evidence_ids": [
+        "C.024",
+        "M.01",
+        "F.38",
+        "F.37"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Reported growth overstates organic growth. CyberArk and Chronosphere together added $930M of revenue and an $797M operating loss in FY26. Unaudited pro forma revenue growth was about 17% ($12.31B vs $10.49B), against 24% reported. The FY27 NGS ARR guide of 22-23% growth compares with 63% at year-end as the acquisitions lap.",
+      "evidence_ids": [
+        "K.319",
+        "K.320",
+        "C.024"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Cash generation is strong. FY26 operating cash flow was $4.55B and GAAP-basis free cash flow was $4.11B; management's adjusted FCF was $4.41B (38.4% margin). FY27 is guided to a 38% adjusted FCF margin and FY28 to a 40% target. Cash and investments fell to $7.9B after $4.7B of net acquisition cash and $1.0B of buybacks.",
+      "evidence_ids": [
+        "F.09",
+        "F.35",
+        "C.022",
+        "C.025",
+        "C.023",
+        "K.239",
+        "K.273"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Stock going into the print: PANW closed at $390.54 on Oct 27, slid about 3% intraday on Oct 29 (Fortinet-led sector selloff) and fell a further 4.12% on Oct 30. Coverage cites 80-90x forward earnings. Historical reaction is an average closing move of ±5.1% over the last 8 reports. No options-implied move is available.",
+      "evidence_ids": [
+        "N.23",
+        "N.58",
+        "N.22",
+        "M.04",
+        "M.03"
+      ],
+      "evidence_type": "proxy"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Revenue",
+      "period": "Q1 FY27 (Oct 2026 quarter)",
+      "last_reported": {
+        "text": "Q4 FY26 revenue was $3.41B (derived), up 34%; Q1 FY26 was $2.47B.",
+        "evidence_ids": [
+          "F.16",
+          "C.020",
+          "F.37"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus revenue is $3.37B, +36.3% on the year-ago $2.47B. The snapshot date is unknown.",
+        "evidence_ids": [
+          "M.01",
+          "F.38"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Guide is $3.30-3.31B (+33-34%, about 3% below Q4's $3.41B sequentially). Consensus of $3.37B needs a beat of about $60M (1.8%) over the top of the guide. Q4's reported beat vs guide was not sized. Modeling $3.34-3.38B is reasonable, with the consensus line in the upper half.",
+        "evidence_ids": [
+          "C.024",
+          "C.020",
+          "F.16",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Non-GAAP diluted EPS",
+      "period": "Q1 FY27",
+      "last_reported": {
+        "text": "Q4 FY26 non-GAAP EPS was $1.02, $0.04 above the high end of the guide.",
+        "evidence_ids": [
+          "C.022"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus EPS is $0.99, 1 cent above the $0.98 top of the guide.",
+        "evidence_ids": [
+          "M.01",
+          "C.024"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Guide is $0.96-0.98, below Q4's $1.02. If Q4's $0.04 beat vs the guide top repeats it points to about $1.02, but one datapoint is a thin basis. Hardware memory costs and hosting costs are headwinds to the beat. $0.99 is a modest hurdle, a 1-2 cent beat of the guide top. Note Barchart's $0.52 'expected EPS' is on a different basis and should not be compared.",
+        "evidence_ids": [
+          "C.024",
+          "C.022",
+          "C.021",
+          "M.01",
+          "A.011"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "NGS ARR",
+      "period": "Q1 FY27",
+      "last_reported": {
+        "text": "NGS ARR was $9.1B at July 31, 2026, up 63%, with nearly $1B of net new ARR in Q4.",
+        "evidence_ids": [
+          "C.018",
+          "C.003"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guide of $9.54-9.56B implies only about $440-460M of net new ARR (±$50M on the rounded base). That is less than half of Q4 despite Q1 being 'larger than normal' due to the Chronosphere LLM migration tail. No consensus is available, so the test is a beat of the $9.56B top; the guide is probably set to be cleared. Q2 net new then implies about $0.31-0.39B, since 60-61% of FY27 net new falls in H2.",
+        "evidence_ids": [
+          "C.024",
+          "C.025",
+          "C.018"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Remaining performance obligations",
+      "period": "Q1 FY27",
+      "last_reported": {
+        "text": "RPO was $21.2B at year-end, up 34%; current RPO was $9.3B, up 34%.",
+        "evidence_ids": [
+          "C.003",
+          "C.018"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guide of $20.8-20.9B is below $21.2B, a sequential decline, while y/y growth of 34-35% matches Q4. FY27 RPO is guided at $25.2-25.4B (19-20% growth). How much of the slowdown is acquisition lapping vs. organic is not quantified. Watch for any change in contract duration or annual-billing mix (about 30% of bookings).",
+        "evidence_ids": [
+          "C.024",
+          "C.023"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Non-GAAP gross margin",
+      "period": "Q1 FY27",
+      "last_reported": {
+        "text": "Q4 FY26 non-GAAP gross margin was 74.8% (-100bp y/y); FY26 was 75.8%. GAAP FY26 gross margin was 70.4%.",
+        "evidence_ids": [
+          "C.021",
+          "K.230"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "No FY27 or Q1 gross margin guide exists. Management expects cloud hosting costs to grow faster than revenue and memory/storage cost pressure to persist; hardware is about 10% of revenue. Fortinet's product gross margin fell 3.3 points on memory costs with pricing only a partial offset. I expect flat to lower non-GAAP gross margin versus 74.8%. GAAP gross margin is likelier to fall than rise, because acquired-intangible amortization in cost of revenue widens the GAAP/non-GAAP gap.",
+        "evidence_ids": [
+          "C.021",
+          "P.001",
+          "P.002",
+          "K.148",
+          "K.327"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Operating margin (non-GAAP and GAAP)",
+      "period": "FY27 (watch Q1 for run-rate)",
+      "last_reported": {
+        "text": "FY26 non-GAAP operating margin was 29.2% (Q4: 29.6%). GAAP was 6.1% for FY26 and 5.0% in Q4 (derived).",
+        "evidence_ids": [
+          "C.021",
+          "F.27",
+          "F.33"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guide is 29.5% non-GAAP. Bridging with $1,081M scheduled intangible amortization (about 7.6% of revenue), SBC at roughly 14-17% of revenue and 0.3-1.0% of other items gives FY27 GAAP operating margin of about 4-8%, centered near 6%, roughly flat vs FY26. This is my estimate, not guidance; SBC is the swing factor (about $140M per point of revenue).",
+        "evidence_ids": [
+          "C.025",
+          "K.327",
+          "K.225",
+          "K.362",
+          "K.232",
+          "K.316"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Adjusted free cash flow margin",
+      "period": "FY27 (Q1 seasonality not guided)",
+      "last_reported": {
+        "text": "FY26 adjusted FCF was $4.41B (38.4% margin); Q4 was $1.29B, up 35%. GAAP-basis FCF (OCF less capex) was $4.11B.",
+        "evidence_ids": [
+          "C.022",
+          "F.35"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guide is a 38% margin, about $5.4B on the revenue midpoint (my derivation), against a 40% FY28 target. The guide is slightly below FY26's 38.4% even with margin expansion. Capex rose 78% in FY26, cloud commitments step up from FY28 ($1.2-1.9B a year) and the $0.3B gap between adjusted and GAAP FCF is unreconciled in my sources.",
+        "evidence_ids": [
+          "C.025",
+          "C.023",
+          "F.26",
+          "K.344",
+          "F.35",
+          "C.022"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Idira revenue and Chronosphere/observability ARR",
+      "period": "FY27 / Q1 FY27",
+      "last_reported": {
+        "text": "Idira pro forma FY26 revenue was $1.26B, up 21%, with Q4 bookings growing faster than revenue. Observability ARR passed $500M, from about $85M at the Chronosphere deal close.",
+        "evidence_ids": [
+          "C.020",
+          "C.047"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "FY27 Idira is guided to about $1.5B (high-teens to 20% pro forma growth), so growth ticks down vs 21%. Cortex is guided up about 30% and Network & AI Security up low double digits. No Q1 acquired-revenue split is given. Q1 should show whether Idira's quarterly run-rate (about $0.35-0.37B) holds and whether observability ARR keeps compounding after the LLM migration tail.",
+        "evidence_ids": [
+          "C.025",
+          "C.020",
+          "C.047"
+        ],
+        "evidence_type": "estimate"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "NGS ARR",
+      "guidance": "$9.54B-$9.56B, +63% y/y",
+      "period": "Q1 FY27",
+      "status": "new",
+      "claim": {
+        "text": "Q1 FY27 NGS ARR is guided to $9.54-9.56B (63% growth).",
+        "evidence_ids": [
+          "C.024"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "RPO",
+      "guidance": "$20.8B-$20.9B, +34-35% y/y (below the $21.2B year-end level)",
+      "period": "Q1 FY27",
+      "status": "new",
+      "claim": {
+        "text": "Q1 FY27 RPO is guided to $20.8-20.9B (34-35% growth), below the $21.2B reported at July 31.",
+        "evidence_ids": [
+          "C.024",
+          "C.003"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Revenue",
+      "guidance": "$3.30B-$3.31B, +33-34% y/y",
+      "period": "Q1 FY27",
+      "status": "new",
+      "claim": {
+        "text": "Q1 FY27 revenue is guided to $3.3-3.31B (33-34% growth). Console and Embrace are immaterial.",
+        "evidence_ids": [
+          "C.024"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Non-GAAP diluted EPS",
+      "guidance": "$0.96-$0.98",
+      "period": "Q1 FY27",
+      "status": "new",
+      "claim": {
+        "text": "Q1 FY27 diluted non-GAAP EPS is guided to $0.96-0.98. The transcript's Q1 share count ('37 to 44 million') looks garbled.",
+        "evidence_ids": [
+          "C.024"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "NGS ARR",
+      "guidance": "$11.075B-$11.175B, +22-23%; 60-61% of net new ARR in H2; Q1 larger than normal due to Chronosphere LLM migration tail",
+      "period": "FY27",
+      "status": "new",
+      "claim": {
+        "text": "FY27 NGS ARR is guided to $11.075-11.175B (22-23% growth). The Q1 uplift comes from a tail-end Chronosphere migration, and 60-61% of net new ARR lands in H2.",
+        "evidence_ids": [
+          "C.024",
+          "C.025"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "RPO",
+      "guidance": "$25.2B-$25.4B, +19-20%",
+      "period": "FY27",
+      "status": "new",
+      "claim": {
+        "text": "FY27 RPO is guided to $25.2-25.4B (19-20% growth).",
+        "evidence_ids": [
+          "C.024"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Revenue",
+      "guidance": "$14.1B-$14.2B, +23-24%",
+      "period": "FY27",
+      "status": "new",
+      "claim": {
+        "text": "FY27 revenue is guided to $14.1-14.2B (23-24% growth).",
+        "evidence_ids": [
+          "C.024"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Operating margin / non-GAAP EPS / diluted shares",
+      "guidance": "Operating margin 29.5%; non-GAAP EPS $4.16-$4.19; 844-847M diluted shares",
+      "period": "FY27",
+      "status": "new",
+      "claim": {
+        "text": "FY27 operating margin is guided to 29.5% (FY26: 29.2%), with non-GAAP EPS of $4.16-4.19 on 844-847M shares. No gross margin or GAAP guide is given; management says higher COGS is more than offset by operating leverage and M&A synergies.",
+        "evidence_ids": [
+          "C.025",
+          "C.021",
+          "C.022"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Adjusted free cash flow margin",
+      "guidance": "38% (FY26: 38.4%); 40% target for FY28",
+      "period": "FY27",
+      "status": "new",
+      "claim": {
+        "text": "FY27 adjusted FCF margin is guided to 38%, with a 40% target in fiscal 2028.",
+        "evidence_ids": [
+          "C.025",
+          "C.023",
+          "C.022"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Platform revenue growth",
+      "guidance": "Network & AI Security low double digits; Cortex about +30%; Idira about $1.5B (pro forma growth high-teens to 20%)",
+      "period": "FY27",
+      "status": "new",
+      "claim": {
+        "text": "FY27 modeling points: Network & AI Security revenue up low double digits, Cortex up about 30%, Idira about $1.5B. These are modeling points, not formal guidance.",
+        "evidence_ids": [
+          "C.025"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Long-term NGS ARR target",
+      "guidance": "$20B NGS ARR by FY2030; more than 4,000 platformizations",
+      "period": "FY2030",
+      "status": "maintained",
+      "claim": {
+        "text": "Management says it remains on track for $20B of NGS ARR and over 4,000 platformizations by FY30.",
+        "evidence_ids": [
+          "C.005",
+          "C.024"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "Estimates have not moved: a Zacks-sourced article dated Oct 27 says consensus estimates for PANW's FY27 and FY28 earnings were unchanged over the past 30 days. A Barchart preview dated Oct 28 reports 40 of 56 analysts at Strong Buy and an average price target of $402.10. It says PANW beat consensus in three of the last four quarters and missed once. The beat sizes and the basis (GAAP or non-GAAP) are not given, and its $0.52 EPS figure does not match PANW's reported figures.",
+      "evidence_ids": [
+        "N.01",
+        "N.03",
+        "A.011",
+        "A.013"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Peer read-through is mixed. Fortinet's Oct 29 Q3 showed revenue +20%, product revenue +37% and billings +29% (supportive of firewall demand), but the stock fell about 20% intraday on a lowered full-year service revenue forecast. PANW fell 3.2% to about $381.86 and CrowdStrike 1.6% intraday in sympathy. Commentary argues security stocks are not being rewarded for beats.",
+      "evidence_ids": [
+        "N.08",
+        "N.58",
+        "N.05"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "PANW fell a further 4.12% on Oct 30 after closing at $390.54 on Oct 27. Coverage cites 80-90x forward earnings and flags the deceleration in NGS ARR growth from 63% to 22-23% as a downside risk into the print.",
+      "evidence_ids": [
+        "N.23",
+        "N.22"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "New PAN-OS security headlines inside the window: on Oct 20, The Register reported multiple ransomware groups exploiting authentication bypass CVE-2026-0257 in GlobalProtect since early June. On Oct 28 PANW confirmed active exploitation of 'PHP2Shell' vulnerabilities against internet-exposed PAN-OS management interfaces, with hotfixes rolling out through Oct 30. A campaign analysis on Oct 31 cites 25 compromised systems. The 10-K already disclosed a May 2026 authentication bypass; whether it is the same flaw as CVE-2026-0257 is unconfirmed.",
+      "evidence_ids": [
+        "N.31",
+        "N.33",
+        "N.30",
+        "K.128"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Corporate items: on Oct 30 PANW recommended stockholders reject an unsolicited mini-tender offer from Tutanota LLC at $450 per share for up to 250,000 shares (about 0.03% of the stock). The Oct 27 proxy cites an Oct 9 close of $418.78 and, in a footnote, says FY26 earnings included fair-value changes on the CyberArk convertible notes and capped calls. I found no PANW buyback announcement since the 10-K; the $1.2B buyback headline of Oct 29-30 is Fortinet's.",
+      "evidence_ids": [
+        "N.17",
+        "N.65",
+        "N.08"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Zscaler, the main SASE competitor, rose 19% in the 30 days to Oct 26 on the AI-security narrative. Its fiscal Q1 2027 guide is revenue of $935-939M with roughly 17% implied ARR growth. That compares loosely with PANW's FY27 NGS ARR growth guide of 22-23% (different metrics).",
+      "evidence_ids": [
+        "N.67",
+        "C.024"
+      ],
+      "evidence_type": "proxy"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Can PANW clear a consensus bar that sits above its own guide, in a tape that has stopped rewarding beats?",
+      "bull": {
+        "text": "Management says it builds guidance from consensus, pipeline and territory plans and expects to exceed consensus. In Q4 it beat the top of its EPS guide by $0.04 and exceeded guidance on every metric. Bookings accelerated for a second straight quarter on a pro forma basis.",
+        "evidence_ids": [
+          "C.050",
+          "C.022",
+          "C.003",
+          "C.018"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Consensus revenue ($3.37B) and EPS ($0.99) are already above the top of the guide ($3.31B, $0.98). The stock trades at 80-90x forward earnings and fell about 7% over Oct 29-30 even as peers' demand data was good. Fortinet fell on a lowered outlook despite a beat, so an in-line-to-slightly-better Q1 may not be enough.",
+        "evidence_ids": [
+          "M.01",
+          "C.024",
+          "N.22",
+          "N.58",
+          "N.05"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Q1 revenue versus $3.37B, NGS ARR versus the $9.56B top of guide, and whether FY27 revenue ($14.1-14.2B) and EPS ($4.16-4.19) guidance is raised."
+    },
+    {
+      "question": "How much of the growth is organic once acquisitions and the Chronosphere one-off are stripped out?",
+      "bull": null,
+      "bear": {
+        "text": "Pro forma revenue growth was about 17% against 24% reported. FY27 NGS ARR growth is guided to 22-23% from 63%. Q4 net new ARR included a nine-figure LLM migration, and Q1 net new ARR is implied at only about $0.45B. Idira growth is guided to tick down from 21%. The 10-K warns of consumption-optimization volatility from AI-native customers.",
+        "evidence_ids": [
+          "K.320",
+          "C.024",
+          "C.020",
+          "C.025",
+          "K.096"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Q1 NGS ARR net new ex-migration (needs the size of the Chronosphere one-off), Idira revenue run-rate against about $1.5B, and Network & AI Security growth versus the low-double-digit guide."
+    },
+    {
+      "question": "Is margin expansion real, given GAAP profitability and gross margin pressure?",
+      "bull": {
+        "text": "Non-GAAP operating margin rose to 29.2% in FY26 even with part-year acquisitions at lower standalone margins. FY27 is guided to 29.5%, CyberArk synergies are three to six months ahead of plan, and management says operating leverage more than offsets higher COGS. Adjusted FCF margin has been at least 38% for four years.",
+        "evidence_ids": [
+          "C.021",
+          "C.022",
+          "C.023",
+          "C.025"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "GAAP gross margin fell to 70.4% from 73.4%, and non-GAAP gross margin to 74.8% in Q4. Hosting costs are guided to outgrow revenue and memory costs to persist. GAAP operating margin was 6.1% (5.0% in Q4), with $1.08B of scheduled FY27 amortization and SBC of $1.8B. My bridge puts FY27 GAAP operating margin roughly flat near 6%. The FCF margin guide (38%) is slightly below FY26's 38.4%.",
+        "evidence_ids": [
+          "K.230",
+          "C.021",
+          "F.27",
+          "F.33",
+          "K.327",
+          "K.225",
+          "C.025",
+          "C.022"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Q1 non-GAAP gross margin versus 74.8%, any hardware price-increase commentary, and the SBC and GAAP reconciliation."
+    },
+    {
+      "question": "Is AI a tailwind for PANW or a competitive and perception risk?",
+      "bull": {
+        "text": "Management frames agentic AI, 'Mythos'-style vulnerability discovery and open-weight models as expanding the attack surface. Prisma AIRS passed $100M ARR in four quarters, agentic traffic on SASE is up ninefold in nine months, and the company expects consolidation toward platforms.",
+        "evidence_ids": [
+          "C.004",
+          "C.009",
+          "C.039"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "The 10-K warns that frontier AI labs and hyperscalers may bundle competing security, and that market perception of AI disruption could hit the stock regardless of fundamentals. Active exploitation of PAN-OS management interfaces adds a product-security overhang.",
+        "evidence_ids": [
+          "K.108",
+          "K.121",
+          "N.33"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Prisma AIRS and Idira agent-security traction, platformization count, and whether customer commentary on PAN-OS exploitation shows any churn or delayed deals."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "bull",
+      "description": {
+        "text": "Revenue of about $3.38-3.42B and non-GAAP EPS of $1.01-1.03 (my estimates, repeating Q4's $0.04 EPS beat vs the top of the guide), with NGS ARR above $9.6B. Management raises FY27 guidance, cites continued platformization, and sizes the Chronosphere one-off modestly so underlying net new ARR looks strong.",
+        "evidence_ids": [
+          "C.024",
+          "C.022",
+          "M.01",
+          "C.025"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Revenue at or above about $3.38B (about 2% over the top of guide)",
+        "NGS ARR comfortably above $9.56B",
+        "Net new platformizations at or above Q4's record of about 22",
+        "FY27 revenue/EPS guide raised and Idira growth above 20%"
+      ]
+    },
+    {
+      "name": "base",
+      "description": {
+        "text": "Revenue of about $3.34-3.37B and non-GAAP EPS of $0.99-1.00, roughly in line with consensus and above the top of the guide. NGS ARR is at or just above $9.56B. FY27 guidance is maintained or nudged up, but the stock reaction is muted or negative given the 80-90x multiple and peer reactions. The average closing move is ±5.1%.",
+        "evidence_ids": [
+          "C.024",
+          "M.01",
+          "M.04",
+          "N.22"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Revenue between the guide top ($3.31B) and consensus ($3.37B)",
+        "EPS $0.98-1.00",
+        "NGS ARR within about $20M of the top of guide",
+        "Non-GAAP gross margin about 74-75% with hosting and memory pressure noted"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Revenue lands near the top of the guide ($3.31-3.33B) and EPS near $0.98. NGS ARR is no better than the guide, which exposes organic softness after the Chronosphere migration fades. Non-GAAP gross margin slips, the Q1 RPO guide proves to be a sequential decline, and PAN-OS exploitation comes up on the call. A priced-for-perfection stock sells off even without a miss.",
+        "evidence_ids": [
+          "C.024",
+          "M.01",
+          "K.148",
+          "N.33",
+          "N.05"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Revenue below $3.34B or EPS below $0.99 (under consensus)",
+        "NGS ARR at or below $9.56B with net new ex-migration unclear",
+        "Gross margin below Q4's 74.8%",
+        "FY27 guide unchanged while consensus drifts higher",
+        "Customer delays or churn tied to PAN-OS vulnerabilities"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "Expectations risk: consensus revenue of $3.37B and EPS of $0.99 sit above the top of Q1 guidance, with the stock at 80-90x forward earnings. Peers' good results were met with selling on Oct 29, so an in-line beat of the guide may not be enough.",
+        "evidence_ids": [
+          "M.01",
+          "C.024",
+          "N.22",
+          "N.58",
+          "N.05"
+        ],
+        "evidence_type": "estimate"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Product-security risk: Palo Alto confirmed active exploitation of PHP2Shell vulnerabilities against internet-exposed PAN-OS management interfaces on Oct 28, with hotfixes rolling out through Oct 30, and ransomware groups were reported exploiting CVE-2026-0257 in GlobalProtect since June. The 10-K flags product defects and a May 2026 authentication bypass, and warns of reputational harm and lost customers.",
+        "evidence_ids": [
+          "N.33",
+          "N.31",
+          "K.128",
+          "K.129"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "ARR quality risk: Q4 net new NGS ARR included a nine-figure LLM migration to Chronosphere, with a smaller tail in Q1. The 10-K warns that consumption-priced offerings, especially from AI-native customers, can see usage optimization and revenue volatility. Management says many Chronosphere customers are AI-native, so this risk applies to the observability business.",
+        "evidence_ids": [
+          "C.020",
+          "C.025",
+          "K.096",
+          "C.047"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Gross margin risk: GAAP gross margin fell 300bp to 70.4% in FY26. The 10-K cites memory and component cost inflation and cloud hosting costs, and management expects hosting costs to outgrow revenue in FY27. Non-cancelable cloud commitments are $7.7B and step up from FY28. Fortinet's product margin fell 3.3 points on memory costs.",
+        "evidence_ids": [
+          "K.230",
+          "K.148",
+          "K.150",
+          "C.021",
+          "K.344",
+          "P.001"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "2030 convertible notes: $1.1B of principal is outstanding and convertible in a quarter if the stock closes at or above $280.75 on 20 of the last 30 trading days of the prior quarter. The trigger was not met in the June quarter, so the notes were not convertible in the September quarter. The stock closed at $418.78 on Oct 9, above the trigger, but one close does not show the 20-of-30-day test was met for the September quarter, and no filing confirms it. If it was met and holders convert in the December quarter, the principal would be settled in cash. Fair-value swings ($620M loss, $58M capped-call gain in FY26) make GAAP EPS and the tax rate (42.7%) hard to forecast.",
+        "evidence_ids": [
+          "K.335",
+          "K.241",
+          "K.336",
+          "K.338",
+          "K.340",
+          "K.238",
+          "N.65"
+        ],
+        "evidence_type": "estimate"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Integration and dilution: headcount rose from 16,068 to 21,921 (4,223 from CyberArk), shares outstanding from 668M to 815M, and goodwill is $22.0B with $7.0B of intangibles. Two more deals (Embrace, $325M cash, closed Aug 27; Console, $500M cash, closed Sept 1) closed after year-end. Idira's FY27 growth guide (pro forma high-teens to 20%) is below FY26's 21%, and CyberArk was excluded from the FY26 internal-control assessment.",
+        "evidence_ids": [
+          "K.088",
+          "K.269",
+          "K.327",
+          "K.268",
+          "K.319",
+          "K.371",
+          "C.025",
+          "C.026",
+          "C.020",
+          "K.374"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Customer and channel concentration: two distributors accounted for 30% of FY26 revenue, and one distributor was 19% of gross accounts receivable. The 10-K also shows customer financing receivables of about $1.5B net (short- plus long-term), down from about $1.7B a year earlier.",
+        "evidence_ids": [
+          "K.097",
+          "K.278",
+          "K.268"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "How large was the Chronosphere LLM-customer migration in Q4 net new NGS ARR, how much more lands in Q1, and what is net new ARR excluding it?",
+      "why": {
+        "text": "Q4 net new ARR was nearly $1B including a 'nine-figure' benefit, while Q1 guide implies only about $0.45B net new. The ex-migration run-rate decides whether ARR momentum is intact.",
+        "evidence_ids": [
+          "C.018",
+          "C.020",
+          "C.025",
+          "C.024"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "Why does the Q1 RPO guide ($20.8-20.9B) fall below the $21.2B year-end level, and how much of the FY27 RPO slowdown to 19-20% is acquisition lapping versus duration or billing-mix change?",
+      "why": {
+        "text": "RPO growth is guided to fall from 34% to 19-20%, and annual billing is about 30% of bookings. Management says contract durations were steady, but the sequential decline needs explaining.",
+        "evidence_ids": [
+          "C.024",
+          "C.003",
+          "C.018",
+          "C.023"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What is the FY27 gross margin trajectory (GAAP and non-GAAP)? How much of the memory cost increase can hardware pricing offset, and when do cloud hosting costs reach margin maturity?",
+      "why": {
+        "text": "Gross margin is not guided, hosting costs are expected to outgrow revenue and memory costs to persist, while the 29.5% operating margin guide depends on leverage elsewhere.",
+        "evidence_ids": [
+          "C.021",
+          "C.022",
+          "K.148",
+          "K.230"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What is Idira's quarterly revenue and bookings run-rate, and why is FY27 growth guided to high-teens to 20% when bookings grew faster than revenue in Q4? How much of the Q1 beat potential comes from Modern PAM upgrades?",
+      "why": {
+        "text": "Idira is guided to about $1.5B, a slight deceleration from 21% pro forma growth, and the Q1 guide includes no disclosed acquired-revenue split.",
+        "evidence_ids": [
+          "C.020",
+          "C.025",
+          "C.035"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What has been the customer impact of the active exploitation of PAN-OS management interfaces and GlobalProtect (including the May authentication bypass)? Are there any delayed deals, service credits or remediation costs?",
+      "why": {
+        "text": "Exploitation was confirmed on Oct 28 and reported through Oct 31. The 10-K warns of lost customers and reputational harm from defects.",
+        "evidence_ids": [
+          "N.33",
+          "N.30",
+          "K.128",
+          "K.129"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What are the capital allocation plans: will the $1.0B buyback authorization (expiring Dec 31, 2026) be renewed? Have any 2030 noteholders converted since Oct 1, and how will principal and any excess be settled?",
+      "why": {
+        "text": "No repurchases were made in Q4, $1.0B remains under a program that expires Dec 31, 2026, and the $1.1B of 2030 notes were not convertible in the September quarter but could become convertible in the December quarter if the sale price condition was met, with principal payable in cash. Fair-value noise in GAAP results continues.",
+        "evidence_ids": [
+          "K.199",
+          "K.241",
+          "K.336",
+          "K.338"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What does adjusted free cash flow add back versus GAAP-basis FCF, and why is the FY27 FCF margin guide (38%) slightly below FY26's 38.4% while operating margin expands?",
+      "why": {
+        "text": "Adjusted FCF of $4.41B compares with $4.11B of OCF less capex, and capex rose 78% in FY26.",
+        "evidence_ids": [
+          "C.022",
+          "F.35",
+          "F.26",
+          "C.025"
+        ],
+        "evidence_type": "reported"
+      }
+    }
+  ],
+  "data_gaps": [
+    "Report date and time are unconfirmed: Finnhub lists 2026-11-12 with no time, a TIKR article (Oct 17, outside the 14-day window) cites a Yahoo estimate of about Nov 19, and no company 8-K or press release announcing the call was found.",
+    "The snapshot date of the $3.37B / $0.99 consensus is unknown, as is whether it predates the Sept 1 guide. No consensus is available for NGS ARR, RPO or gross margin. Beat/miss history is unavailable (FMP refused), and the Barchart '3 of 4' record has no beat sizes or stated basis (its $0.52 EPS does not match PANW's figures).",
+    "No options-implied move is available (no confirmed report date); only the 8-report average closing move of ±5.1%.",
+    "The size of the Chronosphere LLM migration is only bounded as 'nine-figure'. The Q3 FY26 NGS ARR dollar level was not retrieved, so Q4 net new and the ex-migration run-rate cannot be computed precisely. Year-end ARR is rounded to $9.1B, giving implied net new figures about ±$50M of uncertainty.",
+    "The company's definition of adjusted free cash flow and the reconciliation to GAAP-basis FCF ($4.41B vs $4.11B) were not found. The non-GAAP reconciliation, FY27 SBC and any gross margin guide (from the call's appendix modeling points) are not in the sources.",
+    "The GAAP operating margin bridge for FY27 (about 4-8%) and the split of the $1,081M scheduled amortization between cost of revenue and operating expenses are my estimates; the split is undisclosed.",
+    "No filing or news confirms whether the 2030 notes' sale-price condition was met in the quarter ended Sept 30, or whether any holder has converted. My conclusion rests on price datapoints older than 14 days (not cited) plus the Oct 9 close; no daily close series was available.",
+    "The Oct 30 PANW closing price and the October high (about $420) are not sourced from the last 14 days. Fortinet's Oct 29-30 price path is inconsistent across aggregator snippets (intraday -20% on Oct 29, with a rebound reported Oct 30), so the sector reaction is only approximately known.",
+    "No usable latest-quarter results from CrowdStrike, Zscaler, Check Point, Cisco or Microsoft were found, and the F5 reaction was not retrieved. Peer evidence is limited to Fortinet's Q3, Zscaler's guide and sympathy price moves.",
+    "The Q1 FY27 diluted share count in the call transcript ('37 to 44 million shares') is garbled and was not used. Whether the May 2026 authentication bypass and CVE-2026-0257 are the same flaw is unconfirmed.",
+    "No Q1 acquired-revenue split (Idira, Chronosphere, NGTS) is disclosed, so organic growth inside the 33-34% guide (my estimate: about 13%) cannot be verified.",
+    "Market data: signals figures are N/A because FMP refused the request (FMP refused https://financialmodelingprep.com/stable/grades (HTTP 402): Premium Query Parameter: 'Special Endpoint : This value set for 'symbol' is not available under your current subscription please visit our subscription page to upgrade your plan at https://financialmo Check FMP_API_KEY in .env and the FMP plan.).",
+    "A claim was removed because its sources don't support it: 'Platformization drives share gains: 22 net new platformizations in Q4, net revenue retention above 120% for the platformized cohort, SASE competitive displacements of $450M for the year (confirmed by the CEO on the call, up from $200M at Q3), and XSIAM ARR above $700M (up 70%). Observability ARR more than doubled to above $500M after the deal. Idira bookings grew faster than revenue.' (The $200M and $450M figures come from an analyst question with no subject, so the passages never say they are SASE competitive displacements. The other points (22 net new platformizations, NRR above 120%, XSIAM above $700M up 70%, observability above $500M, Idira bookings outgrowing revenue) are supported.)."
+  ],
+  "sources": {
+    "K.088": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Risk Factors — Risks Related to Global Economic and Geopolitical Conditions",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.096": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Risk Factors — RISKS RELATED TO OUR PRODUCTS AND TECHNOLOGY",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.097": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.108": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.121": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.128": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.129": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.148": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Risk Factors — RISKS RELATED TO OPERATIONS",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.150": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.199": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 — Purchases of Equity Securities by the Issuer and Affiliated Purchasers",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.216": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.225": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · MD&A — Results of Operations",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.230": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · MD&A — COST OF SUBSCRIPTION AND SUPPORT REVENUE",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.232": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · MD&A — OPERATING EXPENSES",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.238": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · MD&A — OTHER INCOME (EXPENSE), NET",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.239": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · MD&A — PROVISION FOR (BENEFIT FROM) INCOME TAXES",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.241": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · MD&A — DEBT",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.268": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Financial Statements — Definition and Limitations of Internal Control Over Financial Reporting",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.269": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Financial Statements — Stockholders’ equity:",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.273": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Financial Statements — Stockholders’ equity:",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.278": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.316": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.319": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Financial Statements — Embrace Mobile, Inc.",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.320": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Financial Statements — Additional Acquisition-Related Information",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.327": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Financial Statements — Goodwill",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.335": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.336": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.338": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.340": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Financial Statements — Capped Calls",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.344": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Financial Statements — Purchase Commitments",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.362": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.371": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 · Financial Statements — Embrace Mobile, Inc.",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "K.374": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-09-10 — Management’s Annual Report on Internal Control over Financial Reporting",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "C.003": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Nikesh Arora, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PANW&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.004": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Nikesh Arora, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PANW&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.005": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Nikesh Arora, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PANW&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.009": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Nikesh Arora, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PANW&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.018": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Dipak Golechha, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PANW&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.020": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Dipak Golechha, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PANW&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.021": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Dipak Golechha, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PANW&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.022": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Dipak Golechha, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PANW&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.023": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Dipak Golechha, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PANW&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.024": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Dipak Golechha, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PANW&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.025": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Dipak Golechha, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PANW&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.026": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Dipak Golechha, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PANW&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.035": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Nikesh Arora, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PANW&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.039": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Nikesh Arora, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PANW&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.047": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Nikesh Arora, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PANW&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.050": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Nikesh Arora, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PANW&quarter=2026Q4",
+      "as_of": null
+    },
+    "F.01": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — year ended 2026-07-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "F.03": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Net income — year ended 2026-07-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "F.05": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — year ended 2026-07-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "F.06": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — year ended 2025-07-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "F.07": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating income — year ended 2026-07-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "F.09": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow — year ended 2026-07-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756726000023/panw-20260731.htm",
+      "as_of": "2026-09-10"
+    },
+    "F.16": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2026-07-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.18": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Net income — quarter ended 2026-07-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.21": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — year ended 2026-07-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.26": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure growth — year ended 2026-07-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.27": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — year ended 2026-07-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.29": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — year ended 2025-07-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.33": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2026-07-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.35": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — year ended 2026-07-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.37": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-10-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1327567/000132756725000035/0001327567-25-000035-index.htm",
+      "as_of": "2025-11-20"
+    },
+    "F.38": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q1 2027",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.03": {
+      "kind": "market",
+      "citation": "Market data — Options-implied move",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "N.01": {
+      "kind": "news",
+      "citation": "tradingview.com, 2026-10-27 — Can PANW Turn Frontier AI Defense Into a Key Growth Driver? — TradingView News",
+      "url": "https://www.tradingview.com/news/zacks:ac70396af094b:0-can-panw-turn-frontier-ai-defense-into-a-key-growth-driver",
+      "as_of": "2026-10-27"
+    },
+    "N.03": {
+      "kind": "news",
+      "citation": "finance.yahoo.com, 2026-10-28 — Palo Alto Networks' Quarterly Earnings Preview: What You Need to Know",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/palo-alto-networks-quarterly-earnings-124002745.html",
+      "as_of": "2026-10-28"
+    },
+    "N.05": {
+      "kind": "news",
+      "citation": "247wallst.com, 2026-10-29 — First F5, Now Fortinet: Wall Street Has Stopped Paying Security Stocks for Beating Earnings - 24/7 Wall St.",
+      "url": "https://247wallst.com/investing/2026/10/29/first-f5-now-fortinet-wall-street-has-stopped-paying-security-stocks-for-beating-earnings",
+      "as_of": "2026-10-29"
+    },
+    "N.08": {
+      "kind": "news",
+      "citation": "finance.yahoo.com, 2026-10-29 — Fortinet Reports Strong Third Quarter 2026 Financial Results",
+      "url": "https://finance.yahoo.com/technology/articles/fortinet-reports-strong-third-quarter-200500343.html",
+      "as_of": "2026-10-29"
+    },
+    "A.011": {
+      "kind": "article",
+      "citation": "Article (finance.yahoo.com) — Crypto](https://finance.yahoo.com/markets/crypto/)",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/palo-alto-networks-quarterly-earnings-124002745.html",
+      "as_of": "2026-10-28"
+    },
+    "A.013": {
+      "kind": "article",
+      "citation": "Article (finance.yahoo.com) — Crypto](https://finance.yahoo.com/markets/crypto/)",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/palo-alto-networks-quarterly-earnings-124002745.html",
+      "as_of": "2026-10-28"
+    },
+    "N.17": {
+      "kind": "news",
+      "citation": "paloaltonetworks.com, 2026-10-30 — Palo Alto Networks Recommends Stockholders Reject Mini-Tender Offer by Tutanota LLC",
+      "url": "https://www.paloaltonetworks.com/company/press/2026/palo-alto-networks-recommends-stockholders-reject-mini-tender-offer-by-tutanota-llc",
+      "as_of": "2026-10-30"
+    },
+    "N.22": {
+      "kind": "news",
+      "citation": "tradingkey.com, 2026-10-31 — Palo Alto Networks Inc Stock (PANW) Moved Down by 4.12% on Oct 30: Drivers Behind the Movement",
+      "url": "https://www.tradingkey.com/news/market-movers/262261182-market-movers-panw-20261030",
+      "as_of": "2026-10-31"
+    },
+    "N.23": {
+      "kind": "news",
+      "citation": "finance.yahoo.com, 2026-10-27 — Palo Alto Networks (PANW) Laps the Stock Market: Here's Why",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/palo-alto-networks-panw-laps-204503062.html",
+      "as_of": "2026-10-27"
+    },
+    "N.30": {
+      "kind": "news",
+      "citation": "gbhackers.com, 2026-10-31 — Hackers Exploit PHP2Shell RCE Vulnerabilities to Gain Root Access on Palo Alto Firewalls",
+      "url": "https://gbhackers.com/hackers-exploit-php2shell-rce-vulnerabilities",
+      "as_of": "2026-10-31"
+    },
+    "N.31": {
+      "kind": "news",
+      "citation": "theregister.com, 2026-10-20 — Palo Alto's firewall OS has been under attack from multiple ransomware groups since June",
+      "url": "https://www.theregister.com/cyber-crime/2026/10/20/palo-altos-firewall-os-has-been-under-attack-from-multiple-ransomware-groups-since-june/5304226",
+      "as_of": "2026-10-20"
+    },
+    "N.33": {
+      "kind": "news",
+      "citation": "fieldeffect.com, 2026-10-30 — PHP2Shell exploited against firewalls",
+      "url": "https://fieldeffect.com/blog/php2shell-exploited-against-firewalls",
+      "as_of": "2026-10-30"
+    },
+    "P.001": {
+      "kind": "peer",
+      "citation": "PEER FTNT 10-Q filed 2026-10-30 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "P.002": {
+      "kind": "peer",
+      "citation": "PEER FTNT 10-Q filed 2026-10-30 · Risk Factors",
+      "url": null,
+      "as_of": null
+    },
+    "N.58": {
+      "kind": "news",
+      "citation": "pluang.com, 2026-10-29 — Fortinet stock drops 20% after lowering service... | Pluang",
+      "url": "https://pluang.com/en/news-feed/fortinet-turun-20-perkiraan-pendapatan-layanan-dikoreksi",
+      "as_of": "2026-10-29"
+    },
+    "N.65": {
+      "kind": "news",
+      "citation": "stocktitan.net, 2026-10-27 — Palo Alto Networks cuts performance-share cap to 300% | PANW Proxy Statement",
+      "url": "https://www.stocktitan.net/sec-filings/PANW/def-14a-palo-alto-networks-inc-definitive-proxy-statement-0bd98d8b9a18.html",
+      "as_of": "2026-10-27"
+    },
+    "N.67": {
+      "kind": "news",
+      "citation": "tickeron.com, 2026-10-26 — Zscaler (ZS) Advances +19% in 30 Days as AI Security Narrative Takes Hold",
+      "url": "https://tickeron.com/blogs/zscaler-zs-advances-19-in-30-days-as-ai-security-narrative-takes-hold-21871",
+      "as_of": "2026-10-26"
+    }
+  },
+  "check_notes": [
+    "setup_summary[6]: not checked against its passages — claude-haiku-5-5 returned no verdict for it.",
+    "setup_summary[0]: rewritten to what its sources support (The cited passages do not contain the prior-year EPS of $1.60, the Chronosphere (Jan 29) or CyberArk (Feb 11) close dates, or amortization and SBC as causes of depressed GAAP profit.).",
+    "metrics_to_model[0].view: rewritten to what its sources support (The guide, consensus and sequential arithmetic check out, but the ~13% organic growth figure needs quarterly Idira and Chronosphere revenue contributions that the passages do not give.).",
+    "key_debates[1].bull: rewritten to what its sources support (The $450M SASE competitive displacements figure does not appear in the cited passages, though the other metrics do.).",
+    "key_risks[2]: rewritten to what its sources support (The passages cover the nine-figure migration and the consumption-pricing risk, but nothing says observability ARR is concentrated in AI-native customers.).",
+    "key_risks[4]: rewritten to what its sources support (The claim that July 31 fair value implied a stock price of about $350 cannot be derived because the passages give no conversion rate, though the other facts match.).",
+    "key_risks[5]: rewritten to what its sources support (The passages give no purchase prices for Embrace ($325M) or Console ($500M), and the Idira FY27 growth guide is cut off at 'high'.).",
+    "key_risks[6]: rewritten to what its sources support (The distributor concentration figures are supported, but financing receivables fell from about $1.72B to $1.54B net, so 'growing' contradicts the balance sheet.).",
+    "questions_for_management[5]: rewritten to what its sources support (The 10-K says the notes are not convertible in the September quarter and only conditionally convertible later, so 'the notes are likely convertible' is not stated in the passages.).",
+    "key_debates[1].bull: the claim was removed — its sources don't support it (The $200M and $450M figures come from an analyst question with no subject, so the passages never say they are SASE competitive displacements. The other points (22 net new platformizations, NRR above 120%, XSIAM above $700M up 70%, observability above $500M, Idira bookings outgrowing revenue) are supported.).",
+    "since_filing[4]: tag 'reported' → 'estimate' (it cites only news)."
+  ]
+}

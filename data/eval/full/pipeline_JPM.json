@@ -1,0 +1,1456 @@
+{
+  "ticker": "JPM",
+  "company_name": "JPMORGAN CHASE & CO",
+  "report_generated_at": "2026-11-01T10:41:42+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-08-06",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-02-13",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026008131/jpm-20251231.htm"
+    }
+  ],
+  "earnings_call": "Q3 FY2026 earnings call (date unknown)",
+  "current_report": "8-K filed 2026-10-20: Item 8.01 other events; Item 9.01 financial statements and exhibits",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$5.92",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$51.79B",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2027-01-14 report. Paid lookup not made: next report is 74 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "implied move: no live implied move yet (EarningsWatcher has no confirmed report date)."
+    },
+    "historical_move": {
+      "value": "±2.1% average closing move over the last 8 reports (2025-01-15 to 2026-10-13)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/jpm-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": "3 beats, 1 misses in the last 4 quarters, average surprise +2.2%",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "Finnhub earnings surprises",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "analyst_actions": {
+      "value": "Last 30 days, newest first: Citigroup maintained Neutral (2026-10-15); Truist Securities maintained Hold (2026-10-14); Baird maintained Neutral (2026-10-14); Morgan Stanley maintained Equal Weight (2026-10-14); RBC Capital maintained Outperform (2026-10-14); Barclays maintained Overweight (2026-10-14); UBS maintained Buy (2026-10-05)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP grades",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "price_target": {
+      "value": "$373.36, +10.8% vs current $337.04",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP price target consensus",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "The next report is fiscal Q4 2026, due 2027-01-14. Consensus is EPS $5.92 and revenue $51.79B. JPM beat in 3 of the last 4 quarters (average surprise +2.2%) and has moved ±2.1% on average over the last 8 reports. No options-implied move or whisper number is available yet.",
+      "evidence_ids": [
+        "M.01",
+        "M.05",
+        "M.04"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Q3 2026 was reported after the Q2 10-Q; the earnings history shows a report on 2026-10-13, so the Q2 10-Q is no longer the latest print. On the call, management gave net income of $15.3B, EPS $5.57, ROTCE 20% and revenue of $50.9B (+8% YoY). Results included $658M of net investment securities losses in Corporate; excluding them, revenue grew 9%. Expenses were $27.3B (+12%).",
+      "evidence_ids": [
+        "C.002",
+        "M.04"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Third-party coverage shows different Q3 figures: EPS $5.75 versus a $5.94 consensus, and revenue $50.17B versus $51.23B, described as JPM's first miss since 2023. Both sources are dated to the Oct 13 results. The company's own call figures ($5.57, $50.9B) take precedence by evidence tier, and the sources do not reconcile the gap. The revenue difference may be a managed-versus-reported basis effect (Q3 2025 revenue was $46.43B), but that is inference.",
+      "evidence_ids": [
+        "A.007",
+        "C.002",
+        "F.48",
+        "N.24"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "H1 2026 comparisons are inflated. Q2 included a $4.6B net Visa share gain and $1.0B of equity investment gains, so Q2 EPS of $7.70 and H1 net income of $37.65B (+27%) are not a run rate. Q3 ($5.57) is the cleaner base for Q4.",
+      "evidence_ids": [
+        "Q.016",
+        "F.09",
+        "F.07",
+        "F.34",
+        "C.002"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q3 mix was lopsided. CIB revenue was $22.7B (+14%): Equities +49%, Fixed Income -4%, IB fees +14%. CCB revenue was $21.2B (+9%) with card spend +10%. AWM revenue was $6.9B (+14%) with $51B of long-term net inflows. Corporate posted a net loss of $455M on revenue of $93M.",
+      "evidence_ids": [
+        "C.003",
+        "C.004",
+        "C.002"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q4 guidance from the Q3 call: total NII about $28B, NII ex-Markets about $25.5B, expenses about $27.5B, and a Card NCO rate of about 3.2% for the year. Management also gave a preliminary 2027 NII ex-Markets central case of about $107B.",
+      "evidence_ids": [
+        "C.004",
+        "C.015"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "Capital is the main behavioral change. Standardized CET1 fell 30bp to 13.9% in Q3 as net income was more than offset by OCI losses, higher RWA (about +$52B) and distributions. Buybacks were about $1B versus a usual cadence of about $7B (Q2: $6.7B). Management says it holds about $30B of excess capital and is keeping dry powder for organic deployment. The dividend was raised to $1.65.",
+      "evidence_ids": [
+        "C.002",
+        "C.023",
+        "C.024",
+        "C.026",
+        "Q.104",
+        "A.007"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "JPM closed at about $337, down 1.9% on Oct 30 and below its 50-day average ($343.66) but above its 200-day ($322.92). The FMP consensus price target is $373.36 (+10.8%), and MarketBeat shows $368.10 with a Moderate Buy rating (1 Strong Buy, 14 Buy, 13 Hold).",
+      "evidence_ids": [
+        "A.001",
+        "A.006",
+        "M.07",
+        "A.004",
+        "A.005"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Peers sent a mixed read for Q3. BAC NII rose about 8% to $16.45B, but Global Markets revenue fell 6% (market-making -19%) and IB fees fell 11% to $1.80B. JPM's IB (+14%) and Equities (+49%) outran BAC, so JPM's Markets and IB comps are demanding into Q4.",
+      "evidence_ids": [
+        "P.003",
+        "P.010",
+        "C.003"
+      ],
+      "evidence_type": "proxy"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Diluted EPS",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 2026 EPS was $5.57 per the company's call (Q3 2025: $5.07). Third-party data show $5.75.",
+        "evidence_ids": [
+          "C.002",
+          "F.50",
+          "A.007"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus EPS is $5.92, about +6% sequentially. Against the true year-ago Q4 2025 EPS of $4.63 it is about +28%, not the +16.8% on the fact sheet, which uses the Q3 2025 base ($5.07).",
+        "evidence_ids": [
+          "M.01",
+          "Q.007",
+          "F.51",
+          "F.50"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Arithmetic from guided inputs suggests consensus is reachable but not conservative. Not repeating Q3's $658M securities loss is worth about $0.19 per share (23% tax, about 2.66B shares). The guided NII step-up of about $0.9B over Q3's $27.1B managed NII adds about $0.26. A seasonal Markets decline, expenses (+$0.2B) and the credit build are the offsets. The Q4 2025 comp is flattered by a $2.2B Apple Card reserve build, so YoY growth overstates the improvement.",
+        "evidence_ids": [
+          "C.002",
+          "C.004",
+          "N.24",
+          "Q.034",
+          "Q.007",
+          "Q.010"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Total net revenue",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 revenue was $50.9B per the call (+8% YoY); a third-party source shows $50.17B (+8.1%).",
+        "evidence_ids": [
+          "C.002",
+          "A.007"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus revenue is $51.79B. Versus Q4 2025's $45.80B that is +13.1%, not +11.5% (the fact sheet uses a Q3 2025 base).",
+        "evidence_ids": [
+          "M.01",
+          "Q.007",
+          "F.49",
+          "F.48"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Consensus implies about +1.8% to +3.2% sequential growth depending on the Q3 base ($50.9B or $50.17B). That is a step-up in a quarter with a normal seasonal Markets decline in the CFO's base case. It leans on the guided NII lift (about $28B), AWM and CCB growth, and no repeat of the securities loss. The CEO thinks the Markets decline could be smaller, which would help.",
+        "evidence_ids": [
+          "M.01",
+          "C.002",
+          "A.007",
+          "C.097",
+          "C.098",
+          "C.004"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Net interest income (total)",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 managed NII was $27.1B (+13% YoY), per a secondary source dated Oct 31; the call transcript does not give the figure.",
+        "evidence_ids": [
+          "N.24"
+        ],
+        "evidence_type": "estimate"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The guide of about $28B for Q4 total NII compares with managed NII of $27.1B reported for Q3, implying roughly +$0.9B (+3%), if the bases match, which the sources do not confirm. Together with the ex-Markets guide of $25.5B it implies Markets NII near $2.5B, versus $1.9B in Q2 (managed basis). Markets NII is the swing factor, since its revenue generally has offsets in other lines, primarily principal transactions. Rising short rates (one hike in the forward curve for December) support the ex-Markets line.",
+        "evidence_ids": [
+          "C.004",
+          "N.24",
+          "Q.044",
+          "Q.016",
+          "C.015"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "NII excluding Markets",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q2 2026 NII ex-Markets was $23.7B (+4% YoY). A Q3 figure was not found in the cited sources.",
+        "evidence_ids": [
+          "Q.015"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The Q4 guide of about $25.5B is +7.7% above Q2's level. Management annualizes it to about $102B as the base for the 2027 central case of $107B. Risks are deposit mix shift into CDs and premium products and slower wholesale deposit growth. Offsets are net new checking accounts (about 650,000 in Q3) and card balance growth.",
+        "evidence_ids": [
+          "C.004",
+          "C.015",
+          "C.039",
+          "C.040",
+          "Q.015"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Markets revenue (Fixed Income and Equities)",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q2 2026 Markets revenue was $12.1B (+35%). In Q3, Equities rose 49% YoY and Fixed Income fell 4%. A Q3 Markets total was not in the sources.",
+        "evidence_ids": [
+          "Q.015",
+          "C.003"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The CFO's base case is a normal Q3-to-Q4 seasonal decline, while the CEO expects a smaller decline given world events. That divergence is the largest uncertainty in the revenue line. BAC's Q3 Global Markets fell 6% (market-making -19%), a warning that trading can fade. JPM's Equities strength (prime, derivatives) is the part most exposed to a reversal. No Q4 2025 Markets comp is in the sources.",
+        "evidence_ids": [
+          "C.097",
+          "C.098",
+          "P.010",
+          "C.003"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Investment banking fees",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 IB fees were +14% YoY, with advisory a highlight (Q2: $3.28B in CIB, +30%).",
+        "evidence_ids": [
+          "C.003",
+          "Q.063"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management reported a slowdown in the second half of September as the rate sell-off paused deal pricing. The CEO calls the pipeline 'like an accordion' but sees Europe, especially IPOs, healthier than expected. BAC's Q3 IB fees fell 11%, so JPM's share gains may not be matched by the market. Watch for Q4 IB commentary and any rate-driven deal delays.",
+        "evidence_ids": [
+          "C.030",
+          "C.029",
+          "P.003"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Noninterest expense",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 expenses were $27.3B (+12% YoY), driven by volume- and revenue-related expense, front-office hiring and wage inflation.",
+        "evidence_ids": [
+          "C.002"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The Q4 guide of about $27.5B is only +$0.2B over Q3's $27.3B. With H1 at $54.17B, it implies about $109.0B of noninterest expense for the year, against the reported $108.6B adjusted-expense guide. Adjusted expense excludes Firmwide legal expense by definition, but the sources do not quantify the gap. Management ties the implied full-year increase to higher volume- and revenue-related expense. Management's early 2027 read is not far from the roughly $114B Street number.",
+        "evidence_ids": [
+          "C.004",
+          "C.020",
+          "Q.015",
+          "Q.042",
+          "N.24"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Credit costs and card net charge-offs",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 credit costs were $2.7B: net charge-offs $2.2B plus a net reserve build of $539M. The CFO said the wholesale build came from new activity, not downgrades or an outlook change. Q2 Card NCO was 3.34%.",
+        "evidence_ids": [
+          "C.002",
+          "C.093",
+          "Q.057"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The full-year Card NCO guide of about 3.2% is unchanged. H1 ran at 3.40%, so a 3.2% year implies H2 near 3.0%, below Q2's 3.34% (derived from average loans of about $241B in H1 and a similar-size H2). That requires continued improvement. Card 30+ day delinquency was 1.91% at Q2, down from 2.06% a year earlier. Q3 Card NCO is not in the sources, so the cushion is unverified.",
+        "evidence_ids": [
+          "C.004",
+          "Q.023",
+          "Q.057",
+          "Q.139"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Standardized CET1 ratio",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 Standardized CET1 was 13.9%, down 30bp QoQ (Q2: 14.2%) against an 11.5% requirement.",
+        "evidence_ids": [
+          "C.002",
+          "Q.008",
+          "Q.095"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "With buybacks at about $1B and net income strong, the ratio is more likely driven by RWA growth and OCI than by capital returns. Q3 RWA rose about $52B on lending, energy prices and volatility. Higher yields could add OCI losses. Basel III and GSIB finalization expected around year-end (not yet confirmed) could reset the capital conversation; the re-proposals together imply about 4% more required CET1 versus current 2028 rules.",
+        "evidence_ids": [
+          "C.002",
+          "C.023",
+          "C.024",
+          "Q.093",
+          "Q.092"
+        ],
+        "evidence_type": "estimate"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Net interest income (total)",
+      "guidance": "FY2026 raised to about $106.2B from about $105.5B (reported by a secondary source; the call said implied full-year figures were on a slide not in the transcript). Q4 about $28B.",
+      "period": "FY2026 / Q4 2026",
+      "status": "raised",
+      "claim": {
+        "text": "FY2026 NII guidance moved to about $106.2B from $105.5B in the July outlook. Q4 NII is guided to about $28B.",
+        "evidence_ids": [
+          "N.24",
+          "Q.023",
+          "C.004"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "NII excluding Markets",
+      "guidance": "FY2026 about $97.2B (from about $96.5B). Q4 about $25.5B.",
+      "period": "FY2026 / Q4 2026",
+      "status": "raised",
+      "claim": {
+        "text": "NII ex-Markets for FY2026 is now about $97.2B versus $96.5B in July. Q4 is guided to about $25.5B.",
+        "evidence_ids": [
+          "N.24",
+          "Q.023",
+          "C.004"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Adjusted / total expense",
+      "guidance": "Q4 about $27.5B. FY2026 adjusted expense about $108.6B (from about $107.5B), reflecting higher volume- and revenue-related expense.",
+      "period": "FY2026 / Q4 2026",
+      "status": "raised",
+      "claim": {
+        "text": "Q4 expenses are guided to about $27.5B, with the implied full-year increase attributed to elevated activity-linked costs. FY adjusted expense is reported at about $108.6B versus $107.5B in July.",
+        "evidence_ids": [
+          "C.004",
+          "N.24",
+          "Q.023"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Card Services net charge-off rate",
+      "guidance": "About 3.2% for the year",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "The Card NCO guide of about 3.2% is unchanged from July (it was lowered from about 3.4% at the January outlook).",
+        "evidence_ids": [
+          "C.004",
+          "Q.023",
+          "K.171"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "2027 NII excluding Markets",
+      "guidance": "Preliminary central case of about $107B, from an annualized Q4 base of about $102B. About a quarter of the growth comes from forward-curve hikes, about a quarter from asset sensitivity, and the rest from balance-sheet growth and mix. To be refined next quarter; management flagged more uncertainty than normal.",
+      "period": "FY2027",
+      "status": "new",
+      "claim": {
+        "text": "Management gave a 2027 NII ex-Markets central case of about $107B with the bridge described, and said it will be refined.",
+        "evidence_ids": [
+          "C.004",
+          "C.015",
+          "C.018"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "2027 expenses",
+      "guidance": "No formal guide. The CFO said the preliminary read is not far from the roughly $114B Street consensus, pending the budget cycle.",
+      "period": "FY2027",
+      "status": "unclear",
+      "claim": {
+        "text": "On 2027 expenses the CFO said the consensus of about $114B is not far from the firm's preliminary view, a change from last year when he said the Street was off.",
+        "evidence_ids": [
+          "C.020"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Q4 Markets revenue",
+      "guidance": "No guidance. CFO base case is a normal seasonal Q3-to-Q4 decline; CEO thinks the decline will be smaller than the usual seasonal pattern.",
+      "period": "Q4 2026",
+      "status": "unclear",
+      "claim": {
+        "text": "Management gave no Markets guide; the CFO assumes a normal seasonal decline while the CEO expects less of one.",
+        "evidence_ids": [
+          "C.097",
+          "C.098"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "The Q3 2026 results and call post-date the Q2 10-Q (Aug 6); the earnings history shows a report on 2026-10-13. They report net income $15.3B, EPS $5.57, ROTCE 20% and revenue $50.9B. The Q3 10-Q was not among the filings read, so segment and balance sheet detail for Q3 is limited to the call.",
+      "evidence_ids": [
+        "C.002",
+        "M.04",
+        "Q.461"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Contradiction on Q3 figures: the company's call gives EPS $5.57 and revenue $50.9B, while MarketBeat (article dated Oct 30) reports EPS $5.75 and revenue $50.17B against consensus of $5.94 and $51.23B. The company's figures rank higher on evidence tier, and the difference is not reconciled in the sources.",
+      "evidence_ids": [
+        "C.002",
+        "A.007"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Guidance moved after the 10-Q. FY2026 NII went to about $106.2B from $105.5B, NII ex-Markets to about $97.2B from $96.5B, and adjusted expense to about $108.6B from $107.5B. The Card NCO guide stayed at about 3.2%.",
+      "evidence_ids": [
+        "N.24",
+        "Q.023",
+        "C.004"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "Standardized CET1 fell to 13.9% from 14.2% at June 30. Management says buybacks dropped to about $1B in Q3 (versus $6.7B in Q2) as it keeps dry powder, and the dividend rose to $1.65 from $1.50 (paid Oct 31).",
+      "evidence_ids": [
+        "C.002",
+        "Q.008",
+        "C.023",
+        "Q.104",
+        "A.007"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "On Oct 20 the firm closed about $7.0B of note offerings: $350M floating-rate notes due 2030, $2.9B fixed-to-floating notes due 2030 and $3.75B fixed-to-floating notes due 2037. The 8-K contains no earnings data. A separate report mentions 6.00% senior notes due 2038.",
+      "evidence_ids": [
+        "E.003",
+        "A.003"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Shares fell 1.9% on Oct 30 to about $336.96. Coverage cites rising expenses, potential credit deterioration and a rich valuation as limiting upside despite the higher NII outlook.",
+      "evidence_ids": [
+        "A.001",
+        "A.015"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Sector read-across since the 10-Q: Cullen/Frost raised FY2026 NII growth guidance to 5%-5.5% (from 4.75%-5.25%), assuming a December rate hike. BAC reported deposit spreads of 3.13% (from 2.94%) and a 1.49% average deposit rate, per a Zacks note dated Oct 28. Both are proxies, and neither is a direct read for JPM's scale.",
+      "evidence_ids": [
+        "N.39",
+        "P.001",
+        "N.34"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "No analyst rating or target changes dated within the last 14 days were found. The most recent actions in the market data list are Citigroup (Neutral) on Oct 15 and Truist, Baird, Morgan Stanley, RBC and Barclays on Oct 14, all maintained.",
+      "evidence_ids": [
+        "M.06"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Is Q3's miss a one-off, or does it show that Markets-driven earnings are peaking?",
+      "bull": {
+        "text": "The Q3 miss versus consensus (described as the first since 2023) came with broad strength: CIB revenue +14%, IB fees +14%, CCB +9%, AWM +14%, ROTCE 20%. Excluding the $658M of net investment securities losses, revenue was up 9%. The 2026 NII outlook was raised.",
+        "evidence_ids": [
+          "C.002",
+          "C.003",
+          "C.004",
+          "N.24"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Growth leaned on Equities (+49%) while Fixed Income fell 4%, and the CFO says every franchise is beating records, which is not typical. Expenses are up 12% and are revenue-linked, and BAC's Markets and IB revenue fell in Q3.",
+        "evidence_ids": [
+          "C.003",
+          "C.089",
+          "C.091",
+          "P.010",
+          "P.003"
+        ],
+        "evidence_type": "proxy"
+      },
+      "what_settles_it": "Q4 Markets revenue versus the CFO's normal seasonal-decline base case, Q4 IB fees and commentary on the late-September slowdown, and whether Q4 EPS clears $5.92 without a repeat securities loss."
+    },
+    {
+      "question": "Can NII keep rising into 2027 ($107B ex-Markets) if rates rise and deposit mix shifts?",
+      "bull": {
+        "text": "The firm is asset-sensitive, with lower-than-modeled deposit betas. About a quarter of the 2027 uplift comes from forward-curve hikes. Net new checking accounts of about 650,000 support consumer deposit growth, and BAC's low deposit rate (1.49%) suggests pricing competition is manageable.",
+        "evidence_ids": [
+          "C.015",
+          "C.040",
+          "N.34"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "This cycle has no historical precedent. Higher rates could drive migration into CDs and premium deposits and slightly weaker deposit growth. Management itself flags more uncertainty than normal, and agentic-AI and fintech competition for yield-seeking deposits is a named risk.",
+        "evidence_ids": [
+          "C.039",
+          "C.054",
+          "C.018",
+          "C.007"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 NII ex-Markets versus the $25.5B guide, consumer deposit balances and mix, and the refined 2027 central case on the Q4 call."
+    },
+    {
+      "question": "Is it right to cut buybacks to about $1B and hold capital with CET1 at 13.9%?",
+      "bull": {
+        "text": "Management has about $30B of excess capital and says redeploying it organically (for example the Security and Resiliency Initiative, over $200B deployed in year one) earns better returns than buying stock at a roughly 6% earnings yield. Basel III and GSIB are expected around year-end, so dry powder preserves flexibility.",
+        "evidence_ids": [
+          "C.024",
+          "C.026",
+          "C.023"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Lower repurchases reduce EPS support when CET1 is already 2.4 points above the 11.5% requirement. The Basel III re-proposal would raise required CET1 by about 6%, but the GSIB re-proposal would lower the surcharge to 5.2% from 5.5%, so the net effect of final rules is uncertain.",
+        "evidence_ids": [
+          "C.002",
+          "Q.095",
+          "Q.091",
+          "Q.092"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 buyback amount, final Basel III and GSIB rules (expected around year-end), and any change to the stated approach to excess capital."
+    },
+    {
+      "question": "Is the 3.2% Card NCO guide, and credit generally, too optimistic?",
+      "bull": {
+        "text": "Card delinquencies are improving (30+ day 1.91% versus 2.06% a year ago), the Q3 wholesale reserve build came from new activity rather than downgrades, and corporate balance sheets are described as strong.",
+        "evidence_ids": [
+          "Q.057",
+          "C.093"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Wholesale criticized exposure rose to $50.3B at June 30 (Consumer & Retail, Transportation, Industrials, Oil & Gas). Management is tightening credit terms, expects higher rates, energy and fuel costs to pressure some borrowers, and says an extended hiking cycle would raise unemployment and weaken consumer credit.",
+        "evidence_ids": [
+          "Q.144",
+          "C.034",
+          "C.093",
+          "C.036"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 net charge-offs and reserve build versus Q3's $2.2B and $539M, the full-year Card NCO outcome, and criticized-exposure trends in the Q4 10-K."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "bull",
+      "description": {
+        "text": "The CEO's view proves right: the Q4 Markets decline is smaller than seasonal, IB fees hold up after the late-September pause, securities repositioning losses fade (about +$0.19 per share versus Q3), and NII lands at or above $28B. EPS clears $5.92 and the 2027 NII central case is refined upward.",
+        "evidence_ids": [
+          "C.098",
+          "C.030",
+          "C.002",
+          "C.004",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Markets revenue declines less than the usual seasonal pattern",
+        "IB fees stay near Q3 levels, with Europe IPOs delivering",
+        "No repeat of the $658M securities loss",
+        "NII at or above $28B with a December rate hike delivered",
+        "Updated 2027 NII central case above $107B"
+      ]
+    },
+    {
+      "name": "base",
+      "description": {
+        "text": "Guided items land close to targets (NII about $28B, expense about $27.5B, Card NCO about 3.2% for the year). Markets declines roughly as the CFO's base case, securities losses are smaller than Q3, and EPS comes in near the $5.92 consensus. The stock reaction is within the historical ±2.1% average.",
+        "evidence_ids": [
+          "C.004",
+          "C.097",
+          "M.01",
+          "M.04"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Markets revenue shows a normal seasonal decline",
+        "Expense near $27.5B",
+        "Provision and reserve build similar to Q3",
+        "CET1 stays in the 13.7%-14.0% range"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "A second consecutive shortfall: the rate-driven IB pause extends, Markets falls by the full seasonal amount after a record Equities quarter, further securities repositioning losses recur, and a larger reserve build appears as downgrades or energy and rate stress hit corporates. Revenue-linked expense does not flex down enough to offset.",
+        "evidence_ids": [
+          "C.030",
+          "C.097",
+          "C.066",
+          "C.093",
+          "P.010"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "IB fees fall sequentially with commentary of delayed deals",
+        "Equities revenue gives back part of its +49% YoY surge",
+        "Securities losses above $0.5B again",
+        "Reserve build above $539M with wholesale downgrades",
+        "Deposit migration pushes NII below the $28B guide"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "Higher-rate and market-event risk: the CEO said a 10-year near 6% with Fed hikes is possible, that he sees a higher chance than others do, and that the firm is preparing. A rate sell-off already slowed deal pricing in late September and drives OCI losses that cut CET1.",
+        "evidence_ids": [
+          "C.010",
+          "C.011",
+          "C.030",
+          "C.002"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Markets concentration: Equity Markets revenue was +86% in Q2 and +49% in Q3 while Fixed Income fell 4%. BAC's Q3 market-making fell 19%, and a reversal in client activity would hit both revenue and the ROTCE of about 20% versus the 17% through-cycle target.",
+        "evidence_ids": [
+          "Q.064",
+          "C.003",
+          "P.010",
+          "C.086"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Expense growth: Q3 expense was +12% YoY and Q4 is guided at $27.5B, with 2027 near the roughly $114B Street level. Costs are partly revenue-linked, so they would not fall fully if revenue disappoints.",
+        "evidence_ids": [
+          "C.002",
+          "C.004",
+          "C.020"
+        ],
+        "evidence_type": "guided"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Wholesale credit and concentration: criticized exposure rose to $50.3B at June 30 with Consumer & Retail, Transportation, Industrials and Oil & Gas downgrades. Management is tightening terms, runs stresses on AI-capex financing exposure, which it calls modest but spread across revolvers, construction lending and equities, and flags hedge fund and leveraged finance leverage.",
+        "evidence_ids": [
+          "Q.144",
+          "C.034",
+          "C.066",
+          "C.067",
+          "C.057"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Deposit competition and agentic AI: yield-seeking flows, fintech competition and personal AI agents could pressure deposit balances and mix. The firm is blocking credential-sharing access to protect customers and does not let outside agents inside the company.",
+        "evidence_ids": [
+          "C.007",
+          "C.047",
+          "C.009",
+          "C.039"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Regulatory and legal: Basel III and GSIB finalization expected around year-end could change capital requirements (the re-proposals together imply about 4% more required CET1 versus 2028 rules). Legal exposure above reserves is estimated at $0 to $1.3B, including the Trump lawsuit, cash-sweep class actions and Russian judgments exceeding assets in Russia.",
+        "evidence_ids": [
+          "C.023",
+          "Q.093",
+          "Q.396",
+          "Q.399",
+          "Q.398",
+          "Q.404"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Securities repositioning: net investment securities losses were $395M in Q2, primarily from sales of U.S. GSE and government agency MBS tied to repositioning the portfolio, and $658M in Q3 (the call excerpt does not describe the Q3 composition). If such losses recur in Q4, they could weigh on revenue and EPS.",
+        "evidence_ids": [
+          "Q.024",
+          "Q.026",
+          "C.002"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "The CFO's base case is a normal seasonal Q3-to-Q4 decline in Markets, while the CEO expects less of a decline. What is in the Q4 run rate through the first weeks of the quarter, and how much of Q3's Equities strength is client balance sheet usage versus volatility?",
+      "why": {
+        "text": "The two executives gave different Q4 Markets views on the same call, and Markets is the largest swing factor in the consensus revenue of $51.79B.",
+        "evidence_ids": [
+          "C.097",
+          "C.098",
+          "M.01"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "Are further investment securities repositioning losses planned for Q4 and 2027, and what is the expected NII benefit from the sales?",
+      "why": {
+        "text": "Net investment securities losses grew from $395M in Q2 to $658M in Q3. Whether they recur is a swing factor in Q4 EPS.",
+        "evidence_ids": [
+          "Q.024",
+          "C.002"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What drives the Card NCO guide of about 3.2% when H1 ran at 3.40% and Q2 at 3.34%? What did Q3 Card NCO and delinquency look like?",
+      "why": {
+        "text": "A 3.2% full-year rate implies H2 near 3.0%, and Q3 Card NCO is not in the available sources.",
+        "evidence_ids": [
+          "Q.057",
+          "C.004"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "When do buybacks return toward the old cadence, and how much of the roughly $30B of excess capital is earmarked for organic deployment versus held for final Basel III and GSIB rules?",
+      "why": {
+        "text": "Buybacks fell to about $1B from a roughly $7B cadence while CET1 dropped to 13.9%, and the Basel III and GSIB decisions are expected around year-end.",
+        "evidence_ids": [
+          "C.023",
+          "C.024",
+          "C.026",
+          "C.002"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What deposit beta, deposit mix and consumer deposit growth assumptions underlie the 2027 NII ex-Markets central case of $107B? How much of it depends on the December and H1 hikes?",
+      "why": {
+        "text": "About a quarter of the roughly $5B step-up comes from forward-curve hikes and another quarter from asset sensitivity, and management called the outlook unusually uncertain.",
+        "evidence_ids": [
+          "C.015",
+          "C.018",
+          "C.054"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "How large is exposure to AI-capex financing today, and what are the single-issuer limits? Which wholesale sectors drove the Q3 reserve build, and are criticized exposures still rising?",
+      "why": {
+        "text": "The CFO said AI exposure is modest but diffused across several products, and criticized exposure rose $1.8B in H1 across several sectors.",
+        "evidence_ids": [
+          "C.066",
+          "C.067",
+          "C.093",
+          "Q.144"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What are the main items in the 2027 expense budget (volume-related, investment, AI and token costs), and what revenue assumption sits behind the roughly $114B?",
+      "why": {
+        "text": "The CFO said the preliminary 2027 view is close to the Street, and AI productivity benefits are not yet visible in results.",
+        "evidence_ids": [
+          "C.020",
+          "C.046",
+          "C.045"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "data_gaps": [
+    "Q3 2026 detail is limited to the earnings call and secondary articles; the Q3 10-Q was not read. The sources lack Q3 NII ex-Markets, Markets revenue totals, card NCO rate, loan and deposit balances, and segment expense.",
+    "Conflict on Q3 results: the company call gives EPS $5.57 and revenue $50.9B, while MarketBeat gives EPS $5.75 and revenue $50.17B (consensus $5.94 / $51.23B). The sources do not reconcile these.",
+    "The FY2026 guidance figures ($106.2B NII, $97.2B NII ex-Markets, $108.6B adjusted expense) come from a secondary article (TIKR). The call transcript refers to a slide that is not in the text.",
+    "Fact-sheet derived growth for consensus (F.49, F.51) uses Q3 2025 as the year-ago base for Q4 2026. The correct Q4 2025 base is revenue $45.80B and EPS $4.63, so the consensus growth rates quoted in the report are my recalculation.",
+    "No Q4 2025 Markets, IB or segment comparatives are in the sources (the 10-K gives full-year figures only), so YoY Q4 comps for those lines were not computed.",
+    "Consensus for Q4 NII, expense, Markets and provisions was not found. Whisper EPS and options-implied move are not available (report date 74 days away).",
+    "The market-data calendar lists the Q4 report as after the close on 2027-01-14. JPM reported Q3 at about 7:00 a.m. ET on Oct 13, so the timing should be re-checked closer to the date.",
+    "Peer data are limited to BAC's Q3 10-Q and Citi's Q2 10-Q; Citi's Q3 results from the last 14 days were not available. Peer figures are proxies only.",
+    "No analyst rating or target changes within the last 14 days were found; several relevant news items (Oct 13 call coverage, Oct 15 AI-agent account blocking) fall outside the 14-day citation window.",
+    "The XBRL fact sheet has no operating income, capex or long-term debt tags for these filings, which is typical of a bank and not material here."
+  ],
+  "sources": {
+    "Q.007": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.008": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 — Consolidated financial highlights (unaudited)",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.010": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 — Consolidated financial highlights (unaudited)",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.015": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — EXECUTIVE OVERVIEW",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.016": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — EXECUTIVE OVERVIEW",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.023": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — Outlook",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.024": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — CONSOLIDATED RESULTS OF OPERATIONS",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.026": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — Lending- and deposit-related fees increased, reflecting:",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.034": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — The provision for credit losses included:",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.042": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — EXPLANATION AND RECONCILIATION OF THE FIRM’S USE OF NON-GAAP FINANCIAL MEASURES",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.044": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — EXPLANATION AND RECONCILIATION OF THE FIRM’S USE OF NON-GAAP FINANCIAL MEASURES",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.057": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — Noninterest expense was $22.1 billion, up 12%, reflecting:",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.063": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — COMMERCIAL & INVESTMENT BANK",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.064": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — Banking & Payments revenue was $11.2 billion, up 21%.",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.091": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — U.S. Basel III Finalization and GSIB Surcharge",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.092": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — U.S. Basel III Finalization and GSIB Surcharge",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.093": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — U.S. Basel III Finalization and GSIB Surcharge",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.095": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — Enhanced Transparency and Public Accountability of the Supervisory Stress Test",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.104": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — RWA rollforward",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.139": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — Credit card",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.144": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · MD&A — NA",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.396": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · Financial Statements — Contingencies",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.398": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · Financial Statements — Set forth below are descriptions of the Firm’s material legal proceedings.",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.399": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · Financial Statements — Set forth below are descriptions of the Firm’s material legal proceedings.",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.404": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 · Financial Statements — Set forth below are descriptions of the Firm’s material legal proceedings.",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.461": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 — SIGNATURE",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "K.171": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-13 · MD&A — Outlook",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026008131/jpm-20251231.htm",
+      "as_of": "2026-02-13"
+    },
+    "E.003": {
+      "kind": "8-K",
+      "citation": "8-K Items 8.01, 9.01 (filed 2026-10-20) — Emerging growth company ☐",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000119312526426704/d351999d8k.htm",
+      "as_of": "2026-10-20"
+    },
+    "C.002": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.003": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.004": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.007": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.009": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — James Dimon, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.010": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Ebrahim Poonawala, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.011": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — James Dimon, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.015": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.018": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — James Dimon, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.020": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.023": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Erika Najarian, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.024": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — James Dimon, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.026": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.029": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — James Dimon, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.030": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.034": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — James Dimon, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.036": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.039": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.040": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.045": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.046": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.047": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.054": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.057": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.066": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.067": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.086": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — James Dimon, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.089": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.091": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.093": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.097": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jeremy Barnum, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.098": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — James Dimon, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JPM&quarter=2026Q3",
+      "as_of": null
+    },
+    "F.07": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Net income — six months ended 2026-06-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "F.09": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2026-06-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026054343/jpm-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "F.34": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Net income growth — six months ended 2026-06-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.48": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828025048859/0001628280-25-048859-index.htm",
+      "as_of": "2025-11-04"
+    },
+    "F.49": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "F.50": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828025048859/0001628280-25-048859-index.htm",
+      "as_of": "2025-11-04"
+    },
+    "F.51": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "M.05": {
+      "kind": "market",
+      "citation": "Market data — Beat/miss record",
+      "url": null,
+      "as_of": null
+    },
+    "M.06": {
+      "kind": "market",
+      "citation": "Market data — Analyst rating actions",
+      "url": null,
+      "as_of": null
+    },
+    "M.07": {
+      "kind": "market",
+      "citation": "Market data — Consensus price target",
+      "url": null,
+      "as_of": null
+    },
+    "N.24": {
+      "kind": "news",
+      "citation": "tikr.com, 2026-10-31 — JPMorgan Has Returned 159% in Three Years. After Its First Miss Since 2023, Take Profits or Buy More? | TIKR.com",
+      "url": "https://www.tikr.com/blog/jpmorgan-has-returned-159-in-three-years-after-its-first-miss-since-2023-take-profits-or-buy-more",
+      "as_of": "2026-10-31"
+    },
+    "A.001": {
+      "kind": "article",
+      "citation": "Article (marketbeat.com)",
+      "url": "https://www.marketbeat.com/instant-alerts/price-jpmorgan-chase-co-nyse-jpm-shares-down-19-heres-why-2026-10-30",
+      "as_of": "2026-10-30"
+    },
+    "A.003": {
+      "kind": "article",
+      "citation": "Article (marketbeat.com)",
+      "url": "https://www.marketbeat.com/instant-alerts/price-jpmorgan-chase-co-nyse-jpm-shares-down-19-heres-why-2026-10-30",
+      "as_of": "2026-10-30"
+    },
+    "A.004": {
+      "kind": "article",
+      "citation": "Article (marketbeat.com)",
+      "url": "https://www.marketbeat.com/instant-alerts/price-jpmorgan-chase-co-nyse-jpm-shares-down-19-heres-why-2026-10-30",
+      "as_of": "2026-10-30"
+    },
+    "A.005": {
+      "kind": "article",
+      "citation": "Article (marketbeat.com)",
+      "url": "https://www.marketbeat.com/instant-alerts/price-jpmorgan-chase-co-nyse-jpm-shares-down-19-heres-why-2026-10-30",
+      "as_of": "2026-10-30"
+    },
+    "A.006": {
+      "kind": "article",
+      "citation": "Article (marketbeat.com)",
+      "url": "https://www.marketbeat.com/instant-alerts/price-jpmorgan-chase-co-nyse-jpm-shares-down-19-heres-why-2026-10-30",
+      "as_of": "2026-10-30"
+    },
+    "A.007": {
+      "kind": "article",
+      "citation": "Article (marketbeat.com)",
+      "url": "https://www.marketbeat.com/instant-alerts/price-jpmorgan-chase-co-nyse-jpm-shares-down-19-heres-why-2026-10-30",
+      "as_of": "2026-10-30"
+    },
+    "A.015": {
+      "kind": "article",
+      "citation": "Article (marketbeat.com)",
+      "url": "https://www.marketbeat.com/instant-alerts/price-jpmorgan-chase-co-nyse-jpm-shares-down-19-heres-why-2026-10-30",
+      "as_of": "2026-10-30"
+    },
+    "P.001": {
+      "kind": "peer",
+      "citation": "PEER BAC 10-Q filed 2026-10-30 — Key Statistics",
+      "url": null,
+      "as_of": null
+    },
+    "P.003": {
+      "kind": "peer",
+      "citation": "PEER BAC 10-Q filed 2026-10-30 · Financial Statements",
+      "url": null,
+      "as_of": null
+    },
+    "N.34": {
+      "kind": "news",
+      "citation": "tradingview.com, 2026-10-28 — BAC's NII Growth Accelerates in 2026: Is the Stock Worth Buying Now? — TradingView News",
+      "url": "https://www.tradingview.com/news/zacks:b3be70da7094b:0-bac-s-nii-growth-accelerates-in-2026-is-the-stock-worth-buying-now",
+      "as_of": "2026-10-28"
+    },
+    "N.39": {
+      "kind": "news",
+      "citation": "tradingkey.com, 2026-10-30 — Cullen/Frost Bankers (CFR) Q3 2026 Earnings Call: Loan Growth and Guidance Raised",
+      "url": "https://www.tradingkey.com/news/transcripts/262255538-tradingkey",
+      "as_of": "2026-10-30"
+    },
+    "P.010": {
+      "kind": "peer",
+      "citation": "PEER BAC 10-Q filed 2026-10-30",
+      "url": null,
+      "as_of": null
+    }
+  },
+  "check_notes": [
+    "setup_summary[1]: rewritten to what its sources support (The call figures match, but the cited passage is undated and gives no Oct 13 report date.).",
+    "metrics_to_model[2].view: rewritten to what its sources support (Q2 total NII of $25,511M less ex-Markets NII of $23,677M gives about $1.8B of Markets NII, not $1.9B, and the principal-transactions offset is not in the passages.).",
+    "metrics_to_model[6].view: rewritten to what its sources support (The arithmetic ($27.3B, $27.5B, $54.17B, about $109.0B) and the $114B consensus read are supported, but nothing in the passages says the gap to the $108.6B adjusted guide is legal expense.).",
+    "since_filing[0]: rewritten to what its sources support (The Q3 call figures match, but the Oct 13 and Aug 6 dates are not in the cited passage, which is undated.).",
+    "key_debates[0].bull: rewritten to what its sources support (The segment growth, ROTCE, $658M loss and raised NII guide are supported, but the cited passages give no Q4 consensus (so 'modest' growth is unsupported) and do not call the Q3 loss a repositioning item.).",
+    "key_risks[6]: rewritten to what its sources support (The $395M Q2 loss is not in the passages, and the GSE and agency MBS sales description applies only to the Q2 10-Q quarter, not Q3.).",
+    "questions_for_management[1]: rewritten to what its sources support (The $395M Q2 securities loss figure is not in the cited passages.).",
+    "metrics_to_model[2].last_reported: tag 'reported' → 'estimate' (it cites only news).",
+    "since_filing[5]: tag 'reported' → 'estimate' (it cites only article)."
+  ]
+}

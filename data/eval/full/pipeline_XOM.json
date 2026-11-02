@@ -1,0 +1,1480 @@
+{
+  "ticker": "XOM",
+  "company_name": "ExxonMobil Holdings Corp",
+  "report_generated_at": "2026-11-01T14:23:15+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-08-03",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-02-18",
+      "url": "https://www.sec.gov/Archives/edgar/data/34088/000003408826000045/xom-20251231.htm"
+    }
+  ],
+  "earnings_call": "Q2 FY2026 earnings call (date unknown)",
+  "current_report": "8-K filed 2026-10-30: Item 2.02 results of operations (earnings release); Item 7.01 Regulation FD disclosure",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$3.95",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$113.77B",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2027-01-28 report. Paid lookup not made: next report is 88 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "implied move: EarningsWatcher's report date 2026-10-30 does not match our next report 2027-01-28."
+    },
+    "historical_move": {
+      "value": "±1.1% average closing move over the last 8 reports (2024-11-01 to 2026-07-31)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/xom-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": "3 beats, 1 misses in the last 4 quarters, average surprise +3.9%",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "Finnhub earnings surprises",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "analyst_actions": {
+      "value": "Last 30 days, newest first: Barclays maintained Overweight (2026-10-19); Morgan Stanley maintained Overweight (2026-10-15)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP grades",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "price_target": {
+      "value": "$171.11, -8.6% vs current $187.25",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP price target consensus",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "Exxon reported Q3 2026 on 2026-10-30. GAAP earnings were $15.4B ($3.72/share) and adjusted earnings $17.5B ($4.23/share), against $7.5B ($1.76) a year earlier. The next print is Q4 FY2026, due 2027-01-28, so Q3 is the baseline for this preview.",
+      "evidence_ids": [
+        "E.004",
+        "E.005",
+        "E.027",
+        "E.028",
+        "M.01"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q3 adjusted EPS of $4.23 beat LSEG consensus of $4.08 and Bloomberg consensus of $4.13. Energy Products ($7.2B GAAP) out-earned Upstream ($7.1B). Refining margins, not crude, drove the beat.",
+      "evidence_ids": [
+        "N.03",
+        "N.05",
+        "E.006"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q4 consensus is EPS of $3.95 and revenue of $113.77B. That EPS is about 7% below Q3 adjusted EPS of $4.23 and above Q3 GAAP EPS of $3.72. Consensus revenue is close to Q3 total revenues and other income of $113.16B. The sources do not say whether the $3.95 predates the Q3 print or is on an adjusted or GAAP basis.",
+      "evidence_ids": [
+        "M.01",
+        "E.005",
+        "E.027"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "The Q4 comparison is easy. FY2025 net income was $28.84B and EPS $6.70, and the first nine months of 2025 were $22.34B and $5.16. That implies Q4 2025 of roughly $6.5B and $1.54 per share, so consensus of $3.95 is about +156% y/y. Q4 2025 revenue was roughly $82.3B (FY $332.24B less nine months $249.93B), so consensus implies about +38%. The fact-sheet 'growth' figures of +124% EPS and +33% revenue compare Q4 2026 with Q3 2025, not Q4 2025.",
+      "evidence_ids": [
+        "F.22",
+        "F.24",
+        "E.028",
+        "F.20",
+        "E.027",
+        "M.01",
+        "F.57",
+        "F.59"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Q3 GAAP earnings sat well below adjusted because of estimated timing effects of $(2,541)M ($(668)M Upstream, $(1,873)M Energy Products), partly offset by identified items of +$449M. Identified items included a $675M asset-sale gain and $(226)M of unexplained 'Other'. YTD timing effects are $(3,941)M. The company says timing impacts are expected to unwind in later periods.",
+      "evidence_ids": [
+        "E.023",
+        "E.024",
+        "E.014"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Cash generation was exceptional. Q3 operating cash flow was $25.7B and free cash flow $19.1B, including a $2.2B working-capital inflow. Distributions were $9.4B ($4.3B dividends, $5.1B buybacks). Net debt was $22.1B at 9/30, about $11B lower YTD.",
+      "evidence_ids": [
+        "E.021",
+        "E.005",
+        "E.006",
+        "E.008"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q3 markers: Brent averaged $97.01/b (Q2 $104.52, Q4 2025 $63.69). The indicative refining margin was $50.3/b (Q2 $29.0, Q4 2025 $18.3). North American polyethylene was $998/T (Q2 $1,454). Q3 upstream production was 4,496 koebd and refinery throughput 3,735 kbd.",
+      "evidence_ids": [
+        "E.031",
+        "E.032",
+        "E.033"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "The stock closed near $187.26 on 10-30 after touching a 52-week high of $188.50. That is above the consensus price target of $171.11 (FMP) and MarketBeat's $167.70. The average closing move over the last 8 reports is only ±1.1%, with 3 beats in the last 4 quarters.",
+      "evidence_ids": [
+        "N.20",
+        "M.07",
+        "N.08",
+        "M.04",
+        "M.05"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Adjusted EPS (non-GAAP)",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 adjusted EPS was $4.23 (Q2 $3.52) on adjusted earnings of $17.5B.",
+        "evidence_ids": [
+          "E.005"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Q4 consensus EPS is $3.95 (basis unspecified), about 7% below Q3 adjusted EPS.",
+        "evidence_ids": [
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Risk to consensus ($3.95 EPS) is two-sided and turns on refining margins. Energy Products adjusted earnings rose to $9,053M in Q3 from $4,099M in Q2, as the indicative refining margin averaged $50.3/b versus $29.0/b. The share count is falling (4,079M at 9/30 vs 4,140M Q3 diluted average, roughly a 1.5% per-share tailwind). Offset: BP said it is seeing refining margins start to soften as the driving season ends. A Q4 print near Q3 would need margins to hold near Q3 levels.",
+        "evidence_ids": [
+          "M.01",
+          "E.006",
+          "E.032",
+          "E.031",
+          "N.29"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Energy Products adjusted earnings and refining margin marker",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 Energy Products adjusted earnings were $9,053M (Q2 $4,099M), GAAP $7,169M. The indicative refining margin was $50.3/b vs $29.0 in Q2.",
+        "evidence_ids": [
+          "E.006",
+          "E.032"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "This is the biggest swing factor. Exxon's own mid-quarter signal put margins at about +$4.5B vs Q2, against a marker move of about $21/b. That is roughly $0.2B per $1/b per quarter as a crude rule of thumb. The marker is not Exxon's capture, which also depends on mix, volumes and trading. Model Q4 against the marker's quarter-to-date path, which the sources do not provide.",
+        "evidence_ids": [
+          "N.05",
+          "E.032"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Upstream earnings, production and Brent",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 Upstream adjusted earnings were $7,308M (GAAP $7,088M), production 4,496 koebd. Brent averaged $97.01 vs $104.52 in Q2. Q3 production includes a -87 koebd price/spend entitlement effect vs Q2.",
+        "evidence_ids": [
+          "E.006",
+          "E.033",
+          "E.031"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Use the 10-K sensitivity of about $700M a year (roughly $175M a quarter) of after-tax Upstream earnings per $1/b Brent, before derivatives. Guyana's fifth FPSO is due by end-2026, which is a volume support. Entitlement erosion after early cost recovery and Middle East outages are headwinds.",
+        "evidence_ids": [
+          "K.189",
+          "C.003",
+          "C.004",
+          "E.007"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Estimated timing effects and identified items",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 timing effects were $(2,541)M and identified items +$449M. Q2 was +$2,483M and $(2,638)M. YTD timing is $(3,941)M and YTD identified items $(2,895)M.",
+        "evidence_ids": [
+          "E.023"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "GAAP-versus-adjusted gaps are large and sign-volatile. Timing effects follow derivative marks and LIFO versus physical settlement, so they depend on Q4 price direction and are not forecastable from these sources. Anchor GAAP models on adjusted earnings and treat timing as a reversal source, not a base case. Financial-reserve additions ($1.57B YTD) and Middle East items ($921M YTD) keep recurring in identified items.",
+        "evidence_ids": [
+          "E.014",
+          "E.023",
+          "E.024"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Chemical Products earnings",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 Chemical Products earnings were $735M GAAP ($725M adjusted) vs $1,131M in Q2. North American polyethylene fell to $998/T from $1,454; USGC ethane was $180/T. Sales were 4,888 kt vs 4,471 kt in Q2.",
+        "evidence_ids": [
+          "E.006",
+          "E.032",
+          "E.034"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Margins fell sequentially after a Q2 spike driven by Middle East supply gaps. Q3's $998/T sits above the Q4 2025 level of $759/T, so Q4 is likely to be positive but below Q2. The direction of polyethylene and Asia prices is the key input.",
+        "evidence_ids": [
+          "E.032",
+          "C.003"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Free cash flow and working capital",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 operating cash flow was $25,650M, of which a $2,216M working-capital inflow. Cash flow excluding working capital was $23,434M and free cash flow $19,109M.",
+        "evidence_ids": [
+          "E.021"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Q3 benefited from a $2.2B working-capital inflow after reductions in prior quarters. Model cash flow from operations excluding working capital first. Receivables rose sharply in H1 with prices, so working capital could swing back if prices fall.",
+        "evidence_ids": [
+          "E.021",
+          "Q.007"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Cash capex",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 cash capex was $7,002M. YTD is $19,976M against $21,134M a year earlier.",
+        "evidence_ids": [
+          "E.022"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The 2026 range of $27-29B (stated in the 10-Q) implies Q4 cash capex of about $7.0-9.0B given $19,976M YTD. The Q3 run-rate sits at the bottom of that range.",
+        "evidence_ids": [
+          "Q.059",
+          "E.022"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Shareholder distributions and share count",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 buybacks were $5.1B and dividends $4.3B at $1.03/share. Shares outstanding were 4,079M at quarter end vs 4,112M at 2Q.",
+        "evidence_ids": [
+          "E.005",
+          "E.027",
+          "E.031"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The Q4 dividend of $1.07/share on about 4.08B shares is roughly $4.4B. Nine-month repurchases of $15.1B against the $20B 2026 plan imply about $4.9B in Q4. Both are derived estimates. The 2027 plan is $20B.",
+        "evidence_ids": [
+          "E.004",
+          "E.031",
+          "E.030",
+          "Q.064"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Effective tax rate and Corporate & Financing",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 effective tax rate was 26% (Q2 24%, Q1 40%, Q4 2025 21%). Corporate and Financing expense was $864M (Q2 $954M).",
+        "evidence_ids": [
+          "E.032",
+          "E.006"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The effective tax rate has swung between 21% (4Q25) and 40% (1Q26), then 24% in 2Q26 and 26% in 3Q26, so it is a real EPS variance source; the 10-Q attributed the Q2 rate change to jurisdictional mix. Corporate and Financing expense was $864M in Q3 versus $954M in Q2; the 10-Q attributed Q2's year-on-year rise in that expense to lower interest income and unfavorable tax impacts.",
+        "evidence_ids": [
+          "E.032",
+          "E.006",
+          "Q.060",
+          "Q.055"
+        ],
+        "evidence_type": "estimate"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "2026 cash capital expenditures",
+      "guidance": "$27-29B",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "The 10-Q reiterated 2026 cash capex of $27-29B. The Q3 8-K does not restate it. YTD cash capex is $19,976M, implying about $7.0-9.0B for Q4 if the range holds.",
+        "evidence_ids": [
+          "Q.059",
+          "E.022"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "2026 share repurchases",
+      "guidance": "$20B, assuming reasonable market conditions",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "The 10-Q repeated the $20B expectation for 2026 repurchases. Q3 repurchases were $5.1B and nine-month common stock acquired was $15.1B.",
+        "evidence_ids": [
+          "Q.064",
+          "E.005",
+          "E.030"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "2027 share repurchases",
+      "guidance": "$20B, assuming reasonable market conditions",
+      "period": "FY2027",
+      "status": "new",
+      "claim": {
+        "text": "The Q3 release announced 2027 share repurchases of $20 billion, assuming reasonable market conditions.",
+        "evidence_ids": [
+          "E.004",
+          "E.008"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Quarterly dividend per share",
+      "guidance": "$1.07 declared for Q4, payable 2026-12-10 (record 2026-11-16)",
+      "period": "Q4 2026",
+      "status": "raised",
+      "claim": {
+        "text": "The Q4 dividend was raised to $1.07 from $1.03 paid in each of Q1-Q3. The company called it the 44th consecutive annual increase.",
+        "evidence_ids": [
+          "E.004",
+          "E.006",
+          "E.027"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Cumulative structural cost savings vs 2019",
+      "guidance": "$20B by 2030; $16.9B achieved at 9/30/2026 ($1.8B added in the first nine months)",
+      "period": "by 2030",
+      "status": "maintained",
+      "claim": {
+        "text": "The $20B-by-2030 target was restated on the Q2 call. Savings progressed from $16.3B at Q2 to $16.9B at Q3, about $0.6B in the quarter.",
+        "evidence_ids": [
+          "C.063",
+          "E.017",
+          "Q.044"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Guyana fifth FPSO (Errea Wittu) start-up",
+      "guidance": "On track for start-up by end of 2026",
+      "period": "Q4 2026",
+      "status": "maintained",
+      "claim": {
+        "text": "On the Q2 call management said the fifth FPSO set sail in June and remains on track for start-up by year-end. Q4 is therefore the delivery test.",
+        "evidence_ids": [
+          "C.003"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Mozambique Rovuma and Papua LNG FIDs",
+      "guidance": "Targeted 'later this year' (2026)",
+      "period": "Q4 2026",
+      "status": "unclear",
+      "claim": {
+        "text": "On the Q2 call management hoped for FIDs on both projects later in 2026. The Q3 release shows Exxon assumed Papua LNG operatorship and agreed to raise its working interest to 34% (Papua) and 50% (Rovuma), but it announces no FID.",
+        "evidence_ids": [
+          "C.053",
+          "E.004"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Permian production",
+      "guidance": "About 2.5 Moebd by 2030; Q2 2026 record above 1.8 Moebd",
+      "period": "by 2030",
+      "status": "maintained",
+      "claim": {
+        "text": "The 10-K target of about 2.5 Moebd by 2030 stands. Q2 production set a record above 1.8 Moebd, against a 2025 average of 1.6 Moebd.",
+        "evidence_ids": [
+          "K.150",
+          "C.004"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "2030 plan update (incl. Guyana entitlements)",
+      "guidance": "Corporate plan being finalized at year-end; update to follow",
+      "period": "Dec 2026 / early 2027",
+      "status": "new",
+      "claim": {
+        "text": "Management said the corporate plan process finalizes at year-end, with the update to follow. The 2025 update was released on December 9, 2025. Guyana entitlement changes are said to be reflected in the 2030 plan.",
+        "evidence_ids": [
+          "C.029",
+          "C.004",
+          "Q.064"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "Q3 2026 results (2026-10-30) post-date the 10-Q (2026-08-03, Q2 period). Q2 comparatives reconcile: GAAP earnings $14,525M, Upstream $7,927M, Energy Products $5,465M and cash capex $6,787M match between the two documents.",
+      "evidence_ids": [
+        "E.004",
+        "E.006",
+        "E.022",
+        "Q.006",
+        "Q.046",
+        "Q.051"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Since the Q2 print, Brent fell from $104.52 to $97.01, but the refining marker rose from $29.0 to $50.3/b. Q3 earnings shifted from Upstream to Energy Products. Upstream adjusted earnings fell to $7,308M from $9,189M, while Energy Products adjusted earnings rose to $9,053M from $4,099M. Management cited lower prices and an accelerated Guyana entitlement impact for Upstream.",
+      "evidence_ids": [
+        "E.031",
+        "E.032",
+        "E.006",
+        "E.007"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Balance sheet strengthened. Net debt was $22.1B at 9/30 (total debt $34.3B less $12.2B cash), against about $31.8B at 6/30 (total debt $42.4B less $10.6B cash). Q3 free cash flow of $19.1B less $9.4B distributions is consistent with the roughly $9.7B drop.",
+      "evidence_ids": [
+        "E.008",
+        "Q.056",
+        "Q.058",
+        "E.021",
+        "E.005"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "On the Q2 call (date unspecified) management cited a 'more than $7 billion reduction in net debt' for Q2, but the 10-Q balance sheet implies net debt of about $31.8B at 6/30 vs about $32.9B at year-end 2025 (only about $1.1B lower YTD). The two cannot be reconciled without Q1 data. The Q3 8-K's roughly $11B YTD reduction from $22.1B matches the year-end starting point.",
+      "evidence_ids": [
+        "C.006",
+        "Q.056",
+        "Q.058",
+        "K.097",
+        "E.008",
+        "E.006"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Redomiciliation to Texas completed July 1, 2026 (one-for-one share exchange, $0.001 par). Treasury shares were cancelled with no effect on total equity, so Q3 equity-section lines (earnings reinvested $237.3B vs $482.5B at year-end 2025) are not comparable to the 10-Q.",
+      "evidence_ids": [
+        "Q.011",
+        "Q.012",
+        "E.029"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Peers confirm the refining-led quarter. Chevron downstream earned $4.9B vs $1.1B a year earlier and flat vs Q2 ($4.87B). Its U.S. refineries ran at a record 1.09 MMb/d (about 98% utilization). BP's indicator margin rose to $46.70 from $29.60, but BP's CEO said margins are starting to soften as the driving season ends.",
+      "evidence_ids": [
+        "A.006",
+        "A.011",
+        "A.012",
+        "N.29"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Louisiana coastal litigation: the 10-Q said the settlement effective July 31, 2026 was not material and that Q3 earnings impact would be immaterial. The 8-K shows Q3 'Other' identified items of $(226)M ($(219)M in U.S. Upstream) without explanation, so whether this includes Louisiana is not stated.",
+      "evidence_ids": [
+        "Q.031",
+        "E.023",
+        "E.024"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Exxon assumed operatorship of Papua LNG and agreed to raise its working interest to 34% in Papua and 50% in Rovuma. It also started up CCS at Nucor and received approval for the Rose storage project.",
+      "evidence_ids": [
+        "E.004",
+        "E.006"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Political pressure has risen. President Trump demanded after Q2 that the companies cut retail gasoline prices and has publicly alternated between criticism and praise of oil-company profits. Companies reject price-gouging claims.",
+      "evidence_ids": [
+        "A.003",
+        "N.22"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "No Q3 2026 earnings call transcript is in the source set. The call text available covers Q2, so management's commentary on Q4 beyond the press release is not available.",
+      "evidence_ids": [
+        "C.001",
+        "E.004"
+      ],
+      "evidence_type": "unverifiable"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Is the Q3 refining margin a new run-rate or a peak?",
+      "bull": {
+        "text": "Management said on the Q2 call that available refining capacity relative to demand is the lowest it has seen outside COVID, and it expects very robust, high margins. About 3 mb/d is out in the Gulf and Chinese and Russian capacity is out.",
+        "evidence_ids": [
+          "C.015",
+          "C.016"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "BP's CEO said refining margins are starting to soften as the driving season ends. Chevron flagged Q4 refinery turnarounds at Pascagoula and Richmond as a drag. Consensus Q4 EPS of $3.95 sits below Q3 adjusted $4.23.",
+        "evidence_ids": [
+          "N.29",
+          "A.019",
+          "M.01",
+          "E.005"
+        ],
+        "evidence_type": "proxy"
+      },
+      "what_settles_it": "Q4 average indicative refining margin versus $50.3/b, Exxon's own planned maintenance, and whether Exxon issues a mid-quarter earnings-considerations update."
+    },
+    {
+      "question": "Does the Guyana entitlement decline hurt earnings, or is it a free-cash-flow inflection?",
+      "bull": {
+        "text": "Management said Guyana recovered its $55B investment about two years early and that the change is 'very much an inflection into free cash flow'. It expects 2030 Guyana free cash flow about 2x the 2025 level, framed as value not volume.",
+        "evidence_ids": [
+          "C.031",
+          "C.034",
+          "C.012"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "The Q3 volume bridge shows a -87 koebd price/spend entitlement effect vs Q2, and management cited an accelerated Guyana entitlement impact in Upstream earnings, which fell to $7.3B adjusted from $9.2B.",
+        "evidence_ids": [
+          "E.031",
+          "E.007",
+          "E.006"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 production, FPSO 5 start-up timing, and the December plan update's 2030 volume and cash-flow outlook."
+    },
+    {
+      "question": "How much of the earnings stream is 'real' versus timing, reserves and one-offs?",
+      "bull": {
+        "text": "YTD timing effects of $(3,941)M are expected to unwind, and Q3 included a $2.2B working-capital inflow rather than outflow. Free cash flow of $19.1B in Q3 is large and cash-backed.",
+        "evidence_ids": [
+          "E.014",
+          "E.023",
+          "E.021"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Identified items are recurring: $1.57B of financial-reserve additions and $921M of Middle East impacts YTD, plus $1.08B of Q2 impairments. H1 trading-related contracts lost $2.3B vs $534M gained a year earlier.",
+        "evidence_ids": [
+          "E.023",
+          "E.024",
+          "E.025",
+          "Q.028"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 GAAP-to-adjusted bridge, whether timing effects reverse positive, and the nature of the $(226)M 'Other' item."
+    },
+    {
+      "question": "How large is the windfall-tax and political risk after a record profit quarter?",
+      "bull": {
+        "text": "Management called European windfall taxes shortsighted and said it is pursuing the argument that they are not a legal taking. It said many leaders recognise the unintended consequences.",
+        "evidence_ids": [
+          "C.046"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "A European country had approved a downstream windfall tax by the Q2 call, and Exxon has about 850 kb/d of refining in the UK and Europe. U.S. political pressure on fuel prices persists ahead of the midterms.",
+        "evidence_ids": [
+          "C.045",
+          "A.003",
+          "N.22"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Enacted legislation in Europe, any U.S. federal action after the November midterms, and Exxon commentary on exposure."
+    },
+    {
+      "question": "Is the stock's rally to a 52-week high already pricing a peak?",
+      "bull": {
+        "text": "Q3 free cash flow was $19.1B and distributions $9.4B, with $20B of 2027 buybacks announced, a 44th consecutive dividend increase and net debt down about $11B YTD.",
+        "evidence_ids": [
+          "E.021",
+          "E.005",
+          "E.004",
+          "E.006"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "The stock ($187.25) trades above the consensus price target of $171.11 (FMP) and MarketBeat's $167.70. MarketBeat counts 14 holds, 11 buys and 1 strong buy over 12 months. Average earnings-day moves are small (±1.1%).",
+        "evidence_ids": [
+          "M.07",
+          "N.08",
+          "N.10",
+          "M.04"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Q4 refining capture and the December plan update's 2027 capex and shareholder-return framing."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "bull",
+      "description": {
+        "text": "Refining margins hold near the Q3 marker of $50.3/b, Brent stays in the mid-$90s or higher, and Q4 timing effects reverse. Adjusted EPS prints at or above Q3's $4.23, well above consensus of $3.95. Guyana FPSO 5 starts on time and net debt falls further.",
+        "evidence_ids": [
+          "E.031",
+          "E.032",
+          "E.005",
+          "M.01",
+          "C.003"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Q4 average refining marker stays above about $45-50/b",
+        "Brent holds above $95",
+        "Timing effects turn positive",
+        "Guyana FPSO 5 starts before year-end",
+        "Middle East volumes recover or Hormuz flows improve"
+      ]
+    },
+    {
+      "name": "base",
+      "description": {
+        "text": "Refining margins ease from Q3's peak and turnarounds weigh, Brent is roughly flat to lower, and Guyana entitlement pressure continues. Adjusted EPS lands near consensus of $3.95, supported by a lower share count, cost savings and a stronger Specialty Products run. GAAP is affected by identified items.",
+        "evidence_ids": [
+          "M.01",
+          "E.027",
+          "N.29",
+          "E.017",
+          "E.006"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Refining marker declines but remains far above 2025 levels",
+        "Chemical margins stay below Q2 levels",
+        "Cash capex $7-9B",
+        "Buybacks about $5B and dividend about $4.4B"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Margins normalize quickly as supply returns and the driving season ends, crude falls, and Q4 brings more impairments, reserve additions or unfavorable timing effects. Adjusted EPS falls below consensus. Falling prices could also reverse the Q3 working-capital inflow.",
+        "evidence_ids": [
+          "N.29",
+          "E.023",
+          "E.024",
+          "E.021",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Hormuz or Gulf refinery flows normalize",
+        "Brent falls sharply",
+        "New impairment or reserve charges",
+        "Windfall-tax legislation advances",
+        "Further Guyana entitlement erosion"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "Refining margin normalization. The earnings step-up depends on war-driven supply losses (Strait of Hormuz effectively shut, strikes on Saudi and Russian refineries). A peace or reopening could compress margins quickly. BP says margins are already softening.",
+        "evidence_ids": [
+          "A.003",
+          "N.29",
+          "E.032"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Windfall-tax and political risk. Management criticised a new European downstream windfall tax and said Exxon cancelled European investment after the last one. U.S. political pressure on fuel prices is rising around the November midterms.",
+        "evidence_ids": [
+          "C.045",
+          "C.046",
+          "A.003",
+          "N.22"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Earnings volatility from timing effects and trading. Timing swung from +$2,483M in Q2 to $(2,541)M in Q3, and H1 trading-related contracts lost $2.3B vs a $534M gain in H1 2025.",
+        "evidence_ids": [
+          "E.023",
+          "E.025",
+          "Q.028"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Guyana entitlement erosion after early cost recovery reduces reported volumes (Q3 -87 koebd vs Q2). It will also feed into the 2030 plan. Management frames it as cash-flow positive, but the headline production trajectory is affected.",
+        "evidence_ids": [
+          "E.031",
+          "C.004",
+          "C.034"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Recurring identified-item charges: $1,365M of financial-reserve additions in Q2 ($1,570M YTD), $1,079M of impairments in Q2, and an unexplained $(226)M of Q3 'Other'. Litigation, including climate lawsuits, remains outstanding.",
+        "evidence_ids": [
+          "E.023",
+          "E.024",
+          "Q.030",
+          "Q.031"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Kazakhstan exposure: about 320 koebd and about $1.1B of 2025 after-tax earnings depend on the CPC pipeline through Russia. H1 volumes were hit by Kazakhstan downtime, and management cited short-term issues with the government.",
+        "evidence_ids": [
+          "K.145",
+          "Q.047",
+          "C.066"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Chemical margins are volatile. North American polyethylene dropped from $1,454/T in Q2 to $998 in Q3, and Chemical Products earnings fell to $735M from $1,131M.",
+        "evidence_ids": [
+          "E.032",
+          "E.006"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "What did the refining marker and Exxon's capture look like quarter-to-date in Q4, and how large is scheduled turnaround activity versus Q3?",
+      "why": {
+        "text": "Q3 Energy Products adjusted earnings were $9.1B on a $50.3/b marker. BP says margins are softening and Chevron flagged Q4 turnarounds. Consensus EPS of $3.95 sits below Q3's $4.23.",
+        "evidence_ids": [
+          "E.006",
+          "E.032",
+          "N.29",
+          "A.019",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "question": "How should we think about the $(2.5)B Q3 timing effects and $(3.9)B YTD: how much reverses in Q4 and what would offset it?",
+      "why": {
+        "text": "The gap between GAAP ($15.4B) and adjusted ($17.5B) earnings is driven by timing effects that the company says unwind in subsequent periods.",
+        "evidence_ids": [
+          "E.023",
+          "E.014"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is the Q4 and 2027 volume impact of Guyana entitlement changes, and is Errea Wittu still on track for start-up by year-end?",
+      "why": {
+        "text": "Q3 production fell on a -87 koebd entitlement effect, and management says entitlements fall in the 2030 plan while cash flow inflects.",
+        "evidence_ids": [
+          "E.031",
+          "C.003",
+          "C.004"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is the status of Middle East volumes, including the Qatar LNG repair role, and what further identified items should we expect?",
+      "why": {
+        "text": "Middle East identified items were $921M YTD and Q2 volume impacts were over $1.4B across three segments. Exxon is in talks with QatarEnergy on repairs.",
+        "evidence_ids": [
+          "E.023",
+          "Q.047",
+          "Q.051",
+          "Q.054",
+          "C.022"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is the 2027 capex framework, and how is the $20B 2027 buyback paced against $19B-a-quarter free cash flow and falling net debt?",
+      "why": {
+        "text": "2026 capex is $27-29B with Q3 at $7.0B, net debt has dropped to $22.1B, and 2027 buybacks of $20B were announced ahead of the December plan.",
+        "evidence_ids": [
+          "Q.059",
+          "E.022",
+          "E.008",
+          "E.004",
+          "C.029"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What explains the $(226)M of Q3 'Other' identified items and the $1.57B of YTD financial-reserve additions?",
+      "why": {
+        "text": "The 10-Q described the Louisiana settlement as immaterial for Q3. The 8-K shows an unexplained $(219)M Upstream U.S. charge.",
+        "evidence_ids": [
+          "Q.031",
+          "E.023",
+          "E.024"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is your exposure and response if the U.S. or European governments pursue windfall taxes or price controls after the midterms?",
+      "why": {
+        "text": "Management has said it cancelled European investments after past windfall taxes, and U.S. political pressure on fuel prices is rising.",
+        "evidence_ids": [
+          "C.046",
+          "A.003",
+          "N.22"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "Do you expect Chemical Products margins to rebuild from the Q3 level, and what is the Asia Pacific outlook?",
+      "why": {
+        "text": "Chemical earnings fell to $735M in Q3 as polyethylene prices dropped from Q2, and Q2 advantaged volume growth was hurt by weak Asia Pacific dynamics.",
+        "evidence_ids": [
+          "E.006",
+          "E.032",
+          "Q.053"
+        ],
+        "evidence_type": "reported"
+      }
+    }
+  ],
+  "data_gaps": [
+    "The Q3 2026 10-Q was not provided. Q3 balance-sheet, segment and cash-flow detail comes from the preliminary 8-K Exhibit 99.2 and may be revised.",
+    "No Q3 2026 earnings call transcript is available. The only call text covers Q2 and its date is not given. There is no management commentary on Q4 beyond the press release.",
+    "It is unknown whether the Q4 consensus ($3.95 EPS, $113.77B revenue) was updated after the Q3 print, or whether it is on an adjusted or GAAP basis. Q4 2025 comparatives (about $1.54 EPS, $82.3B revenue) are derived by subtraction.",
+    "The fact-sheet growth rates for Q4 2026 consensus (+124% EPS, +33% revenue) compare against Q3 2025 figures, not Q4 2025, and should not be used as year-over-year growth.",
+    "No Q4-to-date data on Brent, refining margins, polyethylene prices or timing effects is available. No Exxon mid-quarter earnings-considerations update for Q4 is in the sources.",
+    "Whisper EPS and options-implied move are not available (the next report is 88 days away and the implied-move source dated a different report). The report time is unknown.",
+    "Rating and price-target data are mixed. FMP shows a $171.11 consensus target and MarketBeat $167.70. Most named rating actions in the news are older than 14 days and are not cited.",
+    "The call's 'more than $7B' Q2 net-debt reduction cannot be reconciled with the 10-Q balance sheet, and no Q1 net debt figure is provided.",
+    "The Q4 effect of Guyana entitlement changes, Exxon's own Q4 turnaround schedule and the nature of the Q3 'Other' identified items are not quantified in the sources.",
+    "Peer data (Chevron, BP) comes from news reports of results, not filings. Chevron's Q4 turnaround impact is not quantified in the text provided. Market share shifts between Exxon and peers are not evidenced.",
+    "The date and content of Exxon's December corporate plan update, including 2027 capex, are not in the sources.",
+    "Earnings call transcript: the Q3 FY2026 call isn't available yet (Alpha Vantage has no transcript for XOM 2026Q3); the Q2 FY2026 call is used instead.",
+    "The 10-K filed 2026-02-18 was read from EXXON MOBIL CORP (SEC CIK 34088): the company that now holds the XOM ticker took over from it in a reorganisation and has not filed its own annual report yet.",
+    "A claim was removed because its sources don't support it: 'Middle East supply disruption continues to cut volumes and trigger identified items ($921M YTD in Middle East impacts). Q2 volume impacts were $(1,060)M in Upstream, $(310)M in Energy Products and $(110)M in Specialty Products. Management said shipper caution in Hormuz transits will likely slow a ramp-back even once things clear, and it is in discussions with QatarEnergy about expediting repairs.' (The passages give Specialty Products Middle East volume impact only as $(50)M year to date, so the claimed $(110)M for Q2 is not shown and conflicts with the YTD figure; the other figures and management comments are supported.)."
+  ],
+  "sources": {
+    "Q.006": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · Financial Statements — ITEM 1. FINANCIAL STATEMENTS",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.007": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · Financial Statements — ITEM 1. FINANCIAL STATEMENTS",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.011": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · Financial Statements — ITEM 1. FINANCIAL STATEMENTS",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.012": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · Financial Statements — Redomiciliation Merger became effective on July 1, 2026.",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.028": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.030": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · Financial Statements — Litigation",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.031": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.044": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · MD&A — Structural Cost Savings (Non-GAAP)",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.046": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · MD&A — REVIEW OF SECOND QUARTER 2026 RESULTS",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.047": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · MD&A — Volume / Mix",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.051": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · MD&A — Guyana growth.",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.053": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · MD&A — Structural Cost Savings – Increased earnings by $380 million.",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.054": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · MD&A — Volume / Mix",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.055": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · MD&A — Volume / Mix",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.056": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · MD&A — Volume / Mix",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.058": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · MD&A — Volume / Mix",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.059": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · MD&A — Volume / Mix",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.060": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "Q.064": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-03 — ITEM 4. CONTROLS AND PROCEDURES",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000003408826000093/xom-20260630.htm",
+      "as_of": "2026-08-03"
+    },
+    "K.097": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-18 — ITEM 14. PRINCIPAL ACCOUNTANT FEES AND SERVICES",
+      "url": "https://www.sec.gov/Archives/edgar/data/34088/000003408826000045/xom-20251231.htm",
+      "as_of": "2026-02-18"
+    },
+    "K.145": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-18 · MD&A — Transportation of Kazakhstan Production",
+      "url": "https://www.sec.gov/Archives/edgar/data/34088/000003408826000045/xom-20251231.htm",
+      "as_of": "2026-02-18"
+    },
+    "K.150": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-18 · MD&A — Key Recent Events",
+      "url": "https://www.sec.gov/Archives/edgar/data/34088/000003408826000045/xom-20251231.htm",
+      "as_of": "2026-02-18"
+    },
+    "K.189": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-18 · MD&A — Environmental Liabilities",
+      "url": "https://www.sec.gov/Archives/edgar/data/34088/000003408826000045/xom-20251231.htm",
+      "as_of": "2026-02-18"
+    },
+    "E.004": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.1 (filed 2026-10-30)",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26991.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.005": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.1 (filed 2026-10-30) — ExxonMobil Announces Third-Quarter 2026 Results",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26991.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.006": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.1 (filed 2026-10-30) — ExxonMobil Announces Third-Quarter 2026 Results",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26991.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.007": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.1 (filed 2026-10-30) — ExxonMobil Announces Third-Quarter 2026 Results",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26991.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.008": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.1 (filed 2026-10-30) — LNG, partly offset by Middle East volume impacts and higher non-cash expenses.",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26991.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.014": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.1 (filed 2026-10-30) — Frequently Used Terms and non-GAAP Measures",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26991.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.017": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.1 (filed 2026-10-30) — Frequently Used Terms and non-GAAP Measures",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26991.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.021": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.1 (filed 2026-10-30) — Reference to Earnings",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26991.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.022": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.1 (filed 2026-10-30) — Reference to Earnings",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26991.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.023": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.1 (filed 2026-10-30) — Reference to Earnings",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26991.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.024": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.1 (filed 2026-10-30) — Reference to Earnings",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26991.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.025": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.1 (filed 2026-10-30) — Reference to Earnings",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26991.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.027": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.2 (filed 2026-10-30)",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26992.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.028": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.2 (filed 2026-10-30) — EXHIBIT 99.2",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26992.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.029": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.2 (filed 2026-10-30) — EXHIBIT 99.2",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26992.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.030": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.2 (filed 2026-10-30) — EXHIBIT 99.2",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26992.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.031": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.2 (filed 2026-10-30) — EXHIBIT 99.2",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26992.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.032": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.2 (filed 2026-10-30) — EXHIBIT 99.2",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26992.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.033": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.2 (filed 2026-10-30) — EXHIBIT 99.2",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26992.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.034": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, Exhibit 99.2 (filed 2026-10-30) — EXHIBIT 99.2",
+      "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000018/livef8k3q26992.htm",
+      "as_of": "2026-10-30"
+    },
+    "C.001": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — James Chapman, Investor Relations Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=XOM&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.003": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Darren Woods, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=XOM&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.004": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Darren Woods, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=XOM&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.006": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Darren Woods, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=XOM&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.012": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Neil Hansen, Senior Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=XOM&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.015": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Darren Woods, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=XOM&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.016": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Darren Woods, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=XOM&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.022": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Darren Woods, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=XOM&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.029": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Darren Woods, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=XOM&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.031": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Neil Hansen, Senior Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=XOM&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.034": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Neil Hansen, Senior Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=XOM&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.045": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Biraj Borkhataria, Analyst, RBC",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=XOM&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.046": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Darren Woods, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=XOM&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.053": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Darren Woods, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=XOM&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.063": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Neil Hansen, Senior Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=XOM&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.066": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Darren Woods, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=XOM&quarter=2026Q2",
+      "as_of": null
+    },
+    "F.20": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — year ended 2025-12-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/34088/000003408826000045/xom-20251231.htm",
+      "as_of": "2026-02-18"
+    },
+    "F.22": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Net income — year ended 2025-12-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/34088/000003408826000045/xom-20251231.htm",
+      "as_of": "2026-02-18"
+    },
+    "F.24": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — year ended 2025-12-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/34088/000003408826000045/xom-20251231.htm",
+      "as_of": "2026-02-18"
+    },
+    "F.57": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "F.59": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "M.05": {
+      "kind": "market",
+      "citation": "Market data — Beat/miss record",
+      "url": null,
+      "as_of": null
+    },
+    "M.07": {
+      "kind": "market",
+      "citation": "Market data — Consensus price target",
+      "url": null,
+      "as_of": null
+    },
+    "N.03": {
+      "kind": "news",
+      "citation": "qz.com, 2026-10-30 — Exxon and Chevron Q3 2026 earnings top estimates on refining profits",
+      "url": "https://qz.com/exxon-chevron-earnings-beat-refining-profits-103026",
+      "as_of": "2026-10-30"
+    },
+    "N.05": {
+      "kind": "news",
+      "citation": "tikr.com, 2026-10-30 — Trump Says Gasoline Prices Will Come “Plummeting Down.” Exxon and Chevron Didn’t Get the Memo | TIKR.com",
+      "url": "https://www.tikr.com/blog/trump-says-gasoline-prices-will-come-plummeting-down-exxon-and-chevron-didnt-get-the-memo",
+      "as_of": "2026-10-30"
+    },
+    "N.08": {
+      "kind": "news",
+      "citation": "marketbeat.com, 2026-11-01 — ExxonMobil Corporation $XOM Shares Newly Bought by Raleigh Capital Management Inc.",
+      "url": "https://www.marketbeat.com/instant-alerts/filing-exxonmobil-corporation-xom-shares-newly-bought-by-raleigh-capital-management-inc-2026-11-01",
+      "as_of": "2026-11-01"
+    },
+    "N.10": {
+      "kind": "news",
+      "citation": "marketbeat.com, 2026-10-20 — ExxonMobil (XOM) Stock Forecast and Price Target 2026",
+      "url": "https://www.marketbeat.com/stocks/NYSE/XOM/forecast",
+      "as_of": "2026-10-20"
+    },
+    "A.003": {
+      "kind": "article",
+      "citation": "Article (qz.com)",
+      "url": "https://qz.com/exxon-chevron-earnings-beat-refining-profits-103026",
+      "as_of": "2026-10-30"
+    },
+    "N.20": {
+      "kind": "news",
+      "citation": "247wallst.com, 2026-10-31 — Big Oil’s Iran War Windfall Is Nearly 3 Times Last Year’s Profits - 24/7 Wall St.",
+      "url": "https://247wallst.com/investing/2026/10/31/big-oils-iran-war-windfall-is-nearly-3-times-last-years-profits",
+      "as_of": "2026-10-31"
+    },
+    "N.22": {
+      "kind": "news",
+      "citation": "finance.yahoo.com, 2026-10-31 — Exxon and Chevron report massive profits after Trump brags U.S. energy companies are ‘making a freaking fortune’ just before midterms",
+      "url": "https://finance.yahoo.com/energy/articles/exxon-chevron-report-massive-profits-174420392.html",
+      "as_of": "2026-10-31"
+    },
+    "N.29": {
+      "kind": "news",
+      "citation": "247wallst.com, 2026-10-30 — BP's Profit Nearly Quadrupled. Exxon and Chevron Report in Hours, and Oil's Up 21% in a Month. Here We Go Again - 24/7 Wall St.",
+      "url": "https://247wallst.com/investing/2026/10/30/bps-profit-nearly-quadrupled-exxon-and-chevron-report-in-hours-and-oils-up-21-in-a-month-here-we-go-again",
+      "as_of": "2026-10-30"
+    },
+    "A.006": {
+      "kind": "article",
+      "citation": "Article (stocktitan.net)",
+      "url": "https://www.stocktitan.net/articles/chevron-q3-2026-earnings-refining-profit-jump",
+      "as_of": "2026-10-30"
+    },
+    "A.011": {
+      "kind": "article",
+      "citation": "Article (stocktitan.net)",
+      "url": "https://www.stocktitan.net/articles/chevron-q3-2026-earnings-refining-profit-jump",
+      "as_of": "2026-10-30"
+    },
+    "A.012": {
+      "kind": "article",
+      "citation": "Article (stocktitan.net)",
+      "url": "https://www.stocktitan.net/articles/chevron-q3-2026-earnings-refining-profit-jump",
+      "as_of": "2026-10-30"
+    },
+    "A.019": {
+      "kind": "article",
+      "citation": "Article (stocktitan.net)",
+      "url": "https://www.stocktitan.net/articles/chevron-q3-2026-earnings-refining-profit-jump",
+      "as_of": "2026-10-30"
+    }
+  },
+  "check_notes": [
+    "metrics_to_model[0].view: rewritten to what its sources support (The share-count arithmetic (4,140/4,079 ≈ +1.5%) and BP's softening comment check out, but the $50 refining marker and the Q3 refining beat are not in the cited passages, and the Chevron turnaround item is thin.).",
+    "metrics_to_model[8].view: rewritten to what its sources support (The tax rate range of 21% to 40% is shown, but the passages attribute no jurisdictional-mix cause, and the 10-Q says lower interest income raised Corporate expense rather than shrinking it.).",
+    "guidance[2]: rewritten to what its sources support (The $20B 2027 repurchase announcement is in the release, but nothing in the cited passages establishes the usual December plan-update timing or that this is a year earlier.).",
+    "scenarios[2]: rewritten to what its sources support (The passages say nothing about windfall-tax headlines, only Trump's demand to cut gasoline prices and price-gouging allegations.).",
+    "key_risks[3]: rewritten to what its sources support (The $921M and the Q2 volume impacts of $1,060M, $310M and $110M are supported, but the passages do not say Qatar LNG trains were damaged, only that repairs are being discussed.).",
+    "key_risks[3]: its whole key_risks[3] item was removed — its sources don't support it (The passages give Specialty Products Middle East volume impact only as $(50)M year to date, so the claimed $(110)M for Q2 is not shown and conflicts with the YTD figure; the other figures and management comments are supported.).",
+    "since_filing[8]: tag 'reported' → 'estimate' (it cites only article, news).",
+    "key_debates[3].bear: tag 'reported' → 'estimate' (it cites only article, call, news)."
+  ]
+}

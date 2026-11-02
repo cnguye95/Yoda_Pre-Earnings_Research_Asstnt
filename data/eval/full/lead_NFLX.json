@@ -1,0 +1,1476 @@
+{
+  "ticker": "NFLX",
+  "company_name": "NETFLIX INC",
+  "report_generated_at": "2026-11-01T14:59:46+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-10-21",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-01-23",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000034/nflx-20251231.htm"
+    }
+  ],
+  "earnings_call": "Q3 FY2026 earnings call (date unknown)",
+  "current_report": "No 8-K or 6-K recent enough to read",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$0.70",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$13.71B",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2027-01-18 report. Paid lookup not made: next report is 78 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "implied move: no live implied move yet (EarningsWatcher has no confirmed report date)."
+    },
+    "historical_move": {
+      "value": "±7.1% average closing move over the last 8 reports (2024-10-17 to 2026-07-16)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/nflx-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": "1 beats, 1 misses in the last 4 quarters, average surprise -1.8%",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "Finnhub earnings surprises",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "analyst_actions": {
+      "value": "Last 30 days, newest first: Wolfe Research downgraded to Peer Perform from Outperform (2026-10-22); Argus Research maintained Buy (2026-10-22); Pivotal Research maintained Hold (2026-10-22); UBS maintained Buy (2026-10-21); Citigroup maintained Buy (2026-10-21); Oppenheimer maintained Outperform (2026-10-21); Morgan Stanley maintained Overweight (2026-10-21); JP Morgan maintained Overweight (2026-10-21); TD Cowen maintained Buy (2026-10-21); Piper Sandler maintained Overweight (2026-10-21); Evercore ISI Group maintained Outperform (2026-10-21); Barclays maintained Equal Weight (2026-10-21); Guggenheim maintained Buy (2026-10-21); Citizens maintained Market Perform (2026-10-21); Wedbush maintained Outperform (2026-10-21); Bernstein maintained Outperform (2026-10-21); Rosenblatt maintained Neutral (2026-10-21); Needham downgraded to Hold from Buy (2026-10-21); B of A Securities maintained Buy (2026-10-21); BMO Capital maintained Outperform (2026-10-16); Wedbush maintained Outperform (2026-10-16); Rosenblatt maintained Neutral (2026-10-16); Keybanc maintained Overweight (2026-10-13); Morgan Stanley maintained Overweight (2026-10-08); Barclays maintained Equal Weight (2026-10-07); TD Cowen maintained Buy (2026-10-05)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP grades",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "price_target": {
+      "value": "$86.21, +38.9% vs current $62.08",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP price target consensus",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "Netflix's next report is the Q4 2026 print on 2027-01-18 after the close, 78 days out. Consensus per the market-data feed is $13.71B revenue and $0.70 EPS. Past reports have moved the stock ±7.1% on average over the last 8 reports. No options-implied move or whisper number is available yet.",
+      "evidence_ids": [
+        "M.01",
+        "M.02",
+        "M.03",
+        "M.04"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Q3 2026 was a clean profit beat on a soft growth and guidance backdrop. Revenue was $12.874B (+11.8% y/y, 11% constant currency). Operating margin was 34.6% against 28.2% a year earlier. Diluted EPS was $0.87 against $0.59. Free cash flow was $2.88B.",
+      "evidence_ids": [
+        "F.01",
+        "F.41",
+        "F.59",
+        "F.61",
+        "F.09",
+        "F.10",
+        "F.71",
+        "Q.058"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Strip out the $619M Brazil non-income-tax charge in Q3 2025 and the year-ago operating margin was about 33.6%. Q3 2026's 34.6% is therefore about one point of real expansion, not 6.4 points.",
+      "evidence_ids": [
+        "Q.066",
+        "A.039",
+        "A.041"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q3 revenue was roughly in line. The company's July guide implied about $12.86B, and consensus was about $12.87B. EPS beat $0.82 consensus. The company said the operating margin beat its forecast 'due primarily to the timing of expenses and the slight upside in revenue'. A secondary report puts the margin guide at 33.2%.",
+      "evidence_ids": [
+        "A.004",
+        "N.40",
+        "N.48"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "The Q4 guide drove the selloff. Revenue is guided to $13.442B (+11.5%), operating income to $3.5B (26.0% margin, against 24.5% a year ago), and diluted EPS to $0.67. The margin includes about 120bp of drag from headcount reductions, about $160M. Netflix's own letter puts the full-year drag at about 30bp.",
+      "evidence_ids": [
+        "A.014",
+        "A.015",
+        "A.016",
+        "N.13"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "The guide sits below pre-report expectations. The S&P transcript consensus was $13.525B revenue and $0.73 EPS, and coverage called it a Q4 revenue forecast miss. The supplied $13.71B / $0.70 consensus in the market feed is above the guide and not corroborated by any post-print source. Treat it as stale until a live feed confirms it.",
+      "evidence_ids": [
+        "A.014",
+        "N.42",
+        "N.25",
+        "M.01",
+        "F.78"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Netflix cut 2026 ad revenue to about $2.7B from about $3B, citing a slower rollout of some ad product capabilities. Ads still grow more than 80% this year. The full-year revenue guide of $51.1B is within the prior range, about $100M below the midpoint, because subscription revenue outperformed. Full-year free cash flow was cut to about $12.0B from $12.5B on a Q4 real estate transaction.",
+      "evidence_ids": [
+        "N.41",
+        "A.006",
+        "A.007",
+        "A.015",
+        "A.043",
+        "C.053"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "Capital return is running ahead of cash generation. Q3 buybacks were $4.8B (63.9M shares at roughly $72-77), against Q3 free cash flow of $2.88B. Nine-month buybacks were $10.8B against free cash flow of $9.5B. $22.3B of authorization remains. Diluted shares fell about 3% y/y to 4.195B.",
+      "evidence_ids": [
+        "Q.095",
+        "Q.044",
+        "F.71",
+        "F.73",
+        "Q.006",
+        "Q.017",
+        "A.039"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "The stock is trading near a two-year low. NFLX fell 5.31% to $65.04 on 10-21 from a $68.69 close on 10-20. It hit a two-year low of $61.39 around 10-29/30 and the latest quote is $62.08. That is about 9.6% below the pre-print close and about 28% below the $86.21 consensus target. Wolfe and Needham downgraded.",
+      "evidence_ids": [
+        "N.52",
+        "A.044",
+        "N.55",
+        "M.07",
+        "M.06"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Revenue",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 revenue was $12.874B, +11.8% y/y, 11% constant currency. Q4 2025 revenue was $12.05B.",
+        "evidence_ids": [
+          "F.01",
+          "F.41",
+          "Q.058",
+          "F.77"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Supplied consensus is $13.71B (+13.8% y/y). The pre-report S&P consensus was $13.525B.",
+        "evidence_ids": [
+          "M.01",
+          "F.78",
+          "A.014"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Anchor to the guide of $13.442B (+11.5%, 11% FX-neutral). Netflix landed roughly in line with its Q3 revenue guide, so the $13.71B consensus (+13.8%) looks stale. The risk to the guide is ad shortfall and FX; the offset is subscription revenue running ahead of plan.",
+        "evidence_ids": [
+          "A.014",
+          "A.004",
+          "A.007",
+          "F.78"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Operating margin",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 operating margin was 34.6% (33.4% in Q2 2026). Q4 2025 was 24.5%.",
+        "evidence_ids": [
+          "F.59",
+          "A.004",
+          "N.13"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guide is 26.0% ($3.5B operating income), including about 120bp (about $160M) from headcount cuts. Ex-restructuring that is about 27.2%, about 270bp above Q4 2025. Q3 beat its 33.2% margin guide by about 1.4pt on expense timing, which is a possible upside precedent. If any shifted expense lands in Q4 it is an unguided risk. Treat the 'one-time' label on the $160M as an inference.",
+        "evidence_ids": [
+          "A.014",
+          "A.016",
+          "N.14",
+          "N.48",
+          "A.004"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Diluted EPS",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 diluted EPS was $0.87 against $0.59. FY2025 diluted EPS was $2.53 and 9M 2025 was $1.97, so Q4 2025 was roughly $0.56 on a split-adjusted basis.",
+        "evidence_ids": [
+          "F.09",
+          "F.10",
+          "F.31",
+          "F.12"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Supplied consensus is $0.70. The pre-report consensus was $0.73.",
+        "evidence_ids": [
+          "M.01",
+          "A.014"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Guide is $0.67, which is about +20% on my approximate Q4 2025 base. The $0.70 consensus is above guide. EPS sensitivity to buyback pace is small (about $0.002-0.003 per 30M shares), so margin and the interest and other income line matter more than share count for the print.",
+        "evidence_ids": [
+          "A.014",
+          "M.01",
+          "F.31",
+          "F.12",
+          "Q.003"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Free cash flow",
+      "period": "Q4 2026 / FY2026",
+      "last_reported": {
+        "text": "Q3 2026 FCF was $2.88B and 9M FCF was $9.50B. Q4 2025 FCF was about $1.87B (FY $9.46B less 9M $7.59B).",
+        "evidence_ids": [
+          "F.71",
+          "F.73",
+          "F.75",
+          "F.74"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "FY guide of about $12.0B (cut from $12.5B on a Q4 real estate transaction) implies Q4 FCF of about $2.5B, against $2.88B in Q3. About $0.5B of the shortfall is the real estate item, so underlying Q4 is about $3.0B. Direction of the transaction and accounting line are not disclosed.",
+        "evidence_ids": [
+          "A.015",
+          "A.043",
+          "F.73",
+          "N.44"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Advertising revenue",
+      "period": "FY2026 / Q4 2026",
+      "last_reported": {
+        "text": "Ad revenue rose $256M y/y in Q3 and $864M over nine months (about 19% of the revenue increase in both periods). The 10-Q gives no ad revenue level.",
+        "evidence_ids": [
+          "Q.061"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "FY guide is about $2.7B (was about $3B), still growing over 80%. On a 2025 base of just over $1.5B, that implies roughly $300-340M of y/y ad growth in Q4, against $256M in Q3. Q4 needs a step-up that depends on delayed products shipping. This is my derivation and is sensitive to the 2025 base.",
+        "evidence_ids": [
+          "A.006",
+          "A.007",
+          "Q.061",
+          "C.053"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Diluted share count and buybacks",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 diluted weighted shares were 4.195B (4.340B a year earlier). Netflix bought 63.9M shares for $4.8B in Q3.",
+        "evidence_ids": [
+          "Q.017",
+          "Q.095"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Q4 buyback pace is unguided. Cash was $8.19B at 30 Sep, $1B of 4.375% notes mature in November, and Q4 FCF is about $2.5B. At Q3's $4.8B pace, year-end cash would be roughly $5-6B (my estimate). Management could slow repurchases, since $22.3B of authorization remains.",
+        "evidence_ids": [
+          "F.25",
+          "Q.024",
+          "Q.044",
+          "A.015",
+          "A.043"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Constant-currency revenue growth",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Constant-currency revenue growth was 11% in Q3 2026, against reported growth of 12% (11.8%).",
+        "evidence_ids": [
+          "Q.058",
+          "F.41"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Q4 is guided at 11% FX-neutral, flat with Q3's 11%. Management says its objective is sustained double-digit revenue growth and that 2027 guidance will come on the Q4 call in January, which is where the deceleration debate gets tested.",
+        "evidence_ids": [
+          "A.014",
+          "Q.058",
+          "C.030",
+          "C.031"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Q4 2026 revenue",
+      "guidance": "$13.442B, +11.5% y/y (11% FX-neutral)",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Q4 2026 revenue guide is $13.442B (+11.5%), below the pre-report $13.525B consensus.",
+        "evidence_ids": [
+          "A.014",
+          "N.13"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Q4 2026 operating income and margin",
+      "guidance": "Operating income about $3.5B, margin 26.0%, including about 120bp (about $160M) from headcount reductions; 24.5% a year earlier",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Q4 operating margin guide is 26.0% including about 120bp of headcount-reduction drag; ex-restructuring about 27.2%.",
+        "evidence_ids": [
+          "N.13",
+          "A.016",
+          "N.14"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Q4 2026 diluted EPS",
+      "guidance": "$0.67",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Q4 diluted EPS guide is $0.67, below the $0.73 pre-report consensus and below the supplied $0.70.",
+        "evidence_ids": [
+          "A.014",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "FY2026 revenue",
+      "guidance": "$51.1B, +13% (12% FX-neutral)",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "FY revenue guide of $51.1B sits within the prior $51.0-51.4B range but is $100M below the midpoint. Subscription outperformance offset most of the ad shortfall.",
+        "evidence_ids": [
+          "A.007",
+          "A.015"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "FY2026 operating margin",
+      "guidance": "31.5% (31.4% at Jan 1, 2026 FX), against 29.5% in 2025; about 30bp headcount drag included",
+      "period": "FY2026",
+      "status": "unclear",
+      "claim": {
+        "text": "Full-year operating margin guide is 31.5%, including about 30bp of headcount-reduction drag. The prior (July) margin guide was not retrieved, so whether this is a raise, hold or cut is not established; news summaries describe full-year guidance as maintained.",
+        "evidence_ids": [
+          "A.015",
+          "A.016",
+          "N.34"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "FY2026 free cash flow",
+      "guidance": "About $12.0B, down from about $12.5B, due to a Q4 real estate transaction",
+      "period": "FY2026",
+      "status": "lowered",
+      "claim": {
+        "text": "Full-year FCF guide was cut by about $500M to about $12.0B because of the expected closing of a real estate transaction in Q4.",
+        "evidence_ids": [
+          "A.015",
+          "A.043",
+          "N.44"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "FY2026 advertising revenue",
+      "guidance": "About $2.7B vs about $3B previously; still growing over 80%",
+      "period": "FY2026",
+      "status": "lowered",
+      "claim": {
+        "text": "2026 ad revenue is now expected at about $2.7B versus about $3B previously, due to slightly slower rollout of some ad product capabilities.",
+        "evidence_ids": [
+          "A.006",
+          "N.41",
+          "C.053"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Content cash spend to amortization ratio",
+      "guidance": "About 1.1x for the year",
+      "period": "FY2026",
+      "status": "unclear",
+      "claim": {
+        "text": "Annual cash content spend to amortization is still expected at about 1.1x, per a secondary summary of the letter.",
+        "evidence_ids": [
+          "A.043"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "2027 outlook",
+      "guidance": "No numeric guide until the Q4 call in January; objectives are sustained double-digit revenue growth, margin expansion and higher free cash flow; ad tier launches in 15 new countries, first 12 in March 2027",
+      "period": "FY2027",
+      "status": "unclear",
+      "claim": {
+        "text": "The CFO deferred 2027 guidance (including margin) to January and said objectives are unchanged: sustain double-digit revenue growth, expand margins, increase free cash flow. The ad tier expands to 15 new countries in 2027, starting with 12 in March.",
+        "evidence_ids": [
+          "C.030",
+          "C.031",
+          "C.034",
+          "A.012"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "The 10-Q is dated October 21, 2026, a day after the shareholder letter and earnings interview on October 20. The numeric Q4 and full-year guidance used in this report is taken from news coverage of the letter, not from the filings, so it should be checked against the primary letter.",
+      "evidence_ids": [
+        "Q.098",
+        "A.003",
+        "A.014"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Sell-side reaction was mostly price-target cuts with ratings held. Needham went to Hold from Buy on 10-21 (FX-neutral growth slowing 14% to 12% to 11%, expecting single-digit growth in 2027). Wolfe cut to Peer Perform on 10-22 (higher spending not translating to engagement; content leadership change delays the fix). Bernstein cut its target to $80, Rosenblatt to $71 and Barclays to $65. JPMorgan, BofA, Goldman and Morgan Stanley stayed constructive.",
+      "evidence_ids": [
+        "A.026",
+        "A.028",
+        "A.029",
+        "M.06",
+        "N.04"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Content leadership changed. Peter Rice replaces Bela Bajaria as Chief Content Officer. Management said the strategy needs no fundamental shift but US execution must improve. Needham thinks Rice needs about two years to fix the content slate and says Netflix's position versus YouTube is deteriorating.",
+      "evidence_ids": [
+        "C.019",
+        "C.023",
+        "A.026"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Netflix cut about 1,000 roles (about 6% of the workforce), its largest reduction since 2022. The letter does not give a headcount. Management would not quantify run-rate savings or 2027 expense effects.",
+      "evidence_ids": [
+        "A.030",
+        "N.26",
+        "C.034"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "The stock path since the print: $68.69 close on 10-20 to $65.04 on 10-21 (-5.31%, volume about 171% above the three-month average), $65.85 on 10-23, a new 52-week low on 10-27 and a two-year low of $61.39 reported on 10-29/30. It closed at about $62 on Friday 10-30 and the latest quote is $62.08.",
+      "evidence_ids": [
+        "A.044",
+        "N.52",
+        "N.50",
+        "N.57",
+        "N.55",
+        "N.08",
+        "M.07"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Third-party views on the buyback and engagement debate continue to circulate. Morningstar maintains an $80 price target and calls the decline the best buying opportunity in years. 24/7 Wall St. says its model remains constructive. Jim Cramer notes management would not commit to the 2027 double-digit sales growth target.",
+      "evidence_ids": [
+        "A.052",
+        "A.058",
+        "N.38"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Is slowing view-hour and US engagement growth a real threat to the double-digit revenue outlook?",
+      "bull": {
+        "text": "Management says churn improved y/y globally and in the US and beat forecast, and that 2026 price increases performed in line with past ones. It argues the three revenue levers (members, pricing, ads) are working and that APAC, LATAM and EMEA content is driving engagement, with India view hours +24%.",
+        "evidence_ids": [
+          "C.007",
+          "C.030",
+          "C.061"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Constant-currency growth has slowed 14% to 12% to 11% from Q1 to Q3, and Needham expects single-digit growth in 2027. Wolfe says higher content spend has not kept viewers engaged, and management itself says US content is 'doubles and triples' and it wants to grow view hours faster.",
+        "evidence_ids": [
+          "A.026",
+          "N.04",
+          "C.023",
+          "C.030"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "The 2027 revenue guide on the Q4 call in January, and whether Q4 revenue lands at or above $13.44B with the NFL, East of Eden and Diplomat slate lifting US engagement."
+    },
+    {
+      "question": "Is the ad shortfall a timing issue or a sign the ad ramp is slower than hoped?",
+      "bull": {
+        "text": "Ads are still growing over 80%. Peters says demand is strong, advertiser breadth is expanding, the delay is in product rollout and partner integrations, and the ad-tier ARM gap versus standard is narrowing. Twelve more countries launch in March 2027, and the total revenue forecast moved only $100M.",
+        "evidence_ids": [
+          "C.053",
+          "C.054",
+          "C.057",
+          "A.012",
+          "A.007"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "The $3B target was repeated through July, then cut about 10%. Management did not name which integrations slipped, Barclays says the cut reinforces concerns about slowing momentum, and ads are only about 5% of revenue against a long ARM gap still to close.",
+        "evidence_ids": [
+          "A.003",
+          "A.009",
+          "A.028",
+          "A.042",
+          "C.057"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Q4 ad revenue (implied step-up to roughly $300M+ y/y growth), delivery dates for the delayed ad products, and ad contribution in the 2027 guide."
+    },
+    {
+      "question": "Does the Q4 margin hit reverse in 2027, or is it reinvested?",
+      "bull": {
+        "text": "Excluding the roughly 120bp headcount drag, an illustrative Q4 margin is about 27.2% (a third-party adjustment, not company guidance). The guided full-year 31.5% margin compares with 29.5% in 2025, about 200bp higher. Morgan Stanley reads the cuts and leadership change as decisive action. Q3's 34.6% margin beat the 33.2% margin guide by about 1.4pt.",
+        "evidence_ids": [
+          "N.14",
+          "A.014",
+          "F.67",
+          "A.054",
+          "N.48"
+        ],
+        "evidence_type": "estimate"
+      },
+      "bear": {
+        "text": "Management declined to quantify 2027 expense effects or run-rate savings. Technology and development expense grew 21% in Q3, and some of the Q3 beat was expense timing.",
+        "evidence_ids": [
+          "C.034",
+          "Q.068",
+          "A.004"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "The 2027 margin guide in January and whether Q4 operating margin holds at or above 26.0% without any timing reversal."
+    },
+    {
+      "question": "Is the record buyback pace sustainable given free cash flow and the Q4 real estate outflow?",
+      "bull": {
+        "text": "Q3 was a record $4.8B repurchase, diluted shares fell about 3% y/y, and $22.3B of authorization remains. Cash was $8.19B, there is no revolver or commercial paper drawn, and the $1B Nov 2026 maturity was reportedly prefunded.",
+        "evidence_ids": [
+          "Q.095",
+          "Q.017",
+          "Q.044",
+          "F.25",
+          "Q.026",
+          "A.043"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Nine-month buybacks of $10.8B exceeded FCF of $9.5B, so cash is being drawn down. Full-year FCF was cut to about $12.0B and implied Q4 FCF is about $2.5B, so repeating a $4.8B quarter would draw cash toward $5B.",
+        "evidence_ids": [
+          "N.44",
+          "F.73",
+          "A.015",
+          "F.25"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Q4 buyback disclosure in the 10-K and the 2027 capital return framework in January."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "bull",
+      "description": {
+        "text": "Revenue lands above the $13.44B guide as subscription strength continues. Operating margin comes in near the 27.2% ex-restructuring level if Q3-style expense timing repeats. A 2027 guide holds double-digit revenue growth and steady margin expansion, easing the engagement concern. This would sit above the $13.525B pre-report consensus.",
+        "evidence_ids": [
+          "A.014",
+          "N.14",
+          "N.48",
+          "C.031"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Q4 revenue above $13.5B and subscription revenue again outperforming",
+        "Ad revenue tracking at or above $2.7B with delayed products shipping",
+        "2027 guide of double-digit revenue growth and margin expansion",
+        "Evidence of improved US engagement from the Q4 slate and NFL games"
+      ]
+    },
+    {
+      "name": "base",
+      "description": {
+        "text": "Q4 prints roughly in line with guidance: revenue about $13.44B, operating margin about 26%, EPS about $0.67, FCF about $2.5B. Netflix reported Q3 roughly in line on revenue and ahead on margin. The January 2027 guide decides the stock more than the Q4 print.",
+        "evidence_ids": [
+          "A.014",
+          "A.004",
+          "A.015",
+          "F.73"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Revenue within about 0.5% of $13.442B",
+        "Operating margin near 26.0%",
+        "2027 guide cautious on margin given reinvestment",
+        "Stock trades on the 2027 growth and margin framework"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Revenue and ads slip again, with ads missing even the cut $2.7B and growth near the guided 11%. Some Q3 expense timing reverses into Q4, pushing margin below the 26.0% guide. The January 2027 guide shows revenue growth below management's double-digit objective, and the buyback slows as cash falls.",
+        "evidence_ids": [
+          "A.003",
+          "A.004",
+          "A.014",
+          "A.026",
+          "F.25"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Q4 ad growth below the roughly $300M implied step-up",
+        "Operating margin below 26.0%",
+        "2027 revenue guide below double digits or margin guide flat",
+        "Further price-target cuts and downgrades"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "Ad ramp risk: the 2026 ad target was cut about 10% on delays in product rollout and partner integrations, and management did not specify which. Further slippage would weigh on 2027 revenue assumptions and the 15-country expansion.",
+        "evidence_ids": [
+          "A.003",
+          "A.008",
+          "A.009"
+        ],
+        "evidence_type": "estimate"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Growth deceleration and engagement: constant-currency growth slowed to 11% in Q3 and management says it wants faster view-hour growth. Netflix stopped reporting subscriber counts, so churn commentary is the only direct engagement evidence.",
+        "evidence_ids": [
+          "Q.058",
+          "A.026",
+          "C.030",
+          "K.097"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Content leadership transition: Peter Rice replaces Bela Bajaria as Chief Content Officer, and Needham says fixing the slate could take about two years. The new CCO's strategy and 2027 content spend are unknown.",
+        "evidence_ids": [
+          "C.019",
+          "A.026"
+        ],
+        "evidence_type": "estimate"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Margin and expense timing: the Q4 guide includes about $160M of headcount drag, and the Q3 beat was attributed to expense timing. Any reversal, or ongoing costs inside the $160M, would pressure the 26.0% guide. 2027 reinvestment is unquantified.",
+        "evidence_ids": [
+          "A.016",
+          "A.004",
+          "C.034"
+        ],
+        "evidence_type": "guided"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Capital allocation and liquidity: buybacks exceeded FCF year to date, FCF guidance was cut by $500M on a real estate transaction, and $3.19B of principal and interest is due within 12 months. Liquidity remains ample ($3B revolver and $3B CP program undrawn), but cash is falling.",
+        "evidence_ids": [
+          "N.44",
+          "A.043",
+          "Q.074",
+          "Q.026",
+          "Q.027"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "FX exposure: non-USD currencies are 57% of revenue for nine months. Constant-currency revenue would have been about $506M lower than reported, so a stronger dollar would take away part of the tailwind.",
+        "evidence_ids": [
+          "Q.087"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Competitive consolidation: news reports say Paramount Skydance and WBD have merged, putting Paramount+ and HBO Max under one owner, while analysts flag YouTube share gains. Netflix's own filing confirms WBD terminated its Netflix merger agreement on 2026-02-27 and Netflix received a $2.8B termination fee.",
+        "evidence_ids": [
+          "A.051",
+          "A.026",
+          "Q.022"
+        ],
+        "evidence_type": "estimate"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Labor risk was flagged in the 10-K: the WGA, SAG-AFTRA and DGA agreements were to expire in 2026. This report found no update on their status, so it remains an open risk to production timing and cost.",
+        "evidence_ids": [
+          "K.079"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "How much of the Q3 expense-timing benefit lands in Q4 or 2027, and is the roughly $160M headcount charge all one-time severance? What are the run-rate savings and how much is reinvested?",
+      "why": {
+        "text": "Q3 margin beat the guide on expense timing, the Q4 guide carries about 120bp of headcount drag, and management declined to quantify 2027 effects.",
+        "evidence_ids": [
+          "A.004",
+          "A.016",
+          "C.034"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "Which ad products and partner integrations slipped, what are the new delivery dates, and what is the Q4 ad revenue run-rate implied by the $2.7B outlook?",
+      "why": {
+        "text": "Ad revenue was cut about $300M and management did not name the delayed products. The Q4 ad growth required to hit $2.7B steps up from Q3's $256M increase.",
+        "evidence_ids": [
+          "A.009",
+          "A.007",
+          "Q.061"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "question": "What is the size and direction of the Q4 real estate transaction, and does it flow through capex, other investing or the P&L?",
+      "why": {
+        "text": "It cut full-year FCF guidance by $500M, but the letter wording is neutral on purchase versus sale and the accounting line is not stated.",
+        "evidence_ids": [
+          "A.043",
+          "N.44"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "question": "What is the Q4 buyback plan given $8.2B of cash, a $1B November maturity, and about $2.5B of implied Q4 FCF? Will you repay or refinance the maturity?",
+      "why": {
+        "text": "Q3 buybacks of $4.8B were 1.7x FCF, and the 10-Q does not disclose repurchase intent or use of the July notes proceeds.",
+        "evidence_ids": [
+          "Q.095",
+          "Q.024",
+          "F.25",
+          "A.043"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What view-hour growth are you assuming in the 2027 plan, and what would double-digit revenue growth require if view hours stay modest?",
+      "why": {
+        "text": "The CFO said the company wants to grow view hours faster and that 2027 guidance will come on the Q4 call; analysts cite uncertainty around the 2027 outlook.",
+        "evidence_ids": [
+          "C.030",
+          "A.026"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "question": "What are the ad-tier ARM gap versus standard, the ad-plan share of members, and the fill-rate trajectory, and how much 2027 revenue do the 15 new ad countries add?",
+      "why": {
+        "text": "Peters said a gap remains and means under-realized near-term revenue growth, but gave no numbers. The first 12 countries launch in March 2027.",
+        "evidence_ids": [
+          "C.057",
+          "A.012"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "data_gaps": [
+    "Post-report revised Q4 2026 consensus (revenue, EPS) was not found. The provenance and date of the supplied $13.71B / $0.70 (M.01) are unknown. The only sourced consensus is the pre-report $13.525B and $0.73.",
+    "The derived Q4 2025 diluted EPS in the fact sheet (-$17.14, F.79) and the resulting -104% implied EPS growth (F.80) are inconsistent with the filings, which give FY2025 $2.53 and 9M 2025 $1.97, so Q4 2025 is roughly $0.56. Do not use F.79 or F.80.",
+    "The primary Q3 shareholder letter (Exhibit 99.1) and the Q2 letter were not read. All guidance figures (Q4 guide, 31.5% full-year margin, $12.0B FCF, $2.7B ads, 33.2% Q3 margin guide, 1.1x content ratio) come from news coverage and should be verified against the letter.",
+    "The July full-year 2026 operating margin guide was not found, so the 31.5% cannot be classified as a raise, hold or cut. The July FCF guide of about $12.5B also comes from a secondary source.",
+    "The size, direction and accounting line of the Q4 real estate transaction are not disclosed in any source found. The 'prefunding' of the November 2026 maturity by the July notes comes from one secondary source (techi), and the 10-Q gives no use of proceeds.",
+    "No quantification of how much Q3 expense timing moves into Q4 or 2027, and whether the roughly $160M headcount charge is all one-time severance.",
+    "The exact 2025 and 2026 ad revenue levels are not in the 10-Q or call. The Q4 implied ad growth rests on news-reported $2.7B and 'over $1.5B' for 2025.",
+    "No peer data for WBD or Paramount Skydance (the peer lookup failed; the PARA ticker resolves to an unrelated company, Banzai/Parabolic). Disney's 10-Q provides only segment-level Entertainment figures, with no Disney+/Hulu subscribers, ARPU or operating income.",
+    "Netflix no longer reports memberships, so price-increase effects are judged only from management's churn commentary and revenue. No numeric churn, ad-plan share, ARM gap or fill-rate data are available.",
+    "Terms and cost impact of the Sony, Universal, Disney, Globo and TF1 licensing deals are undisclosed.",
+    "Options-implied move and whisper EPS are not yet available (next report 78 days away). The status of the 2026 guild contracts (WGA, SAG-AFTRA, DGA) was not checked.",
+    "The $62.08 quote date is not stated; it is likely 10-30 or later. The 10-21 percentage moves differ across aggregators (Fool/TECHi -5.31% close versus Invezz -4.48% intraday)."
+  ],
+  "sources": {
+    "Q.003": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.006": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — Fair value hedges:",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.017": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — 3. Earnings per Share",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.022": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — 6. Acquisitions",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.024": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — 7. Debt",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.026": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — 7. Debt",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.027": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — Revolving Credit Facility",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.044": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — Stock Repurchases",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.058": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Overview",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.061": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Revenues",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.066": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Cost of Revenues",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.068": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Sales and Marketing",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.074": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Interest and Other Income (Expense)",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.087": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Quantitative Disclosures — Foreign Currency Risk",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.095": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.098": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 — X",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "K.079": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · Risk Factors — Labor disputes may have an adverse effect on the Company’s business.",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000034/nflx-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "K.097": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · MD&A",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000034/nflx-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "C.007": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Greg Peters, Co-CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NFLX&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.019": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Ted Sarandos, Co-CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NFLX&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.023": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Ted Sarandos, Co-CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NFLX&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.030": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Spence Neumann, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NFLX&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.031": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Spence Neumann, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NFLX&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.034": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Spence Neumann, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NFLX&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.053": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Greg Peters, Co-CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NFLX&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.054": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Greg Peters, Co-CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NFLX&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.057": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Greg Peters, Co-CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NFLX&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.061": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Greg Peters, Co-CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=NFLX&quarter=2026Q3",
+      "as_of": null
+    },
+    "F.01": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "F.09": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "F.10": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "F.12": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — nine months ended 2025-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "F.25": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Cash and equivalents — at 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "as_of": "2026-10-21"
+    },
+    "F.31": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — year ended 2025-12-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000034/nflx-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "F.41": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.59": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.61": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2025-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.67": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — year ended 2025-12-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.71": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.73": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — nine months ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.74": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — nine months ended 2025-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.75": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — year ended 2025-12-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.77": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-12-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.78": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.02": {
+      "kind": "market",
+      "citation": "Market data — Whisper EPS",
+      "url": null,
+      "as_of": null
+    },
+    "M.03": {
+      "kind": "market",
+      "citation": "Market data — Options-implied move",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "M.06": {
+      "kind": "market",
+      "citation": "Market data — Analyst rating actions",
+      "url": null,
+      "as_of": null
+    },
+    "M.07": {
+      "kind": "market",
+      "citation": "Market data — Consensus price target",
+      "url": null,
+      "as_of": null
+    },
+    "N.04": {
+      "kind": "news",
+      "citation": "stocktwits.com, 2026-10-23 — Stocktwits Wall Street Wrap: Analysts Turn Bullish On SpaceX, Tesla, But Netflix And Chipotle Face Fresh Downgrades Amid Growth Concerns",
+      "url": "https://stocktwits.com/news-articles/markets/equity/stocktwits-wall-street-wrap-analysts-turn-bullish-on-space-x-tesla-but-netflix-and-chipotle-face-fresh-downgrades-amid-growth-concerns/cZxyaiCRBx4",
+      "as_of": "2026-10-23"
+    },
+    "N.08": {
+      "kind": "news",
+      "citation": "tikr.com, 2026-10-31 — Netflix Slides to a 52-Week Low as Its Ad Business Runs “a Bit Behind” Its $3 Billion Target | TIKR.com",
+      "url": "https://www.tikr.com/blog/netflix-slides-to-a-52-week-low-as-its-ad-business-runs-a-bit-behind-its-3-billion-target",
+      "as_of": "2026-10-31"
+    },
+    "N.13": {
+      "kind": "news",
+      "citation": "techi.com, 2026-10-22 — Netflix Q3 2026: adjusted profit rose 15% as ad outlook fell",
+      "url": "https://www.techi.com/netflix-q3-2026-earnings-underlying-profit-ad-cut",
+      "as_of": "2026-10-22"
+    },
+    "N.14": {
+      "kind": "news",
+      "citation": "indmoney.com, 2026-10-21 — Netflix Q3 2026 Earnings Analysis: Why NFLX Stock Fell",
+      "url": "https://www.indmoney.com/blog/us-stocks/netflix-stock-q3-earnings-analysis-nflx",
+      "as_of": "2026-10-21"
+    },
+    "N.25": {
+      "kind": "news",
+      "citation": "tradingkey.com, 2026-10-22 — Netflix Inc Stock (NFLX) Moved Up by 3.38% on Oct 22: What Signal Does It Send?",
+      "url": "https://www.tradingkey.com/news/market-movers/262232840-market-movers-nflx-20261022",
+      "as_of": "2026-10-22"
+    },
+    "N.26": {
+      "kind": "news",
+      "citation": "globalbrandsmagazine.com, 2026-10-21 — Netflix Q3 2026: 34.6% Margins, 1,000 Jobs Cut, Ads Forecast Trimmed",
+      "url": "https://www.globalbrandsmagazine.com/netflix-brand-breakdown-2026",
+      "as_of": "2026-10-21"
+    },
+    "A.003": {
+      "kind": "article",
+      "citation": "Article (ppc.land)",
+      "url": "https://ppc.land/netflix-ad-revenue-forecast-drops-to-2-7b-as-partner-integrations-slip",
+      "as_of": "2026-10-21"
+    },
+    "A.004": {
+      "kind": "article",
+      "citation": "Article (ppc.land)",
+      "url": "https://ppc.land/netflix-ad-revenue-forecast-drops-to-2-7b-as-partner-integrations-slip",
+      "as_of": "2026-10-21"
+    },
+    "A.006": {
+      "kind": "article",
+      "citation": "Article (ppc.land)",
+      "url": "https://ppc.land/netflix-ad-revenue-forecast-drops-to-2-7b-as-partner-integrations-slip",
+      "as_of": "2026-10-21"
+    },
+    "A.007": {
+      "kind": "article",
+      "citation": "Article (ppc.land)",
+      "url": "https://ppc.land/netflix-ad-revenue-forecast-drops-to-2-7b-as-partner-integrations-slip",
+      "as_of": "2026-10-21"
+    },
+    "A.008": {
+      "kind": "article",
+      "citation": "Article (ppc.land)",
+      "url": "https://ppc.land/netflix-ad-revenue-forecast-drops-to-2-7b-as-partner-integrations-slip",
+      "as_of": "2026-10-21"
+    },
+    "A.009": {
+      "kind": "article",
+      "citation": "Article (ppc.land)",
+      "url": "https://ppc.land/netflix-ad-revenue-forecast-drops-to-2-7b-as-partner-integrations-slip",
+      "as_of": "2026-10-21"
+    },
+    "A.012": {
+      "kind": "article",
+      "citation": "Article (ppc.land)",
+      "url": "https://ppc.land/netflix-ad-revenue-forecast-drops-to-2-7b-as-partner-integrations-slip",
+      "as_of": "2026-10-21"
+    },
+    "A.014": {
+      "kind": "article",
+      "citation": "Article (ppc.land)",
+      "url": "https://ppc.land/netflix-ad-revenue-forecast-drops-to-2-7b-as-partner-integrations-slip",
+      "as_of": "2026-10-21"
+    },
+    "A.015": {
+      "kind": "article",
+      "citation": "Article (ppc.land)",
+      "url": "https://ppc.land/netflix-ad-revenue-forecast-drops-to-2-7b-as-partner-integrations-slip",
+      "as_of": "2026-10-21"
+    },
+    "A.016": {
+      "kind": "article",
+      "citation": "Article (ppc.land)",
+      "url": "https://ppc.land/netflix-ad-revenue-forecast-drops-to-2-7b-as-partner-integrations-slip",
+      "as_of": "2026-10-21"
+    },
+    "N.34": {
+      "kind": "news",
+      "citation": "heygotrade.com, 2026-10-22 — Netflix Stock News (Oct 22, 2026): NFLX Falls 5.3% to $65.04 | Gotrade",
+      "url": "https://www.heygotrade.com/en/news/netflix-nflx-stock-news-october-22-2026",
+      "as_of": "2026-10-22"
+    },
+    "A.026": {
+      "kind": "article",
+      "citation": "Article (finance.yahoo.com) — 9. [Investing](https://finance.yahoo.com/personal-finance/investing/)",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/nflx-stock-heads-26-month-125108103.html",
+      "as_of": "2026-10-25"
+    },
+    "A.028": {
+      "kind": "article",
+      "citation": "Article (finance.yahoo.com) — 9. [Investing](https://finance.yahoo.com/personal-finance/investing/)",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/nflx-stock-heads-26-month-125108103.html",
+      "as_of": "2026-10-25"
+    },
+    "A.029": {
+      "kind": "article",
+      "citation": "Article (finance.yahoo.com) — 9. [Investing](https://finance.yahoo.com/personal-finance/investing/)",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/nflx-stock-heads-26-month-125108103.html",
+      "as_of": "2026-10-25"
+    },
+    "A.030": {
+      "kind": "article",
+      "citation": "Article (finance.yahoo.com) — 9. [Investing](https://finance.yahoo.com/personal-finance/investing/)",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/nflx-stock-heads-26-month-125108103.html",
+      "as_of": "2026-10-25"
+    },
+    "A.039": {
+      "kind": "article",
+      "citation": "Article (techi.com)",
+      "url": "https://www.techi.com/netflix-q3-2026-earnings-underlying-profit-ad-cut",
+      "as_of": "2026-10-22"
+    },
+    "A.041": {
+      "kind": "article",
+      "citation": "Article (techi.com)",
+      "url": "https://www.techi.com/netflix-q3-2026-earnings-underlying-profit-ad-cut",
+      "as_of": "2026-10-22"
+    },
+    "A.042": {
+      "kind": "article",
+      "citation": "Article (techi.com)",
+      "url": "https://www.techi.com/netflix-q3-2026-earnings-underlying-profit-ad-cut",
+      "as_of": "2026-10-22"
+    },
+    "A.043": {
+      "kind": "article",
+      "citation": "Article (techi.com)",
+      "url": "https://www.techi.com/netflix-q3-2026-earnings-underlying-profit-ad-cut",
+      "as_of": "2026-10-22"
+    },
+    "A.044": {
+      "kind": "article",
+      "citation": "Article (techi.com)",
+      "url": "https://www.techi.com/netflix-q3-2026-earnings-underlying-profit-ad-cut",
+      "as_of": "2026-10-22"
+    },
+    "A.051": {
+      "kind": "article",
+      "citation": "Article (invezz.com)",
+      "url": "https://invezz.com/news/2026/10/21/netflix-stock-falls-as-analysts-question-growth-despite-earnings-beat",
+      "as_of": "2026-10-21"
+    },
+    "A.052": {
+      "kind": "article",
+      "citation": "Article (invezz.com)",
+      "url": "https://invezz.com/news/2026/10/21/netflix-stock-falls-as-analysts-question-growth-despite-earnings-beat",
+      "as_of": "2026-10-21"
+    },
+    "A.054": {
+      "kind": "article",
+      "citation": "Article (invezz.com)",
+      "url": "https://invezz.com/news/2026/10/21/netflix-stock-falls-as-analysts-question-growth-despite-earnings-beat",
+      "as_of": "2026-10-21"
+    },
+    "N.38": {
+      "kind": "news",
+      "citation": "aol.com, 2026-10-31 — Jim Cramer flags Netflix's 'biggest problem,' and it isn't price - AOL",
+      "url": "https://www.aol.com/articles/jim-cramer-flags-netflixs-biggest-113700000.html",
+      "as_of": "2026-10-31"
+    },
+    "A.058": {
+      "kind": "article",
+      "citation": "Article (247wallst.com)",
+      "url": "https://247wallst.com/investing/2026/10/26/netflix-price-prediction-where-the-stock-goes-after-a-year-of-doubts",
+      "as_of": "2026-10-26"
+    },
+    "N.40": {
+      "kind": "news",
+      "citation": "marketbeat.com, 2026-10-21 — Netflix (NASDAQ:NFLX) Announces Q4 2026 Earnings Guidance",
+      "url": "https://www.marketbeat.com/instant-alerts/guidance-netflix-nasdaq-nflx-announces-q4-2026-earnings-guidance-2026-10-21",
+      "as_of": "2026-10-21"
+    },
+    "N.41": {
+      "kind": "news",
+      "citation": "finance.yahoo.com, 2026-10-21 — Why Is Netflix Stock Falling Over 5% Despite Beating Third-Quarter Earnings Estimates?",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/why-netflix-stock-falling-over-140549094.html",
+      "as_of": "2026-10-21"
+    },
+    "N.42": {
+      "kind": "news",
+      "citation": "finance.yahoo.com, 2026-10-21 — Netflix stock sinks as Wall Street lowers price targets following Q4 revenue forecast miss",
+      "url": "https://finance.yahoo.com/markets/stocks/article/netflix-stock-sinks-after-announcing-q3-earnings-q4-revenue-forecast-falls-short-of-estimates-204545261.html",
+      "as_of": "2026-10-21"
+    },
+    "N.44": {
+      "kind": "news",
+      "citation": "finance.biggo.com, 2026-10-21 — Netflix CFO Sets 2027 Framework: Membership, Pricing and Ads to Drive Double-Digit Growth — BigGo Finance",
+      "url": "https://finance.biggo.com/news/1861e6c3-5647-433f-bcba-697a7cfc8c4b",
+      "as_of": "2026-10-21"
+    },
+    "N.48": {
+      "kind": "news",
+      "citation": "tradingkey.com, 2026-10-21 — Netflix Stock Forecast: Ad Cut and Soft Q4 Guide Push NFLX Toward $65.52 Support",
+      "url": "https://www.tradingkey.com/analysis/stocks/us-stocks/262228625-netflix-stock-forecast-q3-earnings-ad-cut-q4-guidance-65-support-october-21-2026-tradingkey",
+      "as_of": "2026-10-21"
+    },
+    "N.50": {
+      "kind": "news",
+      "citation": "tikr.com, 2026-10-24 — Netflix Is Down Nearly 30% in 2026. Time to Sell or Load Up? | TIKR.com",
+      "url": "https://www.tikr.com/blog/netflix-is-down-nearly-30-in-2026-time-to-sell-or-load-up",
+      "as_of": "2026-10-24"
+    },
+    "N.52": {
+      "kind": "news",
+      "citation": "fool.com, 2026-10-21 — Stock Market Today, Oct. 21: Netflix Cuts Ad Revenue Guidance, Stock Slides 5% | The Motley Fool",
+      "url": "https://www.fool.com/coverage/stock-market-today/2026/10/21/stock-market-today-oct-21-netflix-cuts-ad-revenue-guidance-stock-slides-5",
+      "as_of": "2026-10-21"
+    },
+    "N.55": {
+      "kind": "news",
+      "citation": "stocktwits.com, 2026-10-30 — Why Did NFLX, MBLY, APP Stocks Tumble To 52-Week Lows?",
+      "url": "https://stocktwits.com/news-articles/markets/equity/why-did-nflx-mbly-app-stocks-tumble-to-52-week-lows/cZUhhobR9RN",
+      "as_of": "2026-10-30"
+    },
+    "N.57": {
+      "kind": "news",
+      "citation": "fool.com, 2026-10-27 — 3 Magnificent Stocks Trading Near Their 52-Week Lows | The Motley Fool",
+      "url": "https://www.fool.com/investing/2026/10/27/3-magnificent-stocks-trading-near-their-52-week-lows",
+      "as_of": "2026-10-27"
+    }
+  },
+  "check_notes": [
+    "metrics_to_model[6].last_reported: rewritten to what its sources support (The passages give Q3 constant-currency growth of 11% but nothing on Q2 (12%) or Q1 (14%), and nothing attributes those figures to Needham.).",
+    "metrics_to_model[6].view: rewritten to what its sources support (Q4 at 11% F/X neutral and management's double-digit objective are supported, but nothing in the passages says Needham expects single-digit growth in 2027.).",
+    "since_filing[0]: rewritten to what its sources support (The cited passages do not give the 10-Q filing date of 10-21 or show that the numeric guidance is absent from the 10-Q and call transcript.).",
+    "since_filing[4]: rewritten to what its sources support (The $67.13 intraday figure on 10-26 and the -4.48% Invezz intraday figure do not appear in the passages.).",
+    "since_filing[5]: rewritten to what its sources support (The Morningstar $80 target and the Cramer remark are supported, but 24/7 Wall St.'s buy rating and $78.99 target are not in the passages, which say only that its model is constructive.).",
+    "key_debates[2].bull: rewritten to what its sources support (The 27.2% ex-drag margin, Morgan Stanley's view and the 1.4pt Q3 margin beat are supported, but the 2025 margin of 29.5% needed for the 'about 200bp above 2025' claim is not in the cited passages.).",
+    "scenarios[2]: rewritten to what its sources support (Nothing in the passages says Needham expects single-digit revenue growth in 2027, so the attribution is unsupported.).",
+    "questions_for_management[4]: rewritten to what its sources support (The CFO's wish to grow view hours faster is in the transcript, but nothing in the passages gives a Needham forecast of single-digit 2027 revenue growth.).",
+    "setup_summary[3]: tag 'reported' → 'estimate' (it cites only article, news).",
+    "setup_summary[4]: tag 'guided' → 'estimate' (it cites only article, news).",
+    "metrics_to_model[0].view: tag 'guided' → 'estimate' (it cites only article, fact).",
+    "metrics_to_model[1].view: tag 'guided' → 'estimate' (it cites only article, news).",
+    "guidance[0]: tag 'guided' → 'estimate' (it cites only article, news).",
+    "guidance[1]: tag 'guided' → 'estimate' (it cites only article, news).",
+    "guidance[2]: tag 'guided' → 'estimate' (it cites only article, market).",
+    "guidance[3]: tag 'guided' → 'estimate' (it cites only article).",
+    "guidance[4]: tag 'guided' → 'estimate' (it cites only article, news).",
+    "guidance[5]: tag 'guided' → 'estimate' (it cites only article, news).",
+    "guidance[7]: tag 'guided' → 'estimate' (it cites only article).",
+    "key_risks[0]: tag 'guided' → 'estimate' (it cites only article).",
+    "questions_for_management[2]: tag 'guided' → 'estimate' (it cites only article, news)."
+  ]
+}

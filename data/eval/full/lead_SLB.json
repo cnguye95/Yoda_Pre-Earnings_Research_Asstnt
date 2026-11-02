@@ -1,0 +1,1531 @@
+{
+  "ticker": "SLB",
+  "company_name": "SLB LIMITED/NV",
+  "report_generated_at": "2026-11-01T11:20:31+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-10-28",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-01-23",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm"
+    }
+  ],
+  "earnings_call": "Q3 FY2026 earnings call (date unknown)",
+  "current_report": "No 8-K or 6-K recent enough to read",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$0.75",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$10.01B",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2027-01-21 report. Paid lookup not made: next report is 81 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "implied move: no live implied move yet (EarningsWatcher has no confirmed report date)."
+    },
+    "historical_move": {
+      "value": "±4.1% average closing move over the last 8 reports (2025-01-17 to 2026-10-23)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/slb-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "analyst_actions": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "price_target": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "Q3 2026 revenue was $9.45B, up 5.8% year on year and 5% sequentially. GAAP diluted EPS was $0.49, against $0.50 a year earlier. The GAAP figure includes a $187M non-cash pension settlement charge and $55M of ChampionX merger and integration cost.",
+      "evidence_ids": [
+        "F.01",
+        "F.33",
+        "F.09",
+        "F.10",
+        "Q.012",
+        "C.011"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Management's headline Q3 EPS excluding charges and credits was $0.64. That is up $0.09 sequentially and down $0.05 year on year. Company-wide adjusted EBITDA margin was 21.9%, up 71bp sequentially. Pretax margins rose in all four divisions. MarketBeat records the $0.64 as a beat against a $0.62 consensus, and revenue of $9.45B against $9.27B.",
+      "evidence_ids": [
+        "C.011",
+        "C.012",
+        "C.003",
+        "N.30"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q4 guide: revenue of about $10B (+5% to +7% sequentially) and adjusted EBITDA margin up 100–150bp. It assumes Middle East revenue stays flat at about $1.9B, roughly 83% of Q4 2025. Core divisions are guided up low single digits, with Production Systems up high single digits and Well Construction and Reservoir Performance about flat. Digital is guided to its usual year-end uptick, led by exploration data.",
+      "evidence_ids": [
+        "C.009",
+        "C.010"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "Consensus for fiscal Q4 2026 is $10.01B revenue and $0.75 EPS, with the report expected 2027-01-21 after the close. Revenue consensus sits at the midpoint of the guided range, so a revenue beat needs the Middle East or year-end sales to surprise. The +36% EPS growth implied against Q4 2025 GAAP $0.55 is not like-for-like, because Q4 2025 carried $561M of pretax charges.",
+      "evidence_ids": [
+        "M.01",
+        "F.57",
+        "F.59",
+        "F.58",
+        "K.063"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Reconciling the guide to EPS (my estimate): Q4 ex-charges pretax of about $1.47–1.55B, a roughly 20% tax rate, about $50M of NCI and about 1,485–1,490M diluted shares give adjusted EPS of about $0.75–0.80. Consensus $0.75 therefore sits at the low end of the guide-implied range, i.e. it embeds a small haircut to the margin guide. The 23% Q3 effective rate was inflated by the non-deductible pension charge and should not recur.",
+      "evidence_ids": [
+        "C.009",
+        "C.011",
+        "Q.004",
+        "Q.012",
+        "Q.018",
+        "Q.024",
+        "Q.037",
+        "M.01"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "The Middle East is the swing factor. Nine-month Middle East revenue fell 16% (about $1.1B) on conflict-related operational disruption. Q3 Middle East revenue grew 13% sequentially to about $1.9B despite late-quarter disruptions. Management said the near-term recovery pace is uncertain and that resolution could unlock deferred activity.",
+      "evidence_ids": [
+        "Q.034",
+        "Q.031",
+        "C.011",
+        "C.004",
+        "C.010"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Cash and leverage: nine-month free cash flow (company definition) was $1,521M against $1,826M a year earlier. Q3 FCF was $828M. Net debt was $9.25B against $7.42B at year-end. Receivables rose to $9.7B and inventories to $5.5B. Management expects a 'meaningful step-up' in Q4 FCF, with the size dependent on collection timing in certain countries.",
+      "evidence_ids": [
+        "Q.039",
+        "Q.005",
+        "C.013",
+        "Q.006"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Strategic overlay: SLB signed (Aug 31) to buy Kelvion for about $3.4B cash plus about $0.7B assumed debt, with closing expected in 1H27. Management targets Data Center Solutions above a $1B run rate by end-2026 and above $2B in 2027. The CFO says that business is not accretive to SLB's margin.",
+      "evidence_ids": [
+        "Q.043",
+        "C.049",
+        "C.035"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "The average closing move over the last 8 reports is ±4.1%. No options-implied move is available yet, and no beat/miss record or sell-side revision trend could be sourced.",
+      "evidence_ids": [
+        "M.04",
+        "M.03",
+        "M.05"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Revenue",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 revenue was $9.45B (+5.8% year on year). Q4 2025 was about $9.74B.",
+        "evidence_ids": [
+          "F.01",
+          "F.33",
+          "F.56"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus revenue is $10.01B, +2.7% on Q4 2025.",
+        "evidence_ids": [
+          "M.01",
+          "F.57"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Guide is about $10B (+5–7% sequentially, about $9.92–10.11B). Consensus is the midpoint, so there is little room for a beat unless year-end sales or Middle East activity surprise. Downside risk is concentrated in the Middle East and in the timing of year-end product and digital exploration sales.",
+        "evidence_ids": [
+          "C.009",
+          "M.01"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "EPS excluding charges and credits",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 EPS excluding charges was $0.64 (GAAP $0.49).",
+        "evidence_ids": [
+          "C.011",
+          "F.09"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus EPS is $0.75. Its basis is not stated; it is inferred to be ex-charges because the Q3 $0.62 consensus was compared with the $0.64 adjusted figure.",
+        "evidence_ids": [
+          "M.01",
+          "N.30"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "My bridge from the guide gives about $0.75–0.80, midpoint about $0.78. $0.75 is achievable and sits at the low end. Sensitivities: a 21% tax rate costs about $0.01; an extra $30M of D&A (for example from exploration-data amortization on higher year-end sales) costs about $0.016. Q4 2025 adjusted EPS is not in the sources (my estimate is about $0.78–0.79), so consensus implies a year-on-year decline in adjusted terms.",
+        "evidence_ids": [
+          "C.009",
+          "C.011",
+          "Q.004",
+          "Q.018",
+          "Q.024",
+          "K.114",
+          "F.58"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Adjusted EBITDA margin",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 adjusted EBITDA margin was 21.9%, up 71bp sequentially.",
+        "evidence_ids": [
+          "C.011",
+          "C.012"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The guide of +100–150bp implies about 22.9–23.4%, or about $2.3B of EBITDA on about $10B. My derived Q4 2025 margin was about 23.9%, so the guide implies a year-on-year margin decline of roughly 50–100bp. That is consistent with the Middle East drag, pricing pressure and Data Center Solutions mix. No street margin consensus was found.",
+        "evidence_ids": [
+          "C.009",
+          "C.011",
+          "K.063",
+          "K.075"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Middle East revenue",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 Middle East revenue was about $1.9B, up 13% sequentially despite late-quarter disruptions. Q3 Middle East & Asia revenue was $2,807M against $3,000M a year earlier.",
+        "evidence_ids": [
+          "C.011",
+          "Q.031",
+          "Q.027"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The guide assumes flat at about $1.9B and no worst-case escalation. Peers diverge: BKR expects Middle East activity to fall sequentially in Q4 on logistics costs and supply-chain challenges, while HAL's Middle East & Asia revenue rose 8% sequentially in Q3. Model flat as the base case, with a downside skew if tensions persist.",
+        "evidence_ids": [
+          "C.009",
+          "C.032",
+          "A.002"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Production Systems revenue and margin",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 Production Systems revenue was $4.0B (+6% sequentially) at a 16% pretax margin. Q4 2025 was $4.078B.",
+        "evidence_ids": [
+          "Q.030",
+          "Q.033",
+          "K.063"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management guided Production Systems up high single digits sequentially in Q4. On Q3 revenue of $4,000M that implies roughly $4.3–4.4B (my arithmetic). Drivers cited are year-end product sales ('magnified' this cycle) and OneSubsea. ChampionX is running at a mid-20s EBITDA margin.",
+        "evidence_ids": [
+          "C.009",
+          "C.076",
+          "C.042",
+          "Q.024"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Digital revenue and margin",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 Digital revenue was $693M at a 28% pretax margin. Q4 2025 was $825M at a 34% margin.",
+        "evidence_ids": [
+          "Q.032",
+          "K.063",
+          "K.065"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management expects a significant uptick in year-end Digital Exploration, double-digit full-year Digital growth and a full-year Digital adjusted EBITDA margin above 35%. On nine-month revenue of $2,030M and FY2025 of $2,660M, double-digit growth implies Q4 revenue of at least about $896M (my arithmetic). Exploration data costs are charged to cost of services in proportion to expected sales, so a high-sales quarter also lifts the related amortization.",
+        "evidence_ids": [
+          "C.005",
+          "C.010",
+          "C.012",
+          "Q.033",
+          "K.066",
+          "K.110"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Free cash flow (company definition) and net debt",
+      "period": "Q4 2026 / year-end 2026",
+      "last_reported": {
+        "text": "Q3 FCF was $828M and nine-month FCF $1,521M. Net debt was $9,249M at 30 Sep. Q4 2025 FCF was about $2.29B (derived) and net debt fell $1.76B in that quarter with no buybacks.",
+        "evidence_ids": [
+          "C.013",
+          "Q.039",
+          "K.076"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "My estimate is Q4 FCF of $1.8–2.3B and full-year FCF of about $3.3–3.8B, against about $4.15B of planned buybacks and dividends. Year-end net debt would be about $8.1–8.6B, central case $8.3–8.4B, before any Kelvion funding. Receivables were about 95 days of Q3 revenue against about 82 days at year-end, so a collections release of $0.4–0.8B is plausible but its timing is uncertain.",
+        "evidence_ids": [
+          "C.013",
+          "C.014",
+          "Q.005",
+          "Q.039",
+          "K.076",
+          "K.063"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Data Center Solutions revenue run rate",
+      "period": "Q4 2026 / 2027",
+      "last_reported": {
+        "text": "Q3 Data Center Solutions revenue was up 23% (+$44M) sequentially, which implies about $235M (derived). Nine-month revenue rose $226M year on year.",
+        "evidence_ids": [
+          "Q.033",
+          "Q.036"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "A $1B run rate by end-2026 needs only about $250M in Q4, about +6% sequentially. The $2B 2027 target needs about $500M a quarter, about 2.1x Q3, before Kelvion. No standalone margin is disclosed. All Other pretax income fell $6M on ramp-up costs.",
+        "evidence_ids": [
+          "C.049",
+          "Q.033",
+          "Q.036",
+          "C.035"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Effective tax rate and charges",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 effective tax rate was 23% (20% in Q2), inflated by the non-deductible $187M pension charge. Merger and integration charges were $41M, $69M and $55M in Q1–Q3.",
+        "evidence_ids": [
+          "Q.037",
+          "Q.012"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Assume about 20–21% ex-charges (nine-month rate was 21%). Management said the ~$200M ChampionX synergy target will be met at about year-end. No Q4 merger-cost outlook was given, and Kelvion will add deal costs.",
+        "evidence_ids": [
+          "Q.037",
+          "C.042",
+          "Q.043"
+        ],
+        "evidence_type": "estimate"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Q4 revenue",
+      "guidance": "About $10B, +5% to +7% sequentially. Excluding the Middle East, global Q4 revenue is expected to grow high single digits year on year.",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Management guided Q4 revenue to about $10B, up 5–7% sequentially, with ex-Middle East revenue up high single digits year on year.",
+        "evidence_ids": [
+          "C.009"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Adjusted EBITDA margin",
+      "guidance": "Expand 100–150bp from Q3's 21.9%.",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Management expects adjusted EBITDA margin to expand 100–150bp sequentially from 21.9%.",
+        "evidence_ids": [
+          "C.009",
+          "C.011"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Middle East revenue assumption",
+      "guidance": "Flat sequentially at about $1.9B (about 83% of Q4 2025), assuming no worst-case escalation.",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "The Q4 outlook assumes Middle East revenue flat at about $1.9B, about 83% of Q4 2025, given 'heightened tensions'. Management said it assumes no worst-case escalation.",
+        "evidence_ids": [
+          "C.009",
+          "C.032"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Division revenue",
+      "guidance": "Core divisions up low single digits combined. Production Systems up high single digits. Well Construction and Reservoir Performance essentially flat. Digital up in line with Q4 seasonality, led by exploration data.",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Core divisions are guided up low single digits combined, led by high-single-digit Production Systems, with Well Construction and Reservoir Performance flat. Digital revenue is expected to rise with a significant uptick in year-end exploration sales.",
+        "evidence_ids": [
+          "C.009",
+          "C.010"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Digital full year",
+      "guidance": "Double-digit year-on-year revenue growth and adjusted EBITDA margin above 35%.",
+      "period": "FY2026",
+      "status": "new",
+      "claim": {
+        "text": "Digital is expected to finish 2026 with double-digit revenue growth and an adjusted EBITDA margin above 35%.",
+        "evidence_ids": [
+          "C.005",
+          "C.012"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Capital investments",
+      "guidance": "About $2.5B including capex, APS investments and exploration data. Q3 was $682M.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "Capital investments are still expected at about $2.5B for 2026, unchanged from the 10-K. Nine-month spend was $1.8B.",
+        "evidence_ids": [
+          "C.014",
+          "Q.040",
+          "K.078"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Buybacks and shareholder returns",
+      "guidance": "About $2.4B of buybacks for the year ($1.755B done in nine months), taking total returns slightly above $4B, in line with the earlier commitment of more than $4B.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "SLB is on track to repurchase about $2.4B in 2026, with total returns slightly above $4B, consistent with the 10-K commitment of more than $4B.",
+        "evidence_ids": [
+          "C.014",
+          "K.062",
+          "Q.039"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Q4 free cash flow",
+      "guidance": "A 'meaningful step-up' from Q3's $828M, with the magnitude dependent on collections timing in certain countries. No number was given.",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Management expects a meaningful sequential step-up in Q4 free cash flow on lower inventory following year-end product sales and higher customer collections. It did not quantify the step-up and said the size will largely depend on the timing of collections in certain countries.",
+        "evidence_ids": [
+          "C.013",
+          "C.014"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "2027 market outlook",
+      "guidance": "Global OFS activity up mid-single digits, assuming Middle East activity stays at H2 2026 levels and the conflict does not materially escalate. Core divisions are expected to visibly outperform. Digital is expected to grow double digits again. A Middle East resolution would be additional upside. 2027 margin detail is promised for January.",
+      "period": "FY2027",
+      "status": "new",
+      "claim": {
+        "text": "Management's first 2027 view is mid-single-digit global OFS growth with the Middle East flat at H2 2026 levels, core divisions outperforming and Digital growing double digits. The CFO said color on 2027 margins will come in January.",
+        "evidence_ids": [
+          "C.010",
+          "C.035",
+          "C.067"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Data Center Solutions and OneSubsea targets",
+      "guidance": "Data Center Solutions above a $1B run rate by end-2026 and above $2B in 2027. OneSubsea expected to surpass the $9B two-year bookings target. Venezuela revenue to more than double in 2026, with multifold growth possible in 2027.",
+      "period": "2026–2027",
+      "status": "maintained",
+      "claim": {
+        "text": "Management reiterated a Data Center Solutions run rate above $1B by end-2026 and above $2B in 2027, expects OneSubsea bookings to surpass the $9B target, and says Venezuela revenue is on track to more than double in 2026.",
+        "evidence_ids": [
+          "C.049",
+          "C.044",
+          "C.008"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Kelvion closing",
+      "guidance": "Closing expected in 1H27, subject to regulatory approvals. Filings are being made and an integration team is in place.",
+      "period": "1H 2027",
+      "status": "new",
+      "claim": {
+        "text": "The Kelvion acquisition remains on track to close in 1H27, with regulatory filings in progress.",
+        "evidence_ids": [
+          "Q.043",
+          "C.013"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "ChampionX synergies",
+      "guidance": "The initial target of about $200M, 18 months after closing, will be reached around year-end, and management does not intend to stop there.",
+      "period": "Year-end 2026",
+      "status": "maintained",
+      "claim": {
+        "text": "The ChampionX synergy target of about $200M will be met at roughly the 18-month mark, around year-end, with more to come.",
+        "evidence_ids": [
+          "C.042"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "Oil is high and headline-driven. Brent rose 1.3% and WTI 3% on Oct 28 on concerns over intensified Houthi attacks and other escalation. On Oct 29 they fell on hopes that peace talks may resume, with Brent about $114 and WTI about $101. No agreement or schedule was reported, and the full list of escalation drivers was not retrievable.",
+      "evidence_ids": [
+        "N.48",
+        "N.46",
+        "N.44",
+        "N.35"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Forecasters raised oil views. UBS lifted its year-end Brent forecast to $110 from $100 on Oct 28, citing persistent Middle East supply disruption. A Reuters survey of 32 analysts put the 2026 Brent average at $92.88, above $90 for the first time since May. High prices reflect supply disruption rather than a confirmed activity upcycle.",
+      "evidence_ids": [
+        "N.33",
+        "N.34"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Peer read-across on the Middle East is mixed. Reuters reports HAL's Middle East & Asia revenue rose 8% sequentially on Saudi Arabia and Kuwait. It reports that Baker Hughes expects Middle East activity to fall sequentially in Q4 on logistics costs and supply-chain challenges, and notes BKR has nearly 40% of revenue in the region. This is a risk to SLB's flat-Q4 assumption.",
+      "evidence_ids": [
+        "A.002",
+        "N.14"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "HAL's 10-Q (filed Oct 23) shows Q3 revenue of $5.7B. International led: Latin America +13% and Europe/Africa/CIS +23%. Middle East/Asia was flat year on year and North America fell 9% to $2.16B. HAL says North America customer activity is focused on maximizing returns within existing capital budgets. That points to soft North America activity at HAL, against the 7% sequential North America growth an analyst cited on SLB's call. SLB management ties its North America growth to ChampionX, drilling technology, digital and data centers.",
+      "evidence_ids": [
+        "P.010",
+        "P.006",
+        "P.005",
+        "C.048",
+        "C.049"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Baker Hughes (Oct 28 call) expects global upstream spending broadly flat in 2026 with an improving outlook into 2027. That is more cautious than SLB's mid-single-digit 2027 OFS market growth, though both point to improvement. TPH Research is cited by Reuters as expecting about 9% annual SLB revenue growth excluding Kelvion, with Middle East recovery beginning in H2 2027. The period for the 9% is not stated explicitly.",
+      "evidence_ids": [
+        "A.018",
+        "A.002",
+        "C.010"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Data-center thermal demand read-through: Trane announced the Cancoil acquisition on Oct 28 (price undisclosed, close expected by end-2026), and Vertiv's 10-Q shows Q3 net sales +61.2% on 'very robust' AI data-center demand. This supports the thermal-management thesis behind Kelvion but gives no valuation benchmark.",
+      "evidence_ids": [
+        "N.02",
+        "A.027",
+        "A.030",
+        "P.003",
+        "P.002"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Reuters (Oct 28) notes SLB flagged renewed Middle East disruptions in the final weeks of Q3. This is consistent with the 10-Q 'late-quarter disruptions' and the call's 'heightened tensions' over recent weeks. Nothing in the retrieved post-filing material contradicts the filing or call figures. No direct evidence on Q4-to-date Middle East activity was found.",
+      "evidence_ids": [
+        "A.001",
+        "Q.031",
+        "C.009"
+      ],
+      "evidence_type": "reported"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Will Middle East revenue hold at about $1.9B in Q4?",
+      "bull": {
+        "text": "Q3 Middle East revenue rose 13% despite late-quarter disruptions. Four Aramco integrated well construction contracts (450+ wells over an initial three years) mobilize in Q4. HAL's Middle East & Asia revenue rose 8% sequentially, and peace-talk hopes could unlock deferred activity.",
+        "evidence_ids": [
+          "Q.031",
+          "C.004",
+          "C.032",
+          "A.002"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Management described 'heightened tensions' and Houthi escalation is reported. Iraq lacked an uplift. BKR expects Middle East activity to fall sequentially in Q4, and HAL says recovery pace and breadth remain uncertain.",
+        "evidence_ids": [
+          "C.009",
+          "C.032",
+          "N.48",
+          "A.002",
+          "P.005"
+        ],
+        "evidence_type": "proxy"
+      },
+      "what_settles_it": "Q4 Middle East revenue against about $1.9B, commentary on Q4-to-date activity by country, and any peace-talk progress before the Jan 21 report."
+    },
+    {
+      "question": "Is the +100–150bp Q4 margin step, and a 2027 margin expansion, credible?",
+      "bull": {
+        "text": "Operating leverage is strong because SLB kept Middle East resources in place. ChampionX EBITDA margins are in the mid-20s and rising, and synergies are ahead of plan. Digital margin should exceed 35% for the full year, and inflation and pricing pressure are 'baked in'.",
+        "evidence_ids": [
+          "C.035",
+          "C.042",
+          "C.012"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Well Construction margin fell 346bp over nine months, partly on pricing headwinds in select markets. Data Center Solutions is growing quickly but is not accretive to margin, with ramp-up costs already hitting All Other. HAL cites persistent inflation in logistics, chemicals and cement.",
+        "evidence_ids": [
+          "Q.035",
+          "C.035",
+          "Q.033",
+          "P.009"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 division margins (Well Construction and Reservoir Performance versus Production Systems and Digital) and the January 2027 margin framework."
+    },
+    {
+      "question": "Does the 2027 'mid-single-digit market growth with core outperformance' view hold up?",
+      "bull": {
+        "text": "Management cites third-party deepwater FIDs expected up more than 30% in 2026, renewed exploration, Venezuela revenue more than doubling in 2026, and OneSubsea bookings above $9B. TPH is cited as expecting about 9% growth, and oil is near $114.",
+        "evidence_ids": [
+          "C.007",
+          "C.008",
+          "C.044",
+          "A.002",
+          "N.46"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "BKR sees upstream spending broadly flat in 2026 with only an 'improving' 2027. HAL's North America revenue fell 9%, and Venezuela is contested by HAL and BKR. A peace deal could pull crude back toward the $65–70 range raised on the call.",
+        "evidence_ids": [
+          "A.018",
+          "P.010",
+          "P.005",
+          "A.017",
+          "C.024"
+        ],
+        "evidence_type": "proxy"
+      },
+      "what_settles_it": "January 2027 guidance and customer budget commentary, OneSubsea order flow, and the oil price path."
+    },
+    {
+      "question": "Is the Kelvion and Data Center Solutions pivot value-creating given leverage?",
+      "bull": {
+        "text": "Data Center Solutions is on track to surpass a $1B run rate by year-end and to surpass a $2B run rate in 2027. Peer Vertiv reports very robust demand growth for AI data centers. Management says customers like the combination with Kelvion, and the deal raises SLB's share of wallet per gigawatt.",
+        "evidence_ids": [
+          "C.049",
+          "P.003",
+          "C.052",
+          "C.069"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Kelvion costs about $4.1B including assumed debt, on top of $9.25B of net debt. By my estimate pro forma leverage would be about 1.5–1.6x before Kelvion EBITDA, which is undisclosed. Data Center Solutions dilutes margin. Funding mix and regulatory timing are not disclosed.",
+        "evidence_ids": [
+          "Q.043",
+          "Q.039",
+          "C.035"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Kelvion financing and EBITDA disclosure, regulatory clearances, and Data Center Solutions margin and backlog disclosure."
+    },
+    {
+      "question": "Is free cash flow enough to fund the $4B+ capital return plus Kelvion?",
+      "bull": {
+        "text": "Q4 is seasonally the strongest cash quarter. Q4 2025 FCF was about $2.29B, and receivables at about 95 days of revenue leave room for a collections release.",
+        "evidence_ids": [
+          "K.076",
+          "Q.039",
+          "C.013",
+          "Q.005"
+        ],
+        "evidence_type": "estimate"
+      },
+      "bear": {
+        "text": "Nine-month FCF fell to $1.52B, working capital absorbed $1.5B, and net debt is up $1.8B year to date. Full-year FCF of about $3.3–3.8B (my estimate) is below the roughly $4.15B of buybacks plus dividends, before the $3.4B Kelvion cash outlay.",
+        "evidence_ids": [
+          "Q.039",
+          "Q.038",
+          "C.014",
+          "Q.043"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Q4 FCF and year-end net debt, and any change in 2027 buyback pacing."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "base",
+      "description": {
+        "text": "Revenue lands near the $10B guide ($9.9–10.1B, i.e. +5–7% on Q3's $9.45B) with the Middle East about flat at $1.9B. Production Systems rises high single digits on year-end product sales and Digital delivers a seasonal exploration uptick. Adjusted EBITDA margin reaches about 22.9–23.4% (21.9% plus the guided 100–150bp). Adjusted EPS is about $0.75–0.80, in line to slightly above the $0.75 consensus. Free cash flow steps up meaningfully from Q3's $828M, as management indicated. January 2027 guidance repeats mid-single-digit market growth.",
+        "evidence_ids": [
+          "C.009",
+          "C.010",
+          "C.011",
+          "C.012",
+          "C.013",
+          "C.014",
+          "M.01",
+          "F.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Middle East revenue about $1.9B",
+        "Production Systems about $4.3–4.4B",
+        "Digital Q4 revenue near $900M or above",
+        "Q4 FCF above $1.8B"
+      ]
+    },
+    {
+      "name": "bull",
+      "description": {
+        "text": "Peace talks revive and Middle East activity rebounds above $1.9B. Year-end exploration data and product sales are strong, so revenue is above the top of the roughly $9.92–10.11B guided range and EBITDA margin is at or above 23.4% (the top of the guided 100–150bp expansion on 21.9%). Adjusted EPS is at or above $0.80. Free cash flow steps up well beyond Q3's $828M and net debt falls from the $9.25B at Q3. Management says a Middle East resolution would be a catalyst for additional 2027 growth on top of its mid-single-digit market outlook.",
+        "evidence_ids": [
+          "C.009",
+          "C.010",
+          "C.078",
+          "C.011",
+          "C.013",
+          "Q.039"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Credible resumption of regional peace talks",
+        "Middle East revenue above $1.9B",
+        "Large year-end digital exploration sales",
+        "Collections release of $0.8B or more"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Escalation (Houthi attacks, Hormuz disruption) or logistics constraints push Middle East revenue below $1.9B, as BKR expects for its own Q4. Year-end sales slip into 2027, Data Center Solutions ramp costs and amortization weigh on margins, and Q4 revenue falls below the $9.92B low end. EPS misses the $0.75 consensus, FCF disappoints on collections timing, and net debt stays near $8.6–8.9B with Kelvion looming. 2027 margin commentary is cautious.",
+        "evidence_ids": [
+          "A.002",
+          "C.009",
+          "C.013",
+          "Q.035"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Escalation affecting UAE, Kuwait or Saudi operations",
+        "Delayed year-end product or digital sales",
+        "Collections slipping in key countries",
+        "Well Construction pricing pressure persisting"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "Middle East escalation or prolonged disruption could push activity below the flat-$1.9B guide assumption. Nine-month revenue in the region fell 16%, late-quarter disruptions occurred in Q3, and the guide explicitly excludes worst-case escalation.",
+        "evidence_ids": [
+          "Q.034",
+          "Q.031",
+          "C.009",
+          "C.032"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Year-end timing risk. The Q4 step-up depends on year-end product sales and digital exploration licensing, and on collections timing in certain countries for free cash flow. Management did not quantify either.",
+        "evidence_ids": [
+          "C.009",
+          "C.010",
+          "C.013"
+        ],
+        "evidence_type": "guided"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Margin dilution and pricing. Data Center Solutions is not accretive to margin and carries ramp-up costs. Well Construction faced pricing headwinds in select markets. HAL cites persistent inflation in logistics, chemicals and cement.",
+        "evidence_ids": [
+          "C.035",
+          "Q.033",
+          "Q.035",
+          "P.009"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "An oil-price reversal on a Middle East settlement could weaken the longer-cycle investment narrative. Brent is about $114, and an analyst on the call raised the case of crude moderating to $65–70, as in June.",
+        "evidence_ids": [
+          "N.46",
+          "C.024",
+          "C.025"
+        ],
+        "evidence_type": "estimate"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Earnings-quality and basis risk. GAAP EPS ($0.49 in Q3) differs materially from the ex-charges headline ($0.64). The basis of the $0.75 consensus is unconfirmed, and charges (pension, merger and integration, workforce) have recurred in every period shown.",
+        "evidence_ids": [
+          "C.011",
+          "Q.012",
+          "K.114",
+          "M.01"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "What is Middle East activity so far in Q4 by country (UAE, Kuwait, Saudi Arabia, Qatar, Iraq), and what would a Houthi- or Hormuz-related escalation do to the $1.9B assumption? When do the Aramco integrated contracts reach full capacity?",
+      "why": {
+        "text": "The Q4 guide assumes flat Middle East revenue at about $1.9B, BKR guides the region down sequentially, and the SLB CEO said late-quarter activity adjustments were made.",
+        "evidence_ids": [
+          "C.009",
+          "C.032",
+          "A.002"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "Bridge the Q4 adjusted EBITDA margin step of +100–150bp. How much comes from Digital Exploration, Middle East operating leverage and Production Systems, and how much does Data Center Solutions and higher exploration-data amortization offset? What tax rate, NCI and charges should we model?",
+      "why": {
+        "text": "The guide implies about $2.3B of EBITDA, roughly flat on Q4 2025's derived level, and consensus EPS of $0.75 sits at the low end of the guide-implied range.",
+        "evidence_ids": [
+          "C.009",
+          "C.011",
+          "K.075",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "question": "What gives you confidence that Well Construction and Reservoir Performance margins recover in 2027? Is the pricing pressure in select markets stabilizing, and where?",
+      "why": {
+        "text": "Well Construction margin contracted 346bp over nine months on Middle East disruption plus pricing headwinds, and the CFO hopes pricing pressure abates.",
+        "evidence_ids": [
+          "Q.035",
+          "C.035"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How will Kelvion be financed (cash, debt, slower buybacks)? What are Kelvion's EBITDA and data-center revenue mix, which regulatory approvals are required, and does 2027 repurchase pacing change?",
+      "why": {
+        "text": "Kelvion adds about $4.1B of cash plus assumed debt against $9.25B of net debt. Remaining buyback authorization is about $2.37B before Q4 repurchases.",
+        "evidence_ids": [
+          "Q.043",
+          "Q.039",
+          "Q.055"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is the expected size of the Q4 free cash flow step-up, which countries drive collection timing, and why are receivables at about 95 days of revenue against about 82 at year-end?",
+      "why": {
+        "text": "Receivables rose to $9.7B, nine-month working capital absorbed $1.5B, and Q4 FCF must help cover about $4B of shareholder returns.",
+        "evidence_ids": [
+          "Q.005",
+          "Q.038",
+          "C.013",
+          "C.014"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What are Data Center Solutions' standalone margins and backlog, and what does the $2B 2027 run rate need in customer count and capacity? How large is Venezuela in 2027, and how do you hold share against HAL and BKR there?",
+      "why": {
+        "text": "The $2B 2027 run-rate target is roughly 2.1x Q3's implied Data Center Solutions run rate of about $0.94B (my arithmetic: Q3 revenue of about $235M, back-solved from the +$44M / +23% sequential increase). Management also says the business is not accretive to SLB's overall margin. HAL has re-established operations in Venezuela and BKR has signed two strategic agreements there.",
+        "evidence_ids": [
+          "Q.033",
+          "C.049",
+          "C.035",
+          "P.005",
+          "A.017"
+        ],
+        "evidence_type": "estimate"
+      }
+    }
+  ],
+  "data_gaps": [
+    "No sell-side revision trend, beat/miss record, price-target data or options-implied move was available (FMP request refused; no live implied move).",
+    "The basis of the $0.75 consensus EPS (ex-charges versus GAAP) is not stated. It is inferred as ex-charges. No consensus for Q4 adjusted EBITDA margin was found.",
+    "Q4 2025 company-reported adjusted EPS is not in the sources. The ~$0.78–0.79 figure is my estimate from 10-K charges.",
+    "Q4 net interest, NCI (~$50M), tax rate (~20%), D&A and exploration-data amortization are my assumptions. Management guided only revenue, EBITDA margin and capital investment.",
+    "Adjusted EBITDA is not reconciled in the filings. My derivation matches the 21.9% Q3 margin but is not company-reported. The Q4 2025 EBITDA (~$2.33B) is derived.",
+    "The XBRL-derived nine-month free cash flow of $2.07B (operating cash flow less capex) uses a narrower definition than the company's $1,521M, which also deducts APS investments and exploration data costs. This report uses the company definition.",
+    "Full text of the Oct 29 Reuters piece was not read. The locations and drivers of escalation beyond the Houthis, and the parties to any peace talks, are unknown. No evidence on Q4-to-date Middle East activity after Oct 28.",
+    "Kelvion EBITDA, margin, headcount, backlog and funding mix are undisclosed. The reported 2026 revenue of $2.3–2.4B (about half from data centers) and the Apollo/Triton sellers come from an undated social-media snippet and are unverified. Analyst and investor reaction to the deal was not found.",
+    "The TPH note itself was not read. The 'about 9% annual growth' comes from Reuters and its period is not stated explicitly. The Seeking Alpha '$8.2B EBITDA' scenario is a single contributor's unsourced figure with unknown time frame.",
+    "Receivables at 9/30/25 are not in the sources, so there is no year-on-year days-sales-outstanding comparison.",
+    "The Q3 results date is unclear. MarketBeat says Oct 23, the press-release news item is dated Oct 29, the 10-Q was filed Oct 28, and the call transcript is undated.",
+    "No independent 2027 E&P capex survey was found. BKR's call Q&A and OFSE-specific 2027 commentary were not read (transcript truncated).",
+    "DCS standalone revenue for Q4 2025 and Q1 2026 is undisclosed, so nine-month 2026 DCS revenue cannot be derived.",
+    "Market data: signals figures are N/A because FMP refused the request (FMP refused https://financialmodelingprep.com/stable/grades (HTTP 402): Premium Query Parameter: 'Special Endpoint : This value set for 'symbol' is not available under your current subscription please visit our subscription page to upgrade your plan at https://financialmo Check FMP_API_KEY in .env and the FMP plan.).",
+    "A claim was removed because its sources don't support it: 'Kelvion execution, regulatory and leverage risk. The $3.4B cash plus $0.7B assumed-debt deal needs regulatory approvals and is exposed to integration risk. Net debt is already $9.25B, against $3.6B of cash and short-term investments and $5.0B of undrawn committed facilities. The 10-Q forward-looking statements include Kelvion-specific language on terms, timing, integration and regulatory approvals. The January 10-K forward-looking statements contain no Kelvion language.' (The 10-K forward-looking passage is truncated, so it cannot show that the January 10-K contains no Kelvion language; the other facts (deal terms, approvals, integration risk, $9.25B net debt, $3.6B cash, $5.0B facilities) are supported.)."
+  ],
+  "sources": {
+    "Q.004": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.005": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.006": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.012": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — 1.   Basis of Presentation",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.018": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — 5.   Inventories",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.024": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — 11.   Contingencies",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.027": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — 11.   Contingencies",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.030": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.031": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.032": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Digital",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.033": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Well Construction",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.034": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — All Other",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.035": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Reservoir Performance",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.036": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — All Other",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.037": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Other",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.038": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Charges and Credits",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.039": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Charges and Credits",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.040": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Charges and Credits",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.043": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Charges and Credits",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.055": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "K.062": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · MD&A — 2025 Executive Overview",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "K.063": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · MD&A — 2025 Executive Overview",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "K.065": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · MD&A — Digital",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "K.066": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · MD&A — Production Systems",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "K.075": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · MD&A — Charges and Credits",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "K.076": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · MD&A — Charges and Credits",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "K.078": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · MD&A — Charges and Credits",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "K.110": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · Financial Statements — Exploration Data",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "K.114": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · Financial Statements — Concentration of Credit Risk",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "C.003": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.004": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.005": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.007": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.008": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.009": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.010": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.011": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Stephane Biguet, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.012": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Stephane Biguet, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.013": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Stephane Biguet, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.014": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Stephane Biguet, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.024": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Scott Gruber, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.025": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.032": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.035": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Stephane Biguet, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.042": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Stephane Biguet, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.044": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.048": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Sebastian Erskine, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.049": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.052": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.067": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.069": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.076": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.078": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "F.01": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "F.09": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "F.10": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "F.33": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.56": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-12-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.57": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "F.58": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-12-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.59": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.03": {
+      "kind": "market",
+      "citation": "Market data — Options-implied move",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "M.05": {
+      "kind": "market",
+      "citation": "Market data — Expectation signals",
+      "url": null,
+      "as_of": null
+    },
+    "N.02": {
+      "kind": "news",
+      "citation": "fleetowner.com, 2026-10-28 — Trane Technologies to acquire Cancoil to strengthen thermal management capabilities - FleetOwner",
+      "url": "https://www.fleetowner.com/refrigerated-transporter/cold-storage-logistics/news/55414941/trane-technologies-to-acquire-cancoil-to-expand-heat-transfer-manufacturing-capacity",
+      "as_of": "2026-10-28"
+    },
+    "N.14": {
+      "kind": "news",
+      "citation": "tradingview.com, 2026-10-28 — Baker Hughes stumbles as Q3 earnings fall short of high expectations — TradingView News",
+      "url": "https://www.tradingview.com/news/seekingalpha:207f1611f094b:0-baker-hughes-stumbles-as-q3-earnings-fall-short-of-high-expectations",
+      "as_of": "2026-10-28"
+    },
+    "A.001": {
+      "kind": "article",
+      "citation": "Article (boereport.com)",
+      "url": "https://boereport.com/2026/10/28/oilfield-services-firms-lean-on-middle-east-rebound-but-risks-persist",
+      "as_of": "2026-10-28"
+    },
+    "A.002": {
+      "kind": "article",
+      "citation": "Article (boereport.com)",
+      "url": "https://boereport.com/2026/10/28/oilfield-services-firms-lean-on-middle-east-rebound-but-risks-persist",
+      "as_of": "2026-10-28"
+    },
+    "N.30": {
+      "kind": "news",
+      "citation": "marketbeat.com, 2026-10-30 — SLB (NYSE:SLB) Insider Sells 20,986 Shares of Stock",
+      "url": "https://www.marketbeat.com/instant-alerts/insider-slb-nyse-slb-insider-sells-20986-shares-of-stock-2026-10-30",
+      "as_of": "2026-10-30"
+    },
+    "N.33": {
+      "kind": "news",
+      "citation": "oilandgas360.com, 2026-10-28 — UBS raises Brent forecast to $110 as Middle East supply risks persist - Oil & Gas 360",
+      "url": "https://www.oilandgas360.com/ubs-raises-brent-forecast-to-110-as-middle-east-supply-risks-persist/",
+      "as_of": "2026-10-28"
+    },
+    "N.34": {
+      "kind": "news",
+      "citation": "reuters.com, 2026-10-30 — Brent 2026 view tops $90 for first time since May as MidEast stability remains elusive - Reuters",
+      "url": "https://www.reuters.com/business/energy/brent-2026-view-tops-90-first-time-since-may-mideast-stability-remains-elusive-2026-10-30/",
+      "as_of": "2026-10-30"
+    },
+    "N.35": {
+      "kind": "news",
+      "citation": "globalbankingandfinance.com, 2026-10-29 — Oil Prices Fall Amid Hopes for Peace and Middle East Conflict Fears - Global Banking & Finance Review",
+      "url": "https://www.globalbankingandfinance.com/us-oil-prices-fall-investors-gauge-risks-mideast-supply/",
+      "as_of": "2026-10-29"
+    },
+    "P.002": {
+      "kind": "peer",
+      "citation": "PEER VRT 10-Q filed 2026-10-28 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "P.003": {
+      "kind": "peer",
+      "citation": "PEER VRT 10-Q filed 2026-10-28 · MD&A — Outlook and Trends",
+      "url": null,
+      "as_of": null
+    },
+    "P.005": {
+      "kind": "peer",
+      "citation": "PEER HAL 10-Q filed 2026-10-23 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "P.006": {
+      "kind": "peer",
+      "citation": "PEER HAL 10-Q filed 2026-10-23 · MD&A — Latin America",
+      "url": null,
+      "as_of": null
+    },
+    "P.009": {
+      "kind": "peer",
+      "citation": "PEER HAL 10-Q filed 2026-10-23 · MD&A — Financial results",
+      "url": null,
+      "as_of": null
+    },
+    "A.017": {
+      "kind": "article",
+      "citation": "Article (theglobeandmail.com)",
+      "url": "https://www.theglobeandmail.com/investing/markets/markets-news/motley/8507545/baker-hughes-bkr-q3-2026-earnings-call-transcript",
+      "as_of": "2026-10-29"
+    },
+    "A.018": {
+      "kind": "article",
+      "citation": "Article (theglobeandmail.com)",
+      "url": "https://www.theglobeandmail.com/investing/markets/markets-news/motley/8507545/baker-hughes-bkr-q3-2026-earnings-call-transcript",
+      "as_of": "2026-10-29"
+    },
+    "N.44": {
+      "kind": "news",
+      "citation": "theglobeandmail.com, 2026-10-29 — Oil prices fall as peace hopes offset fears of growing Middle East conflict - The Globe and Mail",
+      "url": "https://www.theglobeandmail.com/investing/article-oil-prices-fall-as-peace-hopes-offset-fears-of-growing-middle-east",
+      "as_of": "2026-10-29"
+    },
+    "N.46": {
+      "kind": "news",
+      "citation": "reuters.com, 2026-10-29 — Oil prices fall as peace hopes offset fears of growing Middle East conflict | Reuters",
+      "url": "https://www.reuters.com/business/energy/us-oil-prices-fall-investors-gauge-risks-mideast-supply-2026-10-29",
+      "as_of": "2026-10-29"
+    },
+    "N.48": {
+      "kind": "news",
+      "citation": "cnbc.com, 2026-10-29 — Oil prices fall as peace hopes offset fears of growing Middle East conflict",
+      "url": "https://www.cnbc.com/2026/10/29/oil-prices-fall-as-peace-hopes-offset-fears-of-growing-middle-east-conflict.html",
+      "as_of": "2026-10-29"
+    },
+    "P.010": {
+      "kind": "peer",
+      "citation": "PEER HAL 10-Q filed 2026-10-23 · MD&A — Completion and Production",
+      "url": null,
+      "as_of": null
+    },
+    "A.027": {
+      "kind": "article",
+      "citation": "Article (fleetowner.com)",
+      "url": "https://www.fleetowner.com/refrigerated-transporter/cold-storage-logistics/news/55414941/trane-technologies-to-acquire-cancoil-to-expand-heat-transfer-manufacturing-capacity",
+      "as_of": "2026-10-28"
+    },
+    "A.030": {
+      "kind": "article",
+      "citation": "Article (fleetowner.com)",
+      "url": "https://www.fleetowner.com/refrigerated-transporter/cold-storage-logistics/news/55414941/trane-technologies-to-acquire-cancoil-to-expand-heat-transfer-manufacturing-capacity",
+      "as_of": "2026-10-28"
+    }
+  },
+  "check_notes": [
+    "setup_summary[1]: rewritten to what its sources support (The cited CFO passage cuts off before the 71bp sequential EBITDA margin increase, so that figure is not in the cited passages; the other figures are supported.).",
+    "metrics_to_model[2].last_reported: rewritten to what its sources support (The cited CFO passage is cut off before the 71bp sequential increase, so only the 21.9% margin is shown.).",
+    "metrics_to_model[4].view: rewritten to what its sources support (The Q3 Production Systems revenue base needed for $4.3-4.4B and Venezuela as a Q4 driver are not in the cited passages.).",
+    "metrics_to_model[5].view: rewritten to what its sources support (The exact $2,030M nine-month and $2,660M FY2025 Digital revenue figures behind the $896M arithmetic are not in the cited passages, which give only rounded $2.0B and $2.7B.).",
+    "guidance[7]: rewritten to what its sources support (The cited passage ends at lower inventory and does not mention higher collections.).",
+    "since_filing[3]: rewritten to what its sources support (The SLB 10-Q was filed Oct 28, five days after HAL's Oct 23 filing, not three; the cited passages do not give an SLB filing date.).",
+    "key_debates[3].bull: rewritten to what its sources support (The Vertiv +61% figure does not appear in the cited passages.).",
+    "scenarios[0]: rewritten to what its sources support (The cited passages contain no free cash flow or net debt data, so the $1.8-2.3B FCF and $8.3-8.6B year-end net debt have no support.).",
+    "scenarios[1]: rewritten to what its sources support (The Aramco mobilization, the Q4 2025 FCF level of $2.3B and the $8.1B net debt are not in the cited passages, and management is not shown framing 2027 as above mid-single-digit.).",
+    "key_risks[3]: rewritten to what its sources support (The passages show Kelvion deal terms, regulatory approvals and Kelvion-specific forward-looking risk language, but nothing says those risks are new this quarter.).",
+    "questions_for_management[5]: rewritten to what its sources support (Q3's implied Data Center Solutions run rate needed for the 2.1x multiple is not in the cited passages.).",
+    "key_risks[3]: its whole key_risks[3] item was removed — its sources don't support it (The 10-K forward-looking passage is truncated, so it cannot show that the January 10-K contains no Kelvion language; the other facts (deal terms, approvals, integration risk, $9.25B net debt, $3.6B cash, $5.0B facilities) are supported.)."
+  ]
+}

@@ -1,0 +1,1469 @@
+{
+  "ticker": "AAPL",
+  "company_name": "Apple Inc.",
+  "report_generated_at": "2026-11-01T12:26:57+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-07-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2025-10-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm"
+    }
+  ],
+  "earnings_call": "Q3 FY2026 earnings call (date unknown)",
+  "current_report": "8-K/A filed 2026-09-01: Item 5.02 director or officer change",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$2.02",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$115.50B",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": "$2.07",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "https://www.earningswhispers.com/article/AAPL/21359",
+      "as_of_date": "2026-10-26",
+      "missing_reason": null
+    },
+    "implied_move": {
+      "value": "±4.2%",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/aapl-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "historical_move": {
+      "value": "±2.5% average closing move over the last 8 reports (2024-10-31 to 2026-07-30)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/aapl-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": "3 beats, 1 misses in the last 4 quarters, average surprise +1.7%",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "Finnhub earnings surprises",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "analyst_actions": {
+      "value": "Last 30 days, newest first: Loop Capital downgraded to Hold from Buy (2026-10-20); MoffettNathanson maintained Neutral (2026-10-20); JP Morgan maintained Overweight (2026-10-12)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP grades",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "price_target": {
+      "value": "$340.88, -1.1% vs current $344.63",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP price target consensus",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "Apple reports fiscal Q4 2026 (September quarter) on 2026-11-02 after the close. Consensus is EPS $2.02 and revenue $115.50B. The whisper EPS is $2.07.",
+      "evidence_ids": [
+        "M.01",
+        "M.02"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "June-quarter (fiscal Q3) revenue was $109.42B, up 16.4% y/y. Diluted EPS was $2.02, up 28.7%. Operating margin was 32.6% vs 30.0% a year earlier.",
+      "evidence_ids": [
+        "F.01",
+        "F.37",
+        "F.09",
+        "F.41",
+        "F.53",
+        "F.55"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q3 was flattered by tariff refunds booked in products cost of sales. They added about 2 points to the 50.1% gross margin and $0.11 to EPS. Ex-refund gross margin was about 48.1%.",
+      "evidence_ids": [
+        "Q.033",
+        "Q.028",
+        "C.012",
+        "C.013",
+        "C.073"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Management guided September-quarter revenue growth of 9-11% y/y. On the derived $102.47B year-ago base that is roughly $111.7B-$113.7B.",
+      "evidence_ids": [
+        "C.017",
+        "F.69"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "Consensus revenue of $115.50B (+12.7% y/y) sits about $1.8B-$3.8B above the guided range. This is the clearest gap between the Street and management going into the print.",
+      "evidence_ids": [
+        "M.01",
+        "F.70",
+        "C.017",
+        "F.69"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Own calculation: applying guided gross margin (47-48%), opex ($19.1-19.4B), OI&E (~$350M) and tax rate (~16.5%) to the revenue range, with about 14.6B diluted shares, gives EPS of roughly $1.91-$2.05. Consensus $2.02 sits near the top of that range and the $2.07 whisper is above it. The share count assumption is mine; shares outstanding were 14.594B in July and Q3 diluted shares were 14.71B.",
+      "evidence_ids": [
+        "C.017",
+        "F.69",
+        "Q.003",
+        "Q.004",
+        "M.01",
+        "M.02"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Options imply a ±4.2% move, well above the ±2.5% average closing move over the last 8 reports.",
+      "evidence_ids": [
+        "M.03",
+        "M.04"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "This is the first earnings report with John Ternus as CEO (effective Sept 1, 2026). Tim Cook's last call was the July call and he moves to Executive Chair.",
+      "evidence_ids": [
+        "E.002",
+        "E.003",
+        "C.019"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Sentiment is stretched. Apple's market cap was $5.03T on Oct 30 and the stock is up 27% YTD. The consensus price target of $340.88 is 1.1% below the $344.63 price, and Loop Capital cut to Hold on Oct 20.",
+      "evidence_ids": [
+        "N.06",
+        "N.04",
+        "M.07",
+        "M.06"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Total net sales",
+      "period": "Fiscal Q4 2026",
+      "last_reported": {
+        "text": "Q3 net sales were $109.42B, up 16.4% y/y.",
+        "evidence_ids": [
+          "F.01",
+          "F.37"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus revenue is $115.50B, implying +12.7% y/y against $102.47B.",
+        "evidence_ids": [
+          "M.01",
+          "F.70"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Guidance of 9-11% implies $111.7B-$113.7B, so consensus needs a beat of the guide's top end. Management cites a sequential FX headwind of about 2.5 points and significantly larger supply constraints across iPhone, Mac and iPad. Risk to expectations is skewed to revenue landing below consensus unless Apple beats its own range.",
+        "evidence_ids": [
+          "C.017",
+          "F.69",
+          "F.70",
+          "M.01"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Diluted EPS",
+      "period": "Fiscal Q4 2026",
+      "last_reported": {
+        "text": "Q3 diluted EPS was $2.02 (+28.7% y/y), including $0.11 from tariff refunds.",
+        "evidence_ids": [
+          "F.09",
+          "F.41",
+          "C.013"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus EPS is $2.02, +9.9% vs $1.84 a year ago. Whisper is $2.07.",
+        "evidence_ids": [
+          "M.01",
+          "M.02",
+          "F.72",
+          "F.71"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "The guidance-implied range is about $1.91-$2.05 on my calculation, with about 14.6B shares. A print at $2.02 needs the upper half of guidance on revenue and gross margin. The beat record (3 of the last 4, average surprise +1.7%) supports modest upside, but the whisper looks demanding.",
+        "evidence_ids": [
+          "C.017",
+          "F.69",
+          "M.01",
+          "M.02",
+          "M.05"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Total gross margin %",
+      "period": "Fiscal Q4 2026",
+      "last_reported": {
+        "text": "Q3 gross margin was 50.1% (Products 40.1%, Services 75.6%). About 2 points came from tariff refunds, so the ex-refund figure was about 48.1%.",
+        "evidence_ids": [
+          "Q.033",
+          "C.012",
+          "C.073"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guide is 47-48%, including about 1 point of tariff refunds. The ex-refund midpoint of 46.5% is about 160bp below Q3 ex-refund, which management attributes to higher memory costs. Prior-year Q4 gross margin was about 47.2% (derived: FY25 gross margin less nine months, over derived Q4 revenue), so the reported guide is flat y/y only because of the refund benefit.",
+        "evidence_ids": [
+          "C.017",
+          "C.073",
+          "K.116",
+          "Q.004"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "iPhone net sales",
+      "period": "Fiscal Q4 2026",
+      "last_reported": {
+        "text": "Q3 iPhone sales were $54.25B, up 22% y/y.",
+        "evidence_ids": [
+          "Q.011",
+          "Q.031"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guide is mid-teens y/y growth, which on a derived prior-year Q4 base of about $49.0B is about $56.4B at 15%. That is a deceleration from 22% because of FX and supply constraints, not demand. Management says demand remains high.",
+        "evidence_ids": [
+          "C.017",
+          "C.038",
+          "K.101",
+          "Q.011"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Services net sales",
+      "period": "Fiscal Q4 2026",
+      "last_reported": {
+        "text": "Q3 Services sales were $30.74B, up 12% y/y, with Services gross margin of 75.6%.",
+        "evidence_ids": [
+          "Q.011",
+          "Q.031",
+          "Q.033"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guide is similar to June's growth after removing a further sequential FX headwind of about 2.5 points. One analyst reads that as below 10% reported; management did not dispute this. On a derived prior-year Q4 base of about $28.75B, 9-10% growth implies about $31.4B-$31.6B. Watch App Store mobile gaming softness and the absence of last year's F1 film benefit.",
+        "evidence_ids": [
+          "C.017",
+          "C.047",
+          "C.048",
+          "K.102",
+          "Q.011"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Mac + iPad + Wearables/Home/Accessories combined",
+      "period": "Fiscal Q4 2026",
+      "last_reported": {
+        "text": "Q3 Mac was $10.35B (+29%), iPad $6.19B (-6%), Wearables/Home/Accessories $7.88B (+6%).",
+        "evidence_ids": [
+          "Q.011",
+          "Q.031",
+          "Q.032"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "At the guide midpoint (~$112.7B total), with iPhone at ~$56.4B and Services at ~$31.5B, the other three categories are left at about $24.8B. That compares with a derived ~$24.7B a year ago, so roughly flat. This is consistent with management's flag that Mac and iPad supply is constrained, and Mac upside is the likeliest source of a beat.",
+        "evidence_ids": [
+          "C.017",
+          "C.024",
+          "K.102",
+          "Q.011",
+          "F.69"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Operating expenses",
+      "period": "Fiscal Q4 2026",
+      "last_reported": {
+        "text": "Q3 opex was $19.08B, up 23% y/y, with R&D up 32% on AI infrastructure and headcount.",
+        "evidence_ids": [
+          "Q.004",
+          "Q.034"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guide is $19.1B-$19.4B, flat to slightly up sequentially. That is roughly +20-22% y/y against a derived prior-year Q4 of about $15.9B. Nine-month capex fell 28% to $6.8B while R&D rose 33%, so AI spend is flowing through opex and cost of sales and not through capex.",
+        "evidence_ids": [
+          "C.017",
+          "K.116",
+          "Q.004",
+          "F.19",
+          "F.46",
+          "C.064"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Inventories and purchase obligations (memory cost proxy)",
+      "period": "Fiscal Q4 2026",
+      "last_reported": {
+        "text": "Inventories were $11.09B at June 27 vs $5.72B at Sept 2025, with components up to $7.65B from $2.12B. Manufacturing purchase obligations were $57.0B.",
+        "evidence_ids": [
+          "Q.006",
+          "Q.018",
+          "Q.037"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The component build supports management's point about carry-in inventory cushioning September-quarter memory costs, with that benefit fading after September. Watch the September balance sheet for whether components were drawn down or built further.",
+        "evidence_ids": [
+          "C.026",
+          "Q.018"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Share count and capital return",
+      "period": "Fiscal Q4 2026",
+      "last_reported": {
+        "text": "Q3 buybacks were $25.8B and dividends $4.0B. Diluted shares were 14.71B. Remaining repurchase availability was $138.0B across the two $100B programs.",
+        "evidence_ids": [
+          "Q.038",
+          "Q.004",
+          "Q.068",
+          "Q.069"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The $10B ASR entered in May ends its purchase period in fiscal Q4, so final share delivery will add to the share count reduction. I assume Q4 diluted shares of about 14.6B. The quarterly dividend is $0.27 per share.",
+        "evidence_ids": [
+          "Q.069",
+          "C.018"
+        ],
+        "evidence_type": "estimate"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Total company revenue growth",
+      "guidance": "+9% to +11% y/y, assuming current tariffs remain in effect and macro does not worsen. FX is a sequential headwind of about 2.5 points and supply constraints increase significantly.",
+      "period": "Fiscal Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Revenue growth of 9-11% y/y is guided, with about 2.5 points of sequential FX headwind and significantly larger supply constraints on iPhone, Mac and iPad.",
+        "evidence_ids": [
+          "C.017"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "iPhone revenue growth",
+      "guidance": "Mid-teens y/y reported, with high demand but affected by FX and supply.",
+      "period": "Fiscal Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "iPhone is guided to mid-teens y/y reported growth.",
+        "evidence_ids": [
+          "C.017"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Services revenue growth",
+      "guidance": "Reported growth largely similar to June (12%) after removing about 2.5 points of sequential FX headwind.",
+      "period": "Fiscal Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Services growth is guided as similar to June after removing a further 2.5-point sequential FX headwind, which one analyst read as below 10% reported.",
+        "evidence_ids": [
+          "C.017",
+          "C.047",
+          "C.049"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Gross margin",
+      "guidance": "47% to 48%, including roughly 1 point of benefit from tariff refunds.",
+      "period": "Fiscal Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Gross margin is guided to 47-48%, including about a 1-point tariff refund benefit. Memory costs rise again and carry-in inventory offsets only part of it.",
+        "evidence_ids": [
+          "C.017",
+          "C.026",
+          "C.073"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Operating expenses",
+      "guidance": "$19.1B to $19.4B",
+      "period": "Fiscal Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Opex is guided to $19.1B-$19.4B.",
+        "evidence_ids": [
+          "C.017"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Other income/(expense), net",
+      "guidance": "About $350M, excluding any mark-to-market of minority investments.",
+      "period": "Fiscal Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "OI&E is guided at about $350M, excluding minority-investment mark-to-market.",
+        "evidence_ids": [
+          "C.017"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Tax rate",
+      "guidance": "About 16.5%",
+      "period": "Fiscal Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "The effective tax rate is guided at about 16.5%, vs 17.9% in Q3.",
+        "evidence_ids": [
+          "C.017",
+          "Q.035"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Beyond September quarter",
+      "guidance": "No guidance or color provided for the December quarter.",
+      "period": "Fiscal Q1 2027",
+      "status": "unclear",
+      "claim": {
+        "text": "The CFO declined to give December-quarter color. Management expects memory costs to keep rising beyond September and the carry-in inventory benefit to shrink.",
+        "evidence_ids": [
+          "C.039",
+          "C.026"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "An 8-K/A (filed Sept 1) set the CEO transition terms, effective Sept 1, 2026. Ternus's salary is $3M with a $55M target equity award in fiscal 2027. Cook becomes Executive Chair at a $2M salary with a $45M target equity award. Both awards are largely TSR-based performance RSUs.",
+      "evidence_ids": [
+        "E.002",
+        "E.003",
+        "E.004"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Apple debuted the foldable iPhone Duo on Oct 23 and launched a touchscreen MacBook Pro at higher prices, with preorders from Oct 28 and availability on Nov 6. A 14-inch M6 MacBook Pro without touchscreen starts at $1,999. Both fall in the December quarter, not the quarter being reported, but they will shape the guide.",
+      "evidence_ids": [
+        "N.03",
+        "N.07",
+        "Q.011"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Apple reportedly held back about four-fifths of iPhone Duo stock for Apple Stores, a possible sign of constrained or managed supply at launch.",
+      "evidence_ids": [
+        "N.08"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Apple closed at a $5.03T market cap on Oct 30 (down 1.2% that day), retaking the top spot from Nvidia. The stock is up 27% YTD, so the bar into the print is high.",
+      "evidence_ids": [
+        "N.06",
+        "N.04"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Analyst actions: Loop Capital downgraded to Hold on Oct 20, MoffettNathanson stayed Neutral and JP Morgan stayed Overweight. The consensus price target of $340.88 is below the current price.",
+      "evidence_ids": [
+        "M.06",
+        "M.07"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Contradiction on Siri AI status: the July call described Siri AI as in developer and public beta, with users getting it this fall. TechCrunch (Oct 31) says it finally launched this summer. The call is the more reliable, older source and the news item is a proxy, so the launch status is unconfirmed.",
+      "evidence_ids": [
+        "C.004",
+        "C.033",
+        "N.10"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Third-party figures disagree with the consensus fields. The Motley Fool (Oct 30) cites $1.98 EPS vs $1.85 last year, while the consensus is $2.02 against a derived $1.84. Yahoo/Barchart (Oct 30) cites FY26 EPS of $8.75, which implies about $1.87 for Q4 given nine-month EPS of $6.88; $2.02 would imply about $8.90. The structured consensus (M.01) is used here, and the other figures may be stale.",
+      "evidence_ids": [
+        "N.01",
+        "N.02",
+        "M.01",
+        "F.71",
+        "F.11"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Beat-record conflict: Finnhub shows 3 beats and 1 miss in the last 4 quarters, while Yahoo/Barchart (Oct 30) says Apple exceeded estimates in each of the last four. The Finnhub record is used and the discrepancy is noted.",
+      "evidence_ids": [
+        "M.05",
+        "N.02"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Is the 9-11% revenue guide conservative, or are supply constraints a real cap?",
+      "bull": {
+        "text": "Management says the root cause is demand running above forecast (iPhone +22%, Mac +29%), not a supplier problem. Consensus at $115.5B and a +1.7% average historical EPS surprise suggest the Street expects the guide to be beaten.",
+        "evidence_ids": [
+          "C.038",
+          "C.041",
+          "M.01",
+          "M.05"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Management says it is seeing very significant constraints with limited flexibility, and that it is scrambling on supply. Supply pull-forward has a limit, and constraints hit iPhone, Mac and iPad at once.",
+        "evidence_ids": [
+          "C.024",
+          "C.038",
+          "C.017"
+        ],
+        "evidence_type": "guided"
+      },
+      "what_settles_it": "Reported Q4 revenue against $111.7B-$113.7B and $115.5B consensus, plus any commentary on how far constraints extend into the December quarter."
+    },
+    {
+      "question": "Can gross margin hold as memory costs rise and tariff refunds fade?",
+      "bull": {
+        "text": "Q3 ex-refund gross margin of 48.1% was at the midpoint of prior guidance. Carry-in inventory, lower non-memory component costs and favorable mix partly offset memory, and Products gross margin hit 40.1%.",
+        "evidence_ids": [
+          "C.012",
+          "C.073",
+          "C.026",
+          "Q.033"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Memory is the main driver of the sequential decline, with the ex-refund guide midpoint at 46.5%. Management expects memory prices to keep rising beyond September, with a shrinking carry-in benefit. The 10-Q expects supply and cost trends to intensify, and tariff refunds are non-recurring.",
+        "evidence_ids": [
+          "C.073",
+          "C.026",
+          "Q.027",
+          "Q.050"
+        ],
+        "evidence_type": "guided"
+      },
+      "what_settles_it": "Q4 gross margin vs 47-48%, the refund contribution, and any December-quarter margin framework from the new CEO and CFO."
+    },
+    {
+      "question": "Is the Services slowdown mostly FX, or is the App Store weakening?",
+      "bull": {
+        "text": "The CFO attributes the deceleration mainly to FX (about 5 points from March to September) and the lapping of the F1 film. Services set records in every category, with double-digit growth in cloud, video, payments and advertising, and over 1.5B paid subscriptions.",
+        "evidence_ids": [
+          "C.048",
+          "C.049",
+          "C.014",
+          "C.015"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Management also cited mobile gaming softness, App Store business-model changes in some countries, and a U.S. court ruling on link-out transactions. Google search-licensing remedies remain on appeal, and the guide implies reported growth below 10%.",
+        "evidence_ids": [
+          "C.048",
+          "Q.047",
+          "Q.060",
+          "C.047"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Reported Services growth vs ~9-10%, App Store commentary, and the Supreme Court and Ninth Circuit remand on link-out commissions."
+    },
+    {
+      "question": "Is the bar too high given revenue consensus above guidance and a stretched stock?",
+      "bull": {
+        "text": "Apple has beaten in 3 of the last 4 quarters with an average surprise of +1.7%. Investors are rotating toward perceived safety, which pushed the stock to a $5T market cap.",
+        "evidence_ids": [
+          "M.05",
+          "N.06"
+        ],
+        "evidence_type": "proxy"
+      },
+      "bear": {
+        "text": "Consensus revenue is above the top of guidance, the whisper EPS of $2.07 is above my guidance-implied range, and the consensus price target sits below the share price. A 4.2% implied move is much larger than the 2.5% historical average.",
+        "evidence_ids": [
+          "F.70",
+          "M.02",
+          "M.07",
+          "M.03",
+          "M.04"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Where Q4 revenue and EPS land vs consensus and whisper, and whether the December-quarter commentary is clean or flags memory and supply risk."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "bull",
+      "description": {
+        "text": "Revenue lands at or above the top of the guide (about $114B-$115B) as Mac and iPhone upside overcomes supply limits. Gross margin is at the 48% top end and EPS is around $2.05-$2.10, in line with or above the whisper. Management signals constraints easing and manageable memory costs.",
+        "evidence_ids": [
+          "C.017",
+          "M.01",
+          "M.02",
+          "C.024"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Revenue at or above $113.7B",
+        "Gross margin at or above 48%",
+        "Mac and iPad outperform despite constraints",
+        "Positive early read on Siri AI and the Duo and MacBook Pro launches"
+      ]
+    },
+    {
+      "name": "base",
+      "description": {
+        "text": "Revenue of about $112.5B-$113.5B (upper half of guidance), gross margin around 47.5-48% and EPS around $1.98-$2.04, roughly in line with the $2.02 consensus. The stock moves within the options-implied range, driven by the December-quarter tone on memory costs and supply.",
+        "evidence_ids": [
+          "C.017",
+          "M.01",
+          "M.03"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Revenue within the 9-11% growth range",
+        "Gross margin in the 47-48% range",
+        "Opex at $19.1B-$19.4B",
+        "Cautious but non-quantified December commentary"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Revenue misses the $115.5B consensus by a wide margin and falls at or below the low end of the guide ($111.7B). Gross margin is 47% or below, and management flags worse memory costs, a waning carry-in inventory benefit and ongoing supply limits into December. Weak Services or elasticity from price hikes would add to the miss.",
+        "evidence_ids": [
+          "C.017",
+          "C.026",
+          "F.70",
+          "C.055"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Revenue below $111.7B",
+        "Gross margin below 47%",
+        "Services growth below 9%",
+        "Signs of price elasticity on iPad and Mac",
+        "Rising memory costs flagged for the December quarter"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "Component supply constraints and memory (DRAM and NAND) cost inflation. The 10-Q states Apple is currently in a period of constraints, expects the trends to intensify, and that price increases may not offset the impact and may reduce demand.",
+        "evidence_ids": [
+          "Q.027",
+          "Q.050",
+          "C.026"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Compute capacity risk. A new risk factor warns that AI infrastructure supply is constrained, with extended lead times and rising costs, and Apple relies on third-party cloud providers alongside its own data centers.",
+        "evidence_ids": [
+          "Q.052",
+          "C.064"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Tariff risk. The refunds from the February Supreme Court ruling flattered Q3, and about 1 point remains in the Q4 gross margin guide. The 10-Q cites newly imposed Section 301 tariffs and a possible Section 232 semiconductor action.",
+        "evidence_ids": [
+          "Q.028",
+          "Q.029",
+          "C.012",
+          "C.017"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Price-elasticity risk. Apple raised iPad and Mac prices reluctantly and says it is too early to judge how demand responds. New MacBook Pro models are also priced higher.",
+        "evidence_ids": [
+          "C.046",
+          "C.055",
+          "N.07"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Leadership transition. Cook has handed the CEO role to Ternus, and the first quarter under new leadership brings guidance and strategy-communication risk.",
+        "evidence_ids": [
+          "E.002",
+          "C.019"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "App Store and regulatory risk. The Supreme Court granted review on the Epic contempt standard, a court order bars Apple from charging commission on certain link-out purchases, the DMA Article 6(4) investigation could bring fines up to 10% of annual worldwide net sales, and the DOJ antitrust suit continues. Siri AI is not launching in the EU because of DMA interoperability.",
+        "evidence_ids": [
+          "Q.043",
+          "Q.045",
+          "Q.047",
+          "Q.057",
+          "C.071"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Google search-licensing revenue could be affected if the DOJ remedies appeal succeeds in prohibiting Google from offering Apple commercial terms for search distribution.",
+        "evidence_ids": [
+          "Q.060",
+          "K.070"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "FX headwind of about 2.5 points sequentially to total growth (and larger for Services), with a strong dollar versus the prior quarter.",
+        "evidence_ids": [
+          "C.017",
+          "C.049"
+        ],
+        "evidence_type": "guided"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Supplier and customer concentration. Two vendors account for 47% and 22% of vendor non-trade receivables, and carriers account for 27% of trade receivables. Manufacturing purchase obligations are $57.0B.",
+        "evidence_ids": [
+          "Q.017",
+          "Q.037"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "How large was unmet demand in the September quarter, when do advanced-node constraints ease, and how much does the December quarter lose to supply?",
+      "why": {
+        "text": "Management guided 9-11% growth with supply constraints rising significantly, and declined to give December color. The Street was previously at about 8-9% for December according to an analyst on the call.",
+        "evidence_ids": [
+          "C.017",
+          "C.037",
+          "C.039"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What are the memory pricing expectations beyond September, are there long-term supply agreements, and what is the gross margin framework for December excluding tariff refunds?",
+      "why": {
+        "text": "Memory explained more than 100% of the ex-refund margin decline from March to June and again from June to the September guide. The carry-in inventory benefit is declining.",
+        "evidence_ids": [
+          "C.073",
+          "C.026"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What is the total tariff refund received and still expected, how will it be spent, and how much sits in the December guide?",
+      "why": {
+        "text": "Refunds added about 2 points to Q3 gross margin and $0.11 to EPS, and about 1 point is built into the Q4 guide. Apple has said it will reinvest the refunds in the U.S.",
+        "evidence_ids": [
+          "C.012",
+          "C.013",
+          "C.017",
+          "C.010"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What early elasticity are you seeing from price increases on iPad and Mac, and how are the Duo and touchscreen MacBook Pro priced and supplied?",
+      "why": {
+        "text": "Management said elasticity is too early to call, and the new products carry higher prices or reported restricted online availability.",
+        "evidence_ids": [
+          "C.055",
+          "N.07",
+          "N.08"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "question": "How much of the Services slowdown is FX versus App Store weakness in gaming, link-out commissions and the Epic Supreme Court review?",
+      "why": {
+        "text": "Services growth is guided to about 9-10% reported and management cited gaming softness and a court ruling on link-outs.",
+        "evidence_ids": [
+          "C.047",
+          "C.048",
+          "Q.047"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How will Siri AI affect compute costs, cost of sales and capital intensity, and what is the timeline for the EU and China?",
+      "why": {
+        "text": "R&D is up 32% on AI infrastructure, capex is down 28% on a nine-month basis, and management said the cost impact of Siri AI is uncertain. The EU launch is blocked by DMA rules.",
+        "evidence_ids": [
+          "Q.034",
+          "F.46",
+          "C.064",
+          "C.071"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What are your priorities as new CEO, and does capital return stay at about $30B per quarter given the stock at record highs?",
+      "why": {
+        "text": "Q3 returned $33B including a new $10B ASR. Authorization remaining is $138B, and Ternus's first call is the first chance to hear strategy and capital allocation.",
+        "evidence_ids": [
+          "C.016",
+          "Q.068",
+          "Q.069",
+          "E.002"
+        ],
+        "evidence_type": "reported"
+      }
+    }
+  ],
+  "data_gaps": [
+    "No consensus is provided for gross margin, iPhone, Services, opex or any other line item beyond total revenue and EPS.",
+    "The revenue consensus ($115.5B, +12.7%) is above the guided 9-11% range, and it is unclear whether it is stale or reflects expected beats. Another source cites a December-quarter expectation and a 12% September expectation from before the guide.",
+    "Third-party EPS figures disagree: Motley Fool shows Q4 EPS of $1.98 vs $1.85, Yahoo FY26 EPS of $8.75 implies about $1.87 for Q4, while the structured consensus is $2.02 vs a derived $1.84.",
+    "The beat record conflicts: Finnhub shows 3 beats and 1 miss, while Yahoo/Barchart says four beats in a row.",
+    "The earnings call date is not stated in the source header; the transcript implies it preceded the 10-Q filing by a day.",
+    "The dollar amount of tariff refunds received and still pending is not given in the sources; only the margin and EPS effects are quantified.",
+    "Prior-quarter guidance values are not provided, so guidance status (raised or lowered) cannot be assessed.",
+    "The prior-year Q4 line-item bases (iPhone, Services, opex, gross margin) are derived from annual less nine-month figures and are not reported quarterly figures.",
+    "No data on the Q4 diluted share count or buyback pace is guided; the 14.6B assumption is mine.",
+    "The size of the Mac and iPad price increases, the iPhone Duo price and unit supply, and demand for the new products are not covered in the sources.",
+    "Whether Siri AI has formally launched is unconfirmed: the July call described a beta and TechCrunch (Oct 31) says it launched this summer.",
+    "The Seeking Alpha and other news snippets were truncated and added no verifiable details on demand or supplier expectations."
+  ],
+  "sources": {
+    "Q.003": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 — Yes  ☒     No  ☐",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.004": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.006": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.011": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · Financial Statements — Basis of Presentation and Preparation",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.017": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · Financial Statements — Trade Receivables",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.018": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · Financial Statements — Note 5 – Condensed Consolidated Financial Statement Details",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.027": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · MD&A — Macroeconomic Conditions",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.028": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · MD&A — Tariffs and Other Measures",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.029": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · MD&A — Tariffs and Other Measures",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.031": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · MD&A — Greater China",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.032": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · MD&A — Products and Services Performance",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.033": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · MD&A — Gross Margin",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.034": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · MD&A — Services Gross Margin",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.035": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · MD&A — Selling, General and Administrative",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.037": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · MD&A — Manufacturing Purchase Obligations",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.038": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · MD&A — Capital Return Program",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.043": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 — Digital Markets Act Investigations",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.045": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 — Department of Justice Lawsuit",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.047": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 — Epic Games",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.050": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · Risk Factors — Item 1A.    Risk Factors",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.052": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · Risk Factors — Item 1A.    Risk Factors",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.057": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · Risk Factors — Apple Inc. | Q3 2026 Form 10-Q | 21",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.060": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 · Risk Factors — Apple Inc. | Q3 2026 Form 10-Q | 22",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.068": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "Q.069": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-07-31 — Purchases of Equity Securities by the Issuer and Affiliated Purchasers",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "K.070": {
+      "kind": "filing",
+      "citation": "10-K filed 2025-10-31 · Risk Factors — Apple Inc. | 2025 Form 10-K | 13",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm",
+      "as_of": "2025-10-31"
+    },
+    "K.101": {
+      "kind": "filing",
+      "citation": "10-K filed 2025-10-31 · MD&A — Segment Operating Performance",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm",
+      "as_of": "2025-10-31"
+    },
+    "K.102": {
+      "kind": "filing",
+      "citation": "10-K filed 2025-10-31 · MD&A — Rest of Asia Pacific",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm",
+      "as_of": "2025-10-31"
+    },
+    "K.116": {
+      "kind": "filing",
+      "citation": "10-K filed 2025-10-31 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm",
+      "as_of": "2025-10-31"
+    },
+    "E.002": {
+      "kind": "8-K",
+      "citation": "8-K/A Item 5.02 (filed 2026-09-01)",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000114036126035325/ef20081427_8ka.htm",
+      "as_of": "2026-09-01"
+    },
+    "E.003": {
+      "kind": "8-K",
+      "citation": "8-K/A Item 5.02 (filed 2026-09-01) — Emerging growth company ☐",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000114036126035325/ef20081427_8ka.htm",
+      "as_of": "2026-09-01"
+    },
+    "E.004": {
+      "kind": "8-K",
+      "citation": "8-K/A Item 5.02 (filed 2026-09-01) — Emerging growth company ☐",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000114036126035325/ef20081427_8ka.htm",
+      "as_of": "2026-09-01"
+    },
+    "C.004": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Tim Cook, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.010": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Tim Cook, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.012": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Kevan Parekh, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.013": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Kevan Parekh, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.014": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Kevan Parekh, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.015": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Kevan Parekh, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.016": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Kevan Parekh, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.017": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Kevan Parekh, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.018": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Kevan Parekh, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.019": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Tim Cook, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.024": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Tim Cook, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.026": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Tim Cook, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.033": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Tim Cook, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.037": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Ben Reitzes, Analyst, Melius Research",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.038": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Tim Cook, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.039": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Kevan Parekh, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.041": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Tim Cook, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.046": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Tim Cook, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.047": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Erik Woodring, Analyst, Morgan Stanley",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.048": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Kevan Parekh, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.049": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Kevan Parekh, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.055": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Tim Cook, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.064": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Tim Cook, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.071": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Tim Cook, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.073": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Kevan Parekh, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AAPL&quarter=2026Q3",
+      "as_of": null
+    },
+    "F.01": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2026-06-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "F.09": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2026-06-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "F.11": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — nine months ended 2026-06-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "F.19": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure — nine months ended 2026-06-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm",
+      "as_of": "2026-07-31"
+    },
+    "F.37": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — quarter ended 2026-06-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.41": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS growth — quarter ended 2026-06-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.46": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure growth — nine months ended 2026-06-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.53": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2026-06-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.55": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2025-06-28",
+      "url": null,
+      "as_of": null
+    },
+    "F.69": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-09-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.70": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "F.71": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-09-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.72": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.02": {
+      "kind": "market",
+      "citation": "Market data — Whisper EPS",
+      "url": null,
+      "as_of": null
+    },
+    "M.03": {
+      "kind": "market",
+      "citation": "Market data — Options-implied move",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "M.05": {
+      "kind": "market",
+      "citation": "Market data — Beat/miss record",
+      "url": null,
+      "as_of": null
+    },
+    "M.06": {
+      "kind": "market",
+      "citation": "Market data — Analyst rating actions",
+      "url": null,
+      "as_of": null
+    },
+    "M.07": {
+      "kind": "market",
+      "citation": "Market data — Consensus price target",
+      "url": null,
+      "as_of": null
+    },
+    "N.01": {
+      "kind": "news",
+      "citation": "fool.com, 2026-10-30 — Nov. 2 Could Be a Big Day for Apple Stock | The Motley Fool",
+      "url": "https://www.fool.com/investing/2026/10/30/nov-2-could-be-a-big-day-for-apple-stock",
+      "as_of": "2026-10-30"
+    },
+    "N.02": {
+      "kind": "news",
+      "citation": "finance.yahoo.com, 2026-10-30 — What Are Wall Street Analysts' Target Price for Apple Stock?",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/wall-street-analysts-target-price-125107453.html",
+      "as_of": "2026-10-30"
+    },
+    "N.03": {
+      "kind": "news",
+      "citation": "investors.com, 2026-10-30 — Apple, Super Micro, AMD, Palantir Step Up To Earnings Plate After Tech Sell-Off | Investor's Business Daily",
+      "url": "https://www.investors.com/research/earnings-preview/apple-stock-super-micro-earnings-amd-palantir-earnings",
+      "as_of": "2026-10-30"
+    },
+    "N.04": {
+      "kind": "news",
+      "citation": "morningstar.com, 2026-10-30 — Apple Shares Are Up 27% This Year. Is the Stock Still a Buy Ahead of Earnings? | Morningstar",
+      "url": "https://www.morningstar.com/stocks/apple-shares-are-up-27-this-year-is-stock-still-buy-ahead-earnings",
+      "as_of": "2026-10-30"
+    },
+    "N.06": {
+      "kind": "news",
+      "citation": "bloomberg.com, 2026-10-30 — Apple Reclaims Top Spot as World’s Most Valuable Company, Surpassing Nvidia - Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-30/apple-overtakes-nvidia-to-become-world-s-most-valuable-company",
+      "as_of": "2026-10-30"
+    },
+    "N.07": {
+      "kind": "news",
+      "citation": "foxbusiness.com, 2026-10-28 — Apple introduces first touchscreen MacBook Pro at higher prices | Fox Business",
+      "url": "https://www.foxbusiness.com/technology/apple-breaks-longtime-macbook-policy-introduces-touchscreen-laptops-higher-prices",
+      "as_of": "2026-10-28"
+    },
+    "N.08": {
+      "kind": "news",
+      "citation": "appleinsider.com, 2026-10-31 — Apple kept 4/5ths of iPhone Duo stock back for Apple Stores",
+      "url": "https://appleinsider.com/articles/26/10/30/at-launch-there-were-more-iphone-duo-in-stores-than-online",
+      "as_of": "2026-10-31"
+    },
+    "N.10": {
+      "kind": "news",
+      "citation": "techcrunch.com, 2026-10-31 — Apple CEO says the company doesn’t ‘want to ship AI for AI’s sake’ | TechCrunch",
+      "url": "https://techcrunch.com/2026/10/31/apple-ceo-says-the-company-doesnt-want-to-ship-ai-for-ais-sake",
+      "as_of": "2026-10-31"
+    }
+  },
+  "check_notes": []
+}

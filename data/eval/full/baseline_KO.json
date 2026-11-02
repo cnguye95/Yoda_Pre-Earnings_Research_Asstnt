@@ -1,0 +1,1425 @@
+{
+  "ticker": "KO",
+  "company_name": "COCA COLA CO",
+  "report_generated_at": "2026-11-01T12:26:57+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-10-28",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-02-20",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm"
+    }
+  ],
+  "earnings_call": "Q3 FY2026 earnings call (date unknown)",
+  "current_report": "No 8-K or 6-K recent enough to read",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$0.61",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$11.45B",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2027-02-08 report. Paid lookup not made: next report is 99 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "implied move: no live implied move yet (EarningsWatcher has no confirmed report date)."
+    },
+    "historical_move": {
+      "value": "±2.4% average closing move over the last 8 reports (2024-07-23 to 2026-07-28)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/ko-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": "2 beats, 0 misses in the last 4 quarters, average surprise +1.0%",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "Finnhub earnings surprises",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "analyst_actions": {
+      "value": "Last 30 days, newest first: Freedom Broker maintained Hold (2026-10-28); Citigroup maintained Buy (2026-10-28); JP Morgan maintained Overweight (2026-10-28); TD Cowen maintained Buy (2026-10-28); Piper Sandler maintained Overweight (2026-10-28); Wells Fargo maintained Overweight (2026-10-28); RBC Capital maintained Outperform (2026-10-28); Morgan Stanley maintained Overweight (2026-10-28); UBS maintained Buy (2026-10-28); Piper Sandler maintained Overweight (2026-10-26); Barclays maintained Overweight (2026-10-16); Citigroup maintained Buy (2026-10-14); Wells Fargo maintained Overweight (2026-10-05)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP grades",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "price_target": {
+      "value": "$97.58, +3.7% vs current $94.08",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP price target consensus",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "Q3 FY26 was strong: revenue $13.38B (+7.4% y/y), operating income +12.1%, GAAP diluted EPS $0.93. Management put comparable EPS at $0.91, up 11% including about 2 points of currency tailwind.",
+      "evidence_ids": [
+        "F.01",
+        "F.39",
+        "F.45",
+        "F.09",
+        "C.010"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "The next report is Q4 FY26 on 2027-02-08 after the close, about 99 days out. Consensus is EPS $0.61 and revenue $11.45B. No whisper number or options-implied move is available yet, and 2027 guidance is due in February, so the print is as much about 2027 as Q4.",
+      "evidence_ids": [
+        "M.01",
+        "M.02",
+        "M.03",
+        "C.013"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Consensus implies Q4 revenue -3.2% y/y against $11.82B and EPS +15.7% against $0.53. The $0.53 base is derived from GAAP and sits in a quarter with large charges (BodyArmor trademark impairment $960M; the Africa held-for-sale impairment of $1,274M was booked in the year). If consensus is on a comparable basis, the +15.7% overstates growth.",
+      "evidence_ids": [
+        "F.73",
+        "F.75",
+        "F.74",
+        "Q.094",
+        "Q.019"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Management guided Q4 as structurally different: six fewer days, slight destocking, and (if CCBA closes in Q4) a four-point headwind to comparable net revenues, a three-point headwind to comparable EPS and slight margin benefits.",
+      "evidence_ids": [
+        "C.012"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "9M operating cash flow was $12.47B versus $3.65B a year ago, when a $6.1B fairlife milestone payment was made. Derived free cash flow is $11.41B. Net debt leverage is 1.3x EBITDA, below the 2-2.5x target.",
+      "evidence_ids": [
+        "F.17",
+        "F.18",
+        "F.68",
+        "Q.151",
+        "C.011"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "The stock closed at $94.08 on 2026-10-30 and is up about 32% YTD. The consensus price target of $97.58 is only +3.7% above that, so much of the good news looks priced in.",
+      "evidence_ids": [
+        "N.02",
+        "N.01",
+        "M.07"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Historically the stock moves about ±2.4% on average at earnings. The record is 2 beats and 0 misses over the last four quarters, with an average surprise of +1.0%.",
+      "evidence_ids": [
+        "M.04",
+        "M.05"
+      ],
+      "evidence_type": "proxy"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Net operating revenues",
+      "period": "Q4 FY26",
+      "last_reported": {
+        "text": "Q3 FY26 revenue was $13.38B (+7.4% y/y). 9M revenue was $39.23B (+8.6%).",
+        "evidence_ids": [
+          "F.01",
+          "F.39",
+          "F.03",
+          "F.40"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus revenue is $11.45B, about -3.2% y/y versus $11.82B.",
+        "evidence_ids": [
+          "M.01",
+          "F.73",
+          "F.72"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "The y/y decline is driven by the CCBA refranchising (about -4 pts), six fewer days and slight destocking, partly offset by about 1 pt of currency. The 9M organic run-rate was roughly 7% (6% volume plus 1% price/mix), so the 'at least 5%' full-year organic guide allows Q4 organic of about -1%. Consensus at roughly flat organic sits near that floor, so risk looks balanced to modestly positive. The main swing factors are the CCBA closing date and the size of destocking.",
+        "evidence_ids": [
+          "C.012",
+          "C.011",
+          "Q.115",
+          "M.01"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Comparable diluted EPS",
+      "period": "Q4 FY26",
+      "last_reported": {
+        "text": "Q3 comparable EPS was $0.91 (+11%, including a 2-pt currency benefit). GAAP diluted EPS was $0.93.",
+        "evidence_ids": [
+          "C.010",
+          "F.09"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus EPS is $0.61.",
+        "evidence_ids": [
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Full-year comparable EPS is guided to grow at least 11% from about $3 in 2025, implying at least about $3.33. Q4 absorbs a 3-pt CCBA headwind, six fewer days and a higher underlying tax rate (19.7%), against a 3-pt full-year currency tailwind. YTD comparable EPS is not in the sources, so the Q4 EPS implied by guidance cannot be checked against $0.61.",
+        "evidence_ids": [
+          "C.012",
+          "C.011",
+          "M.01"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Unit case volume vs concentrate sales volume",
+      "period": "Q4 FY26 / FY26",
+      "last_reported": {
+        "text": "Q3 unit cases were +5% and concentrate sales +6% (+7% after divestitures). 9M unit cases were +4% and concentrate +6%. Q1 had six extra days and Q4 has six fewer.",
+        "evidence_ids": [
+          "Q.103",
+          "Q.105",
+          "Q.109"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management expects full-year concentrate volume to be slightly behind unit case volume, with slight destocking in Q4. Concentrate is running 2 pts ahead of unit cases YTD, so Q4 concentrate must be clearly weak, probably negative on my arithmetic. The gap, not unit case growth, is the key Q4 swing. Unit cases use average daily sales, so the day-count effect does not hit them.",
+        "evidence_ids": [
+          "Q.109",
+          "C.012",
+          "C.038",
+          "C.052"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Price/mix",
+      "period": "Q4 FY26",
+      "last_reported": {
+        "text": "Q3 price/mix was +1%: about 4 pts of pricing offset by about 3 pts of unfavorable mix (geographic, timing of investments, category). 9M price/mix was +1%.",
+        "evidence_ids": [
+          "C.010",
+          "Q.110",
+          "Q.115"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management says about two-thirds of the mix drag (Topo Chico, finished goods, timing of investments) is manageable, and geographic mix headwinds will persist. An analyst framed full-year price/mix at about 2%, possibly one of the lowest in a decade. Watch whether Q4 price/mix stays near +1% or recovers toward the 2-3 pt algorithm.",
+        "evidence_ids": [
+          "C.020",
+          "C.021",
+          "C.019"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Comparable gross and operating margin",
+      "period": "Q4 FY26",
+      "last_reported": {
+        "text": "Q3 comparable gross margin rose about 170 bps and comparable operating margin about 110 bps. These included currency and a structural benefit from the Nigeria sale. GAAP operating margin was 33.4% versus 32.0%. Advertising rose to $1.78B from $1.52B.",
+        "evidence_ids": [
+          "C.010",
+          "F.56",
+          "F.58",
+          "Q.119"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management expects full-year margin expansion in line with the YTD trend, with only modest underlying gross margin expansion. Marketing is to grow roughly in line with gross margin, and logistics and transportation costs are elevated. CCBA should add slight margin benefits in Q4.",
+        "evidence_ids": [
+          "C.052",
+          "C.024",
+          "C.011",
+          "C.012"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Free cash flow",
+      "period": "FY26 / Q4 FY26",
+      "last_reported": {
+        "text": "9M FCF was $11.41B (operating cash flow $12.47B less capex $1.06B), versus $2.42B in the prior-year period.",
+        "evidence_ids": [
+          "F.68",
+          "F.69",
+          "F.17",
+          "F.21"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guidance of at least $13B for FY26 implies Q4 FCF of at least about $1.6B. Prior-year Q4 FCF was about $2.9B (derived). Capex of about $2.2B for the year implies about $1.1B in Q4, and management called YTD capex 'a little behind'. The guide looks conservative, giving a likely cash beat versus the floor.",
+        "evidence_ids": [
+          "C.012",
+          "F.70",
+          "F.69",
+          "Q.144",
+          "Q.153",
+          "C.041"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Underlying effective tax rate",
+      "period": "FY26",
+      "last_reported": {
+        "text": "Q3 GAAP ETR was 16.1% and 9M was 16.5%, helped by $172M and $491M of discrete benefits.",
+        "evidence_ids": [
+          "Q.077",
+          "Q.078"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The underlying 2026 rate is now 19.7%, down from 20.9% in the 10-K. Management says the current-year benefits will not repeat, which implies a 2027 tax headwind. This is not in the sources as a quantified 2027 item.",
+        "evidence_ids": [
+          "Q.138",
+          "C.012",
+          "K.265"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Organic revenue growth",
+      "guidance": "At least 5%, including slight destocking and six fewer days in Q4",
+      "period": "FY2026",
+      "status": "raised",
+      "claim": {
+        "text": "Management now expects organic revenue growth of at least 5%. An analyst on the call referred to the guidance as raised; the prior figure is not in the sources.",
+        "evidence_ids": [
+          "C.011",
+          "C.035"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Comparable currency-neutral EPS growth (ex acquisitions/divestitures)",
+      "guidance": "At least 9%",
+      "period": "FY2026",
+      "status": "raised",
+      "claim": {
+        "text": "Comparable currency-neutral EPS growth, excluding acquisitions and divestitures, is now expected at 9% or more.",
+        "evidence_ids": [
+          "C.011"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Comparable EPS growth (all-in)",
+      "guidance": "At least 11% versus about $3 in 2025",
+      "period": "FY2026",
+      "status": "raised",
+      "claim": {
+        "text": "All-in comparable EPS growth is expected at 11% or more versus $3 in 2025. This includes about a 3-pt currency tailwind and about a 1-pt divestiture headwind.",
+        "evidence_ids": [
+          "C.012",
+          "C.011"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Divestiture and currency effects",
+      "guidance": "Divestitures about -2% to comparable net revenues and about -1% to comparable EPS; currency about +1 pt to revenue and about +3 pts to EPS",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "The divestiture revenue headwind is now about 2%. The EPS headwind of about 1% and the currency tailwinds of about 1 pt (revenue) and about 3 pts (EPS) are continued. All assume CCBA closes in Q4, subject to regulatory approvals.",
+        "evidence_ids": [
+          "C.011"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Underlying effective tax rate",
+      "guidance": "19.7%, excluding the IRS litigation outcome",
+      "period": "FY2026",
+      "status": "lowered",
+      "claim": {
+        "text": "The 2026 underlying rate is now 19.7%, versus about 20.9% in the 10-K filed 2026-02-20.",
+        "evidence_ids": [
+          "Q.138",
+          "K.265",
+          "C.012"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Free cash flow",
+      "guidance": "At least $13B",
+      "period": "FY2026",
+      "status": "raised",
+      "claim": {
+        "text": "FY26 free cash flow is now expected at $13B or more. An analyst called it a 'pretty nice increase'.",
+        "evidence_ids": [
+          "C.012",
+          "C.040"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Capital expenditures",
+      "guidance": "About $2.2B; buybacks to offset dilution",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "Capex of about $2.2B is unchanged from the 10-K, and repurchases are expected to offset dilution from employee stock compensation.",
+        "evidence_ids": [
+          "Q.144",
+          "K.270"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Concentrate shipments vs unit cases",
+      "guidance": "Full-year concentrate growth slightly behind unit case growth; slight Q4 destocking",
+      "period": "FY2026",
+      "status": "new",
+      "claim": {
+        "text": "The 10-Q says concentrate volume growth is expected to be slightly behind unit case growth for 2026, whereas differences are normally minimal on a full-year basis. Destocking is expected in a couple of segments.",
+        "evidence_ids": [
+          "Q.109",
+          "C.012",
+          "C.038"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Q4 CCBA refranchising impact",
+      "guidance": "About -4 pts comparable net revenues, about -3 pts comparable EPS, slight margin benefit",
+      "period": "Q4 FY2026",
+      "status": "new",
+      "claim": {
+        "text": "This assumes CCBA closes in Q4. The 10-Q says closing is expected by the end of 2026 and is subject to regulatory approvals.",
+        "evidence_ids": [
+          "C.012",
+          "Q.019"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "2027 early considerations (not formal guidance)",
+      "guidance": "CCBA about -8 pts revenue and about -2 pts EPS; slight currency headwind at current rates; consumer value focus unchanged; formal guide in February",
+      "period": "FY2027",
+      "status": "new",
+      "claim": {
+        "text": "Management also flagged continued cost and commodity navigation, ongoing brand investment, and margin expansion over time. It is exploring a potential IPO of the India bottling operations.",
+        "evidence_ids": [
+          "C.012",
+          "C.013"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "The 10-Q was filed 2026-10-28, and the sources contain no new company disclosure after it. The IRS 11th Circuit appeal was heard 2026-06-25 and no decision is reported. Management expects a decision 'in the coming months'.",
+      "evidence_ids": [
+        "Q.053",
+        "C.041"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "The sell side held its ratings on 2026-10-28, with Buy/Overweight/Outperform maintained at several firms and Freedom Broker at Hold. The consensus target is $97.58.",
+      "evidence_ids": [
+        "M.06",
+        "M.07"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "The stock rose 1.36% to $94.08 on 2026-10-30, its third straight gain, while the S&P 500 fell 1.82%. It touched a 52-week high of $95.37 on 2026-10-22.",
+      "evidence_ids": [
+        "N.02",
+        "N.07"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Contradiction on tax: the 10-K (2026-02-20) guided a 2026 underlying ETR of about 20.9%. The 10-Q and call (2026-10-28 / 2026-10-27) say 19.7%. The newer figure applies. The IRS-litigation incremental ETR impact also rose to about 3.8% from 3.5% in the 10-K.",
+      "evidence_ids": [
+        "K.265",
+        "Q.138",
+        "C.012",
+        "K.187",
+        "Q.058"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Third-party beat details are inconsistent: one outlet cites a $12.93B revenue estimate and a comparable operating margin of 32.9% versus 31.9%, while another says revenue 'narrowly beat'. The call says comparable operating margin rose about 110 bps. These do not reconcile with company materials and are unverified.",
+      "evidence_ids": [
+        "N.05",
+        "N.08",
+        "C.010"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "The CFO said the 2027 currency view does not reflect the BRL move in the prior 24-48 hours, and he would update if movement persists.",
+      "evidence_ids": [
+        "C.049"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "Coke said its system will invest $10B in US infrastructure through 2030. PepsiCo cut its full-year earnings forecast earlier in October, which supports Coke's relative strength.",
+      "evidence_ids": [
+        "N.01"
+      ],
+      "evidence_type": "proxy"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Can volume and concentrate growth hold up against tougher 2027 comps and Q4 destocking?",
+      "bull": {
+        "text": "The system has gained value share for 22 consecutive quarters, with growth coming from more markets and categories. The two-year volume CAGR is about 2%, within the 2-3 pt algorithm. Management says it 'earned' the high-volume year.",
+        "evidence_ids": [
+          "C.016",
+          "C.020",
+          "C.017"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Concentrate is running 6% against unit cases of 4% YTD, and destocking in Q4 is guided. The 2027 comp is a record volume year, and North America volume was flat with restaurant pressure.",
+        "evidence_ids": [
+          "Q.103",
+          "C.012",
+          "C.015",
+          "C.032"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 unit cases on a daily-average basis, the Q4 concentrate-versus-unit-case gap, and the 2027 volume framework in the February guide."
+    },
+    {
+      "question": "Is price/mix a controllable lever, or is geographic mix a structural drag?",
+      "bull": {
+        "text": "Underlying pricing was about 4 pts in Q3. About two-thirds of the mix drag stems from manageable factors (Topo Chico, finished goods, timing of investments), and North America pricing kept pace with inflation.",
+        "evidence_ids": [
+          "C.010",
+          "C.020",
+          "C.030"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Price/mix was only +1% in Q3 and about +1% over 9M. Developing markets outgrowing developed ones will keep geographic mix a headwind. Asia Pacific price/mix was -6% over 9M, and affordability packs dilute mix.",
+        "evidence_ids": [
+          "Q.110",
+          "Q.115",
+          "C.021"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 price/mix by segment and the 2027 price/mix commentary in February."
+    },
+    {
+      "question": "How durable is margin expansion given currency, structural help and cost pressure?",
+      "bull": {
+        "text": "Comparable gross margin rose about 170 bps and operating margin about 110 bps in Q3 while advertising rose 17%. Management sees full-year margin expansion and modest underlying gross margin expansion ahead.",
+        "evidence_ids": [
+          "C.010",
+          "Q.119",
+          "C.024",
+          "C.052"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Part of the gain came from currency and the Nigeria sale. Management cites elevated logistics and transportation costs, and the underlying ETR is stepping up to 19.7% with non-recurring benefits dropping out in 2027.",
+        "evidence_ids": [
+          "C.010",
+          "C.011",
+          "C.012"
+        ],
+        "evidence_type": "guided"
+      },
+      "what_settles_it": "The Q4 margin bridge (underlying vs currency vs structural) and the 2027 margin and tax framework."
+    },
+    {
+      "question": "What does the IRS appeal ruling mean for cash and earnings?",
+      "bull": {
+        "text": "The Company says it is more likely than not to prevail, and the Eighth Circuit's 3M ruling (October 2025) is 'highly supportive'. A win would refund the $6.0B deposit plus $589M of accrued interest. Leverage is only 1.3x and management says it can manage best- and worst-case outcomes.",
+        "evidence_ids": [
+          "Q.049",
+          "Q.050",
+          "Q.056",
+          "C.011",
+          "C.041"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "A loss means no refund of the $6.0B deposit and about $14B of potential 2010-2025 tax and interest exposure as of 12/31/25, increased by about $1.4B YTD. It would add about 3.8 pts to the ETR going forward.",
+        "evidence_ids": [
+          "Q.056",
+          "Q.057",
+          "Q.058"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "The 11th Circuit decision (heard 2026-06-25). It may land before or around the February call."
+    },
+    {
+      "question": "After a ~32% YTD rally, is there upside left?",
+      "bull": {
+        "text": "Ratings were uniformly maintained post-print and all quarters have beaten recently. The balance sheet has optionality, and the 2027 plan is being pre-invested.",
+        "evidence_ids": [
+          "M.06",
+          "M.05",
+          "C.041"
+        ],
+        "evidence_type": "estimate"
+      },
+      "bear": {
+        "text": "The consensus target is only +3.7% above the $94.08 price, and 2027 starts with an 8-pt revenue and 2-pt EPS CCBA headwind, a slight currency headwind, a tax step-up and tough volume comps.",
+        "evidence_ids": [
+          "M.07",
+          "N.02",
+          "C.013",
+          "C.012"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "The February 2027 guidance versus consensus 2027 expectations, which are not in the sources."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "base",
+      "description": {
+        "text": "Q4 revenue and EPS land near consensus ($11.45B / $0.61). Full-year guidance is delivered (comparable EPS growth of at least 11%, FCF of at least $13B), with CCBA closing in Q4. Destocking is modest and 2027 commentary is cautiously constructive: volume of 2-3%, price/mix recovering, margin expansion over time, offset by CCBA, currency and tax headwinds.",
+        "evidence_ids": [
+          "M.01",
+          "C.011",
+          "C.012",
+          "C.013"
+        ],
+        "evidence_type": "proxy"
+      },
+      "triggers": [
+        "Q4 unit cases up low-to-mid single digits on a daily basis",
+        "Concentrate trails unit cases as guided",
+        "CCBA closes in Q4",
+        "No IRS ruling or a neutral outcome"
+      ]
+    },
+    {
+      "name": "bull",
+      "description": {
+        "text": "Smaller destocking and better price/mix produce a Q4 beat, with FCF well above the $13B floor. A favorable IRS appeal ruling would unlock the $6.0B deposit plus interest and remove the roughly $14B exposure. Management offers a firm 2027 framework with margin expansion.",
+        "evidence_ids": [
+          "C.012",
+          "Q.056",
+          "Q.057",
+          "C.041"
+        ],
+        "evidence_type": "proxy"
+      },
+      "triggers": [
+        "Q4 FCF above about $1.6B implied",
+        "11th Circuit ruling in favor of the Company",
+        "Price/mix recovering to 2%+",
+        "North America volume turning positive with Topo Chico Texas supply back"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Larger-than-expected destocking, logistics cost inflation and weaker mix hit Q4 and the 2027 setup. An adverse IRS ruling would forfeit the deposit and raise the ETR by about 3.8 pts. The BRL and other currencies could turn the currency tailwind to a larger headwind, and the stock gives back part of its 32% rally.",
+        "evidence_ids": [
+          "C.011",
+          "C.049",
+          "Q.056",
+          "Q.058",
+          "M.07"
+        ],
+        "evidence_type": "proxy"
+      },
+      "triggers": [
+        "Concentrate shipments well below unit cases",
+        "Adverse 11th Circuit decision",
+        "CCBA closing slips or terms change",
+        "2027 guide implies EPS growth below the long-term algorithm",
+        "Further BodyArmor impairment"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "The IRS tax dispute is the largest binary risk. A loss would forfeit the $6.0B deposit plus $589M of interest, and exposure for 2010-2025 was about $14B as of 12/31/25, rising about $1.4B YTD. The incremental ETR impact is now estimated at about 3.8%, up from 3.5% in the 10-K, and a decision is expected in the coming months.",
+        "evidence_ids": [
+          "Q.056",
+          "Q.057",
+          "Q.058",
+          "K.187",
+          "C.041"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Destocking, concentrate timing and the day-count shift (Q1 +6 days, Q4 -6 days) make Q4 unusually hard to forecast. The CFO called this 'perhaps the more challenging year' for aligning unit cases and shipments.",
+        "evidence_ids": [
+          "C.038",
+          "C.012",
+          "Q.109"
+        ],
+        "evidence_type": "guided"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Cost pressure is rising: elevated logistics and transportation costs in aggregate, with commodities described as manageable. Bottler economics bear much of the inflation, which could constrain pricing and investment sharing.",
+        "evidence_ids": [
+          "C.011",
+          "C.026",
+          "C.027"
+        ],
+        "evidence_type": "guided"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Weak price/mix (+1% in Q3) and geographic mix drag could persist into 2027, limiting the revenue algorithm.",
+        "evidence_ids": [
+          "C.010",
+          "C.021",
+          "C.019"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "The CCBA refranchising depends on regulatory approvals. The revenue headwind is guided at 4 pts in Q4 and 8 pts in 2027, and a further group of operations (Singapore, Malaysia, Myanmar) is held for sale with closings expected by mid-2027. A timing slip would change Q4 revenue and EPS versus consensus.",
+        "evidence_ids": [
+          "C.012",
+          "C.013",
+          "Q.019",
+          "Q.020"
+        ],
+        "evidence_type": "guided"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "The BodyArmor trademark ($2.44B carrying value) has fair value approximating carrying value, and management says an additional impairment is likely if near-term results miss. Management itself flags BodyArmor and Sprite in North America as areas needing improvement.",
+        "evidence_ids": [
+          "Q.094",
+          "C.030"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Currency: the BRL and other currencies moved sharply around the call and are not in the 2027 currency view. The 2026 EPS currency tailwind is about 3 pts, and a reversal would lower it.",
+        "evidence_ids": [
+          "C.049",
+          "C.012",
+          "C.013"
+        ],
+        "evidence_type": "guided"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Regional softness persists: North America volume was flat with restaurant pressure, Europe lost value share in a few key Western European markets, Japan volume declined, and Mexico and Argentina remain difficult.",
+        "evidence_ids": [
+          "C.005",
+          "C.006",
+          "C.008",
+          "C.032"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Valuation and expectations risk: the stock is up about 32% YTD and trades close to the consensus target. The 2027 starting point carries CCBA, currency and tax headwinds.",
+        "evidence_ids": [
+          "N.01",
+          "M.07",
+          "C.013",
+          "C.012"
+        ],
+        "evidence_type": "estimate"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Debt maturity step-up: current maturities of long-term debt are $4.9B (up from $1.8B at year-end), and the 10-K shows $4.8B of maturities in 2027. This is manageable, but combined with the IRS outcome it matters for capital allocation.",
+        "evidence_ids": [
+          "Q.010",
+          "K.392"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "How large is the Q4 destocking by region and category, and what Q4 concentrate-versus-unit-case gap is embedded in the 'at least 5%' organic guide?",
+      "why": {
+        "text": "Concentrate is +6% vs unit cases +4% over 9M, yet full-year concentrate is guided slightly behind unit cases, so Q4 concentrate must be weak. The guide's floor allows roughly -1% Q4 organic.",
+        "evidence_ids": [
+          "Q.103",
+          "Q.109",
+          "C.012",
+          "C.038"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "question": "What are the specific cash and capital-allocation plans under an adverse versus favorable IRS ruling, and will buybacks or M&A be considered before the decision?",
+      "why": {
+        "text": "The Company cites 'optionality' and a 1.3x leverage position against the 2-2.5x target, while the exposure is about $14B plus the $6.0B deposit.",
+        "evidence_ids": [
+          "C.041",
+          "C.011",
+          "Q.056",
+          "Q.057"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What are the 2027 price/mix drivers, and how much geographic and category mix drag is expected relative to the 2-3 pt algorithm?",
+      "why": {
+        "text": "Q3 price/mix was +1%, with mix at -3 pts, and mix drivers will persist in some form.",
+        "evidence_ids": [
+          "C.010",
+          "C.021"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How will bottlers' cost inflation (logistics, transport, commodities) flow through pricing and investment sharing in 2027?",
+      "why": {
+        "text": "Analysts flagged that inflation weighs more on bottlers than on concentrate. Management cited elevated logistics and transport costs.",
+        "evidence_ids": [
+          "C.026",
+          "C.027",
+          "C.011"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What is the status, expected timing and expected accounting (any gain or loss, translation adjustment reclassification) for the CCBA closing and the follow-on Singapore/Malaysia/Myanmar sales?",
+      "why": {
+        "text": "Guidance assumes a Q4 CCBA close, and held-for-sale assets total $6.3B against liabilities of $3.0B.",
+        "evidence_ids": [
+          "C.011",
+          "Q.019",
+          "Q.020"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is the plan for North America volume (Sprite, BODYARMOR, Topo Chico supply) and the BodyArmor trademark's impairment risk?",
+      "why": {
+        "text": "North America volume was flat and management cites Sprite and BODYARMOR as areas to improve. The BodyArmor trademark's fair value approximates carrying value.",
+        "evidence_ids": [
+          "C.005",
+          "C.030",
+          "Q.094"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How much of the 2026 tax benefit, currency and structural margin help repeats in 2027, and what is the timeline for the India bottling IPO?",
+      "why": {
+        "text": "The underlying ETR fell to 19.7% with benefits that will not repeat, and the IPO is under consideration.",
+        "evidence_ids": [
+          "C.012",
+          "C.013",
+          "Q.138"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "data_gaps": [
+    "No 8-K or earnings press release: the non-GAAP reconciliations, YTD comparable EPS and the Q4 2025 comparable EPS base are missing, so the Q4 implied EPS from the full-year guide cannot be tested against $0.61 and the consensus basis (comparable vs GAAP) is unverified.",
+    "Earnings call transcript date is not stated in the source header; the transcript is used as dated about 2026-10-27 per news.",
+    "Consensus for FY2027 and any post-print estimate revisions are not provided.",
+    "Whisper EPS and options-implied move are unavailable (the next report is 99 days away).",
+    "The prior values of the raised guidance items (organic revenue, EPS growth, FCF) are not in the sources; 'raised' status rests on analyst comments.",
+    "Long-term debt XBRL tags are missing in both the 10-Q and the 10-K; debt figures are taken from the balance sheet text.",
+    "Finnhub shows 2 beats and 0 misses in the last 4 quarters, while a third-party article cites a 6th consecutive EPS beat; the discrepancy is unreconciled.",
+    "Third-party articles' revenue-beat figures ($12.93B estimate) conflict with 'narrowly beat' characterizations and cannot be verified.",
+    "Quantified Q4 organic revenue guidance and the exact timing of CCBA closing are not given beyond 'Q4, subject to regulatory approvals'.",
+    "The 2027 tax-rate and 2027 margin effects are not quantified by management."
+  ],
+  "sources": {
+    "Q.010": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.019": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — Assets and Liabilities Held for Sale",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.020": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — Assets and Liabilities Held for Sale",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.049": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — Tax Audits",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.050": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — Tax Audits",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.053": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — Tax Audits",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.056": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — Tax Audits",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.057": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — Tax Audits",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.058": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — Tax Audits",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.077": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — NOTE 14: INCOME TAXES",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.078": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — NOTE 14: INCOME TAXES",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.094": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.103": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Beverage Volume",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.105": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — N/A",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.109": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Concentrate Sales Volume",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.110": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Three Months Ended October 2, 2026 versus Three Months Ended September 26, 2025",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.115": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Nine Months Ended October 2, 2026 versus Nine Months Ended September 26, 2025",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.119": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Selling, General and Administrative Expenses",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.138": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Income Taxes",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.144": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — LIQUIDITY, CAPITAL RESOURCES AND FINANCIAL POSITION",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.151": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Cash Flows from Operating Activities",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.153": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Purchases of Property, Plant and Equipment",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "K.187": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-20 — U.S. Federal Income Tax Dispute",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm",
+      "as_of": "2026-02-20"
+    },
+    "K.265": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-20 · MD&A — Income Taxes",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm",
+      "as_of": "2026-02-20"
+    },
+    "K.270": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-20 · MD&A — LIQUIDITY, CAPITAL RESOURCES AND FINANCIAL POSITION",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm",
+      "as_of": "2026-02-20"
+    },
+    "K.392": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-20 · Financial Statements — Loans and Notes Payable",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm",
+      "as_of": "2026-02-20"
+    },
+    "C.005": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Henrique Braun, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.006": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Henrique Braun, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.008": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Henrique Braun, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.010": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John Murphy, President and CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.011": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John Murphy, President and CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.012": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John Murphy, President and CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.013": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John Murphy, President and CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.015": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Dara Mohsenian, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.016": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Henrique Braun, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.017": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Henrique Braun, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.019": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Chris Carey, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.020": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John Murphy, President and CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.021": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John Murphy, President and CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.024": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John Murphy, President and CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.026": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Steve Powers, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.027": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Henrique Braun, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.030": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Henrique Braun, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.032": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John Murphy, President and CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.035": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Andrea Teixeira, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.038": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John Murphy, President and CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.040": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Robert Ottenstein, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.041": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John Murphy, President and CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.049": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John Murphy, President and CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.052": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John Murphy, President and CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=KO&quarter=2026Q3",
+      "as_of": null
+    },
+    "F.01": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2026-10-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "F.03": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — nine months ended 2026-10-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "F.09": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2026-10-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "F.17": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow — nine months ended 2026-10-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "F.18": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow — nine months ended 2025-09-26",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "F.21": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure — nine months ended 2026-10-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026067844/ko-20261002.htm",
+      "as_of": "2026-10-28"
+    },
+    "F.39": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — quarter ended 2026-10-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.40": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — nine months ended 2026-10-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.45": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating income growth — quarter ended 2026-10-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.56": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2026-10-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.58": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2025-09-26",
+      "url": null,
+      "as_of": null
+    },
+    "F.68": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — nine months ended 2026-10-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.69": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — nine months ended 2025-09-26",
+      "url": null,
+      "as_of": null
+    },
+    "F.70": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — year ended 2025-12-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.72": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-12-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.73": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "F.74": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-12-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.75": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.02": {
+      "kind": "market",
+      "citation": "Market data — Whisper EPS",
+      "url": null,
+      "as_of": null
+    },
+    "M.03": {
+      "kind": "market",
+      "citation": "Market data — Options-implied move",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "M.05": {
+      "kind": "market",
+      "citation": "Market data — Beat/miss record",
+      "url": null,
+      "as_of": null
+    },
+    "M.06": {
+      "kind": "market",
+      "citation": "Market data — Analyst rating actions",
+      "url": null,
+      "as_of": null
+    },
+    "M.07": {
+      "kind": "market",
+      "citation": "Market data — Consensus price target",
+      "url": null,
+      "as_of": null
+    },
+    "N.01": {
+      "kind": "news",
+      "citation": "cnbc.com, 2026-10-27 — Coca-Cola (KO) Q3 2026 earnings",
+      "url": "https://www.cnbc.com/2026/10/27/coca-cola-ko-q3-2026-earnings.html",
+      "as_of": "2026-10-27"
+    },
+    "N.02": {
+      "kind": "news",
+      "citation": "marketwatch.com, 2026-10-30 — Coca-Cola Co. stock underperforms Friday when compared to competitors despite daily gains - MarketWatch",
+      "url": "https://www.marketwatch.com/data-news/coca-cola-co-stock-underperforms-friday-when-compared-to-competitors-despite-daily-gains-e9860424-dee73604f489?mod=mw_quote_news",
+      "as_of": "2026-10-30"
+    },
+    "N.05": {
+      "kind": "news",
+      "citation": "247wallst.com, 2026-10-29 — Jim Cramer Says Buy Coca-Cola. Is Its Dividend Still Worth It After a 35% Rally? - 24/7 Wall St.",
+      "url": "https://247wallst.com/investing/2026/10/29/jim-cramer-says-buy-coca-cola-is-its-dividend-still-worth-it-after-a-35-rally",
+      "as_of": "2026-10-29"
+    },
+    "N.07": {
+      "kind": "news",
+      "citation": "tikr.com, 2026-10-24 — Coca-Cola Stock Fell a Day After a 52-Week High. Here’s Why India Matters on October 27 | TIKR.com",
+      "url": "https://www.tikr.com/blog/coca-cola-stock-fell-a-day-after-a-52-week-high-heres-why-india-matters-on-october-27",
+      "as_of": "2026-10-24"
+    },
+    "N.08": {
+      "kind": "news",
+      "citation": "businessinsider.com, 2026-10-29 — Coca-Cola CEO unimpressed by Diet Coke's 'fridge cigarette' nickname",
+      "url": "https://www.businessinsider.com/coca-cola-ceo-diet-coke-fridge-cigarette-nickname-2026-10",
+      "as_of": "2026-10-29"
+    }
+  },
+  "check_notes": []
+}

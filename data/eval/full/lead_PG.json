@@ -1,0 +1,1627 @@
+{
+  "ticker": "PG",
+  "company_name": "PROCTER & GAMBLE Co",
+  "report_generated_at": "2026-11-01T14:45:47+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-10-22",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-08-04",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm"
+    }
+  ],
+  "earnings_call": "Q4 FY2026 earnings call (date unknown)",
+  "current_report": "8-K filed 2026-10-30: Item 8.01 other events; Item 9.01 financial statements and exhibits",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$1.88",
+      "fiscal_quarter": 2,
+      "fiscal_year": 2027,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$23.50B",
+      "fiscal_quarter": 2,
+      "fiscal_year": 2027,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2027-01-20 report. Paid lookup not made: next report is 80 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "implied move: no live implied move yet (EarningsWatcher has no confirmed report date)."
+    },
+    "historical_move": {
+      "value": "±2.2% average closing move over the last 8 reports (2025-01-22 to 2026-10-22)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/pg-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "analyst_actions": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "price_target": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "Q1 FY27 (quarter to 30 Sep 2026): net sales $23.28B (+4.0%), organic sales +4.0%, GAAP diluted EPS $1.97 (+1%), core EPS $2.00 vs $1.99 (+1%). Currency-neutral core EPS was flat. In July the CFO had guided Q1 EPS down 5% or more, so the quarter beat that warning by a wide margin.",
+      "evidence_ids": [
+        "F.01",
+        "F.29",
+        "F.05",
+        "Q.069",
+        "A.020",
+        "C.018"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Core EPS of $2.00 compared with a $1.88–1.89 consensus, and the stock rose about 5.6% on 22 Oct (S&P 500 −1.2%).",
+      "evidence_ids": [
+        "N.08",
+        "N.35",
+        "N.47"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Growth was volume-led: volume +2.4%, mix +1.1%, price +0.4%, FX nil. All 10 categories and all 6 regions grew organically. North America volume rose 3 points, and over 70% of top US customers were holding or growing share, versus under 10% in H1 FY26.",
+      "evidence_ids": [
+        "Q.048",
+        "A.018"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Margins fell. Reported gross margin was 49.8% (−160bp) and core gross margin 50.0% (−150bp). Core operating margin was 25.9% (−80bp) even with 250bp of gross productivity savings, because commodities (−140bp) and product/packaging reinvestment (−140bp) outweighed them.",
+      "evidence_ids": [
+        "Q.048",
+        "Q.049",
+        "N.45",
+        "A.020",
+        "A.029"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q1 was flattered by one-offs. Management said Q1 benefited from only a partial commodity-cost impact and about $90M from the second part of a tariff refund. By my arithmetic (assuming the $90M is pre-tax at the 21.0% Q1 effective rate, ~2,407M diluted shares), core EPS ex-refund is about $1.97 versus reported core of $2.00, roughly -1% against $1.99 a year ago. If the $90M is after tax, it is about $1.96. The refund is about 39bp of Q1 sales, most of the 50bp tariff-related gross-margin benefit, so reported core gross margin of -150bp becomes about -190bp ex-refund.",
+      "evidence_ids": [
+        "A.014",
+        "Q.050",
+        "Q.069",
+        "Q.019",
+        "Q.049",
+        "A.010",
+        "F.01"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "On 22 Oct P&G kept all headline FY27 ranges: organic sales +1–3%, core EPS $6.89–$7.11 (0–3%) and FCF productivity 85–90%. It raised the cost assumptions beneath them: Brent $100 (July: $90), after-tax commodity/energy/transport headwind ~$1.4B (July: ~$1B), and a total headwind of $0.79/share, or 11% of core EPS (July: $0.56, 8%). Management expects 'materially higher' cost headwinds in Q2 and H2.",
+      "evidence_ids": [
+        "A.029",
+        "A.030",
+        "A.071",
+        "N.48",
+        "C.017",
+        "C.018"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "The Q2 bar, with the report due 20 Jan 2027 before the open: consensus is EPS $1.88 and revenue $23.50B, implying +5.6% EPS and +5.8% revenue against $1.78 (GAAP) and $22.21B a year ago. Last year Q2 revenue fell 0.8% sequentially from Q1 ($22.21B vs $22.39B), whereas consensus implies Q2 FY27 up about 1.0% from Q1's $23.28B.",
+      "evidence_ids": [
+        "M.01",
+        "F.53",
+        "F.54",
+        "F.55",
+        "F.56",
+        "F.01",
+        "F.02"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Balance sheet at 30 Sep: cash $15.4B (June: $9.9B), debt due within one year $17.0B (June: $11.3B) and long-term debt $21.9B. Cash was pre-funded for Thorne, which closed on 1 Oct for $3.9B in cash. On 30 Oct P&G closed $4.0B of new notes.",
+      "evidence_ids": [
+        "F.13",
+        "F.27",
+        "Q.006",
+        "F.14",
+        "Q.028",
+        "Q.064",
+        "E.003"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Capital return plan for FY27 is unchanged: over $10B of dividends and about $5B of buybacks, about $15B in total. Q1 returned $3.9B ($2.6B dividends, $1.3B buybacks). Diluted shares fell to 2,407.2M from 2,436.8M (−1.2%).",
+      "evidence_ids": [
+        "A.030",
+        "A.025",
+        "Q.019",
+        "Q.075"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Calendar and move history: the next report is 20 Jan 2027 (before the open). Average closing move over the last 8 reports was ±2.2%. An Investor Day is set for 19 Nov 2026 in Cincinnati.",
+      "evidence_ids": [
+        "M.01",
+        "M.04",
+        "C.085",
+        "A.007"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Organic sales growth",
+      "period": "Q2 FY27 (Oct–Dec 2026)",
+      "last_reported": {
+        "text": "Q1 FY27 organic sales +4.0% (volume +2.4%, price +0.4%, mix +1.1%). Q4 FY26 organic was roughly flat.",
+        "evidence_ids": [
+          "Q.048",
+          "A.017",
+          "C.005"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Model about 2–3%. Management guides H1 at about 3% with a slight H2 acceleration. With Q1 at 4.0%, equal quarterly weights imply Q2 near 2%, which would be a deceleration. Management flagged shipment timing, European pre-shipments and a prior-year US inventory shift (affecting fiscal Q3 comparisons) as sources of quarterly noise. The Pampers China competitor benefit (about 3 points of China growth) may fade. Wells Fargo argues Q2 comparisons are easier.",
+        "evidence_ids": [
+          "A.010",
+          "A.014",
+          "A.011",
+          "N.33",
+          "A.072"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Net sales",
+      "period": "Q2 FY27",
+      "last_reported": {
+        "text": "Q1 FY27 net sales $23.28B (+4.0%). Q2 FY26 was $22.21B.",
+        "evidence_ids": [
+          "F.01",
+          "F.29",
+          "F.53"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus $23.50B, +5.8% year on year.",
+        "evidence_ids": [
+          "M.01",
+          "F.54"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Base case is about $22.8–23.2B (my arithmetic). That is 2–4% organic growth on $22.21B (about $22.65–23.10B) plus roughly $0.13B from Thorne (more than $500M of annual revenue per press), with FX assumed near nil as in Q1. It sits roughly $0.3–0.7B below consensus of $23.50B. The risk to revenue is skewed to a miss unless FX or price is a bigger contributor than in Q1. Q2 FX was not guided.",
+        "evidence_ids": [
+          "F.53",
+          "N.13",
+          "Q.048",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Core EPS",
+      "period": "Q2 FY27",
+      "last_reported": {
+        "text": "Q1 FY27 core EPS was $2.00, up 1% from $1.99. Management said Q1 included about $90M from the second part of a tariff refund and only a partial commodity-cost impact.",
+        "evidence_ids": [
+          "Q.069",
+          "A.014"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus EPS $1.88 (+5.6% against Q2 FY26 GAAP diluted EPS of $1.78). Whether the consensus is core or GAAP is not stated.",
+        "evidence_ids": [
+          "M.01",
+          "F.55",
+          "F.56"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Lean cautious. On my arithmetic Q1 had a ~$0.03/share tariff-refund benefit (~$90M pre-tax at the 21.0% Q1 rate over ~2,407M diluted shares) that will not repeat, and management said Q1 carried only a ~5% commodity earnings drag against ~8% for the year. Scaling the remaining ~$1.16B after tax over Q2–Q4 gives about $0.16/share a quarter versus about $0.10 in Q1, and management expects 'materially higher' cost headwinds in Q2. The incremental M&A-related interest also starts in Q2. Offsets are volume, ~250bp of gross productivity savings and a ~1% lower diluted share count (2,407M vs 2,437M). Q2 core growth should therefore be below Q1's underlying ~-1%, so consensus EPS of $1.88 (+5.6% vs the $1.78 GAAP diluted EPS a year earlier) only works if the Q2 FY26 core base is well above $1.78. The core base is not in my sources; given incremental restructuring add-backs it would normally be at or above the GAAP $1.78.",
+        "evidence_ids": [
+          "A.014",
+          "Q.050",
+          "Q.019",
+          "A.004",
+          "A.029",
+          "N.36",
+          "M.01",
+          "F.54",
+          "F.55"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Core gross margin",
+      "period": "Q2 FY27",
+      "last_reported": {
+        "text": "Q1 core gross margin 50.0%, −150bp (reported GM 49.8%, −160bp).",
+        "evidence_ids": [
+          "N.45",
+          "Q.048",
+          "A.020"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Expect a larger decline than Q1's −150bp (about −190bp ex-refund). Q2 product was made at about $100 Brent, there is little time to react, the tariff-refund help does not repeat, and Q1's price contribution was only +20bp. Fabric & Home Care (−290bp) and Baby/Fem/Family Care (−220bp) already carry the commodity load.",
+        "evidence_ids": [
+          "A.004",
+          "Q.049",
+          "Q.059",
+          "Q.061",
+          "A.071"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Core SG&A % of sales",
+      "period": "Q2 FY27",
+      "last_reported": {
+        "text": "Q1 core SG&A rate −80bp: +130bp productivity and +100bp sales leverage, offset by −120bp reinvestment and −40bp other. SG&A dollars were flat at $5.66B.",
+        "evidence_ids": [
+          "A.028",
+          "Q.049",
+          "Q.004"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Expect less relief than in Q1. The 100bp of leverage came from 4% sales growth, and at about 2–3% growth it shrinks. Restructuring savings (about half the 7,000-role cut done by the July call) and lower incremental restructuring in SG&A help, but management is keeping marketing 'fully invested'.",
+        "evidence_ids": [
+          "A.028",
+          "A.010",
+          "Q.027",
+          "C.042",
+          "Q.069"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Net interest expense and other non-operating income",
+      "period": "Q2 FY27",
+      "last_reported": {
+        "text": "Q1 interest expense $223M vs $197M and interest income $102M vs $108M (net expense $121M vs $89M). Other non-operating income was $207M vs $268M.",
+        "evidence_ids": [
+          "Q.004",
+          "Q.050"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Step-up from Q2. Guidance is ~$300M of higher after-tax net interest for FY27 (about $150M from M&A debt, starting in Q2) and ~$150M lower non-operating income. Only about $25M of the interest increase after tax showed in Q1, so roughly $90–100M after tax a quarter (about $0.04/share) falls in Q2–Q4. The $4.0B of new notes at ~5.5% costs about $220M a year pre-tax.",
+        "evidence_ids": [
+          "N.36",
+          "A.030",
+          "Q.004",
+          "E.003",
+          "Q.019"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Core effective tax rate",
+      "period": "Q2 FY27",
+      "last_reported": {
+        "text": "Q1 GAAP effective tax rate was 21.0% vs 20.8%. Core income taxes were $1,287M on core pre-tax earnings of about $6.12B (GAAP pre-tax $6,023M plus roughly $100M of incremental restructuring), which is also about 21.0%.",
+        "evidence_ids": [
+          "Q.050",
+          "Q.004",
+          "Q.068"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Model about 21%. Guidance moved to 20–21% from ~20% in July. Each 1pt is about $209M, or about $0.09/share, for the year. Q1 already ran at the top of the range.",
+        "evidence_ids": [
+          "A.030",
+          "C.018",
+          "K.146",
+          "Q.069"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Diluted share count and buyback",
+      "period": "Q2 FY27",
+      "last_reported": {
+        "text": "Q1 diluted weighted shares 2,407.2M vs 2,436.8M; Q1 repurchases $1.26B against a ~$5B FY27 plan.",
+        "evidence_ids": [
+          "Q.019",
+          "Q.007",
+          "Q.075"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Model about 2,400–2,405M diluted shares in Q2, about −1% year on year. That is worth roughly $0.02 of EPS and is already in Q1. The ~$5B plan implies about $1.25B a quarter. Thorne is all-cash, so there is no share dilution.",
+        "evidence_ids": [
+          "Q.019",
+          "Q.075",
+          "Q.028"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Free cash flow productivity",
+      "period": "FY27",
+      "last_reported": {
+        "text": "Q1 FCF $4.4B (operating cash flow $5.77B less capex $1.37B), 93% productivity. Capex rose 13.8% year on year.",
+        "evidence_ids": [
+          "Q.067",
+          "F.49",
+          "F.34"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guided at 85–90% for the year versus 93% in Q1. Cost inflation in inventory and payables timing (supplier finance $6.5B) can swing quarters. Model Q2 near the guide, not Q1's level.",
+        "evidence_ids": [
+          "A.030",
+          "Q.026",
+          "Q.063"
+        ],
+        "evidence_type": "estimate"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Organic sales growth",
+      "guidance": "+1% to +3%, including a 30–50bp headwind from brand, product-form and go-to-market exits. Management expects about 3% in H1 with slight acceleration in H2.",
+      "period": "FY27",
+      "status": "maintained",
+      "claim": {
+        "text": "Organic sales growth guidance was maintained at 1–3% after Q1's 4.0%. The 22 Oct call added H1 about 3% and slight H2 acceleration. The CFO said one quarter 'makes no upper end of the guidance range'.",
+        "evidence_ids": [
+          "A.029",
+          "A.010",
+          "A.007"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "All-in net sales growth",
+      "guidance": "+2% to +4% (was +1% to +3%), reflecting Thorne from 1 Oct 2026.",
+      "period": "FY27",
+      "status": "raised",
+      "claim": {
+        "text": "All-in sales growth guidance was raised by about one point for Thorne. Organic is unchanged.",
+        "evidence_ids": [
+          "A.029",
+          "N.14"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Core EPS",
+      "guidance": "0% to +3% growth, $6.89–$7.11 against $6.89 in FY26; midpoint $7.00.",
+      "period": "FY27",
+      "status": "maintained",
+      "claim": {
+        "text": "Core EPS guidance was kept even though the cost assumption rose. The CFO said he is 'confident in the range'. Where in the range is not given: 'it's one quarter'. Pre-print consensus was $6.97.",
+        "evidence_ids": [
+          "A.029",
+          "A.006",
+          "N.07"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "GAAP diluted EPS growth",
+      "guidance": "+1% to +5% on $6.62 (about $6.69–$6.95).",
+      "period": "FY27",
+      "status": "maintained",
+      "claim": {
+        "text": "GAAP EPS growth guidance was maintained.",
+        "evidence_ids": [
+          "A.029",
+          "N.07"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Commodity, energy and transport headwind (after tax)",
+      "guidance": "About $1.4B, assuming Brent at $100 (the July assumption was about $1B at $90). 'Materially higher' headwinds in Q2 and H2.",
+      "period": "FY27",
+      "status": "raised",
+      "claim": {
+        "text": "The commodity cost headwind was raised to ~$1.4B after tax from ~$1B. Management said Q1 carried only partial impact and Q2 was produced at about $100 Brent. Oil above $110 would add pressure.",
+        "evidence_ids": [
+          "A.030",
+          "A.004",
+          "N.48",
+          "A.001",
+          "C.017"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Net interest expense (after tax)",
+      "guidance": "About $300M higher, with about $150M tied to M&A debt starting in Q2 (July guide: about $150M).",
+      "period": "FY27",
+      "status": "raised",
+      "claim": {
+        "text": "The interest headwind doubled to ~$300M after tax, with about half attributed to debt for recent M&A, starting in Q2.",
+        "evidence_ids": [
+          "N.36",
+          "A.071",
+          "A.030",
+          "C.018"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Lower non-operating income and FX (after tax)",
+      "guidance": "About $150M lower non-operating income and about $50M FX headwind; total headwind $0.79/share (11% of FY26 core EPS) versus $0.56 (8%) in July.",
+      "period": "FY27",
+      "status": "maintained",
+      "claim": {
+        "text": "The non-operating income ($150M) and FX ($50M) items are unchanged from July. The total headwind rose to $0.79/share only because commodities and interest rose.",
+        "evidence_ids": [
+          "A.030",
+          "C.018"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Core effective tax rate",
+      "guidance": "20% to 21% (July: about 20%).",
+      "period": "FY27",
+      "status": "raised",
+      "claim": {
+        "text": "The core tax rate guide widened up to 20–21%. Whether it is already inside the $0.79 headwind is not clear: the release lists only input costs, interest, non-operating income and FX.",
+        "evidence_ids": [
+          "A.030",
+          "C.018"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Free cash flow productivity, capex and cash return",
+      "guidance": "FCF productivity 85–90%; capex 4.5–5.5% of sales; dividends over $10B; buybacks about $5B.",
+      "period": "FY27",
+      "status": "maintained",
+      "claim": {
+        "text": "Cash flow, capex and shareholder-return guidance is unchanged from July.",
+        "evidence_ids": [
+          "A.030",
+          "C.019"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "On 30 Oct P&G closed $4.0B of notes: $750M 5.125% due 2031, $750M 5.300% due 2033, $1.25B 5.450% due 2036 and $1.25B 5.900% due 2056. The weighted coupon is about 5.5% (my arithmetic), about $220M a year pre-tax, versus a 3.3% average on existing long-term debt. Use of proceeds (refinancing commercial paper versus adding net debt) is not disclosed.",
+      "evidence_ids": [
+        "E.003",
+        "K.229",
+        "K.230"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Brent has stayed above the $100 'effective' price underlying guidance: it settled at $115.81 on 26 Oct, December futures were $116.53 on 30 Oct, and tickers showed $117.7 on 30 Oct and $113.4 on 31 Oct. ANZ sees $105 and UBS $110 by year-end. The $100 is an effective average of actual and forward prices flowing through the P&L, not a spot price, so the gap does not map one-for-one into cost. The skew is upward, and management itself flagged oil above $110 as a pressure point.",
+      "evidence_ids": [
+        "N.19",
+        "N.17",
+        "N.18",
+        "N.20",
+        "N.16",
+        "A.001",
+        "C.018"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Contradiction on the oil assumption. The July call (Q4 FY26) assumed Brent at $90 and a ~$1B cost headwind. The 22 Oct call (newer) assumes $100 and ~$1.4B. The earlier figures are superseded, and the Oct 22 guidance should be used as the base for Q2 modelling.",
+      "evidence_ids": [
+        "C.018",
+        "A.071",
+        "N.48"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "Colgate-Palmolive's 10-Q (30 Oct) shows a weak US category and heavy input costs. In Q3 North America organic sales fell 1.6% (volume −3.7%, price +2.2%) and EMEA rose 2.7% with price −0.9%. Gross margin rose 80bp only because savings (+290bp), pricing (+80bp) and mix (+20bp) outweighed raw and packaging costs (−300bp). It expects category softness through the rest of 2026 and warns of private-label switching.",
+      "evidence_ids": [
+        "P.001",
+        "P.002",
+        "P.009",
+        "P.003",
+        "P.004"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Packaging read-through: Huhtamaki's Q3 report (29 Oct) says resin raw material prices rose year on year and pulp prices increased, while paperboard was near last year's level. This is indirect support for P&G's resin and pulp cost pressure, not P&G data.",
+      "evidence_ids": [
+        "N.27"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Sell-side reaction was positive. Wells Fargo raised its price target to $180 from $164, saying Q2 and Q4 comparisons get easier and that upside to the topline guide is 'well in scope'. Morningstar expects more detail on supply-chain initiatives at the 19 Nov Investor Day.",
+      "evidence_ids": [
+        "N.33",
+        "N.25"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Thorne closed on 1 Oct for $3.9B (the 10-K had said $3.8B at signing). It is in Personal Health Care, with results reported from the December quarter and described as not material. It had annual revenue of more than $500M in 2025 (press).",
+      "evidence_ids": [
+        "Q.028",
+        "K.090",
+        "N.13"
+      ],
+      "evidence_type": "reported"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Was Q1 a clean beat or a flattered one?",
+      "bull": {
+        "text": "Volume drove growth (+2.4%, the first time volume has topped 2% since 2022 per press). All 10 categories and all 6 regions grew organic sales, North America volume rose 3 points, and over 70% of top US customers are holding or growing share, up from under 10% in H1 FY26. Global share is flat versus prior year, with Baby Care share up 80bp.",
+        "evidence_ids": [
+          "A.001",
+          "A.018",
+          "A.019",
+          "A.006"
+        ],
+        "evidence_type": "estimate"
+      },
+      "bear": {
+        "text": "The EPS beat leaned on one-offs. Management said Q1 carried only a partial commodity-cost impact and about $90M from the second part of a tariff refund. On my arithmetic, core EPS ex-refund is about $1.97 if the $90M is pre-tax at the 21.0% Q1 rate and about $1.96 if after tax, roughly -1% to -1.5% against $1.99 a year ago. Pampers China (up close to 50%) was partly helped by a competitor's disruption that management estimated added about 3 points to China growth. Family Care has not yet returned to share growth (North America Family Care share -0.5 points in Q1).",
+        "evidence_ids": [
+          "A.014",
+          "Q.050",
+          "Q.069",
+          "A.011",
+          "A.006",
+          "Q.061"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Q2 volume staying above 2% with core gross margin ex one-offs, and whether price increases to recover the $1.4B stick without volume loss."
+    },
+    {
+      "question": "Can P&G hold the $6.89–$7.11 core EPS range with a $0.79 per share headwind and oil above its assumption?",
+      "bull": {
+        "text": "Management says it is 'confident in the range' and plans to offset costs with record productivity (250bp in Q1), pricing with innovation and time. Q1 beat the July warning by about 6 points of EPS growth, and the industry is pricing up.",
+        "evidence_ids": [
+          "A.006",
+          "A.005",
+          "A.020",
+          "C.018"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Management said Q2 product was made at about $100 Brent with 'little' time to react, while Brent was about $113–117 on Oct 30–31. The core tax guide moved from about 20% to 20–21%, and the after-tax net interest headwind moved from about $150M to about $300M. Q1 pricing added only 0.4%. Colgate's quarter shows pricing does not fully cover cost: higher pricing added 80bp to gross margin against a 300bp raw and packaging cost headwind.",
+        "evidence_ids": [
+          "A.004",
+          "N.17",
+          "N.20",
+          "C.018",
+          "A.030",
+          "N.36",
+          "Q.048",
+          "P.009"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "The Q2 core gross margin and the Brent assumption on the 20 Jan call, and any announced price increases or promotion pullback at the 19 Nov Investor Day."
+    },
+    {
+      "question": "Is the Street's Q2 bar (+5.8% revenue, +5.6% EPS) too high?",
+      "bull": {
+        "text": "Wells Fargo says comparisons ease in Q2 and Q4 and upside to the reiterated top-line guide is 'well in scope'. Q1 organic sales of 4.0% ran above the 1–3% range, and the Thorne acquisition adds to reported sales (all-in sales guide raised to 2–4%).",
+        "evidence_ids": [
+          "N.33",
+          "Q.048",
+          "A.029"
+        ],
+        "evidence_type": "estimate"
+      },
+      "bear": null,
+      "what_settles_it": "The Q2 core EPS against $1.88, and whether the company or sell-side recasts Q2 expectations after the 19 Nov Investor Day."
+    },
+    {
+      "question": "Does the volume recovery survive price increases and a promotional, private-label-heavy market?",
+      "bull": {
+        "text": "Management says US category growth has improved toward 3% and that it plans to address inflation through productivity, pricing accompanied by innovation, and time. Innovations such as Pantene Abundant & Strong (growing share in the US) and Pampers Amore (projected to exceed $100M in year-one sales and contributing to Pampers share growth) are helping. Management also says promotion is not a way to build the business and that it will keep pricing with innovation.",
+        "evidence_ids": [
+          "A.072",
+          "A.021",
+          "A.022",
+          "C.050"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Promotion is returning to pre-COVID levels (European volume on promotion up about 5 points), Colgate's US volume fell 3.7%, and consumers may switch to private label. Management warns that consumer resilience may not continue consistently given fuel costs.",
+        "evidence_ids": [
+          "C.050",
+          "P.001",
+          "P.003",
+          "A.014"
+        ],
+        "evidence_type": "proxy"
+      },
+      "what_settles_it": "US volume and the share of top customers holding or growing share against the 80% target for year-end, and Family Care share turning, which management says it expects in H2."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "base",
+      "description": {
+        "text": "Q2 organic sales of about 2–3% (consistent with an H1 around 3%), reported sales of about $22.8–23.0B including Thorne (below consensus $23.50B), core gross margin down more than Q1's 150bp, core tax of 20–21% and interest costs stepping up. Core EPS lands roughly flat to modestly down against the prior-year core base, near or slightly under the $1.88 consensus. Guidance ranges are held, with the cost story dominating the tone.",
+        "evidence_ids": [
+          "A.010",
+          "A.004",
+          "A.030",
+          "N.36",
+          "M.01",
+          "F.53",
+          "N.13"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Q2 organic sales 2–3% with volume still positive",
+        "Core gross margin down 150–250bp",
+        "FY27 core EPS range reiterated without the midpoint raised"
+      ]
+    },
+    {
+      "name": "bull",
+      "description": {
+        "text": "Volume momentum persists: organic sales of 3.5% or more, helped by easier comparisons, innovation pricing taking hold and the Family Care and US share recovery. Oil eases from $115 toward the ANZ and UBS year-end $105–110, so the cost drag is no worse than assumed. Core EPS reaches or beats $1.88 and management signals comfort in the upper half of the range.",
+        "evidence_ids": [
+          "N.33",
+          "N.16",
+          "A.018",
+          "A.015"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Brent trending toward or below $105",
+        "Top US customers holding or growing share above 80%",
+        "Announced price increases accepted without volume loss"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Brent holds above $110 so cost pressure in Q2 and H2 exceeds the $1.4B assumption. Without refund help and with higher interest, Q2 core EPS lands clearly below consensus. Retailer destocking or the fading Pampers China competitor effect trims organic sales to about 1–2%. Management then points to the low half of the 0–3% EPS range or uses the Investor Day to reset expectations.",
+        "evidence_ids": [
+          "A.001",
+          "N.17",
+          "N.20",
+          "A.004",
+          "A.011",
+          "A.014"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Brent futures above $115 into January",
+        "Q2 organic sales below 2%",
+        "Core tax at 21% or higher and no offsetting pricing"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "Oil and input-cost risk. The $1.4B headwind assumes an effective Brent price of $100. Management said costs rise 'materially' in Q2 and H2, Q2 was produced at about $100, and oil above $110 would add pressure. Brent futures are at $113–117, driven by Middle East supply and shipping disruption.",
+        "evidence_ids": [
+          "A.030",
+          "A.004",
+          "A.001",
+          "N.17",
+          "N.20"
+        ],
+        "evidence_type": "estimate"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Earnings quality and non-recurring items. The ~$90M IEEPA refund and partial commodity flow-through flattered Q1. The 10-K shows about $200M of IEEPA tariffs paid, half recognised in Q4 FY26. A Q2 without these makes year-on-year EPS comparisons harder.",
+        "evidence_ids": [
+          "A.071",
+          "K.090",
+          "Q.049"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Higher leverage and financing cost. At Sept 30, cash was $15.4B and debt due within one year was $17.0B. Thorne closed Oct 1 for $3.9B in cash, and on Oct 30 P&G closed $4.0B of new notes at coupons of 5.125–5.9% (about 5.5% weighted). After-tax net interest cost is now guided ~$300M higher versus ~$150M in the prior (Q4 FY26) guide. The $4.8B 364-day credit facility was due to expire in October 2026; whether it was renewed is not confirmed.",
+        "evidence_ids": [
+          "F.13",
+          "Q.006",
+          "Q.028",
+          "E.003",
+          "C.018",
+          "N.36",
+          "A.030",
+          "K.120"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Sell-in versus sell-out volatility. Q4 FY26 showed a three-point gap (sell-out +2%, sell-in −1%) from Prime Day timing and retailer destocking. Management still expects trade inventory volatility, cited European pre-shipments and a prior-year US inventory shift that affect fiscal Q3 comparisons, and said the strength 'will not be a straight line'.",
+        "evidence_ids": [
+          "C.005",
+          "C.006",
+          "C.047",
+          "A.014",
+          "A.072"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Competitive and consumer risk in the US and Europe. Family Care share is still falling and management says it has 'not yet seen the share turn'. Oral Care share fell 0.6 pts and Beauty 0.2 pts in the quarter. Promotion is rising toward pre-COVID levels, Colgate reports US volume declines and private-label switching risk, and fuel costs may hit consumers.",
+        "evidence_ids": [
+          "A.006",
+          "Q.056",
+          "Q.052",
+          "C.050",
+          "P.001",
+          "P.003",
+          "A.014"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "China concentration of growth. Greater China grew 8% (volume +5%), with Pampers close to +50% helped by a competitor's issue, worth about 3 points of China growth. The market remains challenged and the benefit may fade.",
+        "evidence_ids": [
+          "A.011",
+          "A.019",
+          "C.057"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Gillette impairment sensitivity. The Gillette indefinite-lived intangible ($12.8B) has fair value more than 10% above carrying value. A 25bp rise in the discount rate or a 25bp cut in growth each reduce fair value about 5%, and higher rates, FX devaluation or inflation could trigger a charge. Annual testing is in the December quarter.",
+        "evidence_ids": [
+          "Q.015",
+          "Q.018",
+          "Q.014"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Execution risk in restructuring and productivity. P&G expects about $2.0B of before-tax restructuring over two years, with over half incurred in FY26 and up to 7,000 non-manufacturing roles to go by end FY27. Q1 charges were $192M ($98M incremental in operating income, ~$0.03/share). Productivity delivered 250bp of gross savings in Q1 and is the main offset to a ~$1.4B after-tax cost headwind.",
+        "evidence_ids": [
+          "Q.027",
+          "Q.041",
+          "Q.068",
+          "Q.069",
+          "A.029",
+          "A.030"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "How much of the ~$1.4B after-tax commodity headwind lands in Q2, and what does the Q2 core EPS cadence look like versus Q1's ~5% earnings drag?",
+      "why": {
+        "text": "Management said Q1 carried only a ~5% earnings headwind from commodities against ~8% for the year, and that Q2 was produced at about $100 Brent. That sets the size of any Q2 step-down.",
+        "evidence_ids": [
+          "A.004",
+          "N.48"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "question": "Is the ~$90M tariff refund pre-tax or after tax, and which line did it hit? Is any further recovery or one-off expected in H1?",
+      "why": {
+        "text": "The refund explains most of Q1's 50bp tariff benefit and about $0.03–0.04 of EPS. The 10-K shows ~$200M paid, half recognised in Q4.",
+        "evidence_ids": [
+          "A.071",
+          "K.090",
+          "Q.049"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "Is the 20–21% core tax rate guide inside the $0.79 per share headwind? What drives the move up from ~20%?",
+      "why": {
+        "text": "The release lists only input costs, interest, non-operating income and FX. Each 1pt of tax rate is about $0.09 of EPS.",
+        "evidence_ids": [
+          "A.030",
+          "C.018",
+          "K.146"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What are the price increases planned and timing (the CFO said innovation is timed with retail resets), and what volume elasticity is embedded in the 1–3% organic range?",
+      "why": {
+        "text": "The CFO said industry pricing must rise at this commodity level, yet Q1 pricing contributed only 0.4% and promotion is rising.",
+        "evidence_ids": [
+          "A.005",
+          "A.072",
+          "Q.048",
+          "C.050"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "Was the $4.0B notes issue to fund Thorne or refinance commercial paper? Was the $4.8B 364-day facility renewed, and what is the target leverage and rating stance?",
+      "why": {
+        "text": "Debt due within one year is $17.0B, the new notes carry ~5.5% coupons, and the facility was due to expire in October 2026.",
+        "evidence_ids": [
+          "Q.006",
+          "E.003",
+          "K.120"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How durable is the Pampers China and Greater China momentum once the competitor disruption fades, and what is the share base excluding it?",
+      "why": {
+        "text": "China grew 8% with an estimated 3-point competitor benefit.",
+        "evidence_ids": [
+          "A.011",
+          "A.015"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "question": "How far is the headcount programme (up to 7,000, and the 15% non-manufacturing cut mentioned on the call) and what savings are locked into FY27 and FY28? Will the Investor Day offer new medium-term targets?",
+      "why": {
+        "text": "The 10-Q says up to 7,000 non-manufacturing roles by FY27 end, while the call cited a planned 15% reduction in non-manufacturing headcount. In Q1, SG&A dollars were flat because lower overhead offset increased marketing spending.",
+        "evidence_ids": [
+          "Q.027",
+          "A.014",
+          "Q.049"
+        ],
+        "evidence_type": "reported"
+      }
+    }
+  ],
+  "data_gaps": [
+    "Q2 FY26 (Oct–Dec 2025) core EPS and organic growth are not in my sources, only GAAP EPS of $1.78 and revenue of $22.21B. The core-to-core restatement of the consensus growth is therefore not done, and it is not stated whether the $1.88 consensus is core or GAAP.",
+    "No estimate-revision history: the pre-Q1 Q2 consensus is unavailable, so whether estimates moved after the print is unknown. Beat/miss record, price target and options-implied move are N/A (M.03, M.05). Whisper EPS is also N/A.",
+    "The tariff refund wording is inconsistent: the call summary says 'EPA' while the 10-K and a later summary say IEEPA. Whether the ~$90M is pre-tax or after tax is not stated.",
+    "Whether the 20–21% core tax guide is already included in the $0.79 per share headwind is not stated.",
+    "The 'Q1 commodity headwind about 5% of earnings versus 8% for the year' comes from a secondary summary (BigGo/AI recap), not the filing or the full transcript.",
+    "The transcript reads '9 of our top 50 category-country combinations held or grew share'; two summaries say 29. I used 29 and treated 9 as a transcription error. The same transcript also prints 'EUR 3.9 billion' for cash returned where the release says $3.9B.",
+    "The 10-K described the restructuring as '$1.5 to $2.0 billion' over two years, while the 10-Q and MD&A say approximately $2.0B. Whether this is a narrowing is not explained.",
+    "The 15% non-manufacturing headcount reduction from the call cannot be reconciled with the 7,000-role target, because the non-manufacturing base is not disclosed. I did not find the actual number of roles already eliminated.",
+    "The $4.8B 364-day credit facility (due October 2026): no source confirms renewal or replacement. Use of proceeds from the $4.0B notes is not disclosed.",
+    "Thorne's quarterly revenue contribution is not disclosed (the $500M+ annual figure is press). The Q2 FX effect on reported sales is not guided.",
+    "No direct resin, pulp, freight or diesel price series was retrieved; packaging evidence is one proxy (Huhtamaki). Unilever and Clorox filings were not read, and Kimberly-Clark data is from its June-quarter 10-Q.",
+    "The size and timing of the European merchandising pre-shipments and the prior-year US inventory shift are not quantified, nor is whether Q4 FY26 destocking reversed in Q1.",
+    "Investor Day content (19 Nov) is unknown. The full Q1 transcript Q&A was only partly available, so Q2 EPS colour beyond the cost-cadence comments may exist.",
+    "Market data: signals figures are N/A because FMP refused the request (FMP refused https://financialmodelingprep.com/stable/grades (HTTP 402): Premium Query Parameter: 'Special Endpoint : This value set for 'symbol' is not available under your current subscription please visit our subscription page to upgrade your plan at https://financialmo Check FMP_API_KEY in .env and the FMP plan.).",
+    "Earnings call transcript: the Q1 FY2027 call isn't available yet (Alpha Vantage has no transcript for PG 2027Q1); the Q4 FY2026 call is used instead.",
+    "A claim was removed because its sources don't support it: \"Management guides H1 organic growth at about 3% (about 2% in Q2 if Q1 was 4%), costs are 'materially higher' in Q2, the Q1 tariff refund (about $90M second part, after roughly half of ~$200M was recognized in the June quarter) is unlikely to repeat, and M&A interest starts in Q2. Consensus revenue of $23.50B also implies a roughly +0.9–1.0% sequential rise in Q2 from Q1's $23.28B, when last year Q2 revenue ($22.21B) fell 0.8% from Q1 ($22.39B). Consensus EPS of $1.88 is +5.6% on a $1.78 GAAP base; the core base is at least that, which makes +5.6% a ceiling, not the floor.\" (The sourced figures and arithmetic check out, but the passages give no Q2 FY26 core EPS, so 'the core base is at least that' ($1.78) is asserted as fact without support.)."
+  ],
+  "sources": {
+    "Q.004": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.006": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.007": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.014": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · Financial Statements — 2. Segment Information",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.015": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · Financial Statements — 2. Segment Information",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.018": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · Financial Statements — 2. Segment Information",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.019": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · Financial Statements — 4. Earnings Per Share",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.026": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · Financial Statements — Supplier Finance Programs",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.027": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · Financial Statements — 12        The Procter & Gamble Company",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.028": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · Financial Statements — 12        The Procter & Gamble Company",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.041": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · MD&A — Bounty, Charmin, Puffs",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.048": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · MD&A — RESULTS OF OPERATIONS – Three Months Ended September 30, 2026",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.049": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · MD&A — Operating Costs",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.050": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · MD&A — Operating Costs",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.052": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · MD&A — SEGMENT RESULTS – Three Months Ended September 30, 2026",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.056": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · MD&A — 18        The Procter & Gamble Company",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.059": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · MD&A — The Procter & Gamble Company        19",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.061": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · MD&A — The Procter & Gamble Company        19",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.063": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · MD&A — Operating Activities",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.064": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · MD&A — Financing Activities",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.067": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · MD&A — The Procter & Gamble Company        21",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.068": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · MD&A — The Procter & Gamble Company        21",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.069": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22 · MD&A — The Procter & Gamble Company        21",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "Q.075": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-22",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "K.090": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-08-04 · MD&A — U.S. Tariffs",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+      "as_of": "2026-08-04"
+    },
+    "K.120": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-08-04 · MD&A — Liquidity",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+      "as_of": "2026-08-04"
+    },
+    "K.146": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-08-04 · MD&A — 32        The Procter & Gamble Company",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+      "as_of": "2026-08-04"
+    },
+    "K.229": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-08-04 · Financial Statements — Disclosures about Financial Instruments",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+      "as_of": "2026-08-04"
+    },
+    "K.230": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-08-04 · Financial Statements — Disclosures about Financial Instruments",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+      "as_of": "2026-08-04"
+    },
+    "E.003": {
+      "kind": "8-K",
+      "citation": "8-K Items 8.01, 9.01 (filed 2026-10-30) — New York Stock Exchange",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000162828026068591/pg-20261030.htm",
+      "as_of": "2026-10-30"
+    },
+    "C.005": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Andre Schulten, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PG&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.006": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Andre Schulten, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PG&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.017": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Andre Schulten, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PG&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.018": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Andre Schulten, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PG&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.019": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Andre Schulten, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PG&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.042": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Andre Schulten, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PG&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.047": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Andre Schulten, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PG&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.050": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Andre Schulten, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PG&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.057": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Andre Schulten, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PG&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.085": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Shailesh Jejurikar, President and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=PG&quarter=2026Q4",
+      "as_of": null
+    },
+    "F.01": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "F.02": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "F.05": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "F.13": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Cash and equivalents — at 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "F.14": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Long-term debt — at 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000256/pg-20260930.htm",
+      "as_of": "2026-10-22"
+    },
+    "F.27": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Cash and equivalents — at 2026-06-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+      "as_of": "2026-08-04"
+    },
+    "F.29": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.34": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure growth — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.49": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.53": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-12-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000011/0000080424-26-000011-index.htm",
+      "as_of": "2026-01-23"
+    },
+    "F.54": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q2 2027",
+      "url": null,
+      "as_of": null
+    },
+    "F.55": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-12-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000011/0000080424-26-000011-index.htm",
+      "as_of": "2026-01-23"
+    },
+    "F.56": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q2 2027",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "N.07": {
+      "kind": "news",
+      "citation": "benzinga.com, 2026-10-22 — Why Is Procter & Gamble Stock Gaining Thursday? - Procter & Gamble (NYSE:PG)",
+      "url": "https://www.benzinga.com/markets/earnings/26/10/62527709/tide-and-gillette-maker-procter-gambles-sales-machine-keeps-humming-despite-inflation-pressure",
+      "as_of": "2026-10-22"
+    },
+    "N.08": {
+      "kind": "news",
+      "citation": "tikr.com, 2026-10-22 — Procter & Gamble Soars 6% on Earnings Beat, Shrugs Off $1.4 Billion Cost Hit: “Strong Start” | TIKR.com",
+      "url": "https://www.tikr.com/blog/procter-gamble-soars-6-on-earnings-beat-shrugs-off-1-4-billion-cost-hit-strong-start",
+      "as_of": "2026-10-22"
+    },
+    "N.13": {
+      "kind": "news",
+      "citation": "qz.com, 2026-10-22 — Procter & Gamble Q1 earnings beat expectations on sales and profit",
+      "url": "https://qz.com/procter-gamble-earnings-beat-sales-profit-102226",
+      "as_of": "2026-10-22"
+    },
+    "N.14": {
+      "kind": "news",
+      "citation": "thedailyupside.com, 2026-10-23 — Procter & Gamble Rosy with Thorne - The Daily Upside",
+      "url": "https://www.thedailyupside.com/industries/consumer/procter-gamble-rosy-with-thorne",
+      "as_of": "2026-10-23"
+    },
+    "N.16": {
+      "kind": "news",
+      "citation": "oilprice.com, 2026-10-30 — Wall Street Banks Raise Oil Price Forecasts as Supply Fears Deepen | OilPrice.com",
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/Wall-Street-Banks-Raise-Oil-Price-Forecasts-as-Supply-Fears-Deepen.html",
+      "as_of": "2026-10-30"
+    },
+    "N.17": {
+      "kind": "news",
+      "citation": "wsj.com, 2026-10-30 — Brent Crude Prices Rise After Strait of Hormuz Tanker Attack - WSJ",
+      "url": "https://www.wsj.com/world/middle-east/oil-prices-rise-after-hormuz-tanker-attack-houthi-claims-stoke-supply-fears-de48df37",
+      "as_of": "2026-10-30"
+    },
+    "N.18": {
+      "kind": "news",
+      "citation": "oilprice.com, 2026-10-30 — Oil Traders Brace for a Wild Week as Brent Approaches $120 | OilPrice.com",
+      "url": "https://oilprice.com/Energy/Oil-Prices/Oil-Traders-Brace-for-a-Wild-Week-as-Brent-Approaches-120.html",
+      "as_of": "2026-10-30"
+    },
+    "N.19": {
+      "kind": "news",
+      "citation": "cnbc.com, 2026-10-26 — Oil ticks lower as Saudi defense minister meets with Iran's president in Tehran to de-escalate",
+      "url": "https://www.cnbc.com/2026/10/26/oil-prices-today-wti-brent.html",
+      "as_of": "2026-10-26"
+    },
+    "N.20": {
+      "kind": "news",
+      "citation": "oilprice.com, 2026-10-31 — U.S. Intelligence: China Could Put Laser Weapons in Space by 2030 | OilPrice.com",
+      "url": "https://oilprice.com/Geopolitics/International/US-Intelligence-China-Could-Put-Laser-Weapons-in-Space-by-2030.html",
+      "as_of": "2026-10-31"
+    },
+    "A.001": {
+      "kind": "article",
+      "citation": "Article (finance.biggo.com)",
+      "url": "https://finance.biggo.com/news/US_PG_2026-10-22",
+      "as_of": "2026-10-22"
+    },
+    "A.004": {
+      "kind": "article",
+      "citation": "Article (finance.biggo.com)",
+      "url": "https://finance.biggo.com/news/US_PG_2026-10-22",
+      "as_of": "2026-10-22"
+    },
+    "A.005": {
+      "kind": "article",
+      "citation": "Article (finance.biggo.com)",
+      "url": "https://finance.biggo.com/news/US_PG_2026-10-22",
+      "as_of": "2026-10-22"
+    },
+    "A.006": {
+      "kind": "article",
+      "citation": "Article (finance.biggo.com)",
+      "url": "https://finance.biggo.com/news/US_PG_2026-10-22",
+      "as_of": "2026-10-22"
+    },
+    "A.007": {
+      "kind": "article",
+      "citation": "Article (finance.biggo.com)",
+      "url": "https://finance.biggo.com/news/US_PG_2026-10-22",
+      "as_of": "2026-10-22"
+    },
+    "A.010": {
+      "kind": "article",
+      "citation": "Article (tradingkey.com)",
+      "url": "https://www.tradingkey.com/news/transcripts/262233402-tradingkey",
+      "as_of": "2026-10-22"
+    },
+    "A.011": {
+      "kind": "article",
+      "citation": "Article (tradingkey.com)",
+      "url": "https://www.tradingkey.com/news/transcripts/262233402-tradingkey",
+      "as_of": "2026-10-22"
+    },
+    "A.014": {
+      "kind": "article",
+      "citation": "Article (tradingkey.com)",
+      "url": "https://www.tradingkey.com/news/transcripts/262233402-tradingkey",
+      "as_of": "2026-10-22"
+    },
+    "A.015": {
+      "kind": "article",
+      "citation": "Article (tradingkey.com)",
+      "url": "https://www.tradingkey.com/news/transcripts/262233402-tradingkey",
+      "as_of": "2026-10-22"
+    },
+    "A.017": {
+      "kind": "article",
+      "citation": "Article (tradingkey.com)",
+      "url": "https://www.tradingkey.com/news/transcripts/262233402-tradingkey",
+      "as_of": "2026-10-22"
+    },
+    "A.018": {
+      "kind": "article",
+      "citation": "Article (tradingkey.com)",
+      "url": "https://www.tradingkey.com/news/transcripts/262233402-tradingkey",
+      "as_of": "2026-10-22"
+    },
+    "A.019": {
+      "kind": "article",
+      "citation": "Article (tradingkey.com)",
+      "url": "https://www.tradingkey.com/news/transcripts/262233402-tradingkey",
+      "as_of": "2026-10-22"
+    },
+    "A.020": {
+      "kind": "article",
+      "citation": "Article (tradingkey.com)",
+      "url": "https://www.tradingkey.com/news/transcripts/262233402-tradingkey",
+      "as_of": "2026-10-22"
+    },
+    "A.021": {
+      "kind": "article",
+      "citation": "Article (tradingkey.com)",
+      "url": "https://www.tradingkey.com/news/transcripts/262233402-tradingkey",
+      "as_of": "2026-10-22"
+    },
+    "A.022": {
+      "kind": "article",
+      "citation": "Article (tradingkey.com)",
+      "url": "https://www.tradingkey.com/news/transcripts/262233402-tradingkey",
+      "as_of": "2026-10-22"
+    },
+    "P.001": {
+      "kind": "peer",
+      "citation": "PEER CL 10-Q filed 2026-10-30",
+      "url": null,
+      "as_of": null
+    },
+    "P.002": {
+      "kind": "peer",
+      "citation": "PEER CL 10-Q filed 2026-10-30",
+      "url": null,
+      "as_of": null
+    },
+    "P.003": {
+      "kind": "peer",
+      "citation": "PEER CL 10-Q filed 2026-10-30",
+      "url": null,
+      "as_of": null
+    },
+    "P.004": {
+      "kind": "peer",
+      "citation": "PEER CL 10-Q filed 2026-10-30",
+      "url": null,
+      "as_of": null
+    },
+    "N.25": {
+      "kind": "news",
+      "citation": "morningstar.com, 2026-10-22 — Procter & Gamble Earnings: Accelerating Sales Growth Evidences Prudence of Strategic Course | Morningstar",
+      "url": "https://www.morningstar.com/stocks/procter-gamble-earnings-accelerating-sales-growth-evidences-prudence-strategic-course",
+      "as_of": "2026-10-22"
+    },
+    "N.27": {
+      "kind": "news",
+      "citation": "huhtamaki.com, 2026-10-29 — Q3 2026 Interim Report",
+      "url": "https://www.huhtamaki.com/globalassets/global/investors/reports-and-presentations/en/2026/interim-report-q3-2026.pdf",
+      "as_of": "2026-10-29"
+    },
+    "A.025": {
+      "kind": "article",
+      "citation": "Article (businesswire.com)",
+      "url": "https://www.businesswire.com/news/home/20261022817063/en/PG-Announces-Fiscal-Year-2027-First-Quarter-Results",
+      "as_of": "2026-10-22"
+    },
+    "A.028": {
+      "kind": "article",
+      "citation": "Article (businesswire.com)",
+      "url": "https://www.businesswire.com/news/home/20261022817063/en/PG-Announces-Fiscal-Year-2027-First-Quarter-Results",
+      "as_of": "2026-10-22"
+    },
+    "A.029": {
+      "kind": "article",
+      "citation": "Article (businesswire.com)",
+      "url": "https://www.businesswire.com/news/home/20261022817063/en/PG-Announces-Fiscal-Year-2027-First-Quarter-Results",
+      "as_of": "2026-10-22"
+    },
+    "A.030": {
+      "kind": "article",
+      "citation": "Article (businesswire.com)",
+      "url": "https://www.businesswire.com/news/home/20261022817063/en/PG-Announces-Fiscal-Year-2027-First-Quarter-Results",
+      "as_of": "2026-10-22"
+    },
+    "N.33": {
+      "kind": "news",
+      "citation": "tradingview.com, 2026-10-23 — P&G’s Q1 Results Draw Price-Target Hikes As Analysts Cite Stronger Underlying Performance — TradingView News",
+      "url": "https://www.tradingview.com/news/stocktwits:630b7f7f9094b:0-p-g-s-q1-results-draw-price-target-hikes-as-analysts-cite-stronger-underlying-performance",
+      "as_of": "2026-10-23"
+    },
+    "N.35": {
+      "kind": "news",
+      "citation": "fxleaders.com, 2026-10-22 — PG Stock Climbs to $158.59 Ahead of Procter & Gamble Q1 Earnings - Forex News by FX Leaders",
+      "url": "https://www.fxleaders.com/news/2026/10/22/procter-gamble-stock-forecast",
+      "as_of": "2026-10-22"
+    },
+    "P.009": {
+      "kind": "peer",
+      "citation": "PEER CL 10-Q filed 2026-10-30",
+      "url": null,
+      "as_of": null
+    },
+    "A.071": {
+      "kind": "article",
+      "citation": "Article (fr.tradingview.com)",
+      "url": "https://fr.tradingview.com/news/marketbeat:9cfed2e0a094b:0-procter-gamble-q1-earnings-call-highlights",
+      "as_of": "2026-10-25"
+    },
+    "A.072": {
+      "kind": "article",
+      "citation": "Article (fr.tradingview.com)",
+      "url": "https://fr.tradingview.com/news/marketbeat:9cfed2e0a094b:0-procter-gamble-q1-earnings-call-highlights",
+      "as_of": "2026-10-25"
+    },
+    "N.36": {
+      "kind": "news",
+      "citation": "benzinga.com, 2026-10-22 — Procter & Gamble Q1 2027 Earnings Call Transcript - Procter & Gamble (NYSE:PG)",
+      "url": "https://www.benzinga.com/news/26/10/62527515/procter-gamble-q1-2027-earnings-call-transcript",
+      "as_of": "2026-10-22"
+    },
+    "N.45": {
+      "kind": "news",
+      "citation": "stocktitan.net, 2026-10-22 — Procter & Gamble sees $1.4B FY2027 after-tax cost hit | PG 8-K Filing",
+      "url": "https://www.stocktitan.net/sec-filings/PG/8-k-procter-gamble-co-reports-material-event-84fa67258a19.html",
+      "as_of": "2026-10-22"
+    },
+    "N.47": {
+      "kind": "news",
+      "citation": "trefis.com, 2026-10-28 — What Did Procter & Gamble’s Latest Quarter Change For Its Stock? | Trefis",
+      "url": "https://www.trefis.com/stock/pg/articles/620996/what-did-procter-gambles-latest-quarter-change-for-its-stock/2026-10-28",
+      "as_of": "2026-10-28"
+    },
+    "N.48": {
+      "kind": "news",
+      "citation": "finance.biggo.com, 2026-10-22 — PG Q1 FY2027 earnings call",
+      "url": "https://finance.biggo.com/quote/PG/earnings-call/US_PG_2026-10-22",
+      "as_of": "2026-10-22"
+    }
+  },
+  "check_notes": [
+    "setup_summary[4]: rewritten to what its sources support (The ~$90M second-part refund and the 'partial flow-through' of commodity costs are not in the cited passages, and the 21.0% Q1 tax rate used for the after-tax step is not in them either. K.090 only says half of ~$200M was recognized in the quarter ended June 30, 2026.).",
+    "metrics_to_model[1].view: rewritten to what its sources support (2–4% organic on $22.21B plus ~$0.13B from Thorne gives about $22.78–23.23B, not $22.9–23.25B, so the stated range does not follow from the stated inputs.).",
+    "metrics_to_model[2].last_reported: rewritten to what its sources support (Core EPS $2.00 (+1%) is supported, but the ~$90M tariff refund behind the $1.97 ex-refund figure is not in the cited passages.).",
+    "metrics_to_model[2].view: rewritten to what its sources support (The ~$0.03 refund, the ~250bp productivity figure and the consensus +5.6% (EPS $1.88) are not in the cited passages.).",
+    "metrics_to_model[6].last_reported: rewritten to what its sources support (The GAAP tax rate of 21.0% vs 20.8% is supported, but the core tax of $1,287M and core pre-tax earnings of ~$6.12B are not visible in the cited passages, because the Q1 FY27 reconciliation is truncated.).",
+    "key_debates[0].bull: rewritten to what its sources support (The Baby Care +80bp share gain is not in the cited passages. It appears only in A.006, which is not cited for this claim.).",
+    "key_debates[0].bear: rewritten to what its sources support (The ~$90M tariff refund and the partial commodity-cost impact are not in the cited passages, so the $1.96–1.97 ex-refund EPS has no support.).",
+    "key_debates[1].bear: rewritten to what its sources support (The cited passages do not show the tax guide rising or the interest headwind doubling, because the prior ~20% tax rate and prior $150M interest guide are absent.).",
+    "key_debates[2].bull: rewritten to what its sources support (Nothing in the passages says FX adds to reported sales. Q1 FX was nil and no Q2 FX guide is given.).",
+    "key_debates[2].bear: rewritten to what its sources support (The refund that 'does not repeat' is not in the cited passages. Consensus $23.50B vs Q1 $23.28B is a +0.9% sequential rise, not +1.0%.).",
+    "key_debates[3].bull: rewritten to what its sources support (Tide Evo and Tide Liquid are not in the cited passages, so the claim that this innovation is lifting categories lacks support.).",
+    "scenarios[0]: rewritten to what its sources support (2–3% organic on $22.21B plus Thorne gives about $22.8–23.0B, so the stated $22.9–23.25B range does not follow from the 2–3% assumption.).",
+    "key_risks[2]: rewritten to what its sources support (The $3.9B Thorne cash purchase and the ~$150M July interest guide are not in the cited passages.).",
+    "key_risks[7]: rewritten to what its sources support (The $98M incremental restructuring charge is not visible in the cited passages, because the Q1 FY27 reconciliation is truncated.).",
+    "questions_for_management[6]: rewritten to what its sources support (The 7,000-role figure comes from the 10-Q, not the 10-K. The passages also do not support savings driving the SG&A rate against rising marketing.).",
+    "key_debates[2].bear: the claim was removed — its sources don't support it (The sourced figures and arithmetic check out, but the passages give no Q2 FY26 core EPS, so 'the core base is at least that' ($1.78) is asserted as fact without support.).",
+    "guidance[0]: tag 'guided' → 'estimate' (it cites only article).",
+    "guidance[1]: tag 'guided' → 'estimate' (it cites only article, news).",
+    "guidance[2]: tag 'guided' → 'estimate' (it cites only article, news).",
+    "guidance[3]: tag 'guided' → 'estimate' (it cites only article, news).",
+    "key_debates[0].bull: tag 'reported' → 'estimate' (it cites only article).",
+    "key_risks[0]: tag 'guided' → 'estimate' (it cites only article, news).",
+    "questions_for_management[0]: tag 'guided' → 'estimate' (it cites only article, news).",
+    "questions_for_management[5]: tag 'reported' → 'estimate' (it cites only article)."
+  ]
+}

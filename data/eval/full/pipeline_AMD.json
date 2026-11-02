@@ -1,0 +1,1627 @@
+{
+  "ticker": "AMD",
+  "company_name": "ADVANCED MICRO DEVICES INC",
+  "report_generated_at": "2026-11-01T10:11:24+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-08-05",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-02-04",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000018/amd-20251227.htm"
+    }
+  ],
+  "earnings_call": "Q2 FY2026 earnings call (date unknown)",
+  "current_report": "8-K filed 2026-09-28: Item 3.02",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$1.97",
+      "fiscal_quarter": 3,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$13.22B",
+      "fiscal_quarter": 3,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": "$1.98",
+      "fiscal_quarter": 3,
+      "fiscal_year": 2026,
+      "source": "https://www.earningswhispers.com/article/AMD/21545",
+      "as_of_date": "2026-10-26",
+      "missing_reason": null
+    },
+    "implied_move": {
+      "value": "±8.8%",
+      "fiscal_quarter": 3,
+      "fiscal_year": 2026,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/amd-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "historical_move": {
+      "value": "±8.8% average closing move over the last 8 reports (2024-10-29 to 2026-08-04)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/amd-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": "4 beats, 0 misses in the last 4 quarters, average surprise +5.9%",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "Finnhub earnings surprises",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "analyst_actions": {
+      "value": "Last 30 days, newest first: Susquehanna maintained Positive (2026-10-28); Susquehanna maintained Positive (2026-10-21); Wedbush maintained Outperform (2026-10-20); Citigroup maintained Buy (2026-10-06); Mizuho maintained Outperform (2026-10-06); Stifel maintained Buy (2026-10-05)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP grades",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "price_target": {
+      "value": "$627.14, +24.2% vs current $504.80",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP price target consensus",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "Q2 FY26 (quarter ended 2026-06-27) revenue was $11.54B, up 50.1% year on year. Data Center was $6.72B (+107%) and about 58% of revenue. Q2 operating income was $1.99B on a GAAP basis, against a $134M loss a year earlier, when about $800M of MI308 export-control charges weighed on results.",
+      "evidence_ids": [
+        "F.01",
+        "F.37",
+        "Q.016",
+        "C.004",
+        "F.13",
+        "F.14",
+        "C.002"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "The bar for the 2026-11-03 print (after the close) is management's Q3 guide: revenue of about $13.0B ±$300M (+41% YoY, +13% QoQ), non-GAAP gross margin of about 56% and non-GAAP opex of about $3.65B. Q3 is the first quarter in which Helios rack shipments are expected to begin, late in the quarter.",
+      "evidence_ids": [
+        "C.015",
+        "C.016",
+        "C.007"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "Consensus revenue is $13.22B (+42.9% YoY), about 1.7% above the guide midpoint and in the upper half of the $12.7B-$13.3B range. Consensus EPS is $1.97 and the whisper is $1.98. The EPS bar has a basis problem: a press preview cites $1.68, and the +162% YoY growth rate is computed against a $0.75 GAAP year-ago figure, not the $0.97 comp that preview uses.",
+      "evidence_ids": [
+        "M.01",
+        "F.70",
+        "F.72",
+        "M.02",
+        "F.71",
+        "N.01",
+        "C.015"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Positioning into the print: options imply ±8.8%, equal to the 8-report average closing move. AMD has beaten 4 of the last 4 quarters (average surprise +5.9%). The consensus price target is $627.14, 24.2% above the $504.80 price. Recent analyst actions are all positive, including Susquehanna raising its target from $620 to $650 on 2026-10-28.",
+      "evidence_ids": [
+        "M.03",
+        "M.04",
+        "M.05",
+        "M.07",
+        "M.06",
+        "N.05"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Sentiment is stretched on the way in. Hold-rated commentary describes the stock as priced for perfection after a 137%+ run, says the 2027 ramp looks largely priced in, and flags gross margin stalling near 56% as a risk. A broad AI-stock sell-off has left both AMD and Qualcomm exposed to profit-taking even on good news.",
+      "evidence_ids": [
+        "N.16",
+        "N.08",
+        "N.07",
+        "N.17"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Intel's Q3 report (2026-10-29) is a mixed read-across. Server revenue rose $2.5B on a 54% ASP increase and 10% volume growth, and Intel says supply constraints on substrates and memory persist into 2027. Client volume fell 14%. The positive for EPYC is pricing power and tight supply. The negative for Client is a weak PC market.",
+      "evidence_ids": [
+        "P.006",
+        "P.007",
+        "P.008"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "The balance sheet is committing hard to the AI ramp. Unconditional purchase commitments were $30.3B at 2026-06-27 ($17.4B in the rest of 2026) against $12.2B at year-end. After quarter-end AMD added up to $5.0B of investment commitments and $9.5B of data center leases. H1 free cash flow was about $4.12B, helped by a $2.2B rise in payables that the 10-Q attributes to payment timing.",
+      "evidence_ids": [
+        "Q.059",
+        "K.224",
+        "Q.025",
+        "Q.033",
+        "F.65",
+        "Q.060"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q2 GAAP EPS of $1.38 included $598M of other income, mostly unrealized gains from the public listing of previously private holdings. This is non-recurring mark-to-market income, so GAAP EPS is a poor guide to run-rate earnings. Q3 non-GAAP other income is guided to only about $55M.",
+      "evidence_ids": [
+        "F.09",
+        "Q.056",
+        "Q.023",
+        "C.016"
+      ],
+      "evidence_type": "reported"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Net revenue",
+      "period": "Q3 FY26",
+      "last_reported": {
+        "text": "Q2 FY26 revenue was $11.54B, +50.1% YoY.",
+        "evidence_ids": [
+          "F.01",
+          "F.37"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus revenue is $13.22B (+42.9% YoY) against $9.25B a year ago.",
+        "evidence_ids": [
+          "M.01",
+          "F.70",
+          "F.69"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "The guide midpoint is $13.0B (range $12.7B-$13.3B) and consensus sits 1.7% above it, so an in-line-with-guide print is a miss versus the Street. A print at or above the top of the range ($13.3B) would be a clean beat. AMD has beaten 4 of 4 recent quarters, though the 5.9% average surprise cited is on EPS, not revenue.",
+        "evidence_ids": [
+          "C.015",
+          "M.01",
+          "M.05"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Data Center revenue",
+      "period": "Q3 FY26",
+      "last_reported": {
+        "text": "Q2 Data Center revenue was $6.72B (+107% YoY), with operating income of $2.10B (31% margin).",
+        "evidence_ids": [
+          "Q.016",
+          "C.014"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Zacks-compiled segment consensus is $8.27B (+90.6% YoY).",
+        "evidence_ids": [
+          "N.03"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Management guided Data Center to strong double-digit sequential growth. Subtracting rough guide-consistent assumptions for the other segments (Client slightly up from $3.06B, Embedded up about 10-15%, Gaming down strong double digits) leaves about $8.2B. The $8.27B consensus is therefore roughly guide-consistent, and upside must come from EPYC supply and early Helios/MI450 shipments. This is my arithmetic, not company guidance.",
+        "evidence_ids": [
+          "C.015",
+          "Q.016",
+          "N.03"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Non-GAAP operating expenses",
+      "period": "Q3 FY26",
+      "last_reported": {
+        "text": "Q2 non-GAAP opex was $3.4B (+40% YoY). GAAP opex was $4.21B, including $503M of stock-based compensation and $284M of intangibles amortization in operating expenses.",
+        "evidence_ids": [
+          "C.013",
+          "Q.004",
+          "Q.037"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The guide of about $3.65B implies roughly +7% QoQ, versus about +13% for revenue, which supports operating leverage. The guide-implied non-GAAP operating margin is about 28% (13.0 x 56% less 3.65, over 13.0), up from 27% in Q2. Management says opex growth will stay below revenue growth.",
+        "evidence_ids": [
+          "C.015",
+          "C.016",
+          "C.013",
+          "C.070"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Non-GAAP diluted EPS",
+      "period": "Q3 FY26",
+      "last_reported": {
+        "text": "Q2 GAAP diluted EPS was $1.38 (vs $0.54). Management cited comparable EPS up about 82% YoY. A Q2 non-GAAP EPS figure is not in the provided sources.",
+        "evidence_ids": [
+          "F.09",
+          "F.10",
+          "C.013"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Finnhub consensus is $1.97 and the whisper is $1.98. A press preview cites $1.68.",
+        "evidence_ids": [
+          "M.01",
+          "M.02",
+          "N.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Arithmetic on the guided inputs (revenue $13.0B, 56% gross margin, opex $3.65B, other income $55M, 13% tax, 1.66B shares) gives about $1.93. That supports $1.97 as the relevant bar and suggests the $1.67-$1.68 figures are stale or on a different basis. A revenue beat at flat margin should clear $1.97, so the stock reaction will turn on the Q4 outlook.",
+        "evidence_ids": [
+          "C.015",
+          "C.016",
+          "M.01",
+          "N.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Gaming revenue",
+      "period": "Q3 FY26",
+      "last_reported": {
+        "text": "Q2 Gaming revenue was $779M (-31% YoY) on lower semi-custom sales.",
+        "evidence_ids": [
+          "Q.016",
+          "Q.050"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus is $634M (-51.2% YoY).",
+        "evidence_ids": [
+          "N.03"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Management guided Gaming down by a significant double-digit percentage sequentially. The $634M consensus (about -19% QoQ from $779M) is consistent with that. Higher component costs are also hurting Radeon card demand. Gaming is the main drag on Client and Gaming segment revenue, with Client guided to slight sequential growth.",
+        "evidence_ids": [
+          "C.015",
+          "C.010",
+          "N.03"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Embedded revenue",
+      "period": "Q3 FY26",
+      "last_reported": {
+        "text": "Q2 Embedded revenue was $977M (+19% YoY, +12% QoQ) with a 40% operating margin.",
+        "evidence_ids": [
+          "Q.016",
+          "C.014",
+          "C.015"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus is $1.07B (+25.1% YoY).",
+        "evidence_ids": [
+          "N.03"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Management guided Embedded to strong double-digit sequential growth. $1.07B is about +9.5% QoQ, so consensus looks at or below the low end of that guide, and a $1.09B+ print would be reasonable. This is my arithmetic.",
+        "evidence_ids": [
+          "C.015",
+          "Q.016",
+          "N.03"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Client revenue",
+      "period": "Q3 FY26",
+      "last_reported": {
+        "text": "Q2 Client revenue was $3.06B (+23% YoY) on a 34% rise in units and a 6% fall in ASP.",
+        "evidence_ids": [
+          "Q.016",
+          "Q.050"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management guided Client slightly up sequentially and said it will outperform a softer second-half PC market. Intel reported a 14% fall in client volume and expects client trends to worsen into 2027. Share-gain claims therefore carry risk if Client comes in flat or down.",
+        "evidence_ids": [
+          "C.015",
+          "C.010",
+          "P.008",
+          "P.007"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Q4 FY26 outlook and Helios contribution",
+      "period": "Q4 FY26",
+      "last_reported": null,
+      "consensus": null,
+      "view": {
+        "text": "Management said Helios shipments start late in Q3, step up in Q4 and grow again in Q1 2027. It also said Q4 Data Center growth will exceed Q3 and that server supply is increasing. A Q4 revenue guide that does not clearly show this step-up, or that points to a Helios yield or rack-component delay, is the main downside risk. No Q4 consensus figure is in the sources.",
+        "evidence_ids": [
+          "C.007",
+          "C.025",
+          "C.030",
+          "Q.101"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Operating cash flow, free cash flow and inventory",
+      "period": "Q3 FY26",
+      "last_reported": {
+        "text": "Q2 free cash flow was $1.6B on $2.4B of operating cash flow. Inventory was about $8.5B. H1 capex was $1.20B (+142%).",
+        "evidence_ids": [
+          "C.015",
+          "F.19",
+          "F.46"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "H1 operating cash flow benefited from a $2.2B payables increase attributed to payment timing and was offset by prepayments to suppliers. Capex is rising and purchase commitments have more than doubled. Watch whether free cash flow holds as payables normalise, and whether inventory, prepayments and commitments keep growing faster than revenue.",
+        "evidence_ids": [
+          "Q.060",
+          "Q.059",
+          "F.17",
+          "F.19"
+        ],
+        "evidence_type": "estimate"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Revenue",
+      "guidance": "About $13.0B ±$300M (+41% YoY, about +13% QoQ at the midpoint)",
+      "period": "Q3 FY26",
+      "status": "new",
+      "claim": {
+        "text": "Management guided Q3 revenue to about $13B ±$300M, +41% YoY and about +13% sequentially. The 10-Q and 10-K contain no quantitative quarterly guidance.",
+        "evidence_ids": [
+          "C.015"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Non-GAAP gross margin",
+      "guidance": "About 56%",
+      "period": "Q3 FY26",
+      "status": "new",
+      "claim": {
+        "text": "Q3 non-GAAP gross margin is guided to about 56%, flat on Q2's 56%.",
+        "evidence_ids": [
+          "C.015",
+          "C.013"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Non-GAAP opex, other income, tax rate and share count",
+      "guidance": "Opex about $3.65B; other income/expense about $55M; tax rate 13%; diluted shares about 1.66B",
+      "period": "Q3 FY26",
+      "status": "new",
+      "claim": {
+        "text": "Q3 non-GAAP guidance is opex of about $3.65B, other income/expense of about $55M (the transcript splits the figure across lines), a 13% tax rate and about 1.66B diluted shares.",
+        "evidence_ids": [
+          "C.015",
+          "C.016"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Segment mix",
+      "guidance": "Data Center: strong double-digit sequential growth, with Q4 higher. Embedded: strong double-digit growth. Client and Gaming: modest sequential decline (Client slightly up, Gaming down strong double digits)",
+      "period": "Q3 FY26",
+      "status": "new",
+      "claim": {
+        "text": "Q3 mix guidance is strong double-digit sequential growth in Data Center and Embedded, and a modest decline in Client and Gaming. Client is slightly up and Gaming is down by a significant double-digit percentage. Management expects Q4 Data Center growth to be higher than Q3.",
+        "evidence_ids": [
+          "C.015",
+          "C.025"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Server CPU revenue",
+      "guidance": "More than 80% YoY growth in 2H26 and more than 70% in 2027, with upside if supply allows",
+      "period": "2H26 / FY27",
+      "status": "raised",
+      "claim": {
+        "text": "Management now expects server CPU revenue to grow more than 80% YoY in 2H26 and more than 70% in 2027, citing improved supply. It said growth may go higher in 2027 depending on how things play out. No such targets appear in the 10-Q or 10-K.",
+        "evidence_ids": [
+          "C.009",
+          "C.036",
+          "C.062"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Data Center segment revenue",
+      "guidance": "More than double YoY in 2027; data center AI described as 'well over 100%'",
+      "period": "FY27",
+      "status": "raised",
+      "claim": {
+        "text": "Management expects Data Center segment revenue to more than double in 2027, with data center AI growth 'well over 100%'. The CEO said the Street's data center AI number is 'probably too low' and that the range depends on customers bringing data center capacity online on time.",
+        "evidence_ids": [
+          "C.009",
+          "C.049",
+          "C.057",
+          "C.054"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Helios rack-scale ramp",
+      "guidance": "Initial shipments late in Q3, step-up in Q4 and again in Q1 2027; revenue per gigawatt 'double-digit billions'",
+      "period": "Q3 FY26-Q1 FY27",
+      "status": "maintained",
+      "claim": {
+        "text": "Helios is in production, with initial shipments on track for late Q3 and a ramp through Q4 and into 2027. Revenue per gigawatt remains 'double-digit billions', and Helios demand is tracking ahead of the initial forecast. The 10-Q likewise says shipments start in 2H26.",
+        "evidence_ids": [
+          "C.007",
+          "C.025",
+          "C.030",
+          "C.038",
+          "Q.086"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Long-term financial model",
+      "guidance": "Revenue growth 'substantially above' the prior >35% target; EPS to 'significantly exceed' $20 within the strategic timeframe; opex growth below revenue growth",
+      "period": "Multi-year",
+      "status": "raised",
+      "claim": {
+        "text": "Management said it is tracking materially ahead of its long-term model, expecting revenue growth substantially above the prior greater-than-35% target and EPS that significantly exceeds $20 within its strategic timeframe. The CFO said opex growth will be managed below revenue growth.",
+        "evidence_ids": [
+          "C.012",
+          "C.070"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Gross margin 2027 and Client 2026",
+      "guidance": "No 2027 gross margin number ('puts and takes'); Client revenue to grow in 2026 despite a softer 2H PC market",
+      "period": "FY26-FY27",
+      "status": "unclear",
+      "claim": {
+        "text": "The CFO described 2027 gross margin as a set of puts and takes and gave no number. Server and Embedded are accretive, and MI450 is slightly below the corporate average. Management expects 2026 Client revenue to grow YoY despite a softer second-half PC market driven by memory and component costs.",
+        "evidence_ids": [
+          "C.022",
+          "C.059",
+          "C.010",
+          "C.044"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "On 2026-09-26 AMD agreed to acquire World Labs Technologies for about $8.2B, paid entirely in AMD common stock. The share count will be set from a 10-day VWAP ending two trading days before closing, so dilution is unknown. The deal is not in the 10-Q, whose 1,632M share count excludes any issuance. The 10-Q's subsequent events mentioned only up to $5.0B of investment commitments and $9.5B of data center leases.",
+      "evidence_ids": [
+        "E.002",
+        "E.003",
+        "Q.002",
+        "Q.025",
+        "Q.033"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "As a rough illustration, $8.2B at the $504.80 share price implies about 16M new shares, roughly 1% of the 1,632M outstanding. This is arithmetic only. The actual count depends on the closing-date VWAP, and the deal's impact on GAAP opex and amortization is not disclosed.",
+      "evidence_ids": [
+        "E.002",
+        "M.07",
+        "Q.002"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Intel reported on 2026-10-29. Its data center revenue rose $3.2B YoY, with server revenue up $2.5B on a 54% ASP increase and 10% volume growth. Intel said demand exceeds supply, with substrates, memory and other components short into 2027, and its CEO called demand for Xeon 'extraordinary'. This is a favourable read-across on server CPU demand and pricing, but also a reminder that supply, not demand, gates server growth.",
+      "evidence_ids": [
+        "P.006",
+        "P.007",
+        "A.021",
+        "A.022"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Intel guided Q4 revenue to $15B-$16B, below the roughly $17.07B consensus, and non-GAAP gross margin to 38% (44.1% in Q3). About two points of the margin decline and about $300M of the revenue shortfall come from the October 2026 fab disruption in Israel. Intel shares fell about 21% after hours, which raises the risk of a harsh market reaction to any AMD guide shortfall.",
+      "evidence_ids": [
+        "N.31",
+        "A.023",
+        "A.025"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Intel's CCPG revenue fell 5% YoY to $8.1B; within it, client (notebook and desktop) revenue was $6.9B, with volume down 14% and ASP up 9%. Intel expects client trends to worsen in Q4 2026 and persist into 2027, with customers cutting inventory in Q4. Its CFO said the PC slowdown could last through at least 1H27. Higher memory prices are raising system costs. AMD guided Client to slight sequential growth in Q3 and expects Client growth in 2026, but is planning for a softer 2H PC market, so Q4 and 2027 PC commentary is a risk.",
+      "evidence_ids": [
+        "P.008",
+        "P.007",
+        "A.023",
+        "A.024",
+        "C.015",
+        "C.044",
+        "C.010"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Nvidia's fiscal Q2 (reported 2026-08-26, so background rather than recent news) had data center revenue of $89.0B (+117% YoY). Its supply and capacity commitments rose to $279B from $119B, and it warned that customers may delay purchases if land, power, shell or capital are unavailable. Nvidia guided its next quarter to $108B ±2% and reports on 2026-11-17, which keeps the AI-demand debate live around AMD's print.",
+      "evidence_ids": [
+        "P.002",
+        "P.001",
+        "N.24"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Analyst notes since the 10-Q are positive. Susquehanna raised its target from $620 to $650 on 2026-10-28, Jefferies reiterated Buy on 2026-10-29, and Wedbush, Citi, Mizuho and Stifel kept positive ratings. Hold-rated 24/7 Wall St. says the 2027 ramp looks priced in. An AI-stock sell-off in mid/late October left AMD exposed to profit-taking.",
+      "evidence_ids": [
+        "N.05",
+        "M.06",
+        "N.08",
+        "N.17"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "The Anthropic agreement (up to 2GW of MI450 GPUs, first gigawatt starting 1H27) and Microsoft's plan to deploy Helios on Azure add to OpenAI and Meta. Commentary notes they are intended deployments with no realised revenue assigned in the June quarter. Helios initial shipments are on track to begin later in Q3 and ramp through Q4 and into 2027, and management calls OpenAI, Meta and Anthropic its strategic anchor customers for the ramp.",
+      "evidence_ids": [
+        "C.007",
+        "N.10",
+        "C.030"
+      ],
+      "evidence_type": "reported"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Is the 2027 ramp (Data Center more than doubling) already priced in?",
+      "bull": {
+        "text": "Management guided server CPU revenue up more than 80% in 2H26 and more than 70% in 2027, and Data Center to more than double in 2027. Helios demand is tracking ahead of plan, with OpenAI, Meta and Anthropic as anchor customers and Microsoft deploying on Azure. The CEO also said the Street's data center AI number is probably too low.",
+        "evidence_ids": [
+          "C.009",
+          "C.049",
+          "C.057",
+          "C.007"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Commentary argues the 2027 ramp is largely priced in after a 137%+ run. It would turn cautious if AI funding concerns delay customer buildouts, and flags a mid-October AI sell-off. AMD's own filing flags customer financing needs, and it has guaranteed up to $4.1B of a partner's data center leases. Much of the 2027 ramp therefore depends on customers' financing and facilities.",
+        "evidence_ids": [
+          "N.16",
+          "N.08",
+          "Q.077",
+          "Q.027"
+        ],
+        "evidence_type": "proxy"
+      },
+      "what_settles_it": "The Q4 revenue guide and Helios shipment commentary: does the step-up in Q4 and Q1 land on schedule, and is any customer deployment slipping? Also watch disclosures on financing support, lease guarantees and warrant vesting."
+    },
+    {
+      "question": "Can gross margin hold at or above 56% through the Helios ramp?",
+      "bull": {
+        "text": "Server CPU growth is accretive, Embedded is recovering with a 40% segment margin and Client has levers. The CFO is optimistic about managing the MI450 ramp and expects server mix to offset it. HBM allocation for 2027 is described as well visible.",
+        "evidence_ids": [
+          "C.022",
+          "C.059",
+          "C.033",
+          "Q.016"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "MI450 runs slightly below the corporate average, and early rack yields are expected to improve only over several quarters. Helios carries more HBM than competing systems, which adds memory cost exposure. The Q3 gross margin guide is flat at 56% despite a revenue step-up, and hold-rated commentary calls margins stalling near 56% a risk.",
+        "evidence_ids": [
+          "C.022",
+          "C.038",
+          "C.032",
+          "C.015",
+          "N.07"
+        ],
+        "evidence_type": "guided"
+      },
+      "what_settles_it": "The Q3 gross margin versus 56% and, more importantly, the Q4 gross margin guide as Helios volume starts. Look for management commentary on first-quarter rack yields."
+    },
+    {
+      "question": "Is server CPU growth demand-led or supply-capped, and how durable is pricing?",
+      "bull": {
+        "text": "Intel's server ASP rose 54% on mix and some demand-based pricing, and Intel expects supply constraints to extend into next year. Management said Q2 EPYC growth had double-digit gains in both units and ASP, with supply being added through this year and much more capacity coming in 2027, and a chiplet approach that ramps fewer wafers on a new node.",
+        "evidence_ids": [
+          "P.006",
+          "P.007",
+          "C.036",
+          "C.064"
+        ],
+        "evidence_type": "proxy"
+      },
+      "bear": {
+        "text": "AMD's own server supply was tight in 1H on unforecast demand, and Intel says substrates and memory are short industry-wide into 2027. These are inputs AMD likely shares (my inference, not an AMD disclosure). The 2H26 guide of more than 80% growth, with Q4 server above Q3, requires supply to arrive on time.",
+        "evidence_ids": [
+          "C.062",
+          "P.007",
+          "C.025"
+        ],
+        "evidence_type": "proxy"
+      },
+      "what_settles_it": "The Q3 server commentary (units versus ASP) and whether the Q4 and 2027 supply additions (wafers, back-end, substrates) are confirmed as on track."
+    },
+    {
+      "question": "Will Client hold up while the PC market weakens?",
+      "bull": {
+        "text": "Q2 Client revenue rose 23% on a 34% unit increase. Commercial Ryzen Pro sales grew more than 50%. Management guides Client slightly up in Q3 and for FY26, and says it expects to beat the market.",
+        "evidence_ids": [
+          "Q.050",
+          "C.009",
+          "C.015",
+          "C.044"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Intel saw client volume fall 14%, expects trends to worsen in Q4 and persist into 2027, and quotes memory-driven system price increases. Nvidia also reported slower consumer PC sales. Client and Gaming operating income already fell in Q2 on higher operating expenses.",
+        "evidence_ids": [
+          "P.008",
+          "P.007",
+          "P.002",
+          "Q.051"
+        ],
+        "evidence_type": "proxy"
+      },
+      "what_settles_it": "The Q3 Client revenue versus guide of slightly up, and Q4 Client commentary: inventory digestion at OEMs, memory costs and pricing."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "bull",
+      "description": {
+        "text": "Revenue lands at or above the $13.3B top of the guide range with Data Center above about $8.3B and gross margin at 56% or better. The Q4 guide shows a clear Helios and server step-up, with Q4 Data Center growth above Q3, and management reaffirms the 2027 targets. EPS would clear $1.97. The upside case here is a beat-and-raise, although a clean beat against a stretched stock may bring only a modest reaction.",
+        "evidence_ids": [
+          "C.015",
+          "C.025",
+          "M.01",
+          "M.05",
+          "M.03"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Revenue at or above $13.3B and Data Center above about $8.3B",
+        "Gross margin at or above 56% with Q4 gross margin guided flat to up",
+        "Q4 revenue guide above Street expectations with Helios shipping on time",
+        "Reaffirmed or raised 2027 server (>70%) and Data Center (>2x) targets",
+        "Positive supply commentary on substrates, HBM and wafers"
+      ]
+    },
+    {
+      "name": "base",
+      "description": {
+        "text": "Revenue lands around $13.2B-$13.3B, roughly in line with the $13.22B consensus and modestly above the guide midpoint. Gross margin is about 56%, and EPS is about $1.95-$2.00 against a $1.97 consensus. Q4 is guided higher, consistent with management's description of the Helios ramp. With options implying ±8.8%, the stock reaction depends on the Q4 and 2027 commentary rather than the Q3 beat.",
+        "evidence_ids": [
+          "M.01",
+          "C.015",
+          "C.016",
+          "M.03",
+          "M.02"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Revenue within about $13.1B-$13.4B",
+        "Gross margin at about 56%, flat on Q2",
+        "Q4 guide consistent with a sequential Data Center step-up",
+        "Gaming near or below $634M and Client slightly up",
+        "Early Helios revenue contribution small but on schedule"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Revenue is near the lower half of the guide range or Q4 is guided light. A Helios shipment or yield slip, tight server supply, or gross margin dilution from early MI450 volume would pressure the stock. Client could also disappoint if PC weakness at Intel spreads. After a large run and an AI-stock sell-off, even a modest guide shortfall could trigger a move beyond the ±8.8% implied, as seen in Intel's drop on weak guidance.",
+        "evidence_ids": [
+          "C.038",
+          "P.007",
+          "A.024",
+          "N.31",
+          "A.025",
+          "M.03"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Revenue below about $13.1B or Data Center below about $8.0B",
+        "Gross margin below 56% or a Q4 gross margin guide below the Q3 level",
+        "Helios slips or yields lag; commentary on customer data center readiness turns cautious",
+        "Q4 Client or PC commentary mirrors Intel's weakness",
+        "New export-control or China developments, or financing concerns around key AI customers"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "Customer funding and concentration. A small number of customers account for a substantial share of revenue. AMD has guaranteed up to $4.1B of a commercial partner's data center lease obligations, issued unvested warrants of up to 160M shares each to OpenAI and Meta at $0.01, and flags that customers may seek vendor financing or deferred payment. A customer failing to fund buildouts would hit the 2027 ramp.",
+        "evidence_ids": [
+          "Q.027",
+          "Q.036",
+          "Q.077",
+          "Q.087",
+          "Q.182"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Rising balance-sheet commitments. Unconditional purchase commitments rose to $30.3B from $12.2B at year-end. After quarter-end AMD committed up to $5.0B of investments through FY2028 and $9.5B of long-term data center leases, on top of $4.5B of leases not yet commenced. The 10-Q warns of excess inventory risk because supplier prepayments and long-term purchase commitments have grown.",
+        "evidence_ids": [
+          "Q.059",
+          "K.224",
+          "Q.025",
+          "Q.033",
+          "Q.102"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "World Labs: an all-stock acquisition of about $8.2B, with the share count set by a 10-day VWAP before closing, so dilution is not yet known. It adds integration, amortization and opex questions that are not yet quantified. The deal came after the 10-Q.",
+        "evidence_ids": [
+          "E.002",
+          "E.003"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Supply, memory and rack-integration risk. The 10-Q flags an industry-wide memory shortage and price increases, and that Helios depends on third-party rack-level components and qualification. Intel separately says substrates and memory remain short into 2027.",
+        "evidence_ids": [
+          "Q.089",
+          "Q.101",
+          "Q.123",
+          "P.007"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Export controls and China. MI308 shipments need licences, and MI325 China licences require US inspection and a 25% tariff on import for that inspection. The 10-Q also cites new Chinese regulations (Decrees 834 and 835) that could create conflicting legal obligations.",
+        "evidence_ids": [
+          "Q.119",
+          "Q.144",
+          "Q.148"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Data center buildout constraints. The 10-Q cites construction delays, power and water availability, and, beyond the 10-K's wording, unfavorable public perception and evolving laws and regulations related to data centers, which could affect the timing of customer adoption.",
+        "evidence_ids": [
+          "Q.077",
+          "Q.138",
+          "K.070"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "PC and consumer weakness. Higher memory and component costs weigh on PC and graphics card demand. Intel's client volumes fell 14% and Intel expects worsening trends in Q4, while AMD guides Gaming down strong double digits in Q3.",
+        "evidence_ids": [
+          "C.010",
+          "P.008",
+          "P.007",
+          "C.015"
+        ],
+        "evidence_type": "proxy"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Earnings quality. Q2 GAAP net income included $598M of other income, which the 10-Q attributes primarily to unrealized gains from the public listing of non-marketable equity securities, and the 10-Q notes $1.1B of marketable equity securities subject to time-based sale restrictions. The 10-Q says these investments are subject to market risks that could substantially affect fair value. H1 operating cash flow was also helped by a $2.2B payables increase from payment timing.",
+        "evidence_ids": [
+          "Q.056",
+          "Q.023",
+          "Q.063",
+          "Q.060"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "How much Helios/MI450 revenue is in the Q3 result and Q4 outlook, and what are early rack yields? What would cause shipments to slip beyond the Q3 start?",
+      "why": {
+        "text": "Management said initial Helios shipments begin late in Q3 with a Q4 step-up, and that yields improve over the first few quarters. The Q4 guide hinges on this.",
+        "evidence_ids": [
+          "C.007",
+          "C.025",
+          "C.038"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What is the Q4 gross margin outlook with early MI450 mix and HBM costs, and where will margins trough?",
+      "why": {
+        "text": "The Q3 guide is about 56%, in line with Q2's 56%, and the CFO said data center AI gross margin is slightly below the corporate average. The CFO gave no 2027 gross margin number, and an analyst noted Helios carries almost 50% more HBM than the competition.",
+        "evidence_ids": [
+          "C.013",
+          "C.015",
+          "C.022",
+          "C.059",
+          "C.032"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What gates server CPU supply into Q4 and 2027 (wafers, substrates, back-end), and how much of the 2H growth is ASP versus units, given Intel's warnings about substrate and memory shortages?",
+      "why": {
+        "text": "The 2H26 guide of more than 80% growth needs more supply. Intel says supply constraints persist into 2027 and AMD said Q2 growth was more unit-driven.",
+        "evidence_ids": [
+          "C.009",
+          "C.036",
+          "C.062",
+          "P.007"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What is the structure and expected close of World Labs, the expected dilution, and the effect on opex and GAAP amortization? Does it change buyback plans?",
+      "why": {
+        "text": "The $8.2B all-stock deal was announced after the 10-Q and the share count is not known. AMD bought back only $221M in H1.",
+        "evidence_ids": [
+          "E.002",
+          "Q.035"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How much of the $4.1B lease guarantee, up to $5.0B of investment commitments and $9.5B of data center leases is tied to customers or partners, and what are the conditions for warrant vesting?",
+      "why": {
+        "text": "Lease commitments are growing: data center and other leases not yet commenced were $4.5B at 2026-06-27 versus $1.3B at 2025-12-27, with a further $9.5B of data center leases signed after quarter-end, plus $4.1B of lease guarantees. No warrant tranches had vested at 2026-06-27.",
+        "evidence_ids": [
+          "Q.027",
+          "Q.033",
+          "Q.036",
+          "K.282"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "Can the $30.3B of purchase commitments and supplier prepayments be matched to demand visibility, and what is the cash-conversion outlook as payables normalise and capex rises?",
+      "why": {
+        "text": "Unconditional commitments rose to $30.3B at 2026-06-27 from $12.2B at 2025-12-27, H1 prepayments and other assets rose $1.0B, and H1 operating cash flow benefited from a $2.2B payables increase.",
+        "evidence_ids": [
+          "Q.059",
+          "K.224",
+          "Q.060"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is the Q4 and 2027 view on Client given Intel's weak PC outlook and memory-driven price increases, and how is Client and Gaming margin trending as Gaming falls?",
+      "why": {
+        "text": "AMD guides Client up in 2026, while Intel saw volume fall 14% and expects worsening trends. Client and Gaming operating income fell in Q2 to 15% of revenue from 21%.",
+        "evidence_ids": [
+          "C.044",
+          "P.008",
+          "A.024",
+          "C.014"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "question": "What is the current status of MI308/MI325 China licences and shipments, and what is the exposure to Chinese countermeasures under Decrees 834/835?",
+      "why": {
+        "text": "The 10-Q risk factors cover MI325 licence conditions (US inspection and 25% tariff) and the new Chinese decrees (834 and 835).",
+        "evidence_ids": [
+          "Q.119",
+          "Q.144",
+          "Q.148"
+        ],
+        "evidence_type": "reported"
+      }
+    }
+  ],
+  "data_gaps": [
+    "No AMD Q2 earnings press release or slides are in the sources. Non-GAAP figures (gross margin 56%, opex $3.4B, operating income $3.1B) come from the call, and the Q2 non-GAAP EPS in dollars is not in the primary sources.",
+    "Consensus EPS conflicts across sources: $1.97 (Finnhub, with whisper $1.98) versus $1.67-$1.68 in press previews. The year-ago comp also differs ($0.75 GAAP per XBRL versus $0.97 in press), so the +162% growth rate is not like-for-like. My guide-implied estimate of about $1.93 suggests $1.97 is the better bar, but the basis is not confirmed.",
+    "No Q4 FY26 consensus for revenue, gross margin or EPS was provided, although the Q4 outlook is likely the main driver of the reaction.",
+    "No consensus figures for Client revenue, non-GAAP gross margin or non-GAAP opex were provided. Segment consensus (Data Center $8.27B, Embedded $1.07B, Gaming $634M) is a single Zacks-compiled source.",
+    "Q2 guidance for comparison (what AMD guided versus delivered last quarter) is not in the 10-Q or call; the only references are older news items outside the 14-day window, so AMD's guide-to-actual beat magnitude on revenue cannot be sourced here.",
+    "The Q2 earnings call date is not stated in the transcript source; it was around 2026-08-04 per press reports outside the 14-day window.",
+    "Some figures conflict across dates. The share price is $504.80 in the market data (2026-11-01) versus $594.34 on 2026-10-13 in older commentary, and headlines put Intel's post-earnings drop at 21% (after hours) versus 30%. The price context above uses the market-data figure.",
+    "The World Labs closing date, share count, accounting treatment, and revenue or opex effects are unknown. The 8-K carries no financial detail.",
+    "A news-list headline from 2026-09-17 suggests AMD planned a 10% price increase across GPUs, chipsets and possibly CPUs. It is outside the 14-day window and the article itself is not in the sources, so it is not used.",
+    "The Benzinga Buy-rated preview (2026-10-05) expecting a beat-and-raise is outside the 14-day window and carries no usable IDs; it is context only.",
+    "Peer data are proxies. Intel's and Nvidia's figures are competitor results, not AMD data, and Nvidia's August report is outside the 14-day news window. Nvidia's next report (2026-11-17) falls after AMD's.",
+    "A claim was removed because its sources don't support it: \"The guide is about 56% non-GAAP, flat on Q2's 56%, so any upside would likely come from server CPU mix, which the CFO called accretive to gross margin. Data center AI gross margin is slightly below the corporate average, and Helios yields are expected to improve only over the first few quarters. Third-party commentary flags margins stalling near 56% as a factor that would weaken the outlook.\" (Su says yields should keep improving through the first few quarters of the ramp, but never says they improve only then, so the word 'only' goes beyond the passage; the other facts (56% guide, accretive server mix, AI margin slightly below average, 24/7 Wall St. margin-stall risk) are supported.)."
+  ],
+  "sources": {
+    "Q.002": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 — The Nasdaq Global Select Market",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.004": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.016": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.023": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.025": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — Financial Instruments Measured at Fair Value on a Non-Recurring Basis",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.027": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — Lease Guarantees",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.033": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — Commitments",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.035": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — Treasury Stock",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.036": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — Warrants",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.037": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — Stock-based Compensation",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.050": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Client and Gaming",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.051": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Client and Gaming",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.056": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Other Income (Expense), Net",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.059": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Liquidity and Capital Resources",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.060": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.063": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Quantitative Disclosures",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.077": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.086": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.087": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Risk Factors — The loss of a significant customer may have a material adverse effect on us.",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.089": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Risk Factors — The loss of a significant customer may have a material adverse effect on us.",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.101": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.102": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.119": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.123": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.138": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Risk Factors — Climate change may have an impact on our business.",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.144": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.148": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.182": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "K.070": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-04 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000018/amd-20251227.htm",
+      "as_of": "2026-02-04"
+    },
+    "K.224": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-04 · MD&A — Liquidity and Capital Resources",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000018/amd-20251227.htm",
+      "as_of": "2026-02-04"
+    },
+    "K.282": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-04 · Financial Statements — Operating Leases",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000018/amd-20251227.htm",
+      "as_of": "2026-02-04"
+    },
+    "E.002": {
+      "kind": "8-K",
+      "citation": "8-K Item 3.02 (filed 2026-09-28) — The Nasdaq Global Select Market",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000182/amd-20260926.htm",
+      "as_of": "2026-09-28"
+    },
+    "E.003": {
+      "kind": "8-K",
+      "citation": "8-K Item 3.02 (filed 2026-09-28) — Item 3.02 Unregistered Sales of Equity Securities",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000182/amd-20260926.htm",
+      "as_of": "2026-09-28"
+    },
+    "C.002": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Matt Ramsey, VP, Financial Strategy and IR",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.004": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Dr. Lisa Su, Chair and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.007": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Dr. Lisa Su, Chair and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.009": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Dr. Lisa Su, Chair and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.010": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Dr. Lisa Su, Chair and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.012": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Dr. Lisa Su, Chair and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.013": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Jean Hu, Executive Vice President, CFO and Treasurer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.014": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Jean Hu, Executive Vice President, CFO and Treasurer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.015": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Jean Hu, Executive Vice President, CFO and Treasurer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.016": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Jean Hu, Executive Vice President, CFO and Treasurer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.022": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Jean Hu, Executive Vice President, CFO and Treasurer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.025": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Dr. Lisa Su, Chair and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.030": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Dr. Lisa Su, Chair and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.032": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Vivek Arya, Analyst (Bank of America)",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.033": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Dr. Lisa Su, Chair and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.036": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Dr. Lisa Su, Chair and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.038": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Dr. Lisa Su, Chair and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.044": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Dr. Lisa Su, Chair and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.049": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Dr. Lisa Su, Chair and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.054": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Dr. Lisa Su, Chair and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.057": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Dr. Lisa Su, Chair and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.059": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Jean Hu, Executive Vice President, CFO and Treasurer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.062": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Dr. Lisa Su, Chair and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.064": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Dr. Lisa Su, Chair and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "C.070": {
+      "kind": "call",
+      "citation": "Q2 FY2026 earnings call (date unknown) — Jean Hu, Executive Vice President, CFO and Treasurer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMD&quarter=2026Q2",
+      "as_of": null
+    },
+    "F.01": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2026-06-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "F.09": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2026-06-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "F.10": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-06-28",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "F.13": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating income — quarter ended 2026-06-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "F.14": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating income — quarter ended 2025-06-28",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "F.17": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow — six months ended 2026-06-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "F.19": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure — six months ended 2026-06-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000123/amd-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "F.37": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — quarter ended 2026-06-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.46": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure growth — six months ended 2026-06-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.65": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — six months ended 2026-06-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.69": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-09-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000166/0000002488-25-000166-index.htm",
+      "as_of": "2025-11-05"
+    },
+    "F.70": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q3 2026",
+      "url": null,
+      "as_of": null
+    },
+    "F.71": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-09-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/2488/000000248825000166/0000002488-25-000166-index.htm",
+      "as_of": "2025-11-05"
+    },
+    "F.72": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q3 2026",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.02": {
+      "kind": "market",
+      "citation": "Market data — Whisper EPS",
+      "url": null,
+      "as_of": null
+    },
+    "M.03": {
+      "kind": "market",
+      "citation": "Market data — Options-implied move",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "M.05": {
+      "kind": "market",
+      "citation": "Market data — Beat/miss record",
+      "url": null,
+      "as_of": null
+    },
+    "M.06": {
+      "kind": "market",
+      "citation": "Market data — Analyst rating actions",
+      "url": null,
+      "as_of": null
+    },
+    "M.07": {
+      "kind": "market",
+      "citation": "Market data — Consensus price target",
+      "url": null,
+      "as_of": null
+    },
+    "N.01": {
+      "kind": "news",
+      "citation": "barchart.com, 2026-10-31 — What to Expect From AMD’s Q3 Earnings",
+      "url": "https://www.barchart.com/story/news/8571795/what-to-expect-from-amds-q3-earnings",
+      "as_of": "2026-10-31"
+    },
+    "N.03": {
+      "kind": "news",
+      "citation": "finance.yahoo.com, 2026-10-30 — Advanced Micro (AMD) Q3 Earnings on the Horizon: Analysts' Insights on Key Performance Measures",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/advanced-micro-amd-q3-earnings-121507710.html",
+      "as_of": "2026-10-30"
+    },
+    "N.05": {
+      "kind": "news",
+      "citation": "marketbeat.com, 2026-10-21 — Advanced Micro Devices (AMD) Stock Forecast and Price Target 2026",
+      "url": "https://www.marketbeat.com/stocks/NASDAQ/AMD/forecast",
+      "as_of": "2026-10-21"
+    },
+    "N.07": {
+      "kind": "news",
+      "citation": "247wallst.com, 2026-10-20 — AMD Stock Price Prediction: Is the AI Chip Opportunity Bigger Than Wall Street Thinks? - 24/7 Wall St.",
+      "url": "https://247wallst.com/investing/2026/10/20/amd-stock-price-prediction-is-the-ai-chip-opportunity-bigger-than-wall-street-thinks",
+      "as_of": "2026-10-20"
+    },
+    "N.08": {
+      "kind": "news",
+      "citation": "247wallst.com, 2026-10-26 — Price Prediction: The Gap With Nvidia Could Shape AMD's Next Big Move - 24/7 Wall St.",
+      "url": "https://247wallst.com/investing/2026/10/26/price-prediction-the-gap-with-nvidia-could-shape-amds-next-big-move",
+      "as_of": "2026-10-26"
+    },
+    "N.10": {
+      "kind": "news",
+      "citation": "finance.yahoo.com, 2026-10-21 — AMD’s Data Center Business Is Finally Delivering Profits. Can MU’s Rival Sustain the Momentum?",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/amd-data-center-business-finally-152555944.html",
+      "as_of": "2026-10-21"
+    },
+    "N.16": {
+      "kind": "news",
+      "citation": "247wallst.com, 2026-10-21 — After a 137% Run, Is AMD Priced for Perfection Before Earnings? - 24/7 Wall St.",
+      "url": "https://247wallst.com/investing/2026/10/21/after-a-137-run-is-amd-priced-for-perfection-before-earnings",
+      "as_of": "2026-10-21"
+    },
+    "N.17": {
+      "kind": "news",
+      "citation": "tech-insider.org, 2026-10-30 — 5 Market Movers: Midterms, Jobs, AMD, Qualcomm [2026]",
+      "url": "https://tech-insider.org/wall-st-week-ahead-midterms-jobs-fed-hike-odds-ai-market-2026",
+      "as_of": "2026-10-30"
+    },
+    "P.001": {
+      "kind": "peer",
+      "citation": "PEER NVDA 10-Q filed 2026-08-26 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "P.002": {
+      "kind": "peer",
+      "citation": "PEER NVDA 10-Q filed 2026-08-26 · MD&A — Financial Information by Business Segment and Geographic Data",
+      "url": null,
+      "as_of": null
+    },
+    "P.006": {
+      "kind": "peer",
+      "citation": "PEER INTC 10-Q filed 2026-10-30",
+      "url": null,
+      "as_of": null
+    },
+    "P.007": {
+      "kind": "peer",
+      "citation": "PEER INTC 10-Q filed 2026-10-30",
+      "url": null,
+      "as_of": null
+    },
+    "P.008": {
+      "kind": "peer",
+      "citation": "PEER INTC 10-Q filed 2026-10-30",
+      "url": null,
+      "as_of": null
+    },
+    "N.24": {
+      "kind": "news",
+      "citation": "admiralmarkets.com, 2026-10-30 — AI Bubble 2026: What the Data Show Before Nvidia Earnings",
+      "url": "https://admiralmarkets.com/analytics/traders-blog/ai-bubble-burst-2026",
+      "as_of": "2026-10-30"
+    },
+    "N.31": {
+      "kind": "news",
+      "citation": "aktualita.co, 2026-10-30 — Intel Shares Plunge 30 Percent, Investors Panic! Revenue Projections Disappoint the Market",
+      "url": "https://aktualita.co/en/economy/intel-shares-plunge-30-percent-investors-panic-revenue-projections-disappoint-the-market",
+      "as_of": "2026-10-30"
+    },
+    "A.021": {
+      "kind": "article",
+      "citation": "Article (colombiaone.com)",
+      "url": "https://colombiaone.com/2026/10/30/intels-ai-business-surges-78-as-pc-weakness-clouds-recovery",
+      "as_of": "2026-10-30"
+    },
+    "A.022": {
+      "kind": "article",
+      "citation": "Article (colombiaone.com)",
+      "url": "https://colombiaone.com/2026/10/30/intels-ai-business-surges-78-as-pc-weakness-clouds-recovery",
+      "as_of": "2026-10-30"
+    },
+    "A.023": {
+      "kind": "article",
+      "citation": "Article (colombiaone.com)",
+      "url": "https://colombiaone.com/2026/10/30/intels-ai-business-surges-78-as-pc-weakness-clouds-recovery",
+      "as_of": "2026-10-30"
+    },
+    "A.024": {
+      "kind": "article",
+      "citation": "Article (colombiaone.com)",
+      "url": "https://colombiaone.com/2026/10/30/intels-ai-business-surges-78-as-pc-weakness-clouds-recovery",
+      "as_of": "2026-10-30"
+    },
+    "A.025": {
+      "kind": "article",
+      "citation": "Article (colombiaone.com)",
+      "url": "https://colombiaone.com/2026/10/30/intels-ai-business-surges-78-as-pc-weakness-clouds-recovery",
+      "as_of": "2026-10-30"
+    }
+  },
+  "check_notes": [
+    "setup_summary[2]: rewritten to what its sources support (The press preview range is given as $1.67-$1.68, but the passages show only $1.68, so the $1.67 figure is not supported.).",
+    "metrics_to_model[2].view: rewritten to what its sources support (The passages do not give the Q2 gross margin, so 'flat on Q2' is unsupported, and nothing identifies the Q4 margin outlook as a key item.).",
+    "metrics_to_model[4].consensus: rewritten to what its sources support (The $1.97 consensus and $1.98 whisper are supported, but the passages show only $1.68 in press previews, not $1.67.).",
+    "metrics_to_model[5].view: rewritten to what its sources support (The sequential gaming decline and the component-cost effect on Radeon demand are supported, but the cited passages do not show gaming driving the segment's margin.).",
+    "since_filing[3]: rewritten to what its sources support (The date '10 Oct' for the Israel disruption is not in the passages, which say only 'October 2026'.).",
+    "since_filing[4]: rewritten to what its sources support (The Intel client details are supported, but AMD's Q3 Client guide and the 'up for FY26' guide are not in the cited passages, and the 5% decline is for CCPG rather than client (notebook and desktop) revenue.).",
+    "since_filing[7]: rewritten to what its sources support (No passage says the Anthropic and Microsoft deployments are not expected to add to Q3 revenue; the call says Helios shipments begin later in Q3.).",
+    "key_debates[2].bull: rewritten to what its sources support (The passages do not name a 2nm node; the chiplet remark refers only to 'a new node'.).",
+    "key_risks[2]: rewritten to what its sources support (The $8.2B all-stock deal is supported, but the roughly 1% dilution needs a share count that is not in the passages.).",
+    "key_risks[4]: rewritten to what its sources support (The licence, tariff and decree risks are supported, but nothing in the passages compares them with the 10-K to show they are new or expanded.).",
+    "key_risks[5]: rewritten to what its sources support (The construction delay, power and regulation risks appear in the 10-Q, but no passage shows they were newly added versus the prior filing.).",
+    "key_risks[7]: rewritten to what its sources support (The $598M other income and the $1.1B of restricted securities are supported, but the $2.2B payables benefit is a six-month figure, not Q2, and the whole $598M is not attributed to unrealized gains.).",
+    "questions_for_management[1]: rewritten to what its sources support (The 56% guide is supported, but the passages do not give the Q2 gross margin, so 'flat' is unsupported.).",
+    "questions_for_management[4]: rewritten to what its sources support (The $4.1B guarantee and the absence of vested warrants are supported, but nothing in the passages shows customer financing or lease exposure is growing.).",
+    "questions_for_management[5]: rewritten to what its sources support (The $1.0B prepayment and $2.2B payables increases are supported, but only the $30.3B commitments total at June 27 is given, with no earlier figure to show commitments more than doubled.).",
+    "questions_for_management[7]: rewritten to what its sources support (The MI325 inspection and tariff conditions and the Chinese decrees are in the 10-Q, but the passages do not show the 10-Q newly adds them.).",
+    "metrics_to_model[2].view: its whole metrics_to_model[2] item was removed — its sources don't support it (Su says yields should keep improving through the first few quarters of the ramp, but never says they improve only then, so the word 'only' goes beyond the passage; the other facts (56% guide, accretive server mix, AI margin slightly below average, 24/7 Wall St. margin-stall risk) are supported.)."
+  ]
+}

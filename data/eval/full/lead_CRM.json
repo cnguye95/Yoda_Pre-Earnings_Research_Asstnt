@@ -1,0 +1,1455 @@
+{
+  "ticker": "CRM",
+  "company_name": "Salesforce, Inc.",
+  "report_generated_at": "2026-11-01T12:23:51+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-08-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-03-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000060/crm-20260131.htm"
+    }
+  ],
+  "earnings_call": "not available",
+  "current_report": "8-K filed 2026-10-20: Item 7.01 Regulation FD disclosure; Item 9.01 financial statements and exhibits",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$3.47",
+      "fiscal_quarter": 3,
+      "fiscal_year": 2027,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$11.57B",
+      "fiscal_quarter": 3,
+      "fiscal_year": 2027,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2026-12-01 report. Paid lookup not made: next report is 30 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "implied move: no live implied move yet (EarningsWatcher has no confirmed report date)."
+    },
+    "historical_move": {
+      "value": "±6.8% average closing move over the last 8 reports (2024-12-03 to 2026-08-26)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/crm-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "analyst_actions": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "price_target": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "Salesforce reports fiscal Q3 FY27 (quarter ended Oct 31) on Dec 1 after the close. Consensus is $11.57B revenue (+12.8% y/y) and $3.47 EPS. The average closing move over the last 8 reports is ±6.8%. No options-implied move or whisper number exists yet, and the beat/miss record could not be retrieved.",
+      "evidence_ids": [
+        "M.01",
+        "F.78",
+        "M.04",
+        "M.03",
+        "M.05"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Q2 FY27 revenue was $11.345B (+10.8% y/y). Operating income was flat at $2.33B, so GAAP operating margin fell to 20.5% from 22.8%. Gross margin slipped to about 76.7% from 78.1%. Amortization of acquired intangibles rose to $522M from $380M, and restructuring to $94M from $4M. Together those two items explain about 2 of the 2.3 points of margin decline, by my arithmetic.",
+      "evidence_ids": [
+        "F.01",
+        "F.41",
+        "F.47",
+        "F.59",
+        "F.61",
+        "Q.005",
+        "Q.060"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Headline growth is flattered by Informatica, which added about $456M in Q2 (about 4.5 points). Excluding it, Q2 growth was about +6.4%. It was acquired in Nov 2025 and is absent from the Q3 FY26 base of $10.26B. If it contributes about 4.5 points again, the consensus of $11.57B (+12.8%) needs about 8.3 points from everything else (organic, Qualified, Fin, Contentful), versus about 6.4 in Q2. This split is my arithmetic, not a company figure.",
+      "evidence_ids": [
+        "F.01",
+        "F.02",
+        "Q.113",
+        "F.77",
+        "F.78"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "The 20% growth in 'Data 360, Headless Platform and Other' ($3,618M vs $3,008M) is mostly Informatica, which the 10-Q groups in that line. Removing its roughly $456M of revenue leaves about +5%. Agentforce Apps grew about 8% ($7,193M vs $6,682M). The AI-led reacceleration story is therefore not yet visible in reported segment growth.",
+      "evidence_ids": [
+        "Q.113",
+        "Q.114"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Current RPO was $33.5B, up 14% y/y. Total RPO was $66.3B, up 11% y/y and down from $72.4B at Jan 31 (seasonal, because Q4 carries the heaviest renewals). Q2 billings and other were $9,769M versus $8,992M a year earlier, about +8.6%, which is slower than revenue growth of 10.8%.",
+      "evidence_ids": [
+        "Q.095",
+        "Q.049",
+        "Q.047"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "The balance sheet changed sharply. Debt principal was $39.5B versus $14.5B at Jan 31, against cash and securities of $11.4B. A $25B ASR was funded with March 2026 notes. Interest expense was $473M in Q2 versus $67M, and diluted shares were 821M versus 962M. Operating cash flow was $1.27B in Q2 and free cash flow about $1.1B.",
+      "evidence_ids": [
+        "Q.111",
+        "Q.064",
+        "Q.005",
+        "Q.006",
+        "Q.070",
+        "F.17",
+        "F.71"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q2 GAAP diluted EPS of $4.29 included a $2.613B pre-tax gain on strategic investments, of which $2.7B was unrealized Anthropic gains. Anthropic is about $5.1B, or 45%, of the $11.3B portfolio. At the 10-Q's 23.5% rate, the gain is about $2.43 per share, so ex-gain GAAP EPS was about $1.86. This is my calculation from the filing.",
+      "evidence_ids": [
+        "Q.005",
+        "Q.095",
+        "Q.120",
+        "Q.142",
+        "F.09",
+        "Q.017"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Deals: Fin (Intercom, about $3.6B) closed Sept 10, and Contentful (about $1.5B, net of shares already owned) has been reported as completed. The 10-Q expected both to close in Q3. Braze (about $5.66B EV, $47.50 cash per share) was announced Oct 20 and is expected to close in FY28.",
+      "evidence_ids": [
+        "Q.059",
+        "N.45",
+        "N.48",
+        "E.004",
+        "E.007"
+      ],
+      "evidence_type": "reported"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Total revenue",
+      "period": "Q3 FY27",
+      "last_reported": {
+        "text": "Q2 FY27 revenue was $11.345B (+10.8% y/y), of which Informatica was about $456M.",
+        "evidence_ids": [
+          "F.01",
+          "F.41",
+          "Q.113"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus is $11.57B (+12.8% y/y on $10.26B).",
+        "evidence_ids": [
+          "M.01",
+          "F.78",
+          "F.77"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "The guide of $11.42–11.50B (+11.3% to +12.1%) comes from August press summaries, not a primary release. Consensus sits about $70M (0.6%) above its top. Q2 revenue beat consensus by only about 0.25%, so $11.57B needs a larger-than-usual beat or a bigger Fin/Contentful contribution than the roughly 0.5 point I assume. I model $11.50–11.58B. Revenue is a low-odds beat versus consensus and a likely beat versus the guide.",
+        "evidence_ids": [
+          "F.78",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Current RPO growth (constant currency) and reported cRPO",
+      "period": "Q3 FY27",
+      "last_reported": {
+        "text": "At Q2, cRPO was $33.5B (+14% y/y), with minimal FX effect. At Jan 31 it was +16% reported, including about 3 points of FX tailwind.",
+        "evidence_ids": [
+          "Q.095",
+          "Q.137",
+          "K.175",
+          "K.220"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "No analyst consensus was found. A thinly traded Polymarket market (Oct 24) put roughly 42% on 16–17%, 27% on 15–16% and 10% on 14–15%, versus a guide of about 14% in constant currency. Volume per bucket was only about $0.9–2.6k.",
+        "evidence_ids": [
+          "N.42"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "The ~14% guide reportedly excluded Fin and Contentful before close, per Aug 31 press. Both closed in Q3, so reported cRPO should include them and could print well above 14%. Judge organic acceleration only on an organic or constant-currency figure ex-acquisitions, which management must supply. A headline 16%+ would not by itself show demand acceleration.",
+        "evidence_ids": [
+          "N.45",
+          "N.48",
+          "N.42"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Non-GAAP diluted EPS",
+      "period": "Q3 FY27",
+      "last_reported": {
+        "text": "Q2 GAAP diluted EPS was $4.29, or about $1.86 ex the investment gain. Non-GAAP EPS was $5.90, of which about $2.53 was the gain per Aug press, leaving about $3.37.",
+        "evidence_ids": [
+          "F.09",
+          "Q.005",
+          "Q.095"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus EPS is $3.47. The basis (GAAP or non-GAAP) is not stated, but the number only fits a non-GAAP, ex-gain basis. The fact sheet's +58.5% growth compares it with a GAAP $2.19 base, which is apples to oranges.",
+        "evidence_ids": [
+          "M.01",
+          "F.80",
+          "F.79"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "The guide of $3.42–3.44 (press) is $0.03–0.05 below consensus, which is $0.10 above the Q2 ex-gain run-rate of $3.37. Lower interest income on about $5B of deal cash and a full quarter of $25B note coupons offset the ASR share-count benefit. A print of $3.45–3.52 looks plausible. The risk is that consensus has drifted above guidance.",
+        "evidence_ids": [
+          "M.01",
+          "Q.005",
+          "Q.061"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "GAAP EPS and strategic-investment line",
+      "period": "Q3 FY27",
+      "last_reported": {
+        "text": "The Q2 gain was $2.613B pre-tax. Q2 also had $285M of impairments. Six-month gain per share was $2.87.",
+        "evidence_ids": [
+          "Q.051",
+          "Q.095"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Model no Anthropic mark in Q3 and treat any GAAP print as noise. The last priced round was $965B in May, and the IPO prospectus was reported Oct 26 with no shares trading, so a Q3 mark-up is unlikely. The 10-Q says private marks are booked only on observable same-issuer transactions or impairment. A 10% enterprise-value fall in the five largest holdings would cut carrying value by about $641M. As an illustration only, if a $1.5–2T IPO were an observable price, Anthropic's roughly $5.1B carrying value would imply a $2.8–5.5B pre-tax mark, on a crude linear scaling that ignores share-class rights. That would land in Q4 or later.",
+        "evidence_ids": [
+          "N.13",
+          "N.14",
+          "Q.026",
+          "Q.143",
+          "Q.142"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "GAAP operating margin",
+      "period": "Q3 FY27",
+      "last_reported": {
+        "text": "Q2 GAAP operating margin was 20.5% (22.8% a year earlier).",
+        "evidence_ids": [
+          "F.59",
+          "F.61"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Scheduled amortization is $839M for the remaining six months of FY27, about $420M a quarter versus $522M in Q2. Restructuring is not expected to recur at scale (Q2 was $94M). Together that is worth about 1.5–2 points of GAAP margin before the new Fin/Contentful amortization and opex. Expect sequential GAAP margin recovery, with dilution risk from the acquisitions.",
+        "evidence_ids": [
+          "Q.060",
+          "Q.119",
+          "Q.005"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Interest expense and other income",
+      "period": "Q3 FY27",
+      "last_reported": {
+        "text": "Q2 interest expense was $473M (Q1 about $317M, derived as the six-month $790M less Q2). Other income was $81M versus $135M a year earlier.",
+        "evidence_ids": [
+          "Q.005"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Q2 is a full-quarter run-rate for the March 2026 notes and term loan. Model about $470–480M of interest expense. Other income should fall further as about $5B of cash goes to Fin and Contentful. The company said the March notes will push interest expense above the prior year throughout FY27.",
+        "evidence_ids": [
+          "Q.119",
+          "Q.005",
+          "Q.111"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Diluted share count",
+      "period": "Q3 FY27",
+      "last_reported": {
+        "text": "Q2 diluted shares were 821M. Another 42M weighted shares of unsettled ASR forward were excluded as anti-dilutive. About 823M shares were outstanding on Aug 20.",
+        "evidence_ids": [
+          "Q.006",
+          "Q.070",
+          "Q.071",
+          "Q.002"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The ASR delivered about 103M shares, roughly 80% of the total expected, so about 26M shares remain at an implied $194 average price. Final settlement is due in Q3. An October settlement and a $176 'to date' price come from Sept press and are unverified. The late-quarter delivery trims Q3 weighted shares by only about 4–6M, worth about $0.02–0.03 of EPS. The fuller benefit lands in Q4, with a base roughly 3–5% below Q2's 821M.",
+        "evidence_ids": [
+          "Q.067",
+          "Q.128",
+          "Q.071"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Operating cash flow and free cash flow, plus acquisition outflows",
+      "period": "Q3 FY27",
+      "last_reported": {
+        "text": "Q2 operating cash flow was $1.27B and free cash flow about $1.10B. Q2 or Q3 is typically the smallest cash-flow quarter.",
+        "evidence_ids": [
+          "F.17",
+          "F.71",
+          "Q.102"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Fin (about $3.6B) and Contentful (about $1.5B) are about $5.1B of investing outflow in Q3, against $11.4B of cash and securities. Add roughly $0.37B of dividends. Cash and securities should end Q3 well below $11.4B before any debt action. Braze, about $5.66B EV in FY28, is to be funded with cash per the company.",
+        "evidence_ids": [
+          "Q.059",
+          "Q.111",
+          "Q.068",
+          "E.004",
+          "E.019"
+        ],
+        "evidence_type": "estimate"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Q3 FY27 revenue",
+      "guidance": "$11.42–11.50B (+11% to +12%). Source is August press coverage of the Aug 26 release, which I could not read directly.",
+      "period": "Q3 FY27 (Aug–Oct 2026)",
+      "status": "new",
+      "claim": {
+        "text": "Q3 revenue guidance of $11.42–11.50B appears only in August press summaries and was not verified against the primary release. Whether it includes Fin and Contentful for a partial quarter is not established.",
+        "evidence_ids": [],
+        "evidence_type": "unverifiable"
+      }
+    },
+    {
+      "metric": "Q3 FY27 current RPO growth",
+      "guidance": "About 14% in constant currency. Press says it excludes pending Contentful and Fin contributions.",
+      "period": "Q3 FY27",
+      "status": "new",
+      "claim": {
+        "text": "The cRPO guide of about 14% in constant currency was reportedly set before Fin and Contentful closed and excludes them. Both have since closed, per the Oct 20 and Oct 30 reports. Aug 31 press coverage, unverified.",
+        "evidence_ids": [
+          "N.45",
+          "N.48"
+        ],
+        "evidence_type": "unverifiable"
+      }
+    },
+    {
+      "metric": "Q3 FY27 non-GAAP diluted EPS",
+      "guidance": "$3.42–3.44 (press). A GAAP Q3 guide was not found.",
+      "period": "Q3 FY27",
+      "status": "new",
+      "claim": {
+        "text": "The Q3 non-GAAP EPS guide of $3.42–3.44 is from press only. It is far below Q2's $5.90 because Q2 included a $2.53 per share gain (per Aug press). Q2 ex-gain was about $3.37.",
+        "evidence_ids": [],
+        "evidence_type": "unverifiable"
+      }
+    },
+    {
+      "metric": "FY27 revenue",
+      "guidance": "$46.1–46.4B, raised in August from $45.9–46.2B. $200M of the raise reportedly comes from Contentful and Fin, $100M organic, offset by $100M of FX. The Oct 20 8-K says there is no anticipated change.",
+      "period": "FY27 (ending Jan 31, 2027)",
+      "status": "maintained",
+      "claim": {
+        "text": "The Oct 20 Braze 8-K says there is 'no anticipated change to Salesforce's FY27 guidance', and no FY28 guidance has been given. The revenue range of $46.1–46.4B and the deal split are from August press.",
+        "evidence_ids": [
+          "E.007"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "FY27 non-GAAP and GAAP EPS",
+      "guidance": "Non-GAAP $16.67–16.71 and GAAP $10.21–10.25 (press). Both embed the realized Q2 investment gain. Implied H2 GAAP EPS is about $3.54–3.58 in total, or roughly $1.8 a quarter, against a Q2 ex-gain run-rate of $1.86.",
+      "period": "FY27",
+      "status": "raised",
+      "claim": {
+        "text": "FY27 GAAP EPS guidance of $10.21–10.25, less H1 GAAP EPS of $6.67, implies about $3.54–3.58 for H2. That suggests no further investment gains are assumed. The guidance figures are from Trefis and StocksToTrade.",
+        "evidence_ids": [
+          "F.11"
+        ],
+        "evidence_type": "unverifiable"
+      }
+    },
+    {
+      "metric": "FY27 non-GAAP operating margin and cash flow",
+      "guidance": "Non-GAAP operating margin of about 34.3% maintained. Operating and free cash flow growth of about 4–5%, which on $15.0B of FY26 operating cash flow implies about $15.6–15.7B and H2 of roughly flat to slightly down y/y.",
+      "period": "FY27",
+      "status": "maintained",
+      "claim": {
+        "text": "Margin and cash-flow guidance was held in August per press. Against FY26 operating cash flow of $15.0B and H1 FY27 of $7.97B, 4–5% growth implies H2 operating cash flow of roughly $7.6–7.8B, versus about $7.8B a year earlier. Press-based and unverified.",
+        "evidence_ids": [
+          "F.35",
+          "F.19",
+          "F.20"
+        ],
+        "evidence_type": "unverifiable"
+      }
+    },
+    {
+      "metric": "Long-term (FY30) framework and FY28",
+      "guidance": "The Braze release says there is no change to the FY30 framework 'at this time', no update to long-term targets, and no FY28 guidance. It flags growth accretion balanced by near-term profitability dilution.",
+      "period": "FY28–FY30",
+      "status": "maintained",
+      "claim": {
+        "text": "The Braze materials keep the FY30 framework unchanged 'at this time', give no FY28 guide, and say funding is via cash, with growth accretion 'balanced by near term profitability dilution'.",
+        "evidence_ids": [
+          "E.007",
+          "E.019"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "On Oct 20 Salesforce signed a deal to buy Braze for about $5.66B EV ($47.50 cash per share). Closing is expected in FY28. The 8-K says there is no anticipated change to FY27 guidance, no FY28 guidance, and no long-term target update. The company expects to fund the deal with cash and flags near-term profitability dilution.",
+      "evidence_ids": [
+        "E.004",
+        "E.007",
+        "E.019"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "The market reaction to Braze was mild for Salesforce. CRM slipped roughly 1% on the day (an early indication was -2.6%) while Braze jumped more than 50%. The price is about 58% above Braze's prior close and about 7x its $738M trailing revenue. Braze has a net loss of about $131M.",
+      "evidence_ids": [
+        "N.22",
+        "N.25",
+        "N.24",
+        "A.045"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Fin closed on Sept 10, and Contentful has been reported as completed. Salesforce also bought Loops on Oct 12. Both closings land in the quarter being reported, so Q3 will carry their first revenue, cash outflows, amortization and integration costs, and the print has more inorganic content than the guide's organic framing.",
+      "evidence_ids": [
+        "N.45",
+        "N.48",
+        "A.046"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "On Oct 29 CRM fell about 4.5% (-4.46% per TradingKey, -4.6% per Benzinga), with IGV down 3.3% and Workday down about 4%. The trigger was ServiceNow's worst day on record, on a slowdown in contracted backlog. An intraday quote of $229.92 (-5.03%) implies a prior close near $242. The sector move was about four times the Braze-day move.",
+      "evidence_ids": [
+        "N.61",
+        "N.65",
+        "N.63",
+        "N.62"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "ServiceNow's 10-Q shows Q3 revenue +21% y/y ($4.1B) and subscription revenue +21%, yet the stock fell sharply on backlog growth. Investors are therefore punishing forward-indicator deceleration even when reported growth is strong. That makes Salesforce's cRPO the key line on Dec 1. No Microsoft, Adobe or Workday results were retrieved.",
+      "evidence_ids": [
+        "P.001",
+        "N.61",
+        "N.65"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Anthropic's IPO prospectus was reported Oct 26. The last private round was $965B in May, the IPO target is $1.5–2T, and shares were not yet trading as of Oct 26–29. No newer priced round was reported, so a Q3 mark-up is unlikely and the Anthropic mark is more of a Q4+ event.",
+      "evidence_ids": [
+        "N.13",
+        "N.14",
+        "N.15"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "A prediction market on Salesforce Q3 cRPO growth (constant currency, resolving Dec 2) put about 42% on 16–17%, 27% on 15–16% and 10% on 14–15%, versus the ~14% guide. The market is thin (about $0.9–2.6k per bucket), so treat it as a loose sentiment gauge, not a consensus.",
+      "evidence_ids": [
+        "N.42"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Is organic growth re-accelerating, or is headline growth just Informatica and M&A?",
+      "bull": {
+        "text": "Current RPO grew 14% y/y, higher than Q2's roughly 11% total revenue growth ex-FX effects would imply. Management reiterated second-half organic reacceleration, and the market is positioned for cRPO of 15%+.",
+        "evidence_ids": [
+          "Q.095",
+          "N.42"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Ex-Informatica, Q2 growth was only about 6.4%, Data 360 ex-Informatica about 5%, and Agentforce Apps about 8%. Billings grew about 8.6%. Consensus of $11.57B needs about 8.3 points of non-Informatica growth versus about 6.4 in Q2, and it sits above the top of the guide.",
+        "evidence_ids": [
+          "F.01",
+          "F.02",
+          "Q.113",
+          "Q.047",
+          "F.78",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "The Dec 1 organic or constant-currency growth figure with Fin and Contentful stripped out, the revenue bridge between acquired and organic, and cRPO ex-acquisitions versus the guided ~14%."
+    },
+    {
+      "question": "How much of the reported cRPO trend is demand versus FX and acquisitions?",
+      "bull": {
+        "text": "At Jan 31, 16% reported cRPO growth included about 3 points of FX. Q2's 14% had minimal FX, so constant-currency growth rose from about 13% to 14% (my arithmetic).",
+        "evidence_ids": [
+          "K.175",
+          "K.220",
+          "Q.095",
+          "Q.137"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "On a reported basis cRPO growth slowed from 16% to 14%. Fin and Contentful closed in Q3 and were excluded from the ~14% guide, so a higher reported number may be purchased growth. Total RPO fell to $66.3B from $72.4B.",
+        "evidence_ids": [
+          "K.175",
+          "Q.095",
+          "Q.049",
+          "N.45"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Reported versus constant-currency versus organic cRPO growth disclosed side by side on Dec 1."
+    },
+    {
+      "question": "How should investors treat GAAP EPS quality and the Anthropic stake?",
+      "bull": {
+        "text": "The Anthropic stake is about $5.1B (45% of the portfolio). If it is marked toward an IPO target of $1.5–2T, the value could rise materially above its carrying amount, supporting buybacks or debt paydown.",
+        "evidence_ids": [
+          "Q.142",
+          "N.14",
+          "N.13"
+        ],
+        "evidence_type": "estimate"
+      },
+      "bear": {
+        "text": "Q2 GAAP EPS of $4.29 included a $2.6B pre-tax gain on strategic investments, and the company says strategic investment gains lifted six-month diluted EPS by $2.87. The portfolio is concentrated, the five largest holdings carry about $641M of sensitivity per 10% enterprise-value move, and Q2 also had $285M of impairments.",
+        "evidence_ids": [
+          "Q.005",
+          "Q.095",
+          "Q.143",
+          "Q.051"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q3 gains/losses line (expected near zero for Anthropic), the Anthropic IPO pricing date, and whether management guides on an ex-gain basis."
+    },
+    {
+      "question": "Does serial M&A and a debt-funded buyback create value or dilute margins?",
+      "bull": {
+        "text": "Management says deals meet its M&A framework, expects to fund Braze with cash (a non-dilutive form of consideration), and cites growth accretion balanced by near-term profitability dilution. The ASR cut diluted shares from 962M to 821M year on year, and six-month operating cash flow grew 10.4%.",
+        "evidence_ids": [
+          "E.018",
+          "E.019",
+          "E.005",
+          "Q.005",
+          "Q.006",
+          "F.50"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Debt principal is $39.5B versus $14.5B in January, interest expense is $473M a quarter, and about $10.8B of Contentful, Fin and Braze cash is roughly equal to the entire $11.4B of cash. The company flags near-term profitability dilution, and Q2 operating income was flat on 10.8% revenue growth.",
+        "evidence_ids": [
+          "Q.111",
+          "Q.005",
+          "Q.059",
+          "E.004",
+          "E.019",
+          "F.47"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 and FY28 margin commentary, net debt after Q3 acquisitions, and any leverage or credit-rating statement (none found)."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "bull",
+      "description": {
+        "text": "Revenue of $11.58B or more (at or above consensus), cRPO growth of 15–16%+ with a credible organic figure of 14%+ ex-acquisitions, non-GAAP EPS of $3.50+, and a raised FY27 guide with a margin-neutral deal bridge. After the Oct 29 de-rating, the average closing move of ±6.8% skews upward.",
+        "evidence_ids": [
+          "M.01",
+          "M.04",
+          "N.42",
+          "N.65"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Reported and organic cRPO growth above the ~14% guide",
+        "Revenue above $11.57B with disclosed Fin/Contentful contribution of $60M or less",
+        "FY27 raise beyond the deal contribution",
+        "Confirmation of FY30 framework and positive FY28 colour"
+      ]
+    },
+    {
+      "name": "base",
+      "description": {
+        "text": "Revenue of $11.50–11.57B, near the top of the guide but below consensus. Reported cRPO is 14–16% (lifted by Fin and Contentful) with organic about 14%, non-GAAP EPS of $3.44–3.50, and FY27 guidance held or nudged for deal contributions. GAAP EPS comes out near $1.8–1.9 with no meaningful investment gains. The stock trades on the Q4/FY28 outlook.",
+        "evidence_ids": [
+          "M.01",
+          "F.78",
+          "Q.005"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Revenue within $70M of consensus",
+        "cRPO near 14% organic",
+        "Interest expense near $470–480M",
+        "ASR final settlement disclosed with the remaining shares delivered"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Revenue near or below the top of the guide ($11.50B or less) with organic growth around 6%, cRPO at or below 14% once acquisitions are stripped out, billings lagging revenue again, and cautious Q4 guidance reflecting Braze/Fin dilution. After ServiceNow's backlog-driven plunge, a soft cRPO could trigger a double-digit move.",
+        "evidence_ids": [
+          "F.41",
+          "Q.047",
+          "N.61",
+          "E.019",
+          "M.04"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Organic cRPO growth below 14%",
+        "Professional services revenue keeps falling",
+        "Margin guide lowered for acquisition costs",
+        "Weak Informatica/license commentary"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "AI disruption of seat-based software. The 10-Q lists AI-native competitors that may bypass traditional workflows. The Oct 29 sector selloff (CRM -4.5%, IGV -3.3%) shows how fast sentiment turns on any forward-indicator deceleration.",
+        "evidence_ids": [
+          "Q.188",
+          "N.61",
+          "N.65"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Leverage and acquisition integration. Debt principal is $39.5B, and Contentful, Fin and Braze add about $10.8B of cash needs against $11.4B of cash. The acquisition risk factor cites the Informatica financing, and management flags near-term profitability dilution on Braze.",
+        "evidence_ids": [
+          "Q.111",
+          "Q.059",
+          "E.004",
+          "Q.169",
+          "Q.171",
+          "E.019"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Strategic-investment concentration and volatility. Anthropic is about 45% of the $11.3B portfolio (22% at Jan 31, and two holdings were 35% in the 10-K). The 10-Q warns that gains and losses could be material and that private marks depend on observable transactions or impairment.",
+        "evidence_ids": [
+          "Q.017",
+          "Q.142",
+          "Q.143",
+          "K.250"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "ASR settlement uncertainty. The 10-Q now says stock-price volatility may obligate Salesforce to deliver shares or make a cash payment on final settlement. That language is not in the 10-K. The remaining share delivery and any cash true-up depend on the final average price.",
+        "evidence_ids": [
+          "Q.242",
+          "Q.067",
+          "K.133"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Dependence on third-party frontier AI models and AI-enabled security threats. The 10-Q adds that access to frontier models may be suspended or restricted by providers or governments, and that frontier AI may help attackers find zero-day flaws faster. Neither is in the 10-K.",
+        "evidence_ids": [
+          "Q.166",
+          "Q.154",
+          "K.063",
+          "K.053"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Backpage litigation keeps growing, with new plaintiff groups added since the 10-K (for example E.Y.W. and F.P., plus many N.D. Cal. cases). Most actions are stayed pending criminal proceedings. The company cannot estimate a loss range. The 10-K's expected Fall 2026 trial date in G.G. does not appear in the 10-Q.",
+        "evidence_ids": [
+          "Q.080",
+          "Q.086",
+          "Q.072",
+          "K.329",
+          "Q.078"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Mix and demand weakness in professional services and license-type revenue. Professional services fell 4% on lower demand for larger multi-year transformation engagements, which 'may continue'. Term licenses were about 4% of subscription revenue versus 6% a year ago.",
+        "evidence_ids": [
+          "Q.113",
+          "Q.112"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "What is the organic, constant-currency cRPO growth in Q3 excluding Fin and Contentful, and how much of reported cRPO growth comes from the two deals?",
+      "why": {
+        "text": "The ~14% guide reportedly excluded both deals, which closed in Q3, and the prediction market is positioned for 15–17%. Without an organic split, a high headline would be uninterpretable.",
+        "evidence_ids": [
+          "N.45",
+          "N.48",
+          "N.42"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "question": "What did Fin and Contentful contribute to Q3 revenue, and what is their expected FY27 contribution inside the $46.1–46.4B guide?",
+      "why": {
+        "text": "The FY27 raise reportedly includes $200M from the two deals, but consensus ($11.57B) sits above the guided Q3 range and the revenue bridge is unclear.",
+        "evidence_ids": [
+          "F.78",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "question": "When did the ASR settle, how many shares were delivered, at what final average price, and was there any cash or share true-up?",
+      "why": {
+        "text": "About 103M shares (about 80%) were delivered up front. The remainder, roughly 26M at an implied $194 average, drives Q4 share count, and the 10-Q says price volatility may require shares or cash.",
+        "evidence_ids": [
+          "Q.067",
+          "Q.242",
+          "Q.128"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How will Braze be funded, what happens to net debt and leverage after about $10.8B of deal cash, and have rating agencies commented?",
+      "why": {
+        "text": "Cash is $11.4B against $39.5B of debt. The release says Braze will be cash-funded, and the 10-Q lists credit-rating downgrades as a risk. No agency commentary was found.",
+        "evidence_ids": [
+          "Q.111",
+          "E.019",
+          "E.004",
+          "Q.244"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is the expected margin path including Braze, Fin and Contentful, and does the FY30 framework still hold once these deals are included?",
+      "why": {
+        "text": "Operating margin fell to 20.5% from 22.8%, the Braze release flags 'near term profitability dilution', and the FY30 framework is unchanged only 'at this time'.",
+        "evidence_ids": [
+          "F.59",
+          "F.61",
+          "E.019"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "Does management plan to monetize or hold the Anthropic stake, and how will an IPO be marked in the accounts and in non-GAAP guidance?",
+      "why": {
+        "text": "Anthropic is about $5.1B (45%) of the portfolio. Strategic investment gains lifted six-month GAAP EPS by $2.87, and an IPO at $1.5–2T could drive a large mark.",
+        "evidence_ids": [
+          "Q.142",
+          "Q.017",
+          "Q.095",
+          "N.14"
+        ],
+        "evidence_type": "estimate"
+      }
+    }
+  ],
+  "data_gaps": [
+    "Primary text of the Aug 26 earnings release and call (Q3 guide, GAAP Q3 EPS guide, FY27 EPS wording, acquisition treatment) could not be opened. All Q3 and FY27 guidance numbers rest on August press summaries, which are older than 14 days.",
+    "The basis of the $3.47 consensus (GAAP vs non-GAAP) is not stated, and the fact sheet's +58.5% EPS growth compares it with a GAAP $2.19 base. The Q3 FY26 non-GAAP EPS base was not in the sources.",
+    "The August consensus ($11.42B / $3.39) could not be confirmed, so it is unclear whether consensus has risen above guidance since August or when.",
+    "Q1 FY27 cRPO growth (reported and constant currency) is missing, so the 16% to Q1 to 14% path is incomplete. Informatica's contribution to y/y cRPO growth is not disclosed.",
+    "Fin and Contentful revenue, cRPO and close-date details (Contentful's exact date) are not available, so the inorganic share of Q3 is my estimate.",
+    "ASR final settlement date, final average price and any cash true-up are unknown. The $176 average price and 'at least 14%' language come from Sept press (24/7 Wall St.) citing the Aug 26 release, which was not retrieved.",
+    "No analyst rating or price-target changes dated Oct 20–31 were found for CRM (only September target raises). Microsoft, Adobe and Workday quarterly results were not retrieved. No rating-agency actions were found.",
+    "Agentforce ARR (above $1.5B) and AI-and-data ARR (about $3.9B) are from secondary August coverage and were not verified against primary text. No verified Dreamforce or Investor Day update on FY30 targets was found.",
+    "No options-implied move, whisper EPS, or historical beat/miss record is available. The CRM closing prices for Oct 29–31 are not established.",
+    "Market data: signals figures are N/A because FMP refused the request (FMP refused https://financialmodelingprep.com/stable/grades (HTTP 402): Premium Query Parameter: 'Special Endpoint : This value set for 'symbol' is not available under your current subscription please visit our subscription page to upgrade your plan at https://financialmo Check FMP_API_KEY in .env and the FMP plan.).",
+    "Earnings call transcript not analyzed: Alpha Vantage has no transcript for CRM 2027Q2; and for the quarter before: Alpha Vantage has no transcript for CRM 2027Q1."
+  ],
+  "sources": {
+    "Q.002": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 — New York Stock Exchange",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.005": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.006": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.017": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements — Concentrations of Credit Risk, Significant Customers and Investments",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.026": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements — Strategic Investments",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.047": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements — Unearned Revenue",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.049": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.051": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements — Strategic Investments",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.059": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements — Contentful",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.060": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements — Fin",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.061": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements — Goodwill",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.064": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements — March 2026 Notes",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.067": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements — Share Repurchase Program",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.068": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements — Share Repurchase Program",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.070": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements — 11. Net Income Per Share",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.071": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.072": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements — 12. Legal Proceedings and Claims",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.078": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements — Backpage Litigation",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.080": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements — Backpage Litigation",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.086": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.095": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.102": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · MD&A — Seasonal Nature of Unearned Revenue, Accounts Receivable and Operating Cash Flow",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.111": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · MD&A — Results of Operations",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.112": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · MD&A — Impact of Acquisitions",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.113": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · MD&A — Impact of Acquisitions",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.114": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.119": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.120": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.128": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · MD&A — Share Repurchase Program",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.137": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Quantitative Disclosures — Foreign Currency Translation Risk",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.142": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Quantitative Disclosures — Strategic Investments",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.143": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Quantitative Disclosures — Strategic Investments",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.154": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.166": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.169": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.171": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.188": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Risk Factors — Strategic and Industry Risks",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.242": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "Q.244": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-27 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "K.053": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-02 · Risk Factors — Operational and Execution Risks",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000060/crm-20260131.htm",
+      "as_of": "2026-03-02"
+    },
+    "K.063": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-02 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000060/crm-20260131.htm",
+      "as_of": "2026-03-02"
+    },
+    "K.133": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-02 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000060/crm-20260131.htm",
+      "as_of": "2026-03-02"
+    },
+    "K.175": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-02 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000060/crm-20260131.htm",
+      "as_of": "2026-03-02"
+    },
+    "K.220": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-02 · Quantitative Disclosures — Foreign Currency Translation Risk",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000060/crm-20260131.htm",
+      "as_of": "2026-03-02"
+    },
+    "K.250": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-02 · Financial Statements — Concentrations of Credit Risk, Significant Customers and Investments",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000060/crm-20260131.htm",
+      "as_of": "2026-03-02"
+    },
+    "K.329": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-02 · Financial Statements — Backpage Litigation",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000060/crm-20260131.htm",
+      "as_of": "2026-03-02"
+    },
+    "E.004": {
+      "kind": "8-K",
+      "citation": "8-K Items 7.01, 9.01, Exhibit 99.1 (filed 2026-10-20)",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000119312526425881/d516983dex991.htm",
+      "as_of": "2026-10-20"
+    },
+    "E.005": {
+      "kind": "8-K",
+      "citation": "8-K Items 7.01, 9.01, Exhibit 99.1 (filed 2026-10-20) — Salesforce Signs Definitive Agreement to Acquire Braze",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000119312526425881/d516983dex991.htm",
+      "as_of": "2026-10-20"
+    },
+    "E.007": {
+      "kind": "8-K",
+      "citation": "8-K Items 7.01, 9.01, Exhibit 99.1 (filed 2026-10-20) — Salesforce Signs Definitive Agreement to Acquire Braze",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000119312526425881/d516983dex991.htm",
+      "as_of": "2026-10-20"
+    },
+    "E.018": {
+      "kind": "8-K",
+      "citation": "8-K Items 7.01, 9.01, Exhibit 99.2 (filed 2026-10-20) — Forward-looking Statements This",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000119312526425881/d516983dex992.htm",
+      "as_of": "2026-10-20"
+    },
+    "E.019": {
+      "kind": "8-K",
+      "citation": "8-K Items 7.01, 9.01, Exhibit 99.2 (filed 2026-10-20) — Patrick Stokes President, Applications",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000119312526425881/d516983dex992.htm",
+      "as_of": "2026-10-20"
+    },
+    "F.01": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2026-07-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "F.02": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-07-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "F.09": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2026-07-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "F.11": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — six months ended 2026-07-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "F.17": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow — quarter ended 2026-07-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "F.19": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow — six months ended 2026-07-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "F.20": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow — six months ended 2025-07-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000190/crm-20260731.htm",
+      "as_of": "2026-08-27"
+    },
+    "F.35": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow — year ended 2026-01-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000060/crm-20260131.htm",
+      "as_of": "2026-03-02"
+    },
+    "F.41": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — quarter ended 2026-07-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.47": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating income growth — quarter ended 2026-07-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.50": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow growth — six months ended 2026-07-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.59": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2026-07-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.61": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2025-07-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.71": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — quarter ended 2026-07-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.77": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-10-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852425000238/0001108524-25-000238-index.htm",
+      "as_of": "2025-12-04"
+    },
+    "F.78": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q3 2027",
+      "url": null,
+      "as_of": null
+    },
+    "F.79": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-10-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852425000238/0001108524-25-000238-index.htm",
+      "as_of": "2025-12-04"
+    },
+    "F.80": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q3 2027",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.03": {
+      "kind": "market",
+      "citation": "Market data — Options-implied move",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "M.05": {
+      "kind": "market",
+      "citation": "Market data — Expectation signals",
+      "url": null,
+      "as_of": null
+    },
+    "N.13": {
+      "kind": "news",
+      "citation": "qz.com, 2026-10-26 — Anthropic IPO filing: 10 numbers from the prospectus",
+      "url": "https://qz.com/anthropic-ipo-filing-numbers",
+      "as_of": "2026-10-26"
+    },
+    "N.14": {
+      "kind": "news",
+      "citation": "scmp.com, 2026-10-29 — As Anthropic eyes a mega-IPO, why are Chinese tech valuations so far behind? | South China Morning Post",
+      "url": "https://www.scmp.com/business/markets/article/3372621/anthropic-eyes-mega-ipo-why-are-chinese-tech-valuations-so-far-behind",
+      "as_of": "2026-10-29"
+    },
+    "N.15": {
+      "kind": "news",
+      "citation": "bloomberg.com, 2026-10-27 — Anthropic’s IPO May See CBA Sitting on Multi-Billion Windfall - Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-27/anthropic-ipo-cba-commonwealth-bank-of-australia-multi-billion-windfall",
+      "as_of": "2026-10-27"
+    },
+    "N.22": {
+      "kind": "news",
+      "citation": "cnbc.com, 2026-10-20 — Salesforce announces $5.66 billion deal for Braze, sending BRZE stock soaring 50% - CNBC",
+      "url": "https://www.cnbc.com/2026/10/20/salesforce-braze-acquisition-deal.html",
+      "as_of": "2026-10-20"
+    },
+    "N.24": {
+      "kind": "news",
+      "citation": "thenextweb.com, 2026-10-20 — Salesforce agrees $5.7bn deal for customer messaging firm Braze - The Next Web",
+      "url": "https://thenextweb.com/news/salesforce-to-buy-marketing-platform-braze-for-5-7bn",
+      "as_of": "2026-10-20"
+    },
+    "N.25": {
+      "kind": "news",
+      "citation": "cnbc.com, 2026-10-20 — Salesforce to acquire Braze in a $5.66 billion deal - CNBC",
+      "url": "https://www.cnbc.com/2026/10/20/salesforce-to-acquire-braze.html",
+      "as_of": "2026-10-20"
+    },
+    "N.42": {
+      "kind": "news",
+      "citation": "polymarket.com, 2026-10-24 — Polymarket",
+      "url": "https://polymarket.com/event/salesforce-q3-current-rpo-growth-cc",
+      "as_of": "2026-10-24"
+    },
+    "N.45": {
+      "kind": "news",
+      "citation": "cmswire.com, 2026-10-20 — What Does Salesforce’s Braze Deal Mean for Marketing Cloud Customers?",
+      "url": "https://www.cmswire.com/customer-experience/why-is-salesforce-buying-braze-and-what-happens-to-marketing-cloud",
+      "as_of": "2026-10-20"
+    },
+    "N.48": {
+      "kind": "news",
+      "citation": "kalkinemedia.com, 2026-10-30 — What Is Driving Salesforce (NYSE:CRM) After Its Agentforce Push?",
+      "url": "https://kalkinemedia.com/us/stocks/technology/what-is-driving-salesforce-nysecrm-after-its-agentforce-push",
+      "as_of": "2026-10-30"
+    },
+    "A.045": {
+      "kind": "article",
+      "citation": "Article (tradingview.com)",
+      "url": "https://www.tradingview.com/news/marketbeat:d5d138c42094b:0-salesforce-fuels-ai-engine-with-5-66b-braze-buyout",
+      "as_of": "2026-10-21"
+    },
+    "A.046": {
+      "kind": "article",
+      "citation": "Article (tradingview.com)",
+      "url": "https://www.tradingview.com/news/marketbeat:d5d138c42094b:0-salesforce-fuels-ai-engine-with-5-66b-braze-buyout",
+      "as_of": "2026-10-21"
+    },
+    "P.001": {
+      "kind": "peer",
+      "citation": "PEER NOW 10-Q filed 2026-10-28 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "N.61": {
+      "kind": "news",
+      "citation": "tradingkey.com, 2026-10-30 — Salesforce Inc Stock (CRM) Moved Down by 4.46% on Oct 29: What Signal Does It Send?",
+      "url": "https://www.tradingkey.com/news/market-movers/262253495-market-movers-crm-20261029",
+      "as_of": "2026-10-30"
+    },
+    "N.62": {
+      "kind": "news",
+      "citation": "tradingkey.com, 2026-10-29 — Earnings Trigger US Cloud Sector Pre-Market Drop; ServiceNow Plunges 19%, Alphabet Drops Over 10%",
+      "url": "https://www.tradingkey.com/analysis/stocks/us-stocks/262252423-earnings-spark-premarket-selloff-us-cloud-stocks-servicenow-alphabet-tradingkey",
+      "as_of": "2026-10-29"
+    },
+    "N.63": {
+      "kind": "news",
+      "citation": "pluang.com, 2026-10-29 — ServiceNow stock drops 19% as slower contract g... | Pluang",
+      "url": "https://pluang.com/en/news-feed/servicenow-turun-19-persen-kontrak-melambat-pengaruh-salesforce-workday-adobe",
+      "as_of": "2026-10-29"
+    },
+    "N.65": {
+      "kind": "news",
+      "citation": "benzinga.com, 2026-10-29 — ServiceNow Stock Plunges on Worst Day in Its History - ServiceNow (NYSE:NOW)",
+      "url": "https://www.benzinga.com/markets/earnings/26/10/62702000/servicenow-stock-worst-day-history-bookings-slowdown",
+      "as_of": "2026-10-29"
+    }
+  },
+  "check_notes": [
+    "setup_summary[5]: rewritten to what its sources support (The cited passages do not show diluted shares of 821M or 962M; the share line in Q.005 is cut off and only basic shares appear.).",
+    "metrics_to_model[3].view: rewritten to what its sources support (The 10-Q policy, the $641M sensitivity, the $965B round and the $5.1B carrying value are supported, but scaling $5.1B to a $1.5–2T IPO gives about $2.8–5.5B, not $2.8–5.3B.).",
+    "metrics_to_model[6].last_reported: rewritten to what its sources support (Diluted shares of 821M are not visible in the cited passages because the share line in Q.005 is cut off, and the anti-dilutive context for the 42M ASR figure is not shown. The 823M count at Aug 20 is supported.).",
+    "key_debates[2].bear: rewritten to what its sources support (The $2.43 per-share Q2 gain and the claim that FY27 guidance embeds the gain are not in the cited passages; they give only the six-month $2.87 effect. The $285M impairments and $641M sensitivity are supported.).",
+    "key_debates[3].bull: rewritten to what its sources support (The 962M to 821M diluted share counts are not in the cited passages. The cash funding and the 10.4% operating cash flow growth are supported.).",
+    "key_risks[1]: rewritten to what its sources support (The debt, cash and roughly $10.8B of deal cash needs are supported, but the cited risk factor text is generic and does not name Informatica or Qualified; Qualified does not appear in the cited passages at all.).",
+    "questions_for_management[5]: rewritten to what its sources support (The $2.43 per-share Q2 gain is not in the cited passages, which give only a six-month $2.87 effect. The $5.1B Anthropic holding (about 45% of $11.3B) and the $1.5–2T IPO target are supported.).",
+    "metrics_to_model[0].view: N.01 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[0].view: N.09 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[0].view: N.69 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[1].view: N.07 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[2].last_reported: A.008 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[2].view: N.01 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[2].view: A.008 removed — news older than 14 days (or undated) is background only.",
+    "metrics_to_model[6].view: N.75 removed — news older than 14 days (or undated) is background only.",
+    "guidance[0]: N.01 removed — news older than 14 days (or undated) is background only.",
+    "guidance[0]: N.02 removed — news older than 14 days (or undated) is background only.",
+    "guidance[0]: A.012 removed — news older than 14 days (or undated) is background only.",
+    "guidance[1]: N.07 removed — news older than 14 days (or undated) is background only.",
+    "guidance[1]: N.02 removed — news older than 14 days (or undated) is background only.",
+    "guidance[2]: N.01 removed — news older than 14 days (or undated) is background only.",
+    "guidance[2]: N.03 removed — news older than 14 days (or undated) is background only.",
+    "guidance[2]: A.008 removed — news older than 14 days (or undated) is background only.",
+    "guidance[3]: A.012 removed — news older than 14 days (or undated) is background only.",
+    "guidance[3]: N.04 removed — news older than 14 days (or undated) is background only.",
+    "guidance[4]: N.11 removed — news older than 14 days (or undated) is background only.",
+    "guidance[4]: N.03 removed — news older than 14 days (or undated) is background only.",
+    "guidance[5]: N.02 removed — news older than 14 days (or undated) is background only.",
+    "guidance[5]: A.012 removed — news older than 14 days (or undated) is background only.",
+    "since_filing[2]: tag 'reported' → 'estimate' (it cites only article, news).",
+    "key_debates[0].bull: N.09 removed — news older than 14 days (or undated) is background only.",
+    "key_debates[1].bear: N.07 removed — news older than 14 days (or undated) is background only.",
+    "scenarios[1]: N.01 removed — news older than 14 days (or undated) is background only.",
+    "questions_for_management[0]: N.07 removed — news older than 14 days (or undated) is background only.",
+    "questions_for_management[1]: A.012 removed — news older than 14 days (or undated) is background only."
+  ]
+}

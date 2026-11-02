@@ -1,0 +1,1532 @@
+{
+  "ticker": "CAT",
+  "company_name": "CATERPILLAR INC",
+  "report_generated_at": "2026-11-01T12:08:13+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-08-05",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000046/cat-20260630.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-02-13",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm"
+    }
+  ],
+  "earnings_call": "Q3 FY2026 earnings call (2026-10-29)",
+  "current_report": "8-K filed 2026-10-29: Item 2.02 results of operations (earnings release); Item 7.01 Regulation FD disclosure; Item 9.01 financial statements and exhibits",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$7.08",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$21.65B",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2027-01-27 report. Paid lookup not made: next report is 87 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "implied move: no live implied move yet (EarningsWatcher has no confirmed report date)."
+    },
+    "historical_move": {
+      "value": "±4.7% average closing move over the last 8 reports (2024-10-30 to 2026-08-04)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/cat-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "analyst_actions": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "price_target": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "Q3 2026 was the company's highest sales quarter ever, per the CEO, but the stock fell about 7–9% on the Q4 guide. Sales and revenues were $20.682B (+17%) on $2.2B of higher sales volume. Adjusted EPS was $7.20 against $4.95 a year ago, and adjusted operating margin was 20.6%. Management guided only 'moderate' Q4 sales growth, saying Q4 2025 is a tough comparison.",
+      "evidence_ids": [
+        "C.004",
+        "E.006",
+        "E.021",
+        "C.018",
+        "N.11",
+        "N.25",
+        "N.26"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q3 was flattered by IEEPA tariff recoveries. Operating profit included $128M of recoveries, after $392M in Q2, so about $520M year to date. Management assumes none in Q4. On my arithmetic, $128M is about $0.21 of EPS at a 23% tax rate and about 461M diluted shares. Excluding it, Q3 EPS was about $6.99 against the $7.16 consensus quoted by AlphaStreet, if that consensus excluded recoveries. That basis is unknown.",
+      "evidence_ids": [
+        "E.008",
+        "C.021",
+        "E.021",
+        "E.023",
+        "N.07"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "The full-year guide is unchanged: sales growth in the mid-to-high teens, and adjusted operating margin 'near the bottom of the target range' excluding IEEPA recoveries. Tariffs are about $2.2B, with about $600M in Q4. Management also guides restructuring costs to about $300M and capex to about $3.3B, down from $3.5B.",
+      "evidence_ids": [
+        "C.009",
+        "C.021",
+        "C.022"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "Q4 2025 revenue was about $19.133B (full-year $67.589B less nine months $48.456B). At 15–19% full-year growth, Q4 would be $19.1–21.8B, and 17% gives $20.44B. 'Moderate' growth is undefined by management. On my 5–10% assumption it implies $20.1–21.05B. My base is about $20.6B (+7.5%), versus the $21.65B in the consensus feed (+13%) and the $21.42B pre-call consensus quoted by management (+12%).",
+      "evidence_ids": [
+        "F.23",
+        "E.023",
+        "C.018",
+        "C.021",
+        "M.01",
+        "N.26",
+        "N.25"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "My Q4 adjusted EPS base is about $6.55, in a range of about $6.1–6.9. It assumes a 19.0% adjusted margin, other income roughly offsetting interest, a 23% tax rate and about 459M diluted shares. That is about 8% below the $7.08 consensus. Revenue looks the clearer miss risk; EPS is high only if $7.08 is the live number. Each 25bp of margin is about $0.09 of EPS.",
+      "evidence_ids": [
+        "C.018",
+        "C.021",
+        "E.021",
+        "E.023",
+        "M.01",
+        "F.23"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "The fact sheet's consensus growth rates (+22.7% revenue, +45.1% EPS for Q4) use Q3 2025 as the prior-year base, so do not rely on F.70 and F.72. Q4 2025 revenue was about $19.133B (FY2025 $67.589B less nine-month $48.456B), so consensus revenue of $21.65B is about +13%. Q4 2025 GAAP diluted EPS is roughly $5.12 (FY $18.81 less nine-month $13.69; per-share figures are not strictly additive), which would make consensus EPS of $7.08 about +38%. That EPS comparison is approximate and may mix GAAP and adjusted bases.",
+      "evidence_ids": [
+        "F.70",
+        "F.72",
+        "F.23",
+        "E.023",
+        "F.27",
+        "E.024",
+        "M.01"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Valuation still demands growth. TIKR says CAT traded at 25x forward earnings at Wednesday's close, 'lower still' on Oct 29, against a five-year average of 19x. It puts the stock 38% below its June 30 high. 2026 consensus EPS is $27.33 (up from $24.72 90 days ago) and the Street average target is about $939, with a range of $575–1,150. After the print, UBS cut its target to $750, Bernstein to $749 and Wells Fargo to $840.",
+      "evidence_ids": [
+        "A.011",
+        "A.012",
+        "A.013",
+        "A.014"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Cash returns and working capital: Q3 MP&E free cash flow was $3.8B, with $1.2B of buybacks and about $0.7B of dividends. Enterprise cash was $7.9B (from $10.0B at year-end). Inventories rose to $22.2B (from $18.1B), receivables to $13.4B (from $10.9B) and customer advances to $5.3B (from $3.3B).",
+      "evidence_ids": [
+        "C.017",
+        "E.005",
+        "E.024",
+        "E.025"
+      ],
+      "evidence_type": "reported"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Q4 2026 sales and revenues",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 sales and revenues were $20.682B, +17% year on year, with volume +$2.2B and price +$663M. Q4 2025 base is about $19.133B.",
+        "evidence_ids": [
+          "E.006",
+          "F.23",
+          "E.023"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus revenue for the next report is $21.65B. Management quoted a pre-call consensus of $21.42B. The date and basis of the $21.65B figure is unconfirmed.",
+        "evidence_ids": [
+          "M.01",
+          "N.26"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "About $20.6B (range $20.1–21.05B), +7.5% year on year and about 4–5% below consensus. Guidance is 'moderate' growth, with a roughly $1B CI volume headwind from the dealer-inventory swing. Consensus-level revenue needs full-year growth near the top of the mid-to-high-teens guide.",
+        "evidence_ids": [
+          "C.018",
+          "C.021",
+          "F.23",
+          "E.023",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Q4 2026 adjusted EPS",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 adjusted EPS was $7.20 (GAAP $7.13), including about $0.21 from IEEPA recoveries by my estimate. Nine-month adjusted EPS is about $20.90 (H1 $13.70 plus Q3 $7.20).",
+        "evidence_ids": [
+          "E.021",
+          "Q.097",
+          "E.008",
+          "E.023"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus EPS is $7.08. TIKR 2026 consensus of $27.33 implies Q4 of about $6.43 on an adjusted basis and about $6.97 on a GAAP basis. The basis and timing of both are unconfirmed.",
+        "evidence_ids": [
+          "M.01",
+          "A.011",
+          "A.014",
+          "Q.097",
+          "E.021",
+          "E.023"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "About $6.55 (range $6.1–6.9), with a downside tail of $5.5–5.9 if the margin lands at 16–18%. Q4 has no IEEPA benefit, flat tariffs, higher freight, higher capacity-expansion depreciation, and a larger CI seasonal step-down. Pension mark-to-market is excluded from adjusted EPS.",
+        "evidence_ids": [
+          "C.018",
+          "C.019",
+          "C.020",
+          "C.021",
+          "E.021",
+          "E.023"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Adjusted operating profit margin excluding IEEPA",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Adjusted operating margin was 20.6% in Q3 (about 19.95% excluding $128M of IEEPA recoveries) and 21.9% in Q2 (about 20.0% excluding $392M). Q4 2025 was about 15.6%, derived as FY2025 adjusted operating profit of $11,595M less first-half ($5,527M) and Q3 ($3,089M) adjusted figures, divided by Q4 2025 revenue of about $19.133B.",
+        "evidence_ids": [
+          "E.021",
+          "E.008",
+          "Q.153",
+          "Q.016",
+          "K.173",
+          "F.23",
+          "E.023"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "About 19.0% (range 18–19.5%). Management guides a higher margin than Q4 2025, P&E margin similar to Q3, tariffs flat on Q3 and about $200M below a year ago, and a CI step-down slightly larger than usual. Consensus EPS of $7.08 implies about 19.4% on a rough conversion, so the Street is at the top of my range.",
+        "evidence_ids": [
+          "C.019",
+          "C.020",
+          "C.021",
+          "E.021",
+          "Q.153",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Construction Industries sales",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "CI Q3 2026 sales were $7.983B (+18%), segment margin 22.9%, and dealer inventory rose $300M versus $600M a year earlier. Q4 2025 CI sales are about $6.93B (derived: $25.060B less $11.374B less $6.760B).",
+        "evidence_ids": [
+          "E.011",
+          "C.013",
+          "K.114",
+          "Q.120"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "About $6.9–7.0B, flat on last year. Management guides CI sales 'similar' to last year, with a $1.6B dealer drawdown against $0.6B in Q4 2025 (about a $1B volume headwind) and favorable price. Flat sales needs sales-to-users growth of roughly 9–10% by my arithmetic, about half of Q3's 20%. Year-end dealer inventory is guided about $700M above year-end 2025.",
+        "evidence_ids": [
+          "C.018",
+          "C.038",
+          "E.011",
+          "E.045",
+          "K.114",
+          "Q.120"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Power & Energy sales",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "P&E Q3 2026 sales were $8.784B (+18%), segment margin 24.4%, and power generation external sales rose 30% to $3.421B.",
+        "evidence_ids": [
+          "E.010",
+          "E.006"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "About $8.8–9.7B, flat to +10% sequentially. This rests on an estimated recast Q4 2025 base of $8.4–8.8B, which I could not source, and on 5–10% growth for 'moderate'. Management attributes the slower year-on-year growth to a tough comparison and capacity limits ('hand to mouth', a test cell outage in Q3), with Q4 margin similar to Q3.",
+        "evidence_ids": [
+          "C.018",
+          "C.020",
+          "C.038",
+          "E.010",
+          "Q.113"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Resource Industries sales and margin",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "RI Q3 2026 sales were $4.615B (+15%) and segment margin 13.5%, versus 13.6% a year earlier. Sales to users rose only 4%, below management's expectations; the CEO said mining sales to users were lower on delays in shipping and commissioning. Rail retail sales (reported in dollars from direct sales) fell 70%, and rail sales fell on lower international locomotive deliveries.",
+        "evidence_ids": [
+          "E.013",
+          "E.045",
+          "C.006",
+          "C.007"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Sales of about $4.8–5.0B. Guidance is 'strong' growth, which on my estimated $4.25B recast Q4 2025 base is about +15–20%, or $4.9–5.1B. I sit slightly below that because of the large-truck ramp and the lack of any sized catch-up. Margin is guided above last year, with freight and material costs unfavorable. Locomotive deliveries are now guided slightly lower for the year.",
+        "evidence_ids": [
+          "C.011",
+          "C.019",
+          "C.020",
+          "C.046",
+          "C.043",
+          "E.013"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Order backlog",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Backlog is a record $78B, up from $72.1B at June 30 and about 96% above a year ago. Growth was in all three primary segments, and 58% should ship within 12 months. Management is taking large reciprocating engine orders into 2029 and turbine orders into 2030.",
+        "evidence_ids": [
+          "C.004",
+          "Q.152",
+          "C.032",
+          "C.009"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Further growth is likely but lumpy. Management says backlog growth will continue but not smoothly, and cautions against reading single quarters, since large prime-power and mining orders come in bulk. Sequential growth slowed in Q3: backlog was about $78B versus $72.1B at June 30 (roughly +$6B), against the Q2 step of +$9.4B. An analyst on the call put book-to-bill at about 1.3, down from as high as 1.7 earlier in the year; management did not give its own figure.",
+        "evidence_ids": [
+          "C.030",
+          "C.050",
+          "C.053",
+          "C.004",
+          "Q.152",
+          "C.052"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "MP&E free cash flow and capital return",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 MP&E free cash flow was $3.8B. Nine-month MP&E operating cash flow was $11.534B against capex ex-leased of $1.993B, so free cash flow was about $9.5B (derived). Nine-month buybacks were $7.745B and dividends $2.148B.",
+        "evidence_ids": [
+          "C.017",
+          "E.037",
+          "E.027"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Full-year MP&E free cash flow is guided to the top half of the $6–15B range, so only about $1B or more is needed in Q4. Expect buybacks to continue at roughly the Q3 pace of $1.2B and the Q1 ASR to settle in Q4. Q4 working-capital drag is likely lower as CI dealers destock and advances stay high. Capex is trimmed to about $3.3B.",
+        "evidence_ids": [
+          "C.021",
+          "C.022",
+          "E.037",
+          "Q.047",
+          "C.017"
+        ],
+        "evidence_type": "estimate"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Full-year 2026 sales and revenues growth",
+      "guidance": "Mid-to-high teens versus 2025 sales of $67.589B, which implies about $77.7–80.4B and Q4 of about $19.1–21.8B.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "Management continues to expect full-year 2026 sales and revenues to grow in the mid-to-high teens, supported by strong sales to users, order rates, capacity increases on schedule and services growth.",
+        "evidence_ids": [
+          "C.009",
+          "C.021",
+          "Q.104"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Q4 2026 sales growth",
+      "guidance": "Moderate sales growth versus the prior year, in a tougher comparison. P&E moderate growth, CI similar to last year, RI strong growth.",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "For Q4, management anticipates moderate consolidated sales growth against a strong prior-year quarter. It expects moderate growth in P&E, CI sales similar to last year with volume down modestly, and strong growth in RI.",
+        "evidence_ids": [
+          "C.018",
+          "C.019"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "CI dealer inventory change",
+      "guidance": "About $1.6B seasonal drawdown in Q4, versus $0.6B in Q4 2025, a roughly $1B volume headwind. Year-end dealer inventory still higher than a year ago.",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "CI dealer inventory is expected to fall about $1.6B in Q4 versus a $600M fall a year earlier, a roughly $1B year-over-year headwind to Q4 sales volume. Year-end inventory is still expected to be higher than prior year. The June 10-Q had guided only 'over $1.0 billion'.",
+        "evidence_ids": [
+          "C.018",
+          "C.019",
+          "Q.104"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Full-year adjusted operating profit margin",
+      "guidance": "Near the bottom of the target range, excluding IEEPA recoveries (about $520M recorded year to date). Q4 margin higher than Q4 2025. No further recoveries assumed.",
+      "period": "FY2026 / Q4 2026",
+      "status": "maintained",
+      "claim": {
+        "text": "Excluding IEEPA tariff recoveries, full-year adjusted operating margin is expected near the bottom of the target range, with a higher Q4 margin than a year ago. The outlook includes no additional IEEPA recoveries in Q4. The CEO wants to 'claw off the bottom' over the next couple of years.",
+        "evidence_ids": [
+          "C.009",
+          "C.019",
+          "C.021",
+          "C.035"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Tariff costs",
+      "guidance": "About $2.2B for 2026 excluding IEEPA recoveries; about $600M in Q4 (about $200M below Q4 2025), roughly 50% in CI and 25% each in P&E and RI.",
+      "period": "FY2026 / Q4 2026",
+      "status": "maintained",
+      "claim": {
+        "text": "Full-year 2026 tariff costs are still expected around $2.2B excluding IEEPA recoveries. Q4 tariffs are about $600M, similar to Q3 and about $200M lower than Q4 2025.",
+        "evidence_ids": [
+          "C.019",
+          "C.021",
+          "Q.104"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Restructuring costs",
+      "guidance": "About $300M in 2026, the low end of the prior $300–350M range.",
+      "period": "FY2026",
+      "status": "lowered",
+      "claim": {
+        "text": "Management now expects restructuring costs of about $300M, the low end of the prior $300–350M range.",
+        "evidence_ids": [
+          "C.021",
+          "Q.105"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Capital expenditures",
+      "guidance": "About $3.3B for 2026, down from about $3.5B.",
+      "period": "FY2026",
+      "status": "lowered",
+      "claim": {
+        "text": "Capex is now anticipated at about $3.3B, slightly below the prior $3.5B.",
+        "evidence_ids": [
+          "C.022",
+          "Q.105"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "MP&E free cash flow",
+      "guidance": "Top half of the $6–15B annual target range.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "Management continues to expect MP&E free cash flow in the top half of the $6–15B annual target range.",
+        "evidence_ids": [
+          "C.021",
+          "C.022"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Effective tax rate",
+      "guidance": "About 23% for 2026, excluding discrete items.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "The estimated global annual effective tax rate remains about 23% excluding discrete items.",
+        "evidence_ids": [
+          "C.021",
+          "Q.105"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Power & Energy Q4 margin",
+      "guidance": "Higher than Q4 2025 but similar to Q3 (24.4%), with price and volume offset by depreciation and capacity-expansion costs, material and freight.",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "P&E Q4 margin is expected higher than a year ago and similar to Q3, with favorable price and volume partly offset by capacity-expansion spend, depreciation, material and freight.",
+        "evidence_ids": [
+          "C.020",
+          "E.010"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "The Q3 print came on Oct 29 and the stock fell about 7–9%. Stocktwits had it 9.5% lower premarket, Tradingkey 8.36% down, and 24/7 Wall St 7%. Drivers cited were the 'moderate' Q4 guide against a pre-call revenue consensus of $21.42B and a high starting multiple. AlphaStreet's piece describes the market reaction as 'muted', which conflicts with the other accounts; the sources here do not explain the difference.",
+      "evidence_ids": [
+        "N.11",
+        "N.25",
+        "N.26",
+        "N.07"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Target cuts, mostly before the Oct 29 print, and a stress signal on AI funding. Wells Fargo cut its target to $840 from $1,155 on Oct 26, citing mounting stress around AI funding. UBS went to $750 and Bernstein to $749 in October cuts (exact dates not given). Oppenheimer reiterated Outperform with a $1,009 target on the day of the report (cut from $1,118 on Oct 14). Treasury yields hit 24-year highs in early October. These are TIKR's summary, not primary notes.",
+      "evidence_ids": [
+        "A.012",
+        "A.013"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "The consensus feed may be stale. The press quotes a pre-call revenue consensus of $21.42B, and the feed shows $21.65B and EPS of $7.08, higher than that. A 'moderate' Q4 guide should have lowered estimates. I treat $21.65B and $7.08 as unconfirmed on date and basis, and expect downward revisions toward about $20.5–21.4B and EPS of about $6.4–6.9 if they are pre-print.",
+      "evidence_ids": [
+        "M.01",
+        "N.26",
+        "N.25",
+        "C.018"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Two items offset in the Q3 consensus. TIKR notes 2026 consensus EPS rose to $27.33 from $24.72 over 90 days, while 2027 moved to about $33 from about $30. It argues the softer Q4 is unlikely to pull 2027 down, but the January guide on margin is the swing factor.",
+      "evidence_ids": [
+        "A.011",
+        "A.014",
+        "A.015"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "IEEPA refunds: CAPE Phase 3, for finally liquidated entries, opened Oct 27 for plaintiffs with court-ordered relief; filing a lawsuit alone does not establish eligibility. Whether Caterpillar qualifies is not disclosed. Caterpillar records recoveries only for claims submitted and accepted through CAPE ($392M in Q2, about $520M year to date through Q3). As of June 30 it did not deem the remaining amounts probable, and its outlook includes no further IEEPA recoveries in Q4. Against roughly $1.0B of total IEEPA costs, that implies about $480M unrecovered (our arithmetic, not a company figure).",
+      "evidence_ids": [
+        "N.44",
+        "Q.016",
+        "Q.106",
+        "C.021"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Peer read-through is supportive for power. GE Vernova's Q3 gas-turbine orders were 16.6 GW versus 7.4 GW a year earlier, and its Power RPO was $130.9B. Generac reported a data-center backlog that tripled to $4.5B, and its CEO said competitors including Caterpillar are adding capacity to sell existing products. Cummins' Q2 filing showed Power Systems sales +19% and power generation +27%, attributed to higher demand in China and North America (the data-center driver was cited for its Distribution segment); its Q3 results were not available.",
+      "evidence_ids": [
+        "P.005",
+        "N.66",
+        "P.009",
+        "P.008"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Data-center funding and build risk is a live debate. A SemiAnalysis-based article on Oct 29 cites permitting delays, local opposition, interconnection, labor shortages and power-equipment backlogs as limits on the buildout, with one skeptic seeing about 25 GW rather than 50 GW. CAT management says it has not seen significant changes in how customers are placing or timing orders.",
+      "evidence_ids": [
+        "N.13",
+        "C.049"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Resource Industries leadership changed. Derrick York succeeded Denise Johnson as RI Group President effective Nov 1, 2026. The CEO said he has worked closely with York for well over a decade. Separately, the CEO described the RI capacity ramp as 'normal growing pains and operational challenges'.",
+      "evidence_ids": [
+        "N.05",
+        "C.012",
+        "C.046"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Mining demand inputs are supportive. Copper was about $14,379/t on Oct 29 and the World Bank raised its 2027 copper outlook 18% to $13,000/t. Freeport guided Q4 sales volumes to be the highest of the year. A counter-signal: Eldorado Gold cut 2026 guidance 18% on commissioning delays at Skouries.",
+      "evidence_ids": [
+        "N.36",
+        "N.37",
+        "N.39"
+      ],
+      "evidence_type": "proxy"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Is the 'moderate' Q4 guide conservative, or is the Street still too high on revenue and EPS?",
+      "bull": {
+        "text": "Management says Q3 matched its plan and it 'hasn't changed its view' on Q4. The weaker year-on-year Q4 is a comparison and timing story: a $1.6B CI destock against $0.6B last year, a strong Q4 2025, and no slack in P&E capacity. Backlog at $78B and 58% shipping within 12 months support 2027. The CI destock leaves year-end dealer inventory higher than a year ago.",
+        "evidence_ids": [
+          "C.038",
+          "C.019",
+          "C.032",
+          "C.004",
+          "C.018"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Arithmetic puts Q4 revenue at about $20.6B and adjusted EPS at about $6.55, below the $21.65B and $7.08 in the feed. Q4 2025 revenue is about $19.133B, so consensus implies about +13% against management's 'moderate'. Revenue of $21.65B needs full-year growth near the top of the mid-to-high-teens guide, and Q4 carries no IEEPA benefit.",
+        "evidence_ids": [
+          "F.23",
+          "E.023",
+          "M.01",
+          "C.018",
+          "C.021"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "The Jan 27 print versus a fresh post-print consensus. First confirm whether $21.65B and $7.08 are the live numbers, since the pre-call figure was $21.42B. Then check Q4 revenue near $20.6B versus above $21.4B, and whether the adjusted margin is near 19% or above 19.5%."
+    },
+    {
+      "question": "Is Power & Energy capacity-limited or is demand slowing as orders extend to 2029–2030?",
+      "bull": {
+        "text": "Power generation sales to users rose 75% in Q3 and P&E sales grew 18% with a 24.4% margin. Management says capacity is the top pacing factor, with large reciprocating engine capacity going to nearly three times the 2024 level by 2030, and a second 3600-series line planned at Winston-Salem. GE Vernova's orders and RPO and Generac's backlog confirm the end demand.",
+        "evidence_ids": [
+          "C.004",
+          "E.010",
+          "C.007",
+          "P.005",
+          "N.66"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "An analyst put book-to-bill at about 1.3, down from as high as 1.7. Backlog growth slowed to about $6B (about $78B versus $72.1B at June 30) from $9.4B in Q2. Orders now run to 2029–2030, which the CEO calls unusual. Q4 P&E guidance is only 'moderate'. Prime-power and mining orders will come in lumps. Third-party commentary cites AI-funding stress, permitting delays, grid interconnection, labor shortages and power-equipment backlogs as limits on the data-center buildout.",
+        "evidence_ids": [
+          "C.052",
+          "C.049",
+          "C.050",
+          "C.018",
+          "C.004",
+          "Q.152",
+          "A.012",
+          "N.13"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 P&E sales versus an estimated $8.8–9.7B, Q4 backlog and book-to-bill, any cancellation or push-out commentary, and the 2027 capacity ramp (the 10-megawatt MaK restart starts shipping in Q4)."
+    },
+    {
+      "question": "How much of the margin is underlying, and can it move off the bottom of the target range?",
+      "bull": {
+        "text": "Underlying adjusted margin was about 20% in both Q2 and Q3 excluding IEEPA. Management guides a higher margin than Q4 2025 and wants to move toward the midpoint over a couple of years. Price realization was $663M in Q3, and the target range is progressive in sales. Sales growth should add operating leverage.",
+        "evidence_ids": [
+          "E.021",
+          "Q.153",
+          "E.008",
+          "C.019",
+          "C.035",
+          "E.006"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Management itself guides the full year to near the bottom of the range excluding IEEPA, and the CEO says margins are 'skipping along the bottom'. Freight on elevated energy prices, capacity-expansion depreciation, tariffs of about $2.2B and higher SG&A/R&D are headwinds. Recoveries flatter reported results: $520M year to date, and the Q3 recovery fell about two-thirds from Q2.",
+        "evidence_ids": [
+          "C.009",
+          "C.021",
+          "C.035",
+          "C.014",
+          "C.015"
+        ],
+        "evidence_type": "guided"
+      },
+      "what_settles_it": "Q4 adjusted margin excluding any recoveries, compared with about 19% (my base) and the roughly 19.4% implied by consensus, and the January 2027 guide: does it place the margin above the bottom of the range?"
+    },
+    {
+      "question": "Can Resource Industries deliver a Q4 catch-up while ramping large mining trucks?",
+      "bull": {
+        "text": "RI orders have been strong for three quarters, copper and gold are supportive, and management expects Q3 commissioning delays to catch up, with strong Q4 growth. The year-ago comparison for mining sales to users is easy (Q4 2025 total RI STU down 5%).",
+        "evidence_ids": [
+          "C.046",
+          "C.011",
+          "E.044",
+          "E.045",
+          "N.36"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "RI was the one segment to miss in Q3 (sales to users +4%, below expectations), with operational challenges and inefficiencies in the ramp and no timeline. Rail is a drag against a hard comparison (Q4 2025 rail sales to users up 26%) and locomotive deliveries are now guided slightly lower for the year. A new Group President takes over during the ramp.",
+        "evidence_ids": [
+          "C.006",
+          "C.046",
+          "C.011",
+          "E.044",
+          "N.05"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 RI sales versus about $4.9–5.1B on the guide, RI sales to users in the Jan 27 retail statistics, RI margin versus 13.5% in Q3, and any sizing of the delayed commissioning."
+    },
+    {
+      "question": "Does the multiple leave room for a guidance-driven reaction?",
+      "bull": {
+        "text": "Earnings estimates keep rising (2026 consensus $27.33, up from $24.72; 2027 about $33 from about $30), the Street target is about $939 and Oppenheimer's is $1,009. Buybacks at lower prices mechanically lift EPS.",
+        "evidence_ids": [
+          "A.011",
+          "A.013",
+          "A.014",
+          "A.004"
+        ],
+        "evidence_type": "estimate"
+      },
+      "bear": {
+        "text": "The stock still trades near 24x forward on the $27.33 estimate (if the price is about $645–655) versus a 19x five-year average. TIKR says Oppenheimer's target implies about 35x and needs a premium multiple to hold. The Q3 reaction of about 7–9% was roughly twice the ±4.7% average earnings move.",
+        "evidence_ids": [
+          "A.014",
+          "A.012",
+          "M.04",
+          "N.11"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "The 2027 outlook in the Jan 27 report, and especially whether margin guidance moves off the bottom of the range, plus post-print estimate revisions."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "bull",
+      "description": {
+        "text": "Q4 revenue of about $21.4B or more (+12% or more), adjusted margin of about 19.5% or higher, and adjusted EPS near $7.0 or above. This needs a faster P&E ramp, a full RI commissioning catch-up, and stronger CI sales to users than the guide. Any IEEPA recoveries would add on top: $128M is about $0.21 of EPS. The 2027 commentary would point to margins moving off the bottom of the range.",
+        "evidence_ids": [
+          "C.018",
+          "C.021",
+          "C.035",
+          "E.008",
+          "M.01",
+          "N.26"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "P&E sales near $9.5B or more with Q3-like margin",
+        "RI sales of $5B or more and mining sales to users rebounding",
+        "CI sales to users staying near +15–20% despite the destock",
+        "New CAPE Phase 3 recoveries booked in Q4",
+        "2027 margin guidance above the bottom of the target range"
+      ]
+    },
+    {
+      "name": "base",
+      "description": {
+        "text": "Q4 revenue of about $20.6B (+7.5%), adjusted margin of about 19.0%, and adjusted EPS of about $6.55, about 8% below the $7.08 in the feed. Backlog grows again but unevenly, MP&E free cash flow lands in the top half of the range, and buybacks continue at about $1.2B a quarter. The stock reacts to the 2027 framework more than to the quarter.",
+        "evidence_ids": [
+          "C.018",
+          "C.019",
+          "C.021",
+          "F.23",
+          "E.023",
+          "E.021"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "CI sales flat with a $1.6B destock",
+        "P&E up moderately with margin near Q3's 24%",
+        "RI sales growth in the mid-teens",
+        "Tariffs near $600M and no recoveries",
+        "2027 commentary reiterating strong sales to users and capacity ramp"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Q4 revenue of about $20.1B (+5%) with the adjusted margin at 18% or lower and EPS of about $5.5–6.1. Freight and capacity-expansion costs bite, the RI ramp slips again, and backlog or book-to-bill softens, which would hit a stock still trading at a premium multiple. A 16–18% margin would conflict with the guided Q3-like P&E margin, so I treat the lower end as the tail.",
+        "evidence_ids": [
+          "C.018",
+          "C.020",
+          "C.021",
+          "C.046",
+          "A.014"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "RI sales growth under 10% as the catch-up slips",
+        "CI sales down on a larger destock or fading rental loading",
+        "Order push-outs or a backlog decline in P&E",
+        "Freight and material inflation above plan",
+        "Cautious 2027 margin guide with AI-funding concerns weighing on the multiple"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "CI dealer destock and rental fleet-loading fade. A $1.6B Q4 drawdown against $0.6B a year ago is a roughly $1B volume headwind. Rental loading will contribute less to sales-to-users growth than in Q3 as it laps strong Q4 2025 loading, and management gives no dollar size for it.",
+        "evidence_ids": [
+          "C.018",
+          "C.010",
+          "C.006"
+        ],
+        "evidence_type": "guided"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Data-center and AI-funding sustainability. P&E growth leans on power generation (sales to users +75%). Permitting, interconnection, labor and equipment bottlenecks and mounting stress around AI funding are being flagged, and orders now stretch to 2029–2030.",
+        "evidence_ids": [
+          "C.004",
+          "N.13",
+          "A.012",
+          "C.049"
+        ],
+        "evidence_type": "estimate"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Margin stuck near the bottom of the range. Freight (elevated energy prices), capacity-expansion depreciation, SG&A/R&D and about $2.2B of tariffs offset price and volume. An 18% Q4 margin would put EPS near $6.1.",
+        "evidence_ids": [
+          "C.009",
+          "C.021",
+          "C.019",
+          "C.020"
+        ],
+        "evidence_type": "guided"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Resource Industries ramp and commissioning. Large mining truck ramp challenges, mining commissioning delays, and lower locomotive deliveries led to the only segment miss in Q3. The segment is also under a new Group President.",
+        "evidence_ids": [
+          "C.006",
+          "C.011",
+          "C.046",
+          "N.05"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Quality of earnings: IEEPA recoveries ($392M in Q2, $128M in Q3, none assumed in Q4) flatter reported EPS, and the remaining roughly $480M of $1.0B paid is not probable under the company's recognition policy. A recovery would be upside; the loss of the tailwind is the baseline.",
+        "evidence_ids": [
+          "C.014",
+          "C.021",
+          "Q.106",
+          "Q.016"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Valuation and consensus. The stock trades near 24x forward earnings against a 19x five-year average, and the Q4 consensus in the feed ($21.65B, $7.08) may be stale and above my arithmetic. Estimate cuts would add to pressure.",
+        "evidence_ids": [
+          "A.014",
+          "M.01",
+          "N.26"
+        ],
+        "evidence_type": "estimate"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Working capital and credit. Inventory is up to $22.2B and receivables to $13.4B, with cash down to $7.9B. Cat Financial credit is healthy (past dues 1.31%) but the allowance rose to $332M (0.91%) and the provision is higher.",
+        "evidence_ids": [
+          "E.024",
+          "E.025",
+          "E.014",
+          "C.016"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "Where does 'moderate' Q4 sales growth sit numerically, and how do you reconcile it with mid-to-high-teens full-year growth? Can you share the recast Q4 2025 base by segment, since rail moved to Resource Industries?",
+      "why": {
+        "text": "Nine-month sales are $58.64B and full-year guidance implies Q4 of $19.1–21.8B, which is hard to square with 'moderate'. The Q4 2025 segment base on the recast basis could not be sourced.",
+        "evidence_ids": [
+          "E.023",
+          "F.23",
+          "C.018",
+          "C.021"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What is the size of the rental fleet-loading lap in CI in Q4 versus the $1B dealer-inventory swing, and what sales-to-users growth do you assume for flat CI sales?",
+      "why": {
+        "text": "Management ties the roughly $1B headwind to the inventory change alone, and says fleet loading will contribute less to sales to users without sizing it. My arithmetic needs sales-to-users growth of about 9–10% for flat CI sales.",
+        "evidence_ids": [
+          "C.018",
+          "C.010",
+          "C.006"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What is the Q4 adjusted margin you are guiding to, what does 'near the bottom of the range' mean in dollars of sales at about $79B, and what drives the step-up in 2027?",
+      "why": {
+        "text": "Full-year margin is guided near the bottom while the target range is progressive in sales. A back-solve gives a Q4 range of roughly 18–19.5%, and each 25bp is about $0.09 of EPS.",
+        "evidence_ids": [
+          "C.021",
+          "C.035",
+          "N.35",
+          "E.021"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "How much of the P&E backlog is firm versus frame-agreement or pipeline, what is the split between hyperscaler, colocation, IPP and oil and gas customers, and how are you monitoring customer funding and permitting?",
+      "why": {
+        "text": "The $78B backlog stretches to 2029–2030, book-to-bill slowed to about 1.3, and AI-funding and permitting concerns rose. Management declined to quantify hyperscaler mix.",
+        "evidence_ids": [
+          "C.004",
+          "C.049",
+          "C.050",
+          "C.052",
+          "N.13",
+          "A.012"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How large was the Q3 commissioning delay in mining, how much of Q4 RI growth relies on the catch-up and on dealer stocking versus sales to users, and what is the status of large-truck output against plan?",
+      "why": {
+        "text": "RI sales to users missed in Q3 (+4%, below expectations) and the Q4 'strong' sales-to-users guide depends on a catch-up of commissioning delays that management did not size. The CEO described ramp 'operational challenges and inefficiencies' and 'normal growing pains' without a timeline beyond saying they would be worked through.",
+        "evidence_ids": [
+          "C.006",
+          "C.011",
+          "C.046",
+          "C.043",
+          "C.019"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is your assessment of the remaining roughly $480M of unrecorded IEEPA refunds, and is Caterpillar eligible for CAPE Phase 3? How will freight inflation from energy prices affect Q4 and 2027?",
+      "why": {
+        "text": "Recoveries fell from $392M to $128M, none are assumed in Q4, and Phase 3 only covers plaintiffs with court-ordered relief. Higher freight is an unquantified margin headwind.",
+        "evidence_ids": [
+          "C.014",
+          "C.021",
+          "N.44",
+          "C.009"
+        ],
+        "evidence_type": "reported"
+      }
+    }
+  ],
+  "data_gaps": [
+    "The date and basis of the consensus in the feed ($21.65B revenue, $7.08 EPS, next report Jan 27, 2027) are unconfirmed. Press quotes a pre-call revenue consensus of $21.42B. A fresh post-print consensus pull is needed.",
+    "TIKR's $27.33 2026 'normalized EPS' consensus has no stated basis (adjusted or GAAP-like) and no stated capture time relative to the print; the implied Q4 is about $6.43 (adjusted basis) or $6.97 (GAAP basis).",
+    "The fact sheet's consensus growth rates (F.70, F.72) use Q3 2025 as the base rather than Q4 2025.",
+    "Q4 2025 segment figures on the recast basis (rail now in Resource Industries) could not be sourced. The CI base (about $6.93B) is derived from the 10-K and quarterly releases; the P&E base ($8.4–8.8B) and RI base ($4.15–4.35B) rest on an assumed Q4 2025 rail amount.",
+    "'Moderate' and 'strong' growth are undefined by management; the 5–10% band for 'moderate' and mid-teens or higher for 'strong' are my assumptions.",
+    "The Q3 2026 10-Q has not been filed or read, so Q3 share repurchases, average price, remaining authorization (about $7.2B by my estimate), Q3 segment balance-sheet detail and any footnote on the IEEPA receivable ($1.2B long-term plus $130M current at June 30, against about $520M booked in earnings) are unavailable.",
+    "The actual Oct 29 closing price and the current price are unverified. AlphaStreet's $713.38 quote conflicts with three sources pointing to about $645–655; the forward P/E (about 24x) rests on that reconciliation.",
+    "Options-implied move, whisper EPS, beat/miss record, analyst target distribution after Q3 and post-print estimate revisions are not available (M.02, M.03, M.05).",
+    "Cummins' Q3 2026 power-generation results and Siemens Energy were not found; the Cummins read is from its Q2 10-Q.",
+    "The XBRL fact sheet carries no long-term debt for June 30, 2026 (F.22); the December 2025 figure is $30.70B.",
+    "The 18–22% at $72B margin-range framework comes from a slide summary (N.35) that is outside the strict citation need; the interpolated bottom of about 18.8% at $79B is my estimate.",
+    "Market data: signals figures are N/A because FMP refused the request (FMP refused https://financialmodelingprep.com/stable/grades (HTTP 402): Premium Query Parameter: 'Special Endpoint : This value set for 'symbol' is not available under your current subscription please visit our subscription page to upgrade your plan at https://financialmo Check FMP_API_KEY in .env and the FMP plan.)."
+  ],
+  "sources": {
+    "Q.016": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000046/cat-20260630.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.047": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000046/cat-20260630.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.097": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Highlights for the six months ended June 30, 2026 include:",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000046/cat-20260630.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.104": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Full-Year 2026 Company Trends and Expectations",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000046/cat-20260630.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.105": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Full-Year 2026 Company Trends and Expectations",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000046/cat-20260630.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.106": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Global Business Conditions",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000046/cat-20260630.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.113": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Other Profit/Loss and Tax Items",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000046/cat-20260630.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.120": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Sales were higher across the three primary segments.",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000046/cat-20260630.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.152": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Order Backlog",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000046/cat-20260630.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.153": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — NON-GAAP FINANCIAL MEASURES",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000046/cat-20260630.htm",
+      "as_of": "2026-08-05"
+    },
+    "K.114": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-13 · MD&A — CONSOLIDATED SALES AND REVENUES",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+      "as_of": "2026-02-13"
+    },
+    "K.173": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-13 · MD&A — NON-GAAP FINANCIAL MEASURES",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+      "as_of": "2026-02-13"
+    },
+    "E.005": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, 9.01, Exhibit 99.1 (filed 2026-10-29)",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000052/ex991toformcat3q2026earnin.htm",
+      "as_of": "2026-10-29"
+    },
+    "E.006": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, 9.01, Exhibit 99.1 (filed 2026-10-29) — Consolidated Sales and Revenues",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000052/ex991toformcat3q2026earnin.htm",
+      "as_of": "2026-10-29"
+    },
+    "E.008": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, 9.01, Exhibit 99.1 (filed 2026-10-29) — Consolidated Operating Profit",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000052/ex991toformcat3q2026earnin.htm",
+      "as_of": "2026-10-29"
+    },
+    "E.010": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, 9.01, Exhibit 99.1 (filed 2026-10-29) — Other Profit/Loss and Tax Items",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000052/ex991toformcat3q2026earnin.htm",
+      "as_of": "2026-10-29"
+    },
+    "E.011": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, 9.01, Exhibit 99.1 (filed 2026-10-29) — Other Profit/Loss and Tax Items",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000052/ex991toformcat3q2026earnin.htm",
+      "as_of": "2026-10-29"
+    },
+    "E.013": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, 9.01, Exhibit 99.1 (filed 2026-10-29) — Other Profit/Loss and Tax Items",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000052/ex991toformcat3q2026earnin.htm",
+      "as_of": "2026-10-29"
+    },
+    "E.014": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, 9.01, Exhibit 99.1 (filed 2026-10-29) — Other Profit/Loss and Tax Items",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000052/ex991toformcat3q2026earnin.htm",
+      "as_of": "2026-10-29"
+    },
+    "E.021": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, 9.01, Exhibit 99.1 (filed 2026-10-29) — NON-GAAP FINANCIAL MEASURES",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000052/ex991toformcat3q2026earnin.htm",
+      "as_of": "2026-10-29"
+    },
+    "E.023": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, 9.01, Exhibit 99.1 (filed 2026-10-29) — Consolidated – Caterpillar Inc. and its subsidiaries.",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000052/ex991toformcat3q2026earnin.htm",
+      "as_of": "2026-10-29"
+    },
+    "E.024": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, 9.01, Exhibit 99.1 (filed 2026-10-29) — Consolidated – Caterpillar Inc. and its subsidiaries.",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000052/ex991toformcat3q2026earnin.htm",
+      "as_of": "2026-10-29"
+    },
+    "E.025": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, 9.01, Exhibit 99.1 (filed 2026-10-29) — Consolidated – Caterpillar Inc. and its subsidiaries.",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000052/ex991toformcat3q2026earnin.htm",
+      "as_of": "2026-10-29"
+    },
+    "E.027": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, 9.01, Exhibit 99.1 (filed 2026-10-29) — Consolidated – Caterpillar Inc. and its subsidiaries.",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000052/ex991toformcat3q2026earnin.htm",
+      "as_of": "2026-10-29"
+    },
+    "E.037": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, 9.01, Exhibit 99.1 (filed 2026-10-29) — Consolidated – Caterpillar Inc. and its subsidiaries.",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000052/ex991toformcat3q2026earnin.htm",
+      "as_of": "2026-10-29"
+    },
+    "E.044": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, 9.01, Exhibit 99.2 (filed 2026-10-29) — EXHIBIT 99.2",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000052/ex992toformcat3q2026retail.htm",
+      "as_of": "2026-10-29"
+    },
+    "E.045": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 7.01, 9.01, Exhibit 99.2 (filed 2026-10-29) — EXHIBIT 99.2",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000052/ex992toformcat3q2026retail.htm",
+      "as_of": "2026-10-29"
+    },
+    "C.004": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Joseph Creed, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.006": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Joseph Creed, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.007": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Joseph Creed, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.009": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Joseph Creed, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.010": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Joseph Creed, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.011": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Joseph Creed, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.012": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Joseph Creed, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.013": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Kyle Epley, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.014": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Kyle Epley, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.015": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Kyle Epley, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.016": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Kyle Epley, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.017": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Kyle Epley, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.018": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Kyle Epley, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.019": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Kyle Epley, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.020": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Kyle Epley, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.021": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Kyle Epley, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.022": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Kyle Epley, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.030": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Joseph Creed, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.032": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Kyle Epley, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.035": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Joseph Creed, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.038": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Joseph Creed, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.043": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Joseph Creed, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.046": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Joseph Creed, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.049": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Joseph Creed, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.050": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Joseph Creed, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.052": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Mircea Dobre, Analyst, Baird",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "C.053": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-29) — Joseph Creed, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=CAT&quarter=2026Q3",
+      "as_of": "2026-10-29"
+    },
+    "F.23": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — year ended 2025-12-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+      "as_of": "2026-02-13"
+    },
+    "F.27": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — year ended 2025-12-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+      "as_of": "2026-02-13"
+    },
+    "F.70": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "F.72": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "N.05": {
+      "kind": "news",
+      "citation": "simplywall.st, 2026-10-25 — Caterpillar (CAT) Turns The Page In Resource Industries As Denise Johnson Retires - Simply Wall St News",
+      "url": "https://simplywall.st/stocks/us/capital-goods/nyse-cat/caterpillar/news/caterpillar-cat-turns-the-page-in-resource-industries-as-den",
+      "as_of": "2026-10-25"
+    },
+    "N.07": {
+      "kind": "news",
+      "citation": "news.alphastreet.com, 2026-10-29 — Caterpillar Q3 2026: Revenue Hits $20.68B, Up 17% Year-Over-Year - Alphastreet",
+      "url": "https://news.alphastreet.com/caterpillar-q3-2026-revenue-hits-20-68b-up-17-year-over-year/amp",
+      "as_of": "2026-10-29"
+    },
+    "N.11": {
+      "kind": "news",
+      "citation": "stocktwits.com, 2026-10-29 — Caterpillar Stock Slumps 9% Despite Q3 Earnings Beat As Revenue Falls Short Of Estimates",
+      "url": "https://stocktwits.com/news-articles/markets/equity/caterpillar-stock-slumps-9-despite-q3-earnings-beat-as-revenue-falls-short-of-estimates/cZUQnXIR9bu",
+      "as_of": "2026-10-29"
+    },
+    "N.13": {
+      "kind": "news",
+      "citation": "datacenterfrontier.com, 2026-10-29 — The 50-Gigawatt Test: SemiAnalysis Sees a Historic Data Center Surge in 2027 | Data Center Frontier",
+      "url": "https://www.datacenterfrontier.com/hyperscale/article/55415349/the-50-gigawatt-test-semianalysis-sees-a-historic-data-center-surge-in-2027",
+      "as_of": "2026-10-29"
+    },
+    "A.004": {
+      "kind": "article",
+      "citation": "Article (invezz.com)",
+      "url": "https://invezz.com/ie/news/2026/10/29/caterpillar-stock-sinks-after-earnings-heres-the-case-for-buying",
+      "as_of": "2026-10-30"
+    },
+    "N.25": {
+      "kind": "news",
+      "citation": "tradingkey.com, 2026-10-29 — Caterpillar Inc Stock (CAT) Moved Down by 8.36% on Oct 29: Key Drivers Unveiled",
+      "url": "https://www.tradingkey.com/news/market-movers/262253288-market-movers-cat-20261029",
+      "as_of": "2026-10-29"
+    },
+    "N.26": {
+      "kind": "news",
+      "citation": "247wallst.com, 2026-10-29 — Caterpillar Drops 7% as Moderate Sales Outlook Overshadows Beat; Deere Sits Out the Selloff, PACCAR Dips - 24/7 Wall St.",
+      "url": "https://247wallst.com/investing/2026/10/29/caterpillar-drops-7-as-moderate-sales-outlook-overshadows-beat-deere-sits-out-the-selloff-paccar-dips",
+      "as_of": "2026-10-29"
+    },
+    "N.35": {
+      "kind": "news",
+      "citation": "investing.com, 2026-10-29 — Caterpillar Q3 2026 slides: record sales, 96% backlog surge",
+      "url": "https://www.investing.com/news/company-news/caterpillar-q3-2026-slides-record-sales-96-backlog-surge-93CH-4984662",
+      "as_of": "2026-10-29"
+    },
+    "P.005": {
+      "kind": "peer",
+      "citation": "PEER GEV 10-Q filed 2026-10-28 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "N.36": {
+      "kind": "news",
+      "citation": "share-talk.com, 2026-10-29 — SP Angel – Today’s Market View, Thursday 29th October 2026 - Share Talk",
+      "url": "https://www.share-talk.com/sp-angel-todays-market-view-thursday-29th-october-2026",
+      "as_of": "2026-10-29"
+    },
+    "N.37": {
+      "kind": "news",
+      "citation": "finance.biggo.com, 2026-10-27 — [Freeport-McMoRan Q3 2026 Earnings Call] Freeport's Net Income Jumps 80% as Copper Price Surge Offsets Guidance Cut, Capex Hike — BigGo Finance",
+      "url": "https://finance.biggo.com/news/US_FCX_2026-10-27",
+      "as_of": "2026-10-27"
+    },
+    "N.39": {
+      "kind": "news",
+      "citation": "geomechanics.io, 2026-10-29 — Eldorado Gold’s Skouries capex rise and 18% guidance cut: key points for mine planners | Geomechanics.io News",
+      "url": "https://www.geomechanics.io/news/article/eldorado-golds-skouries-capex-rise-and-18-guidance-cut-key-points-for-mine-planners",
+      "as_of": "2026-10-29"
+    },
+    "P.008": {
+      "kind": "peer",
+      "citation": "PEER CMI 10-Q filed 2026-08-04 · MD&A — Segment EBITDA",
+      "url": null,
+      "as_of": null
+    },
+    "P.009": {
+      "kind": "peer",
+      "citation": "PEER CMI 10-Q filed 2026-08-04 · MD&A — Sales",
+      "url": null,
+      "as_of": null
+    },
+    "N.44": {
+      "kind": "news",
+      "citation": "libertyjusticecenter.org, 2026-10-27 — IEEPA refunds continue to move, and we are working to protect your right to recover tariffs across all four challenges. - Liberty Justice Center",
+      "url": "https://libertyjusticecenter.org/terra-update/ieepa-refunds-continue-to-move-and-we-are-working-to-protect-your-right-to-recover-tariffs-across-all-four-challenges",
+      "as_of": "2026-10-27"
+    },
+    "A.011": {
+      "kind": "article",
+      "citation": "Article (tikr.com)",
+      "url": "https://www.tikr.com/blog/could-caterpillar-actually-climb-54-or-is-oppenheimer-totally-wrong",
+      "as_of": "2026-10-29"
+    },
+    "A.012": {
+      "kind": "article",
+      "citation": "Article (tikr.com)",
+      "url": "https://www.tikr.com/blog/could-caterpillar-actually-climb-54-or-is-oppenheimer-totally-wrong",
+      "as_of": "2026-10-29"
+    },
+    "A.013": {
+      "kind": "article",
+      "citation": "Article (tikr.com)",
+      "url": "https://www.tikr.com/blog/could-caterpillar-actually-climb-54-or-is-oppenheimer-totally-wrong",
+      "as_of": "2026-10-29"
+    },
+    "A.014": {
+      "kind": "article",
+      "citation": "Article (tikr.com)",
+      "url": "https://www.tikr.com/blog/could-caterpillar-actually-climb-54-or-is-oppenheimer-totally-wrong",
+      "as_of": "2026-10-29"
+    },
+    "A.015": {
+      "kind": "article",
+      "citation": "Article (tikr.com)",
+      "url": "https://www.tikr.com/blog/could-caterpillar-actually-climb-54-or-is-oppenheimer-totally-wrong",
+      "as_of": "2026-10-29"
+    },
+    "N.66": {
+      "kind": "news",
+      "citation": "finance.biggo.com, 2026-10-28 — [Generac Holdings Q3 2026 Earnings Call] Generac Lands $2.4 Billion Amazon Deal, Data Center Backlog Triples to $4.5 Billion as Q3 Sales Hit Record $1.29 Billion — BigGo Finance",
+      "url": "https://finance.biggo.com/news/US_GNRC_2026-10-28",
+      "as_of": "2026-10-28"
+    }
+  },
+  "check_notes": [
+    "setup_summary[0]: rewritten to what its sources support (The cited passages never say Q3 was a record on volume; they only report $2.2B of higher sales volume, so the 'record' claim is unsupported.).",
+    "setup_summary[5]: rewritten to what its sources support (The $19.133B Q4 2025 revenue and the +13% follow from the passages, but the $5.12 Q4 2025 EPS (and so the +38%) appears in none of them.).",
+    "metrics_to_model[2].last_reported: rewritten to what its sources support (The Q4 2025 margin of about 15.6% needs Q4 2025 revenue, which is not in the cited passages, so the figure cannot be derived from them.).",
+    "metrics_to_model[5].last_reported: rewritten to what its sources support (The 'rail sales to users fell 70%' figure is not in the cited passages (E.013 says only that rail sales decreased), nor is the mining shipping-delay cause.).",
+    "metrics_to_model[6].view: rewritten to what its sources support (Management's lumpy-backlog comments and the $72.1B/$9.4B Q2 step are cited, but the book-to-bill of about 1.3 versus 1.7 is not in any cited passage.).",
+    "since_filing[0]: rewritten to what its sources support (The stock moves and drivers are supported, but the AlphaStreet $713.38 'flat' quote and the claim that it is a pre-reaction snapshot are not in the passages.).",
+    "since_filing[1]: rewritten to what its sources support (The target figures match, but they are labelled 'post-print' while the passages date the Wells Fargo cut to Oct 26 and the other cuts to earlier in the month, before the Oct 29 print.).",
+    "since_filing[4]: rewritten to what its sources support (The CAPE Phase 3 details are supported, but the passages say the unrecovered remainder was not probable only as of June 30, not that about $480M is treated that way now.).",
+    "since_filing[5]: rewritten to what its sources support (The GE Vernova and Generac figures are supported, but the passage attributes Cummins' Power Systems growth to China and North America, with the data-center driver given for Distribution.).",
+    "since_filing[7]: rewritten to what its sources support (The cited passages never say Derrick York was Solar Turbines president, and the CEO's 'normal growing pains' remark is about capacity ramp generally, not specifically the Q4 ramp.).",
+    "key_debates[1].bear: rewritten to what its sources support (The $9.4B prior-quarter backlog step and customer funding as a data-center limit are not in the cited passages, although book-to-bill, the 2029–2030 orders, the 'unusual' remark and lumpiness are.).",
+    "questions_for_management[4]: rewritten to what its sources support (The +4% miss and unsized Q4 catch-up are supported, but the quoted 'operational challenges and inefficiencies' is not in the cited passages, which say only 'normal growing pains and operational challenges'.)."
+  ]
+}

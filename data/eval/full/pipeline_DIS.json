@@ -1,0 +1,1586 @@
+{
+  "ticker": "DIS",
+  "company_name": "Walt Disney Co",
+  "report_generated_at": "2026-11-01T11:43:57+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-08-05",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2025-11-13",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448925000155/dis-20250927.htm"
+    }
+  ],
+  "earnings_call": "Q3 FY2026 earnings call (date unknown)",
+  "current_report": "No 8-K or 6-K recent enough to read",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$1.70",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$25.48B",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2026-11-17 report. Paid lookup not made: next report is 16 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": "±7.3%",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/dis-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "historical_move": {
+      "value": "±6.0% average closing move over the last 8 reports (2024-11-14 to 2026-08-05)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/dis-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": "4 beats, 0 misses in the last 4 quarters, average surprise +5.5%",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "Finnhub earnings surprises",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "analyst_actions": {
+      "value": "Last 30 days, newest first: Citigroup maintained Buy (2026-10-16); Needham maintained Buy (2026-10-09); Raymond James maintained Outperform (2026-10-05)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP grades",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "price_target": {
+      "value": "$125.67, +13.3% vs current $110.94",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP price target consensus",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "Disney reports fiscal Q4 2026 before the open on 2026-11-17. Finnhub-sourced consensus is EPS $1.70 and revenue $25.48B. Zacks/Barchart show a slightly lower $1.68 and $25.3B. The providers differ on the same quarter, so treat the Street number as a $1.68–1.70 range.",
+      "evidence_ids": [
+        "M.01",
+        "N.01",
+        "N.17"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Consensus revenue implies +13.4% y/y on a $22.46B base, against +6.8% in Q3 (which included about 2 points from Fubo and NFL). Fiscal 2026 is a 53-week year with the extra week in Q4. One extra week on a 13-week quarter is roughly +8% mechanically (my arithmetic). Part of the consensus step-up is therefore calendar, not acceleration, and the company has not quantified the week's contribution.",
+      "evidence_ids": [
+        "F.70",
+        "F.69",
+        "F.37",
+        "Q.069",
+        "K.259"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "The EPS growth figures are on different bases. Barchart frames consensus $1.68 as +51% on an adjusted year-ago $1.11. The fact-sheet derived +132% compares $1.70 to GAAP $0.73, which is not like for like. Use the adjusted comparison, but check what each provider's consensus actually is.",
+      "evidence_ids": [
+        "N.01",
+        "F.72",
+        "F.71"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Q3 FY26 (reported 2026-08-05): revenue $25.25B (+6.8%), total segment OI $5.56B (+21%), GAAP diluted EPS $1.51 versus $2.92. The prior-year quarter included a $3.3B Hulu tax benefit, and this year's quarter includes an $812M A+E impairment. Adjusted EPS was $2.06 against a $1.86 estimate.",
+      "evidence_ids": [
+        "F.01",
+        "F.37",
+        "F.13",
+        "F.43",
+        "F.09",
+        "F.10",
+        "Q.068",
+        "Q.070",
+        "N.16"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "The mix of Q3 profit growth is narrow. Experiences OI rose 20% to $3.02B (with about $100M of one-off tariff refunds) and Entertainment OI rose 64% to $1.68B. Sports OI fell 17% to $858M. Nine-month segment OI is up only 4.9%, so the Q4 comparison matters for the full-year story.",
+      "evidence_ids": [
+        "Q.080",
+        "Q.086",
+        "Q.081",
+        "C.021",
+        "F.44",
+        "Q.020"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Positioning going in: the stock is $110.94 against a $125.67 consensus target. Options imply ±7.3% versus a ±6.0% historical average closing move. The company has beaten EPS in 4 of the last 4 quarters (average surprise +5.5%).",
+      "evidence_ids": [
+        "M.07",
+        "M.03",
+        "M.04",
+        "M.05"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Capital returns are running ahead of free cash flow. Nine-month free cash flow was $5.74B (versus $7.52B) while repurchases were $7.2B and dividends $1.3B. Borrowings rose to $46.0B from $42.0B at fiscal year-end. The FY26 buyback target is at least $9B.",
+      "evidence_ids": [
+        "F.65",
+        "F.66",
+        "Q.012",
+        "Q.032",
+        "Q.105"
+      ],
+      "evidence_type": "reported"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Total revenue",
+      "period": "Q4 FY2026 (13 weeks + 53rd week)",
+      "last_reported": {
+        "text": "Q4 FY2025 revenue was $22.46B (derived: fiscal year less nine months). Q3 FY2026 revenue was $25.25B (+6.8%).",
+        "evidence_ids": [
+          "F.69",
+          "F.01",
+          "F.37"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus revenue is $25.48B (+13.4%); Zacks shows $25.3B (+12.6%).",
+        "evidence_ids": [
+          "M.01",
+          "F.70",
+          "N.17"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Q3's 6.8% pace on $22.46B gives about $24.0B for a 13-week quarter. Adding a 14th week lifts that to about $25.8B (my arithmetic), so consensus looks reasonable rather than conservative. The risks are weaker Asia parks and SVOD ad pricing, set against Fubo/NFL consolidation (about +2 points). Ask for the 53rd-week revenue contribution, since the 10-Q gives none.",
+        "evidence_ids": [
+          "F.69",
+          "F.37",
+          "Q.069",
+          "K.259",
+          "C.020",
+          "C.047"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Adjusted diluted EPS",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q4 FY2025 adjusted EPS was $1.11. Q3 FY2026 adjusted EPS was $2.06 against a $1.86 estimate. GAAP Q4 FY2025 diluted EPS was $0.73.",
+        "evidence_ids": [
+          "N.01",
+          "N.16",
+          "N.29",
+          "F.71"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus EPS is $1.70 (Finnhub) or $1.68 (Zacks/Barchart). The full-year consensus is $6.92, up 16.7% from $5.93.",
+        "evidence_ids": [
+          "M.01",
+          "N.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Management guides to about 12% adjusted EPS growth for FY26 excluding the 53rd week, which on $5.93 is about $6.64. Full-year consensus of $6.92 sits about $0.28 above that, so the Street already embeds a meaningful 53rd-week benefit or a beat. A beat versus $1.68–1.70 is plausible given the 4-for-4 record, but the bar is the guidance-implied number plus the extra week, which the company has not sized.",
+        "evidence_ids": [
+          "N.16",
+          "N.01",
+          "M.05",
+          "K.259"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Experiences segment operating income",
+      "period": "Q4 FY2026 and FY2026",
+      "last_reported": {
+        "text": "Q3 Experiences OI was $3,017M (+20%), including about $100M of tariff refunds. Nine-month OI was $8,941M (+10%). Q4 FY2025 OI was about $1,878M (derived: FY25 $9,995M less nine-month FY25 $8,117M).",
+        "evidence_ids": [
+          "Q.090",
+          "C.021",
+          "Q.080",
+          "K.167",
+          "Q.020"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management now guides FY26 Experiences OI growth at the high end of high-single-digit, excluding the 53rd week. Taking the high end as about 9% on $9,995M gives about $10.9B. After $8,941M in nine months, that implies only about $1.95B in Q4, or roughly +4% ex-53rd week, against +20% in Q3 and +10% year to date. Either the guide is conservative or Q4 decelerates, because the tariff benefit fades, Shanghai and Hong Kong stay soft and promotions weigh. My read is that the guide leaves room to beat, but the 9% figure is my interpretation of 'high-single-digit'.",
+        "evidence_ids": [
+          "C.012",
+          "C.020",
+          "C.021",
+          "Q.080",
+          "K.167",
+          "Q.020",
+          "Q.090"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Sports segment operating income",
+      "period": "Q4 FY2026 and FY2026",
+      "last_reported": {
+        "text": "Q3 Sports OI was $858M (-17%), partly from NBA rights cost shifting from the first half into Q3. Nine-month OI was $1,701M (-14%). Q4 FY2025 OI was about $911M (derived: FY25 $2,882M less nine-month FY25 $1,971M).",
+        "evidence_ids": [
+          "Q.085",
+          "Q.086",
+          "Q.080",
+          "K.162",
+          "Q.020"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The CFO described Sports as growing on the full-year guidance excluding the 53rd week. For FY26 OI to exceed FY25's $2,882M, Q4 would need to exceed about $1.18B, roughly +30% on $911M. That is a large rebound if the statement refers to OI. Check whether the Q3 cost timing reverses in Q4, and what the NFL Network/Comcast and other carriage disputes do to affiliate fees.",
+        "evidence_ids": [
+          "C.034",
+          "Q.080",
+          "K.162",
+          "Q.020",
+          "Q.085",
+          "Q.122"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Entertainment OI and SVOD operating margin",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 Entertainment OI was $1,680M (+64%) and SVOD operating margin was 13%. Q4 FY2025 Entertainment OI was about $691M (derived: FY25 $4,674M less nine-month FY25 $3,983M). Streaming OI was reported at $712M in Q3.",
+        "evidence_ids": [
+          "Q.081",
+          "C.007",
+          "K.150",
+          "Q.020",
+          "N.29"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management guides to a double-digit FY26 SVOD margin excluding the 53rd week, so Q4 should hold near the Q3 13% level. Q3 was helped by a $187M drop in SG&A on lower marketing and by lower film impairments, and advertising fell 1% on 4% lower rates. Q4 carries ad-pricing pressure from SVOD supply growth and the strongest live-event ad calendar. The Disney+ price increase reported in October is a possible ARPU lever, but details are thin.",
+        "evidence_ids": [
+          "C.007",
+          "Q.082",
+          "Q.083",
+          "C.047",
+          "N.29"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Share repurchases and diluted share count",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 repurchases were 17M shares for $1.7B (average $100.74). Nine-month repurchases were 68M shares for $7.2B. Q3 diluted shares were 1,743M and period-end shares were 1,730M.",
+        "evidence_ids": [
+          "Q.039",
+          "Q.137",
+          "Q.009",
+          "Q.013"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The FY26 buyback target is at least $9B, and $7,245M was repurchased in the first nine months, so Q4 needs at least about $1.8B. Q3 repurchases were $1.7B. In July 2026 Disney agreed to sell its 50% A+E interest for about $1.2B in cash, with closing expected by the end of fiscal 2026, and the CFO cited expected A+E proceeds as a reason for the raise. A larger Q4 buyback is plausible. The 10-K said about $7B, the CFO said the original guide was about $7B, and news says the raise was from $8B, so confirm the base.",
+        "evidence_ids": [
+          "Q.105",
+          "Q.039",
+          "Q.066",
+          "C.023",
+          "C.024",
+          "K.174",
+          "N.29"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Capex and free cash flow",
+      "period": "Q4 FY2026 / FY2026",
+      "last_reported": {
+        "text": "Nine-month operating cash flow was $12.52B (-8.2%), capex $6.78B (+11%) and free cash flow $5.74B versus $7.52B. Q4 FY2025 capex was about $1.9B (derived: FY25 $8.02B less nine-month FY25 $6.11B).",
+        "evidence_ids": [
+          "F.17",
+          "F.45",
+          "F.19",
+          "F.46",
+          "F.65",
+          "F.66",
+          "F.33",
+          "F.20"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guidance is about $9B of capex, so Q4 capex is about $2.2B (derived: $9B less $6.78B). Content spend is about $24B. Nine-month cash flow was hit by deferred wildfire-relief tax payments and higher sports content spend. Watch for a Q4 tax or working-capital normalisation and the fiscal-year free cash flow versus roughly $10.1B in FY25.",
+        "evidence_ids": [
+          "Q.104",
+          "Q.103",
+          "Q.101",
+          "F.67",
+          "F.19"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Parks KPIs: global guests, domestic attendance, per-capita spending",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 global guests were +4%, domestic attendance +3% and domestic per-capita spending +4%. Domestic hotel occupancy was 91% (versus 86%). International attendance was flat with per-capita +7%.",
+        "evidence_ids": [
+          "Q.087",
+          "Q.088"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Comcast's Theme Parks revenue fell 4.4% in Q3 on lower admissions and heavier promotions. Disney has launched new targeted discounts and says Asian consumers are weaker into Q4. I would model Q4 domestic per-capita growth below Q3's 4% unless the commentary says otherwise. Disney Cruise Line capacity (Destiny and Adventure) should keep adding passenger days.",
+        "evidence_ids": [
+          "P.011",
+          "P.012",
+          "C.016",
+          "C.017",
+          "C.020",
+          "Q.087"
+        ],
+        "evidence_type": "proxy"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Experiences segment OI growth",
+      "guidance": "High end of the previously guided high-single-digit growth range, excluding the 53rd week. Management said tariffs contribute nothing to the change and the driver is operating execution.",
+      "period": "FY2026",
+      "status": "raised",
+      "claim": {
+        "text": "On the Q3 call management said it expects Experiences OI growth at the high end of the prior high-single-digit range for fiscal 2026, excluding the 53rd week. It said the tariff refunds are not the reason.",
+        "evidence_ids": [
+          "C.012",
+          "C.020",
+          "C.061"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Adjusted EPS growth",
+      "guidance": "About 12% adjusted EPS growth in FY26 excluding the 53rd week, per late-October coverage of company guidance. An analyst on the call cited double-digit adjusted EPS growth for FY26 and FY27, and management did not dispute it.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "Coverage dated 2026-10-29 restates company guidance of about 12% adjusted EPS growth for FY26 excluding the 53rd week, and double-digit growth in FY27. On the Q3 call an analyst described the company as having reaffirmed double-digit adjusted EPS growth for FY26 and FY27.",
+        "evidence_ids": [
+          "N.16",
+          "C.028"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Adjusted EPS growth",
+      "guidance": "Double-digit adjusted EPS growth in fiscal 2027.",
+      "period": "FY2027",
+      "status": "maintained",
+      "claim": {
+        "text": "Double-digit adjusted EPS growth in FY27 was reaffirmed, per the analyst question on the call and the 2026-10-29 coverage.",
+        "evidence_ids": [
+          "C.028",
+          "N.16"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "SVOD operating margin",
+      "guidance": "Double-digit SVOD operating margin, excluding the 53rd-week impact. Q3 was 13%.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "Management said it remains on track for a double-digit SVOD operating margin in fiscal 2026 excluding the 53rd week, after a 13% margin in Q3. The 10-Q contains no such target.",
+        "evidence_ids": [
+          "C.007"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Share repurchases",
+      "guidance": "At least $9B in FY26, versus about $7B at the 10-K. Funded partly by cash set aside for the OpenAI deal and expected A+E proceeds of about $1.2B.",
+      "period": "FY2026",
+      "status": "raised",
+      "claim": {
+        "text": "The repurchase target is now at least $9B. The 10-K targeted about $7B, and the CFO called $7B the original guide, while news describes the raise as from $8B. The 10-Q already carried the at-least-$9B wording.",
+        "evidence_ids": [
+          "Q.105",
+          "K.174",
+          "C.023",
+          "C.024",
+          "N.29"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Content spend",
+      "guidance": "About $24B including sports rights, up modestly from $23B in FY25.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "FY26 content spend of about $24B was maintained, versus $23B in FY25.",
+        "evidence_ids": [
+          "Q.103",
+          "C.023",
+          "K.170"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Capital expenditures",
+      "guidance": "About $9B versus $8B in FY25, driven by Experiences expansion and new attractions, partly offset by lower cruise ship spending.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "FY26 capex of about $9B was maintained, versus $8B in FY25.",
+        "evidence_ids": [
+          "Q.104",
+          "K.172",
+          "C.023"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Sports segment",
+      "guidance": "Sports described as growing on full-year guidance excluding the 53rd week. No numeric target was given.",
+      "period": "FY2026",
+      "status": "unclear",
+      "claim": {
+        "text": "The CFO said the Sports segment is growing on the full-year guidance that excludes the 53rd week. He gave no number, and Q3 Sports OI fell 17% and nine-month OI fell 14%.",
+        "evidence_ids": [
+          "C.034",
+          "Q.085",
+          "Q.080"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Tariff effect",
+      "guidance": "About $100M of refunds in Q3 Experiences OI. A smaller benefit, if any, in Q4. Full-year impact immaterial because the costs were incurred in the first half.",
+      "period": "Q4 / FY2026",
+      "status": "new",
+      "claim": {
+        "text": "Management said tariff refunds will be a smaller benefit, if any, in Q4, and that the full-year effect nets to roughly zero. This removes a roughly $100M Q3 tailwind from the Q4 comparison.",
+        "evidence_ids": [
+          "C.021",
+          "C.061"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Cost reductions",
+      "guidance": "Management is pursuing meaningful reductions to cost, including labor and SG&A, and will update on progress. Nothing was quantified.",
+      "period": "FY2026–FY2027",
+      "status": "new",
+      "claim": {
+        "text": "The CFO flagged ongoing work on meaningful cost reductions, including labor and SG&A, with no target given. Nine-month severance charges were about $180M.",
+        "evidence_ids": [
+          "C.024",
+          "Q.074"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "Comcast's Theme Parks revenue fell 4.4% in Q3 2026 to $2.597B, with Adjusted EBITDA down 17.1% to $780M. Comcast cited lower admissions including the impact of increased promotional activity, and costs rose 2.3%. This is the closest read-across for Disney domestic parks, where Q3 was strong (+27% domestic OI) but Disney has also added targeted discounts.",
+      "evidence_ids": [
+        "P.011",
+        "P.012",
+        "Q.086",
+        "C.016"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Netflix (reported 2026-10-20) grew Q3 revenue 12% and expanded operating margin to 34.6% from 28.2%. It said 2026 price increases are landing in line with prior changes. It also cut its 2026 advertising target to about $2.7B from about $3B on slower ad product rollout, and acknowledged investor concern about view-hours growth. This supports pricing power but cautions on streaming ad monetisation, a risk for Disney's SVOD advertising.",
+      "evidence_ids": [
+        "P.002",
+        "N.34",
+        "N.32"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Peacock reached 48M paid subscribers and $261M of Adjusted EBITDA in Q3, its second straight profit. Revenue was lifted by FIFA World Cup timing. Comcast's Media domestic advertising rose 14.6%, partly from the World Cup. Sports-driven ad demand looks firm, but the peer figures include event timing that Disney's quarter lacks.",
+      "evidence_ids": [
+        "P.010",
+        "P.013",
+        "N.38"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Late-October coverage puts DIS at $109.04 on Oct 28, about 14.4x forward earnings. Market data shows $110.94 against a $125.67 consensus target. Analyst actions in the market data (Citigroup, Needham, Raymond James) were all maintained ratings.",
+      "evidence_ids": [
+        "N.16",
+        "M.07",
+        "M.06"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Mid-October coverage reports Disney planned a TV overhaul and raised Disney+ prices, alongside the buyback target of at least $9B. This is a potential streaming ARPU lever for Q4 and FY27, but the details are not in the source set.",
+      "evidence_ids": [
+        "N.29"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Q4 consensus across sources ranges from $1.68 to $1.70 EPS and from $25.3B to $25.48B revenue.",
+      "evidence_ids": [
+        "M.01",
+        "N.01",
+        "N.17"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Can Experiences keep compounding in Q4, or is the Q3 +20% OI as good as it gets?",
+      "bull": {
+        "text": "Q3 domestic P&E OI rose 27% on guests +4%, attendance +3% and per-capita +4%. Management says Walt Disney World and Disney Cruise Line bookings are healthy and raised the FY guide to the high end of high-single-digit.",
+        "evidence_ids": [
+          "Q.090",
+          "Q.088",
+          "C.020",
+          "C.012"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "The FY guide implies only about +4% Q4 OI ex-53rd week (my arithmetic). Q3 had about $100M of non-recurring tariff refunds, and Asia is weaker into Q4. New U.S. discounts and Comcast's -4.4% parks revenue on promotions point to a tougher demand and pricing backdrop.",
+        "evidence_ids": [
+          "C.012",
+          "Q.080",
+          "K.167",
+          "C.021",
+          "C.020",
+          "C.016",
+          "P.012"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Q4 domestic attendance, per-capita spending and Experiences OI versus the implied roughly $1.95B ex-53rd week, plus the FY27 bookings and pricing commentary."
+    },
+    {
+      "question": "Is streaming margin expansion durable given ad-pricing pressure?",
+      "bull": {
+        "text": "Q3 SVOD margin was 13%, streaming OI more than doubled to $712M, and management targets a double-digit FY26 margin. Netflix shows scale economics, with a 34.6% operating margin and price increases landing as expected.",
+        "evidence_ids": [
+          "C.007",
+          "N.29",
+          "P.002",
+          "N.34"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Management says streaming ad supply is creating pricing pressure, and Disney advertising rates were -4% in Q3. Netflix cut its ad target and flagged engagement concerns. Disney's Q3 Entertainment OI also benefited from lower marketing and lower film impairments.",
+        "evidence_ids": [
+          "C.047",
+          "Q.082",
+          "Q.083",
+          "N.32",
+          "N.34"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 SVOD margin and advertising growth, subscriber and churn commentary after the price increase, and whether the free ad-supported product is accretive."
+    },
+    {
+      "question": "Is Sports a timing story or a structural drag?",
+      "bull": {
+        "text": "Q3 Sports OI fell partly because the NBA renewal shifted costs from the first half into Q3. NBA Finals and NHL postseason viewership grew over 100%, upfront sports volumes were up low teens and Super Bowl inventory is sold out.",
+        "evidence_ids": [
+          "Q.085",
+          "C.004",
+          "C.047"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Nine-month Sports OI is down 14%. Subscription fees are held back by fewer subscribers and carriage disputes, with NFL Network and RedZone off Comcast Xfinity and a YouTube TV blackout earlier in the year. UFC rights expired.",
+        "evidence_ids": [
+          "Q.080",
+          "Q.094",
+          "Q.122",
+          "Q.085"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 Sports OI against the roughly +30% implied if the full-year growth statement refers to OI, and resolution of the Comcast carriage dispute."
+    },
+    {
+      "question": "How much of Q4 EPS growth is calendar and buyback rather than underlying?",
+      "bull": {
+        "text": "Consensus EPS of $1.68 implies +51% on an adjusted $1.11, and the company has beaten four straight quarters. At least $9B of buybacks cuts the share count. Q3 diluted shares were 1,743M versus 1,805M.",
+        "evidence_ids": [
+          "N.01",
+          "M.05",
+          "Q.105",
+          "Q.009"
+        ],
+        "evidence_type": "estimate"
+      },
+      "bear": {
+        "text": "The guide is about 12% adjusted EPS growth excluding the 53rd week, while FY consensus implies +16.7%. The gap is the extra week plus any beat. The Q3 tariff refunds will not repeat. Interest expense also benefited from a pension-related credit.",
+        "evidence_ids": [
+          "N.16",
+          "N.01",
+          "C.021",
+          "Q.034",
+          "K.259"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "The company's size of the 53rd-week contribution, the adjusted-EPS bridge, and whether the beat comes from operations or below-the-line items."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "base",
+      "description": {
+        "text": "Revenue lands near the $25.3–25.5B consensus, helped by the 53rd week and Fubo/NFL consolidation. Adjusted EPS comes in around $1.70, Experiences OI growth is high-single to low-double-digit, and SVOD margin holds near 13%. FY26 and FY27 EPS guidance are reiterated and the buyback finishes at or above $9B.",
+        "evidence_ids": [
+          "M.01",
+          "N.17",
+          "F.70",
+          "C.007",
+          "C.028",
+          "Q.105"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Domestic per-capita growth of about 3–4% and attendance up low single digits",
+        "Sports OI recovers as the NBA cost timing normalises",
+        "Reiteration of about 12% FY26 adjusted EPS growth ex-53rd week and double-digit FY27",
+        "Buyback of roughly $1.7–2B in Q4"
+      ]
+    },
+    {
+      "name": "bull",
+      "description": {
+        "text": "Experiences beats the implied roughly +4% Q4 OI growth guide, SVOD margin exceeds 13%, and Sports rebounds on the NFL, college football and NBA calendar. Adjusted EPS beats the $1.68–1.70 range, with the 4-for-4 beat record and average surprise of +5.5% as precedent. Management gives early FY27 colour or a cost programme with numbers. The options-implied move is ±7.3%.",
+        "evidence_ids": [
+          "C.012",
+          "M.05",
+          "M.03",
+          "C.007",
+          "C.024",
+          "C.047"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Experiences OI up double digits ex-53rd week despite fading tariff benefit",
+        "Streaming ad growth holds despite supply pressure, and the Disney+ price increase sticks",
+        "Quantified cost reductions in labor and SG&A",
+        "FY27 capex, content and buyback outlook at least as strong as FY26"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Parks promotional intensity and Asian consumer weakness (the Comcast pattern) cut into domestic per-capita and international OI. SVOD ad pricing softens as Netflix's ad cut suggests, and Sports stays down on carriage disputes and rights costs. EPS fails to clear the consensus, or guidance for the 53rd-week-adjusted 12% is hedged. The stock moves against the ±7.3% implied range.",
+        "evidence_ids": [
+          "P.011",
+          "P.012",
+          "C.020",
+          "C.047",
+          "N.32",
+          "Q.122",
+          "M.03"
+        ],
+        "evidence_type": "proxy"
+      },
+      "triggers": [
+        "Domestic per-capita growth well below Q3's 4% or attendance flat",
+        "Experiences OI growth near or below the implied roughly +4% ex-53rd week",
+        "Sports OI below Q4 FY25's about $911M",
+        "Carriage disputes (Comcast NFL Network) or the FCC early license renewal go badly",
+        "Buyback or FY27 messaging reduced because of leverage"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "The FCC ordered early license renewal applications for all owned ABC television stations in April 2026. Disney filed on May 28, 2026, and a response is pending and could adversely affect the company.",
+        "evidence_ids": [
+          "Q.135"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Distribution disputes are live. NFL Network and RedZone were removed from Comcast Xfinity in Q3 and not reinstated, and Disney's channels were temporarily dropped from YouTube TV in Q1. Nine-month Sports subscription growth included a 3% drag from fewer subscribers and a 1% drag from a temporary carriage suspension. Further renewals scheduled to expire in fiscal 2026 could cause blackouts.",
+        "evidence_ids": [
+          "Q.122",
+          "Q.094"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Parks demand and pricing could be weaker than Q3 suggests. Management cites continued international softness at domestic parks and weaker Asian consumers at Shanghai and Hong Kong, continuing in Q4. International P&E OI fell 13% in Q3. Comcast's parks revenue fell on promotions.",
+        "evidence_ids": [
+          "C.018",
+          "C.020",
+          "Q.090",
+          "P.012"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Q3 Experiences OI included about $100M of tariff refunds that management expects to be smaller or absent in Q4. That sets up a tougher Q4 comparison and could produce a deceleration versus Q3's +20%.",
+        "evidence_ids": [
+          "C.021",
+          "C.061",
+          "Q.089"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Streaming advertising faces pricing pressure from rising supply. The CFO said supply is creating pricing pressure that showed in the SVOD ad sales growth rate, and Netflix cut its 2026 ad target from about $3B to $2.7B on slower rollout of ad features. Disney Entertainment advertising revenue declined in Q3, with a 4% decrease from lower rates partly offset by 1% from more impressions and 1% from Fubo.",
+        "evidence_ids": [
+          "C.047",
+          "Q.082",
+          "N.32",
+          "N.34"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Shareholder returns exceed free cash flow. Nine-month FCF was $5.74B against $7.2B of buybacks and $1.3B of dividends. Borrowings reached $46.0B, including $4.4B of commercial paper, and management says it is not looking to build cash or delever meaningfully. Ratings are A2 and A, both Stable.",
+        "evidence_ids": [
+          "F.65",
+          "Q.012",
+          "Q.032",
+          "C.023",
+          "Q.107"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Content performance is uneven. Management acknowledged The Mandalorian and Grogu and live-action Moana fell short of box office expectations, offset by Toy Story 5 passing $1B. Film cost impairments were lower in Q3, which flattered Entertainment OI and could reverse.",
+        "evidence_ids": [
+          "C.005",
+          "C.004",
+          "Q.083"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Litigation remains open. The Disney+ securities class action has a trial date of November 16, 2027 with no loss estimate. There are ten derivative suits (the latest filed July 24, 2026). The Unger fuboTV antitrust action is pending, and the YouTube TV and DirecTV settlement has a final approval hearing set for January 14, 2027. The risk factors also cite AI tools facilitating infringing works based on unauthorized use of Disney IP.",
+        "evidence_ids": [
+          "Q.046",
+          "Q.047",
+          "Q.048",
+          "Q.054",
+          "Q.127"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "Your Experiences guide at the high end of high-single-digit implies only about +4% Q4 OI ex-53rd week versus +20% in Q3. Is that conservatism, or what slows in Q4 (tariffs, Asia, pricing, cruise start-up costs)?",
+      "why": {
+        "text": "Nine-month OI is +10% and the FY25 base implies about $1.95B for Q4 at a 9% full-year growth rate. This is the largest gap between guidance and the Q3 run-rate.",
+        "evidence_ids": [
+          "C.012",
+          "Q.080",
+          "K.167",
+          "Q.020"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "question": "How much does the 53rd week add to Q4 revenue, segment OI and adjusted EPS, and what is the bridge from the 12% ex-53rd-week EPS guide to the Street's $6.92?",
+      "why": {
+        "text": "Full-year consensus implies +16.7% EPS growth against a guide of about 12% excluding the 53rd week. FY26 is a 53-week year, with the extra week reported in Q4.",
+        "evidence_ids": [
+          "N.01",
+          "N.16",
+          "K.259"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "question": "What drives Sports OI from -14% year to date to growth for the full year? How much of the Q3 NBA cost timing reverses, and what are the economics of the NFL Network/Comcast and other carriage disputes?",
+      "why": {
+        "text": "The CFO described Sports as growing on the full-year guide, which excludes the 53rd week. Sports operating income was $1,701M for nine months against $1,971M a year earlier, and FY25 Sports operating income of $2,882M implies about $911M in Q4 FY25. Full-year growth would therefore need a large Q4 rebound. As of the 10-Q, NFL Network and RedZone had not been reinstated on Comcast Xfinity.",
+        "evidence_ids": [
+          "C.034",
+          "Q.080",
+          "K.162",
+          "Q.122"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "question": "What are domestic bookings and per-capita spending trends for October to January, and how do the new after-2pm and resident discounts affect yield versus Comcast's promotional pressure?",
+      "why": {
+        "text": "Comcast's parks revenue fell 4.4% on promotions while Disney launched targeted discounts and flagged continued international softness.",
+        "evidence_ids": [
+          "P.012",
+          "C.016",
+          "C.017",
+          "C.018"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "question": "What is the SVOD ad-pricing outlook, early results from the Disney+ price increase on churn, and the economics and timing of the free ad-supported product?",
+      "why": {
+        "text": "Management cited pricing pressure from supply growth, Netflix cut its ad target, and a free product is under consideration.",
+        "evidence_ids": [
+          "C.047",
+          "C.045",
+          "N.32",
+          "N.29"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "Can you size the labor and SG&A reductions, their timing, restructuring cost, and how much is built into FY27 double-digit EPS growth?",
+      "why": {
+        "text": "The cost programme was flagged without numbers, nine-month severance is about $180M, and the Q3 SG&A decline came from lower marketing.",
+        "evidence_ids": [
+          "C.024",
+          "Q.074",
+          "Q.082"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "With buybacks and dividends exceeding free cash flow and borrowings up $4B, how do you think about leverage, the Q4 repurchase level, A+E proceeds and FY27 capex?",
+      "why": {
+        "text": "Nine-month returns of about $8.6B exceeded FCF of $5.74B and management said it will not delever meaningfully.",
+        "evidence_ids": [
+          "Q.012",
+          "F.65",
+          "Q.032",
+          "C.023"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is the status of the FCC early license renewal, and what outcomes are possible for the owned ABC stations?",
+      "why": {
+        "text": "The 10-Q discloses that the FCC ordered early license renewal applications for all owned television stations. Disney filed on May 28, 2026, and the pending FCC response could adversely impact the company.",
+        "evidence_ids": [
+          "Q.135"
+        ],
+        "evidence_type": "reported"
+      }
+    }
+  ],
+  "data_gaps": [
+    "No 8-K or earnings release text is in the source set. Release line items and the non-GAAP reconciliation are unavailable, and the adjusted-EPS figures here ($2.06, $1.11, $5.93) come from secondary coverage.",
+    "A Yahoo article dated 2026-08-05 reported that Disney guided Q4 operating income of roughly $4.9B. It is outside the 14-day news window and not in the filing or call text, so it is not cited. If confirmed, it would imply about +41% on the derived $3.48B Q4 FY25 segment OI (FY25 $17.55B less nine-month $14.07B).",
+    "The 53rd-week contribution to Q4 revenue, segment OI and EPS is not quantified anywhere in the sources.",
+    "Nine-month adjusted EPS (Q1 and Q2) is not in the sources, so Q4 adjusted EPS implied by the 12% guide cannot be computed directly.",
+    "Consensus differs by provider ($1.70 and $25.48B from Finnhub, $1.68 and $25.3B from Zacks/Barchart). The sources do not state whether each is adjusted or GAAP.",
+    "No segment-level consensus (Experiences, Entertainment, Sports OI) or SVOD margin consensus is available.",
+    "Disney+ and Hulu subscriber counts and ARPU were not in the Q3 10-Q or call text provided, so streaming volume trends cannot be modelled.",
+    "The details and timing of the Disney+ price increase and TV overhaul are thin (headline only), and there is no Q4 theatrical slate detail.",
+    "Whisper EPS is unavailable (no preview within 30 days). Analyst target changes within the last 14 days were not found, and rating actions from M.06 are dated Oct 5–16.",
+    "Consumer Products moves into the Entertainment segment from FY27 reporting. No recast figures are provided, so segment comparisons will change.",
+    "Management's Q4 cash tax payments and the working-capital effect of the deferred wildfire-relief taxes are not quantified."
+  ],
+  "sources": {
+    "Q.009": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.012": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.013": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.020": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — 2.Segment Information",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.032": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — Cash, Cash Equivalents and Restricted Cash",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.034": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — U.S. Dollar Denominated Borrowings",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.039": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — Share Repurchase Program",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.046": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — Securities Actions",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.047": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — Derivative Actions",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.048": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — Derivative Actions",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.054": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — Antitrust and Other Actions",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.066": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Financial Statements — Disaggregation of Income Statement Expense",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.068": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — ORGANIZATION OF INFORMATION",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.069": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — FINANCIAL CONDITION AND RESULTS OF OPERATIONS — (continued)",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.070": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Revenues",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.074": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — FINANCIAL CONDITION AND RESULTS OF OPERATIONS — (continued)",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.080": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — BUSINESS SEGMENT RESULTS",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.081": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — BUSINESS SEGMENT RESULTS",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.082": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — BUSINESS SEGMENT RESULTS",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.083": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Revenues - Other",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.085": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Revenues - Other",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.086": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Operating Income from Sports",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.087": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Items Excluded from Segment Operating Income Related to Sports",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.088": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Key Metrics",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.089": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Key Metrics",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.090": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — FINANCIAL CONDITION AND RESULTS OF OPERATIONS — (continued)",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.094": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Items Excluded from Segment Operating Income Related to Entertainment",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.101": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — Items Excluded from Segment Operating Income Related to Experiences",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.103": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — FINANCIAL CONDITION AND RESULTS OF OPERATIONS — (continued)",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.104": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — FINANCIAL CONDITION AND RESULTS OF OPERATIONS — (continued)",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.105": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — FINANCIAL CONDITION AND RESULTS OF OPERATIONS — (continued)",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.107": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · MD&A — FINANCIAL CONDITION AND RESULTS OF OPERATIONS — (continued)",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.122": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Risk Factors — RISKS RELATED TO OUR BUSINESSES AND INDUSTRY",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.127": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Risk Factors — RISKS RELATED TO OUR BUSINESSES AND INDUSTRY",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.135": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 · Risk Factors — RISKS RELATED TO OUR BUSINESSES AND INDUSTRY",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "Q.137": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-05 — ITEM 2. Unregistered Sales of Equity Securities and Use of Proceeds",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "K.150": {
+      "kind": "filing",
+      "citation": "10-K filed 2025-11-13 · MD&A — Eliminations",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448925000155/dis-20250927.htm",
+      "as_of": "2025-11-13"
+    },
+    "K.162": {
+      "kind": "filing",
+      "citation": "10-K filed 2025-11-13 · MD&A — Operating Income from Sports",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448925000155/dis-20250927.htm",
+      "as_of": "2025-11-13"
+    },
+    "K.167": {
+      "kind": "filing",
+      "citation": "10-K filed 2025-11-13 · MD&A — Operating Income from Experiences",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448925000155/dis-20250927.htm",
+      "as_of": "2025-11-13"
+    },
+    "K.170": {
+      "kind": "filing",
+      "citation": "10-K filed 2025-11-13 · MD&A — TABLE OF CONTENTS",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448925000155/dis-20250927.htm",
+      "as_of": "2025-11-13"
+    },
+    "K.172": {
+      "kind": "filing",
+      "citation": "10-K filed 2025-11-13 · MD&A — Investments in Parks, Resorts and Other Property",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448925000155/dis-20250927.htm",
+      "as_of": "2025-11-13"
+    },
+    "K.174": {
+      "kind": "filing",
+      "citation": "10-K filed 2025-11-13 · MD&A — Other Investing Activities",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448925000155/dis-20250927.htm",
+      "as_of": "2025-11-13"
+    },
+    "K.259": {
+      "kind": "filing",
+      "citation": "10-K filed 2025-11-13 — Reporting Period",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448925000155/dis-20250927.htm",
+      "as_of": "2025-11-13"
+    },
+    "C.004": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Josh D'Amaro, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=DIS&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.005": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Josh D'Amaro, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=DIS&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.007": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Josh D'Amaro, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=DIS&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.012": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Josh D'Amaro, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=DIS&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.016": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Rich Greenfield, Analyst (LightShed Partners)",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=DIS&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.017": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Josh D'Amaro, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=DIS&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.018": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Josh D'Amaro, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=DIS&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.020": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Hugh Johnston, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=DIS&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.021": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Hugh Johnston, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=DIS&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.023": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Hugh Johnston, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=DIS&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.024": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Hugh Johnston, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=DIS&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.028": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Kannan Venkateshwar, Analyst (Barclays)",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=DIS&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.034": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Hugh Johnston, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=DIS&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.045": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Josh D'Amaro, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=DIS&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.047": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Hugh Johnston, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=DIS&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.061": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Hugh Johnston, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=DIS&quarter=2026Q3",
+      "as_of": null
+    },
+    "F.01": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2026-06-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "F.09": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2026-06-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "F.10": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-06-28",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "F.13": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating income — quarter ended 2026-06-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "F.17": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow — nine months ended 2026-06-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "F.19": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure — nine months ended 2026-06-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "F.20": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure — nine months ended 2025-06-28",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448926000057/dis-20260627.htm",
+      "as_of": "2026-08-05"
+    },
+    "F.33": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure — year ended 2025-09-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/1744489/000174448925000155/dis-20250927.htm",
+      "as_of": "2025-11-13"
+    },
+    "F.37": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — quarter ended 2026-06-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.43": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating income growth — quarter ended 2026-06-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.44": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating income growth — nine months ended 2026-06-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.45": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow growth — nine months ended 2026-06-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.46": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure growth — nine months ended 2026-06-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.65": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — nine months ended 2026-06-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.66": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — nine months ended 2025-06-28",
+      "url": null,
+      "as_of": null
+    },
+    "F.67": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — year ended 2025-09-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.69": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-09-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.70": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "F.71": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-09-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.72": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.03": {
+      "kind": "market",
+      "citation": "Market data — Options-implied move",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "M.05": {
+      "kind": "market",
+      "citation": "Market data — Beat/miss record",
+      "url": null,
+      "as_of": null
+    },
+    "M.06": {
+      "kind": "market",
+      "citation": "Market data — Analyst rating actions",
+      "url": null,
+      "as_of": null
+    },
+    "M.07": {
+      "kind": "market",
+      "citation": "Market data — Consensus price target",
+      "url": null,
+      "as_of": null
+    },
+    "N.01": {
+      "kind": "news",
+      "citation": "barchart.com, 2026-10-28 — Walt Disney Earnings Preview: What to Expect",
+      "url": "https://www.barchart.com/story/news/8498221/walt-disney-earnings-preview-what-to-expect",
+      "as_of": "2026-10-28"
+    },
+    "N.16": {
+      "kind": "news",
+      "citation": "heygotrade.com, 2026-10-29 — Disney Stock Forecast: DIS Guidance, Valuation and Risks | Gotrade",
+      "url": "https://www.heygotrade.com/en/market-outlook/disney-stock-forecast",
+      "as_of": "2026-10-29"
+    },
+    "N.17": {
+      "kind": "news",
+      "citation": "finance.yahoo.com, 2026-10-25 — Walt Disney (DIS) Rises As Market Takes a Dip: Key Facts",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/walt-disney-dis-rises-market-204502127.html",
+      "as_of": "2026-10-25"
+    },
+    "P.002": {
+      "kind": "peer",
+      "citation": "PEER NFLX 10-Q filed 2026-10-21 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "N.29": {
+      "kind": "news",
+      "citation": "tikr.com, 2026-10-19 — Disney Plans a TV Overhaul and Raises Disney+ Prices. Here’s What It Means | TIKR.com",
+      "url": "https://www.tikr.com/blog/disney-plans-a-tv-overhaul-and-raises-disney-prices-heres-what-it-means",
+      "as_of": "2026-10-19"
+    },
+    "P.010": {
+      "kind": "peer",
+      "citation": "PEER CMCSA 10-Q filed 2026-10-22 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "N.32": {
+      "kind": "news",
+      "citation": "kentertechhub.com, 2026-10-30 — Amazon and YouTube ad growth slows in the third quarter | K-EnterTech Hub",
+      "url": "https://www.kentertechhub.com/amazon-youtube-q3-ads-en",
+      "as_of": "2026-10-30"
+    },
+    "N.34": {
+      "kind": "news",
+      "citation": "deadline.com, 2026-10-20 — Netflix Q3 2026 Earnings: Stock Drops Again On Lowered Guidance",
+      "url": "https://deadline.com/2026/10/netflix-q3-2026-earnings-layoffs-streaming-1237168825",
+      "as_of": "2026-10-20"
+    },
+    "N.38": {
+      "kind": "news",
+      "citation": "qz.com, 2026-10-22 — Comcast Q3 earnings beat estimates as Peacock posted second profit",
+      "url": "https://qz.com/comcast-earnings-beat-peacock-second-profit-broadband-losses-102226",
+      "as_of": "2026-10-22"
+    },
+    "P.011": {
+      "kind": "peer",
+      "citation": "PEER CMCSA 10-Q filed 2026-10-22 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "P.012": {
+      "kind": "peer",
+      "citation": "PEER CMCSA 10-Q filed 2026-10-22 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "P.013": {
+      "kind": "peer",
+      "citation": "PEER CMCSA 10-Q filed 2026-10-22 · MD&A — Media Segment – Revenue",
+      "url": null,
+      "as_of": null
+    }
+  },
+  "check_notes": [
+    "metrics_to_model[1].last_reported: rewritten to what its sources support (The $1.86 Q3 estimate does not appear in any cited passage; it is only in N.29, which is not cited.).",
+    "metrics_to_model[5].view: rewritten to what its sources support (The $1.2B A+E proceeds figure and Q3's $1.7B buyback pace are not in the passages; the passages only give the $9B target, $7,245M done, and no amount or timing for A&E proceeds.).",
+    "guidance[1]: rewritten to what its sources support (The ~12% guide is supported, but nothing cited shows management not contradicting the framing or that the 10-Q has no EPS guidance; the 10-Q is not cited.).",
+    "since_filing[5]: rewritten to what its sources support (The passages show the consensus range but cannot establish that guidance was unchanged or that consensus 'stayed' over the last 14 days.).",
+    "key_risks[0]: rewritten to what its sources support (The FCC order, the May 28 filing and the pending response are supported, but the passage does not show the risk is new in this 10-Q.).",
+    "key_risks[4]: rewritten to what its sources support (The 1% fall in Disney Entertainment advertising is not in the passages, and the cited components (-4% rates, +1% impressions, +1% Fubo) net to about -2%.).",
+    "key_risks[7]: rewritten to what its sources support (The litigation facts and dates are supported, but the passages do not show that the AI-tools IP risk disclosure is expanded.).",
+    "questions_for_management[1]: rewritten to what its sources support (The +16.7% consensus and the ~12% guide ex-53rd week are supported, but no passage shows the company has not sized the extra week.).",
+    "questions_for_management[2]: rewritten to what its sources support (The CFO's growth comment and the NFL Network/RedZone removal are supported, but the $911M Sports base for the Q4 rebound is not in the passages.).",
+    "questions_for_management[7]: rewritten to what its sources support (The pending FCC response is supported, but the passage does not show the risk is new to this 10-Q.).",
+    "guidance[1]: tag 'guided' → 'estimate' (it cites only call, news).",
+    "guidance[2]: tag 'guided' → 'estimate' (it cites only call, news).",
+    "since_filing[1]: tag 'reported' → 'estimate' (it cites only news, peer).",
+    "since_filing[4]: tag 'reported' → 'estimate' (it cites only news)."
+  ]
+}

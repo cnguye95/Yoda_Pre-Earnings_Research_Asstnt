@@ -1,0 +1,1322 @@
+{
+  "ticker": "HD",
+  "company_name": "HOME DEPOT, INC.",
+  "report_generated_at": "2026-11-01T15:28:29+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-08-25",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-03-18",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm"
+    }
+  ],
+  "earnings_call": "not available",
+  "current_report": "No 8-K or 6-K recent enough to read",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$3.95",
+      "fiscal_quarter": 3,
+      "fiscal_year": 2027,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$44.04B",
+      "fiscal_quarter": 3,
+      "fiscal_year": 2027,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2026-11-17 report. Paid lookup not made: next report is 16 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": "±7.2%",
+      "fiscal_quarter": 3,
+      "fiscal_year": 2027,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/hd-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "historical_move": {
+      "value": "±2.1% average closing move over the last 8 reports (2024-11-12 to 2026-08-18)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/hd-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "analyst_actions": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "price_target": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "HD reports fiscal Q3 on Tuesday Nov 17, expected before the open (Finnhub gives no hour). The calendar labels it 'fiscal Q3 2027', but the company's fiscal 2026 ends Jan 31, 2027. Consensus is EPS $3.95 and revenue $44.04B.",
+      "evidence_ids": [
+        "M.01",
+        "N.02"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Consensus implies revenue +6.5% and diluted EPS +9.2% against year-ago $41.35B and $3.62 (GAAP). Q2 grew revenue +5.7% and EPS +4.6%, so the bar is higher than on the last print even though the GMS acquisition contribution fades.",
+      "evidence_ids": [
+        "F.70",
+        "F.72",
+        "F.37",
+        "F.41"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Q2 (ended Aug 2, 2026) reported revenue of $47.86B (+5.7%), operating income of $6.84B (+4.3%) and diluted EPS of $4.79 (+4.6%). Operating margin slipped to 14.3% from 14.5%.",
+      "evidence_ids": [
+        "F.01",
+        "F.37",
+        "F.13",
+        "F.43",
+        "F.09",
+        "F.41",
+        "F.53",
+        "F.55"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q2 cost of goods sold benefited from about $685M of IEEPA tariff refunds, roughly 1.4% of sales. Management says the refund benefit was 'largely offset' by fuel, energy and other input costs and by GMS mix. Approximately $730M had been received by Aug 2, 'the vast majority' of expected refunds.",
+      "evidence_ids": [
+        "Q.039",
+        "Q.043"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "My arithmetic: removing the $685M refund from Q2 leaves operating income of about $6.15B (about 12.9% margin, roughly -6% YoY). Q2 EPS would be about $4.25-4.30 (after tax at 24.5% on ~996M shares) against $4.58. The reported EPS growth therefore leans on a likely non-recurring item. Caveat: the refunds offset tariff costs incurred earlier, so this is not a clean like-for-like.",
+      "evidence_ids": [
+        "Q.039",
+        "Q.011",
+        "Q.044"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Q2 comparable sales rose +1.7% (vs +1.0% a year ago). Comparable average ticket was +2.8% and comparable transactions -1.0%; FX added about 25bp. The first-half comp was +1.2%, and online sales grew 11.0%.",
+      "evidence_ids": [
+        "Q.040",
+        "Q.042",
+        "Q.041",
+        "Q.046"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "SG&A grew 8.5% to 17.6% of sales (vs 17.1%), which management attributes to higher operating costs relative to comparable sales performance. First-half operating income grew only +1.1% even with the refund benefit.",
+      "evidence_ids": [
+        "Q.043",
+        "F.44"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "The 'Other' segment (SRS including GMS and, since May 11, Mingledorff's HVAC) had Q2 sales of $5.06B vs $3.12B and operating income of $247M vs $201M. Its operating margin was about 4.9% vs 6.4%. Roofing fell to ~39% of Other sales from ~62%.",
+      "evidence_ids": [
+        "Q.021",
+        "Q.022",
+        "Q.024",
+        "Q.035"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "First-half operating cash flow was $11.42B (+27.4%) and free cash flow was $9.70B (vs $7.25B), helped by working-capital timing. Long-term debt including current installments fell to about $48.6B from $51.3B at Feb 1 after $3.0B of repayments. Buybacks remain paused, with no plan to resume in fiscal 2026.",
+      "evidence_ids": [
+        "F.17",
+        "F.45",
+        "F.65",
+        "F.66",
+        "Q.055",
+        "Q.010",
+        "Q.014",
+        "Q.051"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "The Q2 10-Q is signed by CFO Richard McPhail as 'Interim Principal Executive Officer'. The March 10-K was signed by Edward Decker as Chair, President and CEO. The 10-Q forward-looking list newly cites 'organizational changes, including within the Company's senior leadership team'.",
+      "evidence_ids": [
+        "Q.058",
+        "Q.064",
+        "Q.007",
+        "K.286"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Positioning: the stock closed at $329.20 on Oct 30, about 20.7x forward P/E. Options imply a ±7.2% move for the print against a ±2.1% average closing move over the last 8 reports.",
+      "evidence_ids": [
+        "N.04",
+        "N.07",
+        "M.03",
+        "M.04"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Net sales",
+      "period": "Fiscal Q3 2026 (quarter ending ~Nov 1, 2026)",
+      "last_reported": {
+        "text": "Q2 net sales were $47.86B, +5.7% YoY, of which GMS contributed about $1.4B of incremental sales. Year-ago Q3 was $41.35B.",
+        "evidence_ids": [
+          "F.01",
+          "F.37",
+          "Q.041",
+          "F.69"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus is $44.04B, implying +6.5% YoY. Q2 consensus was $47.24B against $47.86B actual.",
+        "evidence_ids": [
+          "M.01",
+          "F.70",
+          "N.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "GMS closed Sept 4, 2025, so only about one month of its sales is incremental in Q3, versus a full $1.4B in Q2 (my estimate: ~$0.5B). A rough bridge uses Primary growth near Q2's +1.5%, Other ex-GMS growth holding at Q2's roughly +$0.5B, plus FX and Mingledorff's. It lands near $43.0-43.5B, below consensus. Revenue looks like the line where risk to expectations is largest unless comps accelerate. Verify the bridge, since I cannot see the consensus build.",
+        "evidence_ids": [
+          "F.69",
+          "F.70",
+          "Q.041",
+          "Q.046",
+          "Q.021",
+          "Q.022",
+          "Q.035"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Diluted EPS (GAAP)",
+      "period": "Fiscal Q3 2026",
+      "last_reported": {
+        "text": "Q2 diluted EPS was $4.79 vs $4.58 (+4.6%). Year-ago Q3 was $3.62.",
+        "evidence_ids": [
+          "F.09",
+          "F.10",
+          "F.41",
+          "F.71"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus is $3.95, implying +9.2% against the $3.62 GAAP base. The basis (GAAP or adjusted) is not disclosed.",
+        "evidence_ids": [
+          "M.01",
+          "F.72"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Q2 EPS included roughly $0.52 of after-tax refund benefit (my arithmetic), and underlying EPS was down about 6-7% YoY. Consensus asks for underlying growth of ~9% in Q3 with little refund help (only ~$45M of the $730M went to inventory cost and flows through COGS as inventory sells). MarketBeat quotes Q2 'EPS' of $4.92 vs the 10-Q's GAAP $4.79, so the consensus basis may differ from GAAP. Confirm the basis before judging a beat or miss.",
+        "evidence_ids": [
+          "Q.039",
+          "Q.011",
+          "Q.044",
+          "N.01",
+          "F.71",
+          "M.01"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Comparable sales, transactions and ticket",
+      "period": "Fiscal Q3 2026",
+      "last_reported": {
+        "text": "Q2 comps were +1.7% (transactions -1.0%, ticket +2.8%, FX ~+25bp). The first-half comp was +1.2%, which implies roughly +0.5-0.7% in Q1.",
+        "evidence_ids": [
+          "Q.040",
+          "Q.042",
+          "Q.046"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Comps are ticket-led, with transactions down for a second straight period (-1.2% in H1). Model +1-2% with negative transactions and a shrinking FX help. The year-ago Q3 comp base is not in the sources. Management attributes demand to smaller repair and maintenance projects amid housing affordability pressure.",
+        "evidence_ids": [
+          "Q.042",
+          "Q.046",
+          "Q.047"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Gross margin",
+      "period": "Fiscal Q3 2026",
+      "last_reported": {
+        "text": "Q2 gross margin was 33.7% vs 33.4%, including the refund benefit. H1 gross margin was 33.4% vs 33.6%.",
+        "evidence_ids": [
+          "Q.040",
+          "Q.045",
+          "Q.043",
+          "Q.047"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Excluding the ~143bp refund effect (my arithmetic), Q2 gross margin was about 32.3%, roughly 110bp below last year on fuel, energy, input costs and GMS mix. With little refund in Q3, the YoY margin comparison should turn negative unless costs ease. The year-ago Q3 gross margin is not in the sources.",
+        "evidence_ids": [
+          "Q.039",
+          "Q.040",
+          "Q.043",
+          "Q.047"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "SG&A rate and operating margin",
+      "period": "Fiscal Q3 2026",
+      "last_reported": {
+        "text": "Q2 SG&A was $8.42B (+8.5%) at 17.6% of sales vs 17.1%. Primary-segment SG&A grew ~5.3% ($7.77B vs $7.38B) against a +1.7% comp. Operating margin was 14.3%.",
+        "evidence_ids": [
+          "Q.043",
+          "Q.021",
+          "F.53"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "SG&A deleverage is the second leg of the underlying margin squeeze. Primary SG&A growth is running well above comps, and amortization in Other rose to $125M from $87M. Watch whether SG&A growth stays above sales growth.",
+        "evidence_ids": [
+          "Q.043",
+          "Q.021",
+          "Q.022",
+          "Q.044"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Other segment (SRS/GMS/HVAC) sales and operating income",
+      "period": "Fiscal Q3 2026",
+      "last_reported": {
+        "text": "Q2 Other sales were $5.055B (vs $3.120B) and operating income was $247M (vs $201M). Q2 Other D&A was $236M.",
+        "evidence_ids": [
+          "Q.021",
+          "Q.022"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Growth should decelerate sharply from +62% as GMS enters the base (about two months of Q3 were already included last year). Mingledorff's (HVAC, ~$1.1B purchase) adds a full quarter, though management called its Q2 contribution immaterial. Margin was ~4.9% in Q2 vs 6.4%, and the roofing mix shifted to 39% of Other sales. Expect continued dilution unless roofing recovers.",
+        "evidence_ids": [
+          "Q.021",
+          "Q.022",
+          "Q.024",
+          "Q.035",
+          "Q.036"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Interest, other and tax rate",
+      "period": "Fiscal Q3 2026",
+      "last_reported": {
+        "text": "Q2 interest expense was $583M, and interest and other, net was $524M vs $550M, helped by interest received on IEEPA refunds. The effective tax rate was 24.5% (H1 24.7%).",
+        "evidence_ids": [
+          "Q.044",
+          "Q.011",
+          "Q.048"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The refund-interest tailwind should fade. $1.75B of senior notes mature in September 2026 (2.125% $1.0B and 4.95% $0.75B), alongside $4.2B of commercial paper at 3.8% and no buybacks, so debt paydown is the stated priority. Model a tax rate of about 24.5-24.7%.",
+        "evidence_ids": [
+          "K.221",
+          "Q.029",
+          "Q.054",
+          "Q.044",
+          "Q.048"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Operating cash flow, capex and working capital",
+      "period": "Fiscal Q3 2026 / FY2026",
+      "last_reported": {
+        "text": "H1 operating cash flow was $11.42B and capex $1.72B (flat). Payables rose $2.5B (accounts payable and accrued expenses change). Inventory was $26.85B vs $25.82B at Feb 1, and turns were 4.5x vs 4.6x.",
+        "evidence_ids": [
+          "F.17",
+          "F.19",
+          "Q.013",
+          "Q.010",
+          "Q.037"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Full-year capex of ~$4B implies about $2.3B in H2, back-half weighted. H1 operating cash flow was flattered by vendor-payment timing and by tax-payment timing (the Q4 FY24 deferral hit Q1 FY25). Expect some working-capital normalization, so do not extrapolate the +27% growth.",
+        "evidence_ids": [
+          "Q.052",
+          "Q.055",
+          "Q.013"
+        ],
+        "evidence_type": "proxy"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Capital expenditures",
+      "guidance": "About $4B in fiscal 2026 (~2.5% of projected net sales); H1 capex was $1.7B.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "The 10-Q repeats the 10-K plan of roughly $4B of capex in fiscal 2026, adjustable to the economic environment.",
+        "evidence_ids": [
+          "Q.052",
+          "K.154"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Share repurchases",
+      "guidance": "No plans to resume repurchases in fiscal 2026 as the company seeks to reduce debt; ~$11.7B of authorization remains.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "The 10-Q repeats the 10-K stance that repurchases (paused since March 2024) will not resume in fiscal 2026 while debt is reduced.",
+        "evidence_ids": [
+          "Q.051",
+          "Q.053",
+          "K.153"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Quarterly dividend",
+      "guidance": "$2.33 per share per quarter (+1.3%), subject to Board declaration.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "The February 2026 dividend increase to $2.33 is reiterated; H1 dividends paid were $4.6B.",
+        "evidence_ids": [
+          "Q.052",
+          "Q.037"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "New store openings",
+      "guidance": "Complete the ~80-store plan in fiscal 2027, then open ~15-20 stores per year.",
+      "period": "FY2027 and beyond",
+      "status": "unclear",
+      "claim": {
+        "text": "The 10-K sets the store plan; the 10-Q does not restate it but reports 3 openings in Q2 and 2,364 stores at Aug 2.",
+        "evidence_ids": [
+          "K.032",
+          "Q.038"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "The stock rose 3.6% on Oct 29 on value-focused institutional buying, and closed at $329.20 on Oct 30. Market cap is about $318.6B and the forward P/E about 20.7x.",
+      "evidence_ids": [
+        "N.03",
+        "N.04",
+        "N.07",
+        "N.02"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Options imply a ±7.2% move (as of Oct 30), about 3.4x the ±2.1% average closing move over the last 8 reports. Expectations for volatility are elevated relative to history.",
+      "evidence_ids": [
+        "M.03",
+        "M.04"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "CONTRADICTION: MarketBeat (dated 2026-10-29) says HD reported Q2 EPS of $4.92 vs a $4.73 consensus (prior year $4.68), on revenue of $47.86B vs $47.24B. The 10-Q (filed 2026-08-25) reports GAAP diluted EPS of $4.79 (prior year $4.58). MarketBeat is newer, but the filing is the more reliable tier for reported GAAP and wins. The $4.92 is probably an adjusted figure, but its definition is not in the sources. Revenue matches the filing.",
+      "evidence_ids": [
+        "N.01",
+        "F.09",
+        "F.10",
+        "Q.011"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Analysts tracked by TradingKey are rated Buy with an average price target of $372.86 (high $425, low $255), about 13% above the Oct 30 close by my arithmetic. Beat/miss history and analyst actions were unavailable.",
+      "evidence_ids": [
+        "N.03",
+        "N.04",
+        "M.05"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Business Insider (Oct 28) reports HD joined Anthropic's Project Glasswing security initiative but was not in the first wave of access. This is a cyber and AI-agent headline with no direct earnings read-through.",
+      "evidence_ids": [
+        "N.09"
+      ],
+      "evidence_type": "proxy"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Is Q2's EPS growth real earnings power or a one-off tariff refund?",
+      "bull": {
+        "text": "Reported Q2 EPS rose 4.6% and revenue beat the $47.24B consensus by about $0.6B. Comps accelerated to +1.7% from +1.0% a year ago, with ticket +2.8% and online +11%.",
+        "evidence_ids": [
+          "F.41",
+          "N.01",
+          "Q.040",
+          "Q.041"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Excluding the $685M refund, my arithmetic puts Q2 operating income down ~6% and EPS down ~7%. SG&A grew 8.5% vs sales +5.7%, and H1 operating income was only +1.1% even with the refund.",
+        "evidence_ids": [
+          "Q.039",
+          "Q.043",
+          "F.44",
+          "Q.011"
+        ],
+        "evidence_type": "proxy"
+      },
+      "what_settles_it": "Q3 gross margin and SG&A rate with no meaningful refund, EPS vs $3.95, and management quantifying any remaining refund benefit and where it sits in the P&L."
+    },
+    {
+      "question": "Can consensus revenue growth of +6.5% be met as the GMS acquisition laps?",
+      "bull": {
+        "text": "Q2 revenue beat consensus. Mingledorff's (closed May 11) contributes a full quarter, Other ex-GMS sales grew about $0.5B in Q2, and comps are improving.",
+        "evidence_ids": [
+          "N.01",
+          "Q.035",
+          "Q.021",
+          "Q.022",
+          "Q.040"
+        ],
+        "evidence_type": "proxy"
+      },
+      "bear": {
+        "text": "GMS (closed Sept 4, 2025) was $1.4B of incremental Q2 sales but only roughly $0.5B incremental in Q3 (my estimate). A rough bridge gives ~$43.0-43.5B vs $44.04B consensus unless comps run well above 2%.",
+        "evidence_ids": [
+          "Q.041",
+          "Q.046",
+          "F.69",
+          "F.70"
+        ],
+        "evidence_type": "proxy"
+      },
+      "what_settles_it": "Q3 net sales vs $44.04B, Other segment sales, and whether the comp is above ~2% with positive transactions."
+    },
+    {
+      "question": "Is the strong cash flow sustainable?",
+      "bull": {
+        "text": "H1 free cash flow was $9.70B vs $7.25B, funding $4.6B of dividends, $3.0B of long-term debt repayment and $1.3B of acquisitions. Total debt is falling and capex is flat.",
+        "evidence_ids": [
+          "F.65",
+          "F.66",
+          "Q.037",
+          "Q.014",
+          "Q.010"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "The H1 operating cash flow gain came from payables and tax timing. Inventory is up ~4% with turns at 4.5x vs 4.6x. Customer receivables are $3.56B vs $2.59B at Feb 1, and supplier-finance obligations are $542M vs $414M. ROIC fell to 24.8% from 27.2%.",
+        "evidence_ids": [
+          "Q.055",
+          "Q.010",
+          "Q.015",
+          "Q.017",
+          "Q.038"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q3 operating cash flow, payables and inventory trends, and whether debt reduction continues so buybacks can be discussed for FY2027."
+    },
+    {
+      "question": "Do SRS/GMS add growth or dilute returns?",
+      "bull": {
+        "text": "Other sales rose 62% and operating income rose 23% to $247M. The new HVAC vertical broadens the platform and acquired intangibles amortize over long lives.",
+        "evidence_ids": [
+          "Q.021",
+          "Q.022",
+          "Q.020",
+          "Q.035"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Other operating margin fell to ~4.9% from 6.4% and roofing dropped to 39% of sales from 62%. Other goodwill is $14.3B, and Other intangible amortization rose to $125M from $87M.",
+        "evidence_ids": [
+          "Q.021",
+          "Q.022",
+          "Q.024",
+          "Q.027"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q3 Other segment operating margin, disclosure of organic growth ex-acquisitions, and roofing demand commentary."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "bull",
+      "description": {
+        "text": "Comps of 2%+ with transactions stabilizing and ticket holding, with SRS sales near consensus. Underlying margins hold better than feared and EPS lands at or above ~$4.05 with revenue at or above $44B.",
+        "evidence_ids": [
+          "M.01",
+          "Q.040",
+          "Q.042"
+        ],
+        "evidence_type": "proxy"
+      },
+      "triggers": [
+        "Comp +2% or better with transactions at or above -0.5%",
+        "Gross margin ex-refund stabilizing YoY",
+        "SG&A growth at or below sales growth",
+        "Constructive demand and cost commentary on Q4 and FY2027"
+      ]
+    },
+    {
+      "name": "base",
+      "description": {
+        "text": "Comps of +1-2% with negative transactions, revenue roughly $43-44B (modestly under or near consensus), and EPS around $3.85-4.00 against $3.95. Underlying margin pressure is partly masked by a small residual refund benefit and lower interest costs. Reaction hinges on tone around demand and costs rather than the headline.",
+        "evidence_ids": [
+          "M.01",
+          "Q.040",
+          "Q.046",
+          "Q.039"
+        ],
+        "evidence_type": "proxy"
+      },
+      "triggers": [
+        "Ticket-led comps near the H1 +1.2% to Q2 +1.7% range",
+        "Other segment growth decelerating as GMS laps",
+        "Capex and buyback stance unchanged",
+        "Working-capital cash flow normalizing"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Comps under 1% with transactions worse than -1%, SRS roughly flat on margin dilution, SG&A deleverage continuing and no refund help. Revenue falls under ~$43B and EPS below ~$3.85, which would likely be penalized given the ±7.2% implied move.",
+        "evidence_ids": [
+          "M.01",
+          "M.03",
+          "Q.043",
+          "Q.021"
+        ],
+        "evidence_type": "proxy"
+      },
+      "triggers": [
+        "Comp below +1% or transactions below -1.5%",
+        "Gross margin down more than ~100bp YoY",
+        "Other segment margin below ~5%",
+        "Cautious commentary on consumer and housing, or new tariff costs"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "Earnings quality: Q2 results include about $685M of non-recurring IEEPA refunds, with the vast majority of refunds already received. Q3 lacks that help while consensus EPS requires +9.2% growth.",
+        "evidence_ids": [
+          "Q.039",
+          "F.72"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Leadership transition: the CFO is signing as Interim Principal Executive Officer and the 10-Q now flags organizational changes in senior leadership. Strategic and guidance continuity is uncertain.",
+        "evidence_ids": [
+          "Q.058",
+          "Q.064",
+          "Q.007"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Cost pressures: management cites incremental fuel, energy and other product input costs that offset much of the refund benefit in gross margin.",
+        "evidence_ids": [
+          "Q.043",
+          "Q.047"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Demand: customers favor smaller repair and maintenance projects, with larger discretionary projects pressured by interest rates and housing affordability. Comparable transactions are declining (-1.0% in Q2).",
+        "evidence_ids": [
+          "Q.042",
+          "Q.046",
+          "K.113"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Tariff and trade policy uncertainty remains after the Supreme Court IEEPA decision, including additional tariffs under other authority. Management says it cannot predict the ultimate impact.",
+        "evidence_ids": [
+          "Q.039",
+          "K.120"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Working-capital reversal and credit exposure: H1 cash flow benefited from payables timing, while customer receivables rose to $3.56B (from $2.59B at Feb 1) and supplier-finance obligations to $542M. Pro and trade-credit customers carry default risk.",
+        "evidence_ids": [
+          "Q.055",
+          "Q.015",
+          "Q.017",
+          "K.114"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Integration and control risk: SRS, GMS and Mingledorff's drive dilutive margins, rising intangible amortization and large goodwill. GMS was excluded from the 10-K ICFR assessment, and finance-system migration is ongoing.",
+        "evidence_ids": [
+          "Q.021",
+          "Q.022",
+          "Q.027",
+          "K.265",
+          "Q.058"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Expectation risk: the options-implied move of ±7.2% is far above the ±2.1% historical average, so a miss on quality (not just headline) could produce an outsized reaction.",
+        "evidence_ids": [
+          "M.03",
+          "M.04"
+        ],
+        "evidence_type": "estimate"
+      },
+      "is_new": true
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "How much of the $730M of IEEPA refunds and related interest hit each quarter and line item, how much remains, and what is Q3 gross margin and EPS excluding them?",
+      "why": {
+        "text": "Q2 COGS benefited by about $685M, which flatters margin and EPS, and consensus Q3 EPS of $3.95 needs a clean read of the underlying trend.",
+        "evidence_ids": [
+          "Q.039",
+          "Q.044",
+          "M.01"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What are quarter-to-date comps and the transaction versus ticket trend, and what would turn transactions positive?",
+      "why": {
+        "text": "Transactions have been negative for several periods (-1.0% in Q2, -1.2% in H1) and growth is ticket-led.",
+        "evidence_ids": [
+          "Q.040",
+          "Q.046"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "Why is SG&A growing faster than sales (Primary SG&A +5.3% vs comp +1.7%) and what is the plan for leverage?",
+      "why": {
+        "text": "SG&A deleverage drove the operating margin decline in Q2.",
+        "evidence_ids": [
+          "Q.043",
+          "Q.021"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is the CEO succession status and timeline, and does it change strategy, capital allocation or guidance?",
+      "why": {
+        "text": "The CFO is Interim Principal Executive Officer and the 10-Q newly references senior-leadership organizational changes.",
+        "evidence_ids": [
+          "Q.058",
+          "Q.064",
+          "Q.007"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is organic growth and margin in SRS, GMS and the HVAC vertical, and when does the roofing mix recover?",
+      "why": {
+        "text": "Other margin fell to ~4.9% from 6.4% and roofing dropped to 39% of Other sales from 62%.",
+        "evidence_ids": [
+          "Q.021",
+          "Q.022",
+          "Q.024"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How much of the H1 cash flow benefit was timing in payables and taxes, and what should we expect for H2 operating cash flow and inventory?",
+      "why": {
+        "text": "Operating cash flow grew 27% on working-capital timing while inventory is up and turns slipped to 4.5x.",
+        "evidence_ids": [
+          "Q.055",
+          "Q.010",
+          "Q.037"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What leverage level is needed to resume buybacks, and how should we think about FY2027 capital allocation given ROIC of 24.8% and equity build?",
+      "why": {
+        "text": "Repurchases are paused through fiscal 2026 to reduce debt, and ROIC fell on higher average equity.",
+        "evidence_ids": [
+          "Q.051",
+          "Q.038"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How are you handling cost inflation in fuel, energy and inputs and any new tariffs, and what pricing is assumed in H2?",
+      "why": {
+        "text": "Cost pressures offset much of the refund benefit, and tariff policy remains in flux after the Supreme Court ruling.",
+        "evidence_ids": [
+          "Q.043",
+          "Q.039",
+          "K.120"
+        ],
+        "evidence_type": "reported"
+      }
+    }
+  ],
+  "data_gaps": [
+    "No FY2026 outlook for sales, comps, margin or EPS is in the filings provided (only capex, dividend and buyback intent). The Q2 earnings release and call, and any guidance, are not in the sources.",
+    "Year-ago Q3 comparable sales, gross margin, SG&A, operating margin and Primary/Other split are not in the sources; only year-ago revenue ($41.35B) and EPS ($3.62) are.",
+    "The quarterly GMS contribution already in the year-ago Q3 base is not disclosed, so the ~$0.5B incremental estimate and the revenue bridge are my approximations.",
+    "The basis of consensus EPS (GAAP vs adjusted) is unknown. MarketBeat's $4.92 Q2 'EPS' cannot be reconciled to the 10-Q's GAAP $4.79, and its definition is not available.",
+    "The exact timing and line-item split of IEEPA refunds and refund interest is not disclosed, and nor is the amount of remaining refunds beyond 'the vast majority' received.",
+    "Beat/miss record, analyst actions and price-target history are unavailable (FMP refused the request). Only a TradingKey average target is available, and there is no whisper EPS.",
+    "The report time is not in Finnhub. Yahoo (Oct 28) says before the market opens on Nov 17.",
+    "The fiscal-period label differs by source: Finnhub says 'fiscal Q3 2027' while the company's fiscal 2026 ends Jan 31, 2027.",
+    "The XBRL long-term debt fact for Aug 2, 2026 is missing (F.22). Debt of about $48.6B is computed from the balance sheet (current installments plus long-term).",
+    "The NAW article (dated 2026-10-18) describes a quarter ended May 4 with comps of -0.3%. That matches last year's Q1, not the current fiscal year, so it was excluded as stale and mismatched.",
+    "No new company filings, 8-Ks or guidance changes since the Aug 25 10-Q are in the sources.",
+    "Market data: signals figures are N/A because FMP refused the request (FMP refused https://financialmodelingprep.com/stable/grades (HTTP 402): Premium Query Parameter: 'Special Endpoint : This value set for 'symbol' is not available under your current subscription please visit our subscription page to upgrade your plan at https://financialmo Check FMP_API_KEY in .env and the FMP plan.).",
+    "Earnings call transcript not analyzed: Alpha Vantage has no transcript for HD 2027Q2; and for the quarter before: Alpha Vantage has no transcript for HD 2027Q1."
+  ],
+  "sources": {
+    "Q.007": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 — FORWARD-LOOKING STATEMENTS",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.010": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.011": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Contingencies (Note 9)",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.013": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Contingencies (Note 9)",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.014": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Contingencies (Note 9)",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.015": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Basis of Presentation",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.017": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Supplier Finance Program",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.020": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Segment Reporting",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.021": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Segment Reporting",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.022": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.024": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.027": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Leases",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.029": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Short-Term Debt",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.035": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — Mingledorff's Acquisition",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.036": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · Financial Statements — GMS Acquisition",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.037": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.038": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — EXECUTIVE SUMMARY",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.039": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — Tariffs and Other Trade Policy Matters",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.040": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — RESULTS OF OPERATIONS",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.041": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — RESULTS OF OPERATIONS",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.042": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.043": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.044": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — Our operating expenses are composed of SG&A and depreciation and amortization.",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.045": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — Diluted Earnings per Share",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.046": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — Diluted Earnings per Share",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.047": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.048": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — Our operating expenses are composed of SG&A and depreciation and amortization.",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.051": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — LIQUIDITY AND CAPITAL RESOURCES",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.052": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — LIQUIDITY AND CAPITAL RESOURCES",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.053": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — LIQUIDITY AND CAPITAL RESOURCES",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.054": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — DEBT",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.055": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 · MD&A — Operating Activities",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.058": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 — Item 4. Controls and Procedures.",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "Q.064": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-25 — SIGNATURES",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "K.032": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-18 · Business — Store Experience",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+      "as_of": "2026-03-18"
+    },
+    "K.113": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-18 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+      "as_of": "2026-03-18"
+    },
+    "K.114": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-18 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+      "as_of": "2026-03-18"
+    },
+    "K.120": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-18 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+      "as_of": "2026-03-18"
+    },
+    "K.153": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-18 · MD&A — LIQUIDITY AND CAPITAL RESOURCES",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+      "as_of": "2026-03-18"
+    },
+    "K.154": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-18 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+      "as_of": "2026-03-18"
+    },
+    "K.221": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-18 · Financial Statements — Short-Term Debt",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+      "as_of": "2026-03-18"
+    },
+    "K.265": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-18 — MANAGEMENT’S REPORT ON INTERNAL CONTROL OVER FINANCIAL REPORTING",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+      "as_of": "2026-03-18"
+    },
+    "K.286": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-18 — March 18, 2026",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026019436/hd-20260201.htm",
+      "as_of": "2026-03-18"
+    },
+    "F.01": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2026-08-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "F.09": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2026-08-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "F.10": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-08-03",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "F.13": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating income — quarter ended 2026-08-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "F.17": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow — six months ended 2026-08-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "F.19": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure — six months ended 2026-08-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828026058715/hd-20260802.htm",
+      "as_of": "2026-08-25"
+    },
+    "F.37": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — quarter ended 2026-08-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.41": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS growth — quarter ended 2026-08-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.43": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating income growth — quarter ended 2026-08-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.44": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating income growth — six months ended 2026-08-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.45": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow growth — six months ended 2026-08-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.53": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2026-08-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.55": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2025-08-03",
+      "url": null,
+      "as_of": null
+    },
+    "F.65": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — six months ended 2026-08-02",
+      "url": null,
+      "as_of": null
+    },
+    "F.66": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — six months ended 2025-08-03",
+      "url": null,
+      "as_of": null
+    },
+    "F.69": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-11-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828025053868/0001628280-25-053868-index.htm",
+      "as_of": "2025-11-25"
+    },
+    "F.70": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q3 2027",
+      "url": null,
+      "as_of": null
+    },
+    "F.71": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-11-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/354950/000162828025053868/0001628280-25-053868-index.htm",
+      "as_of": "2025-11-25"
+    },
+    "F.72": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q3 2027",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.03": {
+      "kind": "market",
+      "citation": "Market data — Options-implied move",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "M.05": {
+      "kind": "market",
+      "citation": "Market data — Expectation signals",
+      "url": null,
+      "as_of": null
+    },
+    "N.01": {
+      "kind": "news",
+      "citation": "marketbeat.com, 2026-10-29 — Home Depot (NYSE:HD) Stock Unloaded by Rep. Pete Sessions",
+      "url": "https://www.marketbeat.com/instant-alerts/congress-home-depot-nyse-hd-stock-unloaded-by-rep-pete-sessions-2026-10-29",
+      "as_of": "2026-10-29"
+    },
+    "N.02": {
+      "kind": "news",
+      "citation": "finance.yahoo.com, 2026-10-28 — Here's What to Expect From Home Depot's Next Earnings Report",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/heres-expect-home-depots-next-103318545.html",
+      "as_of": "2026-10-28"
+    },
+    "N.03": {
+      "kind": "news",
+      "citation": "tradingkey.com, 2026-10-29 — Home Depot Inc Stock (HD) Closed Up by 3.60% on Oct 29: A Full Analysis",
+      "url": "https://www.tradingkey.com/news/market-movers/262255085-market-movers-hd-20261029",
+      "as_of": "2026-10-29"
+    },
+    "N.04": {
+      "kind": "news",
+      "citation": "ca.finance.yahoo.com, 2026-10-29 — The Home Depot, Inc. (HD) Stock Price, News, Quote & History - Yahoo Finance",
+      "url": "https://ca.finance.yahoo.com/quote/HD/latest-news",
+      "as_of": "2026-10-29"
+    },
+    "N.07": {
+      "kind": "news",
+      "citation": "stockstory.org, 2026-10-30 — 1 cash-producing stock on our buy list and 2 that underwhelm - StockStory",
+      "url": "https://stockstory.org/us/stocks/nyse/hd/news/buy-or-sell/1-cash-producing-stock-on-our-buy-list-and-2-that-underwhelm",
+      "as_of": "2026-10-30"
+    },
+    "N.09": {
+      "kind": "news",
+      "citation": "businessinsider.com, 2026-10-28 — Home Depot Wants Your AI Agent to Show Some ID First - Business Insider",
+      "url": "https://www.businessinsider.com/home-depot-chief-open-ai-agents-muse-instinct-2026-10",
+      "as_of": "2026-10-28"
+    }
+  },
+  "check_notes": []
+}

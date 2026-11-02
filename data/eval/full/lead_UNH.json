@@ -1,0 +1,1471 @@
+{
+  "ticker": "UNH",
+  "company_name": "UNITEDHEALTH GROUP INC",
+  "report_generated_at": "2026-11-01T14:16:35+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-08-10",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000197/unh-20260630.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-03-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000062/unh-20251231.htm"
+    }
+  ],
+  "earnings_call": "Q3 FY2026 earnings call (2026-10-13)",
+  "current_report": "8-K filed 2026-10-13: Item 2.02 results of operations (earnings release); Item 9.01 financial statements and exhibits",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$2.29",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$113.43B",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2027-01-25 report. Paid lookup not made: next report is 85 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "implied move: no live implied move yet (EarningsWatcher has no confirmed report date)."
+    },
+    "historical_move": {
+      "value": "±8.1% average closing move over the last 8 reports (2025-01-16 to 2026-10-13)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/unh-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": "3 beats, 1 misses in the last 4 quarters, average surprise +12.3%",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "Finnhub earnings surprises",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "analyst_actions": {
+      "value": "Last 30 days, newest first: Morgan Stanley maintained Overweight (2026-10-27); Wells Fargo maintained Overweight (2026-10-27); Mizuho maintained Outperform (2026-10-22); RBC Capital maintained Outperform (2026-10-20); Bernstein maintained Outperform (2026-10-16); JP Morgan maintained Overweight (2026-10-16); TD Cowen maintained Hold (2026-10-15); Baird maintained Neutral (2026-10-14); Piper Sandler maintained Overweight (2026-10-14); Barclays maintained Overweight (2026-10-14); TD Cowen maintained Hold (2026-10-09)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP grades",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "price_target": {
+      "value": "$478.68, +17.6% vs current $406.97",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP price target consensus",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "The Q4 2026 report is due 2027-01-25 after the close. Consensus is EPS $2.29 and revenue $113.43B. UNH has moved an average ±8.1% on its last 8 reports, and has 3 beats and 1 miss in the last 4 quarters (average surprise +12.3%). No options-implied move exists yet.",
+      "evidence_ids": [
+        "M.01",
+        "M.04",
+        "M.05",
+        "M.03"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Q3 2026 (reported Oct 13): revenue $112.7B (vs $113.2B a year earlier), earnings from operations $6.56B (vs $4.32B), GAAP EPS $4.56 (vs $2.59) and adjusted EPS $4.69 (vs $2.92). The medical care ratio was 88.4% (vs 89.9%) and the operating cost ratio 12.8% (vs 13.5%).",
+      "evidence_ids": [
+        "E.005",
+        "E.011",
+        "E.023",
+        "E.025"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "FY2026 guidance is now GAAP EPS of at least $19.50 and adjusted EPS of at least $20.50. Nine-month adjusted EPS is $18.30 and GAAP EPS $17.50. That implies Q4 adjusted EPS of at least about $2.20 and GAAP EPS of at least about $2.00. The $2.29 consensus is only about $0.09 (roughly 4%) above the implied adjusted floor. The guide is an 'at least' floor, not a point estimate.",
+      "evidence_ids": [
+        "E.044",
+        "E.025",
+        "M.01"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "The consensus-implied -11.7% Q4 EPS change in the data pack compares $2.29 with Q3 2025 diluted GAAP EPS of $2.59, so the base is wrong. Q4 2025 GAAP EPS was only about $0.02 (FY2025 $13.23 less nine months $13.21). A like-for-like Q4 2025 adjusted EPS is not in the filings I have.",
+      "evidence_ids": [
+        "F.71",
+        "F.72",
+        "F.27",
+        "E.025"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q3 quality caveat: the 88.4% MCR included $610M of net favorable prior-period reserve development on 2026 dates of service, about 70 bps of Q3 premiums. Excluding it, the Q3 MCR is about 89.1%. H1 2026 already had $1.25B of favorable prior-year development, vs $320M in H1 2025.",
+      "evidence_ids": [
+        "E.006",
+        "E.011",
+        "E.023",
+        "Q.024"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Management's own Q4 colour is a step down. The guide reflects Q3 performance 'balanced by expected investments in the final months of the year'. The CFO said utilization typically steps up in the back half, especially in risk-based businesses. Optum Health pointed to normal risk seasonality plus added technology, AI and clinician-workflow investment.",
+      "evidence_ids": [
+        "C.015",
+        "C.014",
+        "C.085"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "Management called $20.50 'a solid run rate' and said consensus 2027 'may understate the opportunity'. It sees the lower end of the 13%-16% long-term EPS growth range as a reasonable 2027 starting point, and promised a fuller 2027 outlook before year-end. That outlook could land before the Jan 25 print.",
+      "evidence_ids": [
+        "C.015",
+        "C.019",
+        "C.096"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "The stock is $406.97 against a consensus price target of $478.68 (+17.6%). Every analyst rating action in the last 30 days was 'maintained', with no downgrades listed, and TD Cowen held at Hold.",
+      "evidence_ids": [
+        "M.07",
+        "M.06"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Adjusted diluted EPS",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 adjusted EPS was $4.69 (GAAP $4.56). Nine-month adjusted EPS was $18.30.",
+        "evidence_ids": [
+          "E.025"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus Q4 EPS is $2.29. It is unclear whether this is GAAP or adjusted; it sits close to the adjusted floor.",
+        "evidence_ids": [
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "The floor implied by the guide is about $2.20 adjusted (about $1.99B of adjusted net earnings, more than $18,585M less $16,598M), so consensus sits just above it. Given the 3-of-4 beat record and the 'at least' wording, I see mild upside skew to $2.30-$2.60. A print below $2.20 would need a clear MCR miss, a larger Optum Health loss, or a reserve release that does not repeat.",
+        "evidence_ids": [
+          "E.043",
+          "E.044",
+          "M.01",
+          "M.05"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Consolidated medical care ratio",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 MCR was 88.4% (medical costs $76,982M on premiums $87,078M), about 89.1% ex the $610M release. Q2 was 86.7%.",
+        "evidence_ids": [
+          "E.023",
+          "E.011",
+          "E.006",
+          "Q.050"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The guide floor of at least $20.50 adjusted EPS, less $18.30 adjusted EPS for the first nine months, implies Q4 adjusted EPS of at least about $2.20. Consensus for Q4 is $2.29. Q3 MCR was 88.4% and included $610M of net favorable reserve development. Q4 2025 MCR was about 92.4% on reported figures (derived from full-year medical costs of $313,995M on premiums of $352,229M, less the nine-month figures of $231,954M on $263,418M). That quarter also included a $623M loss-contract reserve in medical costs and a $122M premium reduction. A step up in Q4 MCR from Q3's 88.4% therefore looks consistent with the guide floor. A specific Q4 MCR and EPS model is not supported by the filed figures.",
+        "evidence_ids": [
+          "E.043",
+          "E.044",
+          "E.023",
+          "E.006",
+          "K.129",
+          "K.120",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Operating cost ratio",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 operating cost ratio was 12.8% vs 13.5% in Q3 2025. Operating costs were $14,369M on revenue of $112,694M.",
+        "evidence_ids": [
+          "E.011",
+          "E.023"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "I model about 13.5% for Q4, since management flagged accelerating investment in technology, AI, process and people in the last months of the year. The ratio has been low in Q3 and is the main lever on Q4 EPS. Risk is a higher ratio, which would force an even lower MCR to hold the guide.",
+        "evidence_ids": [
+          "C.015",
+          "C.016",
+          "E.012",
+          "C.085"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Total revenue",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 revenue was $112,694M, with premiums of $87,078M. UnitedHealthcare revenue was $86.3B and Optum Health $22.9B (-10% year over year).",
+        "evidence_ids": [
+          "E.023",
+          "E.033",
+          "E.016"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus Q4 revenue is $113.43B. That is about 0.7% above Q3's $112.69B.",
+        "evidence_ids": [
+          "M.01",
+          "E.023"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Consensus needs sequential growth while risk-based commercial members (7.575M, down from 8.44M a year ago), Medicare Advantage and Medicaid people served are shrinking and Optum Health revenue is falling about 10% year over year. I see mild downside risk to revenue, but revenue is not what moves the stock.",
+        "evidence_ids": [
+          "M.01",
+          "E.079",
+          "E.016",
+          "E.014"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Optum Health earnings from operations",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 earnings from operations were $735M (3.2% margin; $588M, 2.6% adjusted) vs $41M a year ago. Nine-month earnings were $3,066M GAAP and $3,074M adjusted.",
+        "evidence_ids": [
+          "E.077",
+          "E.078",
+          "E.016"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "An analyst said the segment EBIT guide implies a 'meaningfully negative' Q4, and the Optum Health CEO did not dispute it. No dollar guide is in the sources. I assume Q4 EBIT of about -$0.3B to $0, a $0.7B-$1.0B swing from Q3. This is the largest identified source of Q4 dispersion; a smaller loss would be a clear positive.",
+        "evidence_ids": [
+          "C.084",
+          "C.085",
+          "E.016"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Medicare Advantage people served",
+      "period": "Q4 2026 / AEP",
+      "last_reported": {
+        "text": "Medicare Advantage people served were 7,605K at Sep 30, up from 7,565K at Jun 30 and down from 8,445K at Dec 31, 2025.",
+        "evidence_ids": [
+          "E.079",
+          "Q.055"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management will not give formal 2027 Medicare Advantage membership guidance until later this year, after the annual enrollment period, and the 2027 plan includes footprint and residual PPO refinements. Medicare Advantage membership was 7.605M at Sept 30, 2026, up from 7.565M at June 30. Watch for the first formal 2027 MA membership outlook.",
+        "evidence_ids": [
+          "C.029",
+          "E.079"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Optum Rx adjusted scripts",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 adjusted scripts were 393M vs 414M a year ago (-5%) and 387M in Q2. Q4 2025 was 424M. Optum Rx earnings from operations rose to $1.718B from $1.549B, which the company attributed to continued biosimilar adoption and operational improvements.",
+        "evidence_ids": [
+          "E.080",
+          "E.017",
+          "E.036"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "If Q4 scripts hold near 393M, they would be down about 7% year over year against 424M, so volume stays a headwind. Overall volumes were down about 5% in Q3, while specialty volumes were up 2.6%. The company attributes earnings growth to biosimilar adoption and operational improvements. External clients are now over 50% of Optum Rx membership.",
+        "evidence_ids": [
+          "E.080",
+          "C.075",
+          "C.012",
+          "E.017"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Debt-to-capital and buybacks",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Debt-to-capital was 41.7% at Sep 30 (41.2% at Jun 30), against a target of about 40% by year-end. Nine-month repurchases were $5.0B and dividends $6.2B. Nine-month operating cash flow was $25.1B.",
+        "evidence_ids": [
+          "E.012",
+          "E.053",
+          "E.031",
+          "E.030"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Reaching 40% needs roughly $5B of net debt paydown at flat equity ($74.3B of debt vs $104.1B of equity). Implied Q4 GAAP net earnings of about $1.8B are below a Q4 dividend of roughly $2.1B, so equity will not help. Expect little buyback in Q4 and a possible new authorization. Treat the Q3 1.2x cash conversion, not H1's 1.6x, as the run-rate guide.",
+        "evidence_ids": [
+          "E.026",
+          "E.027",
+          "E.028",
+          "E.043",
+          "Q.025",
+          "Q.003",
+          "E.012",
+          "C.015"
+        ],
+        "evidence_type": "estimate"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Adjusted diluted EPS",
+      "guidance": "At least $20.50 (raised on Oct 13). The prior range is not stated in the filings I read.",
+      "period": "FY2026",
+      "status": "raised",
+      "claim": {
+        "text": "Adjusted EPS guidance is at least $20.50, up from the prior outlook. The release says it 'raised guidance', and nine-month adjusted EPS is $18.30. The prior range is not given in the primary sources.",
+        "evidence_ids": [
+          "E.005",
+          "E.044"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "GAAP diluted EPS",
+      "guidance": "At least $19.50, with projected net earnings attributable to common shareholders above $17,650M.",
+      "period": "FY2026",
+      "status": "raised",
+      "claim": {
+        "text": "GAAP EPS is guided to at least $19.50, with net earnings above $17,650M. Adjusted earnings exclude about $1.55 of intangible amortization per share and about $0.25 of net portfolio divestiture gains, net of about $0.30 of tax effect.",
+        "evidence_ids": [
+          "E.043",
+          "E.044"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Medicare Advantage margin",
+      "guidance": "Now expected 'near the top end' of the 2%-4% range.",
+      "period": "FY2026",
+      "status": "raised",
+      "claim": {
+        "text": "The Medicare executive said UNH now expects the MA margin near the top of 2%-4%. The reasons given were medical trend and cost management and durable product offerings. Management is also investing in quality, AI and providers.",
+        "evidence_ids": [
+          "C.024"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Core Medicaid margin",
+      "guidance": "2026 is a trough year; core Medicaid margin 'moderately better than negative 1%', better than the forecast range. Return to target margins aspired for by end of 2028.",
+      "period": "FY2026",
+      "status": "raised",
+      "claim": {
+        "text": "Management views 2026 as the trough year for core Medicaid margin, now expected moderately better than negative 1%. The main variable is the timing and adequacy of state funding. Aspiration is rate-level or target margins by 2028.",
+        "evidence_ids": [
+          "C.009",
+          "C.023",
+          "C.068"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Optum Health margin",
+      "guidance": "Long-term target of 6%-8% margin, with a 'strong pace' toward it by 2028. A Q4 EBIT dollar guide is not given.",
+      "period": "2027-2028",
+      "status": "maintained",
+      "claim": {
+        "text": "Optum Health management said 2027 should show a strong pace toward the 6%-8% margin by 2028. Q3 margin was 3.2% GAAP and 2.6% adjusted. The Q4 guide implies a seasonally negative quarter.",
+        "evidence_ids": [
+          "C.081",
+          "E.077",
+          "C.084",
+          "C.085"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "2027 adjusted EPS growth",
+      "guidance": "Lower end of the 13%-16% long-term range is a 'reasonable starting point'. The formal 2027 outlook is promised before year-end.",
+      "period": "FY2027",
+      "status": "new",
+      "claim": {
+        "text": "The CFO said the lower end of 13%-16% is a more reasonable starting point for 2027 and that consensus may understate it. He also said tailwinds include share repurchases and AI, while headwinds include accelerated investment in UnitedHealthcare and Optum Insight.",
+        "evidence_ids": [
+          "C.015",
+          "C.016"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Debt-to-capital ratio",
+      "guidance": "Target about 40.0% by year-end 2026, from 41.7% at Sep 30.",
+      "period": "Year-end 2026",
+      "status": "maintained",
+      "claim": {
+        "text": "Management continues to target a debt-to-capital ratio of about 40% by year-end. It was 41.7% at Sep 30, up from 41.2% at Jun 30.",
+        "evidence_ids": [
+          "E.012",
+          "E.053"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Dividends",
+      "guidance": "Dividends expected to exceed $8B for 2026. $6.2B had been paid through Q3. The annual rate is $9.28 per share.",
+      "period": "FY2026",
+      "status": "unclear",
+      "claim": {
+        "text": "The CFO expects dividends above $8B by year-end, after $6.2B paid year to date. The annual rate was raised to $9.28 per share in June.",
+        "evidence_ids": [
+          "C.015",
+          "Q.025"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Medicare Advantage 4+ Star share",
+      "guidance": "At least 69% of members in 4+ Star plans for 2027 Stars (in line with expectations); expects to approach 75% through 2027 into 2028 vs an industry average of 70%.",
+      "period": "2027 Stars / 2028 payment",
+      "status": "new",
+      "claim": {
+        "text": "At least 69% of MA members are in 4+ Star plans for the 2027 ratings, in line with expectations. Management expects to approach 75% as it moves through 2027 and into 2028, and says Stars investment is accelerating in Q4 and 2027.",
+        "evidence_ids": [
+          "E.014",
+          "C.007",
+          "C.094"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "The Q3 8-K (Oct 13) is newer than the 10-Q (Aug 10) and shows a clear step-up. Earnings from operations were $6.56B in Q3 vs $7.99B in Q2, but the 9-month adjusted EPS of $18.30 and the raised guide of at least $20.50 are new. Note that the 10-Q covers a quarter with a lower MCR (86.7%) than Q3 (88.4%).",
+      "evidence_ids": [
+        "E.023",
+        "E.025",
+        "E.044",
+        "Q.050"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Contradiction on Medicare Advantage membership: the 10-Q (Aug 10) said MA contraction is expected to continue throughout 2026. The newer Q3 8-K table shows MA people served up 40K sequentially (7,565K to 7,605K). The release separately cites a 935,000 contraction since year-end for MA including programs serving complex populations in Medicaid, while the table shows 840K (8,445K to 7,605K). The newer 8-K governs; the 95K gap is plausibly MA-type duals counted in the Medicaid line, but no source reconciles it.",
+      "evidence_ids": [
+        "Q.045",
+        "E.079",
+        "E.014",
+        "Q.055"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Stars: the 8-K says at least 69% of MA members are in 4+ Star plans for 2027 ratings and management expects about 75% later. The prior-year share for UNH is not in the filings, so the size of the decline cannot be stated from primary sources.",
+      "evidence_ids": [
+        "E.014",
+        "C.007"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "On Oct 23 Newsweek reported that UnitedHealth and Humana 2027 Medicare Advantage plan cuts are expected to hit about 1M Americans. A UnitedHealthcare spokesperson said the company is making targeted adjustments to its 2027 plan offerings and is preserving $0 premiums, $0 primary care copays and $0 Tier 1 prescription drug copays.",
+      "evidence_ids": [
+        "N.16"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Sell-side: JPMorgan raised its price target to $524 (Oct 27, Overweight). It notes 13% growth on $20.50 is about $23.17 against $22.62 consensus for 2027, and Raymond James projects $24.00. A TIKR piece (Oct 23) cited $425 as 'up 9% since earnings' at 18.4x forward earnings, though I could not verify that price. The stock is now $406.97.",
+      "evidence_ids": [
+        "N.42",
+        "N.22",
+        "M.07"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "A Seeking Alpha piece (Oct 19) carries a rating downgrade to 'my thesis has played out, I wouldn't chase here'. A Yahoo piece (Oct 23) says stock returned 21.3% over six months to Oct 22, and that the outlook needs Medicare plans to keep recovering and commercial costs to stop running ahead of plan.",
+      "evidence_ids": [
+        "N.72",
+        "N.69"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Peer read-through (filings, not news): Elevance's Oct 21 10-Q still describes elevated medical cost trends in ACA and Medicaid. Centene's Oct 27 10-Q says policy uncertainty may be 'further exacerbating the medical cost trend' and that it took corrective Marketplace pricing on 95% of membership. Neither says trend is accelerating or easing.",
+      "evidence_ids": [
+        "P.002",
+        "P.004",
+        "P.009",
+        "P.010"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Policy: a risk-adjustment bill (H.R. 9544, 52 cosponsors) would bar chart-review and health-risk-assessment diagnosis codes from risk adjustment starting in 2028, fix RADV timelines and pay recovery contractors up to 20% of recoveries (Oct 30). It is only a proposal, but it targets MA coding practices.",
+      "evidence_ids": [
+        "N.32"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "No Moody's, S&P or Fitch action on UNH was found after Oct 13. The last confirmed ratings and outlooks (A2, A+ and A, all negative) are as of June 30. The Q3 10-Q (period ended Sep 30) was not in the sources.",
+      "evidence_ids": [
+        "Q.062",
+        "Q.063"
+      ],
+      "evidence_type": "reported"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Is the 'at least $20.50' guide conservative, or does Q4 face a real step-down?",
+      "bull": {
+        "text": "Consensus Q4 EPS of $2.29 is only about 4% above the $2.20 floor implied by an 'at least' guide. UNH has beaten in 3 of the last 4 quarters (average surprise +12.3%). Q3 adjusted EPS of $4.69 was well above where Q3 started, and management described a 'solid run rate'.",
+        "evidence_ids": [
+          "M.01",
+          "E.044",
+          "M.05",
+          "C.015"
+        ],
+        "evidence_type": "estimate"
+      },
+      "bear": {
+        "text": "Q3 was flattered by $610M of favorable development (about 70 bps of MCR). Q4 carries seasonal utilization, a deeper Optum Health loss, accelerating investment and a no-repeat risk on reserve releases. The guide implies Q4 net earnings of only about $1.8B GAAP vs $4.1B in Q3, so there is little room for another cost surprise.",
+        "evidence_ids": [
+          "E.006",
+          "E.043",
+          "E.025",
+          "C.014",
+          "C.085"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 consolidated MCR (guide-floor-implied about 91%), the operating cost ratio versus 13.5%, the Optum Health Q4 EBIT, and whether prior-period development is again favorable."
+    },
+    {
+      "question": "Is the margin recovery durable, or driven by reserve releases and shrinking exposure?",
+      "bull": {
+        "text": "Management says commercial is stabilizing, Medicaid is moderating and Medicare is better than expected, with MA margin near the top of 2%-4%. Days claims payable were flat at 47.0 (46.2 a year ago), so the release does not look like reserve drawdown.",
+        "evidence_ids": [
+          "C.063",
+          "C.024",
+          "E.011"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Part of the improvement is repricing, benefit cuts, membership shedding and reserve releases, not lower underlying trend. Risk-based commercial members fell to 7.575M from 8.44M and MA members are down since year-end. Commercial trend is still above 11%, above plan, and management says commercial margin recovery will 'stretch out'.",
+        "evidence_ids": [
+          "E.079",
+          "C.008",
+          "C.053",
+          "Q.024"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 MCR ex-development, the sequence of prior-year development in the Q3/Q4 10-Qs and 10-K, and commercial and Medicaid trend commentary."
+    },
+    {
+      "question": "Can 2027 guidance meet the 13%+ bar the company has set?",
+      "bull": {
+        "text": "13% growth on $20.50 is about $23.17 vs $22.62 consensus (JPMorgan, Oct 27). Management called consensus too low and listed repurchases, value-based care and AI as tailwinds. AEP positioning is focused on HMO, C-SNP and D-SNP plans.",
+        "evidence_ids": [
+          "N.42",
+          "C.015",
+          "C.016",
+          "C.006"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Management also flagged accelerating investment in UnitedHealthcare and Optum Insight and an external environment where health benefit funding 'remains pressured'. Only about 69% of members are in 4+ Star plans in the 2027 ratings. Newsweek reported that 2027 MA plan cuts at UnitedHealth and Humana are expected to hit about 1M Americans. The buyback tailwind may be constrained, since debt-to-capital of 41.7% is above the roughly 40% year-end target. The company repurchased $5.0B of stock year to date.",
+        "evidence_ids": [
+          "C.016",
+          "E.014",
+          "N.16",
+          "E.012"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "The pre-year-end 2027 outlook event, post-AEP MA membership, and the Q4 call's 2027 guide."
+    },
+    {
+      "question": "Is sector-wide trend easing or stabilizing at a high level?",
+      "bull": {
+        "text": "UNH management denies trend acceleration ('we are not seeing the dynamics that you are talking about') and reports moderation in government programs and stabilization in commercial.",
+        "evidence_ids": [
+          "C.063",
+          "C.023"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Peers still describe elevated trend: Elevance on ACA morbidity and Medicaid acuity, Centene on policy uncertainty prompting more care-seeking and billing. UNH itself says commercial trend runs 'north of 11%' and is driven by No Surprises Act arbitration awards.",
+        "evidence_ids": [
+          "P.002",
+          "P.009",
+          "C.008",
+          "C.063"
+        ],
+        "evidence_type": "proxy"
+      },
+      "what_settles_it": "Q4 MCRs at peers and UNH, especially commercial and Medicaid, and the CFO's description of Q4 development."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "bull",
+      "description": {
+        "text": "Q4 adjusted EPS lands well above consensus, around $2.70 or higher. MCR is closer to 90.3% than 91%, Optum Health's Q4 loss is small, and the company opens 2027 at or above the low end of 13%-16% (about $23.2 or more). The stock moves toward the $478.68 consensus target.",
+        "evidence_ids": [
+          "M.01",
+          "E.044",
+          "N.42",
+          "M.07"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Optum Health Q4 EBIT near break-even or better",
+        "Prior-period reserve development again favorable",
+        "Operating cost ratio at or below 13.5%",
+        "2027 guide at least $23 adjusted EPS",
+        "MA membership guide stable after AEP"
+      ]
+    },
+    {
+      "name": "base",
+      "description": {
+        "text": "Q4 adjusted EPS comes in around $2.30-$2.60, a small beat versus $2.29 and above the $2.20 floor. MCR is about 90.5%-91%, the operating cost ratio is about 13.5%, and the guide is nudged to a higher floor. 2027 is framed at the low end of 13%-16%. The stock reaction is within the ±8.1% historical range and depends on the 2027 framing.",
+        "evidence_ids": [
+          "M.01",
+          "E.044",
+          "M.04",
+          "C.015"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "MCR in the 90.3%-91.6% range",
+        "Optum Health loss in line with the 'meaningfully negative' framing",
+        "Commercial trend stays above 11% but stable",
+        "2027 guide at roughly 13%"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Q4 adjusted EPS lands below the $2.20 implied floor. The MCR is above 91.6% because the $610M-type releases do not repeat, commercial trend (above 11%) or Medicaid pressure reappears, and a deeper Optum Health loss and accelerated investment lift the operating cost ratio. The 2027 outlook disappoints against the 13% bar, and the debt-to-capital target is missed.",
+        "evidence_ids": [
+          "E.044",
+          "E.006",
+          "C.014",
+          "C.084",
+          "E.012"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Unfavorable or no prior-period development",
+        "Operating cost ratio at or above 14%",
+        "Optum Health Q4 loss deeper than about $0.3B",
+        "2027 framing below 13% or heavy investment drag",
+        "Rating agency action or IRS adjustment news"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "Reserve quality and the non-repeat of favorable development. Q3 included $610M of net favorable development on 2026 dates of service. The 10-K shows a 1% change in medical costs payable is about $300M of net earnings, against an implied Q4 GAAP net earnings floor of about $1.8B.",
+        "evidence_ids": [
+          "E.006",
+          "K.152",
+          "E.043",
+          "E.025"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Q4 seasonality and investment. Management expects a back-half utilization step-up, normal risk seasonality at Optum Health, and incremental AI, technology and clinician-workflow spend. The Optum Health Q4 EBIT is guided 'meaningfully negative' by an analyst's read, with no dollar guide given.",
+        "evidence_ids": [
+          "C.014",
+          "C.084",
+          "C.085",
+          "C.015"
+        ],
+        "evidence_type": "guided"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Commercial trend and the No Surprises Act. Commercial trend is above the initial 11% expectation, driven by dispute-resolution awards (up to nearly 6% of total medical spend in some regions), clinician intensity and specialty drugs. Management says commercial margin recovery will stretch out. Risk-based commercial members are down to 7.575M from 8.44M a year ago.",
+        "evidence_ids": [
+          "C.008",
+          "C.053",
+          "E.079"
+        ],
+        "evidence_type": "guided"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Medicare funding, Stars and risk adjustment. The 10-Q says the final 2027 MA notice remains below industry cost trend and that risk-model revisions reduce funding. At least 69% of members are in 4+ Star plans for 2027 ratings, which affect 2028 bonus payments. RADV audits can lead to retrospective adjustments. A risk-adjustment bill would limit chart-review and health-risk-assessment codes from 2028.",
+        "evidence_ids": [
+          "Q.048",
+          "E.014",
+          "Q.030",
+          "N.32"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "DOJ False Claims Act case on risk-adjustment submissions (filed 2011, DOJ intervened 2017). A Special Master recommended summary judgment for UNH in March 2025 and the DOJ asked the court to reject it. UNH cannot estimate the outcome, and no new ruling was found.",
+        "evidence_ids": [
+          "Q.031"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "IRS transfer-pricing exposure. The IRS issued Notices of Proposed Adjustment on March 6, 2026 for 2017-2020 intercompany transfer pricing with a foreign subsidiary. It seeks to 'significantly increase' taxable income and could reach later years. UNH disagrees and says reserves are adequate, with nothing quantified. The 10-K was filed before the notices. Gross unrecognized tax benefits were $5.6B at year-end 2025.",
+        "evidence_ids": [
+          "Q.032",
+          "K.227"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Balance sheet and ratings. Debt-to-capital rose to 41.7% at Sept 30 from 41.2% in Q2, against a target of about 40% by year-end. Moody's A2, S&P A+ and Fitch A all had negative outlooks as of June 30. A $1.5B acquisition payment is due within a year of the July 2 close.",
+        "evidence_ids": [
+          "E.012",
+          "Q.062",
+          "Q.063",
+          "Q.027"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Medicaid funding timing. State rate updates lag acuity and cost trend. Management expects 2026 core Medicaid margin only moderately better than negative 1%, and calls the main variable the timing and adequacy of state funding. The 10-K also warned of margin pressure.",
+        "evidence_ids": [
+          "C.009",
+          "C.023",
+          "K.124"
+        ],
+        "evidence_type": "guided"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "Which segments hold the Q4 EPS floor of about $2.20, and what is the dollar guide for Optum Health Q4 EBIT and the Q4 operating cost ratio?",
+      "why": {
+        "text": "The guide implies only about $1.8B of Q4 GAAP net earnings (vs $4.1B in Q3). An analyst called the Optum Health guide 'meaningfully negative' and management did not give a number.",
+        "evidence_ids": [
+          "E.043",
+          "E.025",
+          "C.084",
+          "C.085"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "Does the full-year guide assume any further favorable prior-period development in Q4, and was the $610M a one-time release?",
+      "why": {
+        "text": "The $610M of net favorable reserve development in Q3 was equal to about 70 bps of Q3 premiums of $87.1B, and H1 had $1.25B of favorable prior-year development. Does the company expect releases to continue into Q4, given the effect on MCR?",
+        "evidence_ids": [
+          "E.006",
+          "E.023",
+          "Q.024"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How much of the Q3 MCR improvement is underlying trend versus repricing, benefit cuts and membership shedding, and what are commercial, Medicaid and MA trends in Q4 to date?",
+      "why": {
+        "text": "Management denied trend acceleration while saying commercial is above 11% and utilization typically rises in the back half. Risk-based commercial and MA membership are both down.",
+        "evidence_ids": [
+          "C.063",
+          "C.014",
+          "C.008",
+          "E.079"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What is the 2028 revenue and margin impact of the 2027 Stars result (at least 69% in 4+ Star plans), and what is the Q4 and 2027 spend to reach about 75%?",
+      "why": {
+        "text": "Stars drive 2028 bonus payments. Management said Stars investment is accelerating and the Stars share fell, but no dollar impact has been given.",
+        "evidence_ids": [
+          "E.014",
+          "C.007",
+          "C.094"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What will 2027 guidance look like: is the low end of 13%-16% a floor, how much does the accelerated 2027 investment cost, and what is the MA and Medicaid membership outlook after AEP?",
+      "why": {
+        "text": "Management said consensus may understate 2027 but also flagged accelerated investment as a headwind. The outlook is promised before year-end, possibly ahead of the Q4 call.",
+        "evidence_ids": [
+          "C.015",
+          "C.016",
+          "C.019",
+          "C.029"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What is the plan to reach about 40% debt-to-capital: debt paydown, equity build or both? Is the remaining repurchase authorization nearly exhausted, and is a new authorization planned?",
+      "why": {
+        "text": "Debt-to-capital was 41.7% at Sept 30 against a target of about 40% by year-end, and a $1.5B acquisition payment is due within a year of the July 2 close. The company repurchased $5.0B of stock in the first nine months, and had 10.6M shares of repurchase authorization remaining at June 30.",
+        "evidence_ids": [
+          "E.012",
+          "Q.027",
+          "Q.064"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is the status of the IRS transfer-pricing notices, and has the exposure or reserve been quantified?",
+      "why": {
+        "text": "The notices could reach years after 2020 and nothing has been quantified. The 10-Q says only that reserves are adequate.",
+        "evidence_ids": [
+          "Q.032"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How much of the $1B United Health Foundation commitment and the ACA profit-rebate pledge hits Q4 or 2027 earnings, and is it excluded from adjusted EPS?",
+      "why": {
+        "text": "Only the $400M year-to-date piece is described as excluded from adjusted results, while $1B has been committed and 2026 ACA profits will be rebated.",
+        "evidence_ids": [
+          "E.041",
+          "E.007",
+          "Q.045"
+        ],
+        "evidence_type": "reported"
+      }
+    }
+  ],
+  "data_gaps": [
+    "Q4 2025 adjusted EPS: news dated Oct 2 and Oct 14 quote $2.11, which would make consensus $2.29 about +8.5% and the $2.20 floor about +4% year over year. Both are outside the 14-day window and unconfirmed by primary filings. The data pack's -11.7% uses Q3 2025 GAAP EPS as the base and should not be used.",
+    "Prior FY2026 guidance range: news dated Aug 31 to Oct 13 gives $19.50-$20.00 adjusted. It is not in the filings I read, so the size of the raise (and of the lift to the implied Q4 floor) is not confirmed.",
+    "Whether consensus EPS of $2.29 is GAAP or adjusted is not stated. It is closer to adjusted.",
+    "Optum Health full-year EBIT guide in dollars: not in the Q3 release or call. An Aug 27 article cites 'at least $2.2B' for Optum operating earnings, but it is old and unclear.",
+    "Segment MCRs and the segment location of the $610M of favorable development are not disclosed in the sources.",
+    "The Q3 2026 10-Q (period ended Sep 30) was not in the sources. It would give the nine-month medical costs payable roll-forward, the Q3 share repurchase count and authorization remaining, and any IRS update.",
+    "No Q4 buyback, 2027 buyback or 2027 EPS guidance has been given. The Q3 average repurchase price is unknown.",
+    "The prior-year (2026 payment year) UNH 4+ Star share is not in the filings. A news summary says about 78% for 2026, and other reports cite a 15% fall and Piper's 66.8%. All are older than 14 days and unverified. No source quantifies the 2028 Stars revenue headwind.",
+    "The UNH-specific non-renewal figure (390,000 per an Oct 2 headline) is background only. The Newsweek figure of about 1M combines UNH and Humana without a split.",
+    "The share-price path since Oct 13 cannot be rebuilt: no exact Oct 13 close or day-one move was retrieved, and the $425 figure on Oct 23 is unverified. The $378 vs $390 base inconsistency is unresolved.",
+    "No Q3 commentary was retrieved from Humana, CVS/Aetna, Cigna or Molina, and no peer commentary on the No Surprises Act dispute process. Peer read covers only Elevance and Centene filings.",
+    "No news from the last 14 days on the DOJ False Claims Act ruling or UNH-specific RADV outcomes. No third-party claims data from the last 14 days to test trend acceleration.",
+    "No Moody's, S&P or Fitch action after Oct 13 was found. That is not proof none occurred; check the agencies directly."
+  ],
+  "sources": {
+    "Q.003": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-10 — New York Stock Exchange",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000197/unh-20260630.htm",
+      "as_of": "2026-08-10"
+    },
+    "Q.024": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-10 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000197/unh-20260630.htm",
+      "as_of": "2026-08-10"
+    },
+    "Q.025": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-10 · Financial Statements — 4.    Medical Costs Payable",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000197/unh-20260630.htm",
+      "as_of": "2026-08-10"
+    },
+    "Q.027": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-10 · Financial Statements — Pending Acquisitions",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000197/unh-20260630.htm",
+      "as_of": "2026-08-10"
+    },
+    "Q.030": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-10 · Financial Statements — Government Investigations, Audits and Reviews",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000197/unh-20260630.htm",
+      "as_of": "2026-08-10"
+    },
+    "Q.031": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-10 · Financial Statements — Government Investigations, Audits and Reviews",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000197/unh-20260630.htm",
+      "as_of": "2026-08-10"
+    },
+    "Q.032": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-10 · Financial Statements — Income Taxes - Internal Revenue Service Exams",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000197/unh-20260630.htm",
+      "as_of": "2026-08-10"
+    },
+    "Q.045": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-10 · MD&A — Business Trends",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000197/unh-20260630.htm",
+      "as_of": "2026-08-10"
+    },
+    "Q.048": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-10 · MD&A — Regulatory Trends and Uncertainties",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000197/unh-20260630.htm",
+      "as_of": "2026-08-10"
+    },
+    "Q.050": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-10 · MD&A — RESULTS SUMMARY",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000197/unh-20260630.htm",
+      "as_of": "2026-08-10"
+    },
+    "Q.055": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-10 · MD&A — 2026 Business Realignment",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000197/unh-20260630.htm",
+      "as_of": "2026-08-10"
+    },
+    "Q.062": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-10 · MD&A — Capital Resources and Uses of Liquidity",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000197/unh-20260630.htm",
+      "as_of": "2026-08-10"
+    },
+    "Q.063": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-10 · MD&A — Capital Resources and Uses of Liquidity",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000197/unh-20260630.htm",
+      "as_of": "2026-08-10"
+    },
+    "Q.064": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-10 · MD&A — Capital Resources and Uses of Liquidity",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000197/unh-20260630.htm",
+      "as_of": "2026-08-10"
+    },
+    "K.120": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-02 · MD&A — Restructuring and Other Actions",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000062/unh-20251231.htm",
+      "as_of": "2026-03-02"
+    },
+    "K.124": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-02 · MD&A — Business Trends",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000062/unh-20251231.htm",
+      "as_of": "2026-03-02"
+    },
+    "K.129": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-02 · MD&A — SELECTED OPERATING PERFORMANCE ITEMS",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000062/unh-20251231.htm",
+      "as_of": "2026-03-02"
+    },
+    "K.152": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-02 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000062/unh-20251231.htm",
+      "as_of": "2026-03-02"
+    },
+    "K.227": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-03-02 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000062/unh-20251231.htm",
+      "as_of": "2026-03-02"
+    },
+    "E.005": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.006": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.007": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.011": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.012": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.014": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.016": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.017": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.023": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.025": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.026": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.027": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.028": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.030": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.031": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.033": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.036": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.041": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.043": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.044": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.1 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/earningsrelease3q26unh.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.053": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.2 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/uhgearnings_q32026vfinal.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.077": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.2 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/uhgearnings_q32026vfinal.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.078": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.2 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/uhgearnings_q32026vfinal.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.079": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.2 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/uhgearnings_q32026vfinal.htm",
+      "as_of": "2026-10-13"
+    },
+    "E.080": {
+      "kind": "8-K",
+      "citation": "8-K Items 2.02, 9.01, Exhibit 99.2 (filed 2026-10-13)",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000255/uhgearnings_q32026vfinal.htm",
+      "as_of": "2026-10-13"
+    },
+    "C.006": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Tim Noel, CEO, UnitedHealthcare",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.007": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Tim Noel, CEO, UnitedHealthcare",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.008": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Tim Noel, CEO, UnitedHealthcare",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.009": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Tim Noel, CEO, UnitedHealthcare",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.012": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Patrick, Optum Executive",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.014": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Wayne, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.015": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Wayne, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.016": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Wayne, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.019": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Steve Hemsley, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.023": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Mike, Executive, Medicaid",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.024": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Bobby, Medicare Executive",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.029": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Bobby, Medicare Executive",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.053": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Tim Noel, CEO, UnitedHealthcare",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.063": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Tim Noel, CEO, UnitedHealthcare",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.068": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Mike, Executive, Medicaid",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.075": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — John, Optum Rx Executive",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.081": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Krista, CEO, Optum Health",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.084": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Andrew Mok, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.085": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Krista, CEO, Optum Health",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.094": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Bobby, Medicare Executive",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "C.096": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (2026-10-13) — Steve Hemsley, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=UNH&quarter=2026Q3",
+      "as_of": "2026-10-13"
+    },
+    "F.27": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — year ended 2025-12-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000062/unh-20251231.htm",
+      "as_of": "2026-03-02"
+    },
+    "F.71": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/731766/000073176625000305/0000731766-25-000305-index.htm",
+      "as_of": "2025-10-28"
+    },
+    "F.72": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.03": {
+      "kind": "market",
+      "citation": "Market data — Options-implied move",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "M.05": {
+      "kind": "market",
+      "citation": "Market data — Beat/miss record",
+      "url": null,
+      "as_of": null
+    },
+    "M.06": {
+      "kind": "market",
+      "citation": "Market data — Analyst rating actions",
+      "url": null,
+      "as_of": null
+    },
+    "M.07": {
+      "kind": "market",
+      "citation": "Market data — Consensus price target",
+      "url": null,
+      "as_of": null
+    },
+    "N.16": {
+      "kind": "news",
+      "citation": "newsweek.com, 2026-10-23 — United, Humana Medicare Advantage Plan Cuts Expected to Hit 1M Americans - Newsweek",
+      "url": "https://www.newsweek.com/united-humana-medicare-advantage-plan-cuts-expected-to-hit-1m-americans-12608001",
+      "as_of": "2026-10-23"
+    },
+    "N.22": {
+      "kind": "news",
+      "citation": "tikr.com, 2026-10-23 — UnitedHealth Climbs 9% Since Earnings as Optum Health Profit Surges to $735 Million | TIKR.com",
+      "url": "https://www.tikr.com/blog/unitedhealth-climbs-9-since-earnings-as-optum-health-profit-surges-to-735-million",
+      "as_of": "2026-10-23"
+    },
+    "N.32": {
+      "kind": "news",
+      "citation": "risehealth.org, 2026-10-30 — 5 risk adjustment enforcement takeaways from the 2026 Risk Adjustment Forum",
+      "url": "https://www.risehealth.org/insights-articles/article/risk-adjustment-forum-2026-day-two-takeaways",
+      "as_of": "2026-10-30"
+    },
+    "N.42": {
+      "kind": "news",
+      "citation": "scanx.trade, 2026-10-27 — JP Morgan raises UnitedHealth price target to $524, keeps Overweight",
+      "url": "https://scanx.trade/stock-market-news/companies/jp-morgan-raises-unitedhealth-price-target-524-keeps-overweight/53710840",
+      "as_of": "2026-10-27"
+    },
+    "P.002": {
+      "kind": "peer",
+      "citation": "PEER ELV 10-Q filed 2026-10-21 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "P.004": {
+      "kind": "peer",
+      "citation": "PEER ELV 10-Q filed 2026-10-21 · MD&A — Business Trends",
+      "url": null,
+      "as_of": null
+    },
+    "P.009": {
+      "kind": "peer",
+      "citation": "PEER CNC 10-Q filed 2026-10-27 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "P.010": {
+      "kind": "peer",
+      "citation": "PEER CNC 10-Q filed 2026-10-27 · MD&A — Commercial",
+      "url": null,
+      "as_of": null
+    },
+    "N.69": {
+      "kind": "news",
+      "citation": "finance.yahoo.com, 2026-10-23 — What Will Decide UnitedHealth Group Stock Over The Next Six Months?",
+      "url": "https://finance.yahoo.com/healthcare/articles/decide-unitedhealth-group-stock-over-082405036.html",
+      "as_of": "2026-10-23"
+    },
+    "N.72": {
+      "kind": "news",
+      "citation": "seekingalpha.com, 2026-10-19 — UnitedHealth: My Thesis Has Played Out, I Wouldn't Chase Here (NYSE:UNH) | Seeking Alpha",
+      "url": "https://seekingalpha.com/article/4954944-unitedhealth-my-thesis-has-played-out-i-wouldnt-chase-here-rating-downgrade",
+      "as_of": "2026-10-19"
+    }
+  },
+  "check_notes": [
+    "metrics_to_model[1].view: rewritten to what its sources support (The passages give no Q4 2025 MCR of 92.4% or 91.5% ex-items, no 22% tax rate, and no 89.1% MCR figure, and the model outputs (91.0% MCR, range, 10 bps sensitivity, EPS near $4) cannot be checked from them.).",
+    "metrics_to_model[5].view: rewritten to what its sources support (The passages support waiting on formal membership guidance and the footprint/PPO refinements, but the 'stable near 7.6M' year-end figure is not stated as a view tied to the cited passages (7.605M is in E.079, not cited here), so the claim goes beyond what is cited.).",
+    "metrics_to_model[6].last_reported: rewritten to what its sources support (E.017 supports Q3 scripts 393M vs 414M, and operating earnings $1.7B vs $1.5B with biosimilars; but the $1.718B/$1.549B precise figures, 387M in Q2 and 424M in Q4 2025 are not in the cited passages.).",
+    "metrics_to_model[6].view: rewritten to what its sources support (The 424M Q4 2025 script count is not in the passages, so the 7% year-over-year decline cannot be verified; the other facts (over 50% external, specialty up 2.6%) are supported.).",
+    "since_filing[3]: rewritten to what its sources support (The Newsweek passage supports the headline and the $0 premiums/copays quote, but nothing shown says the cuts are 'not split between the insurers' or details the combined split.).",
+    "key_debates[2].bear: rewritten to what its sources support (Accelerating investment, funding pressure, 69% Stars and 41.7% debt-to-capital are supported, but 'non-renewals affecting a large number of seniors' is not in the passages and 'authorization looks nearly used' is not derivable from the cited material.).",
+    "key_risks[6]: rewritten to what its sources support (Debt-to-capital, negative outlooks as of June 30 and the $1.5B payment are supported, but the claim that implied Q4 net earnings are below the dividend and deleveraging needs about $5B of paydown is not derived from the passages.).",
+    "questions_for_management[1]: rewritten to what its sources support (The $610M and H1 $1.25B favorable development are supported, but the '70 bps' figure ($610M over $87.1B premiums is about 70 bps, which would fit) is fine while the Q4 MCR 'about 91%' step is not given in the cited passages.).",
+    "questions_for_management[5]: rewritten to what its sources support (Debt-to-capital of 41.7%, the $1.5B payment and 10.6M shares authorization at June 30 are supported, but the implied Q4 net earnings below the dividend and the buyback usage are not shown in the passages.).",
+    "key_risks[3]: N.82 removed — news older than 14 days (or undated) is background only.",
+    "questions_for_management[3]: N.82 removed — news older than 14 days (or undated) is background only."
+  ]
+}

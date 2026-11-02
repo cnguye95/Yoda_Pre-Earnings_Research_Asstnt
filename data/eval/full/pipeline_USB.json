@@ -1,0 +1,1410 @@
+{
+  "ticker": "USB",
+  "company_name": "US BANCORP \\DE\\",
+  "report_generated_at": "2026-11-01T13:48:04+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-08-06",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-02-23",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000011/usb-20251231.htm"
+    }
+  ],
+  "earnings_call": "Q3 FY2026 earnings call (date unknown)",
+  "current_report": "8-K filed 2026-10-30: Item 3.03; Item 5.03 charter or bylaw amendment; Item 8.01 other events; Item 9.01 financial statements and exhibits",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$1.42",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$8.16B",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2027-01-19 report. Paid lookup not made: next report is 79 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "implied move: no live implied move yet (EarningsWatcher has no confirmed report date)."
+    },
+    "historical_move": {
+      "value": "±1.9% average closing move over the last 8 reports (2025-01-15 to 2026-10-15)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/usb-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "analyst_actions": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "price_target": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "The next print is fiscal Q4 2026 on 2027-01-19 after the close. Consensus is EPS $1.42 and revenue $8.16B. The average closing move over the last 8 reports is about ±1.9%. No whisper number, options-implied move or beat/miss record is available yet.",
+      "evidence_ids": [
+        "M.01",
+        "M.04",
+        "M.02",
+        "M.03",
+        "M.05"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Q3 2026 is already reported, so the setup is Q3 base plus Q4 guidance. Q3 diluted EPS was $1.34 (about +10% y/y), including a reserve build of about $0.07. Net revenue was a record of about $8B (+8.7%) and NIM was 2.84%, up 5bp q/q. One secondary source puts the EPS consensus at $1.32 and revenue at $7.97B, so EPS was a modest beat. I did not read a Q3 10-Q or earnings release; Q3 figures come from the call and press coverage.",
+      "evidence_ids": [
+        "C.003",
+        "C.007",
+        "A.007",
+        "A.008"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Management raised FY2026 net revenue growth guidance to 8%-9% (6%-7% ex-BTIG) from 5%-7%. It raised operating leverage to about 300bp (about 400bp ex-BTIG) from 200bp/300bp. It also gave Q4 y/y guidance: FTE NII +6%-7%, fee revenue +13%-14% (about half from BTIG) and expenses about +8% (about +4% ex-BTIG).",
+      "evidence_ids": [
+        "C.011"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "Rough arithmetic on the revenue consensus (my estimate). FY2026 guidance of +8%-9% on FY2025 revenue of $28.66B, with H1 2026 at $15.00B and Q3 at about $7.97B, implies Q4 revenue of about $7.98B-$8.27B. The $8.16B consensus sits just above the midpoint of that range. Q4 2025 revenue backs out to about $7.36B, so consensus implies about +11% y/y. Component guidance (NII +6-7%, fees +13-14%, at roughly a 56/44 mix) points to nearer +9.5%, or about $8.06B. The revenue consensus may therefore be slightly rich against the guided components.",
+      "evidence_ids": [
+        "F.03",
+        "F.04",
+        "F.19",
+        "F.48",
+        "A.008",
+        "C.011",
+        "M.01"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "On EPS, consensus $1.42 compares with a Q3 print of $1.34 that carried about a $0.07 reserve build. Backing out Q4 2025 gives about $1.26 (FY $4.62 less H1 $2.14 and Q3 $1.22), so consensus implies about +13% y/y versus +10% in Q3 (+16% ex-build). The fact sheet's +16.5% 'consensus-implied growth' compares against Q3 2025, not Q4 2025, and should not be used. FY2026 consensus EPS of $5.35 from a secondary source implies Q4 of about $1.48, above the $1.42 Q4 consensus, so the two sources differ in vintage or definition.",
+      "evidence_ids": [
+        "F.23",
+        "F.12",
+        "F.50",
+        "F.51",
+        "F.49",
+        "C.007",
+        "M.01",
+        "A.009",
+        "F.11",
+        "C.003"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Trend into Q4: NIM rose from 2.66% (Q2 2025) to 2.79% (Q2 2026) to 2.84% (Q3 2026). The efficiency ratio improved from 59.2% to 57.1% (Q2) to 55.9% (Q3). Net charge-offs were 0.53% in Q2 and 0.51% in Q3. CET1 was 10.8% in both Q2 and Q3.",
+      "evidence_ids": [
+        "Q.009",
+        "A.008",
+        "C.007",
+        "Q.010",
+        "C.010"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Capital is the main swing factor. Reported CET1 was stable at 10.8%, but AOCI-adjusted CET1 fell 30bp to 9.1% on $12B of RWA growth (including the Amazon small-business card onboarding) and higher Treasury rates and wider spreads (40bp). Buybacks were paused in Q3. Management expects to resume 'over the next quarter or two' and glide to a 70%-75% payout. On 30 Oct the company closed a new Series P preferred offering of 1,000,000 depositary shares, each 1/25th of a $25,000-liquidation-preference share, or about $1.0B of liquidation preference (my arithmetic).",
+      "evidence_ids": [
+        "C.010",
+        "C.025",
+        "C.032",
+        "E.003",
+        "E.004"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Market backdrop: USB closed at $57.85 on 19 Oct, about 12.5% below its $66.08 high of 17 Aug. The KBW Bank Index was in correction territory, about 13% below its August record, after a six-week losing streak. Consensus rating is Buy with an average target of $68.50. Goldman cut its target to $61 and said the guidance raise was largely priced in.",
+      "evidence_ids": [
+        "A.005",
+        "A.006",
+        "A.007",
+        "N.20"
+      ],
+      "evidence_type": "proxy"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Total net revenue",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 net revenue was a record of about $8B (about $7.97B), up 8.7% y/y (+6.4% adjusted for BTIG and securities losses).",
+        "evidence_ids": [
+          "C.003",
+          "C.007",
+          "A.008"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus revenue is $8.16B.",
+        "evidence_ids": [
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "The guided components (NII +6-7%, fees +13-14%) point to about +9.5% or $8.06B, while FY guidance brackets Q4 at about $7.98B-$8.27B. Consensus sits at the upper half, so the risk to revenue is skewed slightly to the downside if BTIG falls to about $200M (from $226M) and other revenue normalizes to $120-150M. Model both sequential drags explicitly. All of this is my estimate.",
+        "evidence_ids": [
+          "C.011",
+          "C.045",
+          "C.053",
+          "F.19",
+          "F.03",
+          "A.008",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Diluted EPS",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 diluted EPS was $1.34 (+9.8% y/y), including about $0.07 of reserve build. Ex-build growth was about 16%.",
+        "evidence_ids": [
+          "C.007",
+          "A.008"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus EPS is $1.42.",
+        "evidence_ids": [
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Consensus is about $0.08 above Q3. That is achievable if the reserve build shrinks, NIM gains about 5bp and the Amazon card book contributes for a full quarter, but fee normalization and about +8% expense growth offset part of it. The FY consensus of $5.35 implies about $1.48, so the Street range is wide. The preferred coupon on the new Series P is unknown and adds a small drag.",
+        "evidence_ids": [
+          "C.007",
+          "C.011",
+          "C.053",
+          "A.009",
+          "M.01",
+          "E.004"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Net interest income (FTE) y/y growth",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 FTE NII grew 5.6% y/y and 2.3% q/q, driven by loan and deposit growth, mix improvement and fixed-asset repricing.",
+        "evidence_ids": [
+          "C.009"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guidance is +6%-7% y/y, an acceleration of 40-140bp from Q3. Support comes from a full quarter of the Amazon card book (about $0.9B of Q3 average loans against $1.7B at period-end), about $10B per quarter of fixed assets repricing about 125bp higher, and C&I growth that management expects to re-accelerate. Deposit betas of about 50% on further hikes are the offset.",
+        "evidence_ids": [
+          "C.011",
+          "C.008",
+          "C.015",
+          "C.017",
+          "C.029"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Net interest margin",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 NIM was 2.84%, up 5bp q/q and 9bp y/y.",
+        "evidence_ids": [
+          "C.007",
+          "A.008"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management guides to a similar increase (about 5bp), which gives roughly 2.89%-2.90%, the exit rate an analyst cited. A print below about 2.88% would challenge the 'path to 3% in 2027'. Peers show mix pressure: WFC's NIM fell in Q3 on lower-yielding Markets assets and interest-bearing deposit growth.",
+        "evidence_ids": [
+          "C.009",
+          "C.054",
+          "C.055",
+          "P.005"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Total fee revenue y/y growth",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 fee income grew 14.9% y/y. Capital markets revenue was up 69% (BTIG contributed $226M, legacy +10%). Corporate payments were up about 19% and treasury management grew mid-single digits. Fees were 44% of revenue.",
+        "evidence_ids": [
+          "C.003",
+          "C.009",
+          "C.045"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guidance is Q4 fee revenue growth of 13%-14% year over year, with roughly half of the growth coming from BTIG. Items to model: BTIG about $200M or so (Q3 contributed $226M), other revenue normalizing to the $120-150M range after gains unique to Q3, mortgage with limited or low year-on-year growth, if any, on higher rates, merchant in the 0% area, and legacy capital markets growing at a double-digit pace.",
+        "evidence_ids": [
+          "C.011",
+          "C.003",
+          "C.045",
+          "C.046",
+          "C.053"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Noninterest expense y/y growth and operating leverage",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 expenses grew 7.1% y/y (2.0% ex-BTIG). Operating leverage was 240bp (440bp ex-BTIG). The efficiency ratio was 55.9%.",
+        "evidence_ids": [
+          "C.007",
+          "A.008"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guidance is about +8% (about +4% ex-BTIG), so the ex-BTIG run-rate doubles from Q3's 2%. Against revenue growth of about 9.5%-11%, Q4 operating leverage is likely about 150-300bp, narrower than Q3 unless revenue lands high. Watch marketing, technology and incentive compensation tied to capital markets. This is my arithmetic.",
+        "evidence_ids": [
+          "C.011",
+          "C.007",
+          "C.009",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Net charge-offs and reserve build",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 net charge-offs were 0.51% (down 2bp q/q) and nonperforming assets fell 1.6% q/q. The reserve build cost about $0.07 of EPS.",
+        "evidence_ids": [
+          "C.007",
+          "A.008"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Credit is benign (card NCOs and delinquencies trending lower; no consumer or commercial change despite higher rates). Provision is the main EPS swing: Amazon card growth and loan growth drive reserve builds, and CRE is the flagged watch item. At Q2 the allowance was 1.94% of loans. No Q3 provision figure is in my sources.",
+        "evidence_ids": [
+          "C.060",
+          "C.009",
+          "C.007",
+          "Q.061"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "metric": "Average loans and deposits growth",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "Q3 2026 average loans were up 8.0% y/y and 1.0% q/q. Average deposits were up 2.9% y/y and 2.2% q/q. Average C&I was roughly flat q/q on NDFI runoff and deals that missed return hurdles.",
+        "evidence_ids": [
+          "C.008",
+          "C.029",
+          "C.028"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management expects similar loan growth (card, C&I and the Amazon full-quarter effect), with C&I reaccelerating and CRE and mortgage muted. Deposits should keep growing on consumer and small-business strength, with deposit costs up about 7bp q/q in Q3 (about 2bp from the September hike).",
+        "evidence_ids": [
+          "C.015",
+          "C.029",
+          "C.030",
+          "C.008"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "CET1 ratio, AOCI-adjusted CET1 and buyback restart",
+      "period": "Q4 2026",
+      "last_reported": {
+        "text": "At 30 Sep 2026, CET1 was 10.8%, AOCI-adjusted CET1 9.1%, TCE ratio 6.6%, and capital generated after dividends was 33bp. Buybacks were paused. In Q2 the company repurchased 3.56M shares at $56.39 with $3.9B authorization left.",
+        "evidence_ids": [
+          "C.007",
+          "C.010",
+          "C.025",
+          "Q.091"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management expects capital ratios to build and to resume repurchases in Q4 or Q1, depending on loan and RWA growth, interest rates and pending rules. It says it is not counting on any Basel endgame benefit. Repurchased shares in the Q4 10-K, or explicit timing on the call, is the observable test. This is a key gating item for EPS upside.",
+        "evidence_ids": [
+          "C.010",
+          "C.025",
+          "C.032",
+          "C.087"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "FTE net interest income growth y/y",
+      "guidance": "+6% to +7%",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Management guided Q4 2026 FTE net interest income growth of 6%-7% y/y.",
+        "evidence_ids": [
+          "C.011"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Total fee revenue growth y/y",
+      "guidance": "+13% to +14%, roughly half from BTIG",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Management guided Q4 2026 total fee revenue growth of 13%-14% y/y, with roughly half from BTIG.",
+        "evidence_ids": [
+          "C.011"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Noninterest expense growth y/y",
+      "guidance": "about +8% (about +4% ex-BTIG)",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Management guided Q4 2026 noninterest expense growth of about 8% y/y, or closer to 4% excluding BTIG.",
+        "evidence_ids": [
+          "C.011"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Total net revenue growth",
+      "guidance": "+8% to +9% (6%-7% ex-BTIG), up from 5%-7%",
+      "period": "FY2026",
+      "status": "raised",
+      "claim": {
+        "text": "FY2026 net revenue growth guidance was raised to 8%-9% (6%-7% ex-BTIG) from 5%-7%. The prior range is known only from the call and the secondary summary.",
+        "evidence_ids": [
+          "C.011",
+          "A.009"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Positive operating leverage",
+      "guidance": "about 300bp (about 400bp ex-BTIG), up from 200bp/300bp",
+      "period": "FY2026",
+      "status": "raised",
+      "claim": {
+        "text": "FY2026 operating leverage guidance was raised to about 300bp (about 400bp ex-BTIG) from 200bp and 300bp.",
+        "evidence_ids": [
+          "C.011"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Net interest margin",
+      "guidance": "increase by a similar amount to Q3's +5bp from 2.84% (analyst framed about 2.90% exit)",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Management expects Q4 NIM to rise by a similar amount to Q3's 5bp expansion from 2.84%.",
+        "evidence_ids": [
+          "C.009",
+          "C.054"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Net interest margin path",
+      "guidance": "path to a 3% NIM at some point in 2027",
+      "period": "2027",
+      "status": "maintained",
+      "claim": {
+        "text": "The CFO said management continues to see a path to a 3% NIM at some point in 2027, resting on asset repricing, mix and disciplined deposit acquisition, and acknowledged the curve and deposit competition could interfere.",
+        "evidence_ids": [
+          "C.055"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Rate assumptions",
+      "guidance": "about $10B per quarter of fixed assets repricing about 125bp higher; about 50% initial deposit beta with a couple more hikes in the forecast",
+      "period": "Q4 2026 onward",
+      "status": "new",
+      "claim": {
+        "text": "Management assumes about $10B per quarter of fixed-rate assets repricing about 125bp higher and an initial deposit beta of about 50% with a couple more hikes in its forecast.",
+        "evidence_ids": [
+          "C.017"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Fee line color",
+      "guidance": "BTIG about $200M/quarter; other revenue $120-150M; mortgage low or no y/y growth; merchant about 0% for the next couple of quarters; legacy capital markets double-digit growth",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "CFO color for Q4: BTIG at about $200M or so (versus $226M contributed in Q3), other revenue normalizing to the $120-150M range after gains unique to Q3, mortgage growth limited or low, if any, on higher rates, merchant in the 0% area for the next couple of quarters, and legacy capital markets expected to help deliver double-digit year-over-year growth.",
+        "evidence_ids": [
+          "C.003",
+          "C.045",
+          "C.046",
+          "C.053"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Share repurchases",
+      "guidance": "resume over the next quarter or two, gliding to a 70%-75% payout; not counting on Basel endgame benefit",
+      "period": "Q4 2026 / Q1 2027",
+      "status": "new",
+      "claim": {
+        "text": "After pausing repurchases in Q3, management expects to resume over the next quarter or two, gliding back to a 70%-75% payout. Timing depends on loan and RWA growth, rates and pending regulation.",
+        "evidence_ids": [
+          "C.010",
+          "C.025",
+          "C.032",
+          "C.087"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Efficiency ratio",
+      "guidance": "mid-to-high 50s medium-term; aim for the middle of the range; currently just under 56%",
+      "period": "Medium term",
+      "status": "maintained",
+      "claim": {
+        "text": "Management targets an efficiency ratio in the mid-to-high 50s medium term, wants the middle of that range, and is currently just under 56%.",
+        "evidence_ids": [
+          "C.097",
+          "C.098"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "2027 operating leverage and capital markets mix",
+      "guidance": "no formal 2027 guidance; expects positive operating leverage on similar drivers; capital markets to grow from 8% to 10% or more of revenue over 3-5 years",
+      "period": "2027 and beyond",
+      "status": "new",
+      "claim": {
+        "text": "No formal 2027 guidance has been given. The CFO anticipates positive operating leverage next year on similar drivers, and management targets capital markets at 10% or more of revenue within three to five years, from 8%.",
+        "evidence_ids": [
+          "C.022",
+          "C.003",
+          "C.004"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "Q3 2026 results were released on 15 Oct (after the 10-Q filed 6 Aug). Diluted EPS was $1.34 (about +10% y/y; about +16% excluding the roughly $0.07 reserve build). Net revenue was about $8B (+8.7%). Expenses rose 7.1% (2.0% ex-BTIG). NIM was 2.84%, net charge-offs 51bp and CET1 10.8%. These figures are from the call, since no Q3 filing or release was read.",
+      "evidence_ids": [
+        "C.003",
+        "C.007",
+        "A.008"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q3 was a modest beat on EPS ($1.34 versus a $1.32 market consensus, per a secondary source). Several brokers still trimmed targets despite the beat (Goldman to $61, Citi to $70, RBC to $65), citing valuation or cost-of-equity inputs. Others raised them (BofA $68, Oppenheimer $73, Evercore $67).",
+      "evidence_ids": [
+        "A.006",
+        "A.007"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "The 8-K filed 30 Oct contains no results. It reports the new Series P Fixed Rate Reset Non-Cumulative Perpetual Preferred ($25,000 liquidation preference per share). The company sold 1,000,000 depositary shares at 1/25th of a preferred share each, closing 30 Oct. The coupon and use of proceeds are not disclosed.",
+      "evidence_ids": [
+        "E.003",
+        "E.004",
+        "E.005"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "The call revealed a shift versus the 10-Q. The 10-Q described a 'relatively neutral' interest rate profile to a 50bp parallel shift. On the call the CFO said management is 'shifting more into asset sensitivity' (floating-rate loans 30% of earning assets, up from 22% four years ago). The 10-Q (Q2, 3.56M shares repurchased) and the Q3 call (pause) also show buybacks changing. Both are developments rather than contradictions, and the newer call is the relevant one for Q4.",
+      "evidence_ids": [
+        "Q.069",
+        "C.017",
+        "C.008",
+        "Q.091",
+        "C.025"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "A headline dated 28-29 Oct says a U.S. Bancorp chief risk officer resigned and an interim appointment was announced. I did not read the article body, so the reason, the individual and the effective date are unknown. It is a governance watch item ahead of the Q4 print.",
+      "evidence_ids": [
+        "N.12"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Peer read-across: Wells Fargo's 10-Q (filed 28 Oct) shows NIM down in Q3 on lower-yielding Markets assets and interest-bearing deposit growth, even as NII grew on fixed-rate asset repricing. Its 12-month NII sensitivity was +$1.5B for +100bp at 30 Sep versus +$1.9B at Dec 2025. PNC's cumulative deposit beta was 47% through June, near USB's 50% assumption. These are proxies, not USB data.",
+      "evidence_ids": [
+        "P.005",
+        "P.006",
+        "P.004"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Sector tone: Goldman (27 Oct) said markets are selling US banks on higher rates while NII guidance has been extended into 2027 as fixed-rate assets reprice. Most guiding banks expect NII and NIM to keep rising. The KBW Bank Index was about 13% below its August record as of 19 Oct.",
+      "evidence_ids": [
+        "N.24",
+        "N.20"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "The quarterly common dividend was raised 3.8% to $0.54 (declared 8 Sep, payable 15 Oct), per a secondary source. USB announced a new Global Funds brand with an Ireland-domiciled CNAV fund on 29 Oct, likely immaterial to Q4 earnings.",
+      "evidence_ids": [
+        "A.010",
+        "N.11"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Will buybacks restart in Q4, and how much does capital constrain EPS upside?",
+      "bull": {
+        "text": "Capital generation after dividends was 33bp in Q3, management is 'very much committed' to a 70%-75% payout and says it will 'be starting that back up'. It is ready for Category II and is not relying on Basel relief.",
+        "evidence_ids": [
+          "C.025",
+          "C.032",
+          "C.087"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "AOCI-adjusted CET1 fell 30bp to 9.1% in Q3, as $12B of RWA growth and a 40bp hit from higher Treasury rates and wider credit spreads outweighed roughly 30bp of earnings net of dividends. Management paused buybacks in Q3 and said the restart timing depends on loan demand, interest rates and regulation, so a further rate move could push it out.",
+        "evidence_ids": [
+          "C.010",
+          "C.025",
+          "C.086"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 share repurchases and explicit restart language on the 19 Jan call, plus CET1, AOCI-adjusted CET1 and RWA growth at 31 Dec."
+    },
+    {
+      "question": "Is the NIM path (about 2.90% exit, 3% in 2027) robust to rising rates and deposit competition?",
+      "bull": {
+        "text": "Mix shift to floating-rate C&I, CRE and card, about $10B per quarter of fixed assets repricing about 125bp higher, and improving funding mix are said to be enough to offset a roughly 50% deposit beta. Management reports no unusual pricing changes post-hike.",
+        "evidence_ids": [
+          "C.017",
+          "C.048",
+          "C.084"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "The CFO concedes the curve and deposit competition could interfere. WFC's NIM fell in Q3 on mix, deposit costs rose 7bp q/q at USB in Q3, and NII beyond Q4 depends on balance sheet growth.",
+        "evidence_ids": [
+          "C.055",
+          "C.008",
+          "P.005"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 NIM versus about 2.89%-2.90%, Q4 deposit costs and beta, and any 2027 NII or NIM guidance."
+    },
+    {
+      "question": "Is the Q3 beat-and-raise already priced in, given the sector sell-off?",
+      "bull": {
+        "text": "Consensus rating is Buy with a $68.50 average target, about 18% above the $57.85 close of 19 Oct. The stock trades at about 10.8x 2026 and 9.9x 2027 consensus EPS, and operating leverage is running ahead of plan.",
+        "evidence_ids": [
+          "A.006",
+          "A.010",
+          "C.011"
+        ],
+        "evidence_type": "estimate"
+      },
+      "bear": {
+        "text": "Goldman said the full-year guidance raise was largely reflected in the share price and cut its target to $61. Bank stocks were in a correction on higher-rate worries even after solid Q3 results.",
+        "evidence_ids": [
+          "A.007",
+          "N.20",
+          "N.24"
+        ],
+        "evidence_type": "proxy"
+      },
+      "what_settles_it": "Q4 results versus the $1.42 consensus, any 2027 outlook given on the 19 Jan call, and the path of rates and bank sector sentiment."
+    },
+    {
+      "question": "Can fee growth stay at 13%-14% with expense growth of about 8% without margin leakage?",
+      "bull": {
+        "text": "Legacy capital markets grew 10% in Q3, corporate payments grew about 19%, trust fees are growing, and management says capital markets will reach 10% or more of revenue.",
+        "evidence_ids": [
+          "C.009",
+          "C.045",
+          "C.004"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "BTIG is guided lower (about $200M versus $226M), other revenue normalizes after unusual gains, mortgage and merchant are flat, and ex-BTIG expenses accelerate from 2% to about 4%. Capital markets is described as a high-efficiency-ratio business.",
+        "evidence_ids": [
+          "C.053",
+          "C.011",
+          "C.098"
+        ],
+        "evidence_type": "guided"
+      },
+      "what_settles_it": "Q4 fee mix (other revenue, BTIG, mortgage), the ex-BTIG expense growth rate and the reported efficiency ratio versus 55.9% in Q3."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "base",
+      "description": {
+        "text": "Results land near guidance. NII is up about 6.5% y/y with NIM at about 2.89%. Fees are up 13%-14% and expenses up about 8%. EPS is at or slightly above $1.42, revenue about $8.1B-$8.2B, and management signals buybacks resume in Q1.",
+        "evidence_ids": [
+          "C.011",
+          "C.009",
+          "M.01"
+        ],
+        "evidence_type": "guided"
+      },
+      "triggers": [
+        "NIM reported 2.88%-2.92%",
+        "Reserve build smaller than Q3's about $0.07",
+        "BTIG about $200M and other revenue $120-150M",
+        "Capital commentary points to Q1 buyback restart"
+      ]
+    },
+    {
+      "name": "bull",
+      "description": {
+        "text": "Bull case: management's stated Q4 drivers all land. The Amazon small-business card book contributes a full quarter, C&I balances increase after a flat Q3, NIM rises by a similar amount to Q3's 5bp, and legacy capital markets grows at a double-digit pace. Buybacks resume within the next quarter or two, and management anticipates positive operating leverage again next year, though it is not giving guidance yet.",
+        "evidence_ids": [
+          "C.015",
+          "C.029",
+          "C.046",
+          "C.025",
+          "C.022"
+        ],
+        "evidence_type": "guided"
+      },
+      "triggers": [
+        "NIM at or above 2.90%",
+        "C&I loan growth resumes",
+        "Buybacks announced or executed in Q4",
+        "Provision close to net charge-offs"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Higher rates and wider spreads keep AOCI-adjusted CET1 near 9% and RWA grows again, delaying buybacks to mid-2027. Deposit competition caps NIM near 2.86%, fees miss on lower BTIG and mortgage, and another reserve build (CRE, card growth) takes EPS to $1.35-$1.38. The CRO departure raises governance questions.",
+        "evidence_ids": [
+          "C.010",
+          "C.055",
+          "C.060",
+          "C.053",
+          "N.12"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "NIM below about 2.87%",
+        "Reserve build at or above Q3's",
+        "No buyback restart timing given",
+        "Further risk-management or regulatory headlines"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "Rate and capital sensitivity. A significant increase in Treasury rates and wider credit spreads in Q3 took 40bp off AOCI-adjusted CET1 (which ended at 9.1%), while reported CET1 held at 10.8% and TCE at 6.6%. Management said the timing of the buyback restart depends on loan demand, interest rates and regulation.",
+        "evidence_ids": [
+          "C.010",
+          "C.025"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Leadership and risk-governance: a USB chief risk officer resigned with an interim appointment (headline dated 28-29 Oct; details unread). This comes as the company prepares for Category II status and a more complex trading business.",
+        "evidence_ids": [
+          "N.12",
+          "C.087"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Credit and reserve risk. A reserve build cost about $0.07 in Q3. Commercial real estate is the area management watches with higher rates, NDFI balances ran off, and card growth (Amazon) increases reserve needs. At Q2 the allowance was 1.94% of loans.",
+        "evidence_ids": [
+          "C.007",
+          "C.060",
+          "C.029",
+          "Q.061"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Margin and deposit risk. The NIM path relies on repricing, mix and deposit discipline. The CFO acknowledged deposit competition and curve shape may interfere, and deposit costs rose 7bp q/q in Q3.",
+        "evidence_ids": [
+          "C.055",
+          "C.008"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "BTIG and capital-markets risk: BTIG adds market risk (included in Market Risk Rule capital from Q3 2026), up to $275M of additional cash consideration is contingent on performance, preliminary goodwill is $613M, and the business is guided to about $200M a quarter. Capital markets is a high-efficiency-ratio business.",
+        "evidence_ids": [
+          "Q.075",
+          "Q.014",
+          "Q.123",
+          "C.045",
+          "C.098"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Regulatory and legal: capital rule changes (Basel endgame, tailoring and Category II) are uncertain, regulators are examining fair-access practices under Executive Order 14331, and the Visa interchange injunctive settlement has a final approval hearing on 16 Nov 2026 (Visa swap liability fair value $74M at 30 Jun).",
+        "evidence_ids": [
+          "Q.089",
+          "Q.235",
+          "Q.228",
+          "Q.185"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "What specific thresholds (AOCI-adjusted CET1, RWA growth, rates) govern the buyback restart, and is Q4 repurchase activity under way?",
+      "why": {
+        "text": "Management paused buybacks in Q3 and said the restart, within the next quarter or two, depends on loan demand, rates and regulatory rules. AOCI-adjusted CET1 was 9.1%.",
+        "evidence_ids": [
+          "C.010",
+          "C.025",
+          "C.032"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What drove the roughly $0.07 Q3 reserve build, how much related to the Amazon card portfolio, and what provision should we expect in Q4?",
+      "why": {
+        "text": "Q3 EPS of $1.34 included an approximately $0.07 impact from reserve build, equating to 10% year-over-year EPS growth, or 16% excluding the build.",
+        "evidence_ids": [
+          "C.007"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "Why did the chief risk officer resign, who is the interim, and does it affect Category II readiness or risk governance?",
+      "why": {
+        "text": "A CRO resignation was reported 28-29 Oct and the details are not in my sources. Management says it is ready for Category II.",
+        "evidence_ids": [
+          "N.12",
+          "C.087"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is the coupon and use of proceeds for the new Series P preferred, and does it replace an existing series?",
+      "why": {
+        "text": "The 8-K shows the sale of 1,000,000 depositary shares, each representing 1/25th of a $25,000-liquidation-preference Series P Fixed Rate Reset preferred share (about $1.0B), closed October 30, with no pricing or dividend rate disclosed. Preferred dividends are deducted in arriving at income to common shareholders.",
+        "evidence_ids": [
+          "E.003",
+          "E.004",
+          "Q.177"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How much of the 6%-7% Q4 NII guide comes from the Amazon card book versus underlying NIM and growth, and what betas are assumed beyond Q4?",
+      "why": {
+        "text": "The Amazon book added about $0.9B of Q3 average loans against $1.7B at period-end, and management assumes about a 50% beta with more hikes.",
+        "evidence_ids": [
+          "C.008",
+          "C.017",
+          "C.011"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "Why does BTIG revenue step down from $226M to about $200M, and what is the pipeline and compensation intensity in capital markets?",
+      "why": {
+        "text": "The step-down and ex-BTIG expense growth of about 4% (from 2%) set Q4 fee and efficiency outcomes, and the earn-out depends on performance targets.",
+        "evidence_ids": [
+          "C.045",
+          "C.011",
+          "Q.123"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "Why was C&I roughly flat q/q, and how much of the expected Q4 rebound is NDFI exposure versus new deals clearing return hurdles?",
+      "why": {
+        "text": "The C&I flatness was attributed to NDFI runoff and pricing hurdles, and Q4 loan growth underlies the NII guide.",
+        "evidence_ids": [
+          "C.028",
+          "C.029"
+        ],
+        "evidence_type": "reported"
+      }
+    }
+  ],
+  "data_gaps": [
+    "No Q3 2026 10-Q, earnings release or Q3 financial statements were available. Q3 figures come from the call transcript and secondary press, so Q3 provision, NII dollars, fee line items, noninterest income components and CET1 detail are not verified against a filing.",
+    "No Q4 consensus for NII, fees, expenses, provision or NIM, and no Q4 2025 line-item base. Q4 2025 revenue and EPS in this report are my backed-out estimates (FY less H1 and Q3).",
+    "FY2026 consensus EPS of $5.35 (secondary source, adjusted basis) implies Q4 of about $1.48 against the $1.42 Q4 consensus; the difference in definition or vintage is not resolved.",
+    "The fact sheet's consensus-implied growth rates (+11.3% revenue, +16.5% EPS) compare Q4 consensus with Q3 2025 actuals, not Q4 2025, and are not true y/y growth.",
+    "Series P preferred coupon, use of proceeds and any redemption plans are not disclosed in the 8-K.",
+    "The body of the chief risk officer resignation article (reason, name, effective date) was not read.",
+    "Whisper EPS, options-implied move, beat/miss record, and the dates of any 2027 guidance update are unavailable. Older coverage (a 12 Oct Zacks piece, background only) cited a Q3 revenue consensus of $8.01B versus about $7.97B reported, but is outside the 14-day news window.",
+    "Peer data for Wells Fargo come from segment tables whose segment is not named in the passage, so segment efficiency and fee figures were not used. PNC's 1H26 NII growth includes the FirstBank acquisition and is not organic.",
+    "The main post-Q3 market source is one aggregator article. Its 10-year Treasury yield of 5.15% looks implausible and was not used; price, target and consensus pulls are unverified against S&P or FactSet.",
+    "No numeric 2027 guidance exists. The 3% NIM is 'at some point in 2027' and operating leverage commentary is qualitative.",
+    "Market data: signals figures are N/A because FMP refused the request (FMP refused https://financialmodelingprep.com/stable/grades (HTTP 402): Premium Query Parameter: 'Special Endpoint : This value set for 'symbol' is not available under your current subscription please visit our subscription page to upgrade your plan at https://financialmo Check FMP_API_KEY in .env and the FMP plan.)."
+  ],
+  "sources": {
+    "Q.009": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 — Yes þ No ¨",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.010": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 — Yes þ No ¨",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.014": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 — Overview",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.061": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 — U.S. Bancorp",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.069": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 — U.S. Bancorp",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.075": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 — U.S. Bancorp",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.089": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 — U.S. Bancorp",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.091": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 — U.S. Bancorp",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.123": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 — Business Combinations",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.177": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 — Net-of-tax",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.185": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 — Derivative Instruments",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.228": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 — Guarantees and Contingent Liabilities",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "Q.235": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-08-06 — Litigation and Regulatory Matters",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "E.003": {
+      "kind": "8-K",
+      "citation": "8-K Items 3.03, 5.03, 8.01, 9.01 (filed 2026-10-30) — New York Stock Exchange",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000119312526441737/d20659d8k.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.004": {
+      "kind": "8-K",
+      "citation": "8-K Items 3.03, 5.03, 8.01, 9.01 (filed 2026-10-30) — Item 8.01. Other Events.",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000119312526441737/d20659d8k.htm",
+      "as_of": "2026-10-30"
+    },
+    "E.005": {
+      "kind": "8-K",
+      "citation": "8-K Items 3.03, 5.03, 8.01, 9.01 (filed 2026-10-30) — Item 8.01. Other Events.",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000119312526441737/d20659d8k.htm",
+      "as_of": "2026-10-30"
+    },
+    "C.003": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Gunjan Kedia, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.004": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Gunjan Kedia, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.007": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.008": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.009": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.010": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.011": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.015": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.017": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.022": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.025": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.028": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Manan Gosalia, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.029": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.030": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Gunjan Kedia, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.032": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.045": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.046": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.048": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.053": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.054": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Ken Usdin, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.055": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.060": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.084": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.086": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.087": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Gunjan Kedia, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.097": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — John C. Stern, Vice Chair and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.098": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Gunjan Kedia, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=USB&quarter=2026Q3",
+      "as_of": null
+    },
+    "F.03": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — six months ended 2026-06-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "F.04": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — six months ended 2025-06-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "F.11": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — six months ended 2026-06-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "F.12": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — six months ended 2025-06-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000044/usb-20260630.htm",
+      "as_of": "2026-08-06"
+    },
+    "F.19": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — year ended 2025-12-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000011/usb-20251231.htm",
+      "as_of": "2026-02-23"
+    },
+    "F.23": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — year ended 2025-12-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610426000011/usb-20251231.htm",
+      "as_of": "2026-02-23"
+    },
+    "F.48": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610425000064/0000036104-25-000064-index.htm",
+      "as_of": "2025-11-05"
+    },
+    "F.49": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "F.50": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/36104/000003610425000064/0000036104-25-000064-index.htm",
+      "as_of": "2025-11-05"
+    },
+    "F.51": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.02": {
+      "kind": "market",
+      "citation": "Market data — Whisper EPS",
+      "url": null,
+      "as_of": null
+    },
+    "M.03": {
+      "kind": "market",
+      "citation": "Market data — Options-implied move",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "M.05": {
+      "kind": "market",
+      "citation": "Market data — Expectation signals",
+      "url": null,
+      "as_of": null
+    },
+    "N.11": {
+      "kind": "news",
+      "citation": "via.ritzau.dk, 2026-10-29 — U.S. Bancorp Announces New U.S. Bancorp Global Funds Brand | Business Wire",
+      "url": "https://via.ritzau.dk/pressemeddelelse/15256452/us-bancorp-announces-new-us-bancorp-global-funds-brand?publisherId=90456&lang=en",
+      "as_of": "2026-10-29"
+    },
+    "N.12": {
+      "kind": "news",
+      "citation": "investing.com, 2026-10-29 — US Bancorp chief risk officer resigns, interim appointment announced",
+      "url": "https://www.investing.com/news/sec-filings/us-bancorp-chief-risk-officer-resigns-interim-appointment-announced-93CH-4983506",
+      "as_of": "2026-10-29"
+    },
+    "N.20": {
+      "kind": "news",
+      "citation": "tradingview.com, 2026-10-19 — After a Streak Not Seen Since 2008, Bank Stocks Face a Five-Day Test — TradingView News",
+      "url": "https://www.tradingview.com/news/prnewswire:d3799f6c131cb:0-after-a-streak-not-seen-since-2008-bank-stocks-face-a-five-day-test",
+      "as_of": "2026-10-19"
+    },
+    "A.005": {
+      "kind": "article",
+      "citation": "Article (beinsure.com)",
+      "url": "https://beinsure.com/news/us-bancorp-stock-price-forecast",
+      "as_of": "2026-10-20"
+    },
+    "A.006": {
+      "kind": "article",
+      "citation": "Article (beinsure.com)",
+      "url": "https://beinsure.com/news/us-bancorp-stock-price-forecast",
+      "as_of": "2026-10-20"
+    },
+    "A.007": {
+      "kind": "article",
+      "citation": "Article (beinsure.com)",
+      "url": "https://beinsure.com/news/us-bancorp-stock-price-forecast",
+      "as_of": "2026-10-20"
+    },
+    "A.008": {
+      "kind": "article",
+      "citation": "Article (beinsure.com)",
+      "url": "https://beinsure.com/news/us-bancorp-stock-price-forecast",
+      "as_of": "2026-10-20"
+    },
+    "A.009": {
+      "kind": "article",
+      "citation": "Article (beinsure.com)",
+      "url": "https://beinsure.com/news/us-bancorp-stock-price-forecast",
+      "as_of": "2026-10-20"
+    },
+    "A.010": {
+      "kind": "article",
+      "citation": "Article (beinsure.com)",
+      "url": "https://beinsure.com/news/us-bancorp-stock-price-forecast",
+      "as_of": "2026-10-20"
+    },
+    "N.24": {
+      "kind": "news",
+      "citation": "investinglive.com, 2026-10-27 — Goldman: Markets selling US banks on higher rates, but income guidance rises into 2027",
+      "url": "https://investinglive.com/stocks/goldman-markets-selling-us-banks-on-higher-rates-but-income-guidance-rises-into-2027",
+      "as_of": "2026-10-27"
+    },
+    "P.004": {
+      "kind": "peer",
+      "citation": "PEER PNC 10-Q filed 2026-08-05 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "P.005": {
+      "kind": "peer",
+      "citation": "PEER WFC 10-Q filed 2026-10-28",
+      "url": null,
+      "as_of": null
+    },
+    "P.006": {
+      "kind": "peer",
+      "citation": "PEER WFC 10-Q filed 2026-10-28",
+      "url": null,
+      "as_of": null
+    }
+  },
+  "check_notes": [
+    "metrics_to_model[6].view: not checked against its passages — claude-sonnet-5-5 returned no verdict for it.",
+    "metrics_to_model[4].view: rewritten to what its sources support (The guidance (13-14% fee growth, about half from BTIG) and the other items are sourced, but the 'legacy growth of roughly 6%-7%' is wrong arithmetic (half of 13-14% is 6.5-7%, ok) while 'legacy capital markets at double-digit growth' and 'down from $226M' are only partly sourced; the call text for legacy growth is cut off and 10% comes from a different passage not cited.).",
+    "guidance[8]: rewritten to what its sources support (The cited passages do not state double-digit legacy capital markets growth (the sentence is cut off at 'that is going to'), and $226M for Q3 is not in the cited passages.).",
+    "key_debates[0].bear: rewritten to what its sources support (The passages say AOCI-adjusted CET1 fell 30bp to 9.1%, $12B RWA growth and 40bp rate/spread impact, but they do not say the Q3 pause surprised the Street.).",
+    "scenarios[1]: rewritten to what its sources support (The passages don't support 2027 operating leverage being guided positive, a minimal reserve build, a $1.48 EPS figure implied by FY consensus, or buybacks restarting in Q4 specifically (management said 'next quarter or two').).",
+    "key_risks[0]: rewritten to what its sources support (Passages give the 40bp hit, 9.1%, 6.6% TCE and 10.8% CET1, but the 40bp included widening credit spreads and the September Fed hike appears elsewhere only as a deposit cost note; the claim that further rate rises could delay buybacks is a view, yet the 'Fed hike cost 40bp' attribution omits spreads and the cited passages don't mention the hike.).",
+    "questions_for_management[0]: rewritten to what its sources support (Timing depends on loan demand, rates and regulation and AOCI-adjusted CET1 was 9.1%, but nothing in the passages says the pause surprised the Street.).",
+    "questions_for_management[1]: rewritten to what its sources support (The $0.07 reserve build and $1.42 consensus are present, but nothing says the reserve build was the main EPS drag or the biggest swing in a Q4 bridge.).",
+    "questions_for_management[3]: rewritten to what its sources support (The 8-K shows 1,000,000 depositary shares each 1/25th of a $25,000 preferred share (about $1.0B) with no pricing, but the passages give no support for several existing series becoming callable in 2026-27.).",
+    "since_filing[1]: tag 'reported' → 'estimate' (it cites only article).",
+    "since_filing[4]: tag 'reported' → 'estimate' (it cites only news).",
+    "since_filing[7]: tag 'reported' → 'estimate' (it cites only article, news)."
+  ]
+}

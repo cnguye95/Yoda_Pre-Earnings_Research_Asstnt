@@ -1,0 +1,1732 @@
+{
+  "ticker": "BA",
+  "company_name": "BOEING CO",
+  "report_generated_at": "2026-11-01T15:12:49+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-10-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-01-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/ba-20251231.htm"
+    }
+  ],
+  "earnings_call": "Q3 FY2026 earnings call (date unknown)",
+  "current_report": "No 8-K or 6-K recent enough to read",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$0.03",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$27.25B",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2027-01-25 report. Paid lookup not made: next report is 85 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "implied move: no live implied move yet (EarningsWatcher has no confirmed report date)."
+    },
+    "historical_move": {
+      "value": "±3.8% average closing move over the last 8 reports (2024-10-23 to 2026-07-28)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/ba-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": "1 beats, 3 misses in the last 4 quarters, average surprise -75.9%",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "Finnhub earnings surprises",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "analyst_actions": {
+      "value": "Last 30 days, newest first: Bernstein maintained Outperform (2026-10-29); TD Cowen maintained Buy (2026-10-28); JP Morgan maintained Overweight (2026-10-28); UBS maintained Buy (2026-10-28); Morgan Stanley maintained Equal Weight (2026-10-28); Baird maintained Outperform (2026-10-28); Susquehanna maintained Positive (2026-10-28); RBC Capital maintained Outperform (2026-10-28); BNP Paribas maintained Outperform (2026-10-28); Barclays maintained Overweight (2026-10-28); Wells Fargo maintained Overweight (2026-10-28); Jefferies maintained Buy (2026-10-28); Morgan Stanley maintained Equal Weight (2026-10-19); RBC Capital maintained Outperform (2026-10-15); Bernstein maintained Outperform (2026-10-12); TD Cowen maintained Buy (2026-10-09)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP grades",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "price_target": {
+      "value": "$243.73, +42.1% vs current $171.55",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP price target consensus",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "Q3 2026 (reported 10/27) revenue was $24.19B, up 3.9% year on year, with a 1.5% operating margin. GAAP diluted EPS was -$0.26 and core EPS was -$0.34. The year-earlier quarter carried a roughly $4.9B 777X charge, so the year-on-year improvement is mostly that comparison.",
+      "evidence_ids": [
+        "F.01",
+        "F.37",
+        "F.53",
+        "F.09",
+        "Q.111",
+        "Q.085"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Against Street numbers, Q3 revenue beat (about $24.19B vs $23.84-23.85B) but core EPS missed (-$0.34 vs -$0.21 expected). BCA lost $697M against an estimated ~$361M. The revenue beat came from BDS ($7.94B vs $7.41B estimated), not from commercial. Free cash flow of $464M beat a $325M estimate.",
+      "evidence_ids": [
+        "N.54",
+        "N.52",
+        "A.057",
+        "N.51"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Q3 BDS earnings of $492M included a $252M gain on the sale of an equity-method investment (HRL). Excluding it, BDS margin was about 3.0%. On ~793M shares the gain is worth roughly $0.32 per share pre-tax, so the underlying Q3 loss per share was materially worse than the headline -$0.34 (my arithmetic; tax effect not adjusted).",
+      "evidence_ids": [
+        "A.025",
+        "Q.096",
+        "Q.028",
+        "Q.021"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q4 2026 consensus is revenue of $27.25B (+13.8% year on year) and EPS of $0.03. The year-ago comparison (Q4 2025 EPS $10.73) is distorted by a $9.57B Digital Aviation Solutions gain, so the -99.7% implied EPS growth is not meaningful. The report is scheduled for 2027-01-25 per the calendar, but no confirmed date or implied move exists yet.",
+      "evidence_ids": [
+        "M.01",
+        "F.70",
+        "F.72",
+        "F.71",
+        "K.217",
+        "M.03"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Boeing missed EPS in 3 of the last 4 quarters (average surprise -75.9%). The average closing move over the last 8 reports is ±3.8%, but the stock fell nearly 10-11% on 10/27. Shares are at $171.55 versus a consensus target of $243.73 (+42%).",
+      "evidence_ids": [
+        "M.05",
+        "M.04",
+        "A.057",
+        "A.014",
+        "M.07"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Management gave first-time multi-year free cash flow targets: ~$2B in 2026, ~$3B in 2027, ~$6B in 2028 and ~$10B in 2029. Pre-report Street expectations were ~$5.5B for 2027 and ~$9.8B for 2028, so the plan sits below consensus. The CEO called it a 'one-year shift to the right'. Nine-month 2026 free cash flow is -$359M.",
+      "evidence_ids": [
+        "C.007",
+        "C.008",
+        "C.069",
+        "A.015",
+        "F.65"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "The commercial constraint is the 737 wing back shop. Some 'flow enablers' did not deliver the expected flow savings, so rate 47 stability slips into 2027 and rate 52 is targeted for the second half of 2027. The 500-aircraft 737 delivery target for 2026 will be missed, and the 787 is heading to the low end of 90-100.",
+      "evidence_ids": [
+        "C.048",
+        "C.005",
+        "C.010"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "Backlog is a record $745B, including BCA at a record $612B and BDS at $101B. BDS was selected for the F/A-XX, which is not yet in backlog. Liquidity is $20.7B of cash and marketable securities against $45.9B of debt, with $10B of undrawn revolvers.",
+      "evidence_ids": [
+        "Q.063",
+        "C.007",
+        "C.009",
+        "Q.087",
+        "C.012",
+        "C.013",
+        "Q.105"
+      ],
+      "evidence_type": "reported"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Total revenue",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 2026 revenue was $24.19B (+3.9% year on year).",
+        "evidence_ids": [
+          "F.01",
+          "F.37"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Q4 consensus revenue is $27.25B, +13.8% year on year and about $3.1B above Q3.",
+        "evidence_ids": [
+          "M.01",
+          "F.70"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "My rough build suggests consensus is somewhat demanding but reachable. I assume ~170-180 deliveries (vs 160 in Q4 2025), BCA revenue near $12.5B (Q4 2025 was $11.38B), BDS about $8.3B (Q4 2025: $7.42B) and BGS about $5.7B (Q4 2025: $5.21B). That sums to roughly $26-26.5B, about 3-5% below consensus. The build is my own and the segment assumptions are unsourced. BDS carried the Q3 beat, and a 737 shortfall puts the BCA leg at risk.",
+        "evidence_ids": [
+          "K.097",
+          "Q.073",
+          "A.034",
+          "K.113",
+          "F.70"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Diluted EPS (GAAP) / core EPS",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 2026 GAAP diluted EPS was -$0.26 and core EPS -$0.34, including the $252M HRL gain in BDS.",
+        "evidence_ids": [
+          "F.09",
+          "Q.111",
+          "Q.096"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Q4 consensus EPS is $0.03. The source does not say whether this is GAAP or core.",
+        "evidence_ids": [
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "EPS of +$0.03 on ~793M shares needs about $24M of income to common plus $87M of preferred dividends, so roughly +$110M of net income against Q3's -$116M. With interest of ~$573M and other income of ~$96M, that implies operating earnings of about $0.6B (my arithmetic, ignoring tax and minorities). Q3 operating earnings were $354M, or about $0.1B ex-HRL gain. The step-up would have to come in a quarter where abnormal costs and rate-delay effects begin. The risk is skewed to a miss, especially if the consensus predates the 10/27 call, which cannot be verified.",
+        "evidence_ids": [
+          "Q.005",
+          "Q.021",
+          "Q.096",
+          "C.011",
+          "C.022",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Total commercial deliveries",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 2026 deliveries were 161 (nine months 475). Q4 2025 was 160 and FY2025 was 600.",
+        "evidence_ids": [
+          "Q.084",
+          "A.034",
+          "K.113"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "No analyst delivery estimate was found. Management's own markers point to roughly 165-180: 737s below 133 (500 minus 367), 787s at 28 or more (low end of 90-100 minus 62), plus about 10 767s and a handful of 777s. That is a modest step up from Q3, not the large jump consensus revenue might imply. Boeing publishes Q4 deliveries before the earnings date (the Q3 count came out 10/13), which will be the first hard check.",
+        "evidence_ids": [
+          "C.010",
+          "A.033",
+          "Q.084",
+          "A.035"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "737 deliveries",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 737 deliveries were 124; nine months 367 (330 a year earlier). The best 2025-26 quarter was 129 in Q2 2026.",
+        "evidence_ids": [
+          "Q.084",
+          "A.035"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Hitting 500 would need 133 in Q4, more than any quarter so far, and management says 2026 will come in short. I model about 120-130. About 45 prebuilt -7/-10 aircraft are in inventory but deliveries start early 2027, so they do not help Q4.",
+        "evidence_ids": [
+          "A.033",
+          "C.010",
+          "Q.089"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "787 deliveries",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 787 deliveries were 22; nine months 62.",
+        "evidence_ids": [
+          "Q.084"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The low end of 90-100 implies at least 28 in Q4. Delivery cadence has been uneven because of seat certification, and engines pace the move to rate 10. I treat 28 as the floor and a shortfall as a risk.",
+        "evidence_ids": [
+          "C.010",
+          "C.005"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "BCA operating margin",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "BCA Q3 loss was $697M on revenue of $10.72B (-6.5%). Nine months: -$1,582M (-5.0%).",
+        "evidence_ids": [
+          "Q.083",
+          "Q.012",
+          "Q.085"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Q3 included rate-delay and supply-chain cost effects but not a material wing-supplier abnormal cost. The CFO said abnormal costs from the 777F and 767 lines will hit Q4 and the first half of 2027 and that BCA reaches roughly breakeven in early 2028. I model Q4 at or below Q3's -6.5% despite more volume. This is my inference, not guidance. The 'breakeven for 2026' remark from July most likely referred to cash margin; I could not confirm it.",
+        "evidence_ids": [
+          "Q.085",
+          "C.011",
+          "C.022",
+          "C.018",
+          "C.019"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "BDS operating margin",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 BDS margin was 6.2% including the $252M HRL gain (about 3.0% ex-gain). Nine months 3.1%.",
+        "evidence_ids": [
+          "Q.095",
+          "A.025",
+          "C.012"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Without a repeat gain, I model BDS near 3-4%. Management targets high-single-digit margins by the end of the decade. VC-25B and KC-46A supplier disruption are the charge risks. F/A-XX is not in backlog and does not add Q4 earnings.",
+        "evidence_ids": [
+          "C.012",
+          "Q.036",
+          "Q.037"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Free cash flow",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 free cash flow was $464M (operating cash flow $1.50B less capex $1.03B), vs a $325M estimate. Nine months -$359M. Q4 2025 was $375M.",
+        "evidence_ids": [
+          "A.004",
+          "N.54",
+          "F.65",
+          "A.029"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The ~$2B 2026 target implies about $2.36B in Q4, 5x Q3. Capex is about $1.0B (2026 implied near $4B, since 2027's $5B is about $1B higher), so operating cash flow of roughly $3.3B is needed. Management includes an early KC-46A Lot 13 order/advance (unquantified) and seasonal working capital. Last year's Q4 was only $375M. I see the $2B as achievable only with the Lot 13 advance landing in the quarter, with a risk of finishing nearer the low end of the earlier $1-3B range.",
+        "evidence_ids": [
+          "A.004",
+          "C.013",
+          "C.018",
+          "A.029",
+          "A.006"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Capital expenditure",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Nine-month 2026 capex was $3.04B vs $1.99B (+53%).",
+        "evidence_ids": [
+          "F.19",
+          "F.46"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Q4 capex of about $1.0B is consistent with 2026 near $4B. Management guides 2027 to about $5B and 2028-29 to about $4B a year (3-4% of revenue normalised).",
+        "evidence_ids": [
+          "C.018",
+          "C.062",
+          "C.064"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Free cash flow",
+      "guidance": "About $2B for 2026 (implies ~$2.36B in Q4). Includes the KC-46A Lot 13 order/advance and seasonal working capital.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "Management narrowed 2026 free cash flow to about $2B, which includes an early KC-46A Lot 13 order/advance. In July the range was reportedly $1-3B, so $2B is its midpoint, though that July range is secondhand (Stock Titan) and the Q3 release did not repeat it.",
+        "evidence_ids": [
+          "C.007",
+          "C.013",
+          "A.029",
+          "A.004"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Free cash flow",
+      "guidance": "About $3B, with the absence of the ~$700M DOJ payment, higher deliveries and better 737/787 cash margins offset by lower BCA order deposits (a few billion dollars lower) and ~$1B more capex. Assumes 777X certification by mid-2027.",
+      "period": "FY2027",
+      "status": "new",
+      "claim": {
+        "text": "The 2027 target of about $3B is below the prior ~$5.5B Street view. Jefferies attributed the gap to lower deliveries and higher capital investment.",
+        "evidence_ids": [
+          "C.013",
+          "C.014",
+          "C.018",
+          "A.056"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Free cash flow",
+      "guidance": "About $6B in 2028 and about $10B in 2029, with significant growth beyond. The 2029 build assumes 737 deliveries in the mid-to-high fifties, 787 around 12 a month and positive 777X cash.",
+      "period": "FY2028-FY2029",
+      "status": "lowered",
+      "claim": {
+        "text": "The $10B target arrives in 2029, which the CEO described as about a one-year shift to the right. Reuters says it is a year later than consensus. Pre-report Street expectations were ~$9.8B for 2028, versus ~$6B guided.",
+        "evidence_ids": [
+          "C.008",
+          "C.019",
+          "C.069",
+          "A.015",
+          "A.056"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "737 production rate",
+      "guidance": "Stabilise at 47 per month 'into next year' (2027); rate 52 targeted for the second half of 2027, requiring the North Line certified and producing, stable back shops and stable Wichita fuselages.",
+      "period": "2027",
+      "status": "lowered",
+      "claim": {
+        "text": "The 10-K planned to reach 47 in 2026 with FAA concurrence. The 10-Q and call now put stabilisation at 47 in 2027 and rate 52 in the second half of 2027. Reuters notes executives in May said 47 would be hit this summer.",
+        "evidence_ids": [
+          "K.118",
+          "Q.089",
+          "C.005",
+          "A.057"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "737 deliveries",
+      "guidance": "Below the 500 target for 2026; Q4 would need 133.",
+      "period": "FY2026",
+      "status": "lowered",
+      "claim": {
+        "text": "The CFO said delayed stability at 47 means 737 deliveries will come in shy of 500. In July he had said Boeing was on track for 500.",
+        "evidence_ids": [
+          "C.010",
+          "A.033"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "787 deliveries and rate",
+      "guidance": "90-100 deliveries in 2026, closer to the low end. Stable at 8 per month; transition to 10 per month expected to start this year, paced by engine deliveries. The 10-Q says the next increase begins in December 2026.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "The 787 delivery range is unchanged but now skewed to the low end, with 62 delivered through nine months.",
+        "evidence_ids": [
+          "C.010",
+          "C.005",
+          "Q.093",
+          "Q.084"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "777-9 certification and first delivery",
+      "guidance": "First delivery in 2027; plan assumes certification by mid-2027 with 10-15 deliveries in 2027. Production is about one per month through most of 2027. 2027 is a significant cash use before turning positive in 2029. The 10-Q expects final flight-test phase approvals by end-2026.",
+      "period": "2027",
+      "status": "maintained",
+      "claim": {
+        "text": "First delivery of the 777-9 in 2027 is unchanged from the 10-K. Management says current assumptions sit within the EAC set in last year's reset, with management reserve so that certification slipping to mid-year would still fit within the EAC. The CFO said a delay later in 2027 (10-15 fewer deliveries) could be absorbed within the $3B 2027 free cash flow guide, and later framed the cash impact as a month or two.",
+        "evidence_ids": [
+          "Q.091",
+          "K.121",
+          "C.011",
+          "C.060",
+          "C.034",
+          "C.062"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "BCA deliveries and margin",
+      "guidance": "2027 total BCA deliveries up 10% or more, with detail by program in January. BCA P&L margin to about breakeven in early 2028. Abnormal costs from 777F/767 pressure the run rate into the first half of 2027.",
+      "period": "FY2027-early FY2028",
+      "status": "new",
+      "claim": {
+        "text": "The CFO guided BCA deliveries up 10% or more in 2027 and about breakeven BCA margin in early 2028, with program detail promised in January.",
+        "evidence_ids": [
+          "C.037",
+          "C.022"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Capital expenditure",
+      "guidance": "About $5B in 2027 (including F/A-XX development), about $4B a year in 2028-29; 3-4% of revenue on a normalised basis. 2026 above 2025.",
+      "period": "FY2027-FY2029",
+      "status": "new",
+      "claim": {
+        "text": "Capex is guided higher: about $5B in 2027 and about $4B in each of 2028 and 2029, versus $2.94B in 2025.",
+        "evidence_ids": [
+          "C.018",
+          "C.062",
+          "C.064",
+          "F.33"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "BDS margin",
+      "guidance": "Steady margin improvement toward high-single-digit operating margin by end of decade; defense growth now seen at high-middle single digits or higher.",
+      "period": "By 2030",
+      "status": "maintained",
+      "claim": {
+        "text": "Management remains confident in high-single-digit BDS operating margins by the end of the decade. The CEO expects defense revenue growth to be high-middle-single-digit or higher, versus the low-single-digit growth previously assumed.",
+        "evidence_ids": [
+          "C.012",
+          "C.072"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "The stock fell nearly 10-11% on 10/27, hitting a 52-week low. Outlets disagree on how bad it was: Reuters says worst day since April 2025, Yahoo says since 2020. The consensus price target dropped to $249 from $265 as at least 11 firms cut targets. Citi kept Buy and $260. The market-data block shows the target at $243.73 and the price at $171.55, a snapshot that differs from TIKR's.",
+      "evidence_ids": [
+        "A.057",
+        "N.67",
+        "A.014",
+        "A.015",
+        "M.07"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Analyst ratings were largely maintained after the call (Bernstein, TD Cowen, JPMorgan, UBS, Baird, Wells Fargo, Jefferies and others on 10/28-10/29; Morgan Stanley stays Equal Weight). Consensus EPS is $3.48 for 2027 and $6.92 for 2028, and the new 2027 free cash flow guide of $3B compares with the $5.5B analysts had penciled in before the report.",
+      "evidence_ids": [
+        "M.06",
+        "A.016",
+        "A.015"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "A conflict on the current 737 rate: the 10-Q says the transition from 42 to 47 began in Q2 2026 and stability at 47 comes in 2027. Reuters says 47 is expected 'in early 2027'. Local reports describe Boeing as stabilising at 42 before moving to 47, and one outlet says about 41 per month. The 10-Q is the primary source; the current monthly rate is not disclosed.",
+      "evidence_ids": [
+        "Q.089",
+        "A.057",
+        "N.73",
+        "N.72",
+        "N.21"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "777-9: the FAA will reportedly not certify the aircraft until it approves GE's redesigned engine mid-seal, which GE is seeking by end-2026. GE's 10-Q confirms it delivered GE9X engines with the upgraded seal in Q3, with the financial impact recognised after FAA certification. The CEO said Boeing still needs approval for the balance of flight testing, including ETOPS.",
+      "evidence_ids": [
+        "N.14",
+        "A.038",
+        "P.001",
+        "C.004",
+        "N.17"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Supply read-through: Airbus kept 2026 guidance (850-890 deliveries) and said engines remain the main bottleneck. A Safran seat-delivery risk was raised on the call. GE reported Q3 LEAP deliveries of 535 vs 511 and improved material availability. This is consistent with the CEO saying engines are not the 737 problem; the issue is Boeing's wing shop.",
+      "evidence_ids": [
+        "N.41",
+        "N.40",
+        "P.001",
+        "P.002",
+        "C.048"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "ULA's Vulcan is reportedly set to return to flight on November 13 after the nozzle issue was resolved. That would reduce the risk behind Boeing's $750M guarantee and the additional Q4 support the 10-Q expects.",
+      "evidence_ids": [
+        "N.48",
+        "N.49",
+        "Q.029"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "The Archer sale of Insitu, Wisk and SkyGrid had not closed as of 10/30; closing is expected by year-end. Boeing carries $688M of held-for-sale assets and $161M of liabilities. A Q4 gain or loss could appear in dispositions, but its sign and size are unknown since Archer's valuation was not found.",
+      "evidence_ids": [
+        "N.33",
+        "N.34",
+        "Q.018"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Government funding runs through December 11. Lawmakers expect another stopgap and say shutdown odds are low, though a post-election Pentagon funding fight is flagged as a risk.",
+      "evidence_ids": [
+        "Q.080",
+        "N.36",
+        "N.38"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Can Q4 deliver the step-up that consensus (revenue $27.25B, EPS $0.03) and the $2B free cash flow target need?",
+      "bull": {
+        "text": "Management says working-capital seasonality and the Lot 13 advance support ~$2B. Customer advances rose $3.45B in Q3, and BCA order cash is running at a record in 2026. Q3 free cash flow beat estimates ($464M vs $325M).",
+        "evidence_ids": [
+          "C.013",
+          "A.023",
+          "C.018",
+          "N.54"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Q4 free cash flow would need to be about 5x Q3 ($2.36B), Q4 2025 was only $375M, and 737 deliveries are guided below 133. EPS of +$0.03 requires roughly $0.6B of operating earnings against $0.1B ex-gain in Q3, while abnormal costs start in Q4.",
+        "evidence_ids": [
+          "A.004",
+          "A.029",
+          "C.010",
+          "C.011",
+          "Q.005"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Boeing's early-January Q4 delivery release (737 vs 133, 787 vs 28), any KC-46A Lot 13 contract award in Q4, and the January print itself."
+    },
+    {
+      "question": "Is the 737 wing shop fixable on the stated timetable (stable at 47 in 2027, rate 52 in the second half of 2027)?",
+      "bull": {
+        "text": "Final assembly KPIs are strong (rework down 40% since early last year), early signs on added wing capacity are encouraging, and the CEO sees no systemic supply-chain problem beyond wings and Wichita fuselage ramp.",
+        "evidence_ids": [
+          "C.004",
+          "C.048",
+          "C.051"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "The ramp has slipped repeatedly: executives said in May that 47 would be hit this summer. Several flow enablers did not yield, rate 52 also needs a new North Line going from about 1 to 5 per month, and Wichita fuselages must ramp from a deliberately lower rate.",
+        "evidence_ids": [
+          "A.057",
+          "C.048",
+          "N.65",
+          "C.051"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Monthly 737 delivery counts, FAA North Line production certification, and the January 2027 program-level delivery guidance."
+    },
+    {
+      "question": "How much do abnormal costs and rate-delay effects push BCA margins below Q3's -6.5% before the early-2028 breakeven?",
+      "bull": {
+        "text": "The CFO says Q3 supplier cost was not material, shipments have resumed, and the pressure abates in the second half of 2027 as higher-priced backlog and volume come through. He says cash is already absorbed in the plan.",
+        "evidence_ids": [
+          "C.011",
+          "C.022"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "The 10-Q expects the supplier disruption to continue into 2027 and cause abnormal production costs expensed as incurred. BCA already lost twice what the Street expected in Q3, and the amount of Q4 abnormal cost is not quantified.",
+        "evidence_ids": [
+          "Q.082",
+          "Q.090",
+          "N.54",
+          "C.011"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "The Q4 BCA margin and any quantification of abnormal costs on the January call."
+    },
+    {
+      "question": "Is the 777-9 on track for mid-2027 certification, or is another schedule slip or reach-forward loss likely?",
+      "bull": {
+        "text": "Management reset the EAC last year and says current assumptions, including first delivery in 2027, sit within it with reserve to mid-2027. GE has resumed shipping engines with the upgraded seal, and the FAA can now devote resources after the 737-7/-10 certifications.",
+        "evidence_ids": [
+          "C.004",
+          "C.060",
+          "P.001"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "The FAA still has not granted the balance of flight-test authorisations including ETOPS, the FAA reportedly requires seal approval before certifying, and the $4.9B charge in 2025 shows how sensitive the EAC is. The 777 and 777X programs are near break-even margin, so there is little cushion.",
+        "evidence_ids": [
+          "C.004",
+          "N.14",
+          "K.121",
+          "Q.092"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "FAA authorisation of the remaining flight-test phases and ETOPS by year-end, and FAA approval of the GE9X mid-seal."
+    },
+    {
+      "question": "Is the stock's discount to the $243.73 consensus target justified by the delayed cash path?",
+      "bull": {
+        "text": "Backlog is a record $745B with improved pricing dynamics, the CEO expects defense growth to be well above the earlier low-single-digit view, and he says the endpoint is unchanged and the path is roughly a one-year shift to the right. Citi holds its $260 target.",
+        "evidence_ids": [
+          "C.007",
+          "C.069",
+          "C.072",
+          "A.015"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "The $10B cash target does not arrive until 2029, 2027 estimates are still falling, and reaching Citi's $260 requires paying today for cash expected years out. Debt is $45.9B and the mandatory preferred converts into up to ~40M shares in October 2027.",
+        "evidence_ids": [
+          "A.017",
+          "C.013",
+          "Q.047"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Delivery and margin progress through 2027 against the free cash flow path, starting with January's 2027 program-level guidance."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "bull",
+      "description": {
+        "text": "Deliveries land at the top of the guided markers (737 near 130, 787 near 30, total ~180). The Lot 13 advance arrives in Q4 and free cash flow reaches about $2.4B or more. BCA abnormal costs stay small and BDS holds mid-single-digit margins, so EPS is at or above $0.03. January 2027 program guidance supports BCA deliveries up 10% or more.",
+        "evidence_ids": [
+          "C.010",
+          "C.013",
+          "C.037",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "October and November delivery data point to 737 at or above 125 a month-equivalent run-rate",
+        "KC-46A Lot 13 award announced before year-end",
+        "FAA authorises the balance of 777-9 flight tests including ETOPS",
+        "Vulcan returns to flight on Nov 13 and ULA support is small"
+      ]
+    },
+    {
+      "name": "base",
+      "description": {
+        "text": "Deliveries are about 170-175 with 737s near 125 and 787s near the low end. Revenue lands somewhat below the $27.25B consensus. BCA margin is near or below Q3's -6.5% with abnormal costs carrying into Q4, so EPS is at or below breakeven (a small miss vs +$0.03). Free cash flow lands between $1B and $2B for the year unless the Lot 13 advance is large. The multi-year targets are reiterated and the stock reacts mostly to 2027 program guidance.",
+        "evidence_ids": [
+          "C.009",
+          "Q.083",
+          "C.010",
+          "C.011",
+          "C.022",
+          "C.013",
+          "M.01",
+          "A.004"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "737 deliveries roughly flat with Q3",
+        "Abnormal costs disclosed as modest and temporary",
+        "2027 BCA deliveries guided to about +10%"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "737 deliveries fall below 120 as wing output stays unstable, 787 Q4 deliveries come in under the 28 needed (62 so far) to reach the 90 low end, given seat certification and engine constraints, and abnormal costs plus a charge (KC-46A, VC-25B or 777X) push EPS to a clear loss. Free cash flow falls short of $2B because the Lot 13 advance slips, forcing a trim of the 2026 target and questions on 2027's $3B. The 777-9 flight-test approval or mid-seal slips beyond year-end, putting mid-2027 certification in doubt.",
+        "evidence_ids": [
+          "C.010",
+          "Q.084",
+          "C.005",
+          "C.048",
+          "C.013",
+          "Q.037",
+          "Q.036",
+          "C.060",
+          "N.14"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Weak monthly delivery data in October and November",
+        "No FAA approval of remaining 777-9 flight tests or mid-seal by year-end",
+        "A reach-forward loss or larger abnormal-cost disclosure",
+        "Funding lapse on Dec 11 disrupts defense payments or FAA work"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "737 ramp execution: the wing back shop is not yet stable at 47 and rate 52 also depends on North Line FAA production certification and Wichita fuselage ramp. Further slippage would hit Q4 deliveries and 2027 estimates.",
+        "evidence_ids": [
+          "C.048",
+          "C.005",
+          "Q.089",
+          "K.016"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Supplier disruption (wing components for 777F and 767/KC-46A, plus a key supplier shortage on KC-46A) is expected to cause abnormal production costs expensed as incurred, continuing into 2027. The 10-Q says it adversely affects the KC-46A and 777F programs.",
+        "evidence_ids": [
+          "Q.082",
+          "Q.090",
+          "Q.037",
+          "C.011"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "777-9 certification: the FAA has not yet authorised the balance of flight testing including ETOPS, mid-seal approval is a reported certification requirement, and the 2027 free cash flow target assumes certification by mid-2027. The 2025 reach-forward loss was $4.9B.",
+        "evidence_ids": [
+          "C.004",
+          "C.013",
+          "N.14",
+          "K.121"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Fixed-price defense programs (KC-46A, VC-25B, MQ-25, T-7A, Commercial Crew) can still produce reach-forward losses. VC-25B added $312M in the first nine months of 2026, and the 10-Q repeats that further losses are possible. F/A-XX contract type is undisclosed.",
+        "evidence_ids": [
+          "Q.036",
+          "Q.037",
+          "Q.099",
+          "C.074"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Free cash flow credibility: the 2026 target depends on a Q4 of about $2.36B that includes an unquantified KC-46A Lot 13 advance. Capex rises to about $5B in 2027, and 2027 order deposits fall by a few billion dollars from a record 2026.",
+        "evidence_ids": [
+          "A.004",
+          "C.013",
+          "C.018"
+        ],
+        "evidence_type": "guided"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "ULA: the Vulcan launch pause hurts ULA's results. Boeing and Lockheed each guaranteed $750M of ULA credit facilities in Q3 and expect to provide additional support in Q4, with possible losses if launches do not resume.",
+        "evidence_ids": [
+          "Q.029",
+          "Q.042"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Policy and funding: agencies are funded only through December 11. Government departments (DoW, NASA, DOT/FAA) could face a funding lapse, with delays to certification and payments. The 10-K flags this as a recurring risk.",
+        "evidence_ids": [
+          "Q.080",
+          "K.036",
+          "N.36"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Balance sheet and dilution: debt is $45.9B, Boeing has $16.5B of aircraft financing commitments, and the mandatory convertible preferred converts on October 15, 2027 into 5.828-6.994 shares each (about 33.5-40.2M shares). Dividends cost about $345M a year. The 10-Q states no material change in risk factors versus the 10-K.",
+        "evidence_ids": [
+          "Q.104",
+          "Q.033",
+          "Q.047",
+          "K.071",
+          "Q.115"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "What are your Q4 delivery expectations by program (737, 787, 767, 777), and what is the Q4 abnormal-cost estimate from the wing-supplier disruption?",
+      "why": {
+        "text": "With 367 737s delivered through Q3, reaching the old 500 target would take 133 in Q4, which management says will be missed. The 787 needs 28 in Q4 (62 delivered so far) to reach the 90 low end of its range. The CFO said only that Q3's supplier-disruption cost was not material but will be treated as abnormal cost and a period expense over the next few quarters.",
+        "evidence_ids": [
+          "Q.084",
+          "C.010",
+          "C.011",
+          "A.033"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "How large is the KC-46A Lot 13 advance, when will it be received, and what share of the ~$2.36B Q4 free cash flow does it represent?",
+      "why": {
+        "text": "The 2026 target explicitly includes the Lot 13 order in advance, but no source quantifies it.",
+        "evidence_ids": [
+          "C.013",
+          "A.004",
+          "A.006"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What objective measures will show the wing back shop is stable at 47, and what must be true before you move to 52 given the North Line certification and Wichita ramp?",
+      "why": {
+        "text": "Several flow enablers did not yield and the ramp has slipped from this summer to 2027.",
+        "evidence_ids": [
+          "C.048",
+          "A.057",
+          "C.051"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "When do you expect FAA authorisation of the remaining 777-9 flight tests including ETOPS, and where does mid-seal approval stand?",
+      "why": {
+        "text": "The CEO said approval to begin the balance of the flight-test programme is still needed, and the 10-Q expects final-phase approval by end-2026.",
+        "evidence_ids": [
+          "C.004",
+          "Q.091",
+          "A.038"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What is the F/A-XX contract type, when will it enter backlog, and what is its capex and earnings profile?",
+      "why": {
+        "text": "The CEO called the F/A-XX contract type only 'appropriate'. The CFO put 2027 capex at about $5B, and the CEO said the $3B 2027 free cash flow target is inclusive of the additional capex to support F/A-XX development.",
+        "evidence_ids": [
+          "C.074",
+          "C.018",
+          "C.008"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What is the expected Q4 ULA support, and what is the accounting and timing for the Archer transaction, including any gain or loss?",
+      "why": {
+        "text": "The 10-Q says additional ULA support is expected in Q4 and the Archer deal is expected to close later in 2026, but neither amount is disclosed.",
+        "evidence_ids": [
+          "Q.029",
+          "Q.018"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What are 2027 delivery assumptions by program (including the ~30 prebuilt -7/-10 and the 10-15 777-9s), and how would a slip in 777-9 certification affect free cash flow?",
+      "why": {
+        "text": "BCA deliveries are guided up 10% or more, with program detail promised for January, and the $3B 2027 target assumes mid-2027 777X certification.",
+        "evidence_ids": [
+          "C.037",
+          "C.032",
+          "C.013",
+          "A.056"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "data_gaps": [
+    "Timestamp of the $27.25B / $0.03 Q4 consensus (Finnhub) relative to the 10/27 call is unknown, and it is unclear whether the EPS consensus is GAAP or core.",
+    "No analyst note was found with Q4 or FY2026 737/787 delivery estimates; the 165-180 delivery range is my own inference from management markers.",
+    "No quantified Q4 abnormal-cost figure and no analyst Q4 BCA margin estimate were found.",
+    "The July 2026 free cash flow range of $1-3B comes from a Stock Titan summary; the Q2 call transcript text could not be retrieved, so the 'breakeven for 2026' referent is inferred.",
+    "KC-46A Lot 13 contract value, award date and advance terms are not disclosed.",
+    "Archer's market capitalisation, share count, warrant value and regulatory status were not found, so the Q4 gain or loss on the Insitu/Wisk/SkyGrid disposition cannot be sized.",
+    "The current monthly 737 build rate is not disclosed; third-party figures of 38, 41 and 42 conflict with the 10-Q.",
+    "The FAA's formal position on the GE9X mid-seal rests on secondhand reports (FlightGlobal and Air Data News via a blog); the FAA timing of North Line production certification is not firmly sourced.",
+    "Options-implied move and whisper EPS are unavailable (report date not confirmed); BCA/BGS Q3 revenue consensus by segment was not found."
+  ],
+  "sources": {
+    "Q.005": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.012": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · Financial Statements — Shareholders’ equity:",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.018": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · Financial Statements — Note 3 – Insitu, Wisk Aero and SkyGrid Divestiture",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.021": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · Financial Statements — Note 4 – Earnings Per Share",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.028": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · Financial Statements — Note 10 – Investments",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.029": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · Financial Statements — Note 10 – Investments",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.033": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · Financial Statements — Financing Commitments",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.036": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · Financial Statements — VC-25B Presidential Aircraft",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.037": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · Financial Statements — KC-46A Tanker",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.042": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.047": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · Financial Statements — Equal to or less than $171.5854 but greater than or equal to $142.9797",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.063": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.073": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.080": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.082": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A — Global Trade The global trade landscape continues to evolve.",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.083": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.084": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A — Revenues",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.085": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A — Loss From Operations",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.087": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.089": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A — Program Highlights",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.090": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A — Program Highlights",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.091": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A — Program Highlights",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.092": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.093": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.095": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A — Overview",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.096": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A — Revenues",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.099": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A — Additional Considerations",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.104": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A — Backlog",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.105": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A — Capital Resources",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.111": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · MD&A — Reconciliation of Non-GAAP Measures to GAAP Measures",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "Q.115": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-27 · Risk Factors — Item 1A. Risk Factors",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "K.016": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-30 · Business — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/ba-20251231.htm",
+      "as_of": "2026-01-30"
+    },
+    "K.036": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-30 · Risk Factors — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/ba-20251231.htm",
+      "as_of": "2026-01-30"
+    },
+    "K.071": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-30 · Risk Factors — Risks Related to Financing and Liquidity",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/ba-20251231.htm",
+      "as_of": "2026-01-30"
+    },
+    "K.097": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-30 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/ba-20251231.htm",
+      "as_of": "2026-01-30"
+    },
+    "K.113": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-30 · MD&A — Revenues",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/ba-20251231.htm",
+      "as_of": "2026-01-30"
+    },
+    "K.118": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-30 · MD&A — Program Highlights",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/ba-20251231.htm",
+      "as_of": "2026-01-30"
+    },
+    "K.121": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-30 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/ba-20251231.htm",
+      "as_of": "2026-01-30"
+    },
+    "K.217": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-30 · Financial Statements — Note 3 – Digital Aviation Solutions Divestiture",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/ba-20251231.htm",
+      "as_of": "2026-01-30"
+    },
+    "C.004": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Robert K. Ortberg, President and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.005": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Robert K. Ortberg, President and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.007": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Robert K. Ortberg, President and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.008": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Robert K. Ortberg, President and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.009": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jesus Malave Jr., Executive Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.010": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jesus Malave Jr., Executive Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.011": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jesus Malave Jr., Executive Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.012": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jesus Malave Jr., Executive Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.013": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jesus Malave Jr., Executive Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.014": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jesus Malave Jr., Executive Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.018": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jesus Malave Jr., Executive Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.019": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jesus Malave Jr., Executive Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.022": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jesus Malave Jr., Executive Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.032": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jesus Malave Jr., Executive Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.034": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jesus Malave Jr., Executive Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.037": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jesus Malave Jr., Executive Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.048": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Robert K. Ortberg, President and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.051": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Robert K. Ortberg, President and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.060": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Robert K. Ortberg, President and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.062": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jesus Malave Jr., Executive Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.064": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Jesus Malave Jr., Executive Vice President and Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.069": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Robert K. Ortberg, President and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.072": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Robert K. Ortberg, President and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.074": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Robert K. Ortberg, President and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=BA&quarter=2026Q3",
+      "as_of": null
+    },
+    "F.01": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "F.09": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "F.19": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure — nine months ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026067508/ba-20260930.htm",
+      "as_of": "2026-10-27"
+    },
+    "F.33": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure — year ended 2025-12-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/ba-20251231.htm",
+      "as_of": "2026-01-30"
+    },
+    "F.37": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.46": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure growth — nine months ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.53": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.65": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — nine months ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.70": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "F.71": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-12-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.72": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.03": {
+      "kind": "market",
+      "citation": "Market data — Options-implied move",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "M.05": {
+      "kind": "market",
+      "citation": "Market data — Beat/miss record",
+      "url": null,
+      "as_of": null
+    },
+    "M.06": {
+      "kind": "market",
+      "citation": "Market data — Analyst rating actions",
+      "url": null,
+      "as_of": null
+    },
+    "M.07": {
+      "kind": "market",
+      "citation": "Market data — Consensus price target",
+      "url": null,
+      "as_of": null
+    },
+    "N.14": {
+      "kind": "news",
+      "citation": "maketecheasier.com, 2026-10-28 — The GE9X on Boeing's 777-9 has a 134-inch fan that is wider than a 737 fuselage, and GE calls it the most powerful commercial aircraft engine ever built, but the FAA will not certify the jet until it approves a redesigned mid-seal. - Make Tech Easier",
+      "url": "https://maketecheasier.com/ge9x-mid-seal-boeing-777-9-certification",
+      "as_of": "2026-10-28"
+    },
+    "N.17": {
+      "kind": "news",
+      "citation": "flightglobal.com, 2026-10-28 — Boeing still needs FAA approval for more 777-9 flight tests: CEO - FlightGlobal",
+      "url": "https://www.flightglobal.com/archive/2026/10/boeing-still-needs-faa-approval-for-more-777-9-flight-tests-ceo",
+      "as_of": "2026-10-28"
+    },
+    "N.21": {
+      "kind": "news",
+      "citation": "streamlinefeed.co.ke, 2026-10-28 — Boeing Shares Tumble 10 Percent as Production Delays Push 737 Targets to 2027",
+      "url": "https://streamlinefeed.co.ke/news/boeing-shares-tumble-10-percent-as-production-delays-push-737-targets-to-2027",
+      "as_of": "2026-10-28"
+    },
+    "A.004": {
+      "kind": "article",
+      "citation": "Article (benzinga.com)",
+      "url": "https://www.benzinga.com/opinion/26/10/62657174/is-boeing-2-billion-free-cash-flow-outlook-achievable",
+      "as_of": "2026-10-28"
+    },
+    "A.006": {
+      "kind": "article",
+      "citation": "Article (benzinga.com)",
+      "url": "https://www.benzinga.com/opinion/26/10/62657174/is-boeing-2-billion-free-cash-flow-outlook-achievable",
+      "as_of": "2026-10-28"
+    },
+    "A.014": {
+      "kind": "article",
+      "citation": "Article (tikr.com)",
+      "url": "https://www.tikr.com/blog/boeing-keeps-sliding-why-citi-sees-56-upside",
+      "as_of": "2026-10-29"
+    },
+    "A.015": {
+      "kind": "article",
+      "citation": "Article (tikr.com)",
+      "url": "https://www.tikr.com/blog/boeing-keeps-sliding-why-citi-sees-56-upside",
+      "as_of": "2026-10-29"
+    },
+    "A.016": {
+      "kind": "article",
+      "citation": "Article (tikr.com)",
+      "url": "https://www.tikr.com/blog/boeing-keeps-sliding-why-citi-sees-56-upside",
+      "as_of": "2026-10-29"
+    },
+    "A.017": {
+      "kind": "article",
+      "citation": "Article (tikr.com)",
+      "url": "https://www.tikr.com/blog/boeing-keeps-sliding-why-citi-sees-56-upside",
+      "as_of": "2026-10-29"
+    },
+    "A.023": {
+      "kind": "article",
+      "citation": "Article (stocktitan.net)",
+      "url": "https://www.stocktitan.net/articles/boeing-q3-2026-earnings-cash-positive-airliner-losses-widen",
+      "as_of": "2026-10-27"
+    },
+    "A.025": {
+      "kind": "article",
+      "citation": "Article (stocktitan.net)",
+      "url": "https://www.stocktitan.net/articles/boeing-q3-2026-earnings-cash-positive-airliner-losses-widen",
+      "as_of": "2026-10-27"
+    },
+    "A.029": {
+      "kind": "article",
+      "citation": "Article (stocktitan.net)",
+      "url": "https://www.stocktitan.net/articles/boeing-q3-2026-earnings-cash-positive-airliner-losses-widen",
+      "as_of": "2026-10-27"
+    },
+    "A.033": {
+      "kind": "article",
+      "citation": "Article (stocktitan.net)",
+      "url": "https://www.stocktitan.net/articles/boeing-q3-2026-earnings-cash-positive-airliner-losses-widen",
+      "as_of": "2026-10-27"
+    },
+    "A.034": {
+      "kind": "article",
+      "citation": "Article (stocktitan.net)",
+      "url": "https://www.stocktitan.net/articles/boeing-q3-2026-earnings-cash-positive-airliner-losses-widen",
+      "as_of": "2026-10-27"
+    },
+    "A.035": {
+      "kind": "article",
+      "citation": "Article (stocktitan.net)",
+      "url": "https://www.stocktitan.net/articles/boeing-q3-2026-earnings-cash-positive-airliner-losses-widen",
+      "as_of": "2026-10-27"
+    },
+    "N.33": {
+      "kind": "news",
+      "citation": "aol.de, 2026-10-30 — Is Archer Aviation Stock a Buy Before Its Q3 Earnings Report? - AOL",
+      "url": "https://www.aol.de/articles/archer-aviation-stock-buy-q3-172000000.html",
+      "as_of": "2026-10-30"
+    },
+    "N.34": {
+      "kind": "news",
+      "citation": "247wallst.com, 2026-10-27 — Archer Aviation Is Still Down 43% in 2026: Did ACHR Stock Just Find a Bottom? - 24/7 Wall St.",
+      "url": "https://247wallst.com/investing/2026/10/27/archer-aviation-is-still-down-43-in-2026-did-achr-stock-just-find-a-bottom",
+      "as_of": "2026-10-27"
+    },
+    "N.36": {
+      "kind": "news",
+      "citation": "thehill.com, 2026-10-28 — Trump looms as wild card in post-election funding fight",
+      "url": "https://thehill.com/homenews/house/6169401-midterm-elections-government-funding-fight-shutdown",
+      "as_of": "2026-10-28"
+    },
+    "N.38": {
+      "kind": "news",
+      "citation": "thehill.com, 2026-10-28 — Pete Hegseth's future leadership of the Pentagon sparks political battle",
+      "url": "https://thehill.com/homenews/administration/6176148-trump-hegseth-defense-funding-battle",
+      "as_of": "2026-10-28"
+    },
+    "N.40": {
+      "kind": "news",
+      "citation": "finance.yahoo.com, 2026-10-28 — Airbus SE (EADSY) Q3 FY2026 earnings call transcript",
+      "url": "https://finance.yahoo.com/quote/EADSY/earnings/EADSY-Q3-2026-earnings_call-535886.html",
+      "as_of": "2026-10-28"
+    },
+    "N.41": {
+      "kind": "news",
+      "citation": "tipranks.com, 2026-10-30 — Airbus SE Earnings Call: Ramp-Up Strength Amid Strains - TipRanks.com",
+      "url": "https://www.tipranks.com/news/company-announcements/airbus-se-earnings-call-ramp-up-strength-amid-strains",
+      "as_of": "2026-10-30"
+    },
+    "P.001": {
+      "kind": "peer",
+      "citation": "PEER GE 10-Q filed 2026-10-20 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "P.002": {
+      "kind": "peer",
+      "citation": "PEER GE 10-Q filed 2026-10-20 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "N.48": {
+      "kind": "news",
+      "citation": "baynews9.com, 2026-10-29 — ULA announces new Vulcan launch date after nozzle issue",
+      "url": "https://baynews9.com/fl/tampa/space/2026/10/29/ula-announces-new-vulcan-launch-date-after-nozzle-issue",
+      "as_of": "2026-10-29"
+    },
+    "N.49": {
+      "kind": "news",
+      "citation": "arstechnica.com, 2026-10-28 — ULA's Vulcan rocket is set to return to flight on Friday the 13th - Ars Technica",
+      "url": "https://arstechnica.com/space/2026/10/ulas-vulcan-rocket-is-set-to-return-to-flight-on-friday-the-13th",
+      "as_of": "2026-10-28"
+    },
+    "A.038": {
+      "kind": "article",
+      "citation": "Article (maketecheasier.com)",
+      "url": "https://maketecheasier.com/ge9x-mid-seal-boeing-777-9-certification",
+      "as_of": "2026-10-28"
+    },
+    "A.056": {
+      "kind": "article",
+      "citation": "Article (globalbankingandfinance.com)",
+      "url": "https://www.globalbankingandfinance.com/boeing-jetliner-production-challenges-weigh-third-quarter",
+      "as_of": "2026-10-27"
+    },
+    "A.057": {
+      "kind": "article",
+      "citation": "Article (globalbankingandfinance.com)",
+      "url": "https://www.globalbankingandfinance.com/boeing-jetliner-production-challenges-weigh-third-quarter",
+      "as_of": "2026-10-27"
+    },
+    "N.51": {
+      "kind": "news",
+      "citation": "indiagazette.com, 2026-10-31 — Boeing shares plunge as 737 production ramp pushed to 2027",
+      "url": "https://www.indiagazette.com/news/279400343/boeing-shares-plunge-as-737-production-ramp-pushed-to-2027",
+      "as_of": "2026-10-31"
+    },
+    "N.52": {
+      "kind": "news",
+      "citation": "aero-news.net, 2026-10-29 — Boeing Reports Mixed Third Quarter Results | Aero-News Network",
+      "url": "https://www.aero-news.net/fullsizeimage.cfm?do=main.textpost&id=A8779A77-8F1D-4D37-BCC1-25D874A799AC",
+      "as_of": "2026-10-29"
+    },
+    "N.54": {
+      "kind": "news",
+      "citation": "finance.biggo.com, 2026-10-27 — Boeing's Commercial Jet Unit Swings to $697 Million Loss as Output Stalls — BigGo Finance",
+      "url": "https://finance.biggo.com/news/a9004ccc-d027-4e2e-aaaf-5b097431bf97",
+      "as_of": "2026-10-27"
+    },
+    "N.65": {
+      "kind": "news",
+      "citation": "manufacturingmag.com, 2026-10-31 — 737 Production Rate 2027: Should Suppliers Build for 52? | Manufacturing Mag",
+      "url": "https://www.manufacturingmag.com/article/do-737-suppliers-build-for-rate-52-now-or-wait",
+      "as_of": "2026-10-31"
+    },
+    "N.67": {
+      "kind": "news",
+      "citation": "finance.yahoo.com, 2026-10-27 — Boeing stock has its worst day since 2020 as the 737 ramp slips into 2027 - Yahoo Finance",
+      "url": "https://finance.yahoo.com/markets/article/boeing-stock-has-its-worst-day-since-2020-as-the-737-ramp-slips-into-2027-201809009.html",
+      "as_of": "2026-10-27"
+    },
+    "N.72": {
+      "kind": "news",
+      "citation": "aerospaceglobalnews.com, 2026-10-28 — First Boeing 737 MAX 10 rolls out of Everett factory",
+      "url": "https://aerospaceglobalnews.com/news/first-boeing-737-max-10-rolls-out-everett-factory",
+      "as_of": "2026-10-28"
+    },
+    "N.73": {
+      "kind": "news",
+      "citation": "spokesman.com, 2026-10-27 — First Boeing 737 Max 10 rolls out at new North Line in Everett",
+      "url": "https://www.spokesman.com/stories/2026/oct/27/first-boeing-737-max-10-rolls-out-at-new-north-lin",
+      "as_of": "2026-10-27"
+    }
+  },
+  "check_notes": [
+    "setup_summary[7]: rewritten to what its sources support (The passages give no BCA backlog of $612B; the other figures (BDS $101B, F/A-XX not in backlog, $20.7B cash and securities, $45.9B debt, $10B undrawn) are supported.).",
+    "guidance[6]: rewritten to what its sources support (Nothing in the passages says a one- or two-month certification slip is absorbable within the $3B 2027 free cash flow guide; the CFO only quantified a month or two in a 777X cash context.).",
+    "guidance[9]: rewritten to what its sources support (The passages support the BDS margin confidence and faster defense growth, but F-47 is never mentioned and the CEO does not tie the growth to the F-47 and F/A-XX awards.).",
+    "since_filing[1]: rewritten to what its sources support (The rating actions and the $3.48 and $6.92 consensus figures are supported, but the $6.46 EPS from a year ago appears nowhere in the passages.).",
+    "key_debates[4].bull: rewritten to what its sources support (The cited passages never mention the F-47 or F/A-XX wins as lifting defense growth; the CEO speaks of other programs. The rest (backlog, pricing, one-year shift, Citi $260) is supported.).",
+    "scenarios[1]: rewritten to what its sources support (Q3 BCA margin of -6.5% is not in the passages, which give no BCA revenue; the abnormal cost carry-forward and the consensus figures are supported.).",
+    "scenarios[2]: rewritten to what its sources support (The 787 'floor of 28' and the seats-and-engines cause are not in the passages, which give only Q3 deliveries of 22 and a 90-100 full-year range; the wing disruption cited affects 777F/767 lines, not the 737.).",
+    "questions_for_management[0]: rewritten to what its sources support (The 787 requirement of at least 28 cannot be derived from the passages (no year-to-date 787 count), and 133 is the 737 count needed for the old 500 target, which management says will be missed, so 'under 133' to meet guidance is wrong.).",
+    "questions_for_management[4]: rewritten to what its sources support (The 'appropriate' contract type quote and the $5B 2027 capex are supported, but none of the cited passages say that capex includes F/A-XX development.)."
+  ]
+}

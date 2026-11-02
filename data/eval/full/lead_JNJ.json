@@ -1,0 +1,1639 @@
+{
+  "ticker": "JNJ",
+  "company_name": "JOHNSON & JOHNSON",
+  "report_generated_at": "2026-11-01T11:07:54+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-10-21",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-02-11",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000016/jnj-20251228.htm"
+    }
+  ],
+  "earnings_call": "Q3 FY2026 earnings call (date unknown)",
+  "current_report": "No 8-K or 6-K recent enough to read",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$2.94",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$26.71B",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2027-01-26 report. Paid lookup not made: next report is 86 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "implied move: no live implied move yet (EarningsWatcher has no confirmed report date)."
+    },
+    "historical_move": {
+      "value": "±2.2% average closing move over the last 8 reports (2025-01-22 to 2026-10-13)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/jnj-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": "3 beats, 0 misses in the last 4 quarters, average surprise +0.5%",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "Finnhub earnings surprises",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "analyst_actions": {
+      "value": "Last 30 days, newest first: Wells Fargo maintained Overweight (2026-10-16); Morgan Stanley maintained Overweight (2026-10-15); RBC Capital maintained Outperform (2026-10-14); Leerink Partners maintained Outperform (2026-10-14); Wells Fargo maintained Overweight (2026-10-14); Guggenheim maintained Buy (2026-10-07); RBC Capital maintained Outperform (2026-10-06); Citigroup maintained Buy (2026-10-05)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP grades",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "price_target": {
+      "value": "$285.31, +4.4% vs current $273.20",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP price target consensus",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "Q3 FY2026 sales were $25.40B, up 5.9% reported and 6.0% operational. Innovative Medicine grew 7.9% operationally and MedTech 2.5%. Management said MedTech fell short of its expectations.",
+      "evidence_ids": [
+        "F.01",
+        "F.33",
+        "Q.094",
+        "Q.098",
+        "Q.106",
+        "C.007"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q3 GAAP diluted EPS was $0.09 against $2.12 a year ago. The drivers were the $5.5B ovarian talc accrual and about $1.0B of acquired IPR&D for Firefly Bio. Adjusted diluted EPS was $2.59, down 7.5%. It also absorbed Firefly and Cell BioMedicines costs.",
+      "evidence_ids": [
+        "F.09",
+        "F.10",
+        "Q.109",
+        "C.010"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Management raised the 2026 outlook on Oct 13. Operational sales growth is now 6.7%-7.1% (reported 7.2%-7.6%, about $101.2B at the midpoint). Reported adjusted EPS is $11.05-$11.15 (+2.9% at the midpoint), the operating margin decline is about 60bp (was 75bp), and free cash flow is about $21B.",
+      "evidence_ids": [
+        "C.016",
+        "C.017",
+        "C.018"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "Stelara is still the main drag but is shrinking. It cost about 4.2 points of worldwide operational growth in Q3 and 4.7 points in the nine months, against roughly 6.2 points in FY2025. Tremfya (+68.3% reported) and Darzalex (+15.4%) are the largest offsets, and Caplyta, Spravato, Carvykti and Rybrevant add to growth.",
+      "evidence_ids": [
+        "Q.094",
+        "K.109",
+        "Q.045",
+        "Q.098",
+        "C.011"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Gross margin fell to 68.1% from 69.6% in Q3 on Stelara mix and Intra-Cellular amortization. About $0.2B of MedTech tariff recoveries partly offset this. 2026 intangible amortization is guided at about $5.1B, with $3.7B booked in the nine months.",
+      "evidence_ids": [
+        "Q.014",
+        "Q.109",
+        "Q.023"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Nine-month free cash flow was $15.12B (operating cash flow $18.85B less capex $3.73B). Net debt was $27.4B. The 10-Q lists about $9.0B of talc balance, about $0.9B of opioid settlements, $3.2B of current bonds and about $2.6B for the Sail option as items to fund.",
+      "evidence_ids": [
+        "F.52",
+        "F.14",
+        "F.16",
+        "Q.127"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Consensus for Q4 (report due Jan 26, 2027, after the close) is revenue of $26.71B and EPS of $2.94. J&J beat in 3 of the last 4 quarters with a +0.5% average surprise. The average closing move over the last 8 reports is ±2.2%. The consensus price target is $285.31 against $273.20.",
+      "evidence_ids": [
+        "M.01",
+        "M.05",
+        "M.04",
+        "M.07"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "The consensus-implied Q4 growth of +8.7% revenue and +40.6% EPS is measured against a GAAP Q4 2025 EPS base of $2.09. EPS consensus is probably on an adjusted basis (not confirmed). The 2025 adjusted base implied by the guide (+2.9% growth to $11.10) is about $10.79 for the full year, so the +40.6% overstates the like-for-like step-up.",
+      "evidence_ids": [
+        "F.57",
+        "F.58",
+        "F.59",
+        "F.56",
+        "C.018"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Q4 FY2026 sales",
+      "period": "Q4 FY2026 (reported)",
+      "last_reported": {
+        "text": "Q3 FY2026 sales were $25.40B (+5.9%); nine-month sales were $74.77B (+7.4%).",
+        "evidence_ids": [
+          "F.01",
+          "F.33",
+          "F.03",
+          "F.34"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus is $26.71B, which is +8.7% on Q4 2025's derived $24.56B.",
+        "evidence_ids": [
+          "M.01",
+          "F.57",
+          "F.56"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "The guide implies Q4 reported sales of about $26.2B-$26.6B ($26.4B at the $101.2B midpoint), which is +7.6% at the midpoint. Consensus sits about $0.13B above the top of that range and $0.28B above the midpoint. Consensus plus nine-month sales gives about $101.5B, or +7.7% for the year, above the 7.6% top end of the guide. Operationally, the guide implies Q4 growth of about 8.7%-10.2% (about 9.4% at the midpoint), against 6.0% in Q3. That step-up needs the 53rd week. Beating $26.71B needs the top of the guide or better.",
+        "evidence_ids": [
+          "C.017",
+          "C.018",
+          "F.03",
+          "F.20",
+          "F.56",
+          "M.01",
+          "Q.092",
+          "K.191"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Calendar, FX and Stelara bridge inside Q4 growth",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 currency was -0.1% and nine-month currency +1.4%. Stelara cost 4.2 points of Q3 worldwide operational growth.",
+        "evidence_ids": [
+          "Q.094",
+          "Q.092"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "My arithmetic on the guide: the reported-versus-operational gap of about 0.5 points for the year (reported 7.2%-7.6% against operational 6.7%-7.1%) against +1.4 points in the nine months implies Q4 currency of about -$0.5B, or roughly -2 points. Guidance quotes a euro average of 1.15 against spot 1.12, and it is unclear whether the guide assumes spot for Q4. The 53rd week is the swing factor. An analyst on the call put it at about 100bp of annual growth, which is about $0.9B or about 3.8 points of Q4 growth if it falls in Q4 (location not confirmed). Removing it leaves underlying Q4 operational growth near 5.6%, close to Q3. Stelara's Q4 2025 base is about $1.23B against $716M in Q3 2026, so its drag should ease to about 2 points.",
+        "evidence_ids": [
+          "C.018",
+          "C.029",
+          "K.191",
+          "Q.092",
+          "Q.094",
+          "K.111",
+          "Q.046",
+          "Q.099",
+          "F.56"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Q4 adjusted EPS",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 adjusted diluted EPS was $2.59 (-7.5% y/y; Q3 2025 was $2.80).",
+        "evidence_ids": [
+          "C.010",
+          "N.56"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus EPS is $2.94 (adjusted basis not confirmed).",
+        "evidence_ids": [
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Required Q4 adjusted EPS equals the full-year guide less $2.59 less first-half adjusted EPS. After Q3 the residual for Q1+Q2+Q4 is $8.46 (low), $8.51 (mid) and $8.56 (high). Consensus of $2.94 is met if first-half EPS was $5.52, $5.57 or $5.62 respectively. Each $0.10 of first-half shortfall adds $0.10 to the required Q4. First-half adjusted EPS is not in the sources and needs to be pulled from the Q1 and Q2 releases. The $0.64 deal dilution mostly hit Q3 by my inference, which would support a Q4 rebound, but the split is unconfirmed.",
+        "evidence_ids": [
+          "C.018",
+          "C.010",
+          "C.019",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Innovative Medicine Q4 operational growth",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 Innovative Medicine sales were $16,757M (+7.9% operational; US +11.1%, international +3.0%).",
+        "evidence_ids": [
+          "Q.098"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The sources contain no brand-level consensus. Several comps are tough. Tremfya was about $1.59B in Q4 2025 (FY2025 $5,155M less nine months $3,566M) against $2.40B in Q3 2026. Darzalex was about $3.90B (FY2025 $14,351M less nine months $10,448M) against $4.24B in Q3 2026. Caplyta (about $249M in Q4 2025) and Carvykti (about $555M) also have growing bases. Stelara's comp eases: about $1.23B in Q4 2025 against $716M in Q3 2026. Erosion is broadening. Opsumit US was $193M against $409M after US generics arrived late in Q2 2026, so Q4 faces a full quarter of generics against a year-ago US base of about $458M (FY2025 $1,633M less nine months $1,175M). Simponi/Simponi Aria fell 17.3%. BIOCAD launched an at-risk daratumumab in Russia in September 2026. The rebate true-up adds uncertainty: it was 0.4% of US Innovative Medicine revenue in Q3 2026 against 2.4% in Q3 2025. The filings give no isolated Q4 2025 figure. FY2025 was 3.0% against 3.1% for the first nine months of 2025, which does not show a large favorable Q4 2025 true-up.",
+        "evidence_ids": [
+          "Q.044",
+          "Q.045",
+          "Q.046",
+          "Q.047",
+          "Q.050",
+          "Q.075",
+          "Q.102",
+          "K.111",
+          "K.112",
+          "K.173",
+          "K.245"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "metric": "MedTech Q4 operational growth",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 MedTech grew 2.5% operationally (US +4.8%, international +0.1%). Cardiovascular grew 4.1%, Surgery fell 1.0%, Vision grew 5.1%, Orthopaedics 3.4%, Electrophysiology 4.4% and Abiomed fell 1.5%.",
+        "evidence_ids": [
+          "Q.106",
+          "Q.107",
+          "C.012",
+          "C.013"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management expects improved Q4 performance and a Surgery return to growth, and says Abiomed returns to growth 'in short order'. Variance sources are the US VARIPULSE Pro approval (guided for Q4), the Middle East disruption (a new, broadening headwind that management calls deferral rather than loss), China VBP and PFA competition in Asia-Pacific. Peer evidence is cautionary: Boston Scientific cut guidance again, with electrophysiology -5%.",
+        "evidence_ids": [
+          "C.019",
+          "C.037",
+          "C.038",
+          "C.039",
+          "C.057",
+          "C.058",
+          "A.033"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Gross margin and intangible amortization",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 gross margin was 68.1% against 69.6%. Cost of products sold deleveraged 150bp.",
+        "evidence_ids": [
+          "Q.014",
+          "C.014"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Q4 amortization is about $1.4B ($5.1B guided less $3.7B for the nine months). The mix headwind continues with Tremfya, Darzalex and Caplyta growing against Stelara's decline and Opsumit US generics. MedTech tariff recoveries of about $0.2B flattered Q3 (MedTech adjusted margin 22.9% against 21%). Their recurrence is unguided.",
+        "evidence_ids": [
+          "Q.023",
+          "Q.110",
+          "Q.052",
+          "C.014",
+          "C.015"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Q4 free cash flow and net debt",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Nine-month free cash flow was $15.12B. Q3 free cash flow exceeded $6B. Net debt was $27.4B.",
+        "evidence_ids": [
+          "F.52",
+          "C.016",
+          "Q.127"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The $21B full-year guide implies about $5.9B of Q4 free cash flow. The $5.5B settlement has a payment schedule that is not disclosed. About half of the roughly $9.0B talc reserve is current, which is about $4.5B. Whether that payout sits inside the $21B is unknown.",
+        "evidence_ids": [
+          "C.016",
+          "F.52",
+          "Q.065"
+        ],
+        "evidence_type": "estimate"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "FY2026 operational sales growth",
+      "guidance": "6.7% to 7.1% (about $100.7B at the 6.9% midpoint). The midpoint was raised and the range tightened.",
+      "period": "FY2026",
+      "status": "raised",
+      "claim": {
+        "text": "Management raised the midpoint and tightened operational sales growth to 6.7%-7.1%, or $100.7B at the midpoint.",
+        "evidence_ids": [
+          "C.017"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "FY2026 reported sales",
+      "guidance": "Reported growth of 7.2%-7.6%, about $101.2B at the midpoint (7.4%), at an average euro rate of 1.15. Euro spot is 1.12 and currency could be a headwind next year if spot holds.",
+      "period": "FY2026",
+      "status": "raised",
+      "claim": {
+        "text": "Reported sales growth is guided at 7.2%-7.6%, about $101.2B at the midpoint. A Seeking Alpha article read the July guide as about $101.1B.",
+        "evidence_ids": [
+          "C.018",
+          "A.026"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "FY2026 adjusted EPS (reported basis)",
+      "guidance": "$11.05-$11.15 (midpoint $11.10, +2.9%). Excluding the Firefly Bio and Cell BioMedicines impact of $0.64, growth would approach 9%.",
+      "period": "FY2026",
+      "status": "raised",
+      "claim": {
+        "text": "Reported adjusted EPS is guided at $11.05-$11.15. The July range was $10.96-$11.11 after a cut from $11.60-$11.75 for the Firefly and Sail deals. The raise is $0.09 at the low end and $0.04 at the high end.",
+        "evidence_ids": [
+          "C.018",
+          "C.019",
+          "N.21"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "FY2026 adjusted operational EPS",
+      "guidance": "$10.95-$11.05 (about +2% at the midpoint).",
+      "period": "FY2026",
+      "status": "unclear",
+      "claim": {
+        "text": "Adjusted operational EPS is guided at $10.95-$11.05. No prior-quarter figure for the same metric is in the sources.",
+        "evidence_ids": [
+          "C.018"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "FY2026 adjusted operating margin",
+      "guidance": "Decline of about 60bp, improved from the 75bp decline guided in July. The July figure included a 150bp hit from the Firefly and Cell BioMedicines deals. The margin also carries the 53rd week and the cost of the US government access agreement.",
+      "period": "FY2026",
+      "status": "raised",
+      "claim": {
+        "text": "The operating margin is guided at about -60bp against -75bp in July. The guide includes the 53rd-week cost and the US government agreement. The agreement's cost is not quantified.",
+        "evidence_ids": [
+          "C.018"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Net interest expense and tax rate",
+      "guidance": "Net interest expense lowered to $150M-$200M. Full-year effective tax rate of 17.0%-17.5% (range tightened).",
+      "period": "FY2026",
+      "status": "lowered",
+      "claim": {
+        "text": "Net interest expense guidance was lowered to $150M-$200M. The effective tax rate is guided at 17.0%-17.5%.",
+        "evidence_ids": [
+          "C.018"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "FY2026 free cash flow",
+      "guidance": "About $21B, reaffirmed.",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "The CFO said J&J remains confident in the $21B free cash flow guidance and cited more than $6B of Q3 free cash flow.",
+        "evidence_ids": [
+          "C.016",
+          "C.017"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "2027 markers",
+      "guidance": "The Firefly Bio and Cell BioMedicines deals dilute 2027 adjusted EPS by $1.36. EPS growth is typically a little better than sales growth. A fuller 2027 outlook, possibly with an Orthopaedics pro forma, comes at the Dec 8 Enterprise Business Review. The target is double-digit growth by the end of the decade without assuming M&A.",
+      "period": "FY2027",
+      "status": "new",
+      "claim": {
+        "text": "Management guided a $1.36 combined 2027 EPS dilution and said the Dec 8 Enterprise Business Review will give the 2027 outlook. It did not confirm the analyst's roughly 5.4% reported-sales reading.",
+        "evidence_ids": [
+          "C.019",
+          "C.029",
+          "C.030",
+          "C.021",
+          "C.024"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "Reports on Oct 23 said Smith & Nephew's talks to combine with J&J's orthopaedics unit collapsed over who would lead the combined company. The reported offer valued the unit at up to $22B, with J&J holders getting 50.1%. A Mergermarket analyst said the sides could return to the table, and J&J's own base plan remains a spin by mid-2027.",
+      "evidence_ids": [
+        "N.13",
+        "A.011",
+        "A.012",
+        "A.013",
+        "C.020"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "On Oct 28 J&J announced an Enterprise Business Review for Dec 8, 2026. It will give a detailed review of both businesses, the pipeline and long-term strategy. It is the nearest scheduled venue for 2027 guidance, which comes before the Jan 26 Q4 print.",
+      "evidence_ids": [
+        "N.41",
+        "C.021"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "Boston Scientific (Oct 28) cut 2026 sales growth guidance to 4.25% from 5.5%-6.5%, its third cut this year. Q3 revenue grew 1.5%, with Watchman -6% and electrophysiology -5%. The CEO cited PFA competition and a cyberattack cost of about $150M. It guided Q4 sales down 1%-3%. No Asia-Pacific or ex-US procedure data is given, so it supports J&J's PFA-competition explanation but not the Asia-Pacific or Middle East points.",
+      "evidence_ids": [
+        "A.032",
+        "A.033",
+        "A.034"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Stryker (Oct 30) missed Q3 sales and EPS and cut guidance, citing a market slowdown. TIKR noted J&J grew hips and knees faster in the same quarter. Medtronic's electrophysiology grew 30% in its quarter ended July 31, driven by PFA.",
+      "evidence_ids": [
+        "N.50",
+        "P.016"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "As of the Oct 30 Zacks piece, J&J still expects US approval of VARIPULSE Pro in Q4 after Japan approval. No FDA action had been reported. The 'on track' view rests on management's statement alone.",
+      "evidence_ids": [
+        "N.01",
+        "C.019",
+        "C.038"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "Gilead agreed on Oct 23 to pay $1.275B upfront for an oral IL-23 receptor program, positioning it as a challenger to Icotyde. The UK approved Icotyde the same week, and J&J presented positive Erleada data at ESMO on Oct 24.",
+      "evidence_ids": [
+        "N.07",
+        "A.016",
+        "A.017"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "TIKR (Oct 29) said analysts have cut 2027 EPS estimates about 9% since end-June and expect normalized EPS to grow under 4% a year from 2025 to 2027. A separate TIKR article put consensus normalized 2027 EPS at about $11.60 and called Dec 8 the test. It is unknown whether the $1.36 deal dilution is in that figure.",
+      "evidence_ids": [
+        "N.21",
+        "A.020"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Talc: mesothelioma trials opened in Connecticut (Oct 15) and Massachusetts (Oct 19), outside the ovarian deal. The Third Circuit dismissed the Imerys insurer appeal in October. The 95% participation condition for the $5.5B deal was restated in news, but no participation figure has been published.",
+      "evidence_ids": [
+        "N.12",
+        "Q.068",
+        "Q.065",
+        "N.04"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "J&J stock fell after the Oct 13/14 Q3 report despite the raised guide, then reclaimed its 50-day moving average on Oct 22 at $267.61. Zacks said adjusted EPS beat estimates while sales missed. The call opened by saying operational growth was ahead of consensus, so the sources conflict and neither gives a consensus figure.",
+      "evidence_ids": [
+        "N.17",
+        "N.46",
+        "C.004"
+      ],
+      "evidence_type": "estimate"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Is the $26.71B Q4 revenue consensus too high against the guide?",
+      "bull": {
+        "text": "The guide already implies about 9.4% operational Q4 growth, and the 53rd week plus an easier Stelara comp can lift reported growth. J&J beat in 3 of the last 4 quarters, and the guide looks conservative given management's Q4 confidence.",
+        "evidence_ids": [
+          "C.017",
+          "C.029",
+          "M.05",
+          "Q.094"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Consensus sits above the top of the guide ($26.58B at 7.6% reported growth). It implies a full-year +7.7%. Euro spot at 1.12 against the 1.15 average points to FX pressure, MedTech missed in Q3, and the rebate true-up and Opsumit erosion add headwinds.",
+        "evidence_ids": [
+          "F.57",
+          "F.03",
+          "C.018",
+          "Q.050",
+          "Q.047"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Reported Q4 sales against $26.58B (top of the guide) and $26.71B (consensus), and the split of Q4 growth between the 53rd week, FX and operations."
+    },
+    {
+      "question": "Does MedTech recover in Q4 and 2027?",
+      "bull": {
+        "text": "US MedTech grew 4.8% and the underlying procedure environment is said to be stable. VARIPULSE Pro is back to double-digit growth in Europe and awaits US approval in Q4. Surgery and Abiomed are guided back to growth, and OTTAVA has FDA de novo authorization.",
+        "evidence_ids": [
+          "Q.106",
+          "C.038",
+          "C.019",
+          "C.008",
+          "C.058"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Q3 growth outside the US was only 0.1%, and Middle East disruption has widened beyond a few markets. Boston Scientific cut guidance a third time and Stryker cited a slowing market. Management itself said Q3 fell below its own standard.",
+        "evidence_ids": [
+          "Q.106",
+          "C.057",
+          "A.033",
+          "N.50",
+          "C.037"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 MedTech operational growth (ex-US Surgery, electrophysiology in Asia-Pacific, Abiomed), VARIPULSE Pro's US approval and the Dec 8 detail."
+    },
+    {
+      "question": "Can 2027 EPS grow despite $1.36 of deal dilution and loss of exclusivity?",
+      "bull": {
+        "text": "Management says 2027 will be 'even better', that EPS growth is typically a little better than sales growth, and that margins keep improving. The Stelara drag shrinks and Tremfya, Icotyde, Rybrevant and Inlexzo ramp. Orthopaedics separation adds margin.",
+        "evidence_ids": [
+          "C.009",
+          "C.030",
+          "C.049",
+          "Q.094"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Analysts have cut 2027 estimates about 9% since June, and 2027 carries the $1.36 dilution. Xarelto and Uptravi generics, Opsumit in Europe and Simponi biosimilars hit in or around 2027. Management gives no dollar sizing.",
+        "evidence_ids": [
+          "N.21",
+          "C.019",
+          "Q.102",
+          "Q.103",
+          "Q.101"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "The Dec 8 Enterprise Business Review: 2027 guidance (whether it includes the $1.36 and an Orthopaedics pro forma) against consensus normalized EPS near $11.60."
+    },
+    {
+      "question": "Will the $5.5B ovarian talc settlement reach 95% participation, and what does it do to cash?",
+      "bull": {
+        "text": "The July deal followed favorable MDL rulings and plaintiffs' withdrawal of causation experts. A secondary source says Wolk said J&J is trending to meet the threshold (unverified; not in the call transcript).",
+        "evidence_ids": [
+          "Q.065",
+          "A.019"
+        ],
+        "evidence_type": "unverifiable"
+      },
+      "bear": {
+        "text": "The deal is conditional on 95% of remaining claims, and no deadline, schedule or fallback is disclosed. Mesothelioma trials are continuing and the reserve of about $9.0B is half current. A failure would send cases back to trial and reopen the accrual.",
+        "evidence_ids": [
+          "Q.065",
+          "N.12",
+          "N.06"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "A company statement on participation, the payment schedule, and whether the $21B free cash flow guide includes the payout."
+    },
+    {
+      "question": "Does the Orthopaedics separation create value as a spin or a deal?",
+      "bull": {
+        "text": "The unit is performing well and J&J is leaning toward a spin for mid-2027. The Smith & Nephew talks valued it at up to $22B and private equity has shown interest.",
+        "evidence_ids": [
+          "C.020",
+          "A.012",
+          "A.013"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Separation costs already hit the P&L ($0.4B in Q3, $0.7B in the nine months). The deal talks collapsed on leadership, and completion on time is a stated risk.",
+        "evidence_ids": [
+          "Q.052",
+          "A.011",
+          "Q.008"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "The Dec 8 Enterprise Business Review and any announced transaction structure."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "bull",
+      "description": {
+        "text": "Q4 sales reach or beat $26.71B because the 53rd week and Innovative Medicine strength hold and MedTech returns to growth of 4% or more with VARIPULSE Pro approved. Adjusted EPS meets or beats $2.94. The Dec 8 outlook gives 2027 growth with the $1.36 dilution inside it, so the stock re-rates toward the $285 target. This needs the top of the guide or better.",
+        "evidence_ids": [
+          "C.017",
+          "C.019",
+          "M.01",
+          "M.07"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Q4 sales at or above $26.71B",
+        "US VARIPULSE Pro approval",
+        "Surgery and Abiomed back to growth",
+        "Dec 8 2027 EPS guide at or above about $11.60 including the $1.36 dilution",
+        "Talc participation reaches 95%"
+      ]
+    },
+    {
+      "name": "base",
+      "description": {
+        "text": "Q4 sales land inside the guide (about $26.2B-$26.6B), slightly below the $26.71B consensus, with operational growth near 9% helped by the 53rd week. Adjusted EPS lands near the guide-implied figure. MedTech grows modestly. The stock moves with 2027 commentary rather than the quarter, and the average earnings-day move is ±2.2%.",
+        "evidence_ids": [
+          "C.017",
+          "C.018",
+          "M.01",
+          "M.04"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Sales between $26.2B and $26.6B",
+        "Stelara drag easing to about 2 points",
+        "MedTech operational growth of 2%-4%",
+        "No adverse talc news"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Q4 sales miss the guide, at or below $26.2B, on FX, a hard rebate true-up comp, Opsumit and Simponi erosion and another soft MedTech quarter (Middle East, China VBP, PFA, Abiomed). The talc participation threshold slips. The 2027 outlook disappoints against estimates that have already fallen about 9%. The stock falls more than the 2.2% average move.",
+        "evidence_ids": [
+          "N.21",
+          "C.018",
+          "Q.050",
+          "Q.101",
+          "C.057",
+          "A.033"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Q4 sales at or below $26.2B",
+        "MedTech flat or negative operationally",
+        "US Simponi biosimilar launch",
+        "Talc 95% threshold missed or delayed",
+        "2027 EPS guide below about $11.60"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "MedTech ex-US weakness: China VBP, the surgery transformation program, PFA competition (worse in Asia-Pacific) and Abiomed volumes. Middle East disruption is a new and broadening headwind affecting tender timing and ordering across more countries.",
+        "evidence_ids": [
+          "C.037",
+          "C.057",
+          "Q.107",
+          "Q.128"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Q4 sales are at risk against a consensus that sits above the guide-implied level. Guided reported growth of 7.2%-7.6% has a $101.2B midpoint. Less nine-month sales of $74.77B, that implies about $26.4B for Q4. Applying 7.6% to FY2025 sales of $94.19B gives a top-end full year of about $101.35B and a Q4 of about $26.6B. Consensus is $26.71B. The guide covers a 53-week year, and the margin outlook explicitly includes the 53rd-week cost. The euro spot rate (1.12) is below the 1.15 fiscal-year average on which the reported guide is based. Management said it does not speculate on currency, so it is unclear whether the Q4 implied in the guide assumes spot.",
+        "evidence_ids": [
+          "C.018",
+          "C.017",
+          "F.03",
+          "F.20",
+          "M.01",
+          "K.191"
+        ],
+        "evidence_type": "estimate"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Loss-of-exclusivity erosion is broadening: Opsumit US generics (US sales -52.8% in Q3), Simponi biosimilars in Europe with a possible US entrant, Uptravi and Xarelto generics in 2027, and BIOCAD's at-risk daratumumab launch in Russia in September (impact unquantified).",
+        "evidence_ids": [
+          "Q.047",
+          "Q.101",
+          "Q.102",
+          "Q.103",
+          "Q.075"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "The Q4 rebate true-up is a variable that cannot be known in advance. Q3 2026's true-up was 0.4% of US Innovative Medicine revenue against 2.4% in Q3 2025. For the 2025 comp, the full-year 2025 figure was 3.0% and the first nine months of 2025 was 3.1%. The filings therefore do not show a large favorable Q4 2025 true-up.",
+        "evidence_ids": [
+          "Q.050",
+          "K.173"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "The talc resolution depends on 95% claimant participation. The schedule and fallback are not disclosed, and about $9.0B of talc reserve (about half current) must be funded alongside opioid settlements and $3.2B of bonds. Mesothelioma, the securities class action and Canadian litigation remain outside the ovarian deal.",
+        "evidence_ids": [
+          "Q.065",
+          "Q.127",
+          "Q.066",
+          "N.12"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "MedTech tariff recoveries of about $0.2B flattered Q3 margins. Their basis and recurrence are not disclosed. A one-time character is an inference only.",
+        "evidence_ids": [
+          "Q.052",
+          "Q.110",
+          "C.015"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Pricing and policy: J&J's revised 340B claims-data and contract-pharmacy policies mirror those that drew an Arkansas Attorney General suit against BMS and others in July 2026. The IRA selected Erleada for 2028. J&J's own US government agreement terms are not disclosed, unlike peers that cite tariff relief to about January 2029.",
+        "evidence_ids": [
+          "Q.104",
+          "P.026",
+          "K.037",
+          "P.025",
+          "Q.130"
+        ],
+        "evidence_type": "proxy"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Orthopaedics separation execution risk: separation-related costs of $0.7B are already booked in the first nine months of 2026, with completion expected in mid-2027. The 10-Q's forward-looking risks include the ability to satisfy the conditions to consummate the separation on a timely basis or at all. Reuters-sourced reporting (via Yahoo Finance, 2026-10-23) says merger talks between Smith & Nephew and J&J over the unit collapsed, and that no deal has been reached.",
+        "evidence_ids": [
+          "Q.052",
+          "Q.050",
+          "Q.009",
+          "N.13"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "More business development dilution: the Sail option (about $2.6B) is a funding item, Firefly and Cell BioMedicines cost $0.64 in 2026 and $1.36 in 2027, and management is open to inorganic additions without assuming them in the double-digit growth path.",
+        "evidence_ids": [
+          "Q.127",
+          "Q.060",
+          "C.019",
+          "C.024"
+        ],
+        "evidence_type": "guided"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "Where does the 53rd week fall, and how many points or dollars does it add to Q4 sales and EPS? What FX rate does the Q4 guide assume (spot 1.12 or the 1.15 average)?",
+      "why": {
+        "text": "The guide implies about 9.4% Q4 operational growth against 6.0% in Q3. The derivation: the midpoint operational sales guide is $100.7B (+6.9%), and nine-month operational growth was 6.0%, so Q4 at constant currency is about $26.9B against a Q4 2025 base of $24.56B. If the extra week is worth about 100bp of annual sales (the analyst's framing), that is about $0.94B, or roughly 3.8 points of Q4 growth. The FX assumption is ambiguous because management said it does not speculate on currency.",
+        "evidence_ids": [
+          "C.017",
+          "C.018",
+          "C.029",
+          "Q.092",
+          "Q.094",
+          "F.20",
+          "F.04",
+          "F.56"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "question": "How much of the $0.64 of 2026 deal dilution fell in Q3 versus Q4, and what were first-half adjusted EPS and the Q4 EPS embedded in the $11.05-$11.15 guide?",
+      "why": {
+        "text": "Consensus Q4 EPS of $2.94, Q3 adjusted EPS of $2.59 and the reported adjusted EPS guide of $11.05-$11.15 together imply first-half adjusted EPS of about $5.52-$5.62. First-half adjusted EPS is not in the sources, so the required Q4 EPS cannot be confirmed from them.",
+        "evidence_ids": [
+          "C.010",
+          "C.018",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "question": "What was the basis of the roughly $0.2B MedTech tariff recoveries, and do they recur in Q4 and 2027? Does J&J's US government agreement carry tariff or pricing-mandate protection?",
+      "why": {
+        "text": "The recoveries lifted MedTech adjusted margin to 22.9% and are undisclosed in mechanism. Peers cite protection to about January 2029.",
+        "evidence_ids": [
+          "Q.052",
+          "C.015",
+          "P.025",
+          "P.004"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "Where does 95% participation in the ovarian talc deal stand, what is the deadline and payment schedule, and does the $21B free cash flow guide include the payout?",
+      "why": {
+        "text": "About $9.0B of reserve, half current, must be funded and no schedule is given. A secondary source claims the threshold is being met, but that is not in the call transcript.",
+        "evidence_ids": [
+          "Q.065",
+          "C.016",
+          "A.019"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is behind the confidence in MedTech's Q4 return to growth: timing of VARIPULSE Pro's US launch, the size of the Middle East effect, and Abiomed's trajectory after the ex-US study?",
+      "why": {
+        "text": "MedTech Q3 growth was 2.5% (ex-US 0.1%) and management said it fell short. Peers are cautious, and no FDA approval has been reported.",
+        "evidence_ids": [
+          "Q.106",
+          "C.038",
+          "C.057",
+          "A.033",
+          "N.01"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is the Q4 and 2027 exposure to a US Simponi biosimilar, Opsumit and Uptravi generics, and BIOCAD's daratumumab launch? What rebate true-up is assumed in Q4?",
+      "why": {
+        "text": "These erosion items are not sized, and the Q4 2025 base included a large favorable true-up.",
+        "evidence_ids": [
+          "Q.101",
+          "Q.102",
+          "Q.075",
+          "Q.050",
+          "K.173"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "Is the $1.36 of 2027 dilution inside the Street's roughly $11.60 normalized 2027 EPS, and will the Dec 8 review give a pro forma excluding Orthopaedics? Is a spin your confirmed route after the Smith & Nephew talks failed?",
+      "why": {
+        "text": "Analysts have cut 2027 estimates about 9% since June, and the CFO said a pro forma may come with the review.",
+        "evidence_ids": [
+          "N.21",
+          "A.020",
+          "C.030",
+          "N.13"
+        ],
+        "evidence_type": "estimate"
+      }
+    }
+  ],
+  "data_gaps": [
+    "First-half 2026 adjusted EPS (Q1 and Q2 releases) is not in the sources, so required Q4 adjusted EPS is shown only as a formula and sensitivity.",
+    "Whether the $2.94 consensus is on an adjusted basis is unconfirmed. The Q4 2025 adjusted EPS base is not sourced (only derived from guidance).",
+    "No brand-level or segment-level Q4 consensus is available, and no 2027 consensus sales or EPS definition (whether it includes the $1.36 dilution).",
+    "Which quarter holds the 53rd week and its sales size are not sourced. The '100bp' figure is an analyst's reading on the call, and the CFO's Deutsche Bank comment about 2027 sales could not be found. The 5.4% 2027 figure is therefore not a management number.",
+    "Whether the reported-sales guide assumes euro spot (1.12) or the 1.15 average for Q4 is not stated.",
+    "Source conflict: the call transcript says Stelara 'declined 5.4%' while the 10-Q shows -54.4% (the filing wins). The call says operational growth was ahead of consensus while Zacks says sales missed. No Q3 consensus figure was found to settle it.",
+    "Talc: no opt-in deadline, payment schedule, share of the current reserve, or fallback if 95% is missed. The 'trending to meet' remark appears only in a TIKR paraphrase and is not in the call transcript.",
+    "No prescription-script data for Tremfya, Icotyde, Spravato or Caplyta. Icotyde sales are undisclosed. The BIOCAD impact is not quantified.",
+    "Peer read-across on ex-US procedures is thin: no Boston Scientific or Intuitive ex-US procedure data, no Medtronic October-quarter commentary, and no independent Impella demand data. No FDA news on VARIPULSE Pro.",
+    "The legal basis and recurrence of the MedTech tariff recoveries is not disclosed. J&J's US government agreement terms are not disclosed. Dollar sizing of 2027 loss-of-exclusivity erosion is not given.",
+    "No whisper EPS, options-implied move or post-Q3 stock reaction size is available. The next report is 86 days out."
+  ],
+  "sources": {
+    "Q.008": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 — New York Stock Exchange",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.009": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 — New York Stock Exchange",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.014": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — Shareholders’ equity:",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.023": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — Recently Adopted Accounting Standards",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.044": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — Company contributions",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.045": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — Company contributions",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.046": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — Company contributions",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.047": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — Company contributions",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.050": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — Company contributions",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.052": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — Company contributions",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.060": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — Sail Biomedicines",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.065": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.066": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.068": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.075": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · Financial Statements — DARZALEX",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.092": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.094": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.098": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.099": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.101": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.102": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.103": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.104": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.106": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.107": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.109": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.110": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Cost of products sold increased slightly as a percent to sales driven by:",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.127": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Cash flows",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.128": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Dividends",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "Q.130": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-21 · MD&A — Dividends",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "K.037": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-11 · Business — Regulation",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000016/jnj-20251228.htm",
+      "as_of": "2026-02-11"
+    },
+    "K.109": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-11 · MD&A — Management’s objectives",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000016/jnj-20251228.htm",
+      "as_of": "2026-02-11"
+    },
+    "K.111": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-11 · MD&A — Management’s objectives",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000016/jnj-20251228.htm",
+      "as_of": "2026-02-11"
+    },
+    "K.112": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-11 · MD&A — Management’s objectives",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000016/jnj-20251228.htm",
+      "as_of": "2026-02-11"
+    },
+    "K.173": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-11 · Financial Statements — Revenue recognition",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000016/jnj-20251228.htm",
+      "as_of": "2026-02-11"
+    },
+    "K.191": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-11 · Financial Statements — Income taxes",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000016/jnj-20251228.htm",
+      "as_of": "2026-02-11"
+    },
+    "K.245": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-11 · Financial Statements — Stock options",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000016/jnj-20251228.htm",
+      "as_of": "2026-02-11"
+    },
+    "C.004": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Joaquin Duato, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.007": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Joaquin Duato, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.008": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Joaquin Duato, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.009": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Joaquin Duato, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.010": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Ryan Koors, Vice President, Investor Relations",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.011": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Ryan Koors, Vice President, Investor Relations",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.012": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Ryan Koors, Vice President, Investor Relations",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.013": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Ryan Koors, Vice President, Investor Relations",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.014": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Ryan Koors, Vice President, Investor Relations",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.015": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Ryan Koors, Vice President, Investor Relations",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.016": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Joseph J. Wolk, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.017": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Joseph J. Wolk, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.018": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Joseph J. Wolk, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.019": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Joseph J. Wolk, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.020": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Joseph J. Wolk, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.021": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Joseph J. Wolk, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.024": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Joseph J. Wolk, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.029": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Larry Biegelsen, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.030": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Joseph J. Wolk, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.037": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Timothy Schmid, Executive Vice President, Worldwide Chairman, MedTech",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.038": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Timothy Schmid, Executive Vice President, Worldwide Chairman, MedTech",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.039": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Timothy Schmid, Executive Vice President, Worldwide Chairman, MedTech",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.049": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Joaquin Duato, Chairman and CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.057": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Timothy Schmid, Executive Vice President, Worldwide Chairman, MedTech",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.058": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Timothy Schmid, Executive Vice President, Worldwide Chairman, MedTech",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=JNJ&quarter=2026Q3",
+      "as_of": null
+    },
+    "F.01": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2026-09-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "F.03": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — nine months ended 2026-09-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "F.04": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — nine months ended 2025-09-28",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "F.09": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2026-09-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "F.10": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-09-28",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "F.14": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow — nine months ended 2026-09-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "F.16": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure — nine months ended 2026-09-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000197/jnj-20260927.htm",
+      "as_of": "2026-10-21"
+    },
+    "F.20": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — year ended 2025-12-28",
+      "url": "https://www.sec.gov/Archives/edgar/data/200406/000020040626000016/jnj-20251228.htm",
+      "as_of": "2026-02-11"
+    },
+    "F.33": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — quarter ended 2026-09-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.34": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — nine months ended 2026-09-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.52": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — nine months ended 2026-09-27",
+      "url": null,
+      "as_of": null
+    },
+    "F.56": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-12-28",
+      "url": null,
+      "as_of": null
+    },
+    "F.57": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "F.58": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-12-28",
+      "url": null,
+      "as_of": null
+    },
+    "F.59": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "M.05": {
+      "kind": "market",
+      "citation": "Market data — Beat/miss record",
+      "url": null,
+      "as_of": null
+    },
+    "M.07": {
+      "kind": "market",
+      "citation": "Market data — Consensus price target",
+      "url": null,
+      "as_of": null
+    },
+    "N.01": {
+      "kind": "news",
+      "citation": "tradingview.com, 2026-10-30 — JNJ's MedTech Segment Disappoints in Q3: Will Growth Rebound in Q4?  — TradingView News",
+      "url": "https://www.tradingview.com/news/zacks:5678be55c094b:0-jnj-s-medtech-segment-disappoints-in-q3-will-growth-rebound-in-q4",
+      "as_of": "2026-10-30"
+    },
+    "N.04": {
+      "kind": "news",
+      "citation": "247wallst.com, 2026-10-30 — 4 Dividend Kings With 50-Plus Years of Payout Increases for Retirement Income - 24/7 Wall St.",
+      "url": "https://247wallst.com/investing/2026/10/30/4-dividend-kings-with-50-plus-years-of-payout-increases-for-retirement-income",
+      "as_of": "2026-10-30"
+    },
+    "N.06": {
+      "kind": "news",
+      "citation": "247wallst.com, 2026-10-26 — 2 Safe S&P 500 Dividend Stocks Boomers Can Buy and Hold Forever - 24/7 Wall St.",
+      "url": "https://247wallst.com/investing/2026/10/26/2-safe-sp-500-dividend-stocks-boomers-can-buy-and-hold-forever",
+      "as_of": "2026-10-26"
+    },
+    "N.07": {
+      "kind": "news",
+      "citation": "fiercebiotech.com, 2026-10-23 — Gilead to pay $1.3B upfront for PepStar’s oral IL-23 challenger to J&J’s Icotyde - Fierce Biotech",
+      "url": "https://www.fiercebiotech.com/biotech/gilead-pay-13b-upfront-pepstars-oral-il-23-challenger-jjs-icotyde",
+      "as_of": "2026-10-23"
+    },
+    "N.12": {
+      "kind": "news",
+      "citation": "blog.cvn.com, 2026-10-23 — Juries in MA and CT Hear Openings In J&J Cosmetic Talc Trials: Watch Online via CVN",
+      "url": "https://blog.cvn.com/juries-in-ma-and-ct-hear-openings-in-jj-cosmetic-talc-trials-watch-online-via-cvn",
+      "as_of": "2026-10-23"
+    },
+    "N.13": {
+      "kind": "news",
+      "citation": "finance.yahoo.com, 2026-10-23 — Smith And Nephew Merger Talks With Johnson & Johnson Collapse Over Leadership Dispute",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/smith-nephew-merger-talks-johnson-170659240.html",
+      "as_of": "2026-10-23"
+    },
+    "A.011": {
+      "kind": "article",
+      "citation": "Article (finance.yahoo.com) — 9. [Investing](https://finance.yahoo.com/personal-finance/investing/)",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/smith-nephew-merger-talks-johnson-170659240.html",
+      "as_of": "2026-10-23"
+    },
+    "A.012": {
+      "kind": "article",
+      "citation": "Article (finance.yahoo.com) — 9. [Investing](https://finance.yahoo.com/personal-finance/investing/)",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/smith-nephew-merger-talks-johnson-170659240.html",
+      "as_of": "2026-10-23"
+    },
+    "A.013": {
+      "kind": "article",
+      "citation": "Article (finance.yahoo.com) — 9. [Investing](https://finance.yahoo.com/personal-finance/investing/)",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/smith-nephew-merger-talks-johnson-170659240.html",
+      "as_of": "2026-10-23"
+    },
+    "N.17": {
+      "kind": "news",
+      "citation": "tradingnews.com, 2026-10-29 — Boston Scientific Stock Price Forecast — BSX ($43.26) Rebounds After 3rd 2026 Guidance Cut — $47 Recovery Target",
+      "url": "https://www.tradingnews.com/news/bsx-43-usd-bounces-off-a-new-low-as-watchman-and-ep-shrink",
+      "as_of": "2026-10-29"
+    },
+    "N.21": {
+      "kind": "news",
+      "citation": "tikr.com, 2026-10-29 — Johnson & Johnson Is Up 42% in a Year: Take Profits, or Buy More? | TIKR.com",
+      "url": "https://www.tikr.com/blog/johnson-johnson-is-up-42-in-a-year-take-profits-or-buy-more",
+      "as_of": "2026-10-29"
+    },
+    "P.004": {
+      "kind": "peer",
+      "citation": "PEER PFE 10-Q filed 2026-08-04 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "P.016": {
+      "kind": "peer",
+      "citation": "PEER MDT 10-Q filed 2026-09-03 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "A.016": {
+      "kind": "article",
+      "citation": "Article (tikr.com)",
+      "url": "https://www.tikr.com/blog/johnson-johnson-won-uk-approval-for-its-psoriasis-pill-heres-where-the-stock-could-go-by-2030",
+      "as_of": "2026-10-26"
+    },
+    "A.017": {
+      "kind": "article",
+      "citation": "Article (tikr.com)",
+      "url": "https://www.tikr.com/blog/johnson-johnson-won-uk-approval-for-its-psoriasis-pill-heres-where-the-stock-could-go-by-2030",
+      "as_of": "2026-10-26"
+    },
+    "A.019": {
+      "kind": "article",
+      "citation": "Article (tikr.com)",
+      "url": "https://www.tikr.com/blog/johnson-johnson-won-uk-approval-for-its-psoriasis-pill-heres-where-the-stock-could-go-by-2030",
+      "as_of": "2026-10-26"
+    },
+    "A.020": {
+      "kind": "article",
+      "citation": "Article (tikr.com)",
+      "url": "https://www.tikr.com/blog/johnson-johnson-won-uk-approval-for-its-psoriasis-pill-heres-where-the-stock-could-go-by-2030",
+      "as_of": "2026-10-26"
+    },
+    "A.026": {
+      "kind": "article",
+      "citation": "Article (seekingalpha.com)",
+      "url": "https://seekingalpha.com/article/4959098-johnson-and-johnson-strong-q3-growth-but-2027-could-test-its-earnings",
+      "as_of": "2026-10-29"
+    },
+    "A.032": {
+      "kind": "article",
+      "citation": "Article (medtechdive.com)",
+      "url": "https://www.medtechdive.com/news/boston-scientific-cuts-2026-guidance-for-third-time-this-year/873037/",
+      "as_of": "2026-10-28"
+    },
+    "A.033": {
+      "kind": "article",
+      "citation": "Article (medtechdive.com)",
+      "url": "https://www.medtechdive.com/news/boston-scientific-cuts-2026-guidance-for-third-time-this-year/873037/",
+      "as_of": "2026-10-28"
+    },
+    "A.034": {
+      "kind": "article",
+      "citation": "Article (medtechdive.com)",
+      "url": "https://www.medtechdive.com/news/boston-scientific-cuts-2026-guidance-for-third-time-this-year/873037/",
+      "as_of": "2026-10-28"
+    },
+    "N.41": {
+      "kind": "news",
+      "citation": "biospace.com, 2026-10-28 — Johnson & Johnson to Host Enterprise Business Review - BioSpace",
+      "url": "https://www.biospace.com/press-releases/johnson-johnson-to-host-enterprise-business-review",
+      "as_of": "2026-10-28"
+    },
+    "N.46": {
+      "kind": "news",
+      "citation": "tradingview.com, 2026-10-23 — J&J Stock Reclaims 50-Day SMA: Is it Time to Buy, Sell or Hold? — TradingView News",
+      "url": "https://www.tradingview.com/news/zacks:6b62d636f094b:0-j-j-stock-reclaims-50-day-sma-is-it-time-to-buy-sell-or-hold",
+      "as_of": "2026-10-23"
+    },
+    "N.50": {
+      "kind": "news",
+      "citation": "tikr.com, 2026-10-30 — Stryker Sinks 5% on Q3 Miss and Guidance Cut: “Fall Short of Our Expectations” | TIKR.com",
+      "url": "https://www.tikr.com/blog/stryker-sinks-5-on-q3-miss-and-guidance-cut-fall-short-of-our-expectations",
+      "as_of": "2026-10-30"
+    },
+    "P.025": {
+      "kind": "peer",
+      "citation": "PEER BMY 10-Q filed 2026-10-29 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "P.026": {
+      "kind": "peer",
+      "citation": "PEER BMY 10-Q filed 2026-10-29 · Financial Statements — HRSA 340B Litigation",
+      "url": null,
+      "as_of": null
+    },
+    "N.56": {
+      "kind": "news",
+      "citation": "tickrlab.com, 2026-10-23 — Earnings results — Tickr Lab",
+      "url": "https://www.tickrlab.com/results",
+      "as_of": "2026-10-23"
+    }
+  },
+  "check_notes": [
+    "metrics_to_model[3].view: rewritten to what its sources support (The 3.0% versus 2.6% true-up comparison sets FY2025 against the 2026 nine-month figure (2.6%), when the 2025 nine-month figure was 3.1%, and the Darzalex Q4 2025 base of about $3.90B cannot be derived because the 2025 nine-month Darzalex sales are not shown.).",
+    "key_risks[1]: rewritten to what its sources support (The cited passages give the consensus ($26.71B) and the guide midpoint but not nine-month sales or the top of the guided range, so the claim that consensus is above the top of the guide cannot be derived.).",
+    "key_risks[3]: rewritten to what its sources support (The 2.6% is the 2026 nine-month figure, not the 2025 first nine months (3.1%), so the comparison with FY2025's 3.0% does not show a large favorable Q4 2025 true-up.).",
+    "key_risks[7]: rewritten to what its sources support (The 10-Q passage shown contains only a heading for separation risks, not text listing failure to separate on time or at all as a risk.).",
+    "questions_for_management[0]: rewritten to what its sources support (The cited passages do not give the Q3 operational growth of 6.0%, nine-month operational growth, or the Q4 base needed to derive the 9.4% implied Q4 growth and the 3.8-point figure.).",
+    "questions_for_management[1]: rewritten to what its sources support (The $5.52-$5.62 range requires Q3 adjusted EPS of $2.59, which does not appear in the cited passages.).",
+    "since_filing[5]: tag 'reported' → 'estimate' (it cites only article, news)."
+  ]
+}

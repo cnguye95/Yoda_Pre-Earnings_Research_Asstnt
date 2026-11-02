@@ -1,0 +1,1314 @@
+{
+  "ticker": "SLB",
+  "company_name": "SLB LIMITED/NV",
+  "report_generated_at": "2026-11-01T12:26:57+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-10-28",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-01-23",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm"
+    }
+  ],
+  "earnings_call": "Q3 FY2026 earnings call (date unknown)",
+  "current_report": "No 8-K or 6-K recent enough to read",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$0.75",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$10.01B",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2027-01-21 report. Paid lookup not made: next report is 81 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "implied move: no live implied move yet (EarningsWatcher has no confirmed report date)."
+    },
+    "historical_move": {
+      "value": "±4.1% average closing move over the last 8 reports (2025-01-17 to 2026-10-23)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/slb-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "analyst_actions": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    },
+    "price_target": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "FMP refused the request"
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "Q3 2026 (reported 23 Oct; 10-Q filed 28 Oct): revenue was $9.45B, +5.8% YoY and about +5% sequentially, led by a 13% sequential rise in the Middle East. GAAP diluted EPS was $0.49 against $0.50 a year ago.",
+      "evidence_ids": [
+        "F.01",
+        "F.33",
+        "F.09",
+        "F.10",
+        "Q.031"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Adjusted EPS excluding charges was $0.64, up $0.09 sequentially and down $0.05 YoY. The gap to GAAP is a $0.12 ($187M) non-cash pension settlement charge and $0.03 of ChampionX merger and integration costs. Pre-print consensus was $0.62 EPS on $9.27B revenue, so the quarter beat on both.",
+      "evidence_ids": [
+        "C.011",
+        "Q.012",
+        "N.05"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Nine-month revenue is +4.5% but net income is -10.9% and diluted EPS -16.1%. Excluding ChampionX, revenue is down 4%, driven by a 16% (~$1.1B) Middle East decline from conflict disruptions. Margins are the weak point.",
+      "evidence_ids": [
+        "F.34",
+        "F.36",
+        "F.38",
+        "Q.034"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q4 FY2026 will be reported on 2027-01-21 after the close (Finnhub). Consensus is EPS $0.75 and revenue $10.01B. Management guided Q4 revenue to ~$10B (+5-7% sequential) and adjusted EBITDA margin up 100-150 bps from 21.9%, so consensus sits at the middle of guidance.",
+      "evidence_ids": [
+        "M.01",
+        "C.009",
+        "C.011"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "The consensus-implied +36.3% EPS growth compares $0.75 with a GAAP Q4 2025 EPS of $0.55 that carried $561M of pretax charges. The comparison is not like-for-like. The consensus revenue growth of +2.7% YoY is a cleaner comparison.",
+      "evidence_ids": [
+        "F.59",
+        "F.58",
+        "F.57",
+        "K.063"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "The average closing move over the last 8 reports is ±4.1%. No options-implied move is available yet. The stock closed at $53.74 on 30 Oct. The CEO (10b5-1 plan), the CAO and the CLO sold shares in the days after the print. Plan-based sales are routine, so this is a weak signal.",
+      "evidence_ids": [
+        "M.04",
+        "M.03",
+        "N.03",
+        "N.07",
+        "N.04",
+        "N.06"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Net debt was $9.25B at 30 Sep, up $1.8B YTD. The pending Kelvion deal (~$3.4B cash plus ~$0.7B assumed debt, closing 1H27) adds roughly $4B on a simple sum, putting pro forma net debt above $13B.",
+      "evidence_ids": [
+        "Q.038",
+        "Q.043"
+      ],
+      "evidence_type": "reported"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Revenue",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 2026 revenue was $9.45B. Q4 2025 was $9.745B.",
+        "evidence_ids": [
+          "F.01",
+          "K.063"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus revenue is $10.01B, +2.7% YoY and about +5.9% sequential.",
+        "evidence_ids": [
+          "M.01",
+          "F.57"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Guidance of ~$10B (+5-7% sequential) implies $9.92-10.11B, so consensus is mid-range. The guide assumes Middle East revenue flat at ~$1.9B. Upside needs the Middle East or year-end Digital and product sales to beat. Downside is a worsening of the late-Q3 disruptions.",
+        "evidence_ids": [
+          "C.009",
+          "M.01"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Adjusted EPS (ex-charges)",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 2026 adjusted EPS was $0.64.",
+        "evidence_ids": [
+          "C.011"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus EPS is $0.75, +$0.11 sequentially. Whether it is on an adjusted basis is not stated in the sources.",
+        "evidence_ids": [
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "My rough bridge: ~$0.22B of incremental EBITDA from the guide, taxed at ~21% over ~1.5B diluted shares, adds about $0.11-0.13. That gives roughly $0.75-0.77, in line with consensus. The bar is therefore the top of guidance, not a soft number. This is my arithmetic, not company guidance.",
+        "evidence_ids": [
+          "C.009",
+          "C.011",
+          "F.01",
+          "Q.037",
+          "Q.003"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Adjusted EBITDA margin",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 adjusted EBITDA margin was 21.9%, up 71 bps sequentially.",
+        "evidence_ids": [
+          "C.011"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guidance is +100-150 bps, to about 22.9-23.4%. Drivers are Middle East operating leverage on retained resources and year-end Digital exploration and product sales. Offsets are Data Center Solutions ramp costs and mix, which the CFO called non-accretive, plus pricing pressure.",
+        "evidence_ids": [
+          "C.009",
+          "C.035",
+          "Q.033"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Middle East revenue",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 Middle East revenue was $1.9B, +13% sequentially despite late-quarter disruptions.",
+        "evidence_ids": [
+          "C.011",
+          "Q.031"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guidance assumes flat at ~$1.9B, which is ~83% of Q4 2025 (implying ~$2.3B then). This is the main swing factor for revenue and margin. Management said the late-Q3 activity adjustments were stabilizing, and the Saudi integrated well construction contracts mobilize in Q4 and reach full capacity in 2027.",
+        "evidence_ids": [
+          "C.009",
+          "C.032"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Production Systems revenue",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 Production Systems revenue was $4.0B (+6% sequentially) at a 16.1% pretax margin.",
+        "evidence_ids": [
+          "Q.030",
+          "C.012"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guidance is high-single-digit sequential growth, about $4.3-4.4B on my math, helped by year-end product sales, OneSubsea and ChampionX. Well Construction and Reservoir Performance are guided essentially flat. Watch Production Systems for the combined core growth of low single digits.",
+        "evidence_ids": [
+          "C.009",
+          "C.076"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Digital revenue and margin",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 Digital revenue was $693M (-1% sequential) at a 28% pretax margin. Nine-month revenue was $2.03B, +11%.",
+        "evidence_ids": [
+          "Q.032",
+          "Q.033"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management guides Q4 up in line with history on a 'significant' uptick in exploration data sales, with full-year growth in the double digits and adjusted EBITDA margin above 35%. Against FY2025 Digital of $2.66B, +10% implies Q4 of at least ~$0.9B, versus $825M in Q4 2025. My arithmetic.",
+        "evidence_ids": [
+          "C.005",
+          "C.012",
+          "C.009",
+          "K.066",
+          "Q.033"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Free cash flow (company definition)",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 free cash flow was $828M, and 9M FCF was $1.52B against $1.83B a year earlier. The XBRL-derived figure of $2.07B subtracts capex only, so the definitions differ. Q4 2025 FCF on the company definition was ~$2.29B (FY $4.115B less 9M $1.826B).",
+        "evidence_ids": [
+          "C.013",
+          "Q.039",
+          "F.52",
+          "K.076"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management expects a 'meaningful step-up' from lower inventory and higher collections, but the size depends on the timing of collections in certain countries. Receivables rose ~$1.05B YTD and the 9M working-capital outflow was $1.55B. A Q4 near last year's ~$2.3B would be a solid result, and anything well below it points to a collections slip.",
+        "evidence_ids": [
+          "C.013",
+          "Q.038",
+          "Q.005",
+          "Q.006"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Capital investments and buybacks",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "9M capital investments were $1.8B. Q3 buybacks were $656M (12.9M shares at $51.01) and 9M buybacks were $1.755B.",
+        "evidence_ids": [
+          "Q.040",
+          "C.014",
+          "Q.055",
+          "Q.039"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The FY guides of ~$2.5B capex and ~$2.4B buybacks imply Q4 of about $0.65-0.7B for each. Total 2026 shareholder returns will be slightly above $4B. Watch whether Kelvion funding changes the buyback pace in 2027.",
+        "evidence_ids": [
+          "C.014",
+          "Q.040",
+          "Q.043"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Effective tax rate",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "The Q3 rate was 23% (non-deductible $187M pension charge) against 20% in Q2 and 21% for 9M.",
+        "evidence_ids": [
+          "Q.037"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The rate should return toward ~20-21% with no pension charge. No explicit Q4 guide is given.",
+        "evidence_ids": [
+          "Q.037"
+        ],
+        "evidence_type": "proxy"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Revenue",
+      "guidance": "~$10B, +5-7% sequential, with Middle East flat at ~$1.9B",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Q4 revenue is expected at ~$10B, +5% to +7% sequentially. Excluding the Middle East, growth is high single digits YoY.",
+        "evidence_ids": [
+          "C.009"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Adjusted EBITDA margin",
+      "guidance": "+100-150 bps sequentially",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Adjusted EBITDA margin is expected to expand 100-150 bps from 21.9%.",
+        "evidence_ids": [
+          "C.009",
+          "C.011"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Division revenue",
+      "guidance": "Core divisions up low single digits; Production Systems high single digits; Well Construction and Reservoir Performance flat; Digital up on exploration sales",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "Combined core division revenue is expected up low single digits sequentially, led by Production Systems. Digital is up in line with Q4 history.",
+        "evidence_ids": [
+          "C.009"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Digital full-year growth and margin",
+      "guidance": "Double-digit YoY growth; adjusted EBITDA margin above 35%",
+      "period": "FY2026",
+      "status": "new",
+      "claim": {
+        "text": "Digital is expected to finish the year with double-digit growth and adjusted EBITDA margin above 35%.",
+        "evidence_ids": [
+          "C.005",
+          "C.012"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Capital investments",
+      "guidance": "~$2.5B",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "Capital investments of ~$2.5B were guided in the 10-K and reaffirmed in the 10-Q and on the call.",
+        "evidence_ids": [
+          "K.078",
+          "Q.040",
+          "C.014"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Shareholder returns",
+      "guidance": "Buybacks ~$2.4B; total returns slightly above $4B",
+      "period": "FY2026",
+      "status": "maintained",
+      "claim": {
+        "text": "The 10-K committed to returning more than $4B. On the call, buybacks of ~$2.4B and total returns slightly above $4B were described as in line with that commitment.",
+        "evidence_ids": [
+          "K.062",
+          "C.014"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Free cash flow",
+      "guidance": "Meaningful sequential step-up in Q4, size dependent on collections timing",
+      "period": "Q4 2026",
+      "status": "new",
+      "claim": {
+        "text": "A meaningful Q4 free cash flow step-up is expected from lower inventory and higher collections. No number was given.",
+        "evidence_ids": [
+          "C.013"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Global OFS market activity",
+      "guidance": "Mid-single-digit growth assuming the Middle East stays at 2H26 levels and no material escalation; SLB core divisions to visibly outperform; 2027 margin color in January",
+      "period": "FY2027",
+      "status": "new",
+      "claim": {
+        "text": "The first view of the 2027 market is mid-single-digit OFS growth, with Middle East normalization as upside. More detail on 2027 margins comes in January.",
+        "evidence_ids": [
+          "C.010",
+          "C.035"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Data Center Solutions",
+      "guidance": "Run rate above $1B by end of 2026 and above $2B in 2027",
+      "period": "FY2026-27",
+      "status": "maintained",
+      "claim": {
+        "text": "Management said it is still on track for a >$1B run rate by year-end and >$2B for 2027.",
+        "evidence_ids": [
+          "C.049"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Kelvion and ChampionX synergies",
+      "guidance": "Kelvion closing 1H27; ChampionX synergy target of ~$200M reached by year-end; OneSubsea bookings to exceed $9B over two years",
+      "period": "2026-27",
+      "status": "maintained",
+      "claim": {
+        "text": "Kelvion is on track to close in 1H27. ChampionX's ~$200M synergy target is expected by end-2026. OneSubsea bookings are expected to exceed the $9B two-year target.",
+        "evidence_ids": [
+          "Q.043",
+          "C.013",
+          "C.042",
+          "C.044"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "The 10-Q matches the earlier results release and call: revenue $9.449B, GAAP EPS $0.49 and the $187M pension charge. The call's adjusted EPS of $0.64 reconciles to GAAP by adding back $0.12 (pension) and $0.03 (merger and integration). No contradictions were found. The call transcript is undated, and M.04 and N.05 place the results on 23 Oct.",
+      "evidence_ids": [
+        "Q.004",
+        "Q.012",
+        "C.011",
+        "M.04",
+        "N.05"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Insider activity after the 10-Q: the CEO sold 25,000 shares at $53.17 on 27 Oct under a 10b5-1 plan adopted 27 May. The CAO sold 10,047 shares (~$539K) on 29 Oct and the CLO sold ~$1.12M (reported 31 Oct). The stock closed at $53.74 on 30 Oct. Vanguard reported a 4.97% passive stake.",
+      "evidence_ids": [
+        "N.07",
+        "N.08",
+        "N.06",
+        "N.03",
+        "N.09"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "The date of the next report is inconsistent across sources. Finnhub shows 2027-01-21 after the close (fiscal Q4), while an Investing.com page dated 25 Oct shows 14 Jan 2027. Both are third-party data and the date is not confirmed by the company. The CFO referenced 'January' for 2027 color.",
+      "evidence_ids": [
+        "M.01",
+        "N.02",
+        "C.035"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "The 10-Q reports no material changes to risk factors since the 10-K. New developments versus the 10-K are the Middle East conflict disruptions to 2026 results, the Kelvion agreement signed 31 Aug 2026, the $2.0B of debt issued in Q2 2026 and the Q3 pension settlement.",
+      "evidence_ids": [
+        "Q.054",
+        "Q.034",
+        "Q.043",
+        "Q.041",
+        "Q.012"
+      ],
+      "evidence_type": "reported"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Can Q4 deliver ~$10B and +100-150 bps of EBITDA margin with the Middle East flat?",
+      "bull": {
+        "text": "Q4 is seasonally strong: year-end Digital exploration, product and OneSubsea sales. In Q4 2025, organic revenue rose sequentially in both North America (+6%) and international (+7%). ChampionX is at record revenue and margin, and the Saudi contracts mobilize in Q4. Management has built operating leverage by retaining Middle East resources.",
+        "evidence_ids": [
+          "C.009",
+          "K.064",
+          "C.013",
+          "C.032",
+          "C.035"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Consensus ($10.01B revenue, $0.75 EPS) already sits on the guide, leaving little cushion. The guide depends on Middle East stability after late-Q3 disruptions and 'heightened tensions', and Iraq did not recover in Q3. Digital exploration sales are lumpy: Q3 fell $48M after a strong Q2.",
+        "evidence_ids": [
+          "M.01",
+          "C.009",
+          "C.032",
+          "Q.032"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "The 21 Jan print: Middle East revenue against $1.9B, Digital exploration sales, Production Systems growth versus the high-single-digit guide and adjusted EBITDA margin against 22.9-23.4%."
+    },
+    {
+      "question": "Will Middle East recovery lift margins, or do pricing, inflation and Data Center mix cap them?",
+      "bull": {
+        "text": "Middle East dilution was the main driver of 2026 margin compression, with 9M Reservoir Performance and Well Construction margins down 212 bps and 346 bps. Operating leverage should return as activity rebounds. Inflation is largely baked in, ChampionX synergies exceed plan, and Digital margins are above 35% EBITDA.",
+        "evidence_ids": [
+          "Q.035",
+          "C.035",
+          "C.042",
+          "C.012"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Well Construction margin pressure was 'compounded by pricing headwinds in select markets', and management said larger Middle East tenders carry pricing pressure. Data Center Solutions is not accretive to company margin and carries ramp costs. Full 2027 margin guidance is deferred to January.",
+        "evidence_ids": [
+          "Q.035",
+          "C.034",
+          "C.035",
+          "Q.033"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Division margins in Q4 (Well Construction 16.4% and Reservoir Performance 16.3% in Q3 versus 19% and 20% in Q4 2025) and the 2027 margin framework in January."
+    },
+    {
+      "question": "Is cash conversion recovering, and is the balance sheet ready for Kelvion plus buybacks?",
+      "bull": {
+        "text": "Q4 is historically the cash-heavy quarter: FY2025 FCF was $4.1B, with ~$2.3B in Q4. Management expects a meaningful step-up and has $5.0B of undrawn facilities and $3.6B of cash and short-term investments. Total returns of slightly above $4B are maintained.",
+        "evidence_ids": [
+          "K.076",
+          "Q.039",
+          "C.013",
+          "Q.042",
+          "C.014"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "9M FCF is $1.52B against $1.83B, and net debt rose $1.8B YTD to $9.25B. Receivables are up ~$1.05B and working capital absorbed $1.55B. Kelvion adds ~$4B of cash plus debt in 1H27 while buybacks continue.",
+        "evidence_ids": [
+          "Q.039",
+          "Q.038",
+          "Q.005",
+          "Q.043"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 FCF against the ~$2.3B prior-year level, year-end net debt, DSO and any update on Kelvion financing or buyback pacing."
+    },
+    {
+      "question": "Is the 2027 upcycle durable enough to support outperformance even without a Middle East fix?",
+      "bull": {
+        "text": "Management cites third-party deepwater FIDs +30% in 2026, a rebound in exploration, the Venezuela activation (revenue to more than double this year, multifold in 2027), Saudi multi-year well construction awards, backlog up to $6.8B and OneSubsea bookings above $9B. It sees core divisions outperforming mid-single-digit market growth.",
+        "evidence_ids": [
+          "C.007",
+          "C.008",
+          "C.004",
+          "Q.029",
+          "C.044",
+          "C.010"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "The 2027 market outlook assumes the Middle East stays at 2H26 levels and no escalation. An analyst question raised a Middle East resolution pushing crude back to $65-70 as a risk to growth drivers. Management declined to give regional 2027 detail, and the 2027 view is not yet supported by reported numbers.",
+        "evidence_ids": [
+          "C.010",
+          "C.024",
+          "C.058"
+        ],
+        "evidence_type": "guided"
+      },
+      "what_settles_it": "The January 2027 outlook, including 2027 margin color, plus OneSubsea bookings, Venezuela revenue, and customer budget announcements."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "base",
+      "description": {
+        "text": "Q4 revenue lands near ~$10.0B (+5-7% sequential) and adjusted EPS near $0.75-0.77. Middle East revenue is flat at ~$1.9B, margin expands about 125 bps and FCF steps up. Management frames 2027 as mid-single-digit market growth with outperformance. The stock reaction stays within the ±4% average range.",
+        "evidence_ids": [
+          "C.009",
+          "M.01",
+          "M.04"
+        ],
+        "evidence_type": "guided"
+      },
+      "triggers": [
+        "Middle East revenue about $1.9B",
+        "Production Systems up high single digits",
+        "Digital exploration surge",
+        "FCF around prior-year level (~$2B+)",
+        "2027 commentary unchanged"
+      ]
+    },
+    {
+      "name": "bull",
+      "description": {
+        "text": "Revenue reaches the high end or above (>$10.1B), Middle East recovery resumes ahead of the flat assumption, Digital exploration and OneSubsea beat, and EBITDA margin expands at or above 150 bps. EPS is $0.80 or better, and the 2027 guide leans toward 'visible outperformance' on larger bookings and Venezuela.",
+        "evidence_ids": [
+          "C.009",
+          "C.010",
+          "C.027",
+          "C.044"
+        ],
+        "evidence_type": "proxy"
+      },
+      "triggers": [
+        "Middle East peace or de-escalation",
+        "Venezuela ramp ahead of plan",
+        "OneSubsea bookings above $9B",
+        "Strong year-end product sales",
+        "Margin framework above street"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Middle East disruption escalates or persists below $1.9B, Q4 revenue falls short of $9.9B, Digital exploration disappoints and Data Center ramp costs and pricing pressure cap margin expansion. FCF falls short of the usual Q4 step-up because of collections timing, and 2027 guidance is hedged on Middle East uncertainty.",
+        "evidence_ids": [
+          "C.009",
+          "C.013",
+          "C.035",
+          "C.032"
+        ],
+        "evidence_type": "proxy"
+      },
+      "triggers": [
+        "Middle East revenue below $1.9B",
+        "EBITDA margin expansion below 100 bps",
+        "FCF well below ~$2.3B",
+        "Weaker tone on 2027 Middle East or pricing"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "Middle East conflict: revenue there was down 16% over 9M. The Q4 guide assumes stability, and management cites 'heightened tensions' and late-Q3 disruptions. Escalation breaks the guide and the 2027 market assumption.",
+        "evidence_ids": [
+          "Q.034",
+          "C.009",
+          "C.010",
+          "Q.031"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Collections and working capital: receivables rose to $9.7B from $8.7B at year-end, and the Q4 FCF step-up depends on the timing of collections in certain countries. Revenue in excess of billings on over-time contracts rose to $0.6B from $0.4B.",
+        "evidence_ids": [
+          "Q.005",
+          "C.013",
+          "Q.029"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Margin dilution and pricing: Data Center Solutions ramp costs reduced All Other operating income despite revenue growth. The CFO says it is not accretive to company margin. Pricing headwinds in Well Construction and larger Middle East tenders persist.",
+        "evidence_ids": [
+          "Q.033",
+          "C.035",
+          "Q.035"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Kelvion acquisition: ~$3.4B cash plus ~$0.7B assumed debt, subject to regulatory approvals, closing in 1H27. It adds leverage, integration and execution risk, and competes with buybacks for cash.",
+        "evidence_ids": [
+          "Q.043",
+          "C.013"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Ongoing integration of ChampionX: synergies are ahead of plan, but the 10-K flags the risk that benefits are not fully realized, and chemical inflation is partly offsetting margins.",
+        "evidence_ids": [
+          "C.042",
+          "K.037"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Oil price and customer spending risk: an easing in crude (the analyst's $65-70 scenario) could soften activity, and 82% of 2025 revenue is outside the US. The 10-K cites commodity-price, geopolitical, sanctions (including Russia, ~4% of revenue) and FX exposures.",
+        "evidence_ids": [
+          "C.024",
+          "K.029",
+          "K.031"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "What does the flat ~$1.9B Middle East Q4 assumption embed by country, and what exit rate did Q3 end at after the late-quarter disruptions?",
+      "why": {
+        "text": "The Q3 beat was ahead of expectations before disruptions hit, and the guide hinges on this assumption.",
+        "evidence_ids": [
+          "C.031",
+          "C.032",
+          "C.009"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "How much Q4 free cash flow do you expect, and which countries or customers drive collection timing?",
+      "why": {
+        "text": "9M FCF is down YoY, receivables are up ~$1.05B and the step-up is 'dependent on timing in certain countries'.",
+        "evidence_ids": [
+          "Q.039",
+          "Q.005",
+          "C.013"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How do you expect 2027 margins to evolve, given retained Middle East capacity, Data Center mix dilution and pricing pressure?",
+      "why": {
+        "text": "The CFO deferred the 2027 margin equation to January, and margins are the main driver of the 9M EPS decline.",
+        "evidence_ids": [
+          "C.035",
+          "F.38"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How will Kelvion be financed, and does it change the 2027 buyback pace and leverage targets?",
+      "why": {
+        "text": "The deal adds ~$4B of cash and debt, while net debt is already up $1.8B YTD and buybacks run at ~$2.4B a year.",
+        "evidence_ids": [
+          "Q.043",
+          "Q.038",
+          "C.014"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is the size and timing of the Q4 Digital exploration uplift, and what does it imply for FY Digital growth and the >35% margin?",
+      "why": {
+        "text": "Q3 exploration sales fell $48M sequentially after a strong Q2, and the FY target requires a large Q4.",
+        "evidence_ids": [
+          "Q.032",
+          "C.012"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What is your Venezuela revenue and credit exposure, and how do you manage payment risk as activity scales toward multifold growth?",
+      "why": {
+        "text": "Management called Venezuela a major 2027 driver with a potential ~$1B long-term revenue ambition.",
+        "evidence_ids": [
+          "C.008",
+          "C.027"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "data_gaps": [
+    "Q4 2025 adjusted EPS and adjusted EBITDA margin are not in the sources. Only the GAAP $0.55 is derivable, so the like-for-like adjusted YoY comparison cannot be made.",
+    "The basis (adjusted or GAAP) of the $0.75 EPS consensus is not stated.",
+    "No consensus is available for segment revenue, margins, adjusted EBITDA margin or free cash flow.",
+    "Whisper EPS and options-implied move are unavailable. No live implied move, as the report date is unconfirmed. Beat/miss record, analyst actions and price targets were not retrievable (FMP refused).",
+    "The report date is unconfirmed: Finnhub shows 2027-01-21, while Investing.com shows 14 Jan 2027.",
+    "The earnings call transcript is undated. The adjusted EBITDA reconciliation is not in the 10-Q.",
+    "XBRL operating income and cash-and-equivalents tags are missing from the fact sheet. Free cash flow is shown on the company definition, which includes APS and exploration data investments, and differs from the XBRL-derived capex-only figure.",
+    "Q4 2025 Middle East revenue is only implied (~$2.3B from '83%'). No exact figure is given.",
+    "No Kelvion revenue, margin or financing detail is provided in the sources.",
+    "Q2 2026 detail beyond what is in the 10-Q comparison table (revenue $8.972B, pretax income $1.019B) is not available, and Q4 price and valuation data are limited to a third-party snapshot.",
+    "Market data: signals figures are N/A because FMP refused the request (FMP refused https://financialmodelingprep.com/stable/grades (HTTP 402): Premium Query Parameter: 'Special Endpoint : This value set for 'symbol' is not available under your current subscription please visit our subscription page to upgrade your plan at https://financialmo Check FMP_API_KEY in .env and the FMP plan.)."
+  ],
+  "sources": {
+    "Q.003": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 — New York Stock Exchange",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.004": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.005": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.006": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.012": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — 1.   Basis of Presentation",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.029": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — 11.   Contingencies",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.030": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.031": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.032": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Digital",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.033": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Well Construction",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.034": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — All Other",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.035": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Reservoir Performance",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.037": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Other",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.038": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Charges and Credits",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.039": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Charges and Credits",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.040": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Charges and Credits",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.041": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Charges and Credits",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.042": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Charges and Credits",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.043": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Charges and Credits",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.054": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Risk Factors — Item 1A. Risk Factors.",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.055": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "K.029": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · Risk Factors — Business and Operational Risks",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "K.031": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · Risk Factors — Business and Operational Risks",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "K.037": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · Risk Factors — We may fail to realize the anticipated benefits of the ChampionX acquisition.",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "K.062": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · MD&A — 2025 Executive Overview",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "K.063": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · MD&A — 2025 Executive Overview",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "K.064": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · MD&A — 2025 Executive Overview",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "K.066": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · MD&A — Production Systems",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "K.076": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · MD&A — Charges and Credits",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "K.078": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-01-23 · MD&A — Charges and Credits",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526021017/slb-20251231.htm",
+      "as_of": "2026-01-23"
+    },
+    "C.004": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.005": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.007": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.008": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.009": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.010": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.011": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Stephane Biguet, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.012": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Stephane Biguet, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.013": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Stephane Biguet, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.014": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Stephane Biguet, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.024": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Scott Gruber, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.027": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.031": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Saurabh Pant, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.032": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.034": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Saurabh Pant, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.035": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Stephane Biguet, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.042": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Stephane Biguet, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.044": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.049": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.058": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.076": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Olivier Le Peuch, Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=SLB&quarter=2026Q3",
+      "as_of": null
+    },
+    "F.01": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "F.09": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "F.10": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/87347/000119312526435577/slb-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "F.33": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.34": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — nine months ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.36": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Net income growth — nine months ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.38": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS growth — nine months ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.52": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — nine months ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.57": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "F.58": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-12-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.59": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.03": {
+      "kind": "market",
+      "citation": "Market data — Options-implied move",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "N.02": {
+      "kind": "news",
+      "citation": "in.investing.com, 2026-10-25 — Slb NV Share Price Today | NYSE: SLB - Investing.com IN",
+      "url": "https://in.investing.com/equities/schlumberger-ltd",
+      "as_of": "2026-10-25"
+    },
+    "N.03": {
+      "kind": "news",
+      "citation": "sg.finance.yahoo.com, 2026-10-28 — SLB N.V. (SLB) latest stock news and headlines – Yahoo Finance",
+      "url": "https://sg.finance.yahoo.com/quote/SLB/news",
+      "as_of": "2026-10-28"
+    },
+    "N.04": {
+      "kind": "news",
+      "citation": "investing.com, 2026-10-30 — SLB chief accounting officer sells $539,021 in company stock",
+      "url": "https://www.investing.com/news/insider-trading-news/slb-chief-accounting-officer-sells-539021-in-company-stock-93CH-4985630",
+      "as_of": "2026-10-30"
+    },
+    "N.05": {
+      "kind": "news",
+      "citation": "247wallst.com, 2026-10-23 — SLB beats Q3 2026 estimates for the fourth quarter in a row | 24/7 Wall St.",
+      "url": "https://247wallst.com/cards/slb-q3-2026-earnings-slb-01m5m78a83wm8nn71rvn0y9ave",
+      "as_of": "2026-10-23"
+    },
+    "N.06": {
+      "kind": "news",
+      "citation": "investing.com, 2026-10-31 — Slb chief legal officer sells $1.12M in company stock",
+      "url": "https://www.investing.com/news/insider-trading-news/slb-chief-legal-officer-sells-112m-in-company-stock-93CH-4988954",
+      "as_of": "2026-10-31"
+    },
+    "N.07": {
+      "kind": "news",
+      "citation": "stocktitan.net, 2026-10-28 — SLB CEO Olivier Le Peuch sells 25,000 shares | SLB Insider Trading",
+      "url": "https://www.stocktitan.net/sec-filings/SLB/form-4-slb-limited-nv-insider-trading-activity-60b34fe01bfa.html",
+      "as_of": "2026-10-28"
+    },
+    "N.08": {
+      "kind": "news",
+      "citation": "stocktitan.net, 2026-10-29 — SLB officer Howard B. Guild proposes $539K share sale | SLB SEC Filing - Form 144",
+      "url": "https://www.stocktitan.net/sec-filings/SLB/144-slb-limited-nv-sec-filing-5de3e9488d48.html",
+      "as_of": "2026-10-29"
+    },
+    "N.09": {
+      "kind": "news",
+      "citation": "stocktitan.net, 2026-10-30 — SLB: Vanguard reports 4.97% passive ownership stake | SLB SEC Filing - Form SCHEDULE 13G/A",
+      "url": "https://www.stocktitan.net/sec-filings/SLB/schedule-13g-a-slb-limited-nv-amended-passive-investment-disclosure-b4ad5a327bcf.html",
+      "as_of": "2026-10-30"
+    }
+  },
+  "check_notes": []
+}

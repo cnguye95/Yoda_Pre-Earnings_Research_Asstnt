@@ -1,0 +1,1526 @@
+{
+  "ticker": "AMZN",
+  "company_name": "AMAZON COM INC",
+  "report_generated_at": "2026-11-01T12:26:57+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-10-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-02-06",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm"
+    }
+  ],
+  "earnings_call": "Q3 FY2026 earnings call (date unknown)",
+  "current_report": "No 8-K or 6-K recent enough to read",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$2.50",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$249.46B",
+      "fiscal_quarter": 4,
+      "fiscal_year": 2026,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2027-02-03 report. Paid lookup not made: next report is 94 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "implied move: no live implied move yet (EarningsWatcher has no confirmed report date)."
+    },
+    "historical_move": {
+      "value": "±6.2% average closing move over the last 8 reports (2024-10-31 to 2026-07-30)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/amzn-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": "1 beats, 3 misses in the last 4 quarters, average surprise -1.5%",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "Finnhub earnings surprises",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "analyst_actions": {
+      "value": "Last 30 days, newest first: Wedbush maintained Outperform (2026-10-30); Telsey Advisory Group maintained Outperform (2026-10-30); Scotiabank maintained Sector Outperform (2026-10-30); Cantor Fitzgerald maintained Overweight (2026-10-30); Mizuho maintained Outperform (2026-10-30); DA Davidson maintained Neutral (2026-10-30); Keybanc maintained Overweight (2026-10-30); Citizens maintained Market Outperform (2026-10-30); Wells Fargo maintained Overweight (2026-10-30); Guggenheim maintained Buy (2026-10-30); StoneX maintained Buy (2026-10-30); RBC Capital maintained Outperform (2026-10-30); Morgan Stanley maintained Overweight (2026-10-30); Rosenblatt maintained Buy (2026-10-30); TD Cowen maintained Buy (2026-10-30); UBS maintained Buy (2026-10-30); UBS maintained Buy (2026-10-26); Morgan Stanley maintained Overweight (2026-10-19); Cantor Fitzgerald maintained Overweight (2026-10-12); Wells Fargo maintained Overweight (2026-10-12); Tigress Financial maintained Buy (2026-10-06); TD Cowen maintained Buy (2026-10-05)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP grades",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "price_target": {
+      "value": "$328.48, +36.7% vs current $240.35",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP price target consensus",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "The next report is fiscal Q4 2026 on 2027-02-03 after the close, 94 days from today. Consensus is EPS $2.50 and revenue $249.46B. No whisper number or options-implied move is available yet.",
+      "evidence_ids": [
+        "M.01",
+        "M.02",
+        "M.03"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Q3 2026 revenue was $201.94B (+12.1% y/y) and operating income was $28.08B (+61.2%). The 13.9% operating margin was the company's highest ever, up from 9.7% a year earlier.",
+      "evidence_ids": [
+        "F.01",
+        "F.41",
+        "F.13",
+        "F.47",
+        "F.59",
+        "F.61",
+        "C.015"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Net income fell 2.4% to $20.68B and diluted EPS fell to $1.89 from $1.95, despite the operating income jump. Other income swung from +$10.2B in Q3 2025 (Anthropic marks) to -$0.7B, and interest expense rose to $1.69B from $0.54B.",
+      "evidence_ids": [
+        "F.43",
+        "F.45",
+        "Q.006"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "AWS sales were $45.98B (+39%) with operating income of $17.8B and a 38.7% margin. Unrecognized contract commitments (backlog) reached about $578B at 9/30/26, against about $244B at 12/31/25. The backlog includes expanded OpenAI (+$100B over 8 years) and Anthropic (>$100B over 10 years) commitments.",
+      "evidence_ids": [
+        "Q.066",
+        "Q.089",
+        "C.017",
+        "Q.019",
+        "Q.020",
+        "K.181"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "The AI build-out is stretching the balance sheet. Q3 capex (gross purchases of property and equipment) was $77.3B (+120% y/y), and trailing-12-month free cash flow was -$42.4B against +$14.8B a year earlier. Long-term debt rose to $173.1B from $65.6B at year-end, and cash fell to $55.8B.",
+      "evidence_ids": [
+        "F.21",
+        "F.51",
+        "Q.105",
+        "Q.008",
+        "F.25"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Management guided Q4 net sales to $240-247B (+12% to +16%, with about a 60bp FX headwind) and operating income to $28.5-33.5B, against $25.0B in Q4 2025. Consensus revenue of $249.46B sits above the top of the guided range. That implies +16.9% growth versus the guided +12% to +16%.",
+      "evidence_ids": [
+        "Q.108",
+        "M.01",
+        "F.78"
+      ],
+      "evidence_type": "guided"
+    },
+    {
+      "text": "The stock reacted negatively to the print, falling as much as 5% intraday on Friday before trimming to -1.4%. Reported concerns were larger-than-expected capex and Q4 operating income guidance whose midpoint was below the $32.99B consensus. The shares trade at $240.35 against a $328.48 consensus target, and sell-side ratings were maintained across the board. Amazon has averaged a ±6.2% closing move over 8 reports and had 1 EPS beat and 3 misses in the last 4 quarters.",
+      "evidence_ids": [
+        "N.02",
+        "N.06",
+        "M.07",
+        "M.06",
+        "M.04",
+        "M.05"
+      ],
+      "evidence_type": "proxy"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Net sales",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q4 2025 net sales were $213.39B (derived as the full year minus nine months). Q3 2026 was $201.94B (+12.1%).",
+        "evidence_ids": [
+          "F.77",
+          "F.01",
+          "F.41"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus revenue is $249.46B, about $2.5B above the top of the guided $240-247B range.",
+        "evidence_ids": [
+          "M.01",
+          "Q.108"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Risk to consensus is skewed to the downside. The guided range tops out below consensus, so a print above $247B is needed just to meet it. Q3 growth was held back by Prime Day moving into Q2 (about 400bp ex-shift), which does not repeat in Q4. Q4 should be modeled in the upper half of guidance, roughly $244-247B.",
+        "evidence_ids": [
+          "Q.108",
+          "M.01",
+          "C.015"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Operating income",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q4 2025 operating income was $25.0B. Q3 2026 was $28.08B, a 13.9% margin.",
+        "evidence_ids": [
+          "Q.108",
+          "F.13",
+          "F.59"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus operating income was $32.99B as cited by Barchart on 10-30. This is a pre-print figure that may have been revised, and it is above the $31.0B guidance midpoint.",
+        "evidence_ids": [
+          "N.02",
+          "Q.108"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "The guided range implies a roughly 12-13.5% margin, below Q3's 13.9%, and the midpoint of about 12.7% is a step down. Headwinds are higher fuel and line-haul costs than in Q3, Amazon Leo costs still expensed in Q4 (capitalization starts Q1 2027), memory and component costs, and rising depreciation. Consensus near $33B requires the top of the range.",
+        "evidence_ids": [
+          "Q.108",
+          "C.024",
+          "C.018",
+          "C.033",
+          "Q.004"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "AWS net sales and sequential add",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 2026 AWS sales were $45.98B (+39%), a sequential add of $3.8B and a $184B annualized run rate. Q4 2025 AWS sales were about $35.6B (derived from full-year $128.7B less nine-month $93.1B).",
+        "evidence_ids": [
+          "Q.066",
+          "C.017",
+          "K.222"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management gives no AWS guide but says growth should exceed 40% in each of 2027 and 2028. Sustaining roughly 39-41% on the Q4 2025 base implies about $49-50B, a sequential add of roughly $3.5-4.5B. A sequential add below the Q3 $3.8B would revive the deceleration question analysts raised on the call.",
+        "evidence_ids": [
+          "C.009",
+          "C.017",
+          "C.021",
+          "K.222",
+          "Q.066"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "AWS operating margin",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 2026 AWS operating margin was 38.7% ($17.77B on $45.98B). Q4 2025 was about 35.0% (derived from segment tables).",
+        "evidence_ids": [
+          "Q.066",
+          "C.017",
+          "K.222",
+          "K.223"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The CFO is not guiding AWS margin and says AI mix and component pricing pressure it, partly offset by custom chips and efficiencies. Model roughly 36-39%. D&A is a key driver: AWS D&A was $9.2B in Q3 versus $5.6B a year earlier, and capex keeps landing.",
+        "evidence_ids": [
+          "C.033",
+          "Q.070",
+          "C.017"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Advertising services revenue",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 2026 advertising revenue was $19.64B (+12% ex-FX), depressed by Prime Day timing (an 850bp sequential impact). Q4 2025 was about $21.3B (derived from full-year $68.6B less nine-month $47.3B).",
+        "evidence_ids": [
+          "Q.066",
+          "C.012",
+          "K.223",
+          "Q.108"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management guides Q4 advertising growth back to the high teens, which implies roughly $25B. Q4 includes NBA on Prime, which Q3 lacked, but the company is also lapping a search-marketing change from Q3 2025. A miss here would undercut the margin bridge.",
+        "evidence_ids": [
+          "Q.108",
+          "C.013",
+          "K.223",
+          "Q.066"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Cash capital expenditures",
+      "period": "FY2026 / Q4 FY2026",
+      "last_reported": {
+        "text": "Cash capex (net of proceeds and incentives) was $75.9B in Q3 and $172.2B for nine months. The XBRL gross purchases of property and equipment were $77.26B in Q3, and the two measures should not be mixed.",
+        "evidence_ids": [
+          "Q.082",
+          "C.017",
+          "F.21",
+          "Q.004"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guidance for about $220B in 2026 less $172.2B year to date implies only about $48B in Q4, far below the Q3 run rate of $75.9B. Either capex falls sharply, which looks inconsistent with a 14-second accelerator install cadence, or the $220B figure is stale and will be exceeded. Management also says 2027 capex will be meaningfully higher.",
+        "evidence_ids": [
+          "Q.108",
+          "Q.082",
+          "C.009",
+          "C.004"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Free cash flow and operating cash flow",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 operating cash flow was $42.4B (+19.4%). Trailing-12-month free cash flow was -$42.4B on the company's definition. Derived Q3 free cash flow on gross capex was -$34.8B.",
+        "evidence_ids": [
+          "F.17",
+          "F.49",
+          "Q.105",
+          "F.71"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Q4 is seasonally the strongest working-capital quarter, with cash and payables typically peaking at December 31. If capex really drops toward $48B, Q4 free cash flow could improve markedly. If capex stays near Q3 levels, free cash flow stays deeply negative and borrowing continues.",
+        "evidence_ids": [
+          "K.031",
+          "Q.082",
+          "Q.108",
+          "Q.083"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Diluted EPS",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q4 2025 diluted EPS was $1.95 (derived). Q3 2026 was $1.89 on 10.929B diluted shares.",
+        "evidence_ids": [
+          "F.79",
+          "F.09",
+          "Q.007"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus EPS is $2.50 (+28.4% y/y).",
+        "evidence_ids": [
+          "M.01",
+          "F.80"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Rough arithmetic suggests guided operating income of $28.5-33.5B yields only about $2.0-2.3 of EPS before any investment marks. This assumes Q3's roughly 23% tax rate, interest expense rising above $1.69B and flat share count. Consensus $2.50 therefore appears to embed positive non-operating gains such as Anthropic or OpenAI marks, or a large operating beat. Treat the EPS comparison as noisy and anchor on operating income.",
+        "evidence_ids": [
+          "Q.006",
+          "Q.007",
+          "Q.108",
+          "M.01",
+          "Q.027"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "Interest expense and non-operating items",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 interest expense was $1.69B (vs $0.54B) and other income (expense) was -$0.7B, after a $68.4B gain over nine months. Large debt issuances occurred in July and September, including a $17.5B term loan drawn in September.",
+        "evidence_ids": [
+          "Q.006",
+          "Q.048",
+          "Q.051"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Interest expense should step up again in Q4 as the full-quarter cost of the July and September issuance and term loan lands. Other income depends on observable-price marks on Anthropic and OpenAI preferred stock (carrying value $143.7B), which are not forecastable and can run negative.",
+        "evidence_ids": [
+          "Q.048",
+          "Q.051",
+          "Q.030",
+          "Q.013"
+        ],
+        "evidence_type": "proxy"
+      }
+    },
+    {
+      "metric": "North America segment sales and operating margin",
+      "period": "Q4 FY2026",
+      "last_reported": {
+        "text": "Q3 North America sales were $112.85B (+6%) with an operating margin of 7.7% ($8.7B). Prime Day moved into Q2, and excluding that shift consolidated Q3 growth would have been about 400bp higher. Shipping costs rose 11% against 12% unit growth.",
+        "evidence_ids": [
+          "Q.089",
+          "Q.066",
+          "C.015",
+          "C.016"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "With no Prime Day distortion in Q4, North America growth should normalize toward the high single or low double digits. The margin is the swing factor: fuel and line-haul inflation is higher in Q4 than Q3 and only partly recovered through the FBA fuel surcharge.",
+        "evidence_ids": [
+          "C.015",
+          "C.024",
+          "Q.108"
+        ],
+        "evidence_type": "proxy"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Net sales",
+      "guidance": "$240.0B to $247.0B, +12% to +16% y/y, including about a 60bp unfavorable FX impact",
+      "period": "Q4 FY2026",
+      "status": "new",
+      "claim": {
+        "text": "Q4 net sales are expected at $240-247B, +12% to +16% y/y, with about a 60bp FX headwind.",
+        "evidence_ids": [
+          "Q.108",
+          "C.018"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Operating income",
+      "guidance": "$28.5B to $33.5B, versus $25.0B in Q4 2025; assumes no energy-derivative remeasurement impact and no further acquisitions, restructurings or legal settlements",
+      "period": "Q4 FY2026",
+      "status": "new",
+      "claim": {
+        "text": "Q4 operating income is guided to $28.5-33.5B versus $25.0B a year earlier. Amazon Leo costs are still mostly expensed in Q4, with capitalization of certain costs delayed to Q1 2027, later than management previously suggested.",
+        "evidence_ids": [
+          "Q.108",
+          "C.018"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Advertising revenue growth",
+      "guidance": "High-teens y/y growth in Q4 (ex-FX), after +12% in Q3",
+      "period": "Q4 FY2026",
+      "status": "new",
+      "claim": {
+        "text": "Management expects advertising growth to return to the high teens in Q4, citing Q3 timing anomalies related to Prime Day.",
+        "evidence_ids": [
+          "Q.108",
+          "C.013"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Cash capital expenditures",
+      "guidance": "Approximately $220B for 2026; meaningfully more in 2027, primarily technology infrastructure",
+      "period": "FY2026 and FY2027",
+      "status": "maintained",
+      "claim": {
+        "text": "The company continues to expect 2026 cash capex of about $220B, the majority for AWS, and expects to spend meaningfully more in 2027. The 10-K only said capex would increase in 2026.",
+        "evidence_ids": [
+          "Q.108",
+          "C.009",
+          "Q.082",
+          "K.098"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "AWS revenue growth (management view)",
+      "guidance": "AWS can grow north of 40% in each of 2027 and 2028 and become a trillion-dollar revenue business in 5 to 10 years",
+      "period": "FY2027 and FY2028",
+      "status": "new",
+      "claim": {
+        "text": "The CEO said management believes AWS can grow north of 40% in each of 2027 and 2028. This is a belief statement rather than formal guidance.",
+        "evidence_ids": [
+          "C.009",
+          "C.023"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Trainium external availability",
+      "guidance": "Intends to make Trainium available outside AWS late in 2027",
+      "period": "Late 2027",
+      "status": "new",
+      "claim": {
+        "text": "Management intends to sell Trainium chips externally starting late 2027. It says it will rebalance internal versus external use of chip allocation each year.",
+        "evidence_ids": [
+          "C.009",
+          "C.040"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Globalstar acquisition close",
+      "guidance": "Expected to close in 2027, subject to regulatory approvals and Globalstar satellite replacement milestones; about $10.9B implied value including debt",
+      "period": "2027",
+      "status": "new",
+      "claim": {
+        "text": "The Globalstar acquisition (cash/stock mix, about $10.9B including debt) is expected to close in 2027, subject to regulatory approvals and satellite replacement milestones.",
+        "evidence_ids": [
+          "Q.037",
+          "Q.038"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "The 10-Q (filed 2026-10-30) repeats the guidance from the 2026-10-29 earnings release and the call. The call content is consistent with the filing, and no figure contradicts it. One definitional gap: the company's Q3 'cash capex' of $75.9B is net of proceeds and incentives, while the XBRL purchases-of-property line is $77.26B. Use consistent definitions when comparing to the $220B guide.",
+      "evidence_ids": [
+        "Q.108",
+        "Q.082",
+        "F.21",
+        "C.017"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Since the 10-K (Feb 2026), backlog rose from about $244B to $578B. Long-term debt rose from $65.6B to $173.1B. Equity investments in private companies (mainly Anthropic and OpenAI) rose from $16.2B to $143.7B. The Globalstar deal, a $17.5B term loan and an up to $80B supplier secured loan facility were added.",
+      "evidence_ids": [
+        "K.181",
+        "Q.019",
+        "K.138",
+        "Q.008",
+        "Q.030",
+        "Q.037",
+        "Q.051"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "In October 2026 Amazon replaced its $15B five-year and $5B 364-day revolving credit facilities with new ones on the same terms (five-year to Oct 2031, 364-day to Oct 2027). The new facilities back commercial paper programs of up to $30B, which are undrawn.",
+      "evidence_ids": [
+        "Q.053",
+        "Q.173",
+        "Q.174",
+        "Q.052"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "New legal items since the 10-K include an August 2026 FTC and 22-state complaint over reserve prices in sponsored-ad auctions, plus a Texas suit. Also new is a Xockets ITC complaint (May 2026, investigation instituted June 2026) that targets GB200/GB300-based AWS offerings and seeks injunctive relief.",
+      "evidence_ids": [
+        "Q.041",
+        "Q.040"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Post-earnings coverage was negative on spending and cash flow. Barchart says shares fell after the print because of capex larger than expected, slower core e-commerce growth and Q4 operating income guidance with a midpoint below the $32.99B consensus. The NYT reported shares down more than 4%. Barchart reports the stock at -1.4% on Friday after an earlier drop of more than 5%.",
+      "evidence_ids": [
+        "N.02",
+        "N.06",
+        "N.05"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "On slower core e-commerce growth, the company said on its 10-29 call that Q3 growth would have been about 400bp higher without the Prime Day shift into Q2. Barchart (10-30) frames growth as slower. The company statement is the primary source and is consistent with the 10-Q segment numbers (North America +6%).",
+      "evidence_ids": [
+        "C.015",
+        "N.02",
+        "Q.089"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Amazon cut jobs in its devices and services division on Wednesday 10-28, mostly software development roles, per Reuters as cited by MyNorthwest. Separately, Jassy told investors that the stores business is being 'slept on' (Retail Dive, 10-31).",
+      "evidence_ids": [
+        "N.01",
+        "N.04"
+      ],
+      "evidence_type": "proxy"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Can AWS sustain 40%+ growth, and will returns justify capex of roughly $220B in 2026 and 'meaningfully more' in 2027?",
+      "bull": {
+        "text": "AWS accelerated for a sixth straight quarter to +39%, with $578B of backlog (more than double the year-end level), inference now over half of AI revenue, and custom chips (Trainium and Graviton) growing triple digits. Management has visibility into 2027 and 2028 on large reserved capacity blocks.",
+        "evidence_ids": [
+          "Q.089",
+          "Q.019",
+          "C.004",
+          "C.009",
+          "C.027"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Trailing-12-month free cash flow is -$42.4B and long-term debt has nearly tripled. Capex rose 120% y/y in Q3, and the backlog is anchored by large Anthropic and OpenAI commitments that Amazon is also funding through equity investments and a financing facility. Those investments are marked at levels that depend on private-company pricing.",
+        "evidence_ids": [
+          "Q.105",
+          "Q.008",
+          "F.51",
+          "Q.020",
+          "Q.026",
+          "Q.029"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 AWS growth and sequential add (about $3.8B in Q3), the 2027 capex framework, backlog conversion and concentration disclosure, and whether free cash flow turns the corner in Q4."
+    },
+    {
+      "question": "Is Q4 guidance conservative, or does consensus ($249.5B revenue, about $33B operating income) sit too high?",
+      "bull": {
+        "text": "Q3 had one-off distortions (Prime Day shifted out, advertising timing anomalies) that reverse in Q4. Advertising is guided back to high teens, units grew 12%, the NBA starts in Q4, and operating income set a record 13.9% margin in Q3.",
+        "evidence_ids": [
+          "C.012",
+          "C.013",
+          "Q.108",
+          "C.015",
+          "F.59"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "Consensus revenue sits above the top of the guided range, and the guided operating income midpoint is below consensus. Fuel and line-haul inflation is higher in Q4 than Q3, Leo costs are still expensed, and component and memory costs weigh on AWS margin. The EPS record is 1 beat and 3 misses in the last 4 quarters.",
+        "evidence_ids": [
+          "M.01",
+          "Q.108",
+          "N.02",
+          "C.024",
+          "C.018",
+          "C.033",
+          "M.05"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "The Q4 print against the $240-247B revenue and $28.5-33.5B operating income ranges, plus advertising growth versus the 'high teens' target."
+    },
+    {
+      "question": "Is retail margin expansion durable as the company pushes same-day, perishables and Amazon Now?",
+      "bull": {
+        "text": "Units grew 12% in Q3 and shipping costs grew slower than units. Cost to serve is on track to fall for a fourth year, robotics are scaling (over 1 million robots), and North America and International margins have each expanded by nearly 10 points over several years.",
+        "evidence_ids": [
+          "C.015",
+          "C.016",
+          "C.011",
+          "C.029",
+          "C.010"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "North America sales grew only 6% reported in Q3 and International margin is only 3.7%. Fuel and line-haul costs are rising, and the company is investing in quick commerce and sharper prices.",
+        "evidence_ids": [
+          "Q.089",
+          "C.016",
+          "C.024",
+          "K.122"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 North America operating margin versus 7.7% in Q3, shipping cost growth relative to unit growth, and International margin."
+    },
+    {
+      "question": "How much of reported EPS is operating versus mark-to-market gains on Anthropic and OpenAI stakes?",
+      "bull": {
+        "text": "The Anthropic convertible notes carry a $140.3B unrealized gain in AOCI that can be recognized through other income upon future conversions, and the 9M 2026 other income was $68.4B. The balance sheet equity stakes are now $298.8B of recorded investments.",
+        "evidence_ids": [
+          "Q.027",
+          "Q.006",
+          "Q.112"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "These gains are non-cash and not repeatable on demand. Q3 other income was -$0.7B and net income fell 2.4% despite a 61% operating income gain. Private-company valuation marks are Level 3, so exposure to a downward adjustment or impairment grows as OpenAI and Anthropic carrying values rise.",
+        "evidence_ids": [
+          "F.43",
+          "Q.006",
+          "Q.030",
+          "Q.112"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q4 other income (expense), net, and any Anthropic or OpenAI financing rounds or liquidity events that reset observable prices."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "bull",
+      "description": {
+        "text": "Q4 revenue lands at or above $247B, near consensus. Operating income comes in at or above $33.5B on strong AWS (+40% or more, a sequential add above $4B) and a rebound in advertising to high teens or better. 2027 capex commentary is paired with visible backlog conversion, easing free-cash-flow worries.",
+        "evidence_ids": [
+          "Q.108",
+          "M.01",
+          "C.009",
+          "C.013",
+          "N.02"
+        ],
+        "evidence_type": "proxy"
+      },
+      "triggers": [
+        "AWS sales of $50B or more, with margin held near 38%",
+        "Advertising growth of high teens or better",
+        "Operating income above $33.5B",
+        "Q4 cash capex well below Q3 and clear 2027 funding plan"
+      ]
+    },
+    {
+      "name": "base",
+      "description": {
+        "text": "Revenue of about $244-247B and operating income of about $30-33B, inside the guided ranges. AWS grows roughly 39-41% with a margin in the mid-to-high 30s. Retail margin is flat to slightly lower on fuel and Leo costs. EPS comes in around $2.2-2.4 before investment marks, so the consensus of $2.50 relies on gains.",
+        "evidence_ids": [
+          "Q.108",
+          "C.017",
+          "C.024",
+          "C.018",
+          "Q.006",
+          "M.01"
+        ],
+        "evidence_type": "proxy"
+      },
+      "triggers": [
+        "Advertising growth in the mid-to-high teens",
+        "Shipping cost growth near unit growth",
+        "2026 capex finishes at or modestly above about $220B",
+        "2027 capex guided up meaningfully"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Revenue near the low end ($240-243B) as North America and International growth disappoints. Operating income falls below $30B on fuel, Leo and memory costs and heavier depreciation. AWS decelerates below +37% or the sequential add shrinks. A very large 2027 capex number and negative free cash flow renew the debate on the funding burden, and a negative mark on investments weighs on EPS.",
+        "evidence_ids": [
+          "Q.108",
+          "C.024",
+          "C.018",
+          "C.033",
+          "Q.105",
+          "Q.112"
+        ],
+        "evidence_type": "proxy"
+      },
+      "triggers": [
+        "AWS sequential add below $3.0B or growth below 37%",
+        "North America growth below high single digits",
+        "Operating income below $30B",
+        "Capex run rate stays near $75B per quarter, putting 2026 well above $220B",
+        "Negative marks on Anthropic or OpenAI stakes"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "Funding and free-cash-flow risk. Capex of $77.3B in Q3 produced trailing free cash flow of -$42.4B, financed with debt that nearly tripled. A secured loan facility of up to $80B is planned for Q1 2027 through Q3 2028. Interest expense already tripled y/y in Q3, and cash fell to $55.8B.",
+        "evidence_ids": [
+          "F.21",
+          "Q.105",
+          "Q.008",
+          "Q.051",
+          "Q.006",
+          "F.25"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Customer and counterparty concentration. The $578B backlog includes OpenAI (+$100B over 8 years) and Anthropic (>$100B over 10 years) commitments, while Amazon holds $50B of OpenAI preferred stock and has Anthropic notes and preferred stock. Amazon also provides Anthropic a facility of up to $20B ($15B remaining). Maximum loss exposure is the carrying value plus future funding commitments.",
+        "evidence_ids": [
+          "Q.019",
+          "Q.020",
+          "Q.029",
+          "Q.026",
+          "Q.031"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Valuation-mark volatility in EPS. Recorded equity, warrant and convertible investments total $298.8B and are mainly private companies marked on observable prices (Level 3). Management says market sensitivities are not practicable to quantify.",
+        "evidence_ids": [
+          "Q.112",
+          "Q.030"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Cost inflation in fulfillment and AI infrastructure: fuel and line-haul costs are higher in Q4 than Q3, and memory and component pricing is a named headwind to AWS margin. AI mix is lower margin than the core business.",
+        "evidence_ids": [
+          "C.024",
+          "C.016",
+          "C.033",
+          "Q.072"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Regulatory and legal exposure. New FTC and state complaints target reserve prices in sponsored-ad auctions. The antitrust and price-fixing cases seek billions of dollars, and the Xockets ITC case seeks injunctive relief against AI server products.",
+        "evidence_ids": [
+          "Q.041",
+          "Q.044",
+          "Q.040"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Execution and timing risks. The Amazon Leo service start and cost capitalization slipped to Q1 2027, and the Globalstar acquisition (about $10.9B) depends on regulatory approvals and satellite milestones. Satellite costs are largely expensed until the service achieves commercial viability.",
+        "evidence_ids": [
+          "C.018",
+          "Q.037",
+          "Q.038",
+          "Q.098"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Supply constraints on chips and memory. The company relies on a limited group of suppliers for AI semiconductors, and its forward-looking-statement language flags resource and supply volatility, including memory chips.",
+        "evidence_ids": [
+          "Q.148",
+          "Q.072"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Energy derivative remeasurement. Long-dated electricity contracts (about 690 million MWh, 18-year average remaining duration) are fair-valued in operating expenses with Level 3 inputs. Q4 guidance assumes no impact, but gains or losses can be material in future periods.",
+        "evidence_ids": [
+          "Q.015",
+          "Q.108"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "The $220B 2026 capex target less $172.2B spent through Q3 implies only about $48B in Q4, versus $75.9B in Q3. Is the Q4 capex number lower, or is the full-year figure now conservative, and how should we think about 2027 quarterly phasing?",
+      "why": {
+        "text": "The implied Q4 capex step-down is hard to square with the Q3 run rate and with comments about installing an AI accelerator every 14 seconds.",
+        "evidence_ids": [
+          "Q.082",
+          "Q.108",
+          "C.004",
+          "C.009"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How will the 2027 capex step-up be financed across operating cash flow, bonds, the $17.5B term loan and the up to $80B supplier loan facility, and what leverage level are you comfortable with?",
+      "why": {
+        "text": "Free cash flow is -$42.4B on a trailing basis, and debt and interest costs rose sharply in 2026.",
+        "evidence_ids": [
+          "Q.105",
+          "Q.008",
+          "Q.051",
+          "Q.006"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What share of the $578B backlog comes from your two largest customers (OpenAI and Anthropic), and what is the expected timing of conversion into revenue?",
+      "why": {
+        "text": "Backlog more than doubled since year-end and includes two large expansions. Amazon is also an investor in both customers.",
+        "evidence_ids": [
+          "Q.019",
+          "Q.020",
+          "Q.029",
+          "K.181"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How should we think about AWS operating margin as AI and Trainium-based Bedrock inference scale, given the stated headwinds from component pricing and depreciation?",
+      "why": {
+        "text": "Q3 margin of 38.7% was well above Q4 2025's roughly 35%, yet the CFO cautioned about mix and component cost pressure.",
+        "evidence_ids": [
+          "C.017",
+          "C.033",
+          "Q.070"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What explains the Q4 operating income guidance midpoint ($31B) falling below Q3's margin, and how much of the gap is fuel and line-haul, Leo expense, and depreciation?",
+      "why": {
+        "text": "Q4 implied margin of about 12.7% at the midpoint compares with 13.9% in Q3, and consensus sat at about $33B.",
+        "evidence_ids": [
+          "Q.108",
+          "F.59",
+          "N.02",
+          "C.024",
+          "C.018"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "What gives you confidence that advertising returns to high-teens growth in Q4, and how much of Q3's shortfall was Prime Day timing, the lapping of the search marketing change, and the lack of NBA?",
+      "why": {
+        "text": "Advertising grew only 12% ex-FX in Q3, and the Q4 reacceleration is central to the margin outlook. The FTC reserve-price complaint could also affect ad practices.",
+        "evidence_ids": [
+          "C.012",
+          "C.013",
+          "Q.108",
+          "Q.041"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "question": "How do you plan to balance internal use versus external sales of Trainium from late 2027, and what are the implications for AWS capacity and capex?",
+      "why": {
+        "text": "The CEO described a trade-off between near-term revenue from external sales and longer-lived revenue from using chips in AWS.",
+        "evidence_ids": [
+          "C.009",
+          "C.039",
+          "C.040"
+        ],
+        "evidence_type": "reported"
+      }
+    }
+  ],
+  "data_gaps": [
+    "No AWS revenue, AWS margin, or segment-level guidance or consensus is available in the sources. Q4 2025 segment and advertising figures in this report are derived from full-year and nine-month tables.",
+    "Operating income consensus ($32.99B) comes only from a 10-30 Barchart news article and may be pre-print or already revised. No post-print revised consensus for revenue, operating income or EPS is in the sources.",
+    "Whisper EPS and the options-implied move are not available (no confirmed date from EarningsWatcher), so only the historical average move of ±6.2% is cited.",
+    "Consensus capex, free cash flow and AWS growth for Q4 are not provided. The implied Q4 capex of about $48B is arithmetic from guidance and filing data.",
+    "The 2026 transcript is marked date-unknown, but its text identifies the call as October 29, 2026.",
+    "The Q3 2026 guidance that preceded this print and management's Q3 beat or miss versus guidance are not in the sources.",
+    "The share of backlog attributable to OpenAI and Anthropic, and the timing of its conversion, are not disclosed.",
+    "The size of the fuel, line-haul and memory-cost headwinds in Q4 is not quantified. The CFO said he did not have an exact number.",
+    "Whether consensus EPS of $2.50 includes gains on Anthropic or OpenAI stakes is not disclosed, and Q4 valuation events for those investments are unknown.",
+    "News sources differ on the size of the post-earnings share-price decline (Barchart -1.4% after an earlier drop of more than 5%; NYT more than 4%), and the price used in M.07 ($240.35) has no stated timestamp."
+  ],
+  "sources": {
+    "Q.004": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.006": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Adjustments to reconcile net income to net cash from operating activities:",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.007": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Adjustments to reconcile net income to net cash from operating activities:",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.008": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Adjustments to reconcile net income to net cash from operating activities:",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.013": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Earnings Per Share",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.015": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Derivatives and Hedging",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.019": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Unearned Revenue",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.020": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.026": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.027": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.029": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.030": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.031": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.037": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Commitments",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.038": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.040": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Legal Proceedings",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.041": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Legal Proceedings",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.044": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.048": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.051": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.052": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.053": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.066": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — AWS",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.070": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Financial Statements — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.072": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · MD&A — Forward-Looking Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.082": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.083": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.089": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · MD&A — Net Sales",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.098": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · MD&A — Technology and Infrastructure",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.105": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · MD&A — Free Cash Flow",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.108": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · MD&A — Fourth Quarter 2026 Guidance",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.112": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Quantitative Disclosures — Equity Investment Risk",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.148": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 · Risk Factors — Our Supplier Relationships Subject Us to a Number of Risks",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.173": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "Q.174": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-30 — 2026 Revolving Credit Agreements and Term Loan Amendment",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "K.031": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-06 · Risk Factors — The Variability in Our Retail Business Places Increased Strain on Our Operations",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm",
+      "as_of": "2026-02-06"
+    },
+    "K.098": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-06 · MD&A — Table of Contents",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm",
+      "as_of": "2026-02-06"
+    },
+    "K.122": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-06 · MD&A — Guidance",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm",
+      "as_of": "2026-02-06"
+    },
+    "K.138": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-06 · Financial Statements — Adjustments to reconcile net income to net cash from operating activities:",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm",
+      "as_of": "2026-02-06"
+    },
+    "K.181": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-06 · Financial Statements — Unearned Revenue",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm",
+      "as_of": "2026-02-06"
+    },
+    "K.222": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-06 · Financial Statements — North America",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm",
+      "as_of": "2026-02-06"
+    },
+    "K.223": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-02-06 · Financial Statements — AWS",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm",
+      "as_of": "2026-02-06"
+    },
+    "C.004": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Andy Jassy, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.009": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Andy Jassy, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.010": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Andy Jassy, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.011": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Andy Jassy, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.012": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Andy Jassy, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.013": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Andy Jassy, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.015": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Brian Olsavsky, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.016": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Brian Olsavsky, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.017": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Brian Olsavsky, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.018": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Brian Olsavsky, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.021": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Justin Post, Analyst",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.023": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Andy Jassy, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.024": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Brian Olsavsky, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.027": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Andy Jassy, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.029": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Andy Jassy, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.033": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Brian Olsavsky, CFO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.039": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Andy Jassy, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "C.040": {
+      "kind": "call",
+      "citation": "Q3 FY2026 earnings call (date unknown) — Andy Jassy, CEO",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=AMZN&quarter=2026Q3",
+      "as_of": null
+    },
+    "F.01": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "F.09": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "F.13": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating income — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "F.17": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "F.21": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "F.25": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Cash and equivalents — at 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000040/amzn-20260930.htm",
+      "as_of": "2026-10-30"
+    },
+    "F.41": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.43": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Net income growth — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.45": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS growth — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.47": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating income growth — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.49": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow growth — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.51": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure growth — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.59": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.61": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2025-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.71": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.77": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-12-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.78": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "F.79": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-12-31",
+      "url": null,
+      "as_of": null
+    },
+    "F.80": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q4 2026",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.02": {
+      "kind": "market",
+      "citation": "Market data — Whisper EPS",
+      "url": null,
+      "as_of": null
+    },
+    "M.03": {
+      "kind": "market",
+      "citation": "Market data — Options-implied move",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "M.05": {
+      "kind": "market",
+      "citation": "Market data — Beat/miss record",
+      "url": null,
+      "as_of": null
+    },
+    "M.06": {
+      "kind": "market",
+      "citation": "Market data — Analyst rating actions",
+      "url": null,
+      "as_of": null
+    },
+    "M.07": {
+      "kind": "market",
+      "citation": "Market data — Consensus price target",
+      "url": null,
+      "as_of": null
+    },
+    "N.01": {
+      "kind": "news",
+      "citation": "mynorthwest.com, 2026-10-30 — ‘Business is booming, and jobs are still being cut’: Ursula warns workers as Amazon’s record margin follows more layoffs - MyNorthwest.com",
+      "url": "https://mynorthwest.com/kiro-opinion/amazons-record-follows-layoffs/4292172",
+      "as_of": "2026-10-30"
+    },
+    "N.02": {
+      "kind": "news",
+      "citation": "barchart.com, 2026-10-30 — Stocks Fall Sharply on Intel and Amazon Sell-offs and Crypto Heist",
+      "url": "https://www.barchart.com/story/news/8563181/stocks-fall-sharply-on-intel-and-amazon-sell-offs-and-crypto-heist",
+      "as_of": "2026-10-30"
+    },
+    "N.04": {
+      "kind": "news",
+      "citation": "retaildive.com, 2026-10-31 — Amazon CEO says retail business is being slept on",
+      "url": "https://www.retaildive.com/news/amazon-ceo-retail-business-important-q3-earnings/873316",
+      "as_of": "2026-10-31"
+    },
+    "N.05": {
+      "kind": "news",
+      "citation": "barrons.com, 2026-10-30 — Amazon and Intel Tank the AI Trade. One Factor Linking Earnings Flops.<!-- --> - Barron's",
+      "url": "https://www.barrons.com/articles/amazon-stock-intel-tech-earnings-ai-spending-d0c03d3d",
+      "as_of": "2026-10-30"
+    },
+    "N.06": {
+      "kind": "news",
+      "citation": "nytimes.com, 2026-10-29 — Big Tech’s Data Center Blitz Is Burning Through Cash and Scaring Wall Street - The New York Times",
+      "url": "https://www.nytimes.com/2026/10/29/technology/amazon-earnings-tech-spending.html",
+      "as_of": "2026-10-29"
+    }
+  },
+  "check_notes": []
+}

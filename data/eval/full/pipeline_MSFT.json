@@ -1,0 +1,1514 @@
+{
+  "ticker": "MSFT",
+  "company_name": "MICROSOFT CORP",
+  "report_generated_at": "2026-11-01T12:57:42+00:00",
+  "filings": [
+    {
+      "filing_type": "10-Q",
+      "filing_date": "2026-10-28",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm"
+    },
+    {
+      "filing_type": "10-K",
+      "filing_date": "2026-07-29",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/msft-20260630.htm"
+    }
+  ],
+  "earnings_call": "Q4 FY2026 earnings call (date unknown)",
+  "current_report": "No 8-K or 6-K recent enough to read",
+  "market_expectations": {
+    "consensus_eps": {
+      "value": "$4.94",
+      "fiscal_quarter": 2,
+      "fiscal_year": 2027,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "consensus_revenue": {
+      "value": "$97.51B",
+      "fiscal_quarter": 2,
+      "fiscal_year": 2027,
+      "source": "Finnhub earnings calendar",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "whisper_eps": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "preview: no Earnings Whispers preview within 30 days before the 2027-01-26 report. Paid lookup not made: next report is 86 days away (made automatically within 3 days)."
+    },
+    "implied_move": {
+      "value": null,
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": null,
+      "as_of_date": null,
+      "missing_reason": "implied move: no live implied move yet (EarningsWatcher has no confirmed report date)."
+    },
+    "historical_move": {
+      "value": "±7.0% average closing move over the last 8 reports (2024-10-30 to 2026-07-29)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "EarningsWatcher, https://earnings-watcher.com/wiki/msft-implied-move",
+      "as_of_date": "2026-10-30",
+      "missing_reason": null
+    },
+    "beat_miss_record": {
+      "value": "4 beats, 0 misses in the last 4 quarters, average surprise +4.2%",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "Finnhub earnings surprises",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "analyst_actions": {
+      "value": "Last 30 days, newest first: Stifel maintained Buy (2026-10-29); Cantor Fitzgerald maintained Overweight (2026-10-29); Piper Sandler maintained Overweight (2026-10-29); RBC Capital maintained Outperform (2026-10-29); Scotiabank maintained Sector Outperform (2026-10-29); Citizens maintained Market Outperform (2026-10-29); Truist Securities maintained Buy (2026-10-29); Barclays maintained Overweight (2026-10-29); Wells Fargo maintained Overweight (2026-10-29); Bernstein maintained Outperform (2026-10-29); Citigroup maintained Buy (2026-10-29); DA Davidson maintained Buy (2026-10-29); TD Cowen maintained Buy (2026-10-29); StoneX maintained Buy (2026-10-29); Guggenheim maintained Buy (2026-10-29); Keybanc maintained Overweight (2026-10-29); Oppenheimer maintained Outperform (2026-10-29); Scotiabank maintained Sector Outperform (2026-10-26); Oppenheimer maintained Outperform (2026-10-26); Truist Securities maintained Buy (2026-10-26); Guggenheim maintained Buy (2026-10-21); BMO Capital maintained Outperform (2026-10-20); Bernstein maintained Outperform (2026-10-19); StoneX maintained Buy (2026-10-16); Mizuho maintained Outperform (2026-10-15); TD Cowen maintained Buy (2026-10-15); UBS maintained Buy (2026-10-15); Citigroup maintained Buy (2026-10-15); Jefferies maintained Buy (2026-10-15); Barclays maintained Overweight (2026-10-13); Evercore ISI Group maintained Outperform (2026-10-07); Scotiabank maintained Sector Outperform (2026-10-05)",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP grades",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    },
+    "price_target": {
+      "value": "$611.74, +17.2% vs current $521.91",
+      "fiscal_quarter": null,
+      "fiscal_year": null,
+      "source": "FMP price target consensus",
+      "as_of_date": "2026-11-01",
+      "missing_reason": null
+    }
+  },
+  "setup_summary": [
+    {
+      "text": "The next report is fiscal Q2 FY2027 (Oct–Dec quarter), expected 2027-01-26 with the time unknown. Fiscal Q1 FY2027 was already reported on 2026-10-28, the same day as the 10-Q, so any pre-Q1 preview is superseded. This note is built on the Q1 print and the Q2 guide.",
+      "evidence_ids": [
+        "M.01",
+        "N.03",
+        "Q.001"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Q1 FY27 revenue was $92.28B (+18.8% y/y) and operating income $45.91B (+21.0%). Diluted EPS was $4.92 (+32.3%). Adjusted EPS, which excludes OpenAI gains and losses, was $4.89 versus $4.13 (+18%). OpenAI net gains added only $0.03 this quarter, against a $0.41 hit in the prior-year quarter, so the GAAP growth rate flatters the underlying growth.",
+      "evidence_ids": [
+        "F.01",
+        "F.29",
+        "F.07",
+        "F.32",
+        "F.05",
+        "F.31",
+        "Q.063",
+        "Q.064"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q1 beat the guidance on the lines we can test. Revenue of $92.28B was about $1.3B above the top of the $89.85–90.95B range. Opex of $16.64B was below the $16.8–16.9B range, and cost of revenue of $29.72B was inside the $29.6–29.8B range. Operating margin was 49.8% against 48.9% a year earlier, up about 0.9 point, while management had guided to 'relatively flat'.",
+      "evidence_ids": [
+        "C.025",
+        "F.01",
+        "Q.047",
+        "F.41",
+        "F.43"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Cloud demand is the core of the story. Azure revenue was $33.2B (+48%, on a redefined metric) against $22.4B. Microsoft Cloud revenue was $63.9B (+30%) at a 66% gross margin. Commercial RPO was $677B (+73% y/y), roughly flat against $678B at June 30, with about 30% due to be recognized within 12 months.",
+      "evidence_ids": [
+        "Q.047",
+        "Q.048",
+        "Q.055",
+        "Q.063",
+        "Q.037",
+        "K.134"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Cash conversion is weakening as the build-out accelerates. Q1 operating cash flow was $58.0B (+28.7%) but cash PP&E additions were $39.4B (+103%), so free cash flow fell to $18.6B from $25.7B. Depreciation was $11.1B against $7.1B a year earlier. Datacenter leases not yet commenced rose to $364.6B from $329.1B at June 30.",
+      "evidence_ids": [
+        "F.09",
+        "F.11",
+        "F.34",
+        "F.49",
+        "F.50",
+        "Q.031",
+        "Q.039",
+        "K.236"
+      ],
+      "evidence_type": "reported"
+    },
+    {
+      "text": "Q2 guide versus the bar. Management guided Q2 revenue to $96.0–97.1B, which is +18–19% on the $81.27B a year earlier. Consensus in our market data is $97.51B (+20.0%), above the top of the guided range. Consensus EPS is $4.94, against $4.89 adjusted in Q1 and $5.16 GAAP a year ago. The pre-guide LSEG revenue consensus of $95.6B has been superseded.",
+      "evidence_ids": [
+        "A.001",
+        "M.01",
+        "F.53",
+        "F.54",
+        "F.55",
+        "F.56",
+        "Q.063"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Positioning is constructive going in, but the bar is high. Shares rose more than 5% after hours on the Q1 print. Several brokers raised targets to $625–650, and the consensus target is $611.74 (+17.2% versus $521.91). Microsoft has beaten 4 of the last 4 quarters (average surprise +4.2%) and moves ±7.0% on average on reports. No options-implied move or whisper number is available yet.",
+      "evidence_ids": [
+        "A.001",
+        "N.06",
+        "M.07",
+        "M.05",
+        "M.04",
+        "M.02",
+        "M.03"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "OpenAI is a material, related-party revenue stream. It contributed $10.0B of Q1 revenue (about 11% of the total, our calculation) against $24.1B for all of FY26. Receivables from OpenAI rose to $7.2B from $6.0B. Microsoft holds roughly a 24% as-converted stake, with $12.0B of the $13.0B funding commitment funded.",
+      "evidence_ids": [
+        "Q.015",
+        "K.200",
+        "F.01"
+      ],
+      "evidence_type": "reported"
+    }
+  ],
+  "metrics_to_model": [
+    {
+      "metric": "Total revenue",
+      "period": "Q2 FY2027",
+      "last_reported": {
+        "text": "Q1 FY27 revenue was $92.28B (+18.8% y/y). Q2 FY26 revenue was $81.27B.",
+        "evidence_ids": [
+          "F.01",
+          "F.29",
+          "F.53"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Consensus revenue is $97.51B (+20.0% y/y), above the top of the guided $96.0–97.1B range.",
+        "evidence_ids": [
+          "M.01",
+          "F.54",
+          "A.001"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Q1 revenue of $92.28B beat the $90.95B top of the guide by about $1.3B. The Q2 guide is $96B to $97.1B, and the $97.51B consensus sits above the top of that range. A result inside the guided range would therefore fall short of consensus. Repeating the Q1 beat of roughly $1.3B on the $97.1B top would give about $98.4B. Management said some Q1 third-party capacity deliveries were delayed.",
+        "evidence_ids": [
+          "F.01",
+          "C.025",
+          "A.001",
+          "A.004",
+          "M.01"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Azure revenue and growth",
+      "period": "Q2 FY2027",
+      "last_reported": {
+        "text": "Q1 Azure revenue was $33.17B (+48% y/y) against $22.38B, on the redefined Azure metric (components moved in). Microsoft will now disclose Azure in dollars.",
+        "evidence_ids": [
+          "Q.048",
+          "Q.055",
+          "Q.060",
+          "A.001"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": {
+        "text": "Pre-guide consensus for Q2 Azure growth was 47.6% (Visible Alpha). The guide of 49–50% constant currency is above that, and a post-guide Azure consensus is not in our sources. Before Q1, buy-side expectations ran about 46–47.7% against the 44–45% guide.",
+        "evidence_ids": [
+          "A.001",
+          "N.01",
+          "N.04"
+        ],
+        "evidence_type": "estimate"
+      },
+      "view": {
+        "text": "Guide is 49–50% constant currency. In Q1, Azure beat the guide by about 3 points but beat Visible Alpha's dollar estimate by only about 1% ($33.17B vs $32.84B). Investors will judge Q2 against roughly 50% or higher, not against the guide. Capacity timing, not demand, is the swing factor.",
+        "evidence_ids": [
+          "A.001",
+          "A.003",
+          "N.01",
+          "C.035"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Capex (cash PP&E and incl. finance leases)",
+      "period": "Q2 FY2027",
+      "last_reported": {
+        "text": "Q1 cash additions to PP&E were $39.4B (+103%). Press reports total capex of $45.2B including finance leases, against the company's own projection of over $50B. Management blamed delayed third-party capacity deliveries.",
+        "evidence_ids": [
+          "F.11",
+          "F.34",
+          "A.003",
+          "A.004",
+          "N.19"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Q2 capex is guided above $50B on the broader definition. Cash PP&E and finance-lease additions are different lines, so model both. Reaching about $170–175B for calendar 2026 requires roughly $52–57B in Q4 CY26 (our calculation from $118.1B year to date). Watch for any further slippage or a cut to the year's capex plan.",
+        "evidence_ids": [
+          "N.18",
+          "A.003",
+          "Q.038",
+          "C.021"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Free cash flow",
+      "period": "Q2 FY2027",
+      "last_reported": {
+        "text": "Q1 FY27 free cash flow was $18.6B versus $25.7B a year earlier (down about 27%). It was about $10B above analyst expectations because capex came in light. FY26 free cash flow was $67.0B.",
+        "evidence_ids": [
+          "F.49",
+          "F.50",
+          "F.51",
+          "A.001",
+          "N.19"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Q1 free cash flow was flattered by capex slippage, so it should not be annualized. If capex jumps above $50B in Q2, free cash flow should compress. Management still guides to free cash flow positive for FY27.",
+        "evidence_ids": [
+          "A.004",
+          "N.18",
+          "C.022",
+          "F.49"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Microsoft Cloud gross margin %",
+      "period": "Q2 FY2027",
+      "last_reported": {
+        "text": "Q1 Microsoft Cloud gross margin was 66%, down y/y on Azure mix. Q4 FY26 was 65%.",
+        "evidence_ids": [
+          "Q.063",
+          "C.017"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The Q2 guide is about 65%, one point below Q1. Depreciation is ramping ($11.1B vs $7.1B) and Azure mix is rising, so gross margin is the main swing factor for EPS. Mitigants are efficiency gains and a buildings useful-life extension from 15 to 25 years.",
+        "evidence_ids": [
+          "N.18",
+          "Q.031",
+          "C.021",
+          "Q.063"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Operating margin / opex",
+      "period": "Q2 FY2027",
+      "last_reported": {
+        "text": "Q1 operating margin was 49.8% (48.9% a year earlier). Opex was $16.64B (+6%), below the $16.8–16.9B guide.",
+        "evidence_ids": [
+          "F.41",
+          "F.43",
+          "Q.047",
+          "Q.064",
+          "C.025"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The Q2 opex and margin guide is not in our sources. The FY27 guide is for opex up mid- to high single digits and operating margin down less than 1 point. Q1 margin was up 0.9 point, so the rest of the year implies some margin give-back.",
+        "evidence_ids": [
+          "C.022",
+          "F.41",
+          "F.43",
+          "F.45"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Microsoft 365 commercial cloud growth",
+      "period": "Q2 FY2027",
+      "last_reported": {
+        "text": "Q1 M365 commercial cloud grew 17% and commercial seats +5% (metric now includes GitHub). Paid Copilot seats exceeded 30M at Q4 FY26.",
+        "evidence_ids": [
+          "Q.055",
+          "Q.065",
+          "Q.060",
+          "C.009"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Guide is about 19% constant currency for Q2, an acceleration from 17% on E7, Copilot and usage-based billing. Seat growth is slowing (5% vs 6%), so ARPU has to carry the acceleration.",
+        "evidence_ids": [
+          "N.18",
+          "Q.065",
+          "C.018",
+          "C.045"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Agents and Infra / Devices and Consumer revenue",
+      "period": "Q2 FY2027",
+      "last_reported": {
+        "text": "Q1 Agents and Infra revenue was $76.8B (+25%), operating income $40.6B. Devices and Consumer revenue was $15.5B (-3%), operating income $5.4B.",
+        "evidence_ids": [
+          "Q.047",
+          "Q.064",
+          "Q.065"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "An Agents and Infra guide of $80.1–80.7B is reported. Against the $96.0–97.1B company guide, that leaves roughly $15.9–16.4B for Devices and Consumer. The recast Q2 FY26 segment base is not in our sources, so y/y growth cannot be checked.",
+        "evidence_ids": [
+          "N.07",
+          "A.001",
+          "Q.047"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Windows OEM and devices revenue",
+      "period": "Q2 FY2027",
+      "last_reported": {
+        "text": "Q1 Windows OEM and devices revenue fell 22% to $3.55B on the Windows 10 end-of-support comparison, OEM inventory drawdowns and weaker PC demand.",
+        "evidence_ids": [
+          "Q.047",
+          "Q.055",
+          "Q.067"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "The FY27 guide is a decline in the high teens, after a Q1 guide of low-20s down that was met. Component price increases are raising device prices. The Q2 line guide is not in our sources.",
+        "evidence_ids": [
+          "C.022",
+          "C.025",
+          "Q.067"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "metric": "Commercial RPO and OpenAI revenue",
+      "period": "Q2 FY2027",
+      "last_reported": {
+        "text": "Commercial RPO was $677B (+73% y/y), slightly below $678B at June 30. OpenAI revenue was $10.0B in Q1.",
+        "evidence_ids": [
+          "Q.055",
+          "K.134",
+          "Q.015"
+        ],
+        "evidence_type": "reported"
+      },
+      "consensus": null,
+      "view": {
+        "text": "Management said earlier that large OpenAI contracts will make bookings and RPO volatile quarter to quarter. The FY26 call said all sequential RPO growth came from non-frontier-lab customers. Sequential RPO and the OpenAI mix are the quality check on the Azure acceleration.",
+        "evidence_ids": [
+          "C.017",
+          "C.023",
+          "Q.055",
+          "Q.015"
+        ],
+        "evidence_type": "estimate"
+      }
+    }
+  ],
+  "guidance": [
+    {
+      "metric": "Total revenue",
+      "guidance": "$96.0B–$97.1B (+18% to +19% on $81.27B a year earlier); the figure comes from press reports of the call, not from a transcript in our sources.",
+      "period": "Q2 FY2027",
+      "status": "new",
+      "claim": {
+        "text": "Management guided Q2 FY27 revenue to $96.0–97.1B, above the pre-guide LSEG consensus of $95.6B.",
+        "evidence_ids": [
+          "A.001",
+          "N.03",
+          "F.53"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Azure revenue growth",
+      "guidance": "49%–50% constant currency. This follows a Q1 guide of about 45% constant currency and a 48% actual, on the redefined metric.",
+      "period": "Q2 FY2027",
+      "status": "raised",
+      "claim": {
+        "text": "Azure growth was guided to 49–50% constant currency for Q2, above the 47.6% pre-guide consensus. Q1 reported Azure growth was 48%, against a guide of about 45% constant currency.",
+        "evidence_ids": [
+          "A.001",
+          "N.17",
+          "C.024",
+          "Q.055"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Microsoft 365 commercial cloud growth",
+      "guidance": "About 19% constant currency, an acceleration from 17% in Q1.",
+      "period": "Q2 FY2027",
+      "status": "new",
+      "claim": {
+        "text": "Q2 M365 commercial cloud growth was guided to about 19% in constant currency, from a Q1 reported 17%. The source is a secondary summary of the call.",
+        "evidence_ids": [
+          "N.18",
+          "Q.055"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Microsoft Cloud gross margin %",
+      "guidance": "About 65%, versus 66% in Q1.",
+      "period": "Q2 FY2027",
+      "status": "new",
+      "claim": {
+        "text": "Microsoft Cloud gross margin was guided to about 65% for Q2, against 66% reported in Q1 and 65% in Q4 FY26.",
+        "evidence_ids": [
+          "N.18",
+          "Q.063",
+          "C.017"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Agents and Infra segment revenue",
+      "guidance": "$80.1B–$80.7B.",
+      "period": "Q2 FY2027",
+      "status": "new",
+      "claim": {
+        "text": "The Agents and Infra segment guide of $80.1–80.7B compares with Q1 revenue of $76.8B.",
+        "evidence_ids": [
+          "N.07",
+          "Q.047"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Capex",
+      "guidance": "Above $50B in Q2 (after Q1 capex of $45.2B including finance leases, below the projected $50B). Calendar 2026 is reported at about $170B; July guidance was about $175B after the useful-life change. The sources differ, so the status is unclear.",
+      "period": "Q2 FY2027 / CY2026",
+      "status": "unclear",
+      "claim": {
+        "text": "Q2 capex is guided above $50B. Calendar-2026 capex is cited as about $170B in a post-print summary, against about $175B on the July call. Reuters computed the $175B hurdle at $56.9B for Q4 CY26. Whether the plan was trimmed or the definition changed is not confirmed in our sources.",
+        "evidence_ids": [
+          "N.18",
+          "C.021",
+          "A.003",
+          "A.004"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "FY27 operating margin and opex",
+      "guidance": "Double-digit revenue and operating income growth; opex up mid- to high single digits; operating margin down less than 1 point; capex up y/y; free cash flow positive; tax rate about 20%. Given on the July call; whether it was updated on Oct 28 is not shown in our sources.",
+      "period": "FY2027",
+      "status": "unclear",
+      "claim": {
+        "text": "The July FY27 outlook called for double-digit revenue and operating income growth, opex growth in the mid- to high single digits, and operating margin down less than 1 point. It also called for free cash flow to stay positive and a tax rate of about 20%. Q1 delivered a 20% tax rate and operating margin up 0.9 point.",
+        "evidence_ids": [
+          "C.022",
+          "Q.035",
+          "F.41",
+          "F.43"
+        ],
+        "evidence_type": "guided"
+      }
+    },
+    {
+      "metric": "Windows OEM and devices; M365 commercial products; server products",
+      "guidance": "FY27 Windows OEM and devices down in the high teens. FY27 M365 commercial products and server products each down mid-single digits.",
+      "period": "FY2027",
+      "status": "unclear",
+      "claim": {
+        "text": "The July FY27 line-item guides were Windows OEM and devices down in the high teens, with M365 commercial products and Server products revenue each down mid-single digits. Q1 Windows OEM and devices was -22% and productivity and server licensing was -3% on a combined, redefined line.",
+        "evidence_ids": [
+          "C.021",
+          "C.022",
+          "Q.055",
+          "Q.065"
+        ],
+        "evidence_type": "guided"
+      }
+    }
+  ],
+  "since_filing": [
+    {
+      "text": "The guide for Q2 revenue and Azure was published on Oct 28, the same day as the 10-Q. Revenue guidance of $96.0–97.1B and Azure of 49–50% constant currency were above pre-guide consensus of $95.6B and 47.6%. Post-guide consensus revenue in our data, $97.51B, now sits above the top of the range.",
+      "evidence_ids": [
+        "A.001",
+        "N.03",
+        "M.01"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Management attributed the Q1 capex shortfall to delayed third-party capacity deliveries, not to changed plans. Q1 capex was $45.2B including finance leases against a projected $50B. The delayed spend shifts into the second half. This is new context that the 10-Q alone does not give.",
+      "evidence_ids": [
+        "A.003",
+        "A.004",
+        "N.17"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "The market reaction was positive. Shares rose more than 5% after hours and about 4% overnight. TD Cowen, Piper Sandler and D.A. Davidson each raised targets to $650. Citizens JMP raised to $625, and Huatai to about $653. Microsoft's five-year CDS is the tightest among the large tech names, per Truist.",
+      "evidence_ids": [
+        "A.001",
+        "A.002",
+        "N.16",
+        "N.06",
+        "N.10"
+      ],
+      "evidence_type": "estimate"
+    },
+    {
+      "text": "Peers diverged on capex payback. Alphabet shares fell more than 9% after hours on a search ad miss, about $9B of negative free cash flow and a flagged significant rise in 2027 capex. Google Cloud revenue was $30.7B (+103%) with a margin of about 36%. AWS grew 39% to $46.0B with a margin of about 39%. These are the benchmarks for Azure's growth and margin.",
+      "evidence_ids": [
+        "N.25",
+        "A.002",
+        "P.006",
+        "P.008",
+        "P.004"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "Google Cloud backlog was $560.8B and Alphabet began recognizing TPU system sales, a new stream competing for AI compute. AWS growth reflects usage, partly offset by pricing changes in long-term contracts. Both point to strong demand but some price competition.",
+      "evidence_ids": [
+        "P.005",
+        "P.006",
+        "P.001"
+      ],
+      "evidence_type": "proxy"
+    },
+    {
+      "text": "A secondary source said free cash flow fell 27% and Reuters said it was about $10B above expectations. Both fit the 10-Q: $18.6B against $25.7B is down about 27%, and the beat was against expectations rather than the prior year.",
+      "evidence_ids": [
+        "N.19",
+        "A.001",
+        "F.49",
+        "F.50"
+      ],
+      "evidence_type": "reported"
+    }
+  ],
+  "key_debates": [
+    {
+      "question": "Can Azure deliver 49–50% growth in Q2 and keep accelerating?",
+      "bull": {
+        "text": "Demand exceeds supply, and efficiency gains are monetized in-quarter. Some Q1 third-party capacity deliveries were delayed, and press reports say that spending shifts into the second half. Management guided Q2 Azure growth to 49% to 50% in constant currency. Q1 Azure grew 48% against a roughly 45% constant-currency guide.",
+        "evidence_ids": [
+          "C.035",
+          "A.004",
+          "N.17",
+          "A.001",
+          "C.024",
+          "Q.055"
+        ],
+        "evidence_type": "guided"
+      },
+      "bear": {
+        "text": "The Azure beat versus the Street's dollar estimate was small ($33.17B vs $32.84B), and buy-side expectations were already near 47–48%. Commercial RPO was flat sequentially at $677B against $678B. Growth depends on capacity timing, which slipped once already.",
+        "evidence_ids": [
+          "A.003",
+          "N.01",
+          "Q.055",
+          "K.134",
+          "C.024"
+        ],
+        "evidence_type": "estimate"
+      },
+      "what_settles_it": "Reported Azure dollars and constant-currency growth against 49–50% on Jan 26, plus capacity commentary, Q3 Azure guidance and sequential commercial RPO."
+    },
+    {
+      "question": "Will margins hold as depreciation and AI mix rise?",
+      "bull": {
+        "text": "Q1 operating margin rose to 49.8% from 48.9% with opex below the guided range. Efficiency gains continue, and a buildings useful-life extension from 15 to 25 years reduces depreciation.",
+        "evidence_ids": [
+          "F.41",
+          "F.43",
+          "Q.047",
+          "C.025",
+          "C.021"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Cost of revenue grew 24% against revenue growth of 19%, and depreciation was $11.1B against $7.1B. Microsoft Cloud gross margin is guided to about 65%, down from 66%. Management said the useful-life change gives only a minimal FY27 operating income benefit, and the FY27 outlook has operating margin down.",
+        "evidence_ids": [
+          "Q.063",
+          "Q.031",
+          "N.18",
+          "C.021",
+          "C.022"
+        ],
+        "evidence_type": "guided"
+      },
+      "what_settles_it": "Q2 Microsoft Cloud gross margin versus about 65%, depreciation and opex lines, and the Q3 margin guide."
+    },
+    {
+      "question": "Is capex converting to free cash flow or just moving onto the balance sheet?",
+      "bull": {
+        "text": "Q1 free cash flow of $18.6B was about $10B above expectations, and Microsoft is still free cash flow positive while Alphabet burned cash. Management says capex is skewed to short-lived assets that can be slowed if demand changes.",
+        "evidence_ids": [
+          "A.001",
+          "A.002",
+          "C.039"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "Free cash flow fell about 27% y/y even with capex light, and Q2 capex is guided above $50B. Datacenter leases not yet commenced are $364.6B. Cash, equivalents and short-term investments fell to $64.5B from $76.8B.",
+        "evidence_ids": [
+          "F.49",
+          "F.50",
+          "N.18",
+          "Q.039",
+          "Q.005"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q2 free cash flow and capex split (cash PP&E versus finance leases), the confirmed CY26 capex figure, and any commentary on FY28 spending."
+    },
+    {
+      "question": "How much of the backlog and growth rests on OpenAI?",
+      "bull": {
+        "text": "Management said all sequential commercial RPO growth in Q4 came from customers outside frontier-model companies, and RPO excluding OpenAI was up 25%. Nearly 90% of FY26 cloud revenue came from non-frontier-lab customers.",
+        "evidence_ids": [
+          "C.017"
+        ],
+        "evidence_type": "reported"
+      },
+      "bear": {
+        "text": "OpenAI contributed $10.0B of Q1 revenue (about 11% of the total, our calculation), and receivables from OpenAI rose to $7.2B. The 10-Q warns that strategic partners who are significant Azure customers may adjust purchases.",
+        "evidence_ids": [
+          "Q.015",
+          "F.01",
+          "Q.104"
+        ],
+        "evidence_type": "reported"
+      },
+      "what_settles_it": "Q2 OpenAI revenue and receivables disclosure, RPO ex-OpenAI, and any change in contract or capacity-allocation terms."
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "bull",
+      "description": {
+        "text": "Revenue lands above the top of the guided range (about $98B or more) with Azure above 50% constant currency as delayed capacity comes online. Microsoft Cloud gross margin holds near 66%, opex runs below guide again, and free cash flow stays robust. Consensus EPS of $4.94 is beaten, and the stock extends its post-Q1 rally toward the $611.74 consensus target.",
+        "evidence_ids": [
+          "A.001",
+          "A.004",
+          "F.01",
+          "C.025",
+          "M.01",
+          "M.07"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Azure growth of 50% or more with dollars above Street",
+        "Capacity delays from Q1 resolved and Q3 Azure guide at or above 50%",
+        "Microsoft Cloud gross margin at or above 65–66%",
+        "Sequential commercial RPO growth with a lower OpenAI share"
+      ]
+    },
+    {
+      "name": "base",
+      "description": {
+        "text": "Revenue of $97–98B and Azure growth of about 49–50% match the guide and a $97.51B consensus. Margins are roughly in line with the 65% cloud gross margin guide as depreciation rises. Capex is above $50B and free cash flow compresses from Q1. The stock reaction is muted to modest, with the average ±7% move risk centered on the Q3 guide.",
+        "evidence_ids": [
+          "A.001",
+          "N.18",
+          "M.01",
+          "M.04",
+          "Q.031"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Azure growth of 49–50% in line",
+        "Capex of about $50–55B",
+        "Opex and margin roughly in line with the FY27 outlook",
+        "Q3 guide consistent with the FY27 double-digit growth outlook"
+      ]
+    },
+    {
+      "name": "bear",
+      "description": {
+        "text": "Capacity delivery delays recur, so Azure lands at or below the low end of the 49% to 50% constant-currency guide. Revenue stays inside the $96B to $97.1B guide, below the $97.51B consensus. Delayed capex then catches up, with Q1 capex already up 103% y/y, and free cash flow compresses further from Q1's $18.63B (vs $25.66B a year earlier). Alphabet's post-earnings slide, on negative free cash flow and a higher 2027 capex outlook, shows how investors can punish that mix.",
+        "evidence_ids": [
+          "A.001",
+          "M.01",
+          "A.004",
+          "F.34",
+          "F.49",
+          "F.50",
+          "N.25"
+        ],
+        "evidence_type": "estimate"
+      },
+      "triggers": [
+        "Azure below 49%, or further capex and capacity slippage",
+        "Commercial RPO down sequentially again",
+        "Microsoft Cloud gross margin below 65%",
+        "Calendar-2026 capex cut or a large increase in 2027 spend flagged"
+      ]
+    }
+  ],
+  "key_risks": [
+    {
+      "claim": {
+        "text": "Supply and component risk is live. The 10-Q risk factor lists supplier capacity constraints or allocation decisions among the causes of component delays or higher prices. Some Q1 third-party capacity deliveries that were expected were delayed. Q4 capex included the impact of higher component pricing.",
+        "evidence_ids": [
+          "Q.142",
+          "A.004",
+          "C.016"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Depreciation and lease costs are ramping. Depreciation was $11.1B against $7.1B, finance lease interest drove interest expense higher, and cost of revenue grew faster than revenue. The filing says AI and datacenter investments may decrease operating margins.",
+        "evidence_ids": [
+          "Q.031",
+          "Q.070",
+          "Q.063",
+          "Q.057"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Concentration and partner risk. OpenAI represented about 11% of Q1 revenue, with a growing receivable. The 10-Q adds that Microsoft has limited visibility into the design, training data and behavior of third-party models.",
+        "evidence_ids": [
+          "Q.015",
+          "F.01",
+          "Q.104"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Devices and Consumer is shrinking. Windows OEM and devices fell 22%, and XBOX hardware fell 14%. Management guides Windows OEM and devices down in the high teens for FY27 and expects the PC market to be hurt by component costs.",
+        "evidence_ids": [
+          "Q.055",
+          "Q.066",
+          "Q.067",
+          "C.022"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "New and expanded regulatory and security language in the 10-Q covers autonomous AI agents and AI-accelerated vulnerability discovery. It also covers external audit obligations for advanced AI models in several US states, and datacenter siting moratoriums and community opposition.",
+        "evidence_ids": [
+          "Q.116",
+          "Q.125",
+          "Q.149",
+          "Q.153",
+          "Q.140"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": true
+    },
+    {
+      "claim": {
+        "text": "Tax: the IRS seeks $28.9B plus penalties and interest for 2004–2013 transfer pricing. Microsoft believes its allowances are adequate. Unrecognized tax benefits and other liabilities were $30.6B.",
+        "evidence_ids": [
+          "Q.036"
+        ],
+        "evidence_type": "reported"
+      },
+      "is_new": false
+    },
+    {
+      "claim": {
+        "text": "Sentiment on AI financing is fragile. Alphabet fell 8–9% after hours on negative free cash flow of about $9B and flagged higher 2027 capex, and press describes growing concern over debt-funded AI spending. Microsoft's capex and free cash flow commentary will get the same scrutiny.",
+        "evidence_ids": [
+          "A.002",
+          "N.25",
+          "A.004"
+        ],
+        "evidence_type": "proxy"
+      },
+      "is_new": true
+    }
+  ],
+  "questions_for_management": [
+    {
+      "question": "Q1 capex missed your own $50B projection on delayed third-party deliveries. How much capacity slipped, when does it land, and does it fall within the Q2 Azure guide of 49–50% or beyond it?",
+      "why": {
+        "text": "Capex came in at $45.2B against a projected $50B, with delays shifting spend into H2. Whether Azure's acceleration depends on that capacity is the central call for the quarter.",
+        "evidence_ids": [
+          "A.003",
+          "A.004",
+          "N.17"
+        ],
+        "evidence_type": "estimate"
+      }
+    },
+    {
+      "question": "Is the calendar-2026 capex figure about $170B or $175B, and what are the definitions (cash PP&E, finance leases, operating leases)?",
+      "why": {
+        "text": "The July call cited about $175B after the useful-life change, while a post-print summary cites about $170B. Q1 cash PP&E was $39.4B against $45.2B reported including finance leases.",
+        "evidence_ids": [
+          "C.021",
+          "N.18",
+          "F.11",
+          "A.003"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "Commercial RPO was flat sequentially at $677B. What are the net new bookings ex-OpenAI, and how much of the RPO conversion in the next 12 months depends on frontier-lab customers?",
+      "why": {
+        "text": "RPO slipped from $678B to $677B, and management previously said OpenAI contracts would make RPO volatile. OpenAI was $10.0B of Q1 revenue.",
+        "evidence_ids": [
+          "Q.055",
+          "K.134",
+          "C.023",
+          "Q.015"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "With the Microsoft Cloud gross margin guided to about 65% versus 66% in Q1, how much comes from depreciation and component prices, and how much do the useful-life change and silicon efficiency offset?",
+      "why": {
+        "text": "Depreciation was $11.1B versus $7.1B a year earlier, and management said component prices are higher. The 15-to-25-year buildings useful-life change has only a minimal FY27 operating income benefit.",
+        "evidence_ids": [
+          "Q.031",
+          "C.016",
+          "C.021",
+          "N.18"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "What is the free cash flow outlook for FY27, given Q1 free cash flow fell about 27% on a light-capex quarter and Q2 capex is above $50B?",
+      "why": {
+        "text": "Management guided to stay free cash flow positive for FY27, but Q1 free cash flow of $18.6B was flattered by delayed capacity deliveries.",
+        "evidence_ids": [
+          "C.022",
+          "F.49",
+          "F.50",
+          "A.004"
+        ],
+        "evidence_type": "reported"
+      }
+    },
+    {
+      "question": "How should we compare the redefined Azure, M365 commercial cloud and search metrics with the old definitions, and will you give the recast quarterly history?",
+      "why": {
+        "text": "Metrics were redefined in Q1 (components moved into Azure, GitHub seats added, Industry solutions cloud created, search ex-TAC broadened), so y/y comparisons are not like-for-like. The recast Q2 FY26 base is not in our sources.",
+        "evidence_ids": [
+          "Q.060",
+          "Q.062",
+          "N.04"
+        ],
+        "evidence_type": "reported"
+      }
+    }
+  ],
+  "data_gaps": [
+    "No transcript or 8-K for the Q1 FY27 earnings call (Oct 28) is in the sources. The Q2 guidance (revenue $96.0–97.1B, Azure 49–50% constant currency, M365 commercial cloud about 19%, cloud gross margin about 65%, capex above $50B, Agents and Infra $80.1–80.7B) comes from press and secondary summaries.",
+    "Q2 FY27 guidance for COGS, opex, operating margin, other income and tax rate is not in our sources, so we cannot test consensus EPS of $4.94 against a guided P&L.",
+    "The basis of the EPS consensus ($4.94) is unclear, GAAP or ex-OpenAI. The prior-year Q2 EPS of $5.16 is GAAP and likely includes the OpenAI recapitalization dilution gain, so the -4.3% y/y comparison may not be like-for-like. An adjusted Q2 FY26 EPS is not in our sources.",
+    "The recast Q2 FY26 Azure dollar base and the recast Agents and Infra / Devices and Consumer bases are not provided, so Q2 y/y growth in dollars and segment terms cannot be computed.",
+    "Capex definitions differ across sources: $39.4B cash PP&E (10-Q), $45.2B including finance leases (Reuters), and the over $50B guide. The calendar-2026 capex figure is reported as about $170B in one summary and about $175B in July. The post-Q1 figure is unconfirmed.",
+    "No post-guide Azure consensus, options-implied move, whisper EPS or confirmed report time for 2027-01-26 is available.",
+    "It is not shown whether the FY27 outlook from the July call (operating margin down less than 1 point, opex growth, free cash flow positive) was updated on Oct 28.",
+    "Price context: the $521.91 price in the market data has no date, so the post-print move and upside to the $611.74 target are approximate.",
+    "Earnings call transcript: the Q1 FY2027 call isn't available yet (Alpha Vantage has no transcript for MSFT 2027Q1); the Q4 FY2026 call is used instead.",
+    "A claim was removed because its sources don't support it: 'AI and cloud investment is running ahead of fully developed revenue. The risk factor cites underutilization, asset impairment, and customers shifting workloads. Q1 capex was $39.37B, up 103% y/y, and free cash flow was $18.63B.' (The passages cover underutilization, impairment, and the capex and free cash flow figures, but none mention customers shifting workloads, so that part of the risk factor is unsupported.)."
+  ],
+  "sources": {
+    "Q.001": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.005": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.015": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — Investments",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.031": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — Credit-Risk-Related Contingent Features",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.035": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — Credit-Risk-Related Contingent Features",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.036": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — Effective Tax Rate",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.037": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — Uncertain Tax Positions",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.038": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — NOTE 12 — LEASES",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.039": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — NOTE 12 — LEASES",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.047": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — Devices and Consumer",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.048": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Financial Statements — Devices and Consumer",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.055": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — OVERVIEW",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.057": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Economic Conditions, Challenges, and Risks",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.060": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Metrics",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.062": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Agents and Infra",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.063": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Devices and Consumer",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.064": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Devices and Consumer",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.065": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Devices and Consumer",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.066": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Devices and Consumer",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.067": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — Devices and Consumer",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.070": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · MD&A — 0ppt",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.104": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Risk Factors — STRATEGIC AND COMPETITIVE RISKS",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.116": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Risk Factors — CYBERSECURITY, DATA PRIVACY, AND PLATFORM ABUSE RISKS",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.125": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Risk Factors — CYBERSECURITY, DATA PRIVACY, AND PLATFORM ABUSE RISKS",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.140": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Risk Factors — OPERATIONAL RISKS",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.142": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Risk Factors — OPERATIONAL RISKS",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.149": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Risk Factors — LEGAL, REGULATORY, AND LITIGATION RISKS",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "Q.153": {
+      "kind": "filing",
+      "citation": "10-Q filed 2026-10-28 · Risk Factors — LEGAL, REGULATORY, AND LITIGATION RISKS",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "K.134": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-07-29 · MD&A — OVERVIEW",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/msft-20260630.htm",
+      "as_of": "2026-07-29"
+    },
+    "K.200": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-07-29 · Financial Statements — Investments",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/msft-20260630.htm",
+      "as_of": "2026-07-29"
+    },
+    "K.236": {
+      "kind": "filing",
+      "citation": "10-K filed 2026-07-29 · Financial Statements — NOTE 13 — LEASES",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/msft-20260630.htm",
+      "as_of": "2026-07-29"
+    },
+    "C.009": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Satya Nadella, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=MSFT&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.016": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Amy Hood, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=MSFT&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.017": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Amy Hood, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=MSFT&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.018": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Amy Hood, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=MSFT&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.021": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Amy Hood, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=MSFT&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.022": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Amy Hood, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=MSFT&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.023": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Amy Hood, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=MSFT&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.024": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Amy Hood, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=MSFT&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.025": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Amy Hood, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=MSFT&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.035": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Amy Hood, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=MSFT&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.039": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Amy Hood, Chief Financial Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=MSFT&quarter=2026Q4",
+      "as_of": null
+    },
+    "C.045": {
+      "kind": "call",
+      "citation": "Q4 FY2026 earnings call (date unknown) — Satya Nadella, Chairman and Chief Executive Officer",
+      "url": "https://www.alphavantage.co/query?function=EARNINGS_CALL_TRANSCRIPT&symbol=MSFT&quarter=2026Q4",
+      "as_of": null
+    },
+    "F.01": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "F.05": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "F.07": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating income — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "F.09": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating cash flow — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "F.11": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure — quarter ended 2026-09-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "as_of": "2026-10-28"
+    },
+    "F.29": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue growth — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.31": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS growth — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.32": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating income growth — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.34": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Capital expenditure growth — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.41": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.43": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — quarter ended 2025-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.45": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Operating margin — year ended 2026-06-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.49": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — quarter ended 2026-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.50": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — quarter ended 2025-09-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.51": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Free cash flow — year ended 2026-06-30",
+      "url": null,
+      "as_of": null
+    },
+    "F.53": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Revenue — quarter ended 2025-12-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/0001193125-26-027207-index.htm",
+      "as_of": "2026-01-28"
+    },
+    "F.54": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Revenue growth — fiscal Q2 2027",
+      "url": null,
+      "as_of": null
+    },
+    "F.55": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Diluted EPS — quarter ended 2025-12-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/0001193125-26-027207-index.htm",
+      "as_of": "2026-01-28"
+    },
+    "F.56": {
+      "kind": "fact",
+      "citation": "XBRL fact sheet — Consensus-implied Diluted EPS growth — fiscal Q2 2027",
+      "url": null,
+      "as_of": null
+    },
+    "M.01": {
+      "kind": "market",
+      "citation": "Market data — Consensus estimates",
+      "url": null,
+      "as_of": null
+    },
+    "M.02": {
+      "kind": "market",
+      "citation": "Market data — Whisper EPS",
+      "url": null,
+      "as_of": null
+    },
+    "M.03": {
+      "kind": "market",
+      "citation": "Market data — Options-implied move",
+      "url": null,
+      "as_of": null
+    },
+    "M.04": {
+      "kind": "market",
+      "citation": "Market data — Historical move",
+      "url": null,
+      "as_of": null
+    },
+    "M.05": {
+      "kind": "market",
+      "citation": "Market data — Beat/miss record",
+      "url": null,
+      "as_of": null
+    },
+    "M.07": {
+      "kind": "market",
+      "citation": "Market data — Consensus price target",
+      "url": null,
+      "as_of": null
+    },
+    "N.01": {
+      "kind": "news",
+      "citation": "benzinga.com, 2026-10-28 — Microsoft Earnings Preview: What Will Satya Nadella Say? - Microsoft (NASDAQ:MSFT)",
+      "url": "https://www.benzinga.com/markets/prediction-markets/26/10/62658800/microsoft-earnings-preview",
+      "as_of": "2026-10-28"
+    },
+    "N.03": {
+      "kind": "news",
+      "citation": "reuters.com, 2026-10-28 — Microsoft's cloud growth, cash flow offer respite from AI spending fears | Reuters",
+      "url": "https://www.reuters.com/business/retail-consumer/microsoft-beats-quarterly-cloud-revenue-estimates-2026-10-28",
+      "as_of": "2026-10-28"
+    },
+    "N.04": {
+      "kind": "news",
+      "citation": "indmoney.com, 2026-10-28 — Microsoft Stock Q1 FY27 Earnings Preview: Azure, AI Costs & MSFT Stock Impact",
+      "url": "https://www.indmoney.com/blog/us-stocks/microsoft-stock-q1-earnings-preview-msft",
+      "as_of": "2026-10-28"
+    },
+    "N.06": {
+      "kind": "news",
+      "citation": "tokenpost.com, 2026-10-31 — Three Analysts Raise Microsoft Price Targets to $650 After 19% Growth | TokenPost",
+      "url": "https://www.tokenpost.com/news/investing/45489",
+      "as_of": "2026-10-31"
+    },
+    "N.07": {
+      "kind": "news",
+      "citation": "cnbc.com, 2026-10-29 — Microsoft's quarter validates stock rebound. Here's our new price target",
+      "url": "https://www.cnbc.com/investingclub/2026/10/28/microsofts-quarter-validates-stock-rebound-heres-our-new-price-target.html",
+      "as_of": "2026-10-29"
+    },
+    "N.10": {
+      "kind": "news",
+      "citation": "marketscreener.com, 2026-10-29 — Analyst recommendations: Boston Scientific, Hilton, Kla Corporation, Fortinet, Microsoft… | MarketScreener",
+      "url": "https://www.marketscreener.com/news/analyst-recommendations-boston-scientific-hilton-kla-corporation-fortinet-microsofta--ce785cd3de81f722",
+      "as_of": "2026-10-29"
+    },
+    "A.001": {
+      "kind": "article",
+      "citation": "Article (reuters.com)",
+      "url": "https://www.reuters.com/business/retail-consumer/microsoft-beats-quarterly-cloud-revenue-estimates-2026-10-28",
+      "as_of": "2026-10-28"
+    },
+    "A.002": {
+      "kind": "article",
+      "citation": "Article (reuters.com)",
+      "url": "https://www.reuters.com/business/retail-consumer/microsoft-beats-quarterly-cloud-revenue-estimates-2026-10-28",
+      "as_of": "2026-10-28"
+    },
+    "A.003": {
+      "kind": "article",
+      "citation": "Article (reuters.com)",
+      "url": "https://www.reuters.com/business/retail-consumer/microsoft-beats-quarterly-cloud-revenue-estimates-2026-10-28",
+      "as_of": "2026-10-28"
+    },
+    "A.004": {
+      "kind": "article",
+      "citation": "Article (reuters.com)",
+      "url": "https://www.reuters.com/business/retail-consumer/microsoft-beats-quarterly-cloud-revenue-estimates-2026-10-28",
+      "as_of": "2026-10-28"
+    },
+    "N.16": {
+      "kind": "news",
+      "citation": "tradingkey.com, 2026-10-29 — Microsoft Stock Forecast: MSFT Jumps 4% Overnight as Azure Hits 48% and Cash Flow Doubles Estimates",
+      "url": "https://www.tradingkey.com/analysis/stocks/us-stocks/262251356-microsoft-stock-forecast-q1-earnings-azure-48-percent-546-breakout-october-29-2026-tradingkey",
+      "as_of": "2026-10-29"
+    },
+    "N.17": {
+      "kind": "news",
+      "citation": "tradingview.com, 2026-10-29 — Microsoft Stock Gets Surprising AI Spending Reality Check — TradingView News",
+      "url": "https://www.tradingview.com/news/gurufocus:fcd0dfa8c094b:0-microsoft-stock-gets-surprising-ai-spending-reality-check",
+      "as_of": "2026-10-29"
+    },
+    "N.18": {
+      "kind": "news",
+      "citation": "indmoney.com, 2026-10-29 — Microsoft Q1 FY27 Earnings Analysis: Azure Grows 48%, MSFT Stock Rises",
+      "url": "https://www.indmoney.com/blog/us-stocks/microsoft-stock-q1-earnings-analysis-why-msft-jumped",
+      "as_of": "2026-10-29"
+    },
+    "N.19": {
+      "kind": "news",
+      "citation": "finance.biggo.com, 2026-10-28 — Alphabet Earnings Miss Wipes Out Cash Flow as AI Spending Surges; Microsoft Beats — BigGo Finance",
+      "url": "https://finance.biggo.com/news/32a3f9be-3427-4979-89ee-eaac8d6d7784",
+      "as_of": "2026-10-28"
+    },
+    "P.001": {
+      "kind": "peer",
+      "citation": "PEER AMZN 10-Q filed 2026-10-30 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "P.004": {
+      "kind": "peer",
+      "citation": "PEER AMZN 10-Q filed 2026-10-30 · Financial Statements — S",
+      "url": null,
+      "as_of": null
+    },
+    "P.005": {
+      "kind": "peer",
+      "citation": "PEER GOOGL 10-Q filed 2026-10-29 · MD&A — Google Cloud revenues are comprised of the following:",
+      "url": null,
+      "as_of": null
+    },
+    "P.006": {
+      "kind": "peer",
+      "citation": "PEER GOOGL 10-Q filed 2026-10-29 · Financial Statements — Alphabet Inc.",
+      "url": null,
+      "as_of": null
+    },
+    "P.008": {
+      "kind": "peer",
+      "citation": "PEER GOOGL 10-Q filed 2026-10-29 · MD&A",
+      "url": null,
+      "as_of": null
+    },
+    "N.25": {
+      "kind": "news",
+      "citation": "investinglive.com, 2026-10-29 — Alphabet slides over 9% after hours as search miss and $9bn cash burn overshadow Cloud",
+      "url": "https://investinglive.com/stocks/alphabet-slides-over-9-after-hours-as-search-miss-and-9bn-cash-burn-overshadow-cloud",
+      "as_of": "2026-10-29"
+    }
+  },
+  "check_notes": [
+    "setup_summary[7]: not checked against its passages — claude-haiku-5-5 returned no verdict for it.",
+    "metrics_to_model[0].view: rewritten to what its sources support (Q1 revenue of $92.28B versus the $90.95B guide top gives the $1.3B beat, but none of the cited passages say capacity slipped into H2; they only say Q1 third-party deliveries were delayed.).",
+    "key_debates[0].bull: rewritten to what its sources support (The Q1 Azure guide of 44–45% is not in any cited passage, so the claim of a beat of about 3 points has no cited basis.).",
+    "scenarios[2]: rewritten to what its sources support (The cited passages contain no Q2 49–50% guide, no buy-side bar of about 50%, and no 65% gross margin guide, so the scenario's thresholds are not grounded.).",
+    "key_risks[0]: rewritten to what its sources support (Capex growth of +103% is given, but the $39.4B capex figure is not in the passages.).",
+    "key_risks[1]: rewritten to what its sources support (The passages show the 10-Q wording and the delayed deliveries but give no prior-period risk factor, so they do not show the risk language was expanded.).",
+    "key_risks[0]: its whole key_risks[0] item was removed — its sources don't support it (The passages cover underutilization, impairment, and the capex and free cash flow figures, but none mention customers shifting workloads, so that part of the risk factor is unsupported.).",
+    "since_filing[1]: tag 'reported' → 'estimate' (it cites only article, news).",
+    "questions_for_management[0]: tag 'reported' → 'estimate' (it cites only article, news)."
+  ]
+}
