@@ -24,21 +24,21 @@ Anything that spends API money needs an explicit yes first.
      is OpenAI GPT-6.1 Sol (API model gpt-6.1-sol); call it "OpenAI" or
      "GPT-6.1 Sol", never "ChatGPT" (the consumer app) or "Claude". The
      planned judge check (item 4) keeps the same judge, so these bullets
-     stay true unless it changes the headline.
+     stay true unless it changes the headline. If item 4's planted-error
+     test fails (the judge can't see planted errors), "matched quality"
+     overstates the result: say "no measurable quality difference".
    - Project title: "Yoda: Agentic AI vs. Single-Call LLM for Pre-Earnings
      Equity Research" (or keep "Pre-Earnings Research Assistant for
      Financial Analysts" for finance-facing roles).
 
-   Evaluation (the summary bullet; pick one; finer detail lives in the
-   README's charts):
-   * Evaluated 3 LLM architectures on 20 stocks with an OpenAI GPT-6.1 Sol
-     judge: the agentic pipeline matched a single LLM call at 4x the cost
-     (recommended).
-   * Ran a 60-report controlled evaluation with an OpenAI judge: a 5-stage
-     agentic pipeline gave no quality gain over a single-call baseline at
-     4x the cost.
-   * Showed with a 60-report LLM-judged evaluation that a single LLM call
-     matched a 5-stage agentic pipeline, cutting cost per report 74%.
+   Evaluation (the summary bullet, chosen 2026-11-02; finer detail lives
+   in the README's charts):
+   * Ran an LLM-judged evaluation of 3 architectures (OpenAI GPT-6.1 Sol);
+     chose the single-call design: matched quality, 74% lower cost per
+     unit.
+     (A "unit" is one report: $1.37 for the staged pipeline, $0.35 for
+     the single call. "Chose" is the README's decision; the app's mode
+     switch, item 3, isn't built yet, so don't say it's the default.)
 
    Decision and cost:
    * Recommended the single-call design over a 5-stage agentic pipeline
@@ -90,19 +90,20 @@ Anything that spends API money needs an explicit yes first.
    * Shipped a Streamlit app that produces the report on screen and as a
      PDF, with a batch queue that bundles many tickers into a ZIP.
 
-   Stack line (replaces "Stack: Python, Streamlit, ChromaDB"):
-   * Stack: Python, Anthropic Claude API, OpenAI API, Pydantic, pandas,
-     SciPy, pytest, Streamlit, ChromaDB (short form).
-   * Stack: Python, Anthropic Claude API (Sonnet 5.5, Haiku 5.5; tool use,
-     structured outputs, prompt caching, Batch API), OpenAI API, Pydantic,
-     pandas, NumPy, SciPy, matplotlib, pytest, Streamlit, ChromaDB, SEC
-     EDGAR / XBRL (long form, for LLM-engineering postings).
+   Stack line (replaces "Stack: Python, Streamlit, ChromaDB"; chosen
+   2026-11-02):
+   * Stack: Python (pandas, NumPy, SciPy, matplotlib, Pydantic, pytest),
+     Claude & OpenAI APIs, Streamlit, ChromaDB
+     (Where each is used, if asked: Pydantic for every structured model
+     output; pandas for the results; NumPy for the bootstrap ranges;
+     SciPy for the sign test; matplotlib for the charts; pytest for 595
+     offline tests.)
 
    Keywords postings use that this project genuinely covers: LLM
    evaluation, LLM-as-a-judge, agentic AI, multi-agent systems, tool use,
    prompt caching, cost optimization, bootstrap confidence intervals,
    experimental design, data pipelines, SEC filings, financial NLP.
-   Don't list Ragas or RAG evaluation frameworks unless item 9 is done.
+   Don't list Ragas or RAG evaluation frameworks unless item 10 is done.
 
 
 2. README "Creator's Notes": a reflection on the project, written by Calis
@@ -219,7 +220,7 @@ Anything that spends API money needs an explicit yes first.
      3. Gaps and disadvantages of Yoda and the baseline, from a user's
         point of view.
         3.1 Baseline gaps and disadvantages.
-            - Mention the other suggested baseline (item 6: SEC filings
+            - Mention the other suggested baseline (item 7: SEC filings
               plus Claude's own web search, the model choosing its
               searches). Checked 2026-11-01: it differs from today's
               baseline (one code-chosen Tavily search) and could be
@@ -300,18 +301,18 @@ Anything that spends API money needs an explicit yes first.
               to check the judge (item 4).
             - Ablation: remove one pipeline stage at a time (each
               researcher, each extractor, the repair pass) and keep only
-              the stages that move the scores (item 7).
+              the stages that move the scores (item 8).
             - Give the baseline a cheap Haiku claim check and measure
               whether it changes anything; if so, that is the cheapest
               "Yoda" there is.
-            - Build option C (item 6) so Yoda is measured against the
+            - Build option C (item 7) so Yoda is measured against the
               strongest realistic baseline, not a weak one.
             - Licensed data for consensus, grades and transcripts.
             - Shorter, more focused reports (relevance), which also cut
               output cost and reading time.
             - Measure user value directly: time to a finished earnings
               dossier for a few analysts, with and without Yoda.
-            - See also item 5 (how the staged pipeline would have to
+            - See also item 6 (how the staged pipeline would have to
               change to beat the baseline).
 
 
@@ -367,8 +368,7 @@ Anything that spends API money needs an explicit yes first.
      * The full run's eight-dimension result stays the primary published
        result. New measures are added beside it; nothing replaces it.
      * The judge stays OpenAI gpt-6.1-sol, so the README, the resume and
-       any new result keep describing the same judge. A second judge
-       (option H) is added beside it, never swapped in.
+       any new result keep describing the same judge.
      * Resume consistency (resume goes out before this item is done): the
        resume may only claim what README section 2 says today. If this
        item changes the headline, update the README and the resume
@@ -390,8 +390,11 @@ Anything that spends API money needs an explicit yes first.
         Fix: all 20 tickers x 8 claims per method (320 claims), sampled
         evenly across report sections; confidence ranges by resampling
         tickers, not claims.
-     5. "Partly supported" was undefined. Fix: a written labelling guide
-        with examples, piloted on 20 claims before the real labelling.
+     5. "Partly supported" was undefined. Fix: two labels plus reason
+        codes (step D), a written labelling guide with examples, piloted
+        on 20 claims before the real labelling. Labels judge whether the
+        cited passages support the claim, not whether it's true in the
+        world: a true claim its citations don't back is "not supported".
      6. Adding a rubric dimension changes the judge cache key, so all
         eight existing dimensions would be re-scored and drift by LLM
         noise. Fix: claim checking is a SEPARATE judge pass; the existing
@@ -407,27 +410,63 @@ Anything that spends API money needs an explicit yes first.
       is trusted for claim checking if its agreement with the human on
       held-out claims is Cohen's kappa >= 0.6"; "Q3 is answered if the
       95% range of the unsupported-rate gap excludes 0".
-   B. Planted-error test, Q1 (code + paid, ~$2-3, ~20 min): copy 10
-      reports, change 3 figures and add 2 claims their sources don't
-      support in each, then judge originals (cached, free) and copies.
-      figure_accuracy and source_traceability must drop. If they don't,
-      the judge is blind to exactly what the claim check fixes, and the
-      "no difference" result is weak. Needs no human time.
+   B. Planted-error test, Q1 (design B chosen 2026-11-02; code + paid,
+      ~$5 expected, $12.84 worst case; ~15 min; no human time). Written
+      before it runs:
+      - Copies: all 20 staged pipeline reports from the full run, each
+        with errors planted in 10% of its claims (~7 of ~70), the share
+        of first-draft claims the claim check flags. About 70% of them
+        get one figure changed by +20% (citations kept, so the figure
+        no longer matches its source); the rest have their citations
+        pointed at an unrelated passage. Every change is listed in
+        data/eval/planted/planted_changes.md.
+      - Commands: python -m yoda.eval.planted make; then
+        python -m yoda.eval.runner --rescore data/eval/planted --modes pipeline --judge-budget 10;
+        then python -m yoda.eval.planted compare.
+      - Compared with: the originals' scores from the full run
+        (data/eval/full/rescore/results.csv); the originals are not
+        re-judged. Same statistics as README section 2: the gap per
+        ticker (copy minus original) and its 95% bootstrap range.
+      - Pass rule: figure_accuracy's 95% range lies entirely below 0.
+        source_traceability is reported beside it (a range below 0 means
+        the judge also notices wrong citations). Partial: only
+        source_traceability drops. Fail: neither does.
+      - How the result is used, pass or fail: README section 2 gets a
+        short "Planted-error test" subsection explaining what was planted,
+        why 10%, the result and what it means for the headline.
+        Pass: the tie isn't a blind judge; "matched quality" stands on
+        the resume, and a rigor bullet may be added ("Tested the LLM
+        judge with planted errors: it penalised wrong figures at the rate
+        the claim check removes them"). Fail: a limitation saying the tie
+        may reflect a judge that misses wrong figures; the resume says
+        "no measurable quality difference" (item 1); E and F come first.
+        Either way the planted claims become known-answer cases for F.
+      - Judging is a new judge-cache run, so the cache drops batch A's
+        cached scores (the full run's older run; its scores stay in
+        results.csv). Step C then re-judges batch A's first scores too:
+        about $8 more, and still a valid noise measure.
    C. Judge noise (paid, ~$14, ~45 min; no code):
         python -m yoda.eval.runner --rescore data/eval/full --repeat --judge-budget 20 --out data/eval/full/repeat
       How often the judge gives the same report the same score, and so
       the smallest gap it can detect.
    D. Build the audit kit (code, free): a script that samples the 320
       claims as in flaw 4, shows each claim with the full text of the
-      passages it cites (IDs and method hidden), shuffles them, writes a
-      sheet to label (CSV) and keeps the answer key apart; marks 80 as
-      calibration (20 of them the pilot) and 240 as held-out. Plus the
-      labelling guide: supported / partly supported / unsupported /
-      can't tell, with rules for rounding, the writer's own arithmetic,
-      inferences labelled as estimates, and claims citing several
-      passages.
-   E. Human audit (free, ~6-8 hours, Calis): the pilot 20, then refine the
-      guide; then the rest; a week later, re-label 30 at random.
+      passages it cites (IDs and method hidden), shuffles them, writes
+      Markdown sheets to label in VS Code, offline (item 5), and keeps
+      the answer key apart; marks 80 as calibration (20 of them the
+      pilot) and 240 as held-out. Plus the labelling guide, with rules
+      for rounding, the writer's own arithmetic, inferences labelled as
+      estimates, and claims citing several passages. Labels:
+        Supported      every number and fact in the claim is in the
+                       cited passages
+        Not supported  plus one reason: wrong number / not in the cited
+                       source / overstated / cites the wrong source
+        Not checkable  an opinion or forecast; left out of the scoring
+      Agreement (kappa) is measured on Supported vs Not supported; the
+      reason codes show what kind of errors each side misses.
+   E. Human audit (free, ~6-8 hours, Calis, offline; see item 5): the
+      pilot 20, then refine the guide; then the rest; a week later,
+      re-label 30 at random. The same steps for every claim.
    F. Claim-level judge pass, Q2 and Q3 (code + paid, ~$2-4 for all 40
       baseline and staged pipeline reports): one judge call per report
       labels every claim (~70) against its cited passages (~25K-token
@@ -443,22 +482,19 @@ Anything that spends API money needs an explicit yes first.
       the original verdict next to any new finding; rerun
       docs/charts/make_charts.py if any chart's numbers change; update the
       limitations; update resume bullets only if the headline changed.
-   H. Options, only if B or C show the 1-5 scale can't separate methods:
-      - Pairwise judging: the judge sees both reports for a ticker and
-        picks the better per dimension, run in both orders to cancel
-        position bias. More sensitive than absolute scores near the
-        ceiling (~$10-15).
-      - A second judge from another model family (e.g. Google Gemini) on
-        the same rubric: shows whether the verdict depends on the judge
-        (~$15; new API key and pricing check first).
-      - Sharper anchors for the dimensions at the ceiling: this needs a
-        full re-judge and is reported as a new rubric version, not as a
-        correction.
-   - Order and timing: A now; B and C any time (paid, each needs a yes;
-     B before the resume goes out could add a "validated the judge with
-     planted errors" bullet); D before E; E after the resume; F after E's
-     calibration set; G last. About two working days in total, most of it
-     step E. Paid total about $20 without H.
+   - Not doing (decided 2026-11-02): pairwise judging, a second judge
+     from another model family, and sharper rubric anchors. Each would
+     re-judge all 60 reports (no new reports, but ~$14+ per pass) and
+     add a second headline to explain.
+   - What the human audit improves: the claim-level judge pass (F), not
+     the eight-dimension rubric judge behind the headline. The planted-
+     error test (B) is the only step that tests the headline's scores.
+   - Order and timing: B first, before the resume goes out (approved
+     2026-11-02), because a failed B changes the resume wording (item
+     1); B's pass rule is written into step B before it runs, standing
+     in for step A's plan; then A; C any time (paid, needs a yes); D before E; E after the
+     resume; F after E's calibration set; G last. About two working days
+     in total, most of it step E. Paid total about $20.
    - Running paid steps safely, as the full run was: check credits first;
      run from a separate terminal with output to a log file (cmd /c "... >
      data\eval\NAME.log 2>&1", with -X utf8 -u); a budget on every judging
@@ -466,11 +502,79 @@ Anything that spends API money needs an explicit yes first.
      other judging between steps that rely on cached scores.
 
 
-5. Come up with how Yoda (staged pipeline) would need to change in order
+5. Do the human claim audit offline (item 4, steps D and E; added
+   2026-11-02)
+   - Goal: label the 320 claims in VS Code with no internet, committing
+     with git as you go, and push when back online. Everything the audit
+     needs is already on disk: the 60 reports and the full text of their
+     evidence are in data/eval/full/ ({mode}_{ticker}.json and
+     {mode}_{ticker}_evidence.json).
+   - Before going offline (online, with Claude Code; code: plan and
+     approve first):
+     1. Build the audit kit (item 4, step D): a stdlib-only script, so
+        nothing needs installing. It writes data/eval/audit/:
+          guide.md          the labelling guide (labels, reason codes,
+                            rules, worked examples)
+          sheets/pilot.md   the 20 pilot claims
+          sheets/calibration.md, sheets/heldout_1.md ... heldout_6.md
+                            the other 60 calibration and 240 held-out
+                            claims, about 40 per file
+          sheets/relabel.md 30 claims again, re-shuffled under new IDs;
+                            don't open it until a week after finishing
+          key.json          blinded claim ID -> ticker, method, report
+                            section, original evidence IDs. Don't open it
+                            until labelling is done.
+        Each claim in a sheet is one block: a blinded ID (e.g. C-0137),
+        the claim with its evidence IDs removed, the full text of every
+        passage it cites (document and date shown, IDs and method
+        hidden), then three lines to fill in:
+          Label:   Supported / Not supported / Not checkable
+          Reason:  (only for Not supported) wrong number / not in cited
+                   source / overstated / wrong source
+          Note:    (optional)
+        The same script, run with a "read" option, checks every block
+        has a valid label and writes labels.csv. Offline tests for both.
+     2. Rehearse offline: turn Wi-Fi off, open a sheet in VS Code, fill
+        in one label, run the read option and pytest, commit. If any of
+        it fails, fix it while Claude Code is still reachable.
+     3. Commit and push the kit, so it's backed up before you start.
+   - Offline (Calis, ~6-8 hours):
+     1. Read guide.md.
+     2. Label sheets/pilot.md. Note anywhere the guide was unclear. The
+        guide is refined with Claude Code once you're back online, before
+        the remaining sheets; pilot claims are then re-labelled under the
+        final guide.
+     3. Label the rest. The same steps for every claim: read the claim;
+        read only the passages shown under it; choose the label; add a
+        reason if Not supported. Don't look anything up elsewhere, don't
+        open key.json, don't look at earlier judge results.
+     4. Work in sessions of about an hour. After each: run the read
+        option to catch blank or mistyped labels, then commit, e.g.
+          git add data/eval/audit/sheets
+          git commit -m "Claim audit: held-out sheet 2 labelled"
+     5. A week after finishing, label sheets/relabel.md (self-
+        consistency check).
+   - Works offline: VS Code (editing, search, Markdown preview); git
+     status, diff, add, commit, log, branch; Python from .venv (the kit's
+     read option, pytest, which never calls live APIs); reading the
+     reports, evidence, README and charts.
+   - Doesn't work offline: Claude Code (this app included); git push,
+     pull and fetch (push when back online); anything calling an API
+     (report generation, judging, the Streamlit app fetching new data,
+     SEC EDGAR, FMP, Finnhub, Tavily); pip install (the kit needs none);
+     VS Code extension installs and updates; GitHub's website.
+   - The repo sits in OneDrive: offline edits sync when you reconnect.
+     Don't edit the same files on another device meanwhile, or OneDrive
+     makes a conflicting copy.
+   - Back online: git push, then item 4 step F (the claim-level judge
+     pass, paid, needs a yes).
+
+
+6. Come up with how Yoda (staged pipeline) would need to change in order
    to beat the baseline while justifying its added cost.
 
 
-6. Second baseline: SEC filings plus Claude's own web search (option C)
+7. Second baseline: SEC filings plus Claude's own web search (option C)
    - Question it answers: "Does Yoda beat an analyst using a general AI
      assistant with web search (e.g. Google AI Mode, ChatGPT search)?" -
      likely the most common way analysts do quick research today.
@@ -479,7 +583,7 @@ Anything that spends API money needs an explicit yes first.
      earnings", last 14 days); option C lets the model decide what to
      search, as many times as it needs. It could be a stronger baseline,
      which would make the case for the staged pipeline harder, not easier
-     (see item 5).
+     (see item 6).
    - Results vary run to run, it costs more, and it is a small agent rather
      than one call; every search it runs must be saved to its evidence
      store so the judge sees what it saw.
@@ -487,7 +591,7 @@ Anything that spends API money needs an explicit yes first.
      found (yoda/sources.py; pinned by tests/test_offline.py).
 
 
-7. Cut report costs while keeping quality
+8. Cut report costs while keeping quality
    Already in place: prompt caching within each method (5-minute cache
    kept alive every 4 minutes; 0 misses in the full run's 40 candidate
    reports; rollback: CACHE_TTL = "1h" in yoda/modes/source_calls.py),
@@ -506,7 +610,7 @@ Anything that spends API money needs an explicit yes first.
      the judge's scores beyond run-to-run noise (item 4, step C, measures it).
 
 
-8. Remove XOM's saved predecessor link from the repo (added 2026-10-30)
+9. Remove XOM's saved predecessor link from the repo (added 2026-10-30)
    - yoda/ingest/predecessors.json holds XOM's link (new CIK 2115436 ->
      Exxon Mobil Corp, CIK 34088). It was committed to git only so the
      smoke and full runs read XOM's 10-K even during an EDGAR search
@@ -523,7 +627,7 @@ Anything that spends API money needs an explicit yes first.
      longer needs the link at all.
 
 
-9. Ragas evaluation option
+10. Ragas evaluation option
    - Is this worth adding to Yoda?
    - What is Ragas and how exactly does it work? What makes it different
      from a brute-force evaluation method?
@@ -533,7 +637,7 @@ Anything that spends API money needs an explicit yes first.
      science job postings under LLM evaluation preferred skills.
 
 
-10. Improve retrieval quality (only if wanted)
+11. Improve retrieval quality (only if wanted)
    Neither candidate method searches the company's own filings (both read
    the full sources), so retrieval only serves competitors' filings
    (lookup_peer). Note: tools.retrieve_filing and the vector store return
